@@ -1,0 +1,6 @@
+{
+  "name": "Kharis Homepage",
+  "description": "Kharis brand homepage featuring exact navigation, hero section, brand tokens, and interactive elements.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
