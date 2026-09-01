@@ -1,3 +1,5 @@
+import { BRANCHES_DATA } from "@/data/branchesData";
+
 export type Branch = {
   name: string;
   address?: string;
@@ -8,14 +10,26 @@ export type Branch = {
   lng: number;
 };
 
-/** Official branch list — names and venues as provided */
+const INTERNAL_SLUGS = new Set(Object.keys(BRANCHES_DATA));
+
+function branchHref(city: string, legacyHref: string) {
+  const slug = city.toLowerCase().replace(/\s+/g, "-");
+  if (INTERNAL_SLUGS.has(slug)) return `/locations/${slug}`;
+  const match = Object.values(BRANCHES_DATA).find(
+    (b) => b.city.toLowerCase() === city.toLowerCase(),
+  );
+  if (match) return `/locations/${match.slug}`;
+  return legacyHref;
+}
+
+/** Official branch list with local detail pages where available */
 export const BRANCHES: Branch[] = [
   {
     name: "Kharis Accra",
     address: "Narpo Hotels, Nsawam Road, Near Mile 7 Police Station",
     city: "Accra",
     region: "International",
-    href: "https://kharis.org/locations/accra/",
+    href: branchHref("Accra", "https://kharis.org/locations/accra/"),
     lat: 5.6865,
     lng: -0.222,
   },
@@ -23,7 +37,7 @@ export const BRANCHES: Branch[] = [
     name: "Kharis Birmingham",
     city: "Birmingham",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/birmingham/",
+    href: branchHref("Birmingham", "https://kharis.org/locations/birmingham/"),
     lat: 52.4862,
     lng: -1.8904,
   },
@@ -32,7 +46,7 @@ export const BRANCHES: Branch[] = [
     address: "Kharis Church Brighton, Richmond Parade, Brighton BN2 9AA",
     city: "Brighton",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/brighton/",
+    href: branchHref("Brighton", "https://kharis.org/locations/brighton/"),
     lat: 50.8284,
     lng: -0.1292,
   },
@@ -40,7 +54,7 @@ export const BRANCHES: Branch[] = [
     name: "Kharis Bristol",
     city: "Bristol",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/bristol/",
+    href: branchHref("Bristol", "https://kharis.org/locations/bristol/"),
     lat: 51.4545,
     lng: -2.5879,
   },
@@ -49,7 +63,7 @@ export const BRANCHES: Branch[] = [
     address: "Strood Academy, Carnation Rd",
     city: "Chatham",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/chatham/",
+    href: branchHref("Chatham", "https://kharis.org/locations/chatham/"),
     lat: 51.3965,
     lng: 0.488,
   },
@@ -57,7 +71,7 @@ export const BRANCHES: Branch[] = [
     name: "Kharis Chelmsford",
     city: "Chelmsford",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/chelmsford/",
+    href: branchHref("Chelmsford", "https://kharis.org/locations/chelmsford/"),
     lat: 51.7356,
     lng: 0.4685,
   },
@@ -66,7 +80,7 @@ export const BRANCHES: Branch[] = [
     address: "The Caribbean Centre, 159 Spon Street",
     city: "Coventry",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/coventry/",
+    href: branchHref("Coventry", "https://kharis.org/locations/coventry/"),
     lat: 52.4073,
     lng: -1.518,
   },
@@ -74,7 +88,7 @@ export const BRANCHES: Branch[] = [
     name: "Kharis Croydon",
     city: "Croydon",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/croydon/",
+    href: branchHref("Croydon", "https://kharis.org/locations/croydon/"),
     lat: 51.3762,
     lng: -0.0982,
   },
@@ -83,7 +97,7 @@ export const BRANCHES: Branch[] = [
     address: "Robert Hall, 23 Robert Street",
     city: "Freetown",
     region: "International",
-    href: "https://kharis.org/locations/freetown/",
+    href: branchHref("Freetown", "https://kharis.org/locations/freetown/"),
     lat: 8.484,
     lng: -13.2299,
   },
@@ -92,7 +106,7 @@ export const BRANCHES: Branch[] = [
     address: "Kensington Townhall, Hornton Street",
     city: "London",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/london/",
+    href: branchHref("London", "https://kharis.org/locations/london/"),
     lat: 51.5015,
     lng: -0.1947,
   },
@@ -100,7 +114,7 @@ export const BRANCHES: Branch[] = [
     name: "Kharis Luton",
     city: "Luton",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/luton/",
+    href: branchHref("Luton", "https://kharis.org/locations/luton/"),
     lat: 51.8787,
     lng: -0.42,
   },
@@ -108,7 +122,7 @@ export const BRANCHES: Branch[] = [
     name: "Kharis Northampton",
     city: "Northampton",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/northampton/",
+    href: branchHref("Northampton", "https://kharis.org/locations/northampton/"),
     lat: 52.2405,
     lng: -0.9027,
   },
@@ -118,7 +132,7 @@ export const BRANCHES: Branch[] = [
       "Bluecoat Wollaton Academy, Sutton Passeys Crescent, Wollaton Park",
     city: "Nottingham",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/nottingham/",
+    href: branchHref("Nottingham", "https://kharis.org/locations/nottingham/"),
     lat: 52.9515,
     lng: -1.214,
   },
@@ -126,7 +140,7 @@ export const BRANCHES: Branch[] = [
     name: "Kharis Orpington",
     city: "Orpington",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/orpington/",
+    href: branchHref("Orpington", "https://kharis.org/locations/orpington/"),
     lat: 51.3742,
     lng: 0.0977,
   },
@@ -134,7 +148,7 @@ export const BRANCHES: Branch[] = [
     name: "Kharis Reading",
     city: "Reading",
     region: "United Kingdom",
-    href: "https://kharis.org/locations/reading/",
+    href: branchHref("Reading", "https://kharis.org/locations/reading/"),
     lat: 51.4543,
     lng: -0.9781,
   },

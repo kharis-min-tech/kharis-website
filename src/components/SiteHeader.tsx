@@ -19,7 +19,7 @@ type NavLink = {
 
 const links: NavLink[] = [
   { label: "About", href: "/about", children: aboutChildren },
-  { label: "Locations", href: "/#near-you" },
+  { label: "Locations", href: "/locations" },
   { label: "KP2" },
   { label: "Events", href: "/events" },
   { label: "Messages", href: "/messages" },
@@ -201,7 +201,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/#near-you"
+            href="/locations"
             className={`hidden items-center gap-2 rounded-full px-5 py-2.5 text-[0.8rem] font-extrabold transition sm:inline-flex ${
               onDark || (forceDark && !open)
                 ? "bg-white text-fg hover:bg-white/95"
@@ -304,7 +304,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
             );
           })}
           <Link
-            href="/#near-you"
+            href="/locations"
             className="btn-primary mt-2 w-full"
             onClick={() => setOpen(false)}
           >

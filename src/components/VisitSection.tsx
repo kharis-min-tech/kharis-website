@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { BRANCHES } from "@/lib/locations";
 import type { BranchSlide } from "@/lib/branch-slides";
 import { BranchCarousel } from "@/components/BranchCarousel";
@@ -44,6 +45,11 @@ export function VisitSection({ slides = [] }: Props) {
             <summary className="cursor-pointer text-sm font-semibold text-purple">
               View all {BRANCHES.length} branches
             </summary>
+            <p className="mt-3">
+              <Link href="/locations" className="text-sm font-semibold text-purple underline underline-offset-4">
+                Open full locations directory
+              </Link>
+            </p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               {BRANCHES.map((branch) => (
                 <a

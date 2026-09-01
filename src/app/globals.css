@@ -9820,3 +9820,90 @@ h6 {
   font-size: 0.75rem;
   line-height: 1.5;
 }
+
+/* Branch locations directory and detail pages */
+:root {
+  --page-bg: var(--bg);
+  --page-fg: var(--fg);
+  --surface: var(--bg-soft);
+  --surface-elevated: #ffffff;
+  --surface-muted: var(--bg-purple);
+  --border: var(--line);
+  --nav-bg: rgba(255, 255, 255, 0.92);
+  --hero-from: var(--bg-purple);
+  --input-bg: #ffffff;
+  --card-bg: #ffffff;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.45rem;
+  border-radius: 999px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--purple), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+html.branch-light .bg-\[\#0d0710\] {
+  background-color: #faf6f9;
+}
+
+html.branch-light .bg-\[\#15131f\] {
+  background-color: #ffffff;
+}
+
+html.branch-light .bg-\[\#15131f\]\/90 {
+  background-color: rgba(255, 255, 255, 0.92);
+}
+
+html.branch-light .bg-\[\#15131f\]\/95 {
+  background-color: rgba(255, 255, 255, 0.96);
+}
+
+html.branch-light .text-white {
+  color: #241019;
+}
+
+html.branch-light .text-gray-300 {
+  color: #5d4a55;
+}
+
+html.branch-light .text-gray-400 {
+  color: #6e5a66;
+}
+
+html.branch-light .text-gray-500 {
+  color: #7d6873;
+}
+
+html.branch-light .border-white\/5 {
+  border-color: rgba(28, 20, 30, 0.06);
+}
+
+html.branch-light .border-white\/10 {
+  border-color: rgba(28, 20, 30, 0.08);
+}

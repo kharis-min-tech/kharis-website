@@ -87,7 +87,7 @@ export function SiteFooter({ tone = "onLight" }: Props) {
             <h5 className={`site-footer__heading ${heading}`}>Join Us</h5>
             <ul className={`site-footer__links ${muted}`}>
               <li>
-                <Link href="/#near-you" className={linkHover}>
+                <Link href="/locations" className={linkHover}>
                   Find a Location
                 </Link>
               </li>
