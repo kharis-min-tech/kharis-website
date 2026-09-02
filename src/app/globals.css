@@ -6,7 +6,7 @@
   --bg-purple: #f7eef4;
   --fg: #1c1c1f;
   --fg-soft: #3a3a40;
-  --muted: #6e6e76;
+  --muted: #4a4a52;
   --line: rgba(128, 6, 84, 0.12);
   --purple: #800654;
   --purple-deep: #650445;
@@ -303,6 +303,11 @@ h6 {
   overflow: hidden;
   background:
     linear-gradient(180deg, #f7f7f9 0%, #f3f1f5 45%, #faf7fa 100%);
+}
+
+.listen-band .section-title {
+  color: var(--fg);
+  -webkit-text-fill-color: var(--fg);
 }
 
 .listen-card {
@@ -3957,7 +3962,7 @@ h6 {
   margin: 0.45rem 0 0;
   font-size: 0.98rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .about-ety__blurb {
@@ -3992,7 +3997,7 @@ h6 {
 .about-ety__faith-link span {
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .about-jump {
@@ -4073,7 +4078,7 @@ h6 {
   margin-top: -0.25rem;
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .about-jump__link.is-active .about-jump__hint {
@@ -4286,11 +4291,12 @@ h6 {
 }
 
 .about-panel__hero--vision .about-panel__eyebrow {
-  color: color-mix(in srgb, var(--purple) 72%, #6a4a5c);
+  color: var(--purple) !important;
 }
 
 .about-panel__hero--vision h3 {
-  color: var(--purple-deep);
+  color: var(--purple-deep) !important;
+  -webkit-text-fill-color: var(--purple-deep) !important;
 }
 
 @media (min-width: 900px) {
@@ -4371,7 +4377,7 @@ h6 {
   gap: 0.75rem;
   width: 100%;
   border: 1.5px solid var(--line);
-  background: #fff;
+  background: var(--bg-soft);
   padding: 0.85rem 0.9rem;
   text-align: left;
   cursor: pointer;
@@ -4407,13 +4413,22 @@ h6 {
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.12em;
-  opacity: 0.7;
+  color: var(--purple);
+}
+
+.about-panel__pillar.is-active .about-panel__pillar-num {
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .about-panel__pillar-title {
   display: block;
   font-size: 1rem;
   font-weight: 800;
+  color: var(--fg);
+}
+
+.about-panel__pillar.is-active .about-panel__pillar-title {
+  color: #fff;
 }
 
 .about-panel__focus {
@@ -4503,7 +4518,7 @@ h6 {
   gap: 0.55rem;
   font-size: 0.82rem;
   font-weight: 800;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .about-panel__mandate-nav button {
@@ -5673,7 +5688,7 @@ h6 {
   font-weight: 600;
   font-style: italic;
   line-height: 1.5;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .about-mandate__list {
@@ -6010,6 +6025,7 @@ h6 {
 .about-chapter__card h3 {
   margin: 0;
   font-size: 1.12rem;
+  color: var(--fg);
 }
 
 .about-chapter__card p {
@@ -6037,7 +6053,7 @@ h6 {
   font-weight: 600;
   font-style: italic;
   line-height: 1.45;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .about-chapter__leaders {
@@ -6398,7 +6414,7 @@ h6 {
 
 .events-feature__btn--solid {
   background: #fff;
-  color: var(--fg);
+  color: #1c1c1f;
 }
 
 .events-feature__btn--ghost {
@@ -6529,7 +6545,7 @@ h6 {
   font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--fg);
+  color: #1c1c1f;
 }
 
 .events-happen__copy {
@@ -6550,7 +6566,7 @@ h6 {
   margin: 0 0 0.2rem;
   font-size: 0.92rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .events-happen__copy p {
@@ -7182,6 +7198,7 @@ h6 {
   font-size: 1.05rem;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  color: var(--fg);
 }
 
 .give-why__card p,
@@ -7410,7 +7427,7 @@ h6 {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .give-copy__value {
@@ -7464,7 +7481,7 @@ h6 {
 
 .give-card__hint {
   font-size: 0.8rem !important;
-  color: var(--muted) !important;
+  color: var(--fg-soft) !important;
 }
 
 .give-label {
@@ -7472,7 +7489,7 @@ h6 {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .give-select,
@@ -7773,7 +7790,7 @@ h6 {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .contact-form textarea {
@@ -8060,7 +8077,7 @@ h6 {
   margin-top: 0.15rem;
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .contact-branches {
@@ -8167,7 +8184,7 @@ h6 {
   font-style: normal;
   font-size: 0.74rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .contact-branch.is-on,
@@ -8180,7 +8197,7 @@ h6 {
   padding: 1rem;
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--fg-soft);
 }
 
 .branch-map {
@@ -8349,7 +8366,7 @@ h6 {
 
 .life-cta--quiet {
   background: #fff;
-  color: var(--fg);
+  color: #1c1c1f;
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
 }
@@ -9308,31 +9325,6 @@ h6 {
   background: linear-gradient(180deg, rgba(18, 4, 14, 0.15) 0%, rgba(18, 4, 14, 0.78) 100%);
 }
 
-.life-modal__close {
-  position: absolute;
-  top: 0.85rem;
-  right: 0.85rem;
-  z-index: 2;
-  width: 2.4rem;
-  height: 2.4rem;
-  border: 1.5px solid rgba(255, 255, 255, 0.45);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 1.55rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.life-modal__close--video {
-  top: 0.75rem;
-  right: 0.75rem;
-  border-color: rgba(18, 4, 14, 0.12);
-  background: rgba(255, 255, 255, 0.94);
-  color: var(--fg);
-  box-shadow: 0 4px 16px rgba(40, 8, 28, 0.12);
-}
-
 .life-modal__video-wrap {
   position: relative;
   flex-shrink: 0;
@@ -9543,10 +9535,10 @@ h6 {
   inset: 0;
   background: linear-gradient(
     100deg,
-    #fff 0%,
-    rgba(255, 255, 255, 0.88) 34%,
-    rgba(255, 255, 255, 0.35) 62%,
-    transparent 100%
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(255, 255, 255, 0.78) 30%,
+    rgba(255, 255, 255, 0.2) 55%,
+    transparent 72%
   );
 }
 
@@ -9816,9 +9808,29 @@ h6 {
 }
 
 .site-footer__legal {
-  margin: 2.75rem 0 0;
+  margin: 0;
   font-size: 0.75rem;
   line-height: 1.5;
+  text-align: center;
+}
+
+.site-footer__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 2.75rem;
+}
+
+.site-footer__ea-logo {
+  width: auto;
+  height: 2.5rem;
+  opacity: 0.9;
+}
+
+.site-footer__ea-logo--on-light {
+  filter: brightness(0) saturate(100%);
+  opacity: 0.55;
 }
 
 /* Branch locations directory and detail pages */
@@ -9906,4 +9918,1037 @@ html.branch-light .border-white\/5 {
 
 html.branch-light .border-white\/10 {
   border-color: rgba(28, 20, 30, 0.08);
+}
+
+/* —— Global site theme —— */
+html[data-theme="dark"] {
+  --bg: #0a0612;
+  --bg-soft: #120818;
+  --bg-purple: #1a0f18;
+  --fg: #f5eef3;
+  --fg-soft: #d8cad4;
+  --muted: #a99aa6;
+  --line: rgba(255, 255, 255, 0.1);
+  --purple: #c85a9e;
+  --purple-deep: #a0447e;
+  --orange: #e8a33d;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 28px 60px rgba(0, 0, 0, 0.45);
+  --page-bg: var(--bg);
+  --page-fg: var(--fg);
+  --surface-muted: var(--bg-purple);
+  --border: var(--line);
+  --card-bg: #15131f;
+  --input-bg: #15131f;
+}
+
+html[data-theme="dark"] .site-page,
+html[data-theme="dark"] .contact-page,
+html[data-theme="dark"] .give-page,
+html[data-theme="dark"] .life-page,
+html[data-theme="dark"] .events-page {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .events-feature {
+  background: var(--bg-soft);
+}
+
+html[data-theme="dark"] .events-happen {
+  background: var(--bg);
+}
+
+html[data-theme="dark"] .event-card,
+html[data-theme="dark"] .life-card,
+html[data-theme="dark"] .life-textcard,
+html[data-theme="dark"] .life-detail-block,
+html[data-theme="dark"] .give-why__card,
+html[data-theme="dark"] .give-way,
+html[data-theme="dark"] .contact-hub,
+html[data-theme="dark"] .contact-map-section {
+  background: var(--card-bg);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .msg-page {
+  background: var(--bg);
+  color: var(--fg);
+  --msg-frame: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="light"] .msg-page .msg-row-band h2,
+html[data-theme="light"] .msg-page .msg-shelf h2,
+html[data-theme="light"] .msg-page .msg-faq__title {
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .msg-page .msg-row-band h2,
+html[data-theme="dark"] .msg-page .msg-shelf h2,
+html[data-theme="dark"] .msg-page .msg-faq__title {
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg) !important;
+}
+
+html[data-theme="light"] .msg-page {
+  background: var(--bg-soft);
+  color: var(--fg);
+}
+
+/* Hero title sits on the dark poster wall — always high contrast */
+.msg-hub__hero .msg-hub__title {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.85),
+    0 8px 28px rgba(0, 0, 0, 0.65);
+}
+
+.msg-hub__hero .msg-hub__title span {
+  color: #ffc14d !important;
+  -webkit-text-fill-color: #ffc14d !important;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 24px rgba(212, 146, 10, 0.45);
+}
+
+/* Listen anywhere platform labels on the light page background */
+html[data-theme="light"] .msg-listen__title {
+  color: var(--purple-deep) !important;
+  -webkit-text-fill-color: var(--purple-deep) !important;
+}
+
+html[data-theme="light"] .msg-listen__title span {
+  color: var(--purple) !important;
+  -webkit-text-fill-color: var(--purple) !important;
+}
+
+html[data-theme="light"] .msg-listen__eyebrow {
+  color: var(--purple);
+}
+
+html[data-theme="light"] .msg-listen__lede {
+  color: var(--fg-soft);
+}
+
+html[data-theme="light"] .msg-listen__step {
+  color: var(--fg);
+}
+
+html[data-theme="light"] .msg-listen__step strong {
+  color: var(--purple-deep);
+}
+
+html[data-theme="light"] .msg-listen__step > span:last-child {
+  color: var(--fg-soft);
+}
+
+html[data-theme="light"] .msg-mist {
+  opacity: 0.2;
+}
+
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--fg);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+}
+
+.theme-toggle--on-dark {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.theme-toggle--on-dark:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.theme-toggle__icon {
+  display: grid;
+  place-items: center;
+}
+
+.theme-toggle__label {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .theme-toggle__label {
+    display: inline;
+  }
+}
+
+html[data-theme="dark"] .life-modal__panel {
+  background: #15131f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.life-modal__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-soft);
+}
+
+.life-modal__toolbar-label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+.life-modal__close {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--fg);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.life-modal__close:hover {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #1c1c1f;
+  transform: scale(1.04);
+}
+
+html[data-theme="dark"] .life-modal__close {
+  background: #1f1524;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="dark"] .life-modal__toolbar {
+  background: #120818;
+}
+
+.life-modal__close--video {
+  position: static;
+  top: auto;
+  right: auto;
+}
+
+/* Children ministry v2 */
+.life-wrap--kids {
+  max-width: 76rem;
+}
+
+.life-kids-hero--v2 {
+  min-height: clamp(24rem, 52vw, 36rem);
+  border-radius: 2rem;
+  overflow: hidden;
+  background: linear-gradient(165deg, #fff3d6 0%, var(--bg-purple) 55%, #fff8ee 100%);
+}
+
+.life-kids-hero__blend {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.life-kids-hero__bleed {
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  border-radius: 1.25rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.life-kids-hero__bleed--a {
+  inset: 6% 32% 10% -4%;
+}
+
+.life-kids-hero__bleed--b {
+  inset: 2% -6% 6% 36%;
+}
+
+.life-kids-hero__bleed--c {
+  left: 54%;
+  top: 4%;
+  width: 42%;
+  height: 62%;
+}
+
+.life-kids-hero__copy--v2 h1 {
+  font-size: clamp(2.6rem, 7vw, 4.2rem);
+}
+
+.life-kids-hero__lead {
+  margin: 1.1rem 0 0;
+  max-width: 36rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.28rem);
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--fg-soft);
+}
+
+.life-kids-showcase {
+  padding: clamp(2.75rem, 6vw, 4.5rem) 0;
+}
+
+.life-kids-showcase__intro {
+  text-align: center;
+  max-width: 40rem;
+  margin: 0 auto 2.5rem;
+}
+
+.life-kids-showcase__intro h2 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+.life-kids-showcase__intro p {
+  margin: 0.85rem 0 0;
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.life-kids-showcase__list {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.life-kids-row {
+  display: grid;
+  gap: 0;
+  border-radius: 1.75rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lift);
+  background: #fff;
+}
+
+@media (min-width: 860px) {
+  .life-kids-row {
+    grid-template-columns: 1fr 1fr;
+    min-height: 22rem;
+  }
+
+  .life-kids-row--flip .life-kids-row__visual {
+    order: 2;
+  }
+
+  .life-kids-row--flip .life-kids-row__copy {
+    order: 1;
+  }
+}
+
+.life-kids-row__visual {
+  position: relative;
+  min-height: 16rem;
+  background: #e8e0ee;
+  overflow: hidden;
+}
+
+.life-kids-row__bleed {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.life-kids-row__ages {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 1;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--purple);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.85rem;
+  box-shadow: var(--shadow);
+}
+
+.life-kids-row__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.life-kids-row__ico {
+  width: 1.65rem;
+  height: 1.65rem;
+  color: var(--purple);
+}
+
+.life-kids-row__copy h3 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3.5vw, 2.2rem);
+  letter-spacing: -0.03em;
+}
+
+.life-kids-row__copy p {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--fg-soft);
+}
+
+.life-kids-video--v2 {
+  padding-bottom: clamp(3rem, 7vw, 4.5rem);
+}
+
+.life-kids-video__card {
+  display: grid;
+  gap: 1.75rem;
+  align-items: center;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  border-radius: 1.85rem;
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, var(--bg-purple) 0%, #fff8ee 55%, #fff 100%);
+  box-shadow: var(--shadow-lift);
+}
+
+@media (min-width: 900px) {
+  .life-kids-video__card {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 2.25rem;
+  }
+}
+
+html[data-theme="dark"] .life-kids-row,
+html[data-theme="dark"] .life-kids-video__card {
+  background: var(--card-bg);
+}
+
+html[data-theme="dark"] .life-kids-row__copy {
+  background: var(--card-bg-soft) !important;
+}
+
+html[data-theme="dark"] .life-kids-row__copy h3,
+html[data-theme="dark"] .life-kids-row__copy p {
+  color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .life-kids-row__copy p {
+  color: var(--fg-soft) !important;
+}
+
+html[data-theme="dark"] .life-kids-hero--v2 {
+  background: linear-gradient(165deg, #1a1020 0%, #120818 55%, #1a0f18 100%);
+}
+
+html[data-theme="dark"] .life-kids-hero__veil {
+  background: linear-gradient(
+    100deg,
+    rgba(18, 8, 24, 0.94) 0%,
+    rgba(18, 8, 24, 0.72) 30%,
+    rgba(18, 8, 24, 0.25) 55%,
+    transparent 72%
+  );
+}
+
+html[data-theme="dark"] .life-kids-row__visual {
+  background: #1e1428;
+}
+
+html[data-theme="dark"] .life-kids-hero__bleed {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Homepage: fade in below hero once video is ready */
+.home-below-hero {
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+
+html.hero-ready .home-below-hero {
+  opacity: 1;
+}
+
+.hero-video-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.hero-video-frame:has(.is-ready) .hero-video-poster {
+  opacity: 0;
+}
+
+/* Latest messages CTA row */
+.latest-messages__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-bottom: 0.75rem;
+}
+
+/* Messages year filters */
+.msg-hub__years {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  max-width: 36rem;
+  margin-inline: auto;
+}
+
+.msg-hub__year {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+  border-radius: 999px;
+  padding: 0.42rem 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.msg-hub__year:hover {
+  border-color: rgba(232, 163, 61, 0.55);
+  color: #fff;
+}
+
+.msg-hub__year.is-on {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #1c1c1f;
+}
+
+html[data-theme="light"] .msg-hub__year {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--fg-soft);
+}
+
+html[data-theme="light"] .msg-hub__year.is-on {
+  background: var(--purple);
+  border-color: var(--purple);
+  color: #fff;
+}
+
+/* Dark mode: refined contrast sitewide */
+html[data-theme="dark"] {
+  --bg: #0c0814;
+  --bg-soft: #140e1c;
+  --bg-purple: #1c1224;
+  --fg: #f7f0f5;
+  --fg-soft: #e2d5de;
+  --muted: #b8a8b4;
+  --card-bg: #1a1222;
+  --card-bg-soft: #22182c;
+}
+
+html[data-theme="dark"] .btn-primary {
+  background: rgba(200, 90, 158, 0.18);
+  border-color: #c85a9e;
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme="dark"] .btn-primary:hover {
+  background: #c85a9e;
+  border-color: #c85a9e;
+  color: #fff;
+}
+
+html[data-theme="dark"] .btn-secondary {
+  background: rgba(232, 163, 61, 0.12);
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+html[data-theme="dark"] .btn-secondary:hover {
+  background: var(--orange);
+  color: #1c1c1f;
+}
+
+html[data-theme="dark"] .testimony-band {
+  background: linear-gradient(180deg, #140e1c 0%, #1a1224 48%, #1c1228 100%);
+}
+
+html[data-theme="dark"] .testimony-band .section-title,
+html[data-theme="dark"] .testimony-band .eyebrow {
+  color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .listen-band {
+  background: linear-gradient(180deg, #140e1c 0%, #1a1224 48%, #1c1228 100%);
+}
+
+html[data-theme="dark"] .listen-band .section-title {
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .testimony-viewport::before {
+  background: linear-gradient(90deg, #1a1224 10%, transparent 100%);
+}
+
+html[data-theme="dark"] .testimony-viewport::after {
+  background: linear-gradient(270deg, #1a1224 10%, transparent 100%);
+}
+
+html[data-theme="dark"] .life-card,
+html[data-theme="dark"] .life-textcard,
+html[data-theme="dark"] .life-kids {
+  background: var(--card-bg);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .life-card--gold .life-card__body,
+html[data-theme="dark"] .life-card--cream .life-card__body,
+html[data-theme="dark"] .life-textcard--gold,
+html[data-theme="dark"] .life-textcard--cream,
+html[data-theme="dark"] .life-kids__copy {
+  background: var(--card-bg-soft) !important;
+}
+
+html[data-theme="dark"] .life-card h3,
+html[data-theme="dark"] .life-card p,
+html[data-theme="dark"] .life-textcard h3,
+html[data-theme="dark"] .life-textcard p,
+html[data-theme="dark"] .life-kids__copy h3,
+html[data-theme="dark"] .life-kids__copy p,
+html[data-theme="dark"] .life-card__title-row h3 {
+  color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .life-card p,
+html[data-theme="dark"] .life-textcard p,
+html[data-theme="dark"] .life-kids__copy p {
+  color: var(--fg-soft) !important;
+}
+
+html[data-theme="dark"] .know-stack__card,
+html[data-theme="dark"] .visit-band,
+html[data-theme="dark"] .vision-band,
+html[data-theme="dark"] .unsure-band {
+  background: var(--bg-soft);
+}
+
+html[data-theme="dark"] .build-house-band {
+  background: linear-gradient(180deg, var(--bg-soft) 0%, #1a1020 100%);
+}
+
+/* Dark mode: About + Governance — light panels → dark cards, readable text */
+html[data-theme="dark"] .about-page,
+html[data-theme="dark"] .gov-page {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .about-stage {
+  background: var(--bg);
+}
+
+html[data-theme="dark"] .about-stage__panel,
+html[data-theme="dark"] .about-panel--lead {
+  background: var(--card-bg);
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.35),
+    0 0 0 1px var(--line);
+}
+
+html[data-theme="dark"] .about-jump__link:not(.is-active) {
+  background: var(--card-bg);
+  border-color: var(--line);
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .about-jump__link:not(.is-active) .about-jump__hint {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .about-panel__pillar:not(.is-active) {
+  background: var(--card-bg-soft);
+  border-color: var(--line);
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .about-panel__mandate {
+  border-top-color: var(--line);
+}
+
+html[data-theme="dark"] .about-panel__mandate-nav button {
+  background: var(--card-bg-soft);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .about-panel__mandate-head h4,
+html[data-theme="dark"] .about-panel__body h4 {
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .about-panel__lead {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .about-panel__deep,
+html[data-theme="dark"] .about-panel__kicker {
+  color: var(--fg-soft);
+}
+
+/* Vision hero wallpaper stays light in every theme — keep dark, readable copy */
+html[data-theme="dark"] .about-panel__hero--vision::before {
+  display: none;
+}
+
+html[data-theme="dark"] .about-panel__hero--vision .about-panel__eyebrow {
+  color: var(--purple) !important;
+}
+
+html[data-theme="dark"] .about-panel__hero--vision h3 {
+  color: var(--purple-deep) !important;
+  -webkit-text-fill-color: var(--purple-deep) !important;
+}
+
+html[data-theme="dark"] .about-lead__profile-focus {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .about-lead__profile-blurb {
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .about-faith-band {
+  background: var(--bg-soft);
+}
+
+html[data-theme="dark"] .about-faith__item {
+  background: var(--card-bg);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .about-faith__q {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .about-faith__title {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .about-faith__a {
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .about-chapter {
+  background:
+    radial-gradient(ellipse 70% 50% at 0% 20%, rgba(28, 18, 36, 0.95), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 100% 60%, rgba(26, 16, 28, 0.55), transparent 50%),
+    var(--bg);
+}
+
+html[data-theme="dark"] .about-chapter__panel,
+html[data-theme="dark"] .about-chapter__card {
+  background: var(--card-bg);
+  border-color: var(--line);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme="dark"] .about-chapter__panel--strip,
+html[data-theme="dark"] .about-chapter__card--soft {
+  background: var(--card-bg-soft);
+}
+
+html[data-theme="dark"] .about-chapter__lead,
+html[data-theme="dark"] .about-chapter__h2,
+html[data-theme="dark"] .about-chapter__card h3,
+html[data-theme="dark"] .about-chapter__num {
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .about-chapter__num {
+  color: var(--purple) !important;
+  -webkit-text-fill-color: var(--purple) !important;
+}
+
+html[data-theme="dark"] .about-chapter__copy,
+html[data-theme="dark"] .about-chapter__card p,
+html[data-theme="dark"] .about-chapter__panel p {
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .about-chapter__card blockquote {
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .about-chapter__nav a {
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .about-chapter__nav a:hover,
+html[data-theme="dark"] .about-chapter__next {
+  color: var(--purple) !important;
+}
+
+html[data-theme="dark"] .gov-policy {
+  background: var(--card-bg);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .gov-policy h2 {
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .gov-policy p,
+html[data-theme="dark"] .gov-hero__lede {
+  color: var(--fg-soft);
+}
+
+/* —— Light-surface text contrast (Contact, Give, About) —— */
+/* Headings on white/cream/bg-soft/bg-purple panels */
+:is(
+  .about-chapter__panel,
+  .about-chapter__card,
+  .about-stage__panel,
+  .about-panel__body,
+  .about-panel__pillar:not(.is-active),
+  .about-faith__item,
+  .about-ety__card,
+  .give-why,
+  .give-why__card,
+  .give-way:not(.give-way--featured),
+  .give-panel,
+  .give-methods,
+  .contact-body,
+  .contact-hub,
+  .contact-map-section,
+  .gov-policy,
+  .gov-hero
+) :is(h1, h2, h3, h4, h5, h6, .about-section__title, .about-chapter__h2) {
+  color: var(--fg);
+  -webkit-text-fill-color: var(--fg);
+}
+
+/* Body / secondary copy on light panels */
+:is(
+  .about-chapter__panel,
+  .about-chapter__card,
+  .about-stage__panel,
+  .about-panel__body,
+  .about-faith__item,
+  .about-ety__card,
+  .give-why,
+  .give-why__card,
+  .give-way:not(.give-way--featured),
+  .give-panel,
+  .give-methods,
+  .contact-body,
+  .contact-hub,
+  .contact-map-section,
+  .gov-policy,
+  .gov-hero
+) :is(p, li, em, blockquote):not(.about-chapter__verse):not(.about-panel__verse) {
+  color: var(--fg-soft);
+}
+
+/* Numbered mission pillars + vision chapter numbers */
+.about-panel__pillar:not(.is-active) .about-panel__pillar-num,
+.about-chapter__num {
+  color: var(--purple);
+}
+
+.about-chapter__card > p:first-of-type:not(.about-chapter__verse) {
+  color: var(--fg-soft);
+}
+
+/* Dark mode: panels that stay physically light need dark text */
+html[data-theme="dark"] .give-why {
+  background: var(--bg);
+}
+
+html[data-theme="dark"] .give-panel {
+  background: var(--card-bg);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .give-why__card h3,
+html[data-theme="dark"] .give-way:not(.give-way--featured) h3,
+html[data-theme="dark"] .give-panel h3,
+html[data-theme="dark"] .give-why__intro > p,
+html[data-theme="dark"] .give-methods__intro > p,
+html[data-theme="dark"] .contact-form h2,
+html[data-theme="dark"] .contact-hub h2,
+html[data-theme="dark"] .contact-map-section__head h2 {
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .contact-map-section__caption {
+  background: var(--card-bg-soft);
+  border-top-color: var(--line);
+}
+
+html[data-theme="dark"] .contact-map-section__caption p {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .contact-search {
+  background: var(--card-bg);
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .contact-branch {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .contact-branch.is-on,
+html[data-theme="dark"] .contact-branch:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] .about-panel__pillar:not(.is-active) .about-panel__pillar-num,
+html[data-theme="dark"] .about-chapter__num {
+  color: var(--purple) !important;
+}
+
+html[data-theme="dark"] .about-panel__pillar:not(.is-active) .about-panel__pillar-title {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .about-chapter__card blockquote {
+  color: var(--fg-soft);
+}
+
+/* Mobile / tablet sizing cleanup */
+@media (max-width: 767px) {
+  .site-header .theme-toggle__label {
+    display: none;
+  }
+
+  .section-title {
+    font-size: clamp(1.55rem, 7vw, 2.35rem);
+    white-space: normal;
+  }
+
+  .latest-messages__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .latest-messages__actions .btn-primary,
+  .latest-messages__actions .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .life-kids-row {
+    min-height: auto;
+  }
+
+  .life-kids-row__visual {
+    min-height: 14rem;
+  }
+
+  .msg-hub__title {
+    font-size: clamp(1.85rem, 8vw, 2.6rem);
+  }
+
+  .msg-hub__years {
+    gap: 0.35rem;
+  }
+
+  .msg-hub__year {
+    padding: 0.38rem 0.72rem;
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .section-title.whitespace-nowrap {
+    white-space: normal !important;
+    flex-wrap: wrap !important;
+    justify-content: center;
+  }
+}
+
+/* White / light panels keep dark text even in dark mode */
+html[data-theme="dark"] .events-browse {
+  background: var(--bg);
+}
+
+html[data-theme="dark"] .events-browse .events-happen__title,
+html[data-theme="dark"] .events-browse .events-happen__copy h3,
+html[data-theme="dark"] .events-browse .events-happen__city,
+html[data-theme="dark"] .events-browse .events-happen__copy p,
+html[data-theme="dark"] .events-browse .events-happen__month-title,
+html[data-theme="dark"] .events-browse .events-happen__empty {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .events-browse .events-happen__city,
+html[data-theme="dark"] .events-browse .events-happen__copy p {
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .events-browse .events-browse__back {
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .events-happen__card:hover,
+html[data-theme="dark"] .events-happen__card:focus-visible {
+  background: var(--card-bg);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .life-cta--quiet {
+  color: #1c1c1f;
+}
+
+html[data-theme="dark"] .life-kids-showcase__intro p {
+  color: var(--fg-soft);
 }

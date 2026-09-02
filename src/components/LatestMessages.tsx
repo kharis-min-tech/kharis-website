@@ -49,15 +49,17 @@ export function LatestMessages({ featured, others }: Props) {
               <p className="mt-2 text-sm font-bold uppercase tracking-[0.14em] text-purple">
                 David Antwi
               </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a
-                  href="/messages"
-                  className="btn-primary"
-                >
-                  Watch More Messages
+              <div className="latest-messages__actions">
+                <a href="/messages" className="btn-primary">
+                  Browse All Messages
                 </a>
-                <a href="https://kharis.org/messages/" className="btn-secondary">
-                  Listen to Messages
+                <a
+                  href="https://kharis.org/messages/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-secondary"
+                >
+                  Listen on Podcasts
                 </a>
               </div>
             </div>

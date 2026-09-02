@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { Reveal } from "@/components/Reveal";
+import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
 const WORDS = [
   "Establishing",
@@ -14,6 +15,12 @@ const WORDS = [
 
 export function MissionSection() {
   const ref = useRef<HTMLElement>(null);
+  const theme = useSyncExternalStore(
+    subscribeSiteTheme,
+    getSiteTheme,
+    () => "light" as const,
+  );
+  const isDark = theme === "dark";
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start 0.85", "center 0.35"],
@@ -32,10 +39,7 @@ export function MissionSection() {
           </div>
         </Reveal>
 
-        <h2 className="section-title mx-auto inline-flex max-w-none flex-nowrap items-baseline justify-center gap-x-[0.28em] whitespace-nowrap text-[clamp(1.15rem,3.2vw,2.85rem)]">
-          <span className="text-fg" aria-hidden>
-            “
-          </span>
+        <h2 className="section-title mission-section-title mx-auto max-w-none text-center text-[clamp(1.15rem,3.2vw,2.85rem)]">
           {WORDS.map((word, i) => (
             <MissionWord
               key={`${word}-${i}`}
@@ -43,11 +47,11 @@ export function MissionSection() {
               index={i}
               total={WORDS.length}
               progress={scrollYProgress}
+              isDark={isDark}
+              quoteBefore={i === 0 ? "\u201C" : undefined}
+              quoteAfter={i === WORDS.length - 1 ? "\u201D" : undefined}
             />
           ))}
-          <span className="text-fg" aria-hidden>
-            ”
-          </span>
         </h2>
       </div>
     </section>
@@ -59,18 +63,24 @@ function MissionWord({
   index,
   total,
   progress,
+  isDark,
+  quoteBefore,
+  quoteAfter,
 }: {
   word: string;
   index: number;
   total: number;
   progress: ReturnType<typeof useScroll>["scrollYProgress"];
+  isDark: boolean;
+  quoteBefore?: string;
+  quoteAfter?: string;
 }) {
   const start = index / total;
   const end = Math.min((index + 0.85) / total, 1);
   const color = useTransform(
     progress,
     [start, end],
-    ["#e4e0ea", "#1c1c1f"],
+    isDark ? ["#6e5a78", "#f5eef3"] : ["#e4e0ea", "#1c1c1f"],
   );
   const y = useTransform(progress, [start, end], [18, 0]);
   const opacity = useTransform(progress, [start, end], [0.45, 1]);
@@ -78,9 +88,11 @@ function MissionWord({
   return (
     <motion.span
       style={{ color, y, opacity }}
-      className="inline-block shrink-0 whitespace-nowrap"
+      className="inline whitespace-nowrap [&:not(:last-child)]:mr-[0.28em]"
     >
+      {quoteBefore ? <span aria-hidden>{quoteBefore}</span> : null}
       {word}
+      {quoteAfter ? <span aria-hidden>{quoteAfter}</span> : null}
     </motion.span>
   );
 }

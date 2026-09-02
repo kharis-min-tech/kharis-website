@@ -161,9 +161,27 @@ export function Hero() {
     };
   }, []);
 
+  useEffect(() => {
+    if (revealed) {
+      document.documentElement.classList.add("hero-ready");
+    }
+  }, [revealed]);
+
+  useEffect(() => {
+    return () => {
+      document.documentElement.classList.remove("hero-ready");
+    };
+  }, []);
+
   return (
     <section id="top" className="hero-shell">
       <div className="hero-video-frame" aria-hidden>
+        <div
+          className="hero-video-poster"
+          style={{
+            backgroundImage: `url(https://i.ytimg.com/vi/${HERO_VIDEO_ID}/maxresdefault.jpg)`,
+          }}
+        />
         {src ? (
           <div
             className={`hero-video-scale is-live${revealed ? " is-ready" : ""}`}

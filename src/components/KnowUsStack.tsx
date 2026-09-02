@@ -106,7 +106,7 @@ export function KnowUsStack() {
           <h2 className="section-title mt-2">
             Get to Know <span className="kharis-word">Kharis</span>
           </h2>
-          <p className="mt-4 text-lg text-muted">
+          <p className="mt-4 text-lg text-fg-soft">
             Everything you need, one tap away.
           </p>
         </Reveal>

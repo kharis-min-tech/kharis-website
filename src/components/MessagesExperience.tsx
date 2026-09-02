@@ -95,6 +95,25 @@ type Props = {
 export function MessagesExperience({ messages, latest = [] }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
+  const [yearFilter, setYearFilter] = useState<number | "all">("all");
+
+  const availableYears = useMemo(() => {
+    const years = new Set<number>();
+    for (const m of messages) {
+      if (m.publishedAt) {
+        years.add(new Date(m.publishedAt).getFullYear());
+      }
+    }
+    return [...years].sort((a, b) => b - a);
+  }, [messages]);
+
+  const yearFiltered = useMemo(() => {
+    if (yearFilter === "all") return messages;
+    return messages.filter((m) => {
+      if (!m.publishedAt) return false;
+      return new Date(m.publishedAt).getFullYear() === yearFilter;
+    });
+  }, [messages, yearFilter]);
 
   const wall = useMemo(() => {
     const base = [...ORIGINAL_WALL_POSTERS];
@@ -107,24 +126,42 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
   const results = useMemo(() => {
     const q = query.trim();
     if (!q) return [];
-    return [...messages]
+    return [...yearFiltered]
       .map((m) => ({ m, score: scoreMatch(q, m.title) }))
       .filter((x) => x.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 12)
       .map((x) => x.m);
-  }, [messages, query]);
+  }, [yearFiltered, query]);
 
-  const topRow = useMemo(() => {
-    if (latest.length) return latest.slice(0, 4);
-    return messages.slice(0, 4);
-  }, [latest, messages]);
+  const topRow = useMemo(() => latest.slice(0, 4), [latest]);
+
+  const listenMessages = useMemo(
+    () => (latest.length ? latest : messages.slice(0, 5)),
+    [latest, messages],
+  );
 
   const shelves = useMemo(() => {
     const taken = new Set(topRow.map((m) => m.id));
-    const rest = messages.filter((m) => !taken.has(m.id));
+    const rest = yearFiltered.filter((m) => !taken.has(m.id));
+
+    if (yearFilter !== "all") {
+      if (!rest.length) return [];
+      const rows: MessageVideo[][] = [];
+      for (let i = 0; i < rest.length; i += 4) {
+        rows.push(rest.slice(i, i + 4));
+      }
+      return [
+        {
+          id: `year-${yearFilter}`,
+          title: `Messages from ${yearFilter}`,
+          rows,
+        },
+      ];
+    }
+
     return buildMessageShelves(rest);
-  }, [messages, topRow]);
+  }, [yearFiltered, topRow, yearFilter]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -283,6 +320,26 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
             )}
           </label>
 
+          <div className="msg-hub__years" role="group" aria-label="Filter by year">
+            <button
+              type="button"
+              className={`msg-hub__year${yearFilter === "all" ? " is-on" : ""}`}
+              onClick={() => setYearFilter("all")}
+            >
+              All years
+            </button>
+            {availableYears.map((year) => (
+              <button
+                key={year}
+                type="button"
+                className={`msg-hub__year${yearFilter === year ? " is-on" : ""}`}
+                onClick={() => setYearFilter(year)}
+              >
+                {year}
+              </button>
+            ))}
+          </div>
+
           {query.trim() && (
             <div className="msg-hub__results" role="listbox" aria-label="Search results">
               {results.length === 0 ? (
@@ -346,7 +403,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
           Same Word. Pick the app you already open every day.
         </p>
 
-        <MessagesDeviceCluster messages={topRow.length ? topRow : messages} />
+        <MessagesDeviceCluster messages={listenMessages} />
 
         <div className="msg-listen__steps">
           {LISTEN_PLATFORMS.slice(0, 4).map((p) => (

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="bg-[#0a0614] text-fg">
+    <main className="site-page text-fg">
       <SiteHeader />
       <ContactExperience />
       <SiteFooter />

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, Users, Heart } from "lucide-react";
 import { Icon } from "@/components/Icon";
@@ -16,14 +15,16 @@ const KIDS_GROUPS = [
     title: "Kinder",
     ages: "3–6 years",
     icon: Sparkles,
-    image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80",
+    image:
+      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1200&q=85",
     color: "#fff3d6",
   },
   {
     title: "Super",
     ages: "7–11 years",
     icon: Users,
-    image: "https://images.unsplash.com/photo-1587654780291-39fd940911f8?auto=format&fit=crop&w=900&q=80",
+    image:
+      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=85",
     color: "#f7eef4",
   },
   {
@@ -48,27 +49,19 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
   if (kids) {
     return (
       <div className="life-page life-page--detail life-page--kids">
-        <div className="life-wrap">
-          <header className="life-kids-hero">
-            <div className="life-kids-hero__gallery" aria-hidden>
-              <span
-                className="life-kids-hero__shot life-kids-hero__shot--a"
-                style={{ backgroundImage: "url(/images/young-adults.jpg)" }}
-              />
-              <span
-                className="life-kids-hero__shot life-kids-hero__shot--b"
-                style={{
-                  backgroundImage:
-                    "url(https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1200&q=80)",
-                }}
-              />
-              <span
-                className="life-kids-hero__shot life-kids-hero__shot--c"
-                style={{ backgroundImage: "url(/images/branch-slide-1.jpg)" }}
-              />
+        <div className="life-wrap life-wrap--kids">
+          <header className="life-kids-hero life-kids-hero--v2">
+            <div className="life-kids-hero__blend" aria-hidden>
+              {KIDS_GROUPS.map((group, i) => (
+                <span
+                  key={group.title}
+                  className={`life-kids-hero__bleed life-kids-hero__bleed--${String.fromCharCode(97 + i)}`}
+                  style={{ backgroundImage: `url(${group.image})` }}
+                />
+              ))}
             </div>
             <div className="life-kids-hero__veil" />
-            <Reveal variant="blur" className="life-kids-hero__copy">
+            <Reveal variant="blur" className="life-kids-hero__copy life-kids-hero__copy--v2">
               <Link href="/life" className="life-crumb">
                 Kharis Life
               </Link>
@@ -77,59 +70,62 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
                 <LifeIcon name={page.icon} className="life-detail-hero__ico" />
                 {page.title}
               </h1>
-              <p>{page.intro}</p>
+              <p className="life-kids-hero__lead">{page.intro}</p>
             </Reveal>
           </header>
 
-          <section className="life-kids-groups" aria-label="Age groups">
-            <Reveal variant="up" className="life-kids-groups__intro">
+          <section className="life-kids-showcase" aria-label="Age groups">
+            <Reveal variant="up" className="life-kids-showcase__intro">
               <h2>Three groups, one big family</h2>
               <p>
-                Fun, vibrant, and full of life — each age group meets children
+                Fun, vibrant, and full of life. Each age group meets children
                 where they are with worship, teaching, and friendship.
               </p>
             </Reveal>
 
-            <RevealStagger className="life-kids-groups__grid" stagger={0.08}>
+            <div className="life-kids-showcase__list">
               {page.sections.map((section, i) => {
                 const meta = KIDS_GROUPS[i];
                 const IconComp = meta?.icon ?? Sparkles;
+                const flip = i % 2 === 1;
                 return (
-                  <RevealItem key={section.title} variant="up" className="life-kids-group">
-                    <div className="life-kids-group__media">
+                  <Reveal
+                    key={section.title}
+                    variant="up"
+                    className={`life-kids-row${flip ? " life-kids-row--flip" : ""}`}
+                  >
+                    <div className="life-kids-row__visual">
                       {meta ? (
-                        <Image
-                          src={meta.image}
-                          alt=""
-                          fill
-                          unoptimized={meta.image.startsWith("/images/")}
-                          sizes="(max-width: 700px) 100vw, 33vw"
-                          className="object-cover"
+                        <div
+                          className="life-kids-row__bleed"
+                          style={{ backgroundImage: `url(${meta.image})` }}
+                          role="img"
+                          aria-label={section.title}
                         />
                       ) : null}
-                      <span className="life-kids-group__ages">{meta?.ages}</span>
+                      <span className="life-kids-row__ages">{meta?.ages}</span>
                     </div>
                     <div
-                      className="life-kids-group__body"
+                      className="life-kids-row__copy"
                       style={{ background: meta?.color }}
                     >
-                      <IconComp className="life-kids-group__ico" aria-hidden />
+                      <IconComp className="life-kids-row__ico" aria-hidden />
                       <h3>{section.title}</h3>
                       <p>{section.body}</p>
                     </div>
-                  </RevealItem>
+                  </Reveal>
                 );
               })}
-            </RevealStagger>
+            </div>
           </section>
 
-          <section className="life-kids-video" aria-label="Watch with us">
-            <Reveal variant="up" className="life-kids-video__inner">
+          <section className="life-kids-video life-kids-video--v2" aria-label="Watch with us">
+            <Reveal variant="up" className="life-kids-video__card">
               <div className="life-kids-video__copy">
                 <p className="life-hero__eyebrow">See the vibe</p>
                 <h2>Worship that&apos;s alive</h2>
                 <p>
-                  Our children learn the Word with energy and joy — the same
+                  Our children learn the Word with energy and joy. The same
                   fire you feel in the main hall, made for young hearts.
                 </p>
               </div>

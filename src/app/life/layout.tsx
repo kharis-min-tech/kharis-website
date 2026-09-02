@@ -16,7 +16,7 @@ export default function LifeLayout({
 }) {
   return (
     <main className="bg-bg text-fg">
-      <SiteHeader tone="light" />
+      <SiteHeader />
       <LifeShell>{children}</LifeShell>
       <SiteFooter />
     </main>

@@ -43,7 +43,7 @@ export function VisitSection({ slides = [] }: Props) {
         <Reveal variant="fade" delay={0.15} className="mt-6 text-center">
           <details>
             <summary className="cursor-pointer text-sm font-semibold text-purple">
-              View all {BRANCHES.length} branches
+              View all
             </summary>
             <p className="mt-3">
               <Link href="/locations" className="text-sm font-semibold text-purple underline underline-offset-4">

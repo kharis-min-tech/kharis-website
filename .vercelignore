@@ -1,0 +1,7 @@
+.tools
+node_modules
+.next
+.git
+.cursor
+test-results
+*.tsbuildinfo

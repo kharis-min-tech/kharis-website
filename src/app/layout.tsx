@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { ScrollToTopOnLoad } from "@/components/ScrollToTopOnLoad";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 /* Clean Vive / Apple-like type (not bubble Quicksand) */
@@ -23,10 +24,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={sans.variable}>
+    <html lang="en" className={sans.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('kharis-site-theme');document.documentElement.dataset.theme=t==='dark'?'dark':'light';}catch(e){document.documentElement.dataset.theme='light';}})();`,
+          }}
+        />
+      </head>
       <body className={`${sans.className} antialiased`}>
-        <ScrollToTopOnLoad />
-        {children}
+        <ThemeProvider>
+          <ScrollToTopOnLoad />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

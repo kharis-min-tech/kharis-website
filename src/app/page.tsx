@@ -33,18 +33,20 @@ export default async function Home() {
   const others = messages.slice(1, 5);
 
   return (
-    <main className="bg-bg text-fg">
+    <main className="home-page bg-bg text-fg">
       <SiteHeader />
       <Hero />
-      <MissionSection />
-      <KnowUsStack />
-      {featured ? <LatestMessages featured={featured} others={others} /> : null}
-      <VisitSection slides={branchSlides} />
-      <BuildHouseSection />
-      <TestimoniesSection />
-      <VisionSection />
-      <UnsureBranchCta />
-      <SiteFooter />
+      <div className="home-below-hero">
+        <MissionSection />
+        <KnowUsStack />
+        {featured ? <LatestMessages featured={featured} others={others} /> : null}
+        <VisitSection slides={branchSlides} />
+        <BuildHouseSection />
+        <TestimoniesSection />
+        <VisionSection />
+        <UnsureBranchCta />
+        <SiteFooter />
+      </div>
     </main>
   );
 }

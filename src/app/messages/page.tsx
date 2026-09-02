@@ -19,22 +19,22 @@ export default async function MessagesPage() {
   if (!messages.length && !latest.length) {
     return (
       <main className="msg-page min-h-screen">
-        <SiteHeader tone="dark" />
+        <SiteHeader />
         <div className="mx-auto max-w-3xl px-5 py-32 text-center text-white">
           <h1 className="text-3xl font-extrabold">Messages</h1>
           <p className="mt-4 text-white/70">Check back soon for new teachings.</p>
         </div>
-        <SiteFooter tone="onDark" />
+        <SiteFooter />
       </main>
     );
   }
 
   return (
     <main>
-      <SiteHeader tone="dark" />
+      <SiteHeader />
       <MessagesExperience messages={messages} latest={latest} />
       <div className="msg-footer-wrap">
-        <SiteFooter tone="onDark" />
+        <SiteFooter />
       </div>
     </main>
   );

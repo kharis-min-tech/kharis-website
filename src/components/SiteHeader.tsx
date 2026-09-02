@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Icon } from "@/components/Icon";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
 const aboutChildren = [
   { label: "About Us", href: "/about" },
@@ -34,16 +36,23 @@ type Props = {
 
 export function SiteHeader({ tone = "auto" }: Props) {
   const pathname = usePathname();
+  const siteTheme = useSyncExternalStore(
+    subscribeSiteTheme,
+    getSiteTheme,
+    () => "light" as const,
+  );
+  const siteDark = siteTheme === "dark";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const aboutRef = useRef<HTMLDivElement>(null);
-  const forceDark = tone === "dark" || pathname === "/messages";
+  const forceDark = siteDark || tone === "dark";
   const forceLight =
-    tone === "light" ||
-    pathname === "/governance" ||
-    pathname.startsWith("/about/") ||
-    pathname.startsWith("/life");
+    !siteDark &&
+    (tone === "light" ||
+      pathname === "/governance" ||
+      pathname.startsWith("/about/") ||
+      pathname.startsWith("/life"));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -66,16 +75,20 @@ export function SiteHeader({ tone = "auto" }: Props) {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [aboutOpen]);
 
-  const onDark = forceLight
-    ? false
-    : forceDark
-      ? !open
-      : !scrolled && !open;
-  const solid = forceLight
+  const onDark = siteDark
     ? true
-    : forceDark
-      ? scrolled || open
-      : scrolled || open;
+    : forceLight
+      ? false
+      : forceDark
+        ? !open
+        : !scrolled && !open;
+  const solid = siteDark
+    ? true
+    : forceLight
+      ? true
+      : forceDark
+        ? scrolled || open
+        : scrolled || open;
 
   const linkTone = (active: boolean) =>
     `text-[13px] font-semibold tracking-wide transition ${
@@ -199,13 +212,16 @@ export function SiteHeader({ tone = "auto" }: Props) {
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle onDark={onDark || (forceDark && !open)} />
           <Link
             href="/locations"
             className={`hidden items-center gap-2 rounded-full px-5 py-2.5 text-[0.8rem] font-extrabold transition sm:inline-flex ${
-              onDark || (forceDark && !open)
-                ? "bg-white text-fg hover:bg-white/95"
-                : "btn-primary !px-5 !py-2.5 !text-[0.8rem]"
+              siteDark
+                ? "bg-orange text-[#1c1c1f] hover:bg-[#f2b254]"
+                : onDark || (forceDark && !open)
+                  ? "bg-white text-fg hover:bg-white/95"
+                  : "btn-primary !px-5 !py-2.5 !text-[0.8rem]"
             }`}
           >
             Find a Branch

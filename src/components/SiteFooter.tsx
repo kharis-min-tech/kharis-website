@@ -1,15 +1,24 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { useSyncExternalStore } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Reveal } from "@/components/Reveal";
+import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
 type Props = {
   tone?: "onLight" | "onDark";
 };
 
-export function SiteFooter({ tone = "onLight" }: Props) {
-  const dark = tone === "onDark";
+export function SiteFooter({ tone }: Props) {
+  const theme = useSyncExternalStore(
+    subscribeSiteTheme,
+    getSiteTheme,
+    () => "light" as const,
+  );
+  const resolved = tone ?? (theme === "dark" ? "onDark" : "onLight");
+  const dark = resolved === "onDark";
   const linkHover = dark ? "hover:text-white" : "hover:text-purple";
   const muted = dark ? "text-white/55" : "text-muted";
   const heading = dark ? "text-white" : "text-fg";
@@ -182,13 +191,25 @@ export function SiteFooter({ tone = "onLight" }: Props) {
             </div>
           </div>
           </div>
-          <p
-            className={`site-footer__legal ${
-              dark ? "text-white/40" : "text-muted"
-            }`}
-          >
-            © {new Date().getFullYear()} Kharis Ministries · Charity Number 1139291
-          </p>
+          <div className="site-footer__bottom">
+            <p
+              className={`site-footer__legal ${
+                dark ? "text-white/40" : "text-muted"
+              }`}
+            >
+              2026 Kharis Ministries | All Rights Reserved | Charity Number
+              1139291
+            </p>
+            <Image
+              src="/images/ea-logo-evangelical-alliance.png"
+              alt="Evangelical Alliance"
+              width={180}
+              height={48}
+              className={`site-footer__ea-logo ${
+                dark ? "" : "site-footer__ea-logo--on-light"
+              }`}
+            />
+          </div>
         </div>
       </Reveal>
     </footer>

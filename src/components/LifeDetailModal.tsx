@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -78,19 +79,22 @@ export function LifeDetailModal({
             exit={reduce ? undefined : { opacity: 0, y: 20, scale: 0.98 }}
             transition={{ type: "spring", stiffness: 280, damping: 26 }}
           >
-            <button
-              type="button"
-              className="life-modal__close life-modal__close--video"
-              onClick={onClose}
-              aria-label="Close"
-            >
-              ×
-            </button>
+            <div className="life-modal__toolbar">
+              <p className="life-modal__toolbar-label">{category.badge}</p>
+              <button
+                type="button"
+                className="life-modal__close"
+                onClick={onClose}
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" strokeWidth={2.25} />
+              </button>
+            </div>
 
             <div className="life-modal__video-wrap">
               <iframe
                 src={youtubeEmbedSrc(videoId)}
-                title={`${category.title} — Kharis Life`}
+                title={`${category.title} | Kharis Life`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 className="life-modal__video"
@@ -98,9 +102,6 @@ export function LifeDetailModal({
             </div>
 
             <div className="life-modal__body life-modal__body--video">
-              <p className="life-modal__eyebrow life-modal__eyebrow--inline">
-                {category.badge}
-              </p>
               <h2 id={titleId} className="life-modal__title">
                 <LifeIcon name={category.icon} className="life-modal__ico" />
                 {category.title}
