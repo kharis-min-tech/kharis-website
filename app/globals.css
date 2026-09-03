@@ -1,0 +1,1108 @@
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #faf8ff;
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+  --inverse-on-surface: #f1f0f8;
+  --inverse-primary: #d2bbff;
+  --inverse-surface: #2f3036;
+  --on-background: #1a1b21;
+  --on-error: #ffffff;
+  --on-error-container: #93000a;
+  --on-primary: #ffffff;
+  --on-primary-container: #ede0ff;
+  --on-primary-fixed: #25005a;
+  --on-primary-fixed-variant: #5a00c6;
+  --on-secondary: #ffffff;
+  --on-secondary-container: #756100;
+  --on-secondary-fixed: #221b00;
+  --on-secondary-fixed-variant: #544600;
+  --on-surface: #1a1b21;
+  --on-surface-variant: #4a4455;
+  --on-tertiary: #ffffff;
+  --on-tertiary-container: #e6e6e6;
+  --on-tertiary-fixed: #1b1b1b;
+  --on-tertiary-fixed-variant: #474747;
+  --outline: #7b7487;
+  --outline-variant: #ccc3d8;
+  --primary: #630ed4;
+  --primary-container: #7c3aed;
+  --primary-fixed: #eaddff;
+  --primary-fixed-dim: #d2bbff;
+  --secondary: #705d00;
+  --secondary-container: #ffde59;
+  --secondary-fixed: #ffe16e;
+  --secondary-fixed-dim: #e4c542;
+  --surface: #faf8ff;
+  --surface-bright: #faf8ff;
+  --surface-container: #eeedf5;
+  --surface-container-high: #e8e7ef;
+  --surface-container-highest: #e2e2e9;
+  --surface-container-low: #f4f3fb;
+  --surface-container-lowest: #ffffff;
+  --surface-dim: #dad9e1;
+  --surface-tint: #732ee4;
+  --surface-variant: #e2e2e9;
+  --tertiary: #4f4f4f;
+  --tertiary-container: #676767;
+  --tertiary-fixed: #e2e2e2;
+  --tertiary-fixed-dim: #c6c6c6;
+}
+
+.dark {
+  --background: #121014;
+  --error: #ffb4ab;
+  --error-container: #93000a;
+  --inverse-on-surface: #1a1b21;
+  --inverse-primary: #630ed4;
+  --inverse-surface: #e4e1e9;
+  --on-background: #ece6f0;
+  --on-error: #690005;
+  --on-error-container: #ffdad6;
+  --on-primary: #ffffff;
+  --on-primary-container: #ede0ff;
+  --on-primary-fixed: #25005a;
+  --on-primary-fixed-variant: #d2bbff;
+  --on-secondary: #3b2f00;
+  --on-secondary-container: #221b00;
+  --on-secondary-fixed: #221b00;
+  --on-secondary-fixed-variant: #e4c542;
+  --on-surface: #ece6f0;
+  --on-surface-variant: #cac4d0;
+  --on-tertiary: #1b1b1b;
+  --on-tertiary-container: #e6e6e6;
+  --on-tertiary-fixed: #1b1b1b;
+  --on-tertiary-fixed-variant: #c6c6c6;
+  --outline: #948f99;
+  --outline-variant: #49454f;
+  --primary: #7c3aed;
+  --primary-container: #7c3aed;
+  --primary-fixed: #d2bbff;
+  --primary-fixed-dim: #b79bff;
+  --secondary: #fde047;
+  --secondary-container: #ffde59;
+  --secondary-fixed: #ffe16e;
+  --secondary-fixed-dim: #e4c542;
+  --surface: #17151a;
+  --surface-bright: #38343d;
+  --surface-container: #1f1c24;
+  --surface-container-high: #29252f;
+  --surface-container-highest: #34303a;
+  --surface-container-low: #1a171d;
+  --surface-container-lowest: #0d0b10;
+  --surface-dim: #121014;
+  --surface-tint: #d2bbff;
+  --surface-variant: #29252f;
+  --tertiary: #c6c6c6;
+  --tertiary-container: #4f4f4f;
+  --tertiary-fixed: #e2e2e2;
+  --tertiary-fixed-dim: #c6c6c6;
+}
+
+/* Dark-mode remapping of legacy hardcoded utilities so pages match the
+   dark mockups without touching every route. */
+.dark .bg-white { background-color: var(--surface-container-low); }
+.dark .bg-black { background-color: var(--surface-container-lowest); }
+.dark .text-black { color: var(--on-surface); }
+.dark .border-black,
+.dark .border-\[\#000000\],
+.dark .border-\[\#000\] { border-color: var(--on-surface); }
+
+.dark .comic-border,
+.dark .border-heavy,
+.dark .border-heavier,
+.dark .neo-brutal-border,
+.dark .brutalist-border,
+.dark .brutalist-border-thick { border-color: var(--on-surface); }
+
+.dark .neo-shadow,
+.dark .neo-brutal-shadow,
+.dark .hard-shadow-sm { box-shadow: 4px 4px 0px 0px var(--on-surface); }
+.dark .neo-shadow-sm { box-shadow: 2px 2px 0px 0px var(--on-surface); }
+.dark .neo-shadow-lg,
+.dark .neo-brutal-shadow-lg,
+.dark .brutalist-shadow-lg { box-shadow: 8px 8px 0px 0px var(--on-surface); }
+.dark .brutalist-shadow,
+.dark .hard-shadow,
+.dark .neo-shadow-purple { box-shadow: 6px 6px 0px 0px var(--on-surface); }
+.dark .hard-shadow-primary { box-shadow: 4px 4px 0px 0px var(--primary); }
+.dark .neo-shadow-hover:hover,
+.dark .neo-brutal-shadow:hover,
+.dark .btn-hover:hover,
+.dark .hover-press:hover,
+.dark .neo-button-hover:hover,
+.dark .brutalist-shadow-hover:hover,
+.dark .btn-press:active,
+.dark .active-press:active { box-shadow: 2px 2px 0px 0px var(--on-surface); }
+.dark .hover-lift:hover { box-shadow: 6px 6px 0px 0px var(--on-surface); }
+.dark .halftone { background-image: radial-gradient(#fff 10%, transparent 11%); }
+.dark .halftone-overlay { background-image: radial-gradient(rgba(255,255,255,0.12) 2px, transparent 2px); }
+.dark .input-focus:focus {
+  background-color: var(--surface-container-high);
+  box-shadow: 4px 4px 0px 0px var(--secondary-container);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-track { background: var(--surface-container); }
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 2px solid var(--on-surface);
+}
+
+
+@theme inline {
+  --color-background: var(--background);
+  --color-error: var(--error);
+  --color-error-container: var(--error-container);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-inverse-primary: var(--inverse-primary);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-on-background: var(--on-background);
+  --color-on-error: var(--on-error);
+  --color-on-error-container: var(--on-error-container);
+  --color-on-primary: var(--on-primary);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+  --color-on-secondary: var(--on-secondary);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-primary: var(--primary);
+  --color-primary-container: var(--primary-container);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-secondary: var(--secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-surface: var(--surface);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-tint: var(--surface-tint);
+  --color-surface-variant: var(--surface-variant);
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --spacing-panel-overlap: -32px;
+  --spacing-margin-desktop: 64px;
+  --spacing-unit: 4px;
+  --spacing-gutter: 24px;
+  --spacing-margin-mobile: 16px;
+  --spacing-base: 8px;
+  --spacing-stack-md: 24px;
+  --spacing-stack-lg: 48px;
+  --spacing-stack-sm: 12px;
+  --font-body-md: "Hanken Grotesk", sans-serif;
+  --font-display-xl-mobile: "Anton", sans-serif;
+  --font-headline-lg: "Anton", sans-serif;
+  --font-display-xl: "Anton", sans-serif;
+  --font-body-lg: "Hanken Grotesk", sans-serif;
+  --font-label-comic: "Bricolage Grotesque", sans-serif;
+  --font-headline-lg-mobile: "Anton", sans-serif;
+  --font-label-sm: "Space Mono", sans-serif;
+  --font-label-md: "Space Mono", sans-serif;
+  --font-display-lg: "Anton", sans-serif;
+  --font-headline-md: "Anton", sans-serif;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 1.6;
+  --text-body-md--font-weight: 400;
+  --text-display-xl-mobile: 48px;
+  --text-display-xl-mobile--line-height: 48px;
+  --text-display-xl-mobile--letter-spacing: -0.01em;
+  --text-display-xl-mobile--font-weight: 400;
+  --text-headline-lg: 48px;
+  --text-headline-lg--line-height: 1.2;
+  --text-headline-lg--font-weight: 400;
+  --text-display-xl: 80px;
+  --text-display-xl--line-height: 80px;
+  --text-display-xl--letter-spacing: -0.02em;
+  --text-display-xl--font-weight: 400;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 500;
+  --text-label-comic: 14px;
+  --text-label-comic--line-height: 20px;
+  --text-label-comic--letter-spacing: 0.05em;
+  --text-label-comic--font-weight: 700;
+  --text-headline-lg-mobile: 36px;
+  --text-headline-lg-mobile--line-height: 1.2;
+  --text-headline-lg-mobile--font-weight: 400;
+  --text-label-sm: 12px;
+  --text-label-sm--line-height: 1.2;
+  --text-label-sm--font-weight: 500;
+  --text-label-md: 14px;
+  --text-label-md--line-height: 1.2;
+  --text-label-md--letter-spacing: 0.05em;
+  --text-label-md--font-weight: 700;
+  --text-display-lg: 72px;
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: 0.02em;
+  --text-display-lg--font-weight: 400;
+  --text-headline-md: 32px;
+  --text-headline-md--line-height: 1.2;
+  --text-headline-md--font-weight: 400;
+}
+
+@layer base {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--on-background);
+    font-family: var(--font-body-md);
+  }
+}
+
+.material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+.halftone-bg {
+            background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+.brutalist-shadow {
+            box-shadow: 6px 6px 0px 0px rgba(27,27,31,1);
+        }
+.brutalist-shadow-hover:hover {
+            box-shadow: 2px 2px 0px 0px rgba(27,27,31,1);
+            transform: translate(4px, 4px);
+        }
+.comic-border {
+            border: 4px solid #1b1b1f;
+        }
+canvas#shader-canvas-ANIMATION_26 {
+            opacity: 0.4;
+        }
+.hero-panel-gradient {
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+        }
+.halftone-pattern {
+            background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px);
+            background-size: 8px 8px;
+        }
+.neo-shadow {
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+        }
+.neo-shadow-lg {
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+        }
+.neo-shadow-hover:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+.border-heavy {
+            border: 2px solid #000000;
+        }
+.border-heavier {
+            border: 4px solid #000000;
+        }
+.neo-brutal-border {
+            border: 2px solid #000000;
+        }
+.neo-brutal-shadow {
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+        }
+.neo-brutal-shadow-lg {
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+        }
+.hover-lift:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+        }
+.active-press:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+
+.brutalist-border {
+            border: 2px solid #000000;
+        }
+.brutalist-shadow-lg {
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+        }
+.btn-hover:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+.input-focus:focus {
+            outline: none;
+            border-width: 3px;
+            background-color: #faf8ff;
+            box-shadow: 4px 4px 0px 0px #ffde59;
+        }
+.halftone-overlay {
+            background-image: radial-gradient(rgba(0,0,0,0.1) 2px, transparent 2px);
+            background-size: 8px 8px;
+        }
+.neo-button-hover:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+.hover-press:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+        }
+.custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+.custom-scrollbar::-webkit-scrollbar-track {
+            background: #faf8ff;
+        }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #630ed4;
+            border: 2px solid #000;
+        }
+.neo-shadow-purple {
+            box-shadow: 6px 6px 0px 0px #630ed4;
+        }
+.hover-press:active,
+.btn-press:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
+        }
+.skew-hover:hover {
+            transform: skewX(-2deg) scale(1.02);
+        }
+.hard-shadow {
+            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+        }
+.hard-shadow-sm {
+            box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+        }
+.hard-shadow-primary {
+            box-shadow: 4px 4px 0px 0px #630ed4;
+        }
+.btn-press:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+        }
+.hero-gradient {
+            background: linear-gradient(to bottom, rgba(26, 27, 33, 0.4), rgba(26, 27, 33, 1));
+        }
+.neo-shadow-sm {
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+.halftone {
+            background-image: radial-gradient(#000 10%, transparent 11%);
+            background-size: 8px 8px;
+            opacity: 0.05;
+        }
+.active-neo-shadow {
+            box-shadow: 2px 2px 0px 0px rgba(19,16,22,1);
+            transform: translate(2px, 2px);
+        }
+.brutalist-border-thick {
+            border: 4px solid #000000;
+        }
+
+.dark .halftone-bg,
+.dark .halftone-pattern {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1.5px, transparent 1.5px);
+}
+
+/* Inverted "dark band" tokens should stay dark in dark mode. */
+.dark .bg-on-background,
+.dark .bg-on-surface,
+.dark .bg-inverse-surface { background-color: var(--surface-container-lowest); }
+.dark .text-background,
+.dark .text-surface,
+.dark .text-inverse-on-surface { color: var(--on-surface); }
+
+/* Light-colored fills keep dark, legible text in dark mode. */
+.dark .bg-secondary-container,
+.dark .bg-secondary-container *,
+.dark .bg-secondary,
+.dark .bg-secondary *,
+.dark .bg-secondary-fixed,
+.dark .bg-secondary-fixed *,
+.dark .bg-secondary-fixed-dim,
+.dark .bg-secondary-fixed-dim * { color: var(--on-secondary-fixed); }
+.dark .bg-primary-fixed,
+.dark .bg-primary-fixed *,
+.dark .bg-primary-fixed-dim,
+.dark .bg-primary-fixed-dim *,
+.dark .bg-tertiary-fixed,
+.dark .bg-tertiary-fixed *,
+.dark .bg-tertiary-fixed-dim,
+.dark .bg-tertiary-fixed-dim * { color: var(--on-primary-fixed); }
+
+/* ---------------------------------------------------------------
+   Global interaction polish: nothing should feel static on hover.
+   --------------------------------------------------------------- */
+a,
+button,
+input,
+select,
+textarea,
+[role="button"] {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease,
+    opacity 200ms ease;
+}
+
+a:hover,
+button:hover,
+[role="button"]:hover {
+  cursor: pointer;
+}
+
+/* Neo-brutalist 3D press: shadow acts as depth, pressing collapses it. */
+.btn-neo,
+.brutalist-shadow,
+.brutalist-shadow-lg,
+.neo-shadow,
+.neo-shadow-sm,
+.neo-shadow-lg,
+.neo-shadow-purple,
+.hard-shadow,
+.hard-shadow-sm,
+.hard-shadow-primary,
+.hover-press,
+.btn-press {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease;
+  will-change: transform;
+}
+
+.btn-neo {
+  border: 2px solid var(--on-background);
+  box-shadow: 4px 4px 0px 0px var(--on-background);
+}
+
+.btn-neo:hover,
+button.brutalist-shadow:hover,
+a.brutalist-shadow:hover,
+button.brutalist-shadow-lg:hover,
+a.brutalist-shadow-lg:hover,
+button.neo-shadow:hover,
+a.neo-shadow:hover,
+button.neo-shadow-sm:hover,
+a.neo-shadow-sm:hover,
+button.neo-shadow-lg:hover,
+a.neo-shadow-lg:hover,
+button.neo-shadow-purple:hover,
+a.neo-shadow-purple:hover,
+button.hard-shadow:hover,
+a.hard-shadow:hover,
+button.hard-shadow-sm:hover,
+a.hard-shadow-sm:hover,
+button.hard-shadow-primary:hover,
+a.hard-shadow-primary:hover,
+[role="button"].neo-shadow:hover,
+[role="button"].brutalist-shadow:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--on-background);
+}
+
+.btn-neo:active,
+button.brutalist-shadow:active,
+a.brutalist-shadow:active,
+button.brutalist-shadow-lg:active,
+a.brutalist-shadow-lg:active,
+button.neo-shadow:active,
+a.neo-shadow:active,
+button.neo-shadow-sm:active,
+a.neo-shadow-sm:active,
+button.neo-shadow-lg:active,
+a.neo-shadow-lg:active,
+button.neo-shadow-purple:active,
+a.neo-shadow-purple:active,
+button.hard-shadow:active,
+a.hard-shadow:active,
+button.hard-shadow-sm:active,
+a.hard-shadow-sm:active,
+button.hard-shadow-primary:active,
+a.hard-shadow-primary:active,
+[role="button"].neo-shadow:active,
+[role="button"].brutalist-shadow:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--on-background);
+}
+
+/* Non-interactive cards keep a gentle lift instead of a press. */
+div.brutalist-shadow:hover,
+div.neo-shadow:hover,
+div.neo-shadow-lg:hover,
+div.hard-shadow:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--on-background);
+}
+
+
+/* Filled buttons flip to the accent colour on hover. */
+button.bg-primary:hover,
+a.bg-primary:hover,
+button.bg-primary-container:hover,
+a.bg-primary-container:hover {
+  background-color: var(--secondary-container);
+  color: var(--on-secondary-container);
+}
+button.bg-secondary-container:hover,
+a.bg-secondary-container:hover,
+button.bg-secondary:hover,
+a.bg-secondary:hover {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+/* Outline / ghost buttons fill in on hover. */
+button.bg-surface:hover,
+a.bg-surface:hover,
+button.bg-white:hover,
+a.bg-white:hover,
+button.bg-transparent:hover,
+a.bg-transparent:hover {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+button.bg-primary:hover .material-symbols-outlined,
+a.bg-primary:hover .material-symbols-outlined,
+button.bg-white:hover .material-symbols-outlined,
+a.bg-white:hover .material-symbols-outlined,
+button.bg-surface:hover .material-symbols-outlined,
+a.bg-surface:hover .material-symbols-outlined {
+  color: inherit;
+}
+
+/* Inputs get a visible focus/hover state. */
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--primary);
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 4px 4px 0 0 var(--primary);
+}
+
+/* Smooth in-page navigation that clears the fixed header. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Keyboard focus ring for links and buttons. */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* Media never overflows its container. */
+img, video { max-width: 100%; }
+
+
+
+/* Card lift for bordered content blocks that already carry a hard shadow. */
+.hover-card {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.hover-card:hover {
+  transform: translate(-2px, -2px);
+}
+
+/* Comfortable rhythm: never let a section hug the viewport edge. */
+main > section,
+main > div > section {
+  scroll-margin-top: 6rem;
+}
+
+/* Fixed-tone and inverse filled buttons also react on hover. */
+button.bg-primary-fixed:hover,
+a.bg-primary-fixed:hover,
+button.bg-primary-fixed-dim:hover,
+a.bg-primary-fixed-dim:hover {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+button.bg-secondary-fixed:hover,
+a.bg-secondary-fixed:hover,
+button.bg-secondary-fixed-dim:hover,
+a.bg-secondary-fixed-dim:hover {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+button.bg-on-background:hover,
+a.bg-on-background:hover,
+button.bg-inverse-surface:hover,
+a.bg-inverse-surface:hover,
+button.bg-black:hover,
+a.bg-black:hover {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+/* Bordered text links pick up the accent. */
+a.brutalist-border:hover,
+button.brutalist-border:hover,
+a.neo-brutal-border:hover,
+button.neo-brutal-border:hover {
+  border-color: var(--primary);
+}
+
+/* Legacy hardcoded button fills still get a hover state. */
+:is(button, a).bg-\[\#d2bbff\]:hover,
+:is(button, a).bg-\[\#7c3aed\]:hover,
+:is(button, a).bg-\[\#6025c0\]:hover,
+:is(button, a).bg-\[\#151218\]:hover,
+:is(button, a).bg-\[\#37333a\]:hover,
+:is(button, a).bg-\[\#2c292f\]:hover {
+  background-color: var(--secondary-container) !important;
+  color: var(--on-secondary-container) !important;
+}
+:is(button, a).bg-\[\#f7be1d\]:hover {
+  background-color: var(--primary) !important;
+  color: var(--on-primary) !important;
+}
+
+/* ---------------------------------------------------------------
+   Smooth theme switch: only animate while the toggle is running so
+   normal interactions stay snappy.
+   --------------------------------------------------------------- */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color 320ms ease,
+    color 320ms ease,
+    border-color 320ms ease,
+    box-shadow 320ms ease,
+    fill 320ms ease,
+    stroke 320ms ease !important;
+  transition-delay: 0ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition,
+  .theme-transition *,
+  .theme-transition *::before,
+  .theme-transition *::after {
+    transition: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Dark-mode readability: legacy grey text utilities were authored
+   for white cards, so they go near-invisible on dark surfaces.
+   --------------------------------------------------------------- */
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700,
+.dark .text-gray-100,
+.dark .text-gray-200 { color: var(--on-surface); }
+.dark .text-gray-600,
+.dark .text-gray-500,
+.dark .text-gray-400 { color: var(--on-surface-variant); }
+
+/* Purple body text is too dim against near-black; use the lighter tint. */
+.dark .text-primary,
+.dark .text-\[\#7c3aed\],
+.dark .text-\[\#630ed4\],
+.dark .text-\[\#6025c0\] { color: var(--primary-fixed); }
+.dark .text-\[\#151218\],
+.dark .text-\[\#1b1b1f\] { color: var(--on-surface); }
+.dark .text-on-surface-variant { color: #cfc7d8; }
+
+/* Keep dark accent text readable when it sits on light fixed fills. */
+.dark .bg-secondary-container .text-\[\#7c3aed\],
+.dark .bg-secondary .text-\[\#7c3aed\],
+.dark .bg-\[\#f7be1d\] .text-\[\#7c3aed\],
+.dark .bg-primary-fixed .text-\[\#7c3aed\],
+.dark .bg-primary-fixed-dim .text-\[\#7c3aed\] { color: #4a0fa8; }
+
+/* Muted overlays over photos need a touch more contrast in dark mode. */
+.dark .hero-panel-gradient {
+  background: linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.55) 50%, transparent 100%);
+}
+
+/* Inverse text tokens used on permanently-dark bands must stay light. */
+.dark .text-surface-variant,
+.dark .text-surface-container,
+.dark .text-surface-container-low,
+.dark .text-surface-container-lowest,
+.dark .text-surface-bright,
+.dark .text-surface-dim { color: var(--on-surface); }
+
+/* --- Dark-mode text-colour cascade, ordered from broad to specific --- */
+
+/* 1. Dark surfaces (incl. remapped white/black cards) own light text. */
+.dark :is(.bg-white, .bg-black, .bg-surface, .bg-surface-container, .bg-background,
+  .bg-surface-container-lowest,
+  .bg-surface-container-low, .bg-surface-container-high, .bg-on-background, .bg-on-surface, .bg-inverse-surface),
+.dark :is(.bg-white, .bg-black, .bg-surface, .bg-surface-container, .bg-background,
+  .bg-surface-container-lowest,
+  .bg-surface-container-low, .bg-surface-container-high, .bg-on-background, .bg-on-surface, .bg-inverse-surface) * { color: var(--on-surface); }
+
+/* 2. Light fills (yellow/pale purple) always keep dark ink, even nested
+      inside a dark surface. */
+.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
+  .bg-secondary-fixed-dim, .bg-primary-fixed, .bg-primary-fixed-dim,
+  .bg-tertiary-fixed, .bg-tertiary-fixed-dim,
+  .bg-\[\#d2bbff\], .bg-\[\#eaddff\], .bg-\[\#f7be1d\], .bg-\[\#ffde59\], .bg-\[\#ffd400\]),
+.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
+  .bg-secondary-fixed-dim, .bg-primary-fixed, .bg-primary-fixed-dim,
+  .bg-tertiary-fixed, .bg-tertiary-fixed-dim,
+  .bg-\[\#d2bbff\], .bg-\[\#eaddff\], .bg-\[\#f7be1d\], .bg-\[\#ffde59\], .bg-\[\#ffd400\]) * { color: #221b00; }
+
+/* 3. ...but a dark card nested inside a light fill flips back to light text. */
+.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
+  .bg-secondary-fixed-dim) :is(.bg-white, .bg-black, .bg-surface, .bg-surface-container, .bg-background, .bg-surface-container-lowest, .bg-surface-container-low, .bg-surface-container-high, .bg-on-background, .bg-on-surface, .bg-inverse-surface),
+.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
+  .bg-secondary-fixed-dim) :is(.bg-white, .bg-black, .bg-surface, .bg-surface-container, .bg-background, .bg-surface-container-lowest, .bg-surface-container-low, .bg-surface-container-high, .bg-on-background, .bg-on-surface, .bg-inverse-surface) * { color: var(--on-surface); }
+
+/* 3b. Same flip for dark cards nested inside remapped legacy gray bands. */
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(.bg-black, .bg-background, .bg-on-background, .bg-on-surface, .bg-inverse-surface),
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(.bg-black, .bg-background, .bg-on-background, .bg-on-surface, .bg-inverse-surface) * { color: var(--on-surface); }
+
+/* 3c. Saturated purple fills nested in a light band keep their own light ink. */
+.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
+  .bg-secondary-fixed-dim, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(.bg-primary, .bg-primary-container),
+.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
+  .bg-secondary-fixed-dim, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(.bg-primary, .bg-primary-container) * { color: var(--on-primary); }
+
+/* 3d. Testimonial accent ink: hardcoded brand hues are too dark on the dark
+       card, so soften them to a calm lilac in dark mode only. */
+.dark .testimonial-accent { color: var(--primary-fixed) !important; }
+
+
+
+/* ---------------------------------------------------------------
+   Dark mode: legacy hardcoded light surfaces (footers, bands) and
+   the dark ink written for them.
+   --------------------------------------------------------------- */
+.dark .bg-gray-50,
+.dark .bg-gray-100 { background-color: var(--surface-container-low); }
+.dark .bg-gray-200 { background-color: var(--surface-container); }
+.dark .bg-gray-300 { background-color: var(--surface-container-high); }
+
+.dark .border-gray-900,
+.dark .border-gray-800 { border-color: var(--on-surface); }
+.dark .border-gray-300,
+.dark .border-gray-200 { border-color: var(--outline-variant); }
+
+/* Dark ink hexes authored for light bands must lighten on dark surfaces. */
+.dark .text-\[\#826200\],
+.dark .text-\[\#3f2e00\] { color: var(--secondary); }
+.dark .text-\[\#3f008e\] { color: var(--primary-fixed); }
+
+/* ...unless they sit on a light fill, where they stay dark. */
+.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
+  .bg-secondary-fixed-dim, .bg-primary-fixed, .bg-primary-fixed-dim,
+  .bg-\[\#f7be1d\], .bg-\[\#ffde59\], .bg-\[\#d2bbff\], .bg-\[\#eaddff\])
+  :is(.text-\[\#826200\], .text-\[\#3f2e00\], .text-\[\#3f008e\]) { color: #221b00; }
+
+/* Remapped light surfaces own light text for everything inside them. */
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300),
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) * { color: var(--on-surface); }
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed, .bg-secondary-fixed-dim,
+      .bg-primary-fixed, .bg-primary-fixed-dim, .bg-\[\#f7be1d\], .bg-\[\#ffde59\],
+      .bg-\[\#d2bbff\], .bg-\[\#eaddff\]),
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed, .bg-secondary-fixed-dim,
+      .bg-primary-fixed, .bg-primary-fixed-dim, .bg-\[\#f7be1d\], .bg-\[\#ffde59\],
+      .bg-\[\#d2bbff\], .bg-\[\#eaddff\]) * { color: #221b00; }
+
+/* Halftone texture layers must never tint the text above them. */
+.dark .halftone-bg.text-gray-200,
+.dark .halftone-bg.text-gray-100 { color: rgba(255,255,255,0.06); }
+
+/* Brand-ink hexes win over the generic light-surface text rule. */
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) .text-\[\#826200\],
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) .text-\[\#3f2e00\] { color: var(--secondary); }
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) .text-\[\#3f008e\] { color: var(--primary-fixed); }
+
+/* ============================================================
+   Motion layer — scroll reveals, hover life, ambient loops
+   ============================================================ */
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Diagonal section transitions — the block wipes in on an angle. */
+.reveal-diagonal-left,
+.reveal-diagonal-right {
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    clip-path 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+.reveal-diagonal-left {
+  transform: translate3d(-3%, 22px, 0) skewY(1.6deg);
+  clip-path: polygon(0 0, 0 0, -30% 100%, -30% 100%);
+}
+.reveal-diagonal-right {
+  transform: translate3d(3%, 22px, 0) skewY(-1.6deg);
+  clip-path: polygon(100% 0, 130% 0, 130% 100%, 100% 100%);
+}
+.reveal-diagonal-left.is-revealed,
+.reveal-diagonal-right.is-revealed {
+  transform: none;
+  clip-path: polygon(-25% -25%, 125% -25%, 125% 125%, -25% 125%);
+}
+
+
+@keyframes kp-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes kp-pop {
+  0% { transform: scale(0.94); opacity: 0; }
+  60% { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes kp-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-float { animation: kp-float 5s ease-in-out infinite; }
+.animate-pop { animation: kp-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-marquee { animation: kp-marquee 22s linear infinite; }
+
+/* Images gently scale inside their brutalist frames. */
+.brutalist-border img,
+.comic-border img,
+.hover-card img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.brutalist-border:hover img,
+.comic-border:hover img,
+.hover-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Buttons and links get a springy press across the whole site. */
+main button,
+main a[class*="brutalist"],
+main a[class*="comic"],
+header a,
+header button {
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.18s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+main button:active,
+main a[class*="brutalist"]:active,
+main a[class*="comic"]:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+/* Material icons inside buttons nudge on hover. */
+button:hover > .material-symbols-outlined,
+a:hover > .material-symbols-outlined {
+  transform: translateX(2px);
+  transition: transform 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll,
+  .reveal-diagonal-left,
+  .reveal-diagonal-right,
+  .animate-float,
+  .animate-pop,
+  .animate-marquee {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* ============================================================
+   Glow layer — soft radiant highlights instead of motion
+   ============================================================ */
+
+/* Primary buttons and CTAs radiate a soft brand glow. */
+main .bg-primary,
+main a[class*="bg-primary"],
+main button[class*="bg-primary"],
+.btn-neo {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 40%, transparent),
+    0 8px 28px -6px color-mix(in oklab, var(--primary) 45%, transparent);
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.2s ease;
+}
+main .bg-primary:hover,
+main a[class*="bg-primary"]:hover,
+main button[class*="bg-primary"]:hover,
+.btn-neo:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 60%, transparent),
+    0 10px 42px -4px color-mix(in oklab, var(--primary) 70%, transparent);
+  transform: translateY(-2px);
+}
+
+/* Cards lift with a warm glow instead of tilting. */
+.comic-border,
+.brutalist-border,
+.neo-brutal-border,
+.hover-card {
+  transition:
+    box-shadow 0.28s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+.comic-border:hover,
+.brutalist-border:hover,
+.neo-brutal-border:hover {
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent),
+    0 14px 44px -10px color-mix(in oklab, var(--primary) 45%, transparent);
+  transform: translateY(-3px);
+}
+
+/* Inputs glow softly when focused. */
+main input:focus,
+main textarea:focus,
+main select:focus {
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--primary) 35%, transparent),
+    0 6px 24px -8px color-mix(in oklab, var(--primary) 50%, transparent);
+}
+
+/* Images pick up a faint halo on hover. */
+main img {
+  transition: filter 0.35s ease, box-shadow 0.35s ease;
+}
+main a:hover img,
+main article:hover img {
+  filter: brightness(1.06) saturate(1.08);
+}
+
+/* Nav links glow with a soft underline wash.
+   Scope to direct children only so dropdown items (nav > div > … > a)
+   keep their own per-label underline and don't sweep a full-width bar
+   under the blurb text. */
+header nav > a {
+  position: relative;
+  transition: color 0.2s ease, text-shadow 0.25s ease;
+}
+header nav > a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 3px;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 0 10px 1px color-mix(in oklab, var(--primary) 70%, transparent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+}
+header nav > a:hover {
+  text-shadow: 0 0 14px color-mix(in oklab, var(--primary) 60%, transparent);
+}
+header nav > a:hover::after { transform: scaleX(1); }
+
+/* Material icons in interactive elements catch a small glow. */
+button:hover > .material-symbols-outlined,
+a:hover > .material-symbols-outlined {
+  filter: drop-shadow(0 0 6px color-mix(in oklab, currentColor 55%, transparent));
+  transition: filter 0.2s ease;
+}
+
+/* Reusable explicit glow helpers. */
+.glow-primary {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 40%, transparent),
+    0 10px 40px -6px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+.glow-text {
+  text-shadow: 0 0 24px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+
+/* ---------------------------------------------------------------
+   Responsive scale-down of global design tokens.
+   Section gutters and display type were authored for desktop; on
+   tablet and phone they need to breathe less so content isn't
+   squeezed into a narrow column.
+   --------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .text-display-xl { font-size: 60px; line-height: 60px; }
+  .text-display-lg { font-size: 54px; }
+  .text-headline-lg { font-size: 40px; }
+  .px-margin-desktop { padding-left: 32px; padding-right: 32px; }
+  .py-stack-lg { padding-top: 40px; padding-bottom: 40px; }
+}
+
+@media (max-width: 767px) {
+  .text-display-xl { font-size: 42px; line-height: 44px; }
+  .text-display-lg { font-size: 36px; line-height: 1.05; }
+  .text-headline-lg { font-size: 28px; }
+  .text-headline-md { font-size: 22px; }
+  .text-body-lg { font-size: 16px; }
+  .px-margin-desktop { padding-left: 20px; padding-right: 20px; }
+  .py-stack-lg { padding-top: 32px; padding-bottom: 32px; }
+  .gap-gutter { gap: 16px; }
+}
+
+/* Never let a decorative sticker or shadow create sideways scroll. */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* Comfortable tap targets on touch devices. */
+@media (max-width: 767px) {
+  a, button { touch-action: manipulation; }
+}
+
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
