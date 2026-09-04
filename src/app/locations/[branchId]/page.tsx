@@ -1,38 +1,115 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getBranchDetail, listBranchIds } from "@/lib/branches";
+
 import { LocationBranchView } from "./LocationBranchView";
+import {
+  listBranchData,
+  getBranchBySlug,
+} from "@/lib/branches";
 
 interface PageProps {
-  params: Promise<{ branchId: string }>;
+  params: Promise<{
+    branchId: string;
+  }>;
 }
+
+// ======================================================
+// GENERATE STATIC BRANCH ROUTES
+// ======================================================
 
 export async function generateStaticParams() {
-  const ids = await listBranchIds();
-  return ids.map((branchId) => ({ branchId }));
+  const branches = await listBranchData();
+
+  return branches.map((branch) => ({
+    branchId: branch.slug,
+  }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+// ======================================================
+// PAGE METADATA
+// ======================================================
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { branchId } = await params;
-  const detail = await getBranchDetail(branchId);
-  if (!detail) {
-    return { title: "Branch unavailable | Kharis Church", robots: { index: false } };
+
+  const branch = await getBranchBySlug(branchId);
+
+  if (!branch) {
+    return {
+      title: "Branch unavailable | Kharis Church",
+      robots: {
+        index: false,
+      },
+    };
   }
-  const { branch } = detail;
-  const title = `${branch.name} | Kharis Church ${branch.city}`;
-  const description = branch.tagline || branch.description;
+
+  const mainVenue = branch.venues?.[0];
+
+  const branchLocation =
+    mainVenue?.city ??
+    branch.name.replace(/ Branch$/i, "");
+
+  const title = `${branch.name} | Kharis Church ${branchLocation}`;
+
+  const description =
+    branch.short_description ??
+    branch.description ??
+    `Visit Kharis Church ${location}.`;
+
   return {
     title,
     description,
-    openGraph: { title, description, type: "website" },
-    twitter: { card: "summary_large_image" },
+
+    openGraph: {
+      title,
+      description,
+      type: "website",
+
+      ...(branch.hero_image_url
+        ? {
+            images: [
+              {
+                url: branch.hero_image_url,
+              },
+            ],
+          }
+        : {}),
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+
+      ...(branch.hero_image_url
+        ? {
+            images: [branch.hero_image_url],
+          }
+        : {}),
+    },
   };
 }
 
-export default async function LocationPage({ params }: PageProps) {
-  const { branchId } = await params;
-  const detail = await getBranchDetail(branchId);
-  if (!detail) notFound();
+// ======================================================
+// BRANCH PAGE
+// ======================================================
 
-  return <LocationBranchView detail={detail} />;
+export default async function BranchPage({
+  params,
+}: PageProps) {
+  const { branchId } = await params;
+
+  const branch = await getBranchBySlug(branchId);
+
+  if (!branch) {
+    notFound();
+  }
+
+  return (
+    <LocationBranchView
+      branch={branch}
+    />
+  );
 }

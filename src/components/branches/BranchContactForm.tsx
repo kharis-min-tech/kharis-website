@@ -31,18 +31,18 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
 
           <div className="mt-8 space-y-3">
             <a
-              href={`mailto:${branch.email}`}
+              href={`mailto:${branch.contact_email}`}
               className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#15131f] px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:border-[#e8a33d]/40"
             >
               <Mail className="h-4 w-4 text-[#e8a33d]" />
-              {branch.email}
+              {branch.contact_email}
             </a>
             <a
-              href={`tel:${branch.phone.replace(/\s/g, '')}`}
+              href={`tel:${branch.contact_phone?.replace(/\s/g, '')}`}
               className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#15131f] px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:border-[#e8a33d]/40"
             >
               <Phone className="h-4 w-4 text-[#e8a33d]" />
-              {branch.phone}
+              {branch.contact_phone}
             </a>
             <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-[#15131f] px-4 py-3.5 text-sm font-semibold text-white">
               <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#e8a33d]" />

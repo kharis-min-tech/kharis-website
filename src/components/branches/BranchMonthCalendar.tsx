@@ -30,6 +30,18 @@ function serviceWeekday(name: string): number {
   return 0;
 }
 
+function formatServiceTime(time?: string | null) {
+  if (!time) return "";
+
+  const [hourString, minute] = time.split(":");
+  const hour = Number(hourString);
+
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour % 12 || 12;
+
+  return `${displayHour}:${minute} ${ampm}`;
+}
+
 export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps) {
   const [offset, setOffset] = useState(0);
 
@@ -49,8 +61,8 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const list: Entry[] = [];
 
-    branch.serviceTimes.forEach((service, si) => {
-      const target = serviceWeekday(service.name);
+    (branch.services ?? []).forEach((service, si) => {
+      const target = serviceWeekday(service.day);
       for (let day = 1; day <= daysInMonth; day += 1) {
         const date = new Date(year, month, day);
         if (date.getDay() !== target) continue;
@@ -59,7 +71,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
           day,
           weekday: WEEKDAY_LABEL[target]!,
           title: service.name,
-          time: `${service.time} ${service.ampm}`,
+          time: `${formatServiceTime(service.start_time)}`,
           description: service.description,
           location: branch.address,
           category: 'Gathering',
@@ -88,7 +100,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
 
 
 
-    branch.upcomingEvents.forEach((evt, i) => {
+    (branch.upcomingEvents ?? []).forEach((evt, i) => {
       const parsed = new Date(evt.date);
       const day = Number.isNaN(parsed.getTime()) ? 1 : parsed.getDate();
       if (!Number.isNaN(parsed.getTime()) && parsed.getMonth() !== month) return;

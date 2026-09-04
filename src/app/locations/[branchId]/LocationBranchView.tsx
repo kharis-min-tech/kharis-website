@@ -3,21 +3,21 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import BranchTemplate from "@/components/branches/BranchTemplate";
-import type { BranchDetail } from "@/lib/branches";
+import type { BranchData } from "@/lib/branches";
 
 interface Props {
-  detail: BranchDetail;
+  branch: BranchData;
 }
 
-export function LocationBranchView({ detail }: Props) {
+export function LocationBranchView({ branch }: Props) {
   const router = useRouter();
 
   const goToBranch = useCallback((id: string) => router.push(`/locations/${id}`), [router]);
 
   return (
     <BranchTemplate
-      slug={detail.id}
-      branchData={detail.branch}
+      slug={branch.slug}
+      branchData={branch}
       onNavigateBranch={goToBranch}
       onNavigateDirectory={() => router.push("/locations")}
     />

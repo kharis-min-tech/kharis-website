@@ -21,7 +21,9 @@ import {
   Play
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BRANCHES_DATA, BranchData, DEFAULT_GALLERY_IMAGES } from '@/data/branchesData';
+import type { BranchData } from '@/lib/branches';
+import { listBranches } from '@/lib/branches';
+import {  DEFAULT_GALLERY_IMAGES } from '@/data/branchesData';
 import PlanVisitModal from '@/components/PlanVisitModal';
 import GiveModal from '@/components/GiveModal';
 import { SiteHeader } from '@/components/SiteHeader';
@@ -33,29 +35,63 @@ import BranchMediaModal from '@/components/branches/BranchMediaModal';
 
 
 interface BranchTemplateProps {
-  branchData?: BranchData;
-  slug?: string;
+  branchData: BranchData;
+  branches?: BranchData[];
   onNavigateBranch?: (slug: string) => void;
   onNavigateDirectory?: () => void;
   /** Extra data-driven sections rendered before the footer. */
   extraSections?: React.ReactNode;
 }
 
+function formatServiceTime(time?: string | null) {
+  if (!time) return "";
+
+  const [hourString, minute] = time.split(":");
+  const hour = Number(hourString);
+
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour % 12 || 12;
+
+  return `${displayHour}:${minute} ${ampm}`;
+}
+
 export function BranchTemplate({
   branchData,
-  slug = 'brighton',
+  branches = [],
   onNavigateBranch,
   onNavigateDirectory,
   extraSections,
 }: BranchTemplateProps) {
 
   const router = useRouter();
-  const currentBranch = (branchData || BRANCHES_DATA[slug] || BRANCHES_DATA["brighton"])!;
+  const currentBranch = branchData;
+
+  const sundayServices = (currentBranch.services ?? [])
+  .filter(
+    (service) =>
+      service.is_active &&
+      service.type?.toLowerCase() === "sunday"
+  )
+  .sort(
+    (a, b) =>
+      (a.sort_order ?? 0) - (b.sort_order ?? 0)
+  );
+
+const midweekServices = (currentBranch.services ?? [])
+  .filter(
+    (service) =>
+      service.is_active &&
+      service.type?.toLowerCase() === "midweek"
+  )
+  .sort(
+    (a, b) =>
+      (a.sort_order ?? 0) - (b.sort_order ?? 0)
+  );
 
   const welcomeParagraphs: string[] = currentBranch.welcomeParagraphs?.length
     ? currentBranch.welcomeParagraphs
     : [
-        `I serve as the ${currentBranch.leadPastor.title.toLowerCase().includes('pastor') ? 'pastor' : 'lead'} of ${currentBranch.name}, part of the Kharis Church family. ${currentBranch.description}`,
+        `I serve as the ${currentBranch.pastor_role.toLowerCase().includes('pastor') ? 'pastor' : 'lead'} of ${currentBranch.name}, part of the Kharis Church family. ${currentBranch.description}`,
         `${currentBranch.tagline} We love teaching the Word of God, and we long to see believers established in their faith and our city strengthened.`,
         `Whether you are visiting ${currentBranch.city} for a season or looking for a church to call home, there is a place for you here.`,
       ];
@@ -66,8 +102,31 @@ export function BranchTemplate({
 
   const [zoomLevel, setZoomLevel] = useState(15);
 
-  const { lat, lng } = currentBranch.mapCoordinates;
-  // OpenStreetMap embed: bbox size derived from the zoom level.
+
+
+const mainSundayService = sundayServices[0];
+
+const mainVenue =
+  currentBranch.venues.find(
+    (venue) => venue.id === mainSundayService?.venue_id
+  ) ?? currentBranch.venues[0];
+
+const lat = mainVenue?.latitude ?? 51.4543;
+const lng = mainVenue?.longitude ?? -0.9781;
+
+const city =
+  mainVenue?.city ??
+  currentBranch.name.replace(/ Branch$/i, "");
+
+const fullAddress = [
+  mainVenue?.name,
+  mainVenue?.address_line1,
+  mainVenue?.address_line2,
+  mainVenue?.city,
+  mainVenue?.postcode,
+]
+  .filter(Boolean)
+  .join(", ");  // OpenStreetMap embed: bbox size derived from the zoom level.
   const span = 360 / Math.pow(2, zoomLevel) * 4;
   const latSpan = span * 0.6;
   const mapEmbedSrc =
@@ -105,7 +164,7 @@ export function BranchTemplate({
           <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10">
             <div
               className="absolute inset-0 bg-cover bg-center opacity-90 scale-105 transform hover:scale-100 transition-transform duration-1000"
-              style={{ backgroundImage: `url('${currentBranch.heroImage}')` }}
+              style={{ backgroundImage: `url('${currentBranch.hero_image_url}')` }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
           </div>
@@ -140,13 +199,13 @@ export function BranchTemplate({
                       <div className="mb-1 border-b border-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
                         Switch Kharis Branch
                       </div>
-                      {Object.values(BRANCHES_DATA).map((b) => (
+                      {branches.map((b) => (
                         <button
                           key={b.slug}
                           onClick={() => {
                             setBranchDropdownOpen(false);
                             if (onNavigateBranch) onNavigateBranch(b.slug);
-                            else router.push(`/branches/${b.slug}`);
+                            else router.push(`/locations/${b.slug}`);
                           }}
                           className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs font-bold transition-colors cursor-pointer ${
                             b.slug === currentBranch.slug
@@ -163,7 +222,7 @@ export function BranchTemplate({
                           onClick={() => {
                             setBranchDropdownOpen(false);
                             if (onNavigateDirectory) onNavigateDirectory();
-                            else router.push('/branches');
+                            else router.push('/locations');
                           }}
                           className="w-full py-1.5 text-center text-xs font-extrabold text-[#e8a33d] hover:underline cursor-pointer"
                         >
@@ -241,24 +300,18 @@ export function BranchTemplate({
                   </div>
 
                   <div className="space-y-4">
-                    {currentBranch.serviceTimes.map((service, index) => (
+                    {sundayServices.map((service, index) => (
                       <div
                         key={index}
                         onClick={() => setIsPlanVisitOpen(true)}
-                        className={`flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors group cursor-pointer border relative overflow-hidden ${
-                          service.isHighlighted ? 'bg-white/10 border-[#800654]/50' : 'bg-black/30 border-white/10'
-                        }`}
+                        className="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors group cursor-pointer border relative overflow-hidden bg-black/30 border-white/10"
                       >
-                        {service.isHighlighted && (
-                          <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#d4920a]" />
-                        )}
-
                         <div className="flex-shrink-0 w-20 text-center">
                           <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
-                            {service.time}
+                            {formatServiceTime(service.start_time)}
                           </span>
                           <span className="text-[10px] font-extrabold text-gray-300 uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded-full">
-                            {service.ampm}
+                            
                           </span>
                         </div>
 
@@ -392,16 +445,16 @@ export function BranchTemplate({
                 </div>
                 <div className="aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
                   <img
-                    src={currentBranch.leadPastor.image}
-                    alt={currentBranch.leadPastor.name}
+                    src={currentBranch.pastor_image_url}
+                    alt={currentBranch.pastor_name}
                     className="h-full w-full object-cover"
                   />
                 </div>
                 <div className="absolute -bottom-4 -right-4 rounded-2xl border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
                   <p className="text-xs font-extrabold uppercase tracking-wider text-[#e8a33d]">
-                    Lead Pastor
+                    {currentBranch.pastor_role}
                   </p>
-                  <p className="text-sm font-bold text-white">{currentBranch.leadPastor.name}</p>
+                  <p className="text-sm font-bold text-white">{currentBranch.pastor_name}</p>
                 </div>
               </div>
 
@@ -414,7 +467,7 @@ export function BranchTemplate({
                 </h2>
 
                 <p className="text-sm font-bold uppercase tracking-wider text-[#e8a33d]">
-                  {currentBranch.leadPastor.title}
+                  {currentBranch.pastor_role}
                 </p>
 
                 <div className="space-y-4">
@@ -426,17 +479,17 @@ export function BranchTemplate({
                 </div>
 
                 <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-white">
-                  "{currentBranch.leadPastor.quote}"
+                  "{currentBranch.pastor_bio}"
                 </blockquote>
 
                 <div className="flex flex-wrap gap-3 pt-1 text-xs font-semibold text-gray-300">
                   <span className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-black/40 px-3 py-1.5">
                     <Phone className="h-4 w-4 text-[#e8a33d]" />
-                    {currentBranch.phone}
+                    {currentBranch.contact_phone}
                   </span>
                   <span className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-black/40 px-3 py-1.5">
                     <Mail className="h-4 w-4 text-[#e8a33d]" />
-                    {currentBranch.email}
+                    {currentBranch.contact_email}
                   </span>
                 </div>
               </div>
