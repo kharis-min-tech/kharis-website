@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type FormEvent,
-} from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
@@ -35,6 +29,8 @@ export function TestimonyFormModal({ open, onClose }: Props) {
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const [mounted, setMounted] = useState(false);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => setMounted(true), []);
 
@@ -58,9 +54,58 @@ export function TestimonyFormModal({ open, onClose }: Props) {
     if (!open) setSent(false);
   }, [open]);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+
+      const payload = {
+        firstName: formData.get("firstName"),
+        preferredName: formData.get("preferredName"),
+        lastName: formData.get("lastName"),
+        mobile: formData.get("mobile"),
+        date: formData.get("date"),
+        testimonyDate: formData.get("testimonyDate"),
+        member: formData.get("member"),
+        category: formData.get("category"),
+        details: formData.get("details"),
+        anonymous: formData.get("anonymous"),
+        readOnBehalf: formData.get("readOnBehalf"),
+        onlineUse: formData.get("onlineUse"),
+      };
+
+      const response = await fetch("/api/testimonies", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Unable to submit testimony.");
+      }
+
+      form.reset();
+      setSent(true);
+    } catch (error) {
+      console.error(error);
+
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Unable to submit testimony. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (!mounted) return null;
@@ -284,9 +329,25 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                     </div>
                   </fieldset>
 
+                  {submitError && (
+                    <p
+                      role="alert"
+                      style={{
+                        color: "#b42318",
+                        marginTop: "12px",
+                      }}
+                    >
+                      {submitError}
+                    </p>
+                  )}
+
                   <div className="testimony-modal__actions">
-                    <button type="submit" className="btn-primary">
-                      Submit testimony
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      disabled={submitting}
+                    >
+                      {submitting ? "Submitting..." : "Submit testimony"}
                     </button>
                   </div>
                 </form>
