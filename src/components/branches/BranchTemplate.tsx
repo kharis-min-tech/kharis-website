@@ -1,38 +1,37 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  MapPin, 
-  Clock, 
-  Calendar, 
-  Navigation, 
-  ChevronRight, 
-  Plus, 
-  Minus, 
-  Sparkles, 
-  ArrowRight, 
-  Heart, 
-  Car, 
-  Train, 
-  Phone, 
-  Mail, 
+import {
+  MapPin,
+  Clock,
+  Calendar,
+  Navigation,
+  ChevronRight,
+  Plus,
+  Minus,
+  Sparkles,
+  ArrowRight,
+  Heart,
+  Car,
+  Train,
+  Phone,
+  Mail,
   ChevronDown,
-  Play
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import type { BranchData } from '@/lib/branches';
-import { listBranches } from '@/lib/branches';
-import {  DEFAULT_GALLERY_IMAGES } from '@/data/branchesData';
-import PlanVisitModal from '@/components/PlanVisitModal';
-import GiveModal from '@/components/GiveModal';
-import { SiteHeader } from '@/components/SiteHeader';
-import { SiteFooter } from '@/components/SiteFooter';
-import BranchGallery from '@/components/branches/BranchGallery';
-import BranchMonthCalendar from '@/components/branches/BranchMonthCalendar';
-import BranchContactForm from '@/components/branches/BranchContactForm';
-import BranchMediaModal from '@/components/branches/BranchMediaModal';
-
+  Play,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import type { BranchData } from "@/lib/branches";
+import { listBranches } from "@/lib/branches";
+import { DEFAULT_GALLERY_IMAGES } from "@/data/branchesData";
+import PlanVisitModal from "@/components/PlanVisitModal";
+import GiveModal from "@/components/GiveModal";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import BranchGallery from "@/components/branches/BranchGallery";
+import BranchMonthCalendar from "@/components/branches/BranchMonthCalendar";
+import BranchContactForm from "@/components/branches/BranchContactForm";
+import BranchMediaModal from "@/components/branches/BranchMediaModal";
 
 interface BranchTemplateProps {
   branchData: BranchData;
@@ -62,36 +61,27 @@ export function BranchTemplate({
   onNavigateDirectory,
   extraSections,
 }: BranchTemplateProps) {
-
   const router = useRouter();
   const currentBranch = branchData;
 
   const sundayServices = (currentBranch.services ?? [])
-  .filter(
-    (service) =>
-      service.is_active &&
-      service.type?.toLowerCase() === "sunday"
-  )
-  .sort(
-    (a, b) =>
-      (a.sort_order ?? 0) - (b.sort_order ?? 0)
-  );
+    .filter(
+      (service) =>
+        service.is_active && service.type?.toLowerCase() === "sunday",
+    )
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
-const midweekServices = (currentBranch.services ?? [])
-  .filter(
-    (service) =>
-      service.is_active &&
-      service.type?.toLowerCase() === "midweek"
-  )
-  .sort(
-    (a, b) =>
-      (a.sort_order ?? 0) - (b.sort_order ?? 0)
-  );
+  const midweekServices = (currentBranch.services ?? [])
+    .filter(
+      (service) =>
+        service.is_active && service.type?.toLowerCase() === "midweek",
+    )
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
   const welcomeParagraphs: string[] = currentBranch.welcomeParagraphs?.length
     ? currentBranch.welcomeParagraphs
     : [
-        `I serve as the ${currentBranch.pastor_role.toLowerCase().includes('pastor') ? 'pastor' : 'lead'} of ${currentBranch.name}, part of the Kharis Church family. ${currentBranch.description}`,
+        `I serve as the ${currentBranch.pastor_role.toLowerCase().includes("pastor") ? "pastor" : "lead"} of ${currentBranch.name}, part of the Kharis Church family. ${currentBranch.description}`,
         `${currentBranch.tagline} We love teaching the Word of God, and we long to see believers established in their faith and our city strengthened.`,
         `Whether you are visiting ${currentBranch.city} for a season or looking for a church to call home, there is a place for you here.`,
       ];
@@ -102,47 +92,47 @@ const midweekServices = (currentBranch.services ?? [])
 
   const [zoomLevel, setZoomLevel] = useState(15);
 
+  const mainSundayService = sundayServices[0];
 
+  const mainVenue =
+    currentBranch.venues.find(
+      (venue) => venue.id === mainSundayService?.venue_id,
+    ) ?? currentBranch.venues[0];
 
-const mainSundayService = sundayServices[0];
+  const lat = mainVenue?.latitude ?? 51.4543;
+  const lng = mainVenue?.longitude ?? -0.9781;
 
-const mainVenue =
-  currentBranch.venues.find(
-    (venue) => venue.id === mainSundayService?.venue_id
-  ) ?? currentBranch.venues[0];
+  const city = mainVenue?.city ?? currentBranch.name.replace(/ Branch$/i, "");
 
-const lat = mainVenue?.latitude ?? 51.4543;
-const lng = mainVenue?.longitude ?? -0.9781;
-
-const city =
-  mainVenue?.city ??
-  currentBranch.name.replace(/ Branch$/i, "");
-
-const fullAddress = [
-  mainVenue?.name,
-  mainVenue?.address_line1,
-  mainVenue?.address_line2,
-  mainVenue?.city,
-  mainVenue?.postcode,
-]
-  .filter(Boolean)
-  .join(", ");  // OpenStreetMap embed: bbox size derived from the zoom level.
-  const span = 360 / Math.pow(2, zoomLevel) * 4;
+  const fullAddress = [
+    mainVenue?.name,
+    mainVenue?.address_line1,
+    mainVenue?.address_line2,
+    mainVenue?.city,
+    mainVenue?.postcode,
+  ]
+    .filter(Boolean)
+    .join(", "); // OpenStreetMap embed: bbox size derived from the zoom level.
+  const span = (360 / Math.pow(2, zoomLevel)) * 4;
   const latSpan = span * 0.6;
-  const mapEmbedSrc =
-    `https://www.openstreetmap.org/export/embed.html?bbox=${(lng - span).toFixed(5)}%2C${(lat - latSpan).toFixed(5)}%2C${(lng + span).toFixed(5)}%2C${(lat + latSpan).toFixed(5)}&layer=mapnik&marker=${lat}%2C${lng}`;
+  const mapEmbedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${(lng - span).toFixed(5)}%2C${(lat - latSpan).toFixed(5)}%2C${(lng + span).toFixed(5)}%2C${(lat + latSpan).toFixed(5)}&layer=mapnik&marker=${lat}%2C${lng}`;
 
   const [isPlanVisitOpen, setIsPlanVisitOpen] = useState(false);
   const [isGiveOpen, setIsGiveOpen] = useState(false);
-  const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(null);
+  const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(
+    null,
+  );
   const [copiedLink, setCopiedLink] = useState(false);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
-  const [mediaModal, setMediaModal] = useState<{ type: 'image' | 'video'; src?: string } | null>(null);
+  const [mediaModal, setMediaModal] = useState<{
+    type: "image" | "video";
+    src?: string;
+  } | null>(null);
 
-  useEffect(() => {
-    document.documentElement.classList.add("branch-light");
-    return () => document.documentElement.classList.remove("branch-light");
-  }, []);
+  // useEffect(() => {
+  //   document.documentElement.classList.add("branch-light");
+  //   return () => document.documentElement.classList.remove("branch-light");
+  // }, []);
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -151,20 +141,19 @@ const fullAddress = [
   };
 
   return (
-    <div className="min-h-screen font-sans overflow-x-hidden pt-[4.5rem] selection:bg-[#800654] selection:text-white flex flex-col bg-[#0d0710] text-white">
-      
+    <div className="min-h-screen font-sans text-[var(--page-fg)] overflow-x-hidden pt-[4.5rem] selection:bg-[#800654] selection:text-white flex flex-col bg-[var(--page-bg)] text-white">
       <SiteHeader tone="light" />
-
 
       {/* Main Content Area */}
       <main className="w-full">
-        
         {/* HERO SECTION */}
         <section className="branch-hero relative w-full min-h-[65vh] flex items-center justify-center pt-10 pb-16 px-5 md:px-8 max-w-[1536px] mx-auto">
           <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10">
             <div
               className="absolute inset-0 bg-cover bg-center opacity-90 scale-105 transform hover:scale-100 transition-transform duration-1000"
-              style={{ backgroundImage: `url('${currentBranch.hero_image_url}')` }}
+              style={{
+                backgroundImage: `url('${currentBranch.hero_image_url}')`,
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
           </div>
@@ -185,7 +174,9 @@ const fullAddress = [
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#800654] border border-[#800654] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#5c033c] cursor-pointer"
                 >
                   <span>Switch branch</span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${branchDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform ${branchDropdownOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 <AnimatePresence>
@@ -209,12 +200,14 @@ const fullAddress = [
                           }}
                           className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs font-bold transition-colors cursor-pointer ${
                             b.slug === currentBranch.slug
-                              ? 'bg-[#800654] text-white'
-                              : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                              ? "bg-[#800654] text-white"
+                              : "text-gray-300 hover:bg-white/5 hover:text-white"
                           }`}
                         >
                           <span>{b.name}</span>
-                          <span className="text-[10px] opacity-80">{b.region}</span>
+                          <span className="text-[10px] opacity-80">
+                            {b.region}
+                          </span>
                         </button>
                       ))}
                       <div className="mt-1 border-t border-white/10 pt-1.5">
@@ -222,7 +215,7 @@ const fullAddress = [
                           onClick={() => {
                             setBranchDropdownOpen(false);
                             if (onNavigateDirectory) onNavigateDirectory();
-                            else router.push('/locations');
+                            else router.push("/locations");
                           }}
                           className="w-full py-1.5 text-center text-xs font-extrabold text-[#e8a33d] hover:underline cursor-pointer"
                         >
@@ -235,7 +228,7 @@ const fullAddress = [
               </div>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight text-white!">
               Welcome to <br />
               <span className="bg-gradient-to-r from-[#e8a33d] via-[#d4920a] to-[#ffffff] bg-clip-text text-transparent">
                 {currentBranch.name}
@@ -249,7 +242,7 @@ const fullAddress = [
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <button
                 onClick={() => setIsPlanVisitOpen(true)}
-                className="bg-[#800654] hover:bg-[#5c033c] text-white font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-[#800654]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="bg-[#800654] hover:bg-[#5c033c] text-white! font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-[#800654]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Plan Your Visit</span>
                 <ArrowRight className="w-4 h-4" />
@@ -275,13 +268,17 @@ const fullAddress = [
         </section>
 
         {/* SERVICE TIMES & LOCATION BENTO GRID SECTION */}
-        <section id="services" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
+        <section
+          id="services"
+          className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
+        >
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
               Join Us This Sunday
             </h2>
             <p className="text-base font-medium text-gray-400 max-w-2xl mx-auto">
-              We can't wait to host you. Choose a service time that works best for you and your family.
+              We can't wait to host you. Choose a service time that works best
+              for you and your family.
             </p>
           </div>
 
@@ -294,8 +291,12 @@ const fullAddress = [
                       <Clock className="w-6 h-6 stroke-[2.5]" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-white">Service Times</h3>
-                      <p className="text-xs font-semibold text-gray-400">Sunday & Midweek Gathering</p>
+                      <h3 className="text-2xl font-bold text-white!">
+                        Service Times
+                      </h3>
+                      <p className="text-xs font-semibold text-gray-400">
+                        Sunday & Midweek Gathering
+                      </p>
                     </div>
                   </div>
 
@@ -310,13 +311,11 @@ const fullAddress = [
                           <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
                             {formatServiceTime(service.start_time)}
                           </span>
-                          <span className="text-[10px] font-extrabold text-gray-300 uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded-full">
-                            
-                          </span>
+                          <span className="text-[10px] font-extrabold text-gray-300 uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded-full"></span>
                         </div>
 
                         <div className="flex-grow pt-0.5">
-                          <h4 className="text-sm font-bold text-white mb-1 group-hover:text-[#e8a33d] transition-colors">
+                          <h4 className="text-sm font-bold text-white! mb-1 group-hover:text-[#e8a33d] transition-colors">
                             {service.name}
                           </h4>
                           <p className="text-xs font-medium text-gray-300 leading-relaxed">
@@ -356,7 +355,6 @@ const fullAddress = [
                       </div>
                     )}
                   </div>
-
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-white/10 flex justify-between items-center bg-black/40 p-4 rounded-2xl">
@@ -368,7 +366,6 @@ const fullAddress = [
                     <span className="text-xs font-bold text-white">
                       Warm welcome team on hand when you arrive
                     </span>
-
                   </div>
                   <button
                     onClick={() => setIsPlanVisitOpen(true)}
@@ -394,7 +391,7 @@ const fullAddress = [
 
                 <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
                   <div className="bg-[#15131f]/95 backdrop-blur-md p-4 rounded-2xl max-w-xs pointer-events-auto shadow-lg border border-white/10 text-white">
-                    <h4 className="font-bold text-sm text-white mb-1">
+                    <h4 className="font-bold text-sm text-white! mb-1">
                       {currentBranch.name}
                     </h4>
                     <p className="font-medium text-xs text-gray-300 mb-3 leading-snug">
@@ -429,16 +426,17 @@ const fullAddress = [
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </section>
 
         {/* WELCOME / LEAD PASTOR SECTION */}
-        <section id="pastor" className="py-16 bg-[#15131f] border-y border-white/10">
+        <section
+          id="pastor"
+          className="py-16 bg-[#15131f] border-y border-white/10"
+        >
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-center">
-
               <div className="md:col-span-5 relative">
                 <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl bg-[#800654] text-white shadow-lg sm:flex">
                   <Sparkles className="h-6 w-6" />
@@ -454,25 +452,30 @@ const fullAddress = [
                   <p className="text-xs font-extrabold uppercase tracking-wider text-[#e8a33d]">
                     {currentBranch.pastor_role}
                   </p>
-                  <p className="text-sm font-bold text-white">{currentBranch.pastor_name}</p>
+                  <p className="text-sm font-bold text-white">
+                    {currentBranch.pastor_name}
+                  </p>
                 </div>
               </div>
 
               <div className="md:col-span-7 space-y-5">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-white">
-                  Welcome to{' '}
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-white!">
+                  Welcome to{" "}
                   <span className="bg-gradient-to-r from-[#e8a33d] to-[#d4920a] bg-clip-text text-transparent">
                     {currentBranch.name}
                   </span>
                 </h2>
 
                 <p className="text-sm font-bold uppercase tracking-wider text-[#e8a33d]">
-                  {currentBranch.pastor_role}
+                  {currentBranch.pastor_role} {currentBranch.pastor_name}
                 </p>
 
                 <div className="space-y-4">
                   {welcomeParagraphs.map((para, i) => (
-                    <p key={i} className="text-base font-medium leading-relaxed text-gray-300">
+                    <p
+                      key={i}
+                      className="text-base font-medium leading-relaxed text-gray-300"
+                    >
                       {para}
                     </p>
                   ))}
@@ -493,13 +496,15 @@ const fullAddress = [
                   </span>
                 </div>
               </div>
-
             </div>
           </div>
         </section>
 
         {/* FEATURED MESSAGE / VIDEO SECTION */}
-        <section id="watch" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
+        <section
+          id="watch"
+          className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
+        >
           <div className="mb-10 text-center">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#e8a33d] mb-3">
               <span>Watch</span>
@@ -512,7 +517,7 @@ const fullAddress = [
           <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
             <button
               type="button"
-              onClick={() => setMediaModal({ type: 'video' })}
+              onClick={() => setMediaModal({ type: "video" })}
               className="group relative block aspect-video w-full cursor-pointer text-left"
             >
               <img
@@ -526,21 +531,21 @@ const fullAddress = [
                   <Play className="ml-1 h-8 w-8 fill-current" />
                 </span>
                 <span className="text-sm font-extrabold uppercase tracking-wider text-white">
-                  {currentBranch.videoId ? 'Watch Latest Message' : 'Watch on YouTube'}
+                  {currentBranch.videoId
+                    ? "Watch Latest Message"
+                    : "Watch on YouTube"}
                 </span>
               </div>
             </button>
           </div>
         </section>
 
-
         {/* GALLERY */}
         <BranchGallery
           images={galleryImages}
           city={currentBranch.city}
-          onImageClick={(src) => setMediaModal({ type: 'image', src })}
+          onImageClick={(src) => setMediaModal({ type: "image", src })}
         />
-
 
         {/* MONTHLY EVENTS CALENDAR */}
         <BranchMonthCalendar
@@ -558,12 +563,13 @@ const fullAddress = [
         <section className="py-16 bg-[#15131f] border-t border-white/10">
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
               <div className="bg-black/40 p-6 sm:p-8 rounded-3xl border border-white/10 shadow-sm space-y-3">
                 <div className="w-12 h-12 rounded-2xl bg-white/5 text-[#e8a33d] flex items-center justify-center">
                   <Car className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-white">Parking Information</h3>
+                <h3 className="text-xl font-bold text-white!">
+                  Parking Information
+                </h3>
                 <p className="text-sm text-gray-300 font-medium leading-relaxed">
                   {currentBranch.parkingInfo}
                 </p>
@@ -573,20 +579,17 @@ const fullAddress = [
                 <div className="w-12 h-12 rounded-2xl bg-white/5 text-[#e8a33d] flex items-center justify-center">
                   <Train className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-white">Public Transit</h3>
+                <h3 className="text-xl font-bold text-white!">Public Transit</h3>
                 <p className="text-sm text-gray-300 font-medium leading-relaxed">
                   {currentBranch.transitInfo}
                 </p>
               </div>
-
             </div>
           </div>
         </section>
 
         {extraSections}
-
       </main>
-
 
       <SiteFooter tone="onLight" />
 
@@ -595,10 +598,7 @@ const fullAddress = [
         onClose={() => setIsPlanVisitOpen(false)}
       />
 
-      <GiveModal
-        isOpen={isGiveOpen}
-        onClose={() => setIsGiveOpen(false)}
-      />
+      <GiveModal isOpen={isGiveOpen} onClose={() => setIsGiveOpen(false)} />
 
       <BranchMediaModal
         type={mediaModal?.type ?? null}
@@ -607,9 +607,7 @@ const fullAddress = [
         city={currentBranch.city}
         onClose={() => setMediaModal(null)}
       />
-
     </div>
-
   );
 }
 

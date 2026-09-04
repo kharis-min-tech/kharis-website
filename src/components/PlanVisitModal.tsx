@@ -45,7 +45,7 @@ export default function PlanVisitModal({ isOpen, onClose }: PlanVisitModalProps)
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-extrabold text-xl text-[#f3f0f8]">Plan Your Visit</h3>
+                <h3 className="font-extrabold text-xl text-white!">Plan Your Visit</h3>
                 <p className="text-xs font-semibold text-[#b2aec1]">We're Excited To Host You & Your Family!</p>
               </div>
             </div>

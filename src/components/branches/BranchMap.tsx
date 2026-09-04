@@ -312,7 +312,7 @@ export function BranchMap({
               <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#e8a33d]">
                 One Global Family
               </p>
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl md:text-3xl font-extrabold text-white! tracking-tight">
                 Find a Kharis Branch
               </h2>
               <p className="text-sm text-white/60 font-medium mt-1">
@@ -351,11 +351,20 @@ export function BranchMap({
                       {VIEWS.map((v) => {
                         const count = source.filter((b) => {
                           const p = makeProjection(v).bounds;
+                          const venue = b.venues?.[0];
+
+                          if (
+                            venue?.longitude == null ||
+                            venue?.latitude == null
+                          ) {
+                            return false;
+                          }
+
                           return (
-                            b.mapCoordinates.lng >= p.minLng &&
-                            b.mapCoordinates.lng <= p.maxLng &&
-                            b.mapCoordinates.lat >= p.minLat &&
-                            b.mapCoordinates.lat <= p.maxLat
+                            venue.longitude >= p.minLng &&
+                            venue.longitude <= p.maxLng &&
+                            venue.latitude >= p.minLat &&
+                            venue.latitude <= p.maxLat
                           );
                         }).length;
                         return (

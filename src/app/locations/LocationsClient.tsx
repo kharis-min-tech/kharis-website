@@ -120,11 +120,11 @@ export function LocationsClient({ items: branches, full }: Props) {
                       className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <span className="absolute left-3 top-3 rounded-full bg-[#800654] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                    <span className="absolute left-3 top-3 rounded-full bg-[#800654] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white" >
                       {branch.region}
                     </span>
                     <div className="absolute bottom-3 left-3 right-3 text-white">
-                      <h3 className="text-2xl font-extrabold leading-snug text-white">{branch.name}</h3>
+                      <h3 className="text-2xl font-extrabold leading-snug text-white!">{branch.name}</h3>
                       <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-white/90">
                         <MapPin className="h-3.5 w-3.5 text-[#d4920a]" />
                         {branch.address}
