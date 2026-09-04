@@ -5,7 +5,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { TestimonyFormModal } from "@/components/TestimonyFormModal";
+import type { Testimony } from "@/lib/testimonies";
 
+interface TestimoniesSectionProps {
+  testimonies: Testimony[];
+}
 const photos = [
   {
     src: "/images/testimony-1.jpg",
@@ -21,58 +25,9 @@ const photos = [
   },
 ];
 
-const TESTIMONIES = [
-  {
-    quote:
-      "Christ found me when I had nothing left. Through Kharis I learned to trust Jesus again, and my home has peace.",
-    name: "Amaka O.",
-    place: "London",
-  },
-  {
-    quote:
-      "I came broken, and God met me in the Word. Jesus healed what counselling alone could not. Glory to God.",
-    name: "James T.",
-    place: "Birmingham",
-  },
-  {
-    quote:
-      "Sunday after Sunday, Christ has been strengthening my faith. I am not the same person who first walked through those doors.",
-    name: "Grace A.",
-    place: "Brighton",
-  },
-  {
-    quote:
-      "The gospel was preached clearly, and I gave my life to Jesus. His grace carried me through the darkest season of my life.",
-    name: "Daniel K.",
-    place: "Accra",
-  },
-  {
-    quote:
-      "Prayer, the Word, and the love of the brethren pointed me to Christ. He restored my marriage and my hope.",
-    name: "Sarah M.",
-    place: "Croydon",
-  },
-  {
-    quote:
-      "I used to live for myself. Now I live for Jesus. Kharis helped me see that Christ alone is enough.",
-    name: "Michael B.",
-    place: "Luton",
-  },
-  {
-    quote:
-      "In worship I met Jesus afresh. He lifted my anxiety and filled me with His peace and joy.",
-    name: "Ruth N.",
-    place: "Nottingham",
-  },
-  {
-    quote:
-      "The teaching pointed me to Christ crucified. I was baptised and now serve gladly in my local branch.",
-    name: "Peter O.",
-    place: "Coventry",
-  },
-];
-
-export function TestimoniesSection() {
+export function TestimoniesSection({
+  testimonies,
+}: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
   const [formOpen, setFormOpen] = useState(false);
 
@@ -80,7 +35,11 @@ export function TestimoniesSection() {
   const closeForm = useCallback(() => {
     setFormOpen(false);
     if (window.location.hash === "#share-testimony") {
-      window.history.replaceState({}, "", window.location.pathname + window.location.search);
+      window.history.replaceState(
+        {},
+        "",
+        window.location.pathname + window.location.search,
+      );
     }
   }, []);
 
@@ -115,7 +74,10 @@ export function TestimoniesSection() {
   };
 
   return (
-    <section id="testimonies" className="testimony-band px-5 py-8 md:px-8 md:py-10">
+    <section
+      id="testimonies"
+      className="testimony-band px-5 py-8 md:px-8 md:py-10"
+    >
       <div className="mx-auto max-w-7xl">
         <Reveal variant="blur" className="mb-5 max-w-2xl md:mb-6">
           <p className="eyebrow">Stories</p>
@@ -157,7 +119,7 @@ export function TestimoniesSection() {
 
           <div className="testimony-viewport">
             <div ref={railRef} className="testimony-rail">
-              {TESTIMONIES.map((item, i) => (
+              {testimonies.map((item, i) => (
                 <article
                   key={item.name}
                   className={`testimony-card testimony-card--${(i % 5) + 1}`}
@@ -195,10 +157,10 @@ export function TestimoniesSection() {
                       />
                     </svg>
                   </div>
-                  <p className="testimony-card__quote">{item.quote}</p>
+                  <p className="testimony-card__quote">{item.description}</p>
                   <div className="testimony-card__meta">
                     <strong>{item.name}</strong>
-                    <span>{item.place}</span>
+                    <span>{item.branch_name}</span>
                   </div>
                 </article>
               ))}

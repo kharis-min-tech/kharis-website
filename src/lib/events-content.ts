@@ -82,15 +82,23 @@ export function formatEventMonthYear(date: string) {
   return d.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 }
 
-export function eventMonthKey(date: string) {
-  return date.slice(0, 7);
+export function eventMonthKey(date: string | Date) {
+  const value = new Date(date);
+
+  if (Number.isNaN(value.getTime())) {
+    return "";
+  }
+
+  return `${value.getFullYear()}-${String(
+    value.getMonth() + 1
+  ).padStart(2, "0")}`;
 }
 
 export function groupEventsByMonth(events: ChurchEvent[]) {
   const map = new Map<string, ChurchEvent[]>();
 
   for (const event of events) {
-    const key = eventMonthKey(event.date);
+    const key = eventMonthKey(event.start_time);
     const bucket = map.get(key);
     if (bucket) bucket.push(event);
     else map.set(key, [event]);
@@ -122,7 +130,7 @@ export function formatEventLong(date: string, time: string, timezone: string) {
 }
 
 export function googleCalendarUrl(event: ChurchEvent) {
-  const start = event.date.replace(/-/g, "");
+  const start = event.start_time?.replace(/-/g, "");
   const text = encodeURIComponent(event.title);
   const details = encodeURIComponent(event.description);
   const location = encodeURIComponent(`${event.location}, ${event.address}`);

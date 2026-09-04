@@ -84,7 +84,7 @@ export function EventDetailModal({ event, onClose }: Props) {
               </button>
               <div className="event-modal__hero-copy">
                 <p className="event-modal__eyebrow">{event.category}</p>
-                <h2 id={titleId}>{event.title}</h2>
+                <h2 className="text-white!" id={titleId}>{event.title}</h2>
                 <p className="event-modal__hero-place">{event.location}</p>
               </div>
             </div>
@@ -108,7 +108,7 @@ export function EventDetailModal({ event, onClose }: Props) {
                   <p>
                     {event.location}
                     <br />
-                    <span>{event.address}</span>
+                    {/* <span>{event.address}</span> */}
                   </p>
                 </div>
               </div>

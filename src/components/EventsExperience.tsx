@@ -27,9 +27,9 @@ const PREVIEW_COUNT = 6;
 
 function happeningEvents(events: ChurchEvent[], from = new Date()) {
   const stamp = from.toISOString().slice(0, 10);
-  return events.filter((e) => e.date >= stamp).sort((a, b) =>
-    a.date.localeCompare(b.date),
-  );
+  return events
+    .filter((e) => e.date >= stamp)
+    .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 function EventCard({
@@ -128,23 +128,25 @@ export function EventsExperience({ events }: Props) {
   const [browse, setBrowse] = useState(false);
   const [query, setQuery] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [kind, setKind] = useState<"all" | "Sunday Service" | "Thursday Service">(
-    "all",
-  );
+  const [kind, setKind] = useState<
+    "all" | "Sunday Service" | "Thursday Service"
+  >("all");
   const [place, setPlace] = useState<"all" | string>("all");
 
   const upcoming = useMemo(() => happeningEvents(events), [events]);
   const preview = upcoming.slice(0, PREVIEW_COUNT);
-  const previewByMonth = useMemo(
-    () => groupEventsByMonth(preview),
-    [preview],
-  );
+  const previewByMonth = useMemo(() => groupEventsByMonth(preview), [preview]);
   const rest = useMemo(() => {
-    const shown = new Set(preview.map((e) => e.id));
-    return events
-      .filter((e) => !shown.has(e.id))
-      .sort((a, b) => a.date.localeCompare(b.date));
-  }, [events, preview]);
+  const shown = new Set(preview.map((e) => e.id));
+
+  return events
+    .filter((e) => !shown.has(e.id))
+    .sort(
+      (a, b) =>
+        new Date(a.start_time).getTime() -
+        new Date(b.start_time).getTime()
+    );
+}, [events, preview]);
 
   const venues = useMemo(
     () => [...new Set(events.map((e) => e.location))],
@@ -153,7 +155,7 @@ export function EventsExperience({ events }: Props) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return rest.filter((e) => {
+    return upcoming.filter((e) => {
       if (kind !== "all" && e.title !== kind) return false;
       if (place !== "all" && e.location !== place) return false;
       if (!q) return true;
@@ -164,7 +166,7 @@ export function EventsExperience({ events }: Props) {
         e.address.toLowerCase().includes(q)
       );
     });
-  }, [rest, query, kind, place]);
+  }, [upcoming, query, kind, place]);
 
   const filteredByMonth = useMemo(
     () => groupEventsByMonth(filtered),
@@ -231,9 +233,7 @@ export function EventsExperience({ events }: Props) {
                     Gathering
                     <select
                       value={kind}
-                      onChange={(e) =>
-                        setKind(e.target.value as typeof kind)
-                      }
+                      onChange={(e) => setKind(e.target.value as typeof kind)}
                     >
                       <option value="all">All gatherings</option>
                       <option value="Sunday Service">Sunday Service</option>
@@ -349,7 +349,9 @@ export function EventsExperience({ events }: Props) {
               aria-label="Happening at our church"
             >
               <div className="events-happen__wrap">
-                <h2 className="events-happen__title">Happening at our church</h2>
+                <h2 className="events-happen__title">
+                  Happening at our church
+                </h2>
 
                 {preview.length === 0 ? (
                   <p className="events-happen__empty">

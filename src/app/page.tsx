@@ -6,6 +6,7 @@ import { MissionSection } from "@/components/MissionSection";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TestimoniesSection } from "@/components/TestimoniesSection";
+import { getTestimonies } from "@/lib/testimonies";
 import { UnsureBranchCta } from "@/components/UnsureBranchCta";
 import { VisionSection } from "@/components/VisionSection";
 import { VisitSection } from "@/components/VisitSection";
@@ -31,6 +32,7 @@ export default async function Home() {
 
   const featured = messages[0];
   const others = messages.slice(1, 5);
+  const testimonies = await getTestimonies("kharis", "featured");
 
   return (
     <main className="home-page bg-bg text-fg">
@@ -39,10 +41,12 @@ export default async function Home() {
       <div className="home-below-hero">
         <MissionSection />
         <KnowUsStack />
-        {featured ? <LatestMessages featured={featured} others={others} /> : null}
+        {featured ? (
+          <LatestMessages featured={featured} others={others} />
+        ) : null}
         <VisitSection slides={branchSlides} />
         <BuildHouseSection />
-        <TestimoniesSection />
+        <TestimoniesSection testimonies={testimonies} />
         <VisionSection />
         <UnsureBranchCta />
         <SiteFooter />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GiveExperience } from "@/components/GiveExperience";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { getTestimonies } from "@/lib/testimonies";
 
 export const metadata: Metadata = {
   title: "Give | Kharis Church",
