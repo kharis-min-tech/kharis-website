@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { BranchMap } from "@/components/BranchMap";
 import { Reveal } from "@/components/Reveal";
-import { BRANCHES, branchDirectionsUrl, type Branch } from "@/lib/locations";
+import type { ContactLocation } from "@/lib/contactLocations";
 
 const SUBJECTS = [
   { value: "General", label: "General Inquiry" },
@@ -21,14 +21,53 @@ const SUBJECTS = [
   { value: "Pastoral", label: "Pastoral" },
 ] as const;
 
-const CONTACT_BRANCHES = BRANCHES.filter((b) => !b.name.startsWith("KP2"));
+type Props = {
+  locations: ContactLocation[];
+};
 
-const HQ =
-  CONTACT_BRANCHES.find((b) => b.name === "Kharis London") ?? CONTACT_BRANCHES[0]!;
+function getPrimaryVenue(branch: ContactLocation) {
+  return branch.venues?.[0] ?? null;
+}
 
-const HQ_ADDRESS = "Kensington Town Hall, Hornton Street, London W8 7NX";
-const HQ_PHONE = "01322 476491";
-const HQ_PHONE_HREF = "tel:+441322476491";
+function getBranchCity(branch: ContactLocation) {
+  return getPrimaryVenue(branch)?.city ?? "";
+}
+
+function getBranchAddress(branch: ContactLocation) {
+  const venue = getPrimaryVenue(branch);
+
+  if (!venue) return "";
+
+  return [
+    venue.name,
+    venue.address_line1,
+    venue.address_line2,
+    venue.city,
+    venue.postcode,
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
+
+function getDirectionsUrl(branch: ContactLocation) {
+  const venue = getPrimaryVenue(branch);
+
+  if (!venue) return "#";
+
+  const destination = [
+    venue.name,
+    venue.address_line1,
+    venue.address_line2,
+    venue.city,
+    venue.postcode,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+    destination,
+  )}`;
+}
 
 const THANKS_DISMISS_MS = 6500;
 
@@ -88,10 +127,21 @@ function splitName(full: string) {
   return { first: parts[0]!, last: parts.slice(1).join(" ") };
 }
 
-export function ContactExperience() {
-  const [region, setRegion] = useState<"all" | Branch["region"]>("all");
+export function ContactExperience({ locations }: Props) {
+  const CONTACT_BRANCHES = useMemo(
+    () => locations.filter((b) => !b.name.startsWith("KP2")),
+    [locations],
+  );
+
+  const HQ =
+    CONTACT_BRANCHES.find((b) => b.name === "Kharis London") ??
+    CONTACT_BRANCHES[0] ??
+    null;
+  const [region, setRegion] = useState<
+    "all" | "United Kingdom" | "International"
+  >("all");
   const [query, setQuery] = useState("");
-  const [active, setActive] = useState<Branch>(HQ);
+  const [active, setActive] = useState<ContactLocation | null>(HQ);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -99,22 +149,35 @@ export function ContactExperience() {
     name: "",
     email: "",
     topic: "General",
-    branch: HQ.name,
+    branch: HQ.name ?? "",
     message: "",
   });
-
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return CONTACT_BRANCHES.filter((b) => {
-      if (region !== "all" && b.region !== region) return false;
+
+    return CONTACT_BRANCHES.filter((branch) => {
+      const venue = getPrimaryVenue(branch);
+      const country = venue?.country ?? "";
+      const city = venue?.city ?? "";
+      const address = getBranchAddress(branch);
+
+      if (region === "United Kingdom" && country !== "United Kingdom") {
+        return false;
+      }
+
+      if (region === "International" && country === "United Kingdom") {
+        return false;
+      }
+
       if (!q) return true;
+
       return (
-        b.name.toLowerCase().includes(q) ||
-        b.city.toLowerCase().includes(q) ||
-        (b.address ?? "").toLowerCase().includes(q)
+        branch.name.toLowerCase().includes(q) ||
+        city.toLowerCase().includes(q) ||
+        address.toLowerCase().includes(q)
       );
     });
-  }, [query, region]);
+  }, [CONTACT_BRANCHES, query, region]);
 
   useEffect(() => {
     if (!sent) return;
@@ -122,7 +185,7 @@ export function ContactExperience() {
     return () => window.clearTimeout(timer);
   }, [sent]);
 
-  const selectBranch = (branch: Branch) => {
+  const selectBranch = (branch: ContactLocation) => {
     setActive(branch);
     setForm((f) => ({ ...f, branch: branch.name }));
   };
@@ -210,7 +273,9 @@ export function ContactExperience() {
                       autoComplete="name"
                       placeholder="John Doe"
                       value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, name: e.target.value })
+                      }
                     />
                   </label>
                   <label>
@@ -232,7 +297,9 @@ export function ContactExperience() {
                     Subject
                     <select
                       value={form.topic}
-                      onChange={(e) => setForm({ ...form, topic: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, topic: e.target.value })
+                      }
                     >
                       {SUBJECTS.map((s) => (
                         <option key={s.value} value={s.value}>
@@ -253,7 +320,7 @@ export function ContactExperience() {
                       }}
                     >
                       {CONTACT_BRANCHES.map((b) => (
-                        <option key={b.name} value={b.name}>
+                        <option key={b.id} value={b.name}>
                           {b.name}
                         </option>
                       ))}
@@ -273,7 +340,11 @@ export function ContactExperience() {
                   />
                 </label>
                 {error ? <p className="contact-error">{error}</p> : null}
-                <button type="submit" className="contact-submit" disabled={busy}>
+                <button
+                  type="submit"
+                  className="contact-submit"
+                  disabled={busy}
+                >
                   {busy ? "Sending…" : "Send it!"}
                 </button>
               </form>
@@ -288,7 +359,9 @@ export function ContactExperience() {
                   <MapPin className="h-4 w-4" aria-hidden />
                   <div>
                     <strong>Main campus</strong>
-                    <span>{HQ_ADDRESS}</span>
+                    <span>
+                      {HQ ? getBranchAddress(HQ) : "Address Unavailiable"}
+                    </span>
                   </div>
                 </li>
                 <li>
@@ -303,7 +376,13 @@ export function ContactExperience() {
                   <Phone className="h-4 w-4" aria-hidden />
                   <div>
                     <strong>Call us</strong>
-                    <a href={HQ_PHONE_HREF}>{HQ_PHONE}</a>
+                    {HQ?.contact_phone ? (
+                      <a href={`tel:${HQ.contact_phone.replace(/\D/g, "")}`}>
+                        {HQ.contact_phone}
+                      </a>
+                    ) : (
+                      <span>Phone unavailable</span>
+                    )}{" "}
                   </div>
                 </li>
               </ul>
@@ -320,7 +399,7 @@ export function ContactExperience() {
               <h2>Find us here</h2>
             </div>
             <a
-              href={branchDirectionsUrl(active)}
+              href={active ? getDirectionsUrl(active) : "#"}
               target="_blank"
               rel="noreferrer"
               className="contact-map-head__dir"
@@ -330,7 +409,11 @@ export function ContactExperience() {
             </a>
           </Reveal>
 
-          <Reveal variant="up" delay={0.06} className="contact-map-section__tools">
+          <Reveal
+            variant="up"
+            delay={0.06}
+            className="contact-map-section__tools"
+          >
             <div className="contact-search">
               <Search className="h-4 w-4" aria-hidden />
               <input
@@ -363,49 +446,73 @@ export function ContactExperience() {
             </div>
           </Reveal>
 
-          <Reveal variant="up" delay={0.1} className="contact-map-section__grid">
+          <Reveal
+            variant="up"
+            delay={0.1}
+            className="contact-map-section__grid"
+          >
             <ul className="contact-branches">
-              {filtered.map((branch) => (
-                <li key={branch.name}>
-                  <button
-                    type="button"
-                    className={`contact-branch${active.name === branch.name ? " is-on" : ""}`}
-                    onClick={() => selectBranch(branch)}
-                  >
-                    <MapPin className="h-4 w-4" aria-hidden />
-                    <span>
-                      <strong>{branch.name}</strong>
-                      <em>
-                        {branch.address
-                          ? `${branch.address} · ${branch.city}`
-                          : branch.city}
-                      </em>
-                    </span>
-                  </button>
-                </li>
-              ))}
+              {filtered.map((branch) => {
+                const venue = getPrimaryVenue(branch);
+
+                return (
+                  <li key={branch.id}>
+                    <button
+                      type="button"
+                      className={`contact-branch${
+                        active?.id === branch.id ? " is-on" : ""
+                      }`}
+                      onClick={() => selectBranch(branch)}
+                    >
+                      <MapPin className="h-4 w-4" aria-hidden />
+
+                      <span>
+                        <strong>{branch.name}</strong>
+
+                        <em>
+                          {venue
+                            ? [venue.address_line1, venue.city]
+                                .filter(Boolean)
+                                .join(" · ")
+                            : "Location unavailable"}
+                        </em>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
               {filtered.length === 0 ? (
-                <li className="contact-empty">No branches match that search.</li>
+                <li className="contact-empty">
+                  No branches match that search.
+                </li>
               ) : null}
             </ul>
 
-            <div className="contact-map-section__map">
-              <BranchMap
-                branches={CONTACT_BRANCHES}
-                active={active}
-                onSelect={selectBranch}
-              />
-              <div className="contact-map-section__caption">
-                <div>
-                  <p>{active.name}</p>
-                  <span>
-                    {active.address
-                      ? `${active.address}, ${active.city}`
-                      : active.city}
-                  </span>
-                </div>
+              <div className="contact-map-section__map">
+                {active ? (
+                  <iframe
+                    title={`Map for ${active.name}`}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(
+                      getBranchAddress(active),
+                    )}&output=embed`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                ) : null}
+
+                {active && (
+                  <div className="contact-map-section__caption">
+                    <div>
+                      <p>{active.name}</p>
+                      <span>{getBranchAddress(active)}</span>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            
           </Reveal>
         </div>
       </section>

@@ -9,8 +9,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "yt3.ggpht.com" },
       { protocol: "https", hostname: "upload.wikimedia.org" },
+      { protocol: "https", hostname: "cdn.shopify.com"},
+      { protocol: "https", hostname: "cqgyiqxhpxwasogpdghx.supabase.co", },
     ],
   },
 };
+
+
 
 export default nextConfig;
