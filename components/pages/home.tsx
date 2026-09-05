@@ -4,10 +4,33 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TestimonialCarousel, type Testimonial } from "@/components/TestimonialCarousel";
+import { TestimonyFormModal } from "@/components/TestimonyFormModal";
 
 function Index({ testimonials }: { testimonials: Testimonial[] }) {
+  const [formOpen, setFormOpen] = useState(false);
+  const openForm = useCallback(() => setFormOpen(true), []);
+  const closeForm = useCallback(() => {
+    setFormOpen(false);
+    if (window.location.hash === "#share-testimony") {
+      window.history.replaceState(
+        {},
+        "",
+        window.location.pathname + window.location.search,
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    const sync = () => {
+      if (window.location.hash === "#share-testimony") setFormOpen(true);
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, []);
 
   return (
     <div className="bg-white text-gray-900 font-body-md overflow-x-hidden pt-[74px]">
@@ -315,7 +338,10 @@ function Index({ testimonials }: { testimonials: Testimonial[] }) {
           </div>
         </section>
 
-        <section className="py-16 sm:py-20 lg:py-24 bg-[#f0e6f8] dark:bg-[#151218] border-y-8 border-gray-900 relative overflow-hidden transition-colors duration-300">
+        <section
+          id="testimonies"
+          className="py-16 sm:py-20 lg:py-24 bg-[#f0e6f8] dark:bg-[#151218] border-y-8 border-gray-900 relative overflow-hidden transition-colors duration-300"
+        >
           <div className="halftone-bg text-[#7c3aed]/10 opacity-30 absolute inset-0 z-0"></div>
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
             <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
@@ -334,7 +360,12 @@ function Index({ testimonials }: { testimonials: Testimonial[] }) {
             )}
 
             <div className="flex justify-center sm:justify-end mt-8">
-              <button className="bg-[#7c3aed] !text-white font-label-comic text-label-comic uppercase px-8 py-4 brutalist-border brutalist-shadow">
+              <button
+                type="button"
+                id="share-testimony"
+                onClick={openForm}
+                className="bg-[#7c3aed] !text-white font-label-comic text-label-comic uppercase px-8 py-4 brutalist-border brutalist-shadow"
+              >
                 Share Your Testimony
               </button>
             </div>
@@ -695,6 +726,7 @@ function Index({ testimonials }: { testimonials: Testimonial[] }) {
 
       <SiteFooter />
 
+      <TestimonyFormModal open={formOpen} onClose={closeForm} />
       <ThemeToggle />
     </div>
   );

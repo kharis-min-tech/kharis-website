@@ -28,6 +28,7 @@ const COLUMNS: FooterColumn[] = [
       { label: "Volunteer", to: "/departments" },
       { label: "Fellowships", to: "/fellowships" },
       { label: "Departments", to: "/departments" },
+      { label: "Testimony Form", to: "/#share-testimony" },
     ],
   },
   {
