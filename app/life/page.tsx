@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Page from "@/components/pages/life";
+import { getUpcomingEvents } from "@/lib/events";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Kharis Life | Community & Lifestyle",
@@ -12,4 +15,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export default Page;
+export default async function Life() {
+  const upcoming = (await getUpcomingEvents()).slice(0, 3);
+  return <Page upcoming={upcoming} />;
+}

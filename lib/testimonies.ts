@@ -67,7 +67,7 @@ function displayName(row: TestimonyRow) {
 }
 
 function quoteText(row: TestimonyRow) {
-  return (row.short_description || row.description || "").trim();
+  return (row.description || row.short_description || "").trim();
 }
 
 async function loadPublished(): Promise<TestimonyRow[]> {
@@ -96,9 +96,7 @@ export async function getHomeTestimonials(): Promise<Testimonial[]> {
 }
 
 export async function getGivingTestimonials(): Promise<GivingTestimony[]> {
-  const published = await loadPublished();
-  const giving = published.filter((row) => row.is_featured_giving);
-  const rows = giving.length ? giving : published.filter((row) => row.is_featured);
+  const rows = (await loadPublished()).filter((row) => row.is_featured_giving);
 
   return rows
     .map((row, i) => {

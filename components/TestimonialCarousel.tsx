@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { TestimonyQuote } from "@/components/TestimonyQuote";
 
 export type Testimonial = {
   quote: string;
@@ -44,6 +45,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
   const reducedMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [reading, setReading] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const maxIndex = Math.max(0, testimonials.length - perView);
@@ -64,13 +66,13 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
   const prev = useCallback(() => goTo(index - 1), [goTo, index]);
 
   useEffect(() => {
-    if (paused || reducedMotion || slideCount <= 1) return;
+    if (paused || reading || reducedMotion || slideCount <= 1) return;
     const id = window.setTimeout(() => {
       setIndex((i) => (i + 1) % slideCount);
     }, AUTOPLAY_MS);
     return () => window.clearTimeout(id);
     // `index` in deps resets the timer on manual navigation
-  }, [index, paused, reducedMotion, slideCount]);
+  }, [index, paused, reading, reducedMotion, slideCount]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowRight") {
@@ -139,12 +141,18 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                   >
                     &ldquo;
                   </span>
-                  <p
-                    className="font-body-md text-gray-800 dark:text-[#ece6f0] leading-relaxed flex-1 -mt-2 transition-colors duration-300"
+                  <div
+                    className="flex-1 -mt-2"
                     style={{ fontSize: "clamp(1rem, 3.4vw, 1.25rem)" }}
                   >
-                    {t.quote}
-                  </p>
+                    <TestimonyQuote
+                      quote={t.quote}
+                      name={t.name}
+                      meta={t.location}
+                      className="font-body-md text-gray-800 dark:text-[#ece6f0] leading-relaxed transition-colors duration-300"
+                      onOpenChange={setReading}
+                    />
+                  </div>
                   <div className="mt-6 sm:mt-8 pt-4 sm:pt-5 border-t-4 border-gray-900 dark:border-[#e8e0e9]">
                     <p
                       className="font-display-xl uppercase text-gray-900 dark:text-[#e8e0e9] transition-colors duration-300"

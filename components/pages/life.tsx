@@ -4,11 +4,23 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import type { ChurchEvent } from "@/lib/events";
 
+function socialDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-GB", {
+    month: "short",
+    day: "numeric",
+    timeZone: "Europe/London",
+  });
+}
 
+function socialBlurb(text: string) {
+  const clean = text.trim();
+  if (clean.length <= 90) return clean;
+  return `${clean.slice(0, 90).replace(/\s+\S*$/, "").trim()}…`;
+}
 
-
-function LifePage() {
+function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
       <SiteHeader />
@@ -64,27 +76,27 @@ function LifePage() {
                     <h3 className="font-headline-md text-headline-md uppercase">Upcoming Socials</h3>
                   </div>
                   <ul className="space-y-6">
-                    <li className="flex gap-4 items-start group">
-                      <div className="font-label-md text-label-md text-primary w-12 pt-1 uppercase">Jun 12</div>
-                      <div className="flex-1">
-                        <h4 className="font-body-lg text-body-lg font-bold group-hover:text-primary transition-colors cursor-pointer">Summer Rooftop Kickoff</h4>
-                        <p className="font-body-md text-body-md text-on-surface-variant">Music, sliders, and sunset vibes at the City Campus.</p>
-                      </div>
-                    </li>
-                    <li className="flex gap-4 items-start group">
-                      <div className="font-label-md text-label-md text-primary w-12 pt-1 uppercase">Jun 28</div>
-                      <div className="flex-1 border-t-2 border-outline-variant pt-4">
-                        <h4 className="font-body-lg text-body-lg font-bold group-hover:text-primary transition-colors cursor-pointer">Creative Night Out</h4>
-                        <p className="font-body-md text-body-md text-on-surface-variant">Gallery crawl and post-show discussion with local artists.</p>
-                      </div>
-                    </li>
-                    <li className="flex gap-4 items-start group">
-                      <div className="font-label-md text-label-md text-primary w-12 pt-1 uppercase">Jul 05</div>
-                      <div className="flex-1 border-t-2 border-outline-variant pt-4">
-                        <h4 className="font-body-lg text-body-lg font-bold group-hover:text-primary transition-colors cursor-pointer">The Big Game Watch</h4>
-                        <p className="font-body-md text-body-md text-on-surface-variant">Huge screens, pizza, and friendly rivalry in the Sports Hall.</p>
-                      </div>
-                    </li>
+                    {upcoming.length === 0 ? (
+                      <li className="font-body-md text-on-surface-variant">
+                        No upcoming events just yet — check the events page for the latest.
+                      </li>
+                    ) : (
+                      upcoming.map((event, i) => (
+                        <li key={event.slug} className="flex gap-4 items-start group">
+                          <div className="font-label-md text-label-md text-primary w-14 pt-1 uppercase shrink-0">
+                            {socialDate(event.starts)}
+                          </div>
+                          <div className={`flex-1 ${i > 0 ? "border-t-2 border-outline-variant pt-4" : ""}`}>
+                            <h4 className="font-body-lg text-body-lg font-bold group-hover:text-primary transition-colors">
+                              <Link href="/events">{event.title}</Link>
+                            </h4>
+                            <p className="font-body-md text-body-md text-on-surface-variant">
+                              {socialBlurb(event.blurb)}
+                            </p>
+                          </div>
+                        </li>
+                      ))
+                    )}
                   </ul>
                   <Link
                     href="/events"

@@ -7,6 +7,37 @@ import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BANK, ONLINE_GIVE_URL } from "@/lib/giving";
 import type { GivingTestimony } from "@/lib/testimonies";
+import { TestimonyQuote } from "@/components/TestimonyQuote";
+
+function GivingTestimonyCard({
+  testimony,
+  rotate,
+}: {
+  testimony: GivingTestimony;
+  rotate: string;
+}) {
+  return (
+    <div className="bg-white brutalist-border p-6 sm:p-8 md:p-12 neo-shadow flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+      <div
+        className={`w-32 h-32 md:w-48 md:h-48 brutalist-border-thick shrink-0 bg-cover bg-center transform ${rotate}`}
+        style={{ backgroundImage: `url('${testimony.image}')` }}
+        role="img"
+        aria-label={`${testimony.name} portrait`}
+      />
+      <div className="min-w-0">
+        <span className="material-symbols-outlined text-primary text-4xl mb-2 md:mb-4 block">format_quote</span>
+        <TestimonyQuote
+          quote={testimony.quote}
+          name={testimony.name}
+          meta={testimony.role}
+          className="font-body-lg italic text-on-surface leading-relaxed"
+        />
+        <h4 className="font-headline-md text-2xl uppercase mt-6">— {testimony.name}</h4>
+        <p className="font-label-sm text-primary uppercase">{testimony.role}</p>
+      </div>
+    </div>
+  );
+}
 
 function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
   const [showBank, setShowBank] = useState(false);
@@ -153,15 +184,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 {/* Mobile: one testimony at a time. Desktop: both side by side. */}
 <div className="md:hidden">
 {testimonies.filter((_, i) => i === testimony).map((t) => (
-<div key={t.name} className="bg-white brutalist-border p-6 sm:p-8 neo-shadow flex flex-col gap-6 items-start">
-<div className="w-32 h-32 brutalist-border-thick shrink-0 bg-cover bg-center transform -rotate-3" style={{ backgroundImage: `url('${t.image}')` }} role="img" aria-label={`${t.name} portrait`}></div>
-<div className="min-w-0">
-<span className="material-symbols-outlined text-primary text-4xl mb-2 block">format_quote</span>
-<p className="font-body-lg italic text-on-surface mb-6 leading-relaxed">{t.quote}</p>
-<h4 className="font-headline-md text-2xl uppercase">— {t.name}</h4>
-<p className="font-label-sm text-primary uppercase">{t.role}</p>
-</div>
-</div>
+  <GivingTestimonyCard key={t.name} testimony={t} rotate="-rotate-3" />
 ))}
 <div className="mt-6 flex justify-center gap-2">
 {testimonies.map((t, i) => (
@@ -174,15 +197,11 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 
 <div className="hidden md:grid md:grid-cols-2 gap-gutter">
 {testimonies.map((t, i) => (
-<div key={t.name} className="bg-white brutalist-border p-8 md:p-12 neo-shadow flex flex-col md:flex-row gap-8 items-start">
-<div className={`w-32 h-32 md:w-48 md:h-48 brutalist-border-thick shrink-0 bg-cover bg-center transform ${i % 2 === 0 ? "-rotate-3" : "rotate-3"}`} style={{ backgroundImage: `url('${t.image}')` }} role="img" aria-label={`${t.name} portrait`}></div>
-<div className="min-w-0">
-<span className="material-symbols-outlined text-primary text-4xl mb-4 block">format_quote</span>
-<p className="font-body-lg italic text-on-surface mb-6 leading-relaxed">{t.quote}</p>
-<h4 className="font-headline-md text-2xl uppercase">— {t.name}</h4>
-<p className="font-label-sm text-primary uppercase">{t.role}</p>
-</div>
-</div>
+  <GivingTestimonyCard
+    key={t.name}
+    testimony={t}
+    rotate={i % 2 === 0 ? "-rotate-3" : "rotate-3"}
+  />
 ))}
 </div>
 </section>
