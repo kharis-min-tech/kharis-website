@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Icon } from "@/components/Icon";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
 const aboutChildren = [
@@ -213,7 +212,6 @@ export function SiteHeader({ tone = "auto" }: Props) {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <ThemeToggle onDark={onDark || (forceDark && !open)} />
           <Link
             href="/locations"
             className={`hidden items-center gap-2 rounded-full px-5 py-2.5 text-[0.8rem] font-extrabold transition sm:inline-flex ${

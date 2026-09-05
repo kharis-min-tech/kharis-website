@@ -20,8 +20,8 @@ import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import {
   BANK,
-  ONLINE_BRANCHES,
-  ONLINE_GIVE_URL,
+  BANK_ACCRA,
+  MOMO,
   TEXT_GIVE,
 } from "@/lib/giving";
 
@@ -101,7 +101,6 @@ export function GiveExperience() {
   const [flow, setFlow] = useState<Flow | null>(null);
   const [fromBuilding, setFromBuilding] = useState(false);
   const [amount, setAmount] = useState<(typeof TEXT_AMOUNTS)[number]>(10);
-  const [branch, setBranch] = useState<(typeof ONLINE_BRANCHES)[number]>(ONLINE_BRANCHES[1]);
 
   const smsHref = useMemo(() => {
     const body = encodeURIComponent(`${TEXT_GIVE.keyword} ${amount}`);
@@ -294,45 +293,36 @@ export function GiveExperience() {
                 </div>
 
                 {flow === "online" || flow === "monthly" ? (
-                  <div className="give-panel__body">
-                    <h3>
-                      {flow === "monthly"
-                        ? "Set up a monthly gift"
-                        : fromBuilding
-                          ? "Give to the building fund"
-                          : "Give through the secure page"}
-                    </h3>
-                    <p>
-                      {flow === "monthly"
-                        ? "Choose your branch, then continue. You can set a recurring monthly gift on the next screen."
-                        : fromBuilding
-                          ? "Choose your branch, then continue to the secure page. Select the building fund as your extra gift alongside tithes and offerings."
-                          : "Choose your branch, then continue to the secure Kharis giving page."}
-                    </p>
-                    <label className="give-label" htmlFor="give-branch">
-                      Branch
-                    </label>
-                    <select
-                      id="give-branch"
-                      className="give-select"
-                      value={branch}
-                      onChange={(e) => setBranch(e.target.value as (typeof ONLINE_BRANCHES)[number])}
-                    >
-                      {ONLINE_BRANCHES.map((name) => (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
-                    <a
-                      href={ONLINE_GIVE_URL}
-                      className="give-cta"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Continue securely
-                      <Icon name="arrow" className="h-3.5 w-3.5" />
-                    </a>
+                  <div className="give-panel__body give-panel__body--bank">
+                    <div>
+                      <h3>UK Bank Transfer</h3>
+                      <p>
+                        {flow === "monthly"
+                          ? "Set up a standing order from your bank using these details."
+                          : fromBuilding
+                            ? "Transfer to the building fund using these bank details. Please use your name and 'Building Fund' as the reference."
+                            : "Transfer your tithe or offering directly using these bank details."}
+                      </p>
+                      <CopyRow label="Account name" value={BANK.accountName} />
+                      <CopyRow label="Account number" value={BANK.accountNumber} />
+                      <CopyRow label="Sort code" value={BANK.sortCode} />
+                      <CopyRow label="IBAN" value={BANK.iban} />
+                      <CopyRow label="SWIFT / BIC" value={BANK.swift} />
+                    </div>
+                    <div className="give-panel__text">
+                      <h3>Ghana (CalBank)</h3>
+                      <p>For giving from Ghana, use the CalBank details below.</p>
+                      <CopyRow label="Account name" value={BANK_ACCRA.accountName} />
+                      <CopyRow label="Account number" value={BANK_ACCRA.accountNumber} />
+                      <CopyRow label="Bank" value={BANK_ACCRA.bank} />
+                      <CopyRow label="SWIFT / BIC" value={BANK_ACCRA.swift} />
+                    </div>
+                    <div className="give-panel__text">
+                      <h3>Mobile Money (MoMo)</h3>
+                      <p>Give via Mobile Money in Ghana.</p>
+                      <CopyRow label="Account name" value={MOMO.accountName} />
+                      <CopyRow label="USSD code" value={MOMO.ussd} />
+                    </div>
                   </div>
                 ) : null}
 

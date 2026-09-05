@@ -6,6 +6,18 @@ export const BANK = {
   iban: "GB88BUKB20718280608335",
 } as const;
 
+export const BANK_ACCRA = {
+  accountName: "Kharis Missions Church",
+  accountNumber: "1400009476093",
+  bank: "CalBank",
+  swift: "ACCCGHAC or ACCCGHACXXX",
+} as const;
+
+export const MOMO = {
+  accountName: "Kharis Mission Church",
+  ussd: "*713*2766#",
+} as const;
+
 export const TEXT_GIVE = {
   keyword: "KCGIVE",
   number: "70085",
