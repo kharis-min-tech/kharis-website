@@ -1,3 +1,6 @@
+import { SITE_WORKSPACE } from "@/lib/site";
+import { supabaseSelect } from "@/lib/supabase";
+
 export type Branch = {
   slug: string;
   name: string;
@@ -16,151 +19,169 @@ export type Branch = {
   blurb: string;
   tags: string[];
   image: string;
+  givingLink: string | null;
 };
 
-/** Placeholder data — swap for a Cloud query when the backend lands. */
-export const BRANCHES: Branch[] = [
-  {
-    slug: "london-central",
-    name: "Kharis Phase 2 — London Central",
-    city: "London",
-    region: "Greater London",
-    address: "112 Great Eastern Street, Shoreditch",
-    postcode: "EC2A 3JL",
-    lat: 51.5253,
-    lng: -0.0817,
-    serviceTimes: [
-      { day: "Sunday", time: "10:30 AM", label: "Main Gathering" },
-      { day: "Thursday", time: "7:00 PM", label: "Midweek Encounter" },
-    ],
-    pastor: "Pastor David Oyelami",
-    pastorRole: "Campus Pastor",
-    phone: "+44 20 7946 0101",
-    email: "london@kharisphase2.org",
-    instagram: "@kp2london",
-    blurb:
-      "Our flagship campus in the heart of the city — a young, loud, sending church built for students, creatives and professionals.",
-    tags: ["Students", "Young Adults", "Kids Ministry"],
-    image: "/assets/branch-slide-1.jpg",
-  },
-  {
-    slug: "manchester",
-    name: "Kharis Phase 2 — Manchester",
-    city: "Manchester",
-    region: "North West",
-    address: "45 Oxford Road, City Centre",
-    postcode: "M1 5QA",
-    lat: 53.4739,
-    lng: -2.2374,
-    serviceTimes: [
-      { day: "Sunday", time: "11:00 AM", label: "Main Gathering" },
-      { day: "Wednesday", time: "6:30 PM", label: "Fellowship Night" },
-    ],
-    pastor: "Pastor Awo Mensah",
-    pastorRole: "Campus Pastor",
-    phone: "+44 161 496 0102",
-    email: "manchester@kharisphase2.org",
-    instagram: "@kp2manchester",
-    blurb:
-      "A student-heavy campus with a heart for the streets — worship, discipleship and outreach across Greater Manchester.",
-    tags: ["Students", "Outreach", "Worship School"],
-    image: "/assets/branch-slide-1.jpg",
-  },
-  {
-    slug: "birmingham",
-    name: "Kharis Phase 2 — Birmingham",
-    city: "Birmingham",
-    region: "West Midlands",
-    address: "8 Digbeth High Street",
-    postcode: "B5 6DY",
-    lat: 52.4776,
-    lng: -1.888,
-    serviceTimes: [
-      { day: "Sunday", time: "10:00 AM", label: "Main Gathering" },
-      { day: "Friday", time: "7:30 PM", label: "Prayer & Praise" },
-    ],
-    pastor: "Pastor Naomi Adeyemi",
-    pastorRole: "Campus Pastor",
-    phone: "+44 121 496 0103",
-    email: "birmingham@kharisphase2.org",
-    instagram: "@kp2birmingham",
-    blurb:
-      "Family-centred and multicultural, our Birmingham campus is a home for every generation in the Midlands.",
-    tags: ["Families", "Kids Ministry", "Prayer"],
-    image: "/assets/branch-slide-1.jpg",
-  },
-  {
-    slug: "leeds",
-    name: "Kharis Phase 2 — Leeds",
-    city: "Leeds",
-    region: "Yorkshire",
-    address: "23 Call Lane, City Centre",
-    postcode: "LS1 7BT",
-    lat: 53.7955,
-    lng: -1.5401,
-    serviceTimes: [
-      { day: "Sunday", time: "4:00 PM", label: "Evening Gathering" },
-      { day: "Tuesday", time: "7:00 PM", label: "Bible Study" },
-    ],
-    pastor: "Pastor Josh Kimani",
-    pastorRole: "Campus Lead",
-    phone: "+44 113 496 0104",
-    email: "leeds@kharisphase2.org",
-    instagram: "@kp2leeds",
-    blurb:
-      "A church plant on the rise — small enough to know your name, bold enough to shake the city.",
-    tags: ["Church Plant", "Students", "Small Groups"],
-    image: "/assets/branch-slide-1.jpg",
-  },
-  {
-    slug: "glasgow",
-    name: "Kharis Phase 2 — Glasgow",
-    city: "Glasgow",
-    region: "Scotland",
-    address: "60 Sauchiehall Street",
-    postcode: "G2 3AF",
-    lat: 55.8652,
-    lng: -4.2576,
-    serviceTimes: [
-      { day: "Sunday", time: "11:30 AM", label: "Main Gathering" },
-    ],
-    pastor: "Pastor Ruth Campbell",
-    pastorRole: "Campus Lead",
-    phone: "+44 141 496 0105",
-    email: "glasgow@kharisphase2.org",
-    instagram: "@kp2glasgow",
-    blurb:
-      "Our northern-most campus, gathering students and families for worship every Sunday morning.",
-    tags: ["Students", "Families"],
-    image: "/assets/branch-slide-1.jpg",
-  },
-  {
-    slug: "online",
-    name: "Kharis Phase 2 — Online",
-    city: "Online",
-    region: "Everywhere",
-    address: "Streaming wherever you are",
-    postcode: "WWW",
-    lat: 51.5072,
-    lng: -0.1276,
-    serviceTimes: [
-      { day: "Sunday", time: "10:30 AM", label: "Live Stream" },
-      { day: "Daily", time: "6:00 AM", label: "Morning Prayer Call" },
-    ],
-    pastor: "The Kharis Team",
-    pastorRole: "Digital Campus",
-    phone: "+44 20 7946 0100",
-    email: "online@kharisphase2.org",
-    instagram: "@kharisphase2",
-    blurb:
-      "No campus near you? Join the digital campus — live chat, prayer rooms and online community groups.",
-    tags: ["Digital", "Global", "Prayer"],
-    image: "/assets/branch-slide-1.jpg",
-  },
-];
+type VenueRow = {
+  id: string;
+  name: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  city: string | null;
+  postcode: string | null;
+  country: string | null;
+  latitude: number | null;
+  longitude: number | null;
+};
 
-export function getBranch(slug: string) {
-  return BRANCHES.find((b) => b.slug === slug);
+type ServiceRow = {
+  id: string;
+  name: string | null;
+  type: string | null;
+  day: string | null;
+  start_time: string | null;
+  description: string | null;
+  sort_order: number | null;
+  is_active: boolean | null;
+  venue_id: string | null;
+};
+
+type BranchRow = {
+  id: string;
+  slug: string;
+  name: string;
+  subtitle: string | null;
+  group: string | null;
+  workspace: string | null;
+  short_description: string | null;
+  description: string | null;
+  hero_image_url: string | null;
+  pastor_name: string | null;
+  pastor_role: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  instagram: string | null;
+  giving_link: string | null;
+  sort_order: number | null;
+  venues: VenueRow[] | null;
+  services: ServiceRow[] | null;
+};
+
+const FALLBACK_IMAGE = "/assets/branch-slide-1.jpg";
+
+function formatTime(time?: string | null): string {
+  if (!time) return "";
+  const [hourString, minute = "00"] = time.split(":");
+  let hour = Number(hourString);
+  if (Number.isNaN(hour)) return time;
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12;
+  return `${hour}:${minute} ${ampm}`;
+}
+
+function roleLabel(role?: string | null): string {
+  return role === "lead" ? "Branch Lead" : "Pastor";
+}
+
+function pastorDisplay(name?: string | null, role?: string | null) {
+  const label = roleLabel(role);
+  if (!name?.trim()) return { pastor: "The KP2 Team", pastorRole: label };
+  const alreadyTitled = name.toLowerCase().startsWith(label.toLowerCase());
+  return { pastor: name.trim(), pastorRole: alreadyTitled ? "" : label };
+}
+
+/** KP2 site: Phase 2 campuses, or rows explicitly tagged kp2. Never dump the main Kharis network. */
+export function isKp2Location(row: {
+  workspace?: string | null;
+  group?: string | null;
+  slug?: string | null;
+  name?: string | null;
+}): boolean {
+  if (row.workspace === SITE_WORKSPACE) return true;
+  if (row.workspace === "kharis") return false;
+  const group = (row.group ?? "").toLowerCase();
+  const slug = (row.slug ?? "").toLowerCase();
+  const name = (row.name ?? "").toLowerCase();
+  return group.includes("phase 2") || slug.startsWith("kp2-") || name.includes("phase 2");
+}
+
+function toBranch(row: BranchRow): Branch {
+  const venues = row.venues ?? [];
+  const services = [...(row.services ?? [])]
+    .filter((s) => s.is_active !== false)
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+
+  const sunday = services.find((s) => (s.type ?? "").toLowerCase() === "sunday");
+  const mainVenue =
+    (sunday?.venue_id ? venues.find((v) => v.id === sunday.venue_id) : undefined) ??
+    venues[0];
+
+  const address = [
+    mainVenue?.name,
+    mainVenue?.address_line1,
+    mainVenue?.address_line2,
+    mainVenue?.city,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const { pastor, pastorRole } = pastorDisplay(row.pastor_name, row.pastor_role);
+
+  const serviceTimes = services.map((s) => ({
+    day: s.day || "Sunday",
+    time: formatTime(s.start_time) || "TBC",
+    label: s.name || s.description || s.type || "Gathering",
+  }));
+
+  return {
+    slug: row.slug,
+    name: row.name,
+    city: mainVenue?.city || row.name.replace(/^kharis phase 2\s*[—-]?\s*/i, "") || row.slug,
+    region: row.subtitle || mainVenue?.country || "United Kingdom",
+    address: address || "Location coming soon",
+    postcode: mainVenue?.postcode || "",
+    lat: mainVenue?.latitude ?? 0,
+    lng: mainVenue?.longitude ?? 0,
+    serviceTimes: serviceTimes.length
+      ? serviceTimes
+      : [{ day: "Sunday", time: "TBC", label: "Service information coming soon" }],
+    pastor,
+    pastorRole,
+    phone: row.contact_phone || "",
+    email: row.contact_email || "",
+    instagram: row.instagram || "",
+    blurb: row.short_description || row.description || `${row.name} — a Kharis Phase 2 campus.`,
+    tags: ["Phase 2"].concat(mainVenue?.city ? [mainVenue.city] : []),
+    image: row.hero_image_url || FALLBACK_IMAGE,
+    givingLink: row.giving_link,
+  };
+}
+
+export function hasCoords(branch: { lat: number; lng: number }) {
+  return Number.isFinite(branch.lat) && Number.isFinite(branch.lng) && (branch.lat !== 0 || branch.lng !== 0);
+}
+
+export async function listBranches(): Promise<Branch[]> {
+  const rows = await supabaseSelect<BranchRow>(
+    "branches",
+    "select=*,venues(*),services(*)&is_active=eq.true&order=sort_order.asc",
+  );
+  return rows.filter(isKp2Location).map(toBranch);
+}
+
+export async function getBranch(slug: string): Promise<Branch | null> {
+  const rows = await supabaseSelect<BranchRow>(
+    "branches",
+    `select=*,venues(*),services(*)&slug=eq.${encodeURIComponent(slug)}&is_active=eq.true`,
+  );
+  const row = rows[0];
+  if (!row || !isKp2Location(row)) return null;
+  return toBranch(row);
+}
+
+export async function listBranchSlugs(): Promise<string[]> {
+  const branches = await listBranches();
+  return branches.map((b) => b.slug);
 }
 
 /** Great-circle distance in miles. */

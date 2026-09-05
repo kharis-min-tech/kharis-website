@@ -4,13 +4,9 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { BRANCHES, osmEmbedUrl } from "@/lib/branches";
+import { hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
 
-const MAIN_CAMPUS = BRANCHES[0]!;
-
-
-
-function ContactPage() {
+function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container">
 
@@ -101,27 +97,35 @@ function ContactPage() {
 <span className="material-symbols-outlined text-primary text-3xl">location_on</span>
 <div>
 <p className="font-label-md uppercase text-secondary">Main Campus</p>
-<p className="font-body-lg">{MAIN_CAMPUS.address}</p>
+<p className="font-body-lg">{mainCampus?.address ?? "Find a KP2 campus near you"}</p>
 </div>
 </div>
 <div className="flex items-start gap-4">
 <span className="material-symbols-outlined text-primary text-3xl">schedule</span>
 <div>
 <p className="font-label-md uppercase text-secondary">Service Times</p>
-<p className="font-body-lg">Sunday: 9:00 AM | 11:30 AM</p>
-<p className="font-body-lg">Wednesday: 7:00 PM (Youth Night)</p>
+{mainCampus?.serviceTimes.length ? (
+  mainCampus.serviceTimes.map((s) => (
+    <p key={`${s.day}-${s.time}`} className="font-body-lg">{s.day}: {s.time}{s.label ? ` (${s.label})` : ""}</p>
+  ))
+) : (
+  <>
+    <p className="font-body-lg">Sunday gatherings — times on each campus page</p>
+  </>
+)}
 </div>
 </div>
 <div className="flex items-start gap-4">
 <span className="material-symbols-outlined text-primary text-3xl">phone</span>
 <div>
 <p className="font-label-md uppercase text-secondary">Call Us</p>
-<p className="font-body-lg">+44 20 7946 0123</p>
+<p className="font-body-lg">{mainCampus?.phone || "See your campus page"}</p>
 </div>
 </div>
 </div>
 </div>
 
+{mainCampus && hasCoords(mainCampus) ? (
 <div className="brutalist-border brutalist-shadow-lg overflow-hidden bg-surface-container-low">
 <div className="flex items-center justify-between gap-4 border-b-2 border-on-background px-4 py-3">
 <span className="font-label-md uppercase flex items-center gap-2">
@@ -130,7 +134,7 @@ Find Us Here
 </span>
 <a
 className="font-label-sm uppercase underline decoration-2 underline-offset-4 hover:text-primary"
-href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MAIN_CAMPUS.address)}`}
+href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mainCampus.address)}`}
 target="_blank"
 rel="noreferrer noopener"
 >
@@ -138,12 +142,17 @@ Get Directions
 </a>
 </div>
 <iframe
-title="Map of Kharis Phase 2 main campus"
-src={osmEmbedUrl(MAIN_CAMPUS)}
+title="Map of Kharis Phase 2 campus"
+src={osmEmbedUrl(mainCampus)}
 className="w-full h-72 md:h-80 block border-0"
 loading="lazy"
 ></iframe>
 </div>
+) : (
+<Link href="/branches" className="block brutalist-border brutalist-shadow bg-surface-container-low p-6 font-label-md uppercase text-center hover:text-primary">
+Find a campus
+</Link>
+)}
 
 </div>
 </section>

@@ -5,27 +5,10 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BANK, ONLINE_GIVE_URL } from "@/lib/giving";
+import type { GivingTestimony } from "@/lib/testimonies";
 
-
-
-const TESTIMONIES = [
-  {
-    name: "Sarah Jenkins",
-    role: "Entrepreneur & Member",
-    image: "/assets/testimony-1.jpg",
-    quote:
-      "\"When I lost my job, the Kharis benevolence fund didn't just give me money; they gave me a lifeline and the training to start my own business. Now, I give back so others can find hope.\"",
-  },
-  {
-    name: "David Chen",
-    role: "Mission Partner",
-    image: "/assets/testimony-2.jpg",
-    quote:
-      "\"Being part of the mission trips changed my perspective on what it means to be a global citizen. My monthly giving is a small part of a much bigger vision that I am proud to support.\"",
-  },
-];
-
-function GivingPage() {
+function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
   const [showBank, setShowBank] = useState(false);
   const [testimony, setTestimony] = useState(0);
   return (
@@ -54,9 +37,9 @@ function GivingPage() {
                     Kharis Phase 2 is about expanding our reach and deepening our impact. Every seed sown directly supports community outreach, digital fellowship, and regional development.
                 </p>
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-                    <button className="w-full md:w-auto bg-primary text-on-primary brutalist-border-thick neo-shadow-lg px-12 py-4 font-headline-md text-2xl hover:scale-105 transition-all">
+                <a href={ONLINE_GIVE_URL} target="_blank" rel="noreferrer" className="w-full md:w-auto bg-primary text-on-primary brutalist-border-thick neo-shadow-lg px-12 py-4 font-headline-md text-2xl hover:scale-105 transition-all">
                         GIVE ONLINE NOW
-                    </button>
+                    </a>
                 </div>
 </div>
 </section>
@@ -115,9 +98,9 @@ function GivingPage() {
 </div>
 <h3 className="font-headline-md text-headline-md uppercase mb-4">Online Portal</h3>
 <p className="font-body-md text-on-surface-variant mb-8 flex-grow">A secure, one-click way to give using your credit card or PayPal account.</p>
-<button className="w-full bg-primary text-on-primary brutalist-border neo-shadow py-3 font-label-md uppercase tracking-widest hover:bg-primary-container transition-colors">
+<a href={ONLINE_GIVE_URL} target="_blank" rel="noreferrer" className="w-full bg-primary text-on-primary brutalist-border neo-shadow py-3 font-label-md uppercase tracking-widest hover:bg-primary-container transition-colors">
                         GIVE ONLINE
-                    </button>
+                    </a>
 </div>
 
 <div className="bg-primary text-on-primary brutalist-border-thick p-10 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform">
@@ -141,15 +124,16 @@ function GivingPage() {
                         VIEW DETAILS
                     </button>
 <div className={`${showBank ? "" : "hidden"} mt-6 text-left font-label-sm p-4 bg-surface-container-high w-full border-t-2 border-black`} id="bank-details">
-<p>A/C: 12345678</p>
-<p>Sort: 00-00-00</p>
-<p>Bank: Kharis Global</p>
+<p>A/C: {BANK.accountNumber}</p>
+<p>Sort: {BANK.sortCode}</p>
+<p>Name: {BANK.accountName}</p>
 </div>
 
 </div>
 </div>
 </section>
 
+{testimonies.length > 0 ? (
 <section className="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto overflow-hidden">
 <div className="mb-stack-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
 <div className="max-w-2xl">
@@ -157,10 +141,10 @@ function GivingPage() {
 <p className="font-body-lg text-on-surface-variant">Real stories of transformation through the power of collective generosity.</p>
 </div>
 <div className="flex gap-4 md:hidden">
-<button type="button" aria-label="Previous testimony" onClick={() => setTestimony((i) => (i + TESTIMONIES.length - 1) % TESTIMONIES.length)} className="w-12 h-12 brutalist-border flex items-center justify-center neo-shadow bg-white text-black active:active-neo-shadow">
+<button type="button" aria-label="Previous testimony" onClick={() => setTestimony((i) => (i + testimonies.length - 1) % testimonies.length)} className="w-12 h-12 brutalist-border flex items-center justify-center neo-shadow bg-white text-black active:active-neo-shadow">
 <span className="material-symbols-outlined">chevron_left</span>
 </button>
-<button type="button" aria-label="Next testimony" onClick={() => setTestimony((i) => (i + 1) % TESTIMONIES.length)} className="w-12 h-12 brutalist-border flex items-center justify-center neo-shadow bg-white text-black active:active-neo-shadow">
+<button type="button" aria-label="Next testimony" onClick={() => setTestimony((i) => (i + 1) % testimonies.length)} className="w-12 h-12 brutalist-border flex items-center justify-center neo-shadow bg-white text-black active:active-neo-shadow">
 <span className="material-symbols-outlined">chevron_right</span>
 </button>
 </div>
@@ -168,7 +152,7 @@ function GivingPage() {
 
 {/* Mobile: one testimony at a time. Desktop: both side by side. */}
 <div className="md:hidden">
-{TESTIMONIES.filter((_, i) => i === testimony).map((t) => (
+{testimonies.filter((_, i) => i === testimony).map((t) => (
 <div key={t.name} className="bg-white brutalist-border p-6 sm:p-8 neo-shadow flex flex-col gap-6 items-start">
 <div className="w-32 h-32 brutalist-border-thick shrink-0 bg-cover bg-center transform -rotate-3" style={{ backgroundImage: `url('${t.image}')` }} role="img" aria-label={`${t.name} portrait`}></div>
 <div className="min-w-0">
@@ -180,7 +164,7 @@ function GivingPage() {
 </div>
 ))}
 <div className="mt-6 flex justify-center gap-2">
-{TESTIMONIES.map((t, i) => (
+{testimonies.map((t, i) => (
 <button key={t.name} type="button" aria-label={`Show testimony ${i + 1}`} aria-current={i === testimony ? "true" : undefined} onClick={() => setTestimony(i)} className="h-11 min-w-11 flex items-center justify-center">
 <span className={`block h-3 border-2 border-black transition-all ${i === testimony ? "w-9 bg-primary" : "w-3 bg-transparent"}`} />
 </button>
@@ -189,7 +173,7 @@ function GivingPage() {
 </div>
 
 <div className="hidden md:grid md:grid-cols-2 gap-gutter">
-{TESTIMONIES.map((t, i) => (
+{testimonies.map((t, i) => (
 <div key={t.name} className="bg-white brutalist-border p-8 md:p-12 neo-shadow flex flex-col md:flex-row gap-8 items-start">
 <div className={`w-32 h-32 md:w-48 md:h-48 brutalist-border-thick shrink-0 bg-cover bg-center transform ${i % 2 === 0 ? "-rotate-3" : "rotate-3"}`} style={{ backgroundImage: `url('${t.image}')` }} role="img" aria-label={`${t.name} portrait`}></div>
 <div className="min-w-0">
@@ -202,6 +186,7 @@ function GivingPage() {
 ))}
 </div>
 </section>
+) : null}
 
             <section className="py-stack-lg px-margin-mobile md:px-margin-desktop text-center bg-white border-t-2 border-black">
                 <div className="max-w-4xl mx-auto py-14 md:py-16 px-6 md:px-12 bg-gradient-to-br from-[#7c3aed] via-[#9333ea] to-[#be185d] brutalist-shadow-lg relative overflow-hidden">
@@ -217,7 +202,7 @@ function GivingPage() {
                         <h2 className="font-display-lg text-headline-lg-mobile md:text-headline-lg text-white uppercase mb-6 tracking-tight">Ready to make a difference?</h2>
                         <p className="font-body-lg text-white/85 mb-10 max-w-2xl mx-auto">Join hundreds of others who are investing in the next phase of our journey. Your gift, regardless of size, makes a massive impact.</p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button className="rounded-none bg-white text-[#4e0046] px-12 py-4 font-headline-md text-2xl hover:scale-105 hover:bg-gray-100 transition-all shadow-lg">GIVE NOW</button>
+                            <a href={ONLINE_GIVE_URL} target="_blank" rel="noreferrer" className="inline-block rounded-none bg-white text-[#4e0046] px-12 py-4 font-headline-md text-2xl hover:scale-105 hover:bg-gray-100 transition-all shadow-lg">GIVE NOW</a>
                         </div>
                     </div>
                 </div>

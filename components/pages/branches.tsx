@@ -5,13 +5,13 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { BRANCHES, distanceMiles, osmEmbedUrl, type Branch } from "@/lib/branches";
+import { distanceMiles, hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
 
 
 
-function BranchesPage() {
+function BranchesPage({ branches }: { branches: Branch[] }) {
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<string>(BRANCHES[0]!.slug);
+  const [selected, setSelected] = useState<string>(branches[0]?.slug ?? "");
   const [origin, setOrigin] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
   const [locError, setLocError] = useState<string | null>(null);
@@ -19,25 +19,24 @@ function BranchesPage() {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     const list = q
-      ? BRANCHES.filter((b) =>
+      ? branches.filter((b) =>
           [b.name, b.city, b.region, b.address, b.postcode, ...b.tags]
             .join(" ")
             .toLowerCase()
             .includes(q),
         )
-      : [...BRANCHES];
+      : [...branches];
     if (origin) {
       return list
         .map((b) => ({ branch: b, miles: distanceMiles(origin, b) }))
         .sort((a, b) => a.miles - b.miles);
     }
     return list.map((b) => ({ branch: b, miles: null as number | null }));
-  }, [query, origin]);
+  }, [query, origin, branches]);
 
-  const active: Branch =
+  const active: Branch | undefined =
     results.find((r) => r.branch.slug === selected)?.branch ??
-    results[0]?.branch ??
-    BRANCHES[0]!;
+    results[0]?.branch;
 
   function useMyLocation() {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
@@ -136,10 +135,13 @@ function BranchesPage() {
           <div className="grid lg:grid-cols-[minmax(0,1fr)_400px] gap-8 items-start">
             {/* Map */}
             <div className="brutalist-border brutalist-shadow bg-surface-container-lowest order-1">
+              {active ? (
+                <>
               <div className="flex items-center justify-between gap-4 border-b-2 border-on-background px-5 py-3">
                 <p className="font-body-md text-[13px] font-bold uppercase tracking-wide">
                   {active.city}
                 </p>
+                {hasCoords(active) ? (
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
                     `${active.address}, ${active.postcode}`,
@@ -153,7 +155,9 @@ function BranchesPage() {
                     open_in_new
                   </span>
                 </a>
+                ) : null}
               </div>
+              {hasCoords(active) ? (
               <iframe
                 key={active.slug}
                 title={`Map of ${active.name}`}
@@ -161,9 +165,16 @@ function BranchesPage() {
                 loading="lazy"
                 className="w-full h-[340px] sm:h-[460px] lg:h-[560px] block"
               />
+              ) : (
+                <img
+                  src={active.image}
+                  alt={active.name}
+                  className="w-full h-[340px] sm:h-[460px] lg:h-[560px] object-cover"
+                />
+              )}
               <div className="border-t-2 border-on-background px-5 py-4 flex flex-wrap items-center justify-between gap-3">
                 <p className="font-body-md text-body-md">
-                  {active.address}, {active.postcode}
+                  {active.address}{active.postcode ? `, ${active.postcode}` : ""}
                 </p>
                 <Link
                   href={`/branches/${active.slug}`}
@@ -172,6 +183,13 @@ function BranchesPage() {
                   View branch
                 </Link>
               </div>
+                </>
+              ) : (
+                <div className="p-8">
+                  <p className="font-display-lg text-[22px] uppercase mb-2">No KP2 campuses yet</p>
+                  <p className="font-body-md text-on-surface-variant">Check back soon, or get in touch and we will connect you.</p>
+                </div>
+              )}
             </div>
 
             {/* Results list */}
@@ -182,7 +200,7 @@ function BranchesPage() {
 
               <div className="space-y-4 lg:max-h-[560px] lg:overflow-y-auto lg:pr-1">
                 {results.map(({ branch, miles }) => {
-                  const isActive = branch.slug === active.slug;
+                  const isActive = branch.slug === active?.slug;
                   return (
                     <button
                       key={branch.slug}
@@ -235,10 +253,10 @@ function BranchesPage() {
                       Try a nearby city, or join us on the digital campus.
                     </p>
                     <Link
-                      href={`/branches/${"online"}`}
+                      href="/contact"
                       className="inline-block bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border brutalist-shadow"
                     >
-                      Join online
+                      Get in touch
                     </Link>
                   </div>
                 )}

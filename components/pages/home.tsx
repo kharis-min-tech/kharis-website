@@ -5,56 +5,9 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { TestimonialCarousel } from "@/components/TestimonialCarousel";
+import { TestimonialCarousel, type Testimonial } from "@/components/TestimonialCarousel";
 
-function Index() {
-  const testimonials = [
-    {
-      quote:
-        "Christ found me when I had nothing left. Through Kharis I learned to trust Jesus again, and my home has peace.",
-      name: "Amaka O.",
-      location: "London",
-      color: "#7c3aed",
-      pattern: "radial-gradient(#a78bfa 1.5px, transparent 1.5px)",
-      patternSize: "18px 18px",
-    },
-    {
-      quote: "I came broken, and God met me in the Word. Jesus healed what counselling alone could not. Glory to God.",
-      name: "James T.",
-      location: "Birmingham",
-      color: "#c44569",
-      pattern: "repeating-linear-gradient(45deg, #f4a3b5 0px, #f4a3b5 1px, transparent 1px, transparent 14px)",
-      patternSize: "auto",
-    },
-    {
-      quote:
-        "Sunday after Sunday, Christ has been strengthening my faith. I am not the same person who first walked through those doors.",
-      name: "Grace A.",
-      location: "Brighton",
-      color: "#4f46e5",
-      pattern:
-        "url(\"data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 3l1.5 4.5h4.5l-3.75 2.75 1.5 4.5L16 12.5l-3.75 2.25 1.5-4.5L9 7.5h4.5z' fill='%234f46e5' fill-opacity='0.12'/%3E%3C/svg%3E\")",
-      patternSize: "32px 32px",
-    },
-    {
-      quote:
-        "The gospel was preached clearly, and I gave my life to Jesus. His grace carried me through the darkest season of my life.",
-      name: "Daniel K.",
-      location: "Accra",
-      color: "#e85d3a",
-      pattern: "linear-gradient(#fdba74 1px, transparent 1px), linear-gradient(90deg, #fdba74 1px, transparent 1px)",
-      patternSize: "22px 22px",
-    },
-    {
-      quote: "Prayer changed everything. I walked in broken, but Christ restored my mind, my heart, and my family.",
-      name: "Sarah M.",
-      location: "Croydon",
-      color: "#e84393",
-      pattern:
-        "url(\"data:image/svg+xml,%3Csvg width='40' height='20' viewBox='0 0 40 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q10 0 20 10 T40 10' stroke='%23e84393' stroke-opacity='0.15' fill='none' stroke-width='1.5'/%3E%3C/svg%3E\")",
-      patternSize: "40px 20px",
-    },
-  ];
+function Index({ testimonials }: { testimonials: Testimonial[] }) {
 
   return (
     <div className="bg-white text-gray-900 font-body-md overflow-x-hidden pt-[74px]">
@@ -372,7 +325,13 @@ function Index() {
               REAL STORIES
             </h2>
 
-            <TestimonialCarousel testimonials={testimonials} />
+            {testimonials.length > 0 ? (
+              <TestimonialCarousel testimonials={testimonials} />
+            ) : (
+              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl">
+                Stories from the family will land here as people share what God is doing.
+              </p>
+            )}
 
             <div className="flex justify-center sm:justify-end mt-8">
               <button className="bg-[#7c3aed] !text-white font-label-comic text-label-comic uppercase px-8 py-4 brutalist-border brutalist-shadow">

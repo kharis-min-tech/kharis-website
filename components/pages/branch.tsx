@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
-import { BRANCHES, osmEmbedUrl, type Branch } from "@/lib/branches";
+import { hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
 
 
 
@@ -28,9 +28,7 @@ function BranchNotFound() {
   );
 }
 
-function BranchPage({ branch }: { branch: Branch }) {
-  
-  const others = BRANCHES.filter((b) => b.slug !== branch.slug).slice(0, 3);
+function BranchPage({ branch, others }: { branch: Branch; others: Branch[] }) {
 
   return (
     <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
@@ -76,12 +74,21 @@ function BranchPage({ branch }: { branch: Branch }) {
               >
                 Plan your visit
               </a>
+              {branch.email ? (
               <a
                 href={`mailto:${branch.email}`}
                 className="bg-secondary text-on-secondary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-4 brutalist-border brutalist-shadow"
               >
                 Contact the team
               </a>
+              ) : (
+              <Link
+                href="/contact"
+                className="bg-secondary text-on-secondary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-4 brutalist-border brutalist-shadow"
+              >
+                Contact the team
+              </Link>
+              )}
             </div>
           </div>
         </section>
@@ -147,22 +154,29 @@ function BranchPage({ branch }: { branch: Branch }) {
               {branch.pastorRole}
             </p>
             <ul className="space-y-2 font-body-md text-body-md">
+              {branch.phone ? (
               <li>
                 <a href={`tel:${branch.phone.replace(/\s/g, "")}`} className="hover:text-primary">
                   {branch.phone}
                 </a>
               </li>
+              ) : null}
+              {branch.email ? (
               <li>
                 <a href={`mailto:${branch.email}`} className="hover:text-primary break-all">
                   {branch.email}
                 </a>
               </li>
+              ) : null}
+              {branch.instagram ? (
               <li className="text-on-surface-variant">{branch.instagram}</li>
+              ) : null}
             </ul>
           </div>
         </section>
 
         {/* Map */}
+        {hasCoords(branch) ? (
         <section className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pb-16">
           <div className="brutalist-border brutalist-shadow bg-surface-container-lowest">
             <div className="border-b-2 border-on-background px-5 py-3">
@@ -178,6 +192,7 @@ function BranchPage({ branch }: { branch: Branch }) {
             />
           </div>
         </section>
+        ) : null}
 
         {/* What to expect */}
         <section className="border-y-4 border-on-background bg-secondary-container text-on-secondary-container">

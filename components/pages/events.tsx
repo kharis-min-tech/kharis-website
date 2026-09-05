@@ -7,7 +7,6 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   CATEGORY_ICON,
-  EVENTS,
   EVENT_CATEGORIES,
   type ChurchEvent,
 } from "@/lib/events";
@@ -132,20 +131,23 @@ function EventCard({ event }: { event: ChurchEvent }) {
   );
 }
 
-function EventsPage() {
+function EventsPage({ events }: { events: ChurchEvent[] }) {
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [query, setQuery] = useState("");
 
   const sorted = useMemo(
     () =>
-      [...EVENTS].sort(
+      [...events].sort(
         (a, b) => new Date(a.starts).getTime() - new Date(b.starts).getTime(),
       ),
-    [],
+    [events],
   );
 
-  const featured = (sorted.find((e) => e.featured) ??
-    sorted[0]) as ChurchEvent;
+  const featured = sorted.find((e) => e.featured) ?? sorted[0];
+  const categories = useMemo(() => {
+    const present = new Set(sorted.map((e) => e.category));
+    return ["All", ...EVENT_CATEGORIES.filter((c) => present.has(c))];
+  }, [sorted]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -207,12 +209,13 @@ function EventsPage() {
         </section>
 
         {/* NEXT UP + COUNTDOWN */}
+        {featured ? (
         <section className="bg-surface-container-low h-screen pt-stack-lg border-b-4 border-on-background overflow-hidden">
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop h-full">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch h-full">
               <div className="lg:col-span-7 relative border-2 border-on-background neo-shadow-lg overflow-hidden group">
                 <img
-                  src={WORSHIP}
+                  src={featured.image || WORSHIP}
                   alt={`${featured.title} at Kharis Phase 2`}
                   className="w-full h-full min-h-[320px] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700"
                   loading="lazy"
@@ -254,6 +257,7 @@ function EventsPage() {
             </div>
           </div>
         </section>
+        ) : null}
 
         {/* SPECIAL SERVICES */}
         <section className="bg-surface py-stack-lg">
@@ -336,7 +340,7 @@ function EventsPage() {
             </div>
 
             <div className="flex flex-wrap gap-3 mb-stack-lg">
-              {["All", ...EVENT_CATEGORIES].map((cat) => {
+              {categories.map((cat) => {
                 const active = activeCategory === cat;
                 return (
                   <button
