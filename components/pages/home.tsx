@@ -69,45 +69,49 @@ function Index() {
       <header className="dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
         <div className="absolute inset-0 grid grid-cols-2 md:flex md:flex-row w-full h-full z-0">
           <div className="relative col-span-2 md:flex-1 group overflow-hidden border-b-2 md:border-b-0 md:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
-            <img
-              alt="Kharis departments serving"
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/worship.jpg"
-              loading="eager"
-              decoding="async"
+              src="/assets/Choir-video.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
           <div className="relative md:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#deb7ff]/10">
-            <img
-              alt="Young adults fellowship"
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/young-adults.jpg"
-              loading="lazy"
-              decoding="async"
+              src="/assets/crowd.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
           <div className="relative md:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#f7be1d]/10">
-            <img
-              alt="Sunday service at Kharis"
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/events-sunday-service.jpg"
-              loading="lazy"
-              decoding="async"
+              src="/assets/Choir2.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
           <div className="relative hidden md:block md:flex-1 group overflow-hidden halftone-bg text-[#eaddff]/10">
-            <img
-              alt="Kharis branch location"
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/branch-slide-1.jpg"
-              loading="lazy"
-              decoding="async"
+              src="/assets/dancing.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
