@@ -5,13 +5,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-import youngAdults from "@/assets/photos/young-adults.jpg.asset.json";
-import community from "@/assets/photos/community.jpg.asset.json";
-import branchSlide2 from "@/assets/photos/branch-slide-2.jpg.asset.json";
-import branchSlide4 from "@/assets/photos/branch-slide-4.jpg.asset.json";
-import branchSlide5 from "@/assets/photos/branch-slide-5.jpg.asset.json";
-
-
+const YOUNG_ADULTS = "/assets/young-adults.jpg";
+const COMMUNITY = "/assets/community.jpg";
+const BRANCH_SLIDE_2 = "/assets/branch-slide-2.jpg";
+const BRANCH_SLIDE_4 = "/assets/branch-slide-4.jpg";
+const BRANCH_SLIDE_5 = "/assets/branch-slide-5.jpg";
 
 const HANGOUTS = [
   {
@@ -20,7 +18,7 @@ const HANGOUTS = [
     copy: "The ultimate vibe check. Networking, music, and great conversations under the stars.",
     time: "19:00 - 22:00",
     tags: ["SOCIAL", "DOWNTOWN"],
-    image: community.url,
+    image: COMMUNITY,
     alt: "Kharis community social evening",
   },
   {
@@ -29,7 +27,7 @@ const HANGOUTS = [
     copy: "Competitive ball followed by a short word and community chill session.",
     time: "18:00 - 20:30",
     tags: ["SPORTS", "WEST END"],
-    image: branchSlide4.url,
+    image: BRANCH_SLIDE_4,
     alt: "Kharis sports fellowship",
   },
   {
@@ -38,7 +36,7 @@ const HANGOUTS = [
     copy: "For the makers and dreamers. A space to share work, collaborate, and get inspired.",
     time: "19:30 - 21:30",
     tags: ["CREATIVE", "STUDIO A"],
-    image: branchSlide5.url,
+    image: BRANCH_SLIDE_5,
     alt: "Creative fellowship gathering",
   },
 ];
@@ -91,7 +89,7 @@ function FellowshipsPage() {
                 <img
                   alt="Young adults fellowship at Kharis"
                   className="w-full grayscale hover:grayscale-0 transition-all duration-500 object-cover aspect-square"
-                  src={youngAdults.url}
+                  src={YOUNG_ADULTS}
                   loading="eager"
                   decoding="async"
                 />
@@ -127,7 +125,7 @@ function FellowshipsPage() {
 
                 <div className="relative h-56 md:h-72 border-b-4 border-on-background overflow-hidden">
                   <img
-                    src={branchSlide2.url}
+                    src={BRANCH_SLIDE_2}
                     alt="New Breeds fellowship"
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                     loading="lazy"

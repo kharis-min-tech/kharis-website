@@ -99,7 +99,7 @@ export const DEPARTMENTS: Department[] = [
     tagline: "DIGITAL LIGHT",
     description:
       "Capturing moments and amplifying the message across all digital platforms.",
-image: "/assets/branch-slide-2.jpg",
+    image: "/assets/branch-slide-2.jpg",
     accent: "bg-primary-fixed-dim",
     icon: "videocam",
     roles: ["Camera & Video", "Post Production", "Social Media"],

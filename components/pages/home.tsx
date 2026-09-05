@@ -6,12 +6,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
-import appStep1 from "@/assets/photos/app-steps-step-1-messages.png.asset.json";
-import appStep2 from "@/assets/photos/app-steps-step-2-browse.png.asset.json";
-import appStep3 from "@/assets/photos/app-steps-step-3-player.png.asset.json";
-import pastorDavid from "@/assets/photos/leadership-pastor-david.jpg.asset.json";
-
-
 
 function Index() {
   const testimonials = [
@@ -99,7 +93,7 @@ function Index() {
               loop
               playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/Choir2.mp4"
+              src="/assets/choir2.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -359,7 +353,7 @@ function Index() {
                 <img
                   alt="Pastor David Antwi, Head Pastor of Kharis Phase 2"
                   className="relative w-full aspect-[4/5] object-cover rounded-[2rem] shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500"
-                  src={pastorDavid.url}
+                  src="/assets/leadership-pastor-david.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -608,7 +602,7 @@ function Index() {
                   <img
                     alt="Kharis app home screen"
                     className="w-full h-auto rounded-2xl"
-                    src={appStep1.url}
+                    src="/assets/app-steps-step-1-messages.png"
                     loading="lazy"
                     decoding="async"
                   />
@@ -629,7 +623,7 @@ function Index() {
                   <img
                     alt="Kharis app search screen"
                     className="w-full h-auto rounded-2xl"
-                    src={appStep2.url}
+                    src="/assets/app-steps-step-2-browse.png"
                     loading="lazy"
                     decoding="async"
                   />
@@ -650,7 +644,7 @@ function Index() {
                   <img
                     alt="Kharis app player screen"
                     className="w-full h-auto rounded-2xl"
-                    src={appStep3.url}
+                    src="/assets/app-steps-step-3-player.png"
                     loading="lazy"
                     decoding="async"
                   />

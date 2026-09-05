@@ -15,5 +15,5 @@ npm run build && npm start
 - `app/` — App Router pages, `layout.tsx`, `not-found.tsx`, `error.tsx`
 - `components/` — shared components; `components/pages/*` hold each page's client UI
 - `lib/`, `data/`, `hooks/` — data and helpers
-- `assets/` — image/video metadata JSON pointing at files in `public/assets`
+- `public/assets/` — photos, logos and videos served at `/assets/...`
 - `app/globals.css` — Tailwind v4 theme, design tokens and custom utilities

@@ -2,13 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { DEPARTMENTS } from "@/data/departments";
-import kMusicVideo from "@/assets/K-Music-video.mp4.asset.json";
-import choirVideo from "@/assets/Choir-video.mp4.asset.json";
 
 // Add a department video by adding one line here.
 const DEPARTMENT_VIDEOS: Record<string, string> = {
-  "K-MUSIC": kMusicVideo.url,
-  CHOIR: choirVideo.url,
+  CHOIR: "/assets/Choir-video.mp4",
 };
 
 export function DepartmentVideoHero() {

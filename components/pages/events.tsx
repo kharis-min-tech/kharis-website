@@ -12,14 +12,9 @@ import {
   type ChurchEvent,
 } from "@/lib/events";
 
-import heroWorship from "@/assets/photos/events-hero-worship.jpg.asset.json";
-import bassSunday from "@/assets/photos/bass-sunday.jpg.asset.json";
-import sportsDay from "@/assets/photos/sports-day.jpg.asset.json";
-import praiseNight from "@/assets/photos/praise-night.jpg.asset.json";
-import worship from "@/assets/photos/worship.jpg.asset.json";
-import pastorDavid from "@/assets/photos/leadership-pastor-david.jpg.asset.json";
-
-
+const HERO_WORSHIP = "/assets/events-hero-worship.jpg";
+const WORSHIP = "/assets/worship.jpg";
+const PASTOR_DAVID = "/assets/leadership-pastor-david.jpg";
 
 const SPECIAL_SERVICES = [
   {
@@ -27,21 +22,21 @@ const SPECIAL_SERVICES = [
     time: "Monthly · Sunday",
     title: "Bring A Soul Sunday",
     note: "We fill the room with friends, family and first-timers — a high-energy Sunday built for souls.",
-    image: bassSunday.url,
+    image: "/assets/bass-sunday.jpg",
   },
   {
     day: "Sports Day",
     time: "Summer",
     title: "Sports Day",
     note: "Track, football and full-blown team rivalry — the church family outdoors for a day of games.",
-    image: sportsDay.url,
+    image: "/assets/sports-day.jpg",
   },
   {
     day: "Praise Night",
     time: "Seasonal",
     title: "Praise Night",
     note: "A night handed over to worship — live praise, testimony and the Word until the room shifts.",
-    image: praiseNight.url,
+    image: "/assets/praise-night.jpg",
   },
 ];
 
@@ -175,7 +170,7 @@ function EventsPage() {
         {/* HERO */}
         <section className="relative bg-on-background text-surface py-stack-lg min-h-[60vh] flex flex-col justify-center overflow-hidden border-b-4 border-primary">
           <img
-            src={heroWorship.url}
+            src={HERO_WORSHIP}
             alt="Kharis Phase 2 congregation worshipping together"
             className="absolute inset-0 w-full h-full object-cover opacity-25 grayscale"
             loading="eager"
@@ -217,7 +212,7 @@ function EventsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch h-full">
               <div className="lg:col-span-7 relative border-2 border-on-background neo-shadow-lg overflow-hidden group">
                 <img
-                  src={worship.url}
+                  src={WORSHIP}
                   alt={`${featured.title} at Kharis Phase 2`}
                   className="w-full h-full min-h-[320px] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700"
                   loading="lazy"
@@ -404,7 +399,7 @@ function EventsPage() {
                     <img
                       alt="Pastor David Antwi, Head Pastor of Kharis Ministries"
                       className="w-full h-full object-cover object-top grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-                      src={pastorDavid.url}
+                      src={PASTOR_DAVID}
                       loading="lazy"
                       decoding="async"
                     />
