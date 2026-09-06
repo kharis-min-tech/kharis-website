@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { listBranches, listBranchData } from "@/lib/branches";
 import { LocationsClient } from "./LocationsClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Kharis Church Locations | Find a Branch Near You",
   description:

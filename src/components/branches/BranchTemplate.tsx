@@ -32,6 +32,11 @@ import BranchGallery from "@/components/branches/BranchGallery";
 import BranchMonthCalendar from "@/components/branches/BranchMonthCalendar";
 import BranchContactForm from "@/components/branches/BranchContactForm";
 import BranchMediaModal from "@/components/branches/BranchMediaModal";
+import { BranchFallbackImage } from "@/components/branches/BranchFallbackImage";
+import {
+  FALLBACK_PASTOR_IMAGE,
+  withBranchImage,
+} from "@/lib/branch-images";
 
 interface BranchTemplateProps {
   branchData: BranchData;
@@ -86,9 +91,11 @@ export function BranchTemplate({
         `Whether you are visiting ${currentBranch.city} for a season or looking for a church to call home, there is a place for you here.`,
       ];
 
-  const galleryImages: string[] = currentBranch.galleryImages?.length
-    ? currentBranch.galleryImages
-    : DEFAULT_GALLERY_IMAGES;
+  const galleryImages: string[] = (
+    currentBranch.galleryImages?.length
+      ? currentBranch.galleryImages
+      : DEFAULT_GALLERY_IMAGES
+  ).map((src, i) => withBranchImage(src, `${currentBranch.slug}-gallery-${i}`));
 
   const [zoomLevel, setZoomLevel] = useState(15);
 
@@ -147,20 +154,20 @@ export function BranchTemplate({
       {/* Main Content Area */}
       <main className="w-full">
         {/* HERO SECTION */}
-        <section className="branch-hero relative w-full min-h-[65vh] flex items-center justify-center pt-10 pb-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-          <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10">
-            <div
-              className="absolute inset-0 bg-cover bg-center opacity-90 scale-105 transform hover:scale-100 transition-transform duration-1000"
-              style={{
-                backgroundImage: `url('${currentBranch.hero_image_url}')`,
-              }}
+        <section className="branch-hero relative flex w-full min-h-0 items-center justify-center px-4 pt-6 pb-8 sm:min-h-[65vh] sm:px-5 sm:pt-10 sm:pb-16 md:px-8 max-w-[1536px] mx-auto">
+          <div className="absolute inset-x-4 top-6 bottom-4 z-0 overflow-hidden rounded-[1.75rem] border border-white/10 shadow-lg sm:inset-x-5 sm:top-10 sm:bottom-8 sm:rounded-3xl md:inset-x-8">
+            <BranchFallbackImage
+              src={currentBranch.hero_image_url}
+              seed={currentBranch.slug}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover opacity-90 scale-105 transform hover:scale-100 transition-transform duration-1000"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
           </div>
 
-          <div className="relative z-10 flex flex-col items-center text-center max-w-4xl pt-16 text-white">
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
+          <div className="relative z-10 flex w-full max-w-4xl flex-col items-center px-3 pt-12 pb-8 text-center text-white sm:px-6 sm:pt-16 sm:pb-12">
+            <div className="mb-8 flex flex-col items-center gap-3 sm:mb-6 sm:flex-row sm:flex-wrap sm:justify-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
                 <MapPin className="w-4 h-4 text-[#d4920a]" />
                 <span className="font-semibold text-xs text-white uppercase tracking-wider">
                   Kharis Church UK • {currentBranch.city} Branch
@@ -171,7 +178,7 @@ export function BranchTemplate({
               <div className="relative">
                 <button
                   onClick={() => setBranchDropdownOpen(!branchDropdownOpen)}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#800654] border border-[#800654] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#5c033c] cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#800654] border border-[#800654] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#5c033c] cursor-pointer"
                 >
                   <span>Switch branch</span>
                   <ChevronDown
@@ -228,21 +235,21 @@ export function BranchTemplate({
               </div>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight text-white!">
+            <h1 className="mb-5 text-[1.85rem] font-extrabold leading-[1.18] tracking-tight text-white! sm:mb-6 sm:text-5xl md:text-6xl">
               Welcome to <br />
               <span className="bg-gradient-to-r from-[#e8a33d] via-[#d4920a] to-[#ffffff] bg-clip-text text-transparent">
                 {currentBranch.name}
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl font-medium text-gray-300 max-w-2xl mb-10 leading-relaxed">
+            <p className="mb-8 max-w-2xl px-1 text-[0.95rem] font-medium leading-relaxed text-gray-300 sm:mb-10 sm:text-lg md:text-xl">
               {currentBranch.description}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <div className="flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:w-auto sm:flex-row sm:gap-4">
               <button
                 onClick={() => setIsPlanVisitOpen(true)}
-                className="bg-[#800654] hover:bg-[#5c033c] text-white! font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-[#800654]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#800654] px-7 py-3.5 text-sm font-extrabold text-white! shadow-xl shadow-[#800654]/30 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#5c033c] sm:px-8 sm:py-4"
               >
                 <span>Plan Your Visit</span>
                 <ArrowRight className="w-4 h-4" />
@@ -250,7 +257,7 @@ export function BranchTemplate({
 
               <a
                 href="#events"
-                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md"
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-extrabold text-white shadow-lg backdrop-blur-md transition-all duration-300 hover:bg-white/20 sm:px-8 sm:py-4"
               >
                 <Calendar className="w-4 h-4 text-[#e8a33d]" />
                 <span>Upcoming Events</span>
@@ -258,7 +265,7 @@ export function BranchTemplate({
 
               <button
                 onClick={() => setIsGiveOpen(true)}
-                className="bg-transparent hover:bg-white/10 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-white/20 bg-transparent px-7 py-3.5 text-sm font-extrabold text-white transition-all duration-300 hover:bg-white/10 sm:px-8 sm:py-4"
               >
                 <Heart className="w-4 h-4 text-[#e8a33d] fill-current" />
                 <span>Give</span>
@@ -276,7 +283,7 @@ export function BranchTemplate({
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
               Join Us This Sunday
             </h2>
-            <p className="text-base font-medium text-gray-400 max-w-2xl mx-auto">
+            <p className="text-base font-medium text-fg-soft max-w-2xl mx-auto">
               We can't wait to host you. Choose a service time that works best
               for you and your family.
             </p>
@@ -442,9 +449,10 @@ export function BranchTemplate({
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <div className="aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
-                  <img
+                  <BranchFallbackImage
                     src={currentBranch.pastor_image_url}
-                    alt={currentBranch.pastor_name}
+                    fallback={FALLBACK_PASTOR_IMAGE}
+                    alt={currentBranch.pastor_name ?? "Branch pastor"}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -520,9 +528,10 @@ export function BranchTemplate({
               onClick={() => setMediaModal({ type: "video" })}
               className="group relative block aspect-video w-full cursor-pointer text-left"
             >
-              <img
-                src={currentBranch.heroImage}
-                alt={`Kharis ${currentBranch.city} worship`}
+              <BranchFallbackImage
+                src={currentBranch.hero_image_url}
+                seed={currentBranch.slug}
+                alt={`Kharis ${city} worship`}
                 className="h-full w-full object-cover opacity-70 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />

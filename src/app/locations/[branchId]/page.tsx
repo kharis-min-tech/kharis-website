@@ -6,6 +6,7 @@ import {
   listBranchData,
   getBranchBySlug,
 } from "@/lib/branches";
+import { withBranchImage } from "@/lib/branch-images";
 
 interface PageProps {
   params: Promise<{
@@ -58,6 +59,8 @@ export async function generateMetadata({
     branch.description ??
     `Visit Kharis Church ${location}.`;
 
+  const ogImage = withBranchImage(branch.hero_image_url, branch.slug);
+
   return {
     title,
     description,
@@ -66,28 +69,18 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
-
-      ...(branch.hero_image_url
-        ? {
-            images: [
-              {
-                url: branch.hero_image_url,
-              },
-            ],
-          }
-        : {}),
+      images: [
+        {
+          url: ogImage,
+        },
+      ],
     },
 
     twitter: {
       card: "summary_large_image",
       title,
       description,
-
-      ...(branch.hero_image_url
-        ? {
-            images: [branch.hero_image_url],
-          }
-        : {}),
+      images: [ogImage],
     },
   };
 }

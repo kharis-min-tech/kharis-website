@@ -71,11 +71,6 @@ export function SiteFooter({ tone }: Props) {
                 </a>
               </li>
               <li>
-                <Link href="/life/baptism" className={linkHover}>
-                  Become a believer
-                </Link>
-              </li>
-              <li>
                 <Link href="/life/departments" className={linkHover}>
                   Volunteer
                 </Link>

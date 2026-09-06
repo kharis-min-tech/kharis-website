@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { BranchSlide } from "@/lib/branch-slides";
+import { withBranchImage } from "@/lib/branch-images";
 
 const INTERVAL_MS = 4200;
 
@@ -89,6 +90,7 @@ export function BranchCarousel({ slides }: Props) {
         >
           {reel.map((slide, i) => {
             const active = i === index;
+            const image = withBranchImage(slide.image, slide.name);
             return (
               <article
                 key={`${slide.name}-${i}`}
@@ -99,10 +101,10 @@ export function BranchCarousel({ slides }: Props) {
                 aria-label={`${slide.title} ${slide.subtitle}`}
               >
                 <Image
-                  src={slide.image}
+                  src={image}
                   alt={`${slide.subtitle} branch`}
                   fill
-                  unoptimized={slide.image.startsWith("/images/")}
+                  unoptimized={image.startsWith("/images/")}
                   className="object-cover object-center"
                   sizes="(max-width: 768px) 86vw, 1000px"
                   quality={95}

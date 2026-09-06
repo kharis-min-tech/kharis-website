@@ -29,7 +29,7 @@ export function MissionSection() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden bg-bg px-5 pb-10 pt-7 md:px-8 md:pb-12 md:pt-9"
+      className="mission-section relative overflow-hidden bg-bg px-5 pb-10 pt-7 md:px-8 md:pb-12 md:pt-9"
     >
       <div className="mx-auto max-w-7xl text-center">
         <Reveal variant="up" distance={28} duration={0.8} className="mb-4">
@@ -40,18 +40,34 @@ export function MissionSection() {
         </Reveal>
 
         <h2 className="section-title mission-section-title mx-auto max-w-none text-center text-[clamp(1.15rem,3.2vw,2.85rem)]">
-          {WORDS.map((word, i) => (
-            <MissionWord
-              key={`${word}-${i}`}
-              word={word}
-              index={i}
-              total={WORDS.length}
-              progress={scrollYProgress}
-              isDark={isDark}
-              quoteBefore={i === 0 ? "\u201C" : undefined}
-              quoteAfter={i === WORDS.length - 1 ? "\u201D" : undefined}
-            />
-          ))}
+          <span className="mission-marquee__track">
+            <span className="mission-marquee__copy">
+              {WORDS.map((word, i) => (
+                <MissionWord
+                  key={`${word}-${i}`}
+                  word={word}
+                  index={i}
+                  total={WORDS.length}
+                  progress={scrollYProgress}
+                  isDark={isDark}
+                  quoteBefore={i === 0 ? "\u201C" : undefined}
+                  quoteAfter={i === WORDS.length - 1 ? "\u201D" : undefined}
+                />
+              ))}
+            </span>
+            <span className="mission-marquee__copy mission-marquee__copy--clone" aria-hidden>
+              {WORDS.map((word, i) => (
+                <span
+                  key={`clone-${word}-${i}`}
+                  className="mission-word inline whitespace-nowrap [&:not(:last-child)]:mr-[0.28em]"
+                >
+                  {i === 0 ? "\u201C" : null}
+                  {word}
+                  {i === WORDS.length - 1 ? "\u201D" : null}
+                </span>
+              ))}
+            </span>
+          </span>
         </h2>
       </div>
     </section>
@@ -88,7 +104,7 @@ function MissionWord({
   return (
     <motion.span
       style={{ color, y, opacity }}
-      className="inline whitespace-nowrap [&:not(:last-child)]:mr-[0.28em]"
+      className="mission-word inline whitespace-nowrap [&:not(:last-child)]:mr-[0.28em]"
     >
       {quoteBefore ? <span aria-hidden>{quoteBefore}</span> : null}
       {word}

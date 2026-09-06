@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { TestimonyFormModal } from "@/components/TestimonyFormModal";
+import { TestimonyReadModal } from "@/components/TestimonyReadModal";
 import type { Testimony } from "@/lib/testimonies";
 
 interface TestimoniesSectionProps {
@@ -25,11 +26,100 @@ const photos = [
   },
 ];
 
+function TestimonyCard({
+  item,
+  index,
+  onReadMore,
+}: {
+  item: Testimony;
+  index: number;
+  onReadMore: (testimony: Testimony) => void;
+}) {
+  const quoteRef = useRef<HTMLParagraphElement>(null);
+  const [needsMore, setNeedsMore] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = quoteRef.current;
+    if (!el) return;
+
+    const check = () => {
+      const overflows = el.scrollHeight - el.clientHeight > 1;
+      setNeedsMore(overflows || item.description.trim().length > 140);
+    };
+
+    check();
+    const frame = window.requestAnimationFrame(check);
+    const observer = new ResizeObserver(check);
+    observer.observe(el);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [item.description]);
+
+  return (
+    <article className={`testimony-card testimony-card--${(index % 5) + 1}`}>
+      <span className="testimony-card__wall" aria-hidden />
+      <div className="testimony-card__ornament" aria-hidden>
+        <svg
+          className="testimony-card__marks"
+          viewBox="0 0 72 48"
+          fill="none"
+        >
+          <path
+            d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
+            fill="currentColor"
+          />
+        </svg>
+        <svg
+          className="testimony-card__star testimony-card__star--a"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 1.4 13.8 9.2 21.6 11 13.8 12.8 12 20.6 10.2 12.8 2.4 11 10.2 9.2 12 1.4Z"
+            fill="currentColor"
+          />
+        </svg>
+        <svg
+          className="testimony-card__star testimony-card__star--b"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 3.2 13.1 9.1 19 10.2 13.1 11.3 12 17.2 10.9 11.3 5 10.2 10.9 9.1 12 3.2Z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+      <p ref={quoteRef} className="testimony-card__quote testimony-card__quote--clamp">
+        {item.description}
+      </p>
+      {needsMore ? (
+        <button
+          type="button"
+          className="testimony-card__more"
+          aria-haspopup="dialog"
+          aria-label={`Read more of ${item.name}'s testimony`}
+          onClick={() => onReadMore(item)}
+        >
+          Read more
+        </button>
+      ) : null}
+      <div className="testimony-card__meta">
+        <strong>{item.name}</strong>
+        <span>{item.branch_name}</span>
+      </div>
+    </article>
+  );
+}
+
 export function TestimoniesSection({
   testimonies,
 }: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
   const [formOpen, setFormOpen] = useState(false);
+  const [selected, setSelected] = useState<Testimony | null>(null);
 
   const openForm = useCallback(() => setFormOpen(true), []);
   const closeForm = useCallback(() => {
@@ -120,49 +210,12 @@ export function TestimoniesSection({
           <div className="testimony-viewport">
             <div ref={railRef} className="testimony-rail">
               {testimonies.map((item, i) => (
-                <article
-                  key={item.name}
-                  className={`testimony-card testimony-card--${(i % 5) + 1}`}
-                >
-                  <span className="testimony-card__wall" aria-hidden />
-                  <div className="testimony-card__ornament" aria-hidden>
-                    <svg
-                      className="testimony-card__marks"
-                      viewBox="0 0 72 48"
-                      fill="none"
-                    >
-                      <path
-                        d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    <svg
-                      className="testimony-card__star testimony-card__star--a"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M12 1.4 13.8 9.2 21.6 11 13.8 12.8 12 20.6 10.2 12.8 2.4 11 10.2 9.2 12 1.4Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    <svg
-                      className="testimony-card__star testimony-card__star--b"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M12 3.2 13.1 9.1 19 10.2 13.1 11.3 12 17.2 10.9 11.3 5 10.2 10.9 9.1 12 3.2Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </div>
-                  <p className="testimony-card__quote">{item.description}</p>
-                  <div className="testimony-card__meta">
-                    <strong>{item.name}</strong>
-                    <span>{item.branch_name}</span>
-                  </div>
-                </article>
+                <TestimonyCard
+                  key={`${item.name}-${i}`}
+                  item={item}
+                  index={i}
+                  onReadMore={setSelected}
+                />
               ))}
             </div>
           </div>
@@ -199,6 +252,10 @@ export function TestimoniesSection({
       </div>
 
       <TestimonyFormModal open={formOpen} onClose={closeForm} />
+      <TestimonyReadModal
+        testimony={selected}
+        onClose={() => setSelected(null)}
+      />
     </section>
   );
 }

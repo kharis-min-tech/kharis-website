@@ -24,7 +24,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
           <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold text-white">
             Contact {branch.city}
           </h2>
-          <p className="mt-4 max-w-md text-sm font-medium leading-relaxed text-gray-300">
+          <p className="mt-4 max-w-md text-sm font-medium leading-relaxed text-fg-soft">
             Have a question, a prayer request, or want to know more before you visit? Our
             {' '}{branch.city} team would love to hear from you.
           </p>

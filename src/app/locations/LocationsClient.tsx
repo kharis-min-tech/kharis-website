@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapPin, Search, Clock, CalendarDays, ChevronRight, Compass } from "lucide-react";
-import type { BranchItem } from "@/lib/branches";
+import type { BranchFamily, BranchItem } from "@/lib/branches";
+import { getBranchFamily } from "@/lib/branches";
 import type { BranchData } from "@/data/branchesData";
 import BranchMap from "@/components/branches/BranchMap";
+import { BranchFallbackImage } from "@/components/branches/BranchFallbackImage";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -15,25 +17,54 @@ interface Props {
   full: BranchData[];
 }
 
+const FAMILIES: { id: "all" | BranchFamily; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "kharis", label: "Kharis" },
+  { id: "kp2", label: "KP2" },
+];
+
 export function LocationsClient({ items: branches, full }: Props) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [family, setFamily] = useState<"all" | BranchFamily>("all");
   const [region, setRegion] = useState<string>("All");
 
-  const regions = useMemo(
-    () => ["All", ...Array.from(new Set(branches.map((b) => b.region)))],
-    [branches],
+  const byFamily = useMemo(
+    () =>
+      family === "all"
+        ? branches
+        : branches.filter((b) => b.family === family),
+    [branches, family],
   );
+
+  const regions = useMemo(
+    () => ["All", ...Array.from(new Set(byFamily.map((b) => b.region)))],
+    [byFamily],
+  );
+
+  useEffect(() => {
+    if (region !== "All" && !regions.includes(region)) setRegion("All");
+  }, [region, regions]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return branches.filter((b) => {
+    return byFamily.filter((b) => {
       const matchesQuery =
         !q ||
-        [b.name, b.city, b.postcode, b.address].some((v) => v?.toLowerCase().includes(q));
+        [b.name, b.city, b.postcode, b.address].some((v) =>
+          v?.toLowerCase().includes(q),
+        );
       return matchesQuery && (region === "All" || b.region === region);
     });
-  }, [branches, query, region]);
+  }, [byFamily, query, region]);
+
+  const mapBranches = useMemo(
+    () =>
+      family === "all"
+        ? full
+        : full.filter((b) => getBranchFamily(b.name, b.slug) === family),
+    [full, family],
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--page-bg)] pt-[4.5rem] font-sans text-[var(--page-fg)]">
@@ -68,6 +99,27 @@ export function LocationsClient({ items: branches, full }: Props) {
                 className="w-full rounded-2xl border border-[var(--border)] bg-[var(--input-bg)] py-4 pl-12 pr-4 text-sm font-bold shadow-xl outline-none focus:ring-2 focus:ring-[var(--purple)]"
               />
             </div>
+            <div
+              className="mx-auto flex w-fit rounded-full border border-[var(--border)] bg-[var(--surface-muted)] p-1 shadow-sm"
+              role="group"
+              aria-label="Filter by church family"
+            >
+              {FAMILIES.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setFamily(item.id)}
+                  className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition-all ${
+                    family === item.id
+                      ? "bg-[var(--purple)] text-white shadow-md"
+                      : "text-[var(--page-fg)] hover:bg-[var(--card-bg)]"
+                  }`}
+                  aria-pressed={family === item.id}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
             <div className="flex flex-wrap items-center justify-center gap-2">
               {regions.map((r) => (
                 <button
@@ -88,20 +140,25 @@ export function LocationsClient({ items: branches, full }: Props) {
       </section>
 
       <BranchMap
-        branches={full}
+        branches={mapBranches}
         onSelectBranch={(id) => router.push(`/locations/${id}`)}
       />
 
       <section className="mx-auto w-full max-w-[1536px] px-5 pb-20 md:px-8">
         <h2 className="mb-8 border-b border-[var(--border)] pb-6 text-2xl font-extrabold">
-          Our Branches ({filtered.length})
+          {family === "kp2"
+            ? "KP2 Branches"
+            : family === "kharis"
+              ? "Kharis Branches"
+              : "Our Branches"}{" "}
+          ({filtered.length})
         </h2>
 
         {filtered.length === 0 ? (
           <div className="rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] p-12 text-center">
             <h3 className="text-xl font-bold">No branches matched your search</h3>
             <p className="mt-2 text-sm font-medium text-[var(--muted)]">
-              Try another city or postcode, or select “All”.
+              Try Kharis, KP2, another city, or select “All”.
             </p>
           </div>
         ) : (
@@ -113,16 +170,22 @@ export function LocationsClient({ items: branches, full }: Props) {
               >
                 <div>
                   <div className="relative h-52 overflow-hidden bg-black">
-                    <img
+                    <BranchFallbackImage
                       src={branch.heroImage}
+                      seed={branch.id}
                       alt={branch.name}
                       loading="lazy"
                       className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <span className="absolute left-3 top-3 rounded-full bg-[#800654] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white" >
+                    <span className="absolute left-3 top-3 rounded-full bg-[#800654] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
                       {branch.region}
                     </span>
+                    {branch.family === "kp2" ? (
+                      <span className="absolute right-3 top-3 rounded-full bg-[#d4920a] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#1a0b16]">
+                        KP2
+                      </span>
+                    ) : null}
                     <div className="absolute bottom-3 left-3 right-3 text-white">
                       <h3 className="text-2xl font-extrabold leading-snug text-white!">{branch.name}</h3>
                       <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-white/90">
@@ -153,7 +216,7 @@ export function LocationsClient({ items: branches, full }: Props) {
 
                 <div className="border-t border-[var(--border)] p-6 pt-4">
                   <Link href={`/locations/${branch.id}`} className="btn-secondary w-full !text-xs">
-                    <span>Explore {branch.city}</span>
+                    <span>Explore {branch.name.replace(/\s+Branch$/i, "")}</span>
                     <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>

@@ -1,4 +1,5 @@
 import { BRANCHES_DATA } from "@/data/branchesData";
+import { withBranchImage } from "@/lib/branch-images";
 
 export type BranchSlide = {
   name: string;
@@ -35,7 +36,7 @@ export async function fetchBranchSlides(): Promise<BranchSlide[]> {
       title: "KHARIS",
       subtitle: branch.city.toUpperCase(),
       address: branch.address,
-      image: branch.heroImage,
+      image: withBranchImage(branch.heroImage, slug),
       accent: ACCENTS[i % ACCENTS.length]!,
     };
   }).filter((slide): slide is BranchSlide => slide !== null);

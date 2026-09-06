@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { BranchFallbackImage } from '@/components/branches/BranchFallbackImage';
 
 interface BranchGalleryProps {
   images: string[];
@@ -58,8 +59,9 @@ export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps
                 onClick={() => onImageClick?.(src)}
                 className="group relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black text-left cursor-pointer"
               >
-                <img
+                <BranchFallbackImage
                   src={src}
+                  seed={`${city}-${i}`}
                   alt={`Kharis ${city} gathering`}
                   loading="lazy"
                   className="h-full w-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"

@@ -153,6 +153,7 @@ export function BranchMap({
           return {
             slug: b.slug,
             name: b.name,
+            label: b.name.replace(/\s+Branch$/i, "").trim(),
 
             city: venue.city ?? b.name.replace(/^Kharis\s+/i, ""),
 
@@ -245,7 +246,7 @@ export function BranchMap({
         ...b,
         side,
         slotY: mid - total / 2 + i * gap,
-        railX: side === "left" ? 128 : W - 128,
+        railX: side === "left" ? 148 : W - 148,
       }));
     };
     // Balance the two rails so leader lines stay short.
@@ -588,7 +589,7 @@ export function BranchMap({
                         stroke="#12060f"
                         strokeWidth={3.5}
                       >
-                        {b.city}
+                        {b.label}
                       </text>
                     )}
                   </g>
@@ -599,7 +600,12 @@ export function BranchMap({
               {callouts.map((b) => {
                 const active = hovered === b.slug || nearestSlug === b.slug;
                 const isLeft = b.side === "left";
-                const anchorX = b.railX + (isLeft ? -6 : 6);
+                const pillW = Math.min(
+                  170,
+                  Math.max(112, b.label.length * 8.1 + 22),
+                );
+                const pillX = isLeft ? b.railX - 8 - pillW : b.railX + 8;
+                const textX = isLeft ? b.railX - 16 : b.railX + 18;
                 return (
                   <g
                     key={`callout-${b.slug}`}
@@ -617,9 +623,9 @@ export function BranchMap({
                     />
                     <circle cx={b.railX} cy={b.slotY} r={2.6} fill="#e8a33d" />
                     <rect
-                      x={isLeft ? 0 : b.railX + 6}
+                      x={pillX}
                       y={b.slotY - 13}
-                      width={122}
+                      width={pillW}
                       height={26}
                       rx={13}
                       fill={active ? "#e8a33d" : "#1a0b16"}
@@ -628,14 +634,14 @@ export function BranchMap({
                       strokeOpacity={active ? 1 : 0.2}
                     />
                     <text
-                      x={isLeft ? anchorX : b.railX + 16}
+                      x={textX}
                       y={b.slotY + 5}
                       textAnchor={isLeft ? "end" : "start"}
                       fill={active ? "#1a0b16" : "#ffffff"}
-                      fontSize={14}
+                      fontSize={b.label.length > 14 ? 12 : 14}
                       fontWeight={800}
                     >
-                      {b.city}
+                      {b.label}
                     </text>
                   </g>
                 );

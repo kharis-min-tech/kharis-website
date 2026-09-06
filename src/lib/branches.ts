@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { withBranchImage } from "@/lib/branch-images";
 
 
 // ======================================================
@@ -89,6 +90,8 @@ export interface BranchData {
 // TYPE USED BY YOUR LOCATIONS CARDS
 // ======================================================
 
+export type BranchFamily = "kharis" | "kp2";
+
 export interface BranchItem {
   id: string;
 
@@ -96,6 +99,7 @@ export interface BranchItem {
 
   city: string;
   region: string;
+  family: BranchFamily;
 
   heroImage: string;
 
@@ -121,6 +125,15 @@ export interface BranchItem {
 // Website:
 // 10:00 AM
 // ======================================================
+
+export function getBranchFamily(
+  name: string,
+  slug?: string | null,
+): BranchFamily {
+  return `${slug ?? ""} ${name}`.toLowerCase().includes("kp2")
+    ? "kp2"
+    : "kharis";
+}
 
 function formatTime(time?: string | null): string {
   if (!time) return "";
@@ -334,9 +347,9 @@ export function toBranchItem(
       mainVenue?.country ??
       "United Kingdom",
 
-    heroImage:
-      branch.hero_image_url ??
-      "/images/branch-slide-1.jpg",
+    family: getBranchFamily(branch.name, branch.slug),
+
+    heroImage: withBranchImage(branch.hero_image_url, branch.slug),
 
     postcode:
       mainVenue?.postcode ?? "",
