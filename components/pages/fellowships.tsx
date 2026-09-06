@@ -4,6 +4,12 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import {
+  splitFellowshipEvents,
+  type ChurchEvent,
+} from "@/lib/events";
+import { eventToCalendarItem, mapsSearchUrl } from "@/lib/calendar";
+import { PlanVisitButton } from "@/components/PlanVisitButton";
 
 const YOUNG_ADULTS = "/assets/young-adults.jpg";
 const COMMUNITY = "/assets/community.jpg";
@@ -11,37 +17,90 @@ const BRANCH_SLIDE_2 = "/assets/branch-slide-2.jpg";
 const BRANCH_SLIDE_4 = "/assets/branch-slide-4.jpg";
 const BRANCH_SLIDE_5 = "/assets/branch-slide-5.jpg";
 
-const HANGOUTS = [
-  {
-    date: "OCT 12",
-    title: "Rooftop Social",
-    copy: "The ultimate vibe check. Networking, music, and great conversations under the stars.",
-    time: "19:00 - 22:00",
-    tags: ["SOCIAL", "DOWNTOWN"],
-    image: COMMUNITY,
-    alt: "Kharis community social evening",
-  },
-  {
-    date: "OCT 15",
-    title: "Hoops & Huddle",
-    copy: "Competitive ball followed by a short word and community chill session.",
-    time: "18:00 - 20:30",
-    tags: ["SPORTS", "WEST END"],
-    image: BRANCH_SLIDE_4,
-    alt: "Kharis sports fellowship",
-  },
-  {
-    date: "OCT 18",
-    title: "The Creative Lab",
-    copy: "For the makers and dreamers. A space to share work, collaborate, and get inspired.",
-    time: "19:30 - 21:30",
-    tags: ["CREATIVE", "STUDIO A"],
-    image: BRANCH_SLIDE_5,
-    alt: "Creative fellowship gathering",
-  },
-];
+const FALLBACK_IMAGES = [COMMUNITY, BRANCH_SLIDE_4, BRANCH_SLIDE_5];
 
-function FellowshipsPage() {
+function eventDateBadge(event: ChurchEvent) {
+  if (event.dayLabel.toLowerCase().startsWith("every ")) {
+    return event.dayLabel.replace(/^Every /i, "").slice(0, 3).toUpperCase();
+  }
+  return new Date(event.starts)
+    .toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      timeZone: "Europe/London",
+    })
+    .toUpperCase();
+}
+
+function eventBlurb(text: string) {
+  const clean = text.trim();
+  if (clean.length <= 110) return clean;
+  return `${clean.slice(0, 110).replace(/\s+\S*$/, "").trim()}…`;
+}
+
+function HangoutCard({
+  event,
+  index,
+  featured,
+}: {
+  event: ChurchEvent;
+  index: number;
+  featured?: boolean;
+}) {
+  const image = event.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
+  const place = event.location.split(",")[0]?.trim() || event.location;
+
+  return (
+    <article className="bg-surface-container-lowest border-heavier neo-shadow hover-lift group flex flex-col">
+      <div className="h-48 border-b-2 border-on-background relative overflow-hidden">
+        <img
+          src={image}
+          alt={`${event.title} at Kharis Phase 2`}
+          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 font-label-md border-heavy">
+          {eventDateBadge(event)}
+        </div>
+      </div>
+      <div className="p-stack-md space-y-base flex flex-col flex-1">
+        <div className="flex flex-wrap gap-2">
+          <span
+            className={`px-2 py-0.5 font-label-sm text-[10px] border uppercase ${
+              featured
+                ? "bg-secondary-fixed text-on-secondary-fixed-variant"
+                : "bg-surface-variant text-on-surface-variant"
+            }`}
+          >
+            {event.category}
+          </span>
+          <span className="px-2 py-0.5 font-label-sm text-[10px] border bg-surface-variant text-on-surface-variant uppercase">
+            {place}
+          </span>
+        </div>
+        <h3 className="font-headline-md text-headline-md uppercase">{event.title}</h3>
+        <p className="font-body-md text-on-surface-variant line-clamp-2">
+          {eventBlurb(event.blurb)}
+        </p>
+        <div className="pt-base mt-auto border-t-2 border-on-background flex justify-between items-center gap-3">
+          <span className="font-label-md">{event.timeLabel}</span>
+          <PlanVisitButton
+            item={eventToCalendarItem(event)}
+            directionsUrl={mapsSearchUrl(event.location)}
+            className="inline-flex items-center gap-1 font-label-md uppercase text-primary"
+          >
+            Remind me
+            <span className="material-symbols-outlined text-lg">calendar_add_on</span>
+          </PlanVisitButton>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
+  const { fellowships, others } = splitFellowshipEvents(events);
   return (
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
@@ -190,8 +249,8 @@ function FellowshipsPage() {
                 </h2>
                 <div className="h-1.5 w-32 bg-primary mb-4"></div>
                 <p className="font-body-md text-on-surface-variant">
-                  Don't miss out on the energy. Spontaneous meetups, planned parties, and
-                  everything in between.
+                  Hangouts, New Breeds, and midweek circles — then the rest of
+                  the KP2 calendar so you never miss a gathering.
                 </p>
               </div>
               <Link
@@ -202,51 +261,68 @@ function FellowshipsPage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-              {HANGOUTS.map((ev) => (
-                <article
-                  key={ev.title}
-                  className="bg-surface-container-lowest border-heavier neo-shadow hover-lift group flex flex-col"
-                >
-                  <div className="h-48 border-b-2 border-on-background relative overflow-hidden">
-                    <img
-                      src={ev.image}
-                      alt={ev.alt}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                      loading="lazy"
-                      decoding="async"
+            {fellowships.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                {fellowships.map((event, index) => (
+                  <HangoutCard
+                    key={event.slug}
+                    event={event}
+                    index={index}
+                    featured
+                  />
+                ))}
+              </div>
+            ) : others.length > 0 ? (
+              <div className="border-2 border-dashed border-on-background bg-surface-container-low p-stack-md md:p-stack-lg mb-stack-lg">
+                <p className="font-body-md text-on-surface-variant">
+                  No fellowship nights on the calendar yet. When they&apos;re
+                  announced they&apos;ll show up here first.
+                </p>
+              </div>
+            ) : null}
+
+            {others.length > 0 ? (
+              <div className={fellowships.length > 0 ? "mt-stack-lg" : ""}>
+                <div className="mb-stack-md">
+                  <h3 className="font-headline-md text-headline-md uppercase">
+                    Also happening
+                  </h3>
+                  <p className="font-body-md text-on-surface-variant mt-2">
+                    Sunday, conferences, and everything else coming up.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                  {others.map((event, index) => (
+                    <HangoutCard
+                      key={event.slug}
+                      event={event}
+                      index={index}
                     />
-                    <div className="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 font-label-md border-heavy">
-                      {ev.date}
-                    </div>
-                  </div>
-                  <div className="p-stack-md space-y-base flex flex-col flex-1">
-                    <div className="flex flex-wrap gap-2">
-                      {ev.tags.map((t, i) => (
-                        <span
-                          key={t}
-                          className={`px-2 py-0.5 font-label-sm text-[10px] border ${
-                            i === 0
-                              ? "bg-secondary-fixed text-on-secondary-fixed-variant"
-                              : "bg-surface-variant text-on-surface-variant"
-                          }`}
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                    <h3 className="font-headline-md text-headline-md uppercase">{ev.title}</h3>
-                    <p className="font-body-md text-on-surface-variant line-clamp-2">{ev.copy}</p>
-                    <div className="pt-base mt-auto border-t-2 border-on-background flex justify-between items-center">
-                      <span className="font-label-md">{ev.time}</span>
-                      <span className="material-symbols-outlined text-primary transition-transform group-hover:translate-x-1">
-                        arrow_forward
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {events.length === 0 ? (
+              <div className="border-2 border-dashed border-on-background bg-surface-container-low p-stack-lg text-center">
+                <span className="material-symbols-outlined text-5xl text-outline">
+                  event_busy
+                </span>
+                <h3 className="font-headline-md text-headline-md uppercase mt-4">
+                  Nothing on the calendar yet
+                </h3>
+                <p className="font-body-md text-on-surface-variant mt-2">
+                  Check back soon, or see the full events page for the latest.
+                </p>
+                <Link
+                  href="/events"
+                  className="mt-stack-md inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 border-heavy font-headline-md text-label-md hover-lift hover-press"
+                >
+                  View all events
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </Link>
+              </div>
+            ) : null}
           </div>
         </section>
 

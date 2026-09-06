@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Page from "@/components/pages/home";
 import { getHomeTestimonials } from "@/lib/testimonies";
+import { fetchLatestMessages } from "@/lib/youtube";
 
 export const revalidate = 60;
 
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const testimonials = await getHomeTestimonials();
-  return <Page testimonials={testimonials} />;
+  const [testimonials, messages] = await Promise.all([
+    getHomeTestimonials(),
+    fetchLatestMessages(5),
+  ]);
+  return <Page testimonials={testimonials} messages={messages} />;
 }

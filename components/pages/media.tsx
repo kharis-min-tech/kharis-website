@@ -5,6 +5,19 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { YoutubeEmbed } from "@/components/YoutubeEmbed";
+import {
+  displayMessageTitle,
+  formatMessageDate,
+  youtubeWatchUrl,
+  type MessageVideo,
+} from "@/lib/youtube";
+import {
+  INSTAGRAM_PROFILE_URL,
+  formatInstagramDate,
+  instagramCaption,
+  type InstagramPost,
+} from "@/lib/instagram";
 
 
 
@@ -50,7 +63,7 @@ const SOCIALS = [
     label: "Instagram",
     handle: "@kharisphasetwo",
     copy: "Daily reels, service moments and behind-the-scenes.",
-    href: "https://instagram.com/kharisphasetwo",
+    href: INSTAGRAM_PROFILE_URL,
     cta: "FOLLOW",
     Icon: InstagramIcon,
     band: "bg-secondary-container text-on-background",
@@ -84,66 +97,17 @@ const SOCIALS = [
   },
 ];
 
-const POSTS = [
-  {
-    img: "/assets/events-sunday-service.jpg",
-    caption: "Sunday was a whole atmosphere. Swipe for the highlights.",
-    platform: "Instagram",
-    Icon: InstagramIcon,
-  },
-  {
-    img: "/assets/worship.jpg",
-    caption: "Wildfire Praise — live worship recorded in the room.",
-    platform: "Instagram",
-    Icon: InstagramIcon,
-  },
-  {
-    img: "/assets/young-adults.jpg",
-    caption: "Fellowship nights hit different. Find one near you.",
-    platform: "Instagram",
-    Icon: InstagramIcon,
-  },
-  {
-    img: "/assets/community.jpg",
-    caption: "Family photo dump from the community outreach.",
-    platform: "Instagram",
-    Icon: InstagramIcon,
-  },
-  {
-    img: "/assets/branch-slide-1.jpg",
-    caption: "New branch, same grace. Kharis is growing.",
-    platform: "Instagram",
-    Icon: InstagramIcon,
-  },
-  {
-    img: "/assets/testimony-1.jpg",
-    caption: "Testimony Tuesday — God is still doing it.",
-    platform: "Instagram",
-    Icon: InstagramIcon,
-  },
-];
-
-const EPISODES = [
-  {
-    title: "The Gravity of Grace",
-    meta: "Sunday Service · 48 min",
-    copy: "Grace is not a licence, it's an anchor. A deep dive into unmerited favour.",
-  },
-  {
-    title: "Built to Carry Weight",
-    meta: "Midweek Teaching · 36 min",
-    copy: "Why God grows your capacity before He grows your platform.",
-  },
-  {
-    title: "Small Church, Big Family",
-    meta: "Fellowship Series · 29 min",
-    copy: "As the church gets bigger, it must get smaller. Here's how.",
-  },
-];
-
 /* ---------------- page ---------------- */
 
-function MediaPage() {
+function MediaPage({
+  messages,
+  posts,
+}: {
+  messages: MessageVideo[];
+  posts: InstagramPost[];
+}) {
+  const featured = messages[0];
+  const more = messages.slice(1, 4);
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
       <ScrollReveal />
@@ -153,7 +117,7 @@ function MediaPage() {
         <img
           alt="Kharis worship gathering"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
-          src="/assets/worship.jpg"
+          src={posts[0]?.image || "/assets/worship.jpg"}
           loading="eager"
           decoding="async"
         />
@@ -251,7 +215,7 @@ function MediaPage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 <a
-                  href="https://instagram.com/kharisphasetwo"
+                  href={INSTAGRAM_PROFILE_URL}
                   target="_blank"
                   rel="noreferrer noopener"
                   className="bg-secondary-container text-on-background font-label-sm px-4 py-2 border-2 border-black neo-shadow hover-press flex items-center gap-2"
@@ -261,33 +225,72 @@ function MediaPage() {
               </div>
             </div>
 
+            {posts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-              {POSTS.map((post) => (
-                <article
-                  key={post.caption}
+              {posts.map((post) => (
+                <a
+                  key={post.id}
+                  href={post.permalink}
+                  target="_blank"
+                  rel="noreferrer noopener"
                   className="bg-surface border-2 border-black neo-shadow overflow-hidden group flex flex-col"
                 >
                   <div className="aspect-square overflow-hidden border-b-2 border-black relative">
                     <img
-                      alt={post.caption}
-                      src={post.img}
+                      alt={instagramCaption(post.caption, 80)}
+                      src={post.image}
                       loading="lazy"
                       decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <span className="absolute top-3 right-3 bg-surface text-on-surface border-2 border-black p-2 flex items-center justify-center">
-                      <post.Icon className="w-4 h-4" />
+                      <InstagramIcon className="w-4 h-4" />
                     </span>
+                    {post.mediaType === "VIDEO" ? (
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="bg-secondary-container border-2 border-black p-3 rounded-full neo-shadow">
+                          <span
+                            className="material-symbols-outlined text-3xl leading-none"
+                            style={{ fontVariationSettings: "'FILL' 1" }}
+                          >
+                            play_arrow
+                          </span>
+                        </span>
+                      </span>
+                    ) : null}
                   </div>
                   <div className="p-5 flex-1 flex flex-col gap-3">
-                    <p className="font-body-md text-on-surface line-clamp-2">{post.caption}</p>
+                    <p className="font-body-md text-on-surface line-clamp-2">
+                      {instagramCaption(post.caption)}
+                    </p>
                     <span className="font-label-sm text-on-surface-variant mt-auto">
-                      {post.platform}
+                      {formatInstagramDate(post.timestamp) || "@kharisphasetwo"}
                     </span>
                   </div>
-                </article>
+                </a>
               ))}
             </div>
+            ) : (
+              <div className="border-2 border-dashed border-on-background bg-surface p-stack-md md:p-stack-lg text-center">
+                <InstagramIcon className="w-10 h-10 mx-auto mb-4" />
+                <h3 className="font-headline-md text-headline-md uppercase mb-2">
+                  Follow @kharisphasetwo
+                </h3>
+                <p className="font-body-md text-on-surface-variant max-w-xl mx-auto mb-6">
+                  Latest posts from the KP2 Instagram will show up here. Until then,
+                  tap through for reels, Sunday moments and behind the scenes.
+                </p>
+                <a
+                  href={INSTAGRAM_PROFILE_URL}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-2 bg-secondary-container text-on-background font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press"
+                >
+                  <InstagramIcon className="w-4 h-4" />
+                  Open Instagram
+                </a>
+              </div>
+            )}
           </div>
         </section>
 
@@ -301,38 +304,34 @@ function MediaPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
             <div className="lg:col-span-7 bg-surface border-2 border-black neo-shadow-lg overflow-hidden group">
               <div className="aspect-video relative bg-black">
-                <img
-                  alt="Senior Pastor preaching"
-                  className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                  src="/assets/pastor-stage.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-secondary-container p-6 rounded-full border-4 border-black neo-shadow group-hover:scale-110 transition-transform">
-                    <span
-                      className="material-symbols-outlined text-4xl leading-none text-on-background"
-                      style={{ fontVariationSettings: "'FILL' 1" }}
-                    >
-                      play_arrow
+                {featured ? (
+                  <YoutubeEmbed id={featured.id} title={featured.title} thumbnail={featured.thumbnail} />
+                ) : (
+                  <img
+                    alt="Senior Pastor preaching"
+                    className="absolute inset-0 w-full h-full object-cover opacity-80"
+                    src="/assets/pastor-stage.jpg"
+                  />
+                )}
+                {featured ? (
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
+                    <span className="bg-secondary text-on-secondary font-label-sm px-2 py-1 mb-2 inline-block border border-black">
+                      NEWEST RELEASE
                     </span>
+                    <h3 className="font-headline-md text-white text-2xl uppercase">
+                      {displayMessageTitle(featured.title)}
+                    </h3>
                   </div>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-                  <span className="bg-secondary text-on-secondary font-label-sm px-2 py-1 mb-2 inline-block border border-black">
-                    NEWEST RELEASE
-                  </span>
-                  <h3 className="font-headline-md text-white text-2xl uppercase">The Gravity of Grace</h3>
-                </div>
+                ) : null}
               </div>
               <div className="p-6 border-t-2 border-black">
                 <p className="font-body-md text-on-surface-variant mb-6">
-                  Preached by Senior Pastor D. Antwi. Watch the full message on YouTube, or
+                  Preached by Pastor David Antwi. Watch the full message on YouTube, or
                   take the audio with you on Spotify and SoundCloud.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <a
-                    href="https://youtube.com/@davidantwi"
+                    href={featured ? youtubeWatchUrl(featured.id) : "https://youtube.com/@davidantwi"}
                     target="_blank"
                     rel="noreferrer noopener"
                     className="bg-error-container text-on-error-container font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
@@ -360,35 +359,20 @@ function MediaPage() {
             </div>
 
             <div className="lg:col-span-5 flex flex-col gap-gutter">
-              {EPISODES.map((ep) => (
+              {more.map((ep) => (
                 <article
-                  key={ep.title}
+                  key={ep.id}
                   className="bg-surface-container border-2 border-black neo-shadow hover-press p-6 flex-1"
                 >
-                  <h4 className="font-label-md text-primary mb-1">{ep.meta}</h4>
-                  <h3 className="font-headline-md text-2xl uppercase mb-2">{ep.title}</h3>
-                  <p className="font-body-md text-on-surface-variant mb-4">{ep.copy}</p>
+                  <h4 className="font-label-md text-primary mb-1">
+                    {ep.publishedAt ? formatMessageDate(ep.publishedAt) : "Latest teaching"}
+                  </h4>
+                  <h3 className="font-headline-md text-2xl uppercase mb-2">
+                    {displayMessageTitle(ep.title)}
+                  </h3>
                   <div className="flex gap-2">
                     <a
-                      href="https://open.spotify.com/"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      aria-label={`Listen to ${ep.title} on Spotify`}
-                      className="w-11 h-11 bg-surface border-2 border-black flex items-center justify-center hover:bg-tertiary-container transition-colors"
-                    >
-                      <SpotifyIcon className="w-5 h-5" />
-                    </a>
-                    <a
-                      href="https://soundcloud.com/"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      aria-label={`Listen to ${ep.title} on SoundCloud`}
-                      className="w-11 h-11 bg-surface border-2 border-black flex items-center justify-center hover:bg-secondary-container transition-colors"
-                    >
-                      <SoundCloudIcon className="w-5 h-5" />
-                    </a>
-                    <a
-                      href="https://youtube.com/@davidantwi"
+                      href={youtubeWatchUrl(ep.id)}
                       target="_blank"
                       rel="noreferrer noopener"
                       aria-label={`Watch ${ep.title} on YouTube`}

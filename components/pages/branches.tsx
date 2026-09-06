@@ -6,6 +6,31 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { distanceMiles, hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
+import {
+  mapsDirectionsUrl,
+  weeklyServiceToCalendarItem,
+} from "@/lib/calendar";
+import { PlanVisitButton } from "@/components/PlanVisitButton";
+
+function branchVisitItem(branch: Branch) {
+  const service = branch.serviceTimes[0];
+  if (!service) return null;
+  const location = [branch.address, branch.postcode].filter(Boolean).join(", ");
+  return {
+    item: weeklyServiceToCalendarItem({
+      uid: `branch-${branch.slug}-${service.day}`,
+      title: `${service.label} · ${branch.name}`,
+      description: `Join us at ${branch.name}. ${branch.blurb}`,
+      location,
+      day: service.day,
+      time: service.time,
+    }),
+    directions:
+      location && !location.toLowerCase().includes("coming soon")
+        ? mapsDirectionsUrl(location)
+        : undefined,
+  };
+}
 
 
 
@@ -37,6 +62,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
   const active: Branch | undefined =
     results.find((r) => r.branch.slug === selected)?.branch ??
     results[0]?.branch;
+  const visit = active ? branchVisitItem(active) : null;
 
   function useMyLocation() {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
@@ -176,12 +202,23 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                 <p className="font-body-md text-body-md">
                   {active.address}{active.postcode ? `, ${active.postcode}` : ""}
                 </p>
-                <Link
-                  href={`/branches/${active.slug}`}
-                  className="bg-secondary text-on-secondary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border brutalist-shadow"
-                >
-                  View branch
-                </Link>
+                <div className="flex flex-wrap gap-2">
+                  {visit?.item ? (
+                    <PlanVisitButton
+                      item={visit.item}
+                      directionsUrl={visit.directions}
+                      className="bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border brutalist-shadow"
+                    >
+                      Plan visit
+                    </PlanVisitButton>
+                  ) : null}
+                  <Link
+                    href={`/branches/${active.slug}`}
+                    className="bg-secondary text-on-secondary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border brutalist-shadow"
+                  >
+                    View branch
+                  </Link>
+                </div>
               </div>
                 </>
               ) : (

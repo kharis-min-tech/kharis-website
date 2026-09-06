@@ -5,6 +5,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import type { ChurchEvent } from "@/lib/events";
+import { eventToCalendarItem } from "@/lib/calendar";
+import { PlanVisitButton } from "@/components/PlanVisitButton";
 
 function socialDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
@@ -93,6 +95,15 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
                             <p className="font-body-md text-body-md text-on-surface-variant">
                               {socialBlurb(event.blurb)}
                             </p>
+                            <PlanVisitButton
+                              item={eventToCalendarItem(event)}
+                              className="mt-2 inline-flex items-center gap-1 font-label-md text-[11px] uppercase tracking-widest text-primary"
+                            >
+                              <span className="material-symbols-outlined text-base">
+                                calendar_add_on
+                              </span>
+                              Remind me
+                            </PlanVisitButton>
                           </div>
                         </li>
                       ))

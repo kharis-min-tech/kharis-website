@@ -10,6 +10,8 @@ import {
   EVENT_CATEGORIES,
   type ChurchEvent,
 } from "@/lib/events";
+import { eventToCalendarItem, mapsSearchUrl } from "@/lib/calendar";
+import { PlanVisitButton } from "@/components/PlanVisitButton";
 
 const HERO_WORSHIP = "/assets/events-hero-worship.jpg";
 const WORSHIP = "/assets/worship.jpg";
@@ -117,15 +119,16 @@ function EventCard({ event }: { event: ChurchEvent }) {
       </div>
 
       <div className="p-stack-md mt-auto bg-on-background">
-        <Link
-          href="/branches"
-          className="flex justify-between items-center text-surface font-label-md uppercase hover:text-primary-fixed-dim transition-colors"
+        <PlanVisitButton
+          item={eventToCalendarItem(event)}
+          directionsUrl={mapsSearchUrl(event.location)}
+          className="flex w-full justify-between items-center text-surface font-label-md uppercase hover:text-primary-fixed-dim transition-colors"
         >
           {event.cta}
           <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-            arrow_forward
+            calendar_add_on
           </span>
-        </Link>
+        </PlanVisitButton>
       </div>
     </article>
   );
@@ -197,12 +200,22 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 >
                   See What's On
                 </a>
-                <Link
-                  href="/branches"
-                  className="inline-block bg-surface text-on-background font-headline-md text-headline-md px-8 py-4 border-4 border-surface neo-shadow-lg neo-button-hover transition-all text-center uppercase"
-                >
-                  Plan Your Visit
-                </Link>
+                {featured ? (
+                  <PlanVisitButton
+                    item={eventToCalendarItem(featured)}
+                    directionsUrl={mapsSearchUrl(featured.location)}
+                    className="inline-block bg-surface text-on-background font-headline-md text-headline-md px-8 py-4 border-4 border-surface neo-shadow-lg neo-button-hover transition-all text-center uppercase"
+                  >
+                    Plan Your Visit
+                  </PlanVisitButton>
+                ) : (
+                  <Link
+                    href="/branches"
+                    className="inline-block bg-surface text-on-background font-headline-md text-headline-md px-8 py-4 border-4 border-surface neo-shadow-lg neo-button-hover transition-all text-center uppercase"
+                  >
+                    Plan Your Visit
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -240,12 +253,13 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 </p>
                 <CountdownBlock target={featured.starts} />
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    href="/branches"
+                  <PlanVisitButton
+                    item={eventToCalendarItem(featured)}
+                    directionsUrl={mapsSearchUrl(featured.location)}
                     className="flex-1 bg-primary-container text-on-primary-container font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
                   >
                     {featured.cta}
-                  </Link>
+                  </PlanVisitButton>
                   <Link
                     href="/messages"
                     className="flex-1 bg-surface text-on-background font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"

@@ -5,6 +5,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 import { hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
+import { PlanVisitButton } from "@/components/PlanVisitButton";
+import {
+  mapsDirectionsUrl,
+  weeklyServiceToCalendarItem,
+} from "@/lib/calendar";
 
 
 
@@ -28,7 +33,28 @@ function BranchNotFound() {
   );
 }
 
+function visitDirections(branch: Branch) {
+  const dest = [branch.address, branch.postcode].filter(Boolean).join(", ");
+  if (!dest || dest.toLowerCase().includes("coming soon")) return undefined;
+  return mapsDirectionsUrl(dest);
+}
+
+function visitItem(branch: Branch, service = branch.serviceTimes[0]) {
+  if (!service) return null;
+  const location = [branch.address, branch.postcode].filter(Boolean).join(", ");
+  return weeklyServiceToCalendarItem({
+    uid: `branch-${branch.slug}-${service.day}-${service.time}`,
+    title: `${service.label} · ${branch.name}`,
+    description: `Join us at ${branch.name}. ${branch.blurb}`,
+    location,
+    day: service.day,
+    time: service.time,
+  });
+}
+
 function BranchPage({ branch, others }: { branch: Branch; others: Branch[] }) {
+  const nextVisit = visitItem(branch);
+  const directions = visitDirections(branch);
 
   return (
     <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
@@ -64,16 +90,24 @@ function BranchPage({ branch, others }: { branch: Branch; others: Branch[] }) {
               {branch.blurb}
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-                  `${branch.address}, ${branch.postcode}`,
-                )}`}
-                target="_blank"
-                rel="noreferrer"
-                className="bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-4 brutalist-border brutalist-shadow"
-              >
-                Plan your visit
-              </a>
+              {nextVisit ? (
+                <PlanVisitButton
+                  item={nextVisit}
+                  directionsUrl={directions}
+                  className="bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-4 brutalist-border brutalist-shadow"
+                >
+                  Plan your visit
+                </PlanVisitButton>
+              ) : directions ? (
+                <a
+                  href={directions}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-4 brutalist-border brutalist-shadow"
+                >
+                  Plan your visit
+                </a>
+              ) : null}
               {branch.email ? (
               <a
                 href={`mailto:${branch.email}`}
@@ -103,19 +137,34 @@ function BranchPage({ branch, others }: { branch: Branch; others: Branch[] }) {
               Service times
             </h2>
             <ul className="space-y-3">
-              {branch.serviceTimes.map((s) => (
+              {branch.serviceTimes.map((s) => {
+                const item = visitItem(branch, s);
+                return (
                 <li
-                  key={`${s.day}-${s.time}`}
-                  className="border-b-2 border-on-background/15 pb-3 last:border-0"
+                  key={`${s.day}-${s.time}-${s.label}`}
+                  className="border-b-2 border-on-background/15 pb-3 last:border-0 flex items-start justify-between gap-3"
                 >
-                  <p className="font-body-md text-[13px] font-bold uppercase tracking-wide">
-                    {s.day} · {s.time}
-                  </p>
-                  <p className="font-body-md text-body-md text-on-surface-variant">
-                    {s.label}
-                  </p>
+                  <div>
+                    <p className="font-body-md text-[13px] font-bold uppercase tracking-wide">
+                      {s.day} · {s.time}
+                    </p>
+                    <p className="font-body-md text-body-md text-on-surface-variant">
+                      {s.label}
+                    </p>
+                  </div>
+                  {item ? (
+                    <PlanVisitButton
+                      item={item}
+                      directionsUrl={directions}
+                      className="shrink-0 inline-flex items-center text-primary"
+                      aria-label={`Add ${s.label} to your calendar`}
+                    >
+                      <span className="material-symbols-outlined">calendar_add_on</span>
+                    </PlanVisitButton>
+                  ) : null}
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </div>
 

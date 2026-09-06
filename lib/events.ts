@@ -9,12 +9,24 @@ export type EventCategory =
   | "Outreach"
   | "Social";
 
+/** Raw `events.category` from the shared database (architecture v5). */
+export type DbEventCategory =
+  | "service"
+  | "fellowship"
+  | "conference"
+  | "camp"
+  | "general";
+
 export type ChurchEvent = {
   slug: string;
   title: string;
   category: EventCategory;
+  kind: DbEventCategory;
   /** ISO date-time, used for sorting + the countdown. */
   starts: string;
+  /** ISO date-time for the end of this occurrence. */
+  ends: string;
+  weekly: boolean;
   dayLabel: string;
   timeLabel: string;
   location: string;
@@ -39,6 +51,7 @@ type EventRow = {
   recurrence_until: string | null;
   is_featured: boolean | null;
   image_url: string | null;
+  category: DbEventCategory | null;
   sites: EventSite[] | null;
   workspace: string | null;
 };
@@ -92,6 +105,19 @@ function isForThisSite(event: EventRow): boolean {
   return SITE_WORKSPACES.some((site) => sites.includes(site));
 }
 
+function normalizeKind(value: string | null | undefined): DbEventCategory {
+  const kind = (value ?? "general").toLowerCase();
+  if (
+    kind === "service" ||
+    kind === "fellowship" ||
+    kind === "conference" ||
+    kind === "camp"
+  ) {
+    return kind;
+  }
+  return "general";
+}
+
 function inferCategory(event: EventRow): EventCategory {
   if (event.recurrence === "weekly") return "Weekly";
   const hay = `${event.title} ${event.description ?? ""}`.toLowerCase();
@@ -100,6 +126,15 @@ function inferCategory(event: EventRow): EventCategory {
   if (/outreach|mission|street/.test(hay)) return "Outreach";
   if (/fellowship|hangout|social/.test(hay)) return "Fellowship";
   return "Social";
+}
+
+function toDisplayCategory(event: EventRow): EventCategory {
+  const kind = normalizeKind(event.category);
+  if (kind === "fellowship") return "Fellowship";
+  if (kind === "conference") return "Conference";
+  if (kind === "camp") return "Conference";
+  if (kind === "service") return event.recurrence === "weekly" ? "Weekly" : "Worship";
+  return inferCategory(event);
 }
 
 function expandEvents(events: EventRow[], daysAhead = 90): DisplayEvent[] {
@@ -169,14 +204,27 @@ function londonTime(date: Date) {
   }).replace(":00", "").toUpperCase();
 }
 
+function occurrenceEnd(event: DisplayEvent): Date {
+  if (event.end_time) {
+    const duration = new Date(event.end_time).getTime() - new Date(event.start_time).getTime();
+    if (duration > 0) {
+      return new Date(event.occurrence_date.getTime() + duration);
+    }
+  }
+  return new Date(event.occurrence_date.getTime() + 2 * 60 * 60 * 1000);
+}
+
 function toChurchEvent(event: DisplayEvent): ChurchEvent {
   const weekly = event.recurrence === "weekly";
   const weekday = WEEKDAYS[event.occurrence_date.getDay()] ?? "Sunday";
   return {
     slug: `${event.id}-${event.occurrence_date.getTime()}`,
     title: event.title,
-    category: inferCategory(event),
+    category: toDisplayCategory(event),
+    kind: normalizeKind(event.category),
     starts: event.occurrence_date.toISOString(),
+    ends: occurrenceEnd(event).toISOString(),
+    weekly,
     dayLabel: weekly ? `Every ${weekday}` : londonDate(event.occurrence_date),
     timeLabel: londonTime(event.occurrence_date),
     location: event.location || event.branch_name || "Kharis Phase 2",
@@ -191,11 +239,18 @@ export async function getUpcomingEvents(): Promise<ChurchEvent[]> {
   const rows = await supabaseSelect<EventRow>(
     "events",
     [
-      "select=id,title,description,location,branch_name,start_time,end_time,recurrence,recurrence_days,recurrence_until,is_featured,image_url,sites,workspace",
+      "select=id,title,description,location,branch_name,start_time,end_time,recurrence,recurrence_days,recurrence_until,is_featured,image_url,category,sites,workspace",
       "order=start_time.asc",
     ].join("&"),
   );
 
   const scoped = rows.filter(isForThisSite);
   return nextOccurrencePerSeries(expandEvents(scoped)).map(toChurchEvent);
+}
+
+/** Fellowship nights first, then the rest of the calendar — both still date-sorted. */
+export function splitFellowshipEvents(events: ChurchEvent[]) {
+  const fellowships = events.filter((event) => event.kind === "fellowship");
+  const others = events.filter((event) => event.kind !== "fellowship");
+  return { fellowships, others };
 }

@@ -8,8 +8,24 @@ import { useCallback, useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TestimonialCarousel, type Testimonial } from "@/components/TestimonialCarousel";
 import { TestimonyFormModal } from "@/components/TestimonyFormModal";
+import { YoutubeEmbed } from "@/components/YoutubeEmbed";
+import { ShareVideoButton } from "@/components/ShareVideoButton";
+import {
+  displayMessageTitle,
+  formatMessageDate,
+  youtubeWatchUrl,
+  type MessageVideo,
+} from "@/lib/youtube";
 
-function Index({ testimonials }: { testimonials: Testimonial[] }) {
+function Index({
+  testimonials,
+  messages,
+}: {
+  testimonials: Testimonial[];
+  messages: MessageVideo[];
+}) {
+  const featured = messages[0];
+  const others = messages.slice(1, 5);
   const [formOpen, setFormOpen] = useState(false);
   const openForm = useCallback(() => setFormOpen(true), []);
   const closeForm = useCallback(() => {
@@ -103,13 +119,19 @@ function Index({ testimonials }: { testimonials: Testimonial[] }) {
             encounter Jesus and live transformed lives.
           </p>
           <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 pointer-events-auto w-full sm:w-auto max-w-sm sm:max-w-none">
-            <button className="bg-[#d2bbff] !text-black font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 brutalist-shadow border-2 border-[#151218] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all">
+            <Link
+              href="/branches"
+              className="bg-[#d2bbff] !text-black font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 brutalist-shadow border-2 border-[#151218] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+            >
               FIND A BRANCH
-            </button>
-            <button className="bg-[#2c292f] text-[#e8e0e9] border-2 border-[#958da1] font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 hover:bg-[#37333a] transition-colors flex items-center justify-center gap-2">
+            </Link>
+            <Link
+              href="/messages"
+              className="bg-[#2c292f] text-[#e8e0e9] border-2 border-[#958da1] font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 hover:bg-[#37333a] transition-colors flex items-center justify-center gap-2"
+            >
               <span className="material-symbols-outlined">play_circle</span>
               WATCH THE EXPERIENCE
-            </button>
+            </Link>
           </div>
         </div>
       </header>
@@ -386,32 +408,19 @@ function Index({ testimonials }: { testimonials: Testimonial[] }) {
               LATEST MESSAGES
             </h2>
 
-            {/* Featured Latest Message — two-card layout */}
+            {featured ? (
+              <>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter gap-6 lg:gap-8 mb-12 lg:mb-16">
               <div className="lg:col-span-8 bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow overflow-hidden group transition-colors duration-300">
-                <div className="aspect-video relative bg-black cursor-pointer">
-                  <img
-                    alt="Senior Pastor preaching the latest message"
-                    className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                    src="/assets/pastor-stage.jpg"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-[#f7be1d] p-6 rounded-full border-4 border-gray-900 brutalist-shadow group-hover:scale-110 transition-transform">
-                      <span
-                        className="material-symbols-outlined text-4xl leading-none text-gray-900"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        play_arrow
-                      </span>
-                    </div>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                <div className="aspect-video relative bg-black">
+                  <YoutubeEmbed id={featured.id} title={featured.title} thumbnail={featured.thumbnail} />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
                     <span className="bg-[#5c532b] text-white font-label-comic text-xs px-2 py-1 mb-2 inline-block border-2 border-gray-900">
                       NEWEST RELEASE
                     </span>
-                    <h3 className="font-headline-lg text-white text-2xl uppercase">The Gravity of Grace</h3>
+                    <h3 className="font-headline-lg text-white text-2xl uppercase">
+                      {displayMessageTitle(featured.title)}
+                    </h3>
                   </div>
                 </div>
               </div>
@@ -421,122 +430,82 @@ function Index({ testimonials }: { testimonials: Testimonial[] }) {
                   Now Playing
                 </h4>
                 <h3 className="font-headline-lg text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-4 transition-colors duration-300">
-                  The Gravity of Grace
+                  {displayMessageTitle(featured.title)}
                 </h3>
                 <p className="font-body-md text-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
-                  Dive deep into the transformative power of grace in our latest series. Understanding how grace anchors
-                  us in turbulent times.
+                  The latest teaching from Pastor David Antwi on YouTube.
                 </p>
                 <div className="space-y-3 mb-6">
-                  <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                    <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">calendar_today</span>
-                    <span>Sunday, Oct 27, 2024</span>
-                  </div>
+                  {featured.publishedAt ? (
+                    <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
+                      <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">calendar_today</span>
+                      <span>{formatMessageDate(featured.publishedAt)}</span>
+                    </div>
+                  ) : null}
                   <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
                     <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">person</span>
-                    <span>Senior Pastor D. Antwi</span>
+                    <span>Pastor David Antwi</span>
                   </div>
                 </div>
                 <div className="flex gap-4 mt-auto">
-                  <button
-                    type="button"
+                  <ShareVideoButton
+                    id={featured.id}
+                    title={featured.title}
                     className="flex-1 bg-[#7c3aed] text-white font-label-comic text-sm uppercase px-4 py-3 border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-lg">share</span>
-                    SHARE VIDEO
-                  </button>
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Other messages — 2x2 grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group cursor-pointer transition-colors duration-300">
-                <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
-                  <img
-                    alt="A Living Witness For Jesus"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                    src="/assets/events-hero-worship.jpg"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined !text-white text-5xl">play_circle</span>
+              {others.map((msg) => (
+                <a
+                  key={msg.id}
+                  href={youtubeWatchUrl(msg.id)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group transition-colors duration-300"
+                >
+                  <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
+                    <img
+                      alt=""
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      src={msg.thumbnail}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="material-symbols-outlined !text-white text-5xl">play_circle</span>
+                    </div>
                   </div>
-                </div>
-                <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
-                  A Living Witness For Jesus | Acts 28:1-10
-                </p>
-              </div>
-
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group cursor-pointer transition-colors duration-300">
-                <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
-                  <img
-                    alt="Riding On Divine Assignment"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                    src="/assets/pastor-stage.jpg"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined !text-white text-5xl">play_circle</span>
-                  </div>
-                </div>
-                <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
-                  He Is God Even In The Storm | Acts 27:13-25
-                </p>
-              </div>
-
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group cursor-pointer transition-colors duration-300">
-                <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
-                  <img
-                    alt="The Light That Changes Everything"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                    src="/assets/branch-slide-3.jpg"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined !text-white text-5xl">play_circle</span>
-                  </div>
-                </div>
-                <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
-                  The LIGHT That Changes Everything | Acts 26
-                </p>
-              </div>
-
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group cursor-pointer transition-colors duration-300">
-                <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
-                  <img
-                    alt="Inside The Church: Good Men and Actors"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                    src="/assets/branch-slide-4.jpg"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined !text-white text-5xl">play_circle</span>
-                  </div>
-                </div>
-                <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
-                  Inside The Church: Good Men &amp; Actors | Acts 4:34-5:11
-                </p>
-              </div>
+                  <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
+                    {displayMessageTitle(msg.title)}
+                  </p>
+                </a>
+              ))}
             </div>
+              </>
+            ) : (
+              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl mb-10">
+                New teachings will land here as they go live on YouTube.
+              </p>
+            )}
 
             <div className="flex flex-wrap gap-4 mt-10">
               <Link
-                href="/media"
+                href="/messages"
                 className="bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
               >
                 Watch More Messages
               </Link>
-              <Link
-                href="/messages"
+              <a
+                href="https://youtube.com/@davidantwi"
+                target="_blank"
+                rel="noreferrer"
                 className="bg-[#1f1c24] text-[#e8e0e9] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
               >
-                Listen to Messages
-              </Link>
+                Watch on YouTube
+              </a>
             </div>
           </div>
         </section>

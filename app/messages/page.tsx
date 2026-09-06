@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Page from "@/components/pages/messages";
+import { fetchPastorMessages } from "@/lib/youtube";
+
+export const revalidate = 1800;
 
 export const metadata: Metadata = {
   title: "Messages | Kharis Phase 2",
@@ -12,4 +15,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export default Page;
+export default async function Messages() {
+  const messages = await fetchPastorMessages(18);
+  return <Page messages={messages} />;
+}
