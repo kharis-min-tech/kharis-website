@@ -136,7 +136,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
                   <span className="material-symbols-outlined">arrow_downward</span>
                 </a>
                 <a
-                  className="border-2 border-background px-8 py-4 font-headline-md text-headline-md hover:bg-background hover:text-on-background transition-colors flex items-center gap-2"
+                  className="keep-light px-8 py-4 font-headline-md text-headline-md border-2 border-black hover-press flex items-center gap-2"
                   href="#hangouts"
                 >
                   UPCOMING EVENTS

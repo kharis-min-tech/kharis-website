@@ -73,7 +73,7 @@ export function SiteHeader() {
             <img
               src={KP2_LOGO}
               alt="KP2 Kharis Phase 2"
-              className="h-11 w-auto transition-transform duration-200 group-hover:-translate-y-0.5"
+              className="site-logo h-11 w-auto transition-transform duration-200 group-hover:-translate-y-0.5"
             />
           </Link>
 

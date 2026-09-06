@@ -52,7 +52,7 @@ function Index({
     <div className="bg-white text-gray-900 font-body-md overflow-x-hidden pt-[74px]">
       <SiteHeader />
 
-      <header className="dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
+      <header className="relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
         <div className="absolute inset-0 grid grid-cols-2 md:flex md:flex-row w-full h-full z-0">
           <div className="relative col-span-2 md:flex-1 group overflow-hidden border-b-2 md:border-b-0 md:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
             <video

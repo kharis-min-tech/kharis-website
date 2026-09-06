@@ -1,18 +1,15 @@
-import type { Metadata } from "next";
 import Page from "@/components/pages/home";
 import { getHomeTestimonials } from "@/lib/testimonies";
 import { fetchLatestMessages } from "@/lib/youtube";
+import { pageMeta, SITE_DESCRIPTION } from "@/lib/seo";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "Kharis Phase 2 | Faith Looks Different Here",
-  openGraph: {
-    title: "Kharis Phase 2 | Faith Looks Different Here",
-    type: "website",
-  },
-  twitter: { card: "summary_large_image" },
-};
+export const metadata = pageMeta({
+  title: "Home",
+  description: SITE_DESCRIPTION,
+  path: "/",
+});
 
 export default async function Home() {
   const [testimonials, messages] = await Promise.all([

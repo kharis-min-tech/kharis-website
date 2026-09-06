@@ -1,15 +1,11 @@
-import type { Metadata } from "next";
 import Page from "@/components/pages/governance";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Governance & Policies | Kharis Ministries",
-  description: "Our policy and practice guidance documents inform the governance of Kharis Ministries, including our safeguarding policy, privacy policy and website disclaimer.",
-  openGraph: {
-    title: "Governance & Policies | Kharis Ministries",
-    description: "Our policy and practice guidance documents inform the governance of Kharis Ministries, including our safeguarding policy, privacy policy and website disclaimer.",
-    type: "website",
-  },
-  twitter: { card: "summary_large_image" },
-};
+export const metadata = pageMeta({
+  title: "Governance",
+  description:
+    "Safeguarding, privacy and governance policies for Kharis Ministries and Kharis Phase 2. Charity number 1139291.",
+  path: "/governance",
+});
 
 export default Page;

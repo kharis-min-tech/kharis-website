@@ -7,7 +7,8 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const stored = localStorage.getItem("kharis-theme");
-    const isDark = stored ? stored === "dark" : false;
+    const isDark =
+      document.documentElement.classList.contains("dark") || stored === "dark";
     setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
   }, []);

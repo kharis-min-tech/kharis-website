@@ -204,14 +204,14 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                   <PlanVisitButton
                     item={eventToCalendarItem(featured)}
                     directionsUrl={mapsSearchUrl(featured.location)}
-                    className="inline-block bg-surface text-on-background font-headline-md text-headline-md px-8 py-4 border-4 border-surface neo-shadow-lg neo-button-hover transition-all text-center uppercase"
+                    className="inline-block keep-light font-headline-md text-headline-md px-8 py-4 border-4 border-black neo-shadow-lg neo-button-hover transition-all text-center uppercase"
                   >
                     Plan Your Visit
                   </PlanVisitButton>
                 ) : (
                   <Link
                     href="/branches"
-                    className="inline-block bg-surface text-on-background font-headline-md text-headline-md px-8 py-4 border-4 border-surface neo-shadow-lg neo-button-hover transition-all text-center uppercase"
+                    className="inline-block keep-light font-headline-md text-headline-md px-8 py-4 border-4 border-black neo-shadow-lg neo-button-hover transition-all text-center uppercase"
                   >
                     Plan Your Visit
                   </Link>

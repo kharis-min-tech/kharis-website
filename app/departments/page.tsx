@@ -1,15 +1,11 @@
-import type { Metadata } from "next";
 import Page from "@/components/pages/departments";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Departments | Kharis Phase 2",
-  description: "Worship, media, hospitality, evangelism and more — discover the Kharis Phase 2 departments where your gift can serve.",
-  openGraph: {
-    title: "Departments | Kharis Phase 2",
-    description: "Worship, media, hospitality, evangelism and more — discover the Kharis Phase 2 departments where your gift can serve.",
-    type: "website",
-  },
-  twitter: { card: "summary_large_image" },
-};
+export const metadata = pageMeta({
+  title: "Departments",
+  description:
+    "Worship, media, hospitality, evangelism and more — find a Kharis Phase 2 department where your gift can serve.",
+  path: "/departments",
+});
 
 export default Page;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function GlobalError({ error, reset }: { error: Error; reset: () => void }) {
   useEffect(() => {
@@ -8,27 +9,27 @@ export default function GlobalError({ error, reset }: { error: Error; reset: () 
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 text-on-background">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+        <h1 className="font-headline-md text-headline-md uppercase tracking-tight">
           This page didn&apos;t load
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-3 font-body-md text-on-surface-variant">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             onClick={reset}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center bg-primary px-6 py-3 font-label-md text-sm uppercase tracking-wide text-on-primary brutalist-border brutalist-shadow"
           >
             Try again
           </button>
-          <a
+          <Link
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex items-center justify-center bg-surface px-6 py-3 font-label-md text-sm uppercase tracking-wide text-on-background brutalist-border"
           >
             Go home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

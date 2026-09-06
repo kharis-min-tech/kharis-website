@@ -51,7 +51,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             <h1 className="font-display-lg text-display-lg text-white leading-none uppercase mb-4 tracking-tighter">
               {featured ? displayMessageTitle(featured.title) : "Messages"}
             </h1>
-            <p className="font-body-lg text-body-lg text-surface-variant max-w-2xl mb-8">
+            <p className="font-body-lg text-body-lg text-white/80 max-w-2xl mb-8">
               {featured
                 ? "The newest teaching from Pastor David Antwi. Watch here or on YouTube."
                 : "Teachings from Pastor David Antwi will appear here as they go live."}
@@ -71,7 +71,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   href={youtubeWatchUrl(featured.id)}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-white text-black font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press"
+                  className="keep-light font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press"
                 >
                   <span className="material-symbols-outlined">smart_display</span>
                   YOUTUBE

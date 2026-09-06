@@ -113,7 +113,7 @@ function MediaPage({
       <ScrollReveal />
       <SiteHeader />
 
-      <header className="relative min-h-[440px] md:min-h-[520px] flex flex-col justify-center items-center bg-on-background text-on-primary-fixed pt-28 md:pt-32 pb-stack-lg overflow-hidden border-b-4 border-primary">
+      <header className="relative min-h-[440px] md:min-h-[520px] flex flex-col justify-center items-center bg-on-background text-primary-fixed pt-28 md:pt-32 pb-stack-lg overflow-hidden border-b-4 border-primary">
         <img
           alt="Kharis worship gathering"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
@@ -144,7 +144,7 @@ function MediaPage({
             </a>
             <a
               href="#listen"
-              className="bg-surface text-on-surface font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
+              className="keep-light font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
             >
               LISTEN TO MESSAGES
             </a>

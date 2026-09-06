@@ -53,9 +53,11 @@
   --tertiary-container: #676767;
   --tertiary-fixed: #e2e2e2;
   --tertiary-fixed-dim: #c6c6c6;
+  color-scheme: light;
 }
 
 .dark {
+  color-scheme: dark;
   --background: #121014;
   --error: #ffb4ab;
   --error-container: #93000a;
@@ -802,6 +804,47 @@ button.neo-brutal-border:hover {
 /* 3d. Testimonial accent ink: hardcoded brand hues are too dark on the dark
        card, so soften them to a calm lilac in dark mode only. */
 .dark .testimonial-accent { color: var(--primary-fixed) !important; }
+
+/* 4. Restore semantic colours the * cascade flattened. */
+.dark .text-primary,
+.dark .text-\[\#7c3aed\],
+.dark .text-\[\#630ed4\],
+.dark .text-\[\#6025c0\] { color: var(--primary-fixed) !important; }
+.dark .text-on-primary,
+.dark .text-on-primary-container { color: #ffffff !important; }
+.dark .text-on-surface-variant { color: #cfc7d8 !important; }
+.dark .text-white,
+.dark .\!text-white { color: #ffffff !important; }
+
+.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
+  .bg-secondary-fixed-dim, .bg-\[\#f7be1d\], .bg-\[\#ffde59\], .bg-\[\#ffd400\])
+  :is(.text-primary, .text-\[\#7c3aed\], .text-\[\#630ed4\], .text-\[\#6025c0\]) {
+  color: #4a0fa8 !important;
+}
+
+/* True light chips/buttons that must stay light on photo heroes. */
+.keep-light {
+  background-color: #ffffff;
+  color: #1a1b21;
+}
+.dark .keep-light {
+  background-color: #ece6f0 !important;
+  color: #1a1b21 !important;
+}
+.dark .keep-light * { color: #1a1b21 !important; }
+a.keep-light:hover,
+button.keep-light:hover {
+  background-color: var(--secondary-container) !important;
+  color: #221b00 !important;
+}
+.dark a.keep-light:hover *,
+.dark button.keep-light:hover * {
+  color: #221b00 !important;
+}
+
+html.dark .site-logo {
+  filter: brightness(0) invert(1);
+}
 
 
 

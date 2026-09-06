@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BranchPage from "@/components/pages/branch";
+import { JsonLd } from "@/components/JsonLd";
 import { getBranch, listBranchSlugs, listBranches } from "@/lib/branches";
+import { branchJsonLd, pageMeta } from "@/lib/seo";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -17,16 +19,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const branch = await getBranch(slug);
   if (!branch) {
-    return { title: "Branch not found | Kharis Phase 2", robots: { index: false } };
+    return pageMeta({
+      title: "Branch not found",
+      description: "That Kharis Phase 2 campus could not be found.",
+      path: `/branches/${slug}`,
+      noIndex: true,
+    });
   }
-  const title = `${branch.city} Branch | Kharis Phase 2`;
-  const description = `${branch.blurb} Service times, location and contact details for the Kharis Phase 2 ${branch.city} branch.`;
-  return {
-    title,
-    description,
-    openGraph: { title, description, type: "website" },
-    twitter: { card: "summary_large_image" },
-  };
+  return pageMeta({
+    title: `${branch.city} Branch`,
+    description: `${branch.blurb} Service times, location and how to visit the Kharis Phase 2 ${branch.city} campus.`,
+    path: `/branches/${branch.slug}`,
+    image: branch.image,
+  });
 }
 
 export default async function Page({ params }: Props) {
@@ -34,5 +39,10 @@ export default async function Page({ params }: Props) {
   const [branch, all] = await Promise.all([getBranch(slug), listBranches()]);
   if (!branch) notFound();
   const others = all.filter((b) => b.slug !== branch.slug).slice(0, 3);
-  return <BranchPage branch={branch} others={others} />;
+  return (
+    <>
+      <JsonLd data={branchJsonLd(branch)} />
+      <BranchPage branch={branch} others={others} />
+    </>
+  );
 }

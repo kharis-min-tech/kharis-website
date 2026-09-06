@@ -52,7 +52,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
             </Link>
             <Link
               href="/messages"
-              className="bg-white text-black px-8 py-4 border-4 border-black neo-shadow-lg font-headline-md text-headline-md uppercase hover-press transition-all skew-hover inline-block"
+              className="keep-light px-8 py-4 border-4 border-black neo-shadow-lg font-headline-md text-headline-md uppercase hover-press transition-all skew-hover inline-block"
             >
               Watch Message
             </Link>

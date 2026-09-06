@@ -1,19 +1,15 @@
-import type { Metadata } from "next";
 import Page from "@/components/pages/giving";
 import { getGivingTestimonials } from "@/lib/testimonies";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "Giving | Kharis Phase 2",
-  description: "Your generosity powers the mission. Give online, set up a transfer, and track the Phase 2 building milestone.",
-  openGraph: {
-    title: "Giving | Kharis Phase 2",
-    description: "Your generosity powers the mission. Give online, set up a transfer, and track the Phase 2 building milestone.",
-    type: "website",
-  },
-  twitter: { card: "summary_large_image" },
-};
+export const metadata = pageMeta({
+  title: "Giving",
+  description:
+    "Give to Kharis Phase 2 online or by bank transfer. Your generosity powers worship, outreach, media and new campuses.",
+  path: "/giving",
+});
 
 export default async function Giving() {
   const testimonies = await getGivingTestimonials();

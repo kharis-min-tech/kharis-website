@@ -1,15 +1,11 @@
-import type { Metadata } from "next";
 import Page from "@/components/pages/mission";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Mission | Kharis Phase 2",
-  description: "Meet the Phase 2 generation: our vision, mission, core values and the leadership team behind Kharis Phase 2.",
-  openGraph: {
-    title: "Mission | Kharis Phase 2",
-    description: "Meet the Phase 2 generation: our vision, mission, core values and the leadership team behind Kharis Phase 2.",
-    type: "website",
-  },
-  twitter: { card: "summary_large_image" },
-};
+export const metadata = pageMeta({
+  title: "Mission",
+  description:
+    "The vision, mandate, core values and leadership of Kharis Phase 2 — a generation encountering Jesus across the UK.",
+  path: "/mission",
+});
 
 export default Page;
