@@ -2,7 +2,18 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "cqgyiqxhpxwasogpdghx.supabase.co" },
+      {
+        protocol: "https",
+        hostname: "cdn.shopify.com",
+      },
+      {
+        protocol: "https",
+        hostname: "imgs.search.brave.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cqgyiqxhpxwasogpdghx.supabase.co",
+      },
     ],
   },
 };
