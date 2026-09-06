@@ -223,7 +223,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
 
         {/* NEXT UP + COUNTDOWN */}
         {featured ? (
-        <section className="bg-surface-container-low h-screen pt-stack-lg border-b-4 border-on-background overflow-hidden">
+        <section className="bg-surface-container-low h-screen pt-stack-lg pb-stack-lg border-b-4   border-on-background overflow-hidden">
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop h-full">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch h-full">
               <div className="lg:col-span-7 relative border-2 border-on-background neo-shadow-lg overflow-hidden group">

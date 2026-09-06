@@ -477,20 +477,7 @@ function AboutPage() {
 
 <OurLeadership />
 
-<section className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-background">
 
-  <div className="max-w-4xl mx-auto text-center">
-    <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-on-background mb-6 uppercase tracking-widest">
-      Mandate
-    </span>
-    <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-background uppercase leading-none mb-6">
-      Our Mandate
-    </h2>
-    <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-      Content coming soon.
-    </p>
-  </div>
-</section>
 
 <StatementOfFaith />
 

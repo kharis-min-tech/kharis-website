@@ -122,7 +122,7 @@ function MediaPage({
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 pointer-events-none"></div>
-        <div className="absolute inset-0 halftone-bg pointer-events-none"></div>
+        <div className="absolute inset-0 pointer-events-none"></div>
 
         <div className="container mx-auto px-margin-mobile relative z-10 text-center">
           <span className="inline-block bg-secondary-container text-on-background font-label-sm px-3 py-1 border-2 border-black -rotate-2 mb-4">
