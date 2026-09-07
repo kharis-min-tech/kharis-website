@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   MapPin,
@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { BranchData } from "@/lib/branches";
-import { listBranches } from "@/lib/branches";
+import { getBranchCity, getBranchFullAddress, getBranchRegion } from "@/lib/branches";
 import { DEFAULT_GALLERY_IMAGES } from "@/data/branchesData";
 import PlanVisitModal from "@/components/PlanVisitModal";
 import GiveModal from "@/components/GiveModal";
@@ -83,69 +83,54 @@ export function BranchTemplate({
     )
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
-  const welcomeParagraphs: string[] = currentBranch.welcomeParagraphs?.length
-    ? currentBranch.welcomeParagraphs
-    : [
-        `I serve as the ${currentBranch.pastor_role.toLowerCase().includes("pastor") ? "pastor" : "lead"} of ${currentBranch.name}, part of the Kharis Church family. ${currentBranch.description}`,
-        `${currentBranch.tagline} We love teaching the Word of God, and we long to see believers established in their faith and our city strengthened.`,
-        `Whether you are visiting ${currentBranch.city} for a season or looking for a church to call home, there is a place for you here.`,
-      ];
+  const city = getBranchCity(currentBranch);
+  const fullAddress = getBranchFullAddress(currentBranch);
+  const pastorRole = currentBranch.pastor_role ?? "Pastor";
+  const pastorLead = pastorRole.toLowerCase().includes("pastor")
+    ? "pastor"
+    : "lead";
+  const description =
+    currentBranch.description ?? currentBranch.short_description ?? "";
 
-  const galleryImages: string[] = (
-    currentBranch.galleryImages?.length
-      ? currentBranch.galleryImages
-      : DEFAULT_GALLERY_IMAGES
-  ).map((src, i) => withBranchImage(src, `${currentBranch.slug}-gallery-${i}`));
+  const welcomeParagraphs = [
+    `I serve as the ${pastorLead} of ${currentBranch.name}, part of the Kharis Church family.${description ? ` ${description}` : ""}`,
+    "We love teaching the Word of God, and we long to see believers established in their faith and our city strengthened.",
+    `Whether you are visiting ${city} for a season or looking for a church to call home, there is a place for you here.`,
+  ];
+
+  const galleryImages = DEFAULT_GALLERY_IMAGES.map((src, i) =>
+    withBranchImage(src, `${currentBranch.slug}-gallery-${i}`),
+  );
 
   const [zoomLevel, setZoomLevel] = useState(15);
 
   const mainSundayService = sundayServices[0];
 
   const mainVenue =
-    currentBranch.venues.find(
+    (currentBranch.venues ?? []).find(
       (venue) => venue.id === mainSundayService?.venue_id,
-    ) ?? currentBranch.venues[0];
+    ) ?? currentBranch.venues?.[0];
 
   const lat = mainVenue?.latitude ?? 51.4543;
   const lng = mainVenue?.longitude ?? -0.9781;
 
-  const city = mainVenue?.city ?? currentBranch.name.replace(/ Branch$/i, "");
-
-  const fullAddress = [
-    mainVenue?.name,
-    mainVenue?.address_line1,
-    mainVenue?.address_line2,
-    mainVenue?.city,
-    mainVenue?.postcode,
-  ]
-    .filter(Boolean)
-    .join(", "); // OpenStreetMap embed: bbox size derived from the zoom level.
+  const parkingInfo =
+    mainVenue?.parking_info ?? "Public parking is available near the venue.";
+  const transitInfo =
+    mainVenue?.public_transport_info ??
+    "The venue is reachable by public transport. Check local bus and rail times before you travel.";
   const span = (360 / Math.pow(2, zoomLevel)) * 4;
   const latSpan = span * 0.6;
   const mapEmbedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${(lng - span).toFixed(5)}%2C${(lat - latSpan).toFixed(5)}%2C${(lng + span).toFixed(5)}%2C${(lat + latSpan).toFixed(5)}&layer=mapnik&marker=${lat}%2C${lng}`;
 
   const [isPlanVisitOpen, setIsPlanVisitOpen] = useState(false);
   const [isGiveOpen, setIsGiveOpen] = useState(false);
-  const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(
-    null,
-  );
-  const [copiedLink, setCopiedLink] = useState(false);
+  const [, setSelectedEventRsvp] = useState<string | null>(null);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
   const [mediaModal, setMediaModal] = useState<{
     type: "image" | "video";
     src?: string;
   } | null>(null);
-
-  // useEffect(() => {
-  //   document.documentElement.classList.add("branch-light");
-  //   return () => document.documentElement.classList.remove("branch-light");
-  // }, []);
-
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2500);
-  };
 
   return (
     <div className="min-h-screen font-sans text-[var(--page-fg)] overflow-x-hidden pt-[4.5rem] selection:bg-[#800654] selection:text-white flex flex-col bg-[var(--page-bg)] text-white">
@@ -170,7 +155,7 @@ export function BranchTemplate({
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
                 <MapPin className="w-4 h-4 text-[#d4920a]" />
                 <span className="font-semibold text-xs text-white uppercase tracking-wider">
-                  Kharis Church UK • {currentBranch.city} Branch
+                  Kharis Church UK • {city} Branch
                 </span>
               </div>
 
@@ -213,7 +198,7 @@ export function BranchTemplate({
                         >
                           <span>{b.name}</span>
                           <span className="text-[10px] opacity-80">
-                            {b.region}
+                            {getBranchRegion(b)}
                           </span>
                         </button>
                       ))}
@@ -284,7 +269,7 @@ export function BranchTemplate({
               Join Us This Sunday
             </h2>
             <p className="text-base font-medium text-fg-soft max-w-2xl mx-auto">
-              We can't wait to host you. Choose a service time that works best
+              We can&apos;t wait to host you. Choose a service time that works best
               for you and your family.
             </p>
           </div>
@@ -334,33 +319,34 @@ export function BranchTemplate({
                       </div>
                     ))}
 
-                    {currentBranch.midweek && (
+                    {midweekServices.map((service) => (
                       <div
+                        key={service.id}
                         onClick={() => setIsPlanVisitOpen(true)}
                         className="flex items-start gap-4 p-4 rounded-2xl bg-black/30 border border-[#e8a33d]/30 hover:bg-white/5 transition-colors group cursor-pointer relative overflow-hidden"
                       >
                         <div className="flex-shrink-0 w-20 text-center">
                           <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
-                            {currentBranch.midweek.time}
+                            {formatServiceTime(service.start_time)}
                           </span>
                           <span className="text-[10px] font-extrabold text-gray-300 uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded-full">
-                            {currentBranch.midweek.ampm}
+                            {service.day}
                           </span>
                         </div>
                         <div className="flex-grow pt-0.5">
                           <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[#e8a33d] mb-1">
-                            {currentBranch.midweek.day} · Midweek
+                            {service.day} · Midweek
                           </span>
                           <h4 className="text-sm font-bold text-white mb-1 group-hover:text-[#e8a33d] transition-colors">
-                            {currentBranch.midweek.name}
+                            {service.name}
                           </h4>
                           <p className="text-xs font-medium text-gray-300 leading-relaxed">
-                            {currentBranch.midweek.description}
+                            {service.description}
                           </p>
                         </div>
                         <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors pt-1" />
                       </div>
-                    )}
+                    ))}
                   </div>
                 </div>
 
@@ -402,10 +388,10 @@ export function BranchTemplate({
                       {currentBranch.name}
                     </h4>
                     <p className="font-medium text-xs text-gray-300 mb-3 leading-snug">
-                      {currentBranch.fullAddress}
+                      {fullAddress}
                     </p>
                     <a
-                      href={`https://maps.google.com/?q=${encodeURIComponent(currentBranch.fullAddress)}`}
+                      href={`https://maps.google.com/?q=${encodeURIComponent(fullAddress)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-[#e8a33d] text-xs font-bold hover:underline"
@@ -458,7 +444,7 @@ export function BranchTemplate({
                 </div>
                 <div className="absolute -bottom-4 -right-4 rounded-2xl border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
                   <p className="text-xs font-extrabold uppercase tracking-wider text-[#e8a33d]">
-                    {currentBranch.pastor_role}
+                    {pastorRole}
                   </p>
                   <p className="text-sm font-bold text-white">
                     {currentBranch.pastor_name}
@@ -475,7 +461,7 @@ export function BranchTemplate({
                 </h2>
 
                 <p className="text-sm font-bold uppercase tracking-wider text-[#e8a33d]">
-                  {currentBranch.pastor_role} {currentBranch.pastor_name}
+                    {currentBranch.pastor_role ?? "Pastor"} {currentBranch.pastor_name}
                 </p>
 
                 <div className="space-y-4">
@@ -490,7 +476,7 @@ export function BranchTemplate({
                 </div>
 
                 <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-white">
-                  "{currentBranch.pastor_bio}"
+                  &ldquo;{currentBranch.pastor_bio ?? `Welcome to ${currentBranch.name}.`}&rdquo;
                 </blockquote>
 
                 <div className="flex flex-wrap gap-3 pt-1 text-xs font-semibold text-gray-300">
@@ -540,9 +526,7 @@ export function BranchTemplate({
                   <Play className="ml-1 h-8 w-8 fill-current" />
                 </span>
                 <span className="text-sm font-extrabold uppercase tracking-wider text-white">
-                  {currentBranch.videoId
-                    ? "Watch Latest Message"
-                    : "Watch on YouTube"}
+                    Watch on YouTube
                 </span>
               </div>
             </button>
@@ -552,7 +536,7 @@ export function BranchTemplate({
         {/* GALLERY */}
         <BranchGallery
           images={galleryImages}
-          city={currentBranch.city}
+          city={city}
           onImageClick={(src) => setMediaModal({ type: "image", src })}
         />
 
@@ -580,7 +564,7 @@ export function BranchTemplate({
                   Parking Information
                 </h3>
                 <p className="text-sm text-gray-300 font-medium leading-relaxed">
-                  {currentBranch.parkingInfo}
+                  {parkingInfo}
                 </p>
               </div>
 
@@ -590,7 +574,7 @@ export function BranchTemplate({
                 </div>
                 <h3 className="text-xl font-bold text-white!">Public Transit</h3>
                 <p className="text-sm text-gray-300 font-medium leading-relaxed">
-                  {currentBranch.transitInfo}
+                  {transitInfo}
                 </p>
               </div>
             </div>
@@ -612,8 +596,7 @@ export function BranchTemplate({
       <BranchMediaModal
         type={mediaModal?.type ?? null}
         imageSrc={mediaModal?.src}
-        videoId={currentBranch.videoId}
-        city={currentBranch.city}
+        city={city}
         onClose={() => setMediaModal(null)}
       />
     </div>

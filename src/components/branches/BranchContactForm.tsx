@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Check } from 'lucide-react';
-import type { BranchData } from '@/data/branchesData';
+import type { BranchData } from "@/lib/branches";
+import { getBranchCity, getBranchFullAddress } from "@/lib/branches";
 
 interface BranchContactFormProps {
   branch: BranchData;
@@ -9,6 +10,10 @@ interface BranchContactFormProps {
 
 export function BranchContactForm({ branch }: BranchContactFormProps) {
   const [sent, setSent] = useState(false);
+  const city = getBranchCity(branch);
+  const address = getBranchFullAddress(branch);
+  const email = branch.contact_email;
+  const phone = branch.contact_phone;
 
   const inputClass =
     'w-full rounded-xl border border-white/12 bg-black/40 px-4 py-3 text-sm font-medium text-white placeholder:text-gray-500 outline-none transition-colors focus:border-[#e8a33d]';
@@ -22,32 +27,38 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
             <span>Say Hello</span>
           </div>
           <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold text-white">
-            Contact {branch.city}
+            Contact {city}
           </h2>
           <p className="mt-4 max-w-md text-sm font-medium leading-relaxed text-fg-soft">
             Have a question, a prayer request, or want to know more before you visit? Our
-            {' '}{branch.city} team would love to hear from you.
+            {' '}{city} team would love to hear from you.
           </p>
 
           <div className="mt-8 space-y-3">
+            {email ? (
             <a
-              href={`mailto:${branch.contact_email}`}
+              href={`mailto:${email}`}
               className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#15131f] px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:border-[#e8a33d]/40"
             >
               <Mail className="h-4 w-4 text-[#e8a33d]" />
-              {branch.contact_email}
+              {email}
             </a>
+            ) : null}
+            {phone ? (
             <a
-              href={`tel:${branch.contact_phone?.replace(/\s/g, '')}`}
+              href={`tel:${phone.replace(/\s/g, '')}`}
               className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#15131f] px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:border-[#e8a33d]/40"
             >
               <Phone className="h-4 w-4 text-[#e8a33d]" />
-              {branch.contact_phone}
+              {phone}
             </a>
+            ) : null}
+            {address ? (
             <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-[#15131f] px-4 py-3.5 text-sm font-semibold text-white">
               <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#e8a33d]" />
-              {branch.fullAddress}
+              {address}
             </div>
+            ) : null}
           </div>
         </div>
 
@@ -85,7 +96,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
                 name="message"
                 rows={5}
                 className={`${inputClass} resize-y`}
-                placeholder={`Tell the ${branch.city} team how we can help…`}
+                placeholder={`Tell the ${city} team how we can help…`}
               />
             </div>
 
@@ -99,7 +110,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
               </button>
               {sent && (
                 <span className="text-xs font-semibold text-[#e8a33d]">
-                  Thank you — the {branch.city} team will be in touch shortly.
+                  Thank you — the {city} team will be in touch shortly.
                 </span>
               )}
             </div>

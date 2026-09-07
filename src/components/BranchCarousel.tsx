@@ -12,7 +12,10 @@ type Props = {
 };
 
 export function BranchCarousel({ slides }: Props) {
-  const list = Array.isArray(slides) ? slides : [];
+  const list = useMemo(
+    () => (Array.isArray(slides) ? slides : []),
+    [slides],
+  );
   const n = list.length;
 
   // Triple the reel so the loop never “ends”

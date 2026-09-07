@@ -70,6 +70,8 @@ export function BranchMediaModal({
 
             {type === 'image' && imageSrc && (
               <div className="flex h-full max-h-[80vh] items-center justify-center p-2">
+                {/* Gallery sources mix local, CMS, and remote URLs */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imageSrc}
                   alt={`Kharis ${city} gathering`}

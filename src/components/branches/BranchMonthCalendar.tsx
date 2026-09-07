@@ -2,7 +2,8 @@
 import React, { useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, Clock, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { BranchData } from '@/data/branchesData';
+import type { BranchData } from '@/lib/branches';
+import { getBranchCity, getBranchFullAddress } from '@/lib/branches';
 
 interface BranchMonthCalendarProps {
   branch: BranchData;
@@ -62,7 +63,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
     const list: Entry[] = [];
 
     (branch.services ?? []).forEach((service, si) => {
-      const target = serviceWeekday(service.day);
+      const target = serviceWeekday(`${service.day} ${service.name} ${service.type}`);
       for (let day = 1; day <= daysInMonth; day += 1) {
         const date = new Date(year, month, day);
         if (date.getDay() !== target) continue;
@@ -72,48 +73,11 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
           weekday: WEEKDAY_LABEL[target]!,
           title: service.name,
           time: `${formatServiceTime(service.start_time)}`,
-          description: service.description,
-          location: branch.address,
+          description: service.description ?? '',
+          location: getBranchFullAddress(branch) || getBranchCity(branch),
           category: 'Gathering',
         });
       }
-    });
-
-    if (branch.midweek) {
-      const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-      const target = Math.max(0, dayNames.indexOf(branch.midweek.day.toLowerCase()));
-      for (let day = 1; day <= daysInMonth; day += 1) {
-        const date = new Date(year, month, day);
-        if (date.getDay() !== target) continue;
-        list.push({
-          key: `mid-${day}`,
-          day,
-          weekday: WEEKDAY_LABEL[target]!,
-          title: branch.midweek.name,
-          time: `${branch.midweek.time} ${branch.midweek.ampm}`,
-          description: branch.midweek.description ?? '',
-          location: branch.address,
-          category: 'Midweek',
-        });
-      }
-    }
-
-
-
-    (branch.upcomingEvents ?? []).forEach((evt, i) => {
-      const parsed = new Date(evt.date);
-      const day = Number.isNaN(parsed.getTime()) ? 1 : parsed.getDate();
-      if (!Number.isNaN(parsed.getTime()) && parsed.getMonth() !== month) return;
-      list.push({
-        key: `evt-${evt.id}-${i}`,
-        day,
-        weekday: WEEKDAY_LABEL[Number.isNaN(parsed.getTime()) ? 0 : parsed.getDay()]!,
-        title: evt.title,
-        time: evt.time,
-        description: evt.description,
-        location: evt.location,
-        category: evt.category,
-      });
     });
 
     return list.sort((a, b) => a.day - b.day);
@@ -123,10 +87,10 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
     <section id="events" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
       <div className="mb-10 text-center">
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 text-[#e8a33d] text-xs font-bold mb-3 border border-white/10">
-          <span>What's Happening</span>
+          <span>What&apos;s Happening</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-          What's Happening In {branch.city}
+          What&apos;s Happening In {getBranchCity(branch)}
         </h2>
       </div>
 
@@ -211,7 +175,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
                 onClick={() => onRsvp(entry.title)}
                 className="flex-shrink-0 rounded-xl bg-white/10 px-5 py-2.5 text-xs font-bold text-white! transition-colors hover:bg-[#d4920a] cursor-pointer"
               >
-                I'm Coming
+                I&apos;m Coming
               </button>
             </div>
           ))}

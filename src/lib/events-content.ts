@@ -98,7 +98,7 @@ export function groupEventsByMonth(events: ChurchEvent[]) {
   const map = new Map<string, ChurchEvent[]>();
 
   for (const event of events) {
-    const key = eventMonthKey(event.start_time);
+    const key = eventMonthKey(event.date);
     const bucket = map.get(key);
     if (bucket) bucket.push(event);
     else map.set(key, [event]);
@@ -130,7 +130,7 @@ export function formatEventLong(date: string, time: string, timezone: string) {
 }
 
 export function googleCalendarUrl(event: ChurchEvent) {
-  const start = event.start_time?.replace(/-/g, "");
+  const start = event.date.replace(/-/g, "");
   const text = encodeURIComponent(event.title);
   const details = encodeURIComponent(event.description);
   const location = encodeURIComponent(`${event.location}, ${event.address}`);

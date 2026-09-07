@@ -9,7 +9,6 @@ import {
   Phone,
   Search,
 } from "lucide-react";
-import { BranchMap } from "@/components/BranchMap";
 import { Reveal } from "@/components/Reveal";
 import type { ContactLocation } from "@/lib/contactLocations";
 
@@ -27,10 +26,6 @@ type Props = {
 
 function getPrimaryVenue(branch: ContactLocation) {
   return branch.venues?.[0] ?? null;
-}
-
-function getBranchCity(branch: ContactLocation) {
-  return getPrimaryVenue(branch)?.city ?? "";
 }
 
 function getBranchAddress(branch: ContactLocation) {

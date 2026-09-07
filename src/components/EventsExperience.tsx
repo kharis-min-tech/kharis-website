@@ -136,17 +136,6 @@ export function EventsExperience({ events }: Props) {
   const upcoming = useMemo(() => happeningEvents(events), [events]);
   const preview = upcoming.slice(0, PREVIEW_COUNT);
   const previewByMonth = useMemo(() => groupEventsByMonth(preview), [preview]);
-  const rest = useMemo(() => {
-  const shown = new Set(preview.map((e) => e.id));
-
-  return events
-    .filter((e) => !shown.has(e.id))
-    .sort(
-      (a, b) =>
-        new Date(a.start_time).getTime() -
-        new Date(b.start_time).getTime()
-    );
-}, [events, preview]);
 
   const venues = useMemo(
     () => [...new Set(events.map((e) => e.location))],

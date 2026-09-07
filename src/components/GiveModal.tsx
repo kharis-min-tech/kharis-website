@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Heart, X, Check, ShieldCheck, Sparkles, CreditCard, RefreshCw } from 'lucide-react';
+import { Heart, X, Check, ShieldCheck, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface GiveModalProps {

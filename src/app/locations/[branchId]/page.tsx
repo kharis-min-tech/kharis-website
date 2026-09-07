@@ -57,7 +57,7 @@ export async function generateMetadata({
   const description =
     branch.short_description ??
     branch.description ??
-    `Visit Kharis Church ${location}.`;
+    `Visit Kharis Church ${branchLocation}.`;
 
   const ogImage = withBranchImage(branch.hero_image_url, branch.slug);
 
@@ -94,7 +94,10 @@ export default async function BranchPage({
 }: PageProps) {
   const { branchId } = await params;
 
-  const branch = await getBranchBySlug(branchId);
+  const [branch, branches] = await Promise.all([
+    getBranchBySlug(branchId),
+    listBranchData(),
+  ]);
 
   if (!branch) {
     notFound();
@@ -103,6 +106,7 @@ export default async function BranchPage({
   return (
     <LocationBranchView
       branch={branch}
+      branches={branches}
     />
   );
 }

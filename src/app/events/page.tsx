@@ -39,6 +39,7 @@ export default async function EventsPage() {
       address: event.location ?? "",
       description: event.description ?? "",
       image: event.image_url ?? "/images/events/hero-worship.jpg",
+      category: "service" as const,
     };
   });
 

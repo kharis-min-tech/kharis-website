@@ -7,17 +7,18 @@ import type { BranchData } from "@/lib/branches";
 
 interface Props {
   branch: BranchData;
+  branches: BranchData[];
 }
 
-export function LocationBranchView({ branch }: Props) {
+export function LocationBranchView({ branch, branches }: Props) {
   const router = useRouter();
 
   const goToBranch = useCallback((id: string) => router.push(`/locations/${id}`), [router]);
 
   return (
     <BranchTemplate
-      slug={branch.slug}
       branchData={branch}
+      branches={branches}
       onNavigateBranch={goToBranch}
       onNavigateDirectory={() => router.push("/locations")}
     />

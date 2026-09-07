@@ -115,6 +115,43 @@ export interface BranchItem {
   longitude?: number;
 }
 
+export function getMainVenue(branch: BranchData): Venue | undefined {
+  return branch.venues?.[0];
+}
+
+export function getBranchCity(branch: BranchData): string {
+  const fromVenue = getMainVenue(branch)?.city?.trim();
+  if (fromVenue) return fromVenue;
+  const fromName = branch.name
+    .replace(/\s+Branch$/i, "")
+    .replace(/^Kharis\s+/i, "")
+    .trim();
+  return fromName || branch.name;
+}
+
+export function getBranchRegion(branch: BranchData): string {
+  return (
+    branch.subtitle ??
+    getMainVenue(branch)?.country ??
+    "United Kingdom"
+  );
+}
+
+export function getBranchFullAddress(branch: BranchData): string {
+  const venue = getMainVenue(branch);
+  if (!venue) return "";
+  return [
+    venue.name,
+    venue.address_line1,
+    venue.address_line2,
+    venue.city,
+    venue.postcode,
+    venue.country,
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
+
 
 // ======================================================
 // FORMAT DATABASE TIME

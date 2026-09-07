@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { MapPin, Calendar, Clock, Check, Users, Sparkles, X, ChevronRight } from 'lucide-react';
+import { MapPin, Check, X, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface PlanVisitModalProps {
@@ -46,7 +46,7 @@ export default function PlanVisitModal({ isOpen, onClose }: PlanVisitModalProps)
               </div>
               <div>
                 <h3 className="font-extrabold text-xl text-white!">Plan Your Visit</h3>
-                <p className="text-xs font-semibold text-[#b2aec1]">We're Excited To Host You & Your Family!</p>
+                <p className="text-xs font-semibold text-[#b2aec1]">We&apos;re Excited To Host You & Your Family!</p>
               </div>
             </div>
             <button
@@ -62,7 +62,7 @@ export default function PlanVisitModal({ isOpen, onClose }: PlanVisitModalProps)
               <div className="w-16 h-16 rounded-full bg-[#800654]/20 text-[#e8a33d] mx-auto flex items-center justify-center">
                 <Check className="w-8 h-8 stroke-[3]" />
               </div>
-              <h4 className="text-2xl font-extrabold text-[#f3f0f8]">You're All Set, {name}!</h4>
+              <h4 className="text-2xl font-extrabold text-[#f3f0f8]">You&apos;re All Set, {name}!</h4>
               <p className="text-sm font-semibold text-[#b2aec1] max-w-sm mx-auto">
                 Our host team will meet you at the Welcome Lounge with reserved VIP seating and a special gift bag!
               </p>

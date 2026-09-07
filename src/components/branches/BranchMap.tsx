@@ -2,7 +2,7 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MapPin, Navigation, Loader2, Globe2, ChevronDown } from "lucide-react";
-import { BRANCHES_DATA, type BranchData } from "@/data/branchesData";
+import type { BranchData } from "@/lib/branches";
 import worldDots from "@/data/worldDots.json";
 import countryOutlines from "@/data/countryOutlines.json";
 
@@ -130,7 +130,7 @@ export function BranchMap({
   const { project, bounds } = useMemo(() => makeProjection(view), [view]);
 
   const source = useMemo(
-    () => (branchesProp?.length ? branchesProp : Object.values(BRANCHES_DATA)),
+    () => branchesProp ?? [],
     [branchesProp],
   );
 
@@ -181,7 +181,7 @@ export function BranchMap({
               lat <= bounds.maxLat,
           };
         })
-        .filter(Boolean),
+        .filter((b): b is NonNullable<typeof b> => b !== null),
     [source, project, bounds],
   );
 
@@ -259,7 +259,7 @@ export function BranchMap({
 
   const go = (slug: string) => {
     if (onSelectBranch) onSelectBranch(slug);
-    else router.push(`/branches/${slug}`);
+    else router.push(`/locations/${slug}`);
   };
 
   const locateMe = () => {
