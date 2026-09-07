@@ -2,43 +2,37 @@
 
 import { useEffect, useState } from "react";
 
+function currentDark() {
+  return document.documentElement.classList.contains("dark");
+}
+
 export function ThemeToggle() {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("kharis-theme");
-    const isDark =
-      document.documentElement.classList.contains("dark") || stored === "dark";
-    setDark(isDark);
-    document.documentElement.classList.toggle("dark", isDark);
+    const sync = () => setDark(currentDark());
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
   }, []);
-
-  const toggle = () => {
-    const next = !dark;
-    const root = document.documentElement;
-
-    root.classList.add("theme-transition");
-    window.clearTimeout(
-      (window as unknown as { __themeTimer?: number }).__themeTimer,
-    );
-    (window as unknown as { __themeTimer?: number }).__themeTimer =
-      window.setTimeout(() => root.classList.remove("theme-transition"), 400);
-
-    setDark(next);
-    root.classList.toggle("dark", next);
-    localStorage.setItem("kharis-theme", next ? "dark" : "light");
-  };
 
   return (
     <button
-      onClick={toggle}
-      aria-label="Toggle dark mode"
-      className="fixed bottom-5 right-5 z-[999] flex items-center gap-2 border-2 border-on-background bg-primary px-4 py-3 font-label-comic text-label-comic uppercase text-on-primary neo-shadow transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+      type="button"
+      id="theme-toggle"
+      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-pressed={dark}
+      style={{ zIndex: 9999 }}
+      className="pointer-events-auto fixed bottom-5 right-5 z-[9999] flex items-center gap-2 rounded-full border border-on-background/15 bg-surface-container-highest px-4 py-3 font-label-comic text-label-comic uppercase text-on-surface shadow-[0_12px_40px_-12px_rgba(6,7,10,0.55)]"
     >
-      <span className="material-symbols-outlined text-base">
+      <span data-theme-icon className="material-symbols-outlined text-base">
         {dark ? "light_mode" : "dark_mode"}
       </span>
-      {dark ? "Light" : "Dark"}
+      <span data-theme-label>{dark ? "Light" : "Dark"}</span>
     </button>
   );
 }

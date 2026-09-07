@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { JsonLd } from "@/components/JsonLd";
 import { organizationJsonLd, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteUrl } from "@/lib/seo";
 
@@ -55,8 +56,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf8ff" },
-    { media: "(prefers-color-scheme: dark)", color: "#121014" },
+    { media: "(prefers-color-scheme: light)", color: "#f4eee6" },
+    { media: "(prefers-color-scheme: dark)", color: "#06070a" },
   ],
 };
 
@@ -66,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(localStorage.getItem("kharis-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}})();`,
+            __html: `(function(){function apply(d){var r=document.documentElement;r.classList.toggle("dark",d);r.style.colorScheme=d?"dark":"light";try{localStorage.setItem("kharis-theme",d?"dark":"light")}catch(e){}var t=document.getElementById("theme-toggle");if(!t)return;t.setAttribute("aria-pressed",d?"true":"false");t.setAttribute("aria-label",d?"Switch to light mode":"Switch to dark mode");var l=t.querySelector("[data-theme-label]");var i=t.querySelector("[data-theme-icon]");if(l)l.textContent=d?"Light":"Dark";if(i)i.textContent=d?"light_mode":"dark_mode"}try{apply(localStorage.getItem("kharis-theme")==="dark")}catch(e){}document.addEventListener("click",function(e){var t=e.target&&e.target.closest&&e.target.closest("#theme-toggle");if(!t)return;e.preventDefault();apply(!document.documentElement.classList.contains("dark"))});})();`,
           }}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -80,6 +81,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={organizationJsonLd()} />
         <ScrollReveal />
         {children}
+        <ThemeToggle />
+        <script src="/ui-boot.js?v=4" defer />
       </body>
     </html>
   );

@@ -20,13 +20,13 @@ export default function GlobalError({ error, reset }: { error: Error; reset: () 
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             onClick={reset}
-            className="inline-flex items-center justify-center bg-primary px-6 py-3 font-label-md text-sm uppercase tracking-wide text-on-primary brutalist-border brutalist-shadow"
+            className="inline-flex items-center justify-center rounded-2xl bg-primary px-6 py-3 font-label-md text-sm uppercase tracking-wide text-on-primary vibe-glow"
           >
             Try again
           </button>
           <Link
             href="/"
-            className="inline-flex items-center justify-center bg-surface px-6 py-3 font-label-md text-sm uppercase tracking-wide text-on-background brutalist-border"
+            className="inline-flex items-center justify-center rounded-2xl border border-on-background/15 bg-surface px-6 py-3 font-label-md text-sm uppercase tracking-wide text-on-background"
           >
             Go home
           </Link>

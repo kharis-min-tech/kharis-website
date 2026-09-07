@@ -51,105 +51,104 @@ const COLUMNS: FooterColumn[] = [
   },
 ];
 
-const footerLinkClass = "hover:text-primary transition-colors";
+const footerLinkClass =
+  "rounded-lg px-1 py-0.5 hover:text-primary transition-colors";
 
 export function SiteFooter() {
   return (
-    <footer className="w-full relative border-t-4 border-primary bg-surface-container-highest overflow-hidden">
-      <div
-        className="halftone absolute inset-0 z-0 pointer-events-none opacity-[0.15]"
-        aria-hidden="true"
-      ></div>
+    <footer className="relative bg-background px-4 pb-6 pt-8 md:px-8">
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-on-background/10 bg-surface-container-lowest">
+        <div className="vibe-mesh pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-16 top-0 h-56 w-56 rounded-full bg-cobalt/20 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-magenta/15 blur-3xl"
+        />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-gutter gap-y-10 px-margin-mobile md:px-margin-desktop py-14 max-w-7xl mx-auto relative z-10">
-        {/* Brand */}
-        <div className="col-span-2 md:col-span-3 lg:col-span-2 space-y-4">
-          <div className="font-display-xl text-4xl md:text-5xl text-primary tracking-tighter leading-none">
-            KHARIS
-            <span className="text-on-background"> PHASE 2.</span>
+        <div className="relative z-10 grid grid-cols-2 gap-x-6 gap-y-10 px-6 py-12 md:grid-cols-3 md:px-10 lg:grid-cols-6 lg:px-12 lg:py-14">
+          <div className="col-span-2 space-y-4 md:col-span-3 lg:col-span-2">
+            <div className="font-display-xl text-4xl leading-none tracking-tighter text-primary md:text-5xl">
+              KHARIS
+              <span className="text-on-background"> PHASE 2.</span>
+            </div>
+            <p className="max-w-xs font-body-md text-on-surface-variant">
+              Changing the world with a touch of His grace.
+            </p>
+            <div className="flex gap-3 pt-2">
+              <a
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-background/10 bg-surface text-on-background vibe-glow"
+                href="https://youtube.com/@davidantwi"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="YouTube"
+              >
+                <span className="material-symbols-outlined">play_arrow</span>
+              </a>
+              <a
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-background/10 bg-surface text-on-background vibe-glow"
+                href="https://instagram.com/kharisphasetwo"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+              >
+                <span className="material-symbols-outlined">photo_camera</span>
+              </a>
+            </div>
           </div>
-          <p className="font-body-md text-on-surface-variant max-w-xs">
-            Changing the world with a touch of His grace.
+
+          {COLUMNS.map((col) => (
+            <div className="space-y-3" key={col.title}>
+              <h4 className={`mb-3 font-headline-md text-lg uppercase ${col.titleColor}`}>
+                {col.title}
+              </h4>
+              <ul className="space-y-2 font-body-md text-on-surface-variant">
+                {col.links.map((link) => (
+                  <li key={link.label}>
+                    {link.href ? (
+                      <a className={footerLinkClass} href={link.to}>
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link className={footerLinkClass} href={link.to}>
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="relative z-10 mx-6 mb-6 flex flex-col items-center gap-4 rounded-3xl border border-on-background/10 bg-surface-container/80 px-6 py-6 backdrop-blur-md md:mx-10 lg:mx-12">
+          <span className="font-label-md text-xs uppercase tracking-widest text-on-surface-variant">
+            Member of
+          </span>
+          <div className="w-full max-w-[220px]">
+            <img
+              src={eaLogoLight}
+              alt="Evangelical Alliance — together making Jesus known"
+              className="block h-auto w-full dark:hidden"
+              loading="lazy"
+              decoding="async"
+            />
+            <img
+              src={eaLogoDark}
+              alt=""
+              aria-hidden="true"
+              className="hidden h-auto w-full dark:block"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <p className="text-center font-body-md text-xs uppercase tracking-wide text-on-surface-variant">
+            © 2026 Kharis Ministries | All Rights Reserved | Charity Number 1139291
           </p>
-          <div className="flex gap-3 pt-2">
-            <a
-              className="w-11 h-11 bg-background comic-border flex items-center justify-center text-on-background brutalist-shadow hover:-translate-y-1 transition-transform"
-              href="https://youtube.com/@davidantwi"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="YouTube"
-            >
-              <span className="material-symbols-outlined">play_arrow</span>
-            </a>
-            <a
-              className="w-11 h-11 bg-background comic-border flex items-center justify-center text-on-background brutalist-shadow hover:-translate-y-1 transition-transform"
-              href="https://instagram.com/kharisphasetwo"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-            >
-              <span className="material-symbols-outlined">photo_camera</span>
-            </a>
-          </div>
-        </div>
-
-        {/* Link columns */}
-        {COLUMNS.map((col) => (
-          <div className="space-y-3" key={col.title}>
-            <h4
-              className={`font-headline-md text-lg uppercase mb-3 ${col.titleColor}`}
-            >
-              {col.title}
-            </h4>
-            <ul className="space-y-2 font-body-md text-on-surface-variant">
-              {col.links.map((link) => (
-                <li key={link.label}>
-                  {link.href ? (
-                    <a
-                      className={footerLinkClass}
-                      href={link.to}
-                    >
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link className={footerLinkClass} href={link.to}>
-                      {link.label}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center gap-3 px-margin-mobile md:px-margin-desktop">
-        <span className="font-label-md text-xs uppercase tracking-widest text-on-surface-variant">
-          Member of
-        </span>
-        <div className="w-full max-w-[220px]">
-          <img
-            src={eaLogoLight}
-            alt="Evangelical Alliance — together making Jesus known"
-            className="block dark:hidden w-full h-auto"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src={eaLogoDark}
-            alt=""
-            aria-hidden="true"
-            className="hidden dark:block w-full h-auto"
-            loading="lazy"
-            decoding="async"
-          />
         </div>
       </div>
-
-      <div className="text-center mt-6 pb-8 font-body-md text-xs text-on-surface-variant px-margin-mobile md:px-margin-desktop uppercase tracking-wide">
-        © 2026 Kharis Ministries | All Rights Reserved | Charity Number 1139291
-      </div>
-
     </footer>
   );
 }

@@ -11,8 +11,9 @@ export function ShareVideoButton({
   title: string;
   className?: string;
 }) {
+  const url = youtubeWatchUrl(id);
+
   async function share() {
-    const url = youtubeWatchUrl(id);
     try {
       if (navigator.share) {
         await navigator.share({ title, url });
@@ -29,7 +30,14 @@ export function ShareVideoButton({
   }
 
   return (
-    <button type="button" onClick={share} className={className}>
+    <button
+      type="button"
+      data-ui="share-video"
+      data-url={url}
+      data-title={title}
+      onClick={share}
+      className={className}
+    >
       <span className="material-symbols-outlined text-lg">share</span>
       SHARE VIDEO
     </button>

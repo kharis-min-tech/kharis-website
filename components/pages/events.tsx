@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   CATEGORY_ICON,
   EVENT_CATEGORIES,
@@ -74,7 +73,7 @@ function CountdownBlock({ target }: { target: string }) {
       {units.map((u) => (
         <div
           key={u.label}
-          className="bg-surface border-2 border-on-background neo-shadow px-2 py-3 text-center"
+          className="rounded-2xl bg-surface border border-on-background/10 vibe-glow px-2 py-3 text-center"
         >
           <span className="block font-display-lg text-headline-lg text-on-background tabular-nums">
             {u.value === undefined ? "--" : String(u.value).padStart(2, "0")}
@@ -90,10 +89,10 @@ function CountdownBlock({ target }: { target: string }) {
 
 function EventCard({ event }: { event: ChurchEvent }) {
   return (
-    <article className="bg-surface border-2 border-on-background neo-shadow neo-button-hover transition-all flex flex-col group">
-      <div className="p-stack-md border-b-2 border-on-background flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+    <article className="vibe-card overflow-hidden rounded-3xl bg-surface-container-lowest flex flex-col group">
+      <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
         <div className="min-w-0">
-          <span className="inline-flex items-center gap-2 font-label-sm text-outline uppercase mb-2 tracking-widest">
+          <span className="inline-flex items-center gap-2 font-label-comic text-xs text-primary uppercase mb-2 tracking-[0.16em]">
             <span className="material-symbols-outlined text-base align-middle">
               {CATEGORY_ICON[event.category]}
             </span>
@@ -103,29 +102,34 @@ function EventCard({ event }: { event: ChurchEvent }) {
             {event.title}
           </h4>
         </div>
-        <div className="self-start max-w-full shrink-0 bg-secondary-fixed text-on-secondary-fixed border-2 border-on-background px-3 py-2 font-label-md text-center leading-tight">
-          {event.dayLabel.toUpperCase()}
-          <br />
-          {event.timeLabel}
+        <div className="self-start max-w-full shrink-0 rounded-2xl bg-cobalt text-white px-3.5 py-2.5 text-center leading-tight">
+          <span className="block font-label-comic text-[11px] uppercase tracking-[0.12em]">
+            {event.dayLabel}
+          </span>
+          <span className="block font-label-comic text-sm uppercase mt-0.5">
+            {event.timeLabel}
+          </span>
         </div>
       </div>
 
-      <div className="p-stack-md flex-grow flex flex-col gap-3">
+      <div className="px-5 sm:px-6 pb-2 flex-grow flex flex-col gap-3">
         <p className="font-body-md text-on-surface-variant">{event.blurb}</p>
-        <p className="font-label-md text-outline flex items-center gap-2">
-          <span className="material-symbols-outlined text-base">place</span>
+        <p className="font-label-comic text-sm text-outline flex items-start gap-2">
+          <span className="material-symbols-outlined text-base text-primary mt-0.5">
+            place
+          </span>
           {event.location}
         </p>
       </div>
 
-      <div className="p-stack-md mt-auto bg-on-background">
+      <div className="p-5 sm:p-6 mt-auto rounded-b-3xl">
         <PlanVisitButton
           item={eventToCalendarItem(event)}
           directionsUrl={mapsSearchUrl(event.location)}
-          className="flex w-full justify-between items-center text-surface font-label-md uppercase hover:text-primary-fixed-dim transition-colors"
+          className="flex w-full justify-between items-center gap-3 rounded-2xl bg-amber text-[#1a0b00] font-label-comic text-sm uppercase tracking-wide px-5 py-3.5 vibe-glow hover:brightness-110 transition-all"
         >
           {event.cta}
-          <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+          <span className="material-symbols-outlined group-hover:translate-x-0.5 transition-transform">
             calendar_add_on
           </span>
         </PlanVisitButton>
@@ -168,23 +172,24 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
   }, [sorted, activeCategory, query]);
 
   return (
-    <div className="bg-background text-on-background font-body-md overflow-x-hidden">
+    <div className="bg-background text-on-background font-body-md">
       <SiteHeader />
 
       <main className="mt-20">
         {/* HERO */}
-        <section className="relative bg-on-background text-surface py-stack-lg min-h-[60vh] flex flex-col justify-center overflow-hidden border-b-4 border-primary">
+        <section className="relative bg-[#06070a] text-white py-stack-lg min-h-[60vh] flex flex-col justify-center overflow-hidden">
           <img
             src={HERO_WORSHIP}
             alt="Kharis Phase 2 congregation worshipping together"
-            className="absolute inset-0 w-full h-full object-cover opacity-25 grayscale"
+            className="absolute inset-0 w-full h-full object-cover opacity-40"
             loading="eager"
             decoding="async"
           />
-          <div className="absolute inset-0 halftone-overlay opacity-20 pointer-events-none" />
+          <div className="vibe-mesh absolute inset-0" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-[#06070a]/50 to-transparent" />
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
             <div className="max-w-4xl">
-              <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-surface mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
+              <span className="inline-block rounded-full bg-amber text-[#1a0b00] font-label-md px-4 py-1 mb-6 uppercase tracking-widest">
                 Experience the Culture
               </span>
               <h1 className="font-display-lg text-display-lg mb-4 text-surface-bright">
@@ -196,7 +201,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               <div className="flex flex-col sm:flex-row gap-4">
                 <a
                   href="#whats-on"
-                  className="inline-block bg-primary text-on-primary font-headline-md text-headline-md px-8 py-4 border-4 border-surface neo-shadow-lg neo-button-hover transition-all text-center uppercase"
+                  className="inline-block rounded-2xl bg-amber text-[#1a0b00] font-headline-md text-headline-md px-8 py-4 vibe-glow text-center uppercase"
                 >
                   See What's On
                 </a>
@@ -204,14 +209,14 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                   <PlanVisitButton
                     item={eventToCalendarItem(featured)}
                     directionsUrl={mapsSearchUrl(featured.location)}
-                    className="inline-block keep-light font-headline-md text-headline-md px-8 py-4 border-4 border-black neo-shadow-lg neo-button-hover transition-all text-center uppercase"
+                    className="inline-block rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md font-headline-md text-headline-md px-8 py-4 text-center uppercase"
                   >
                     Plan Your Visit
                   </PlanVisitButton>
                 ) : (
                   <Link
                     href="/branches"
-                    className="inline-block keep-light font-headline-md text-headline-md px-8 py-4 border-4 border-black neo-shadow-lg neo-button-hover transition-all text-center uppercase"
+                    className="inline-block rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md font-headline-md text-headline-md px-8 py-4 text-center uppercase"
                   >
                     Plan Your Visit
                   </Link>
@@ -223,10 +228,10 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
 
         {/* NEXT UP + COUNTDOWN */}
         {featured ? (
-        <section className="bg-surface-container-low h-screen pt-stack-lg pb-stack-lg border-b-4   border-on-background overflow-hidden">
+        <section className="bg-surface-container-low h-screen pt-stack-lg pb-stack-lg overflow-hidden">
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop h-full">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch h-full">
-              <div className="lg:col-span-7 relative border-2 border-on-background neo-shadow-lg overflow-hidden group">
+              <div className="lg:col-span-7 relative rounded-2xl border border-on-background/10 neo-shadow-lg overflow-hidden group">
                 <img
                   src={featured.image || WORSHIP}
                   alt={`${featured.title} at Kharis Phase 2`}
@@ -234,12 +239,12 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                   loading="lazy"
                   decoding="async"
                 />
-                <span className="absolute top-4 left-4 bg-primary text-on-primary font-label-md px-4 py-2 border-2 border-on-background uppercase neo-shadow">
+                <span className="absolute top-4 left-4 bg-primary text-on-primary font-label-md px-4 py-2 rounded-2xl border border-on-background/10 uppercase neo-shadow">
                   Next Up
                 </span>
               </div>
 
-              <div className="lg:col-span-5 flex flex-col gap-stack-md justify-center bg-surface border-2 border-on-background neo-shadow-lg p-stack-md overflow-y-auto">
+              <div className="lg:col-span-5 flex flex-col gap-stack-md justify-center bg-surface rounded-2xl border border-on-background/10 neo-shadow-lg p-stack-md overflow-y-auto">
                 <div>
                   <span className="font-label-sm uppercase tracking-widest text-outline">
                     {featured.dayLabel} · {featured.timeLabel}
@@ -256,13 +261,13 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                   <PlanVisitButton
                     item={eventToCalendarItem(featured)}
                     directionsUrl={mapsSearchUrl(featured.location)}
-                    className="flex-1 bg-primary-container text-on-primary-container font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
+                    className="flex-1 bg-primary-container text-on-primary-container font-headline-md text-headline-md px-6 py-4 rounded-2xl border border-on-background/10 neo-shadow neo-button-hover transition-all text-center uppercase"
                   >
                     {featured.cta}
                   </PlanVisitButton>
                   <Link
                     href="/messages"
-                    className="flex-1 bg-surface text-on-background font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
+                    className="flex-1 bg-surface text-on-background font-headline-md text-headline-md px-6 py-4 rounded-2xl border border-on-background/10 neo-shadow neo-button-hover transition-all text-center uppercase"
                   >
                     Watch Online
                   </Link>
@@ -292,7 +297,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               {SPECIAL_SERVICES.map((slot) => (
                 <div
                   key={slot.title}
-                  className="border-2 border-on-background neo-shadow neo-button-hover transition-all bg-surface overflow-hidden group"
+                  className="rounded-2xl border border-on-background/10 neo-shadow neo-button-hover transition-all bg-surface overflow-hidden group"
                 >
                   <div className="aspect-[16/10] overflow-hidden border-b-2 border-on-background">
                     <img
@@ -323,7 +328,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
         {/* WHAT'S ON — filter + search */}
         <section
           id="whats-on"
-          className="bg-surface-container-low py-stack-lg border-y-4 border-on-background scroll-mt-24"
+          className="bg-surface-container-low py-stack-lg border-y border-on-background/10 scroll-mt-24"
         >
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-stack-md gap-gutter">
@@ -348,7 +353,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                   onChange={(e) => setQuery(e.target.value)}
                   type="search"
                   placeholder="SEARCH EVENTS"
-                  className="w-full pl-12 pr-4 py-4 bg-surface border-2 border-on-background font-label-md uppercase neo-shadow focus:ring-4 focus:ring-primary outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-4 bg-surface rounded-2xl border border-on-background/10 font-label-md uppercase neo-shadow focus:ring-4 focus:ring-primary outline-none transition-all"
                 />
               </label>
             </div>
@@ -362,7 +367,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                     type="button"
                     onClick={() => setActiveCategory(cat)}
                     aria-pressed={active}
-                    className={`font-label-md uppercase tracking-widest px-5 py-3 border-2 border-on-background transition-all neo-button-hover ${
+                    className={`font-label-md uppercase tracking-widest px-5 py-3 rounded-2xl border border-on-background/10 transition-all neo-button-hover ${
                       active
                         ? "bg-primary text-on-primary neo-shadow"
                         : "bg-surface text-on-background hover:bg-primary-fixed"
@@ -381,7 +386,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 ))}
               </div>
             ) : (
-              <div className="border-2 border-dashed border-on-background bg-surface p-stack-lg text-center">
+              <div className="rounded-3xl border border-dashed border-on-background/20 bg-surface p-stack-lg text-center">
                 <span className="material-symbols-outlined text-5xl text-outline">
                   event_busy
                 </span>
@@ -398,7 +403,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                     setQuery("");
                     setActiveCategory("All");
                   }}
-                  className="mt-stack-md inline-block bg-primary text-on-primary font-label-md uppercase px-6 py-3 border-2 border-on-background neo-shadow neo-button-hover transition-all"
+                  className="mt-stack-md inline-block bg-primary text-on-primary font-label-md uppercase px-6 py-3 rounded-2xl border border-on-background/10 neo-shadow neo-button-hover transition-all"
                 >
                   Reset Filters
                 </button>
@@ -412,7 +417,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
               <div className="md:col-span-7">
-                <div className="relative neo-shadow-lg border-2 border-on-background group overflow-hidden">
+                <div className="relative neo-shadow-lg rounded-2xl border border-on-background/10 group overflow-hidden">
                   <div className="aspect-video w-full">
                     <img
                       alt="Pastor David Antwi, Head Pastor of Kharis Ministries"
@@ -422,7 +427,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                       decoding="async"
                     />
                   </div>
-                  <div className="absolute top-4 left-4 bg-primary text-on-primary font-label-md px-4 py-2 border-2 border-on-background uppercase neo-shadow">
+                  <div className="absolute top-4 left-4 bg-primary text-on-primary font-label-md px-4 py-2 rounded-2xl border border-on-background/10 uppercase neo-shadow">
                     Head Pastor
                   </div>
                 </div>
@@ -433,7 +438,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                   Antwi
                 </h2>
                 <div className="flex gap-4 items-center flex-wrap">
-                  <span className="bg-secondary-container text-on-secondary-container font-label-md px-3 py-1 border-2 border-on-background">
+                  <span className="bg-secondary-container text-on-secondary-container font-label-md px-3 py-1 rounded-2xl border border-on-background/10">
                     HEAD PASTOR
                   </span>
                   <span className="font-label-md text-outline">
@@ -449,7 +454,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 <div className="pt-2">
                   <Link
                     href="/messages"
-                    className="inline-block bg-primary-container text-on-primary-container font-headline-md text-headline-md px-10 py-4 border-4 border-on-background neo-shadow-lg neo-button-hover transition-all w-full md:w-auto text-center uppercase"
+                    className="inline-block bg-primary-container text-on-primary-container font-headline-md text-headline-md px-10 py-4 rounded-2xl border border-on-background/10 neo-shadow-lg neo-button-hover transition-all w-full md:w-auto text-center uppercase"
                   >
                     Hear Him Preach
                   </Link>
@@ -460,8 +465,8 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
         </section>
 
         {/* FIRST TIME / SERVE STRIP */}
-        <section className="bg-on-background text-surface py-stack-lg border-y-4 border-primary relative overflow-hidden">
-          <div className="absolute inset-0 halftone-overlay opacity-10 pointer-events-none" />
+        <section className="bg-[#06070a] text-white py-stack-lg relative overflow-hidden">
+          <div className="vibe-mesh absolute inset-0" />
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10 grid grid-cols-1 md:grid-cols-3 gap-gutter">
             {[
               {
@@ -488,7 +493,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
             ].map((item) => (
               <div
                 key={item.title}
-                className="border-2 border-surface p-stack-md flex flex-col gap-3 hover:bg-surface hover:text-on-background transition-colors group"
+                className="rounded-3xl border border-white/15 p-stack-md flex flex-col gap-3 hover:bg-white/10 transition-colors group"
               >
                 <span className="material-symbols-outlined text-4xl text-primary-fixed-dim group-hover:text-primary transition-colors">
                   {item.icon}
@@ -512,7 +517,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
         </section>
 
         {/* NEWSLETTER */}
-        <section className="py-stack-lg bg-secondary-container border-b-4 border-on-background">
+        <section className="py-stack-lg bg-secondary-container">
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop text-center">
             <h3 className="font-headline-lg text-headline-lg uppercase mb-4 text-on-secondary-container">
               Get the schedule in your inbox
@@ -528,7 +533,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               <label className="flex-grow">
                 <span className="sr-only">Email address</span>
                 <input
-                  className="w-full p-4 bg-surface border-2 border-on-background font-label-md focus:ring-4 focus:ring-primary outline-none transition-all"
+                  className="w-full p-4 bg-surface rounded-2xl border border-on-background/10 font-label-md focus:ring-4 focus:ring-primary outline-none transition-all"
                   placeholder="ENTER YOUR EMAIL"
                   type="email"
                   required
@@ -536,7 +541,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               </label>
               <button
                 type="submit"
-                className="bg-on-background text-surface font-headline-md px-8 py-4 border-2 border-on-background neo-shadow-lg neo-button-hover transition-all uppercase"
+                className="bg-on-background text-surface font-headline-md px-8 py-4 rounded-2xl border border-on-background/10 neo-shadow-lg neo-button-hover transition-all uppercase"
               >
                 Subscribe
               </button>
@@ -546,7 +551,6 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
       </main>
 
       <SiteFooter />
-      <ThemeToggle />
     </div>
   );
 }

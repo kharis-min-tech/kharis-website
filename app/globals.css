@@ -6,7 +6,11 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #faf8ff;
+  --amber: #ff8a1e;
+  --magenta: #ff2fa3;
+  --cobalt: #3d5afe;
+  --pearl: #f5f7ff;
+  --background: #f4eee6;
   --error: #ba1a1a;
   --error-container: #ffdad6;
   --inverse-on-surface: #f1f0f8;
@@ -20,7 +24,7 @@
   --on-primary-fixed: #25005a;
   --on-primary-fixed-variant: #5a00c6;
   --on-secondary: #ffffff;
-  --on-secondary-container: #756100;
+  --on-secondary-container: #1a0b00;
   --on-secondary-fixed: #221b00;
   --on-secondary-fixed-variant: #544600;
   --on-surface: #1a1b21;
@@ -31,24 +35,24 @@
   --on-tertiary-fixed-variant: #474747;
   --outline: #7b7487;
   --outline-variant: #ccc3d8;
-  --primary: #630ed4;
+  --primary: #6d28d9;
   --primary-container: #7c3aed;
   --primary-fixed: #eaddff;
   --primary-fixed-dim: #d2bbff;
-  --secondary: #705d00;
-  --secondary-container: #ffde59;
-  --secondary-fixed: #ffe16e;
-  --secondary-fixed-dim: #e4c542;
-  --surface: #faf8ff;
-  --surface-bright: #faf8ff;
-  --surface-container: #eeedf5;
-  --surface-container-high: #e8e7ef;
-  --surface-container-highest: #e2e2e9;
-  --surface-container-low: #f4f3fb;
-  --surface-container-lowest: #ffffff;
-  --surface-dim: #dad9e1;
-  --surface-tint: #732ee4;
-  --surface-variant: #e2e2e9;
+  --secondary: #c45e00;
+  --secondary-container: #ff8a1e;
+  --secondary-fixed: #ffb347;
+  --secondary-fixed-dim: #ff8a1e;
+  --surface: #f4eee6;
+  --surface-bright: #fffaf4;
+  --surface-container: #efe6db;
+  --surface-container-high: #e8ddd0;
+  --surface-container-highest: #e0d4c6;
+  --surface-container-low: #f8f2ea;
+  --surface-container-lowest: #fffdf9;
+  --surface-dim: #d9cfc3;
+  --surface-tint: #7c3aed;
+  --surface-variant: #e8ddd0;
   --tertiary: #4f4f4f;
   --tertiary-container: #676767;
   --tertiary-fixed: #e2e2e2;
@@ -58,7 +62,11 @@
 
 .dark {
   color-scheme: dark;
-  --background: #121014;
+  --amber: #ff8a1e;
+  --magenta: #ff2fa3;
+  --cobalt: #3d5afe;
+  --pearl: #f5f7ff;
+  --background: #06070a;
   --error: #ffb4ab;
   --error-container: #93000a;
   --inverse-on-surface: #1a1b21;
@@ -71,10 +79,10 @@
   --on-primary-container: #ede0ff;
   --on-primary-fixed: #25005a;
   --on-primary-fixed-variant: #d2bbff;
-  --on-secondary: #3b2f00;
-  --on-secondary-container: #221b00;
+  --on-secondary: #1a0b00;
+  --on-secondary-container: #1a0b00;
   --on-secondary-fixed: #221b00;
-  --on-secondary-fixed-variant: #e4c542;
+  --on-secondary-fixed-variant: #ff8a1e;
   --on-surface: #ece6f0;
   --on-surface-variant: #cac4d0;
   --on-tertiary: #1b1b1b;
@@ -83,24 +91,24 @@
   --on-tertiary-fixed-variant: #c6c6c6;
   --outline: #948f99;
   --outline-variant: #49454f;
-  --primary: #7c3aed;
+  --primary: #a78bfa;
   --primary-container: #7c3aed;
   --primary-fixed: #d2bbff;
   --primary-fixed-dim: #b79bff;
-  --secondary: #fde047;
-  --secondary-container: #ffde59;
-  --secondary-fixed: #ffe16e;
-  --secondary-fixed-dim: #e4c542;
-  --surface: #17151a;
-  --surface-bright: #38343d;
-  --surface-container: #1f1c24;
-  --surface-container-high: #29252f;
-  --surface-container-highest: #34303a;
-  --surface-container-low: #1a171d;
-  --surface-container-lowest: #0d0b10;
-  --surface-dim: #121014;
+  --secondary: #ff8a1e;
+  --secondary-container: #ff8a1e;
+  --secondary-fixed: #ffb347;
+  --secondary-fixed-dim: #ff8a1e;
+  --surface: #0c0d12;
+  --surface-bright: #2a2433;
+  --surface-container: #12141c;
+  --surface-container-high: #1a1d28;
+  --surface-container-highest: #242833;
+  --surface-container-low: #0b0c11;
+  --surface-container-lowest: #050508;
+  --surface-dim: #06070a;
   --surface-tint: #d2bbff;
-  --surface-variant: #29252f;
+  --surface-variant: #1a1d28;
   --tertiary: #c6c6c6;
   --tertiary-container: #4f4f4f;
   --tertiary-fixed: #e2e2e2;
@@ -114,45 +122,54 @@
 .dark .text-black { color: var(--on-surface); }
 .dark .border-black,
 .dark .border-\[\#000000\],
-.dark .border-\[\#000\] { border-color: var(--on-surface); }
+.dark .border-\[\#000\],
+.dark .border-gray-900 { border-color: color-mix(in oklab, var(--pearl) 14%, transparent); }
 
 .dark .comic-border,
 .dark .border-heavy,
 .dark .border-heavier,
 .dark .neo-brutal-border,
 .dark .brutalist-border,
-.dark .brutalist-border-thick { border-color: var(--on-surface); }
+.dark .brutalist-border-thick { border-color: color-mix(in oklab, var(--pearl) 14%, transparent); }
 
 .dark .neo-shadow,
 .dark .neo-brutal-shadow,
-.dark .hard-shadow-sm { box-shadow: 4px 4px 0px 0px var(--on-surface); }
-.dark .neo-shadow-sm { box-shadow: 2px 2px 0px 0px var(--on-surface); }
+.dark .hard-shadow-sm,
+.dark .neo-shadow-sm,
 .dark .neo-shadow-lg,
 .dark .neo-brutal-shadow-lg,
-.dark .brutalist-shadow-lg { box-shadow: 8px 8px 0px 0px var(--on-surface); }
+.dark .brutalist-shadow-lg,
 .dark .brutalist-shadow,
 .dark .hard-shadow,
-.dark .neo-shadow-purple { box-shadow: 6px 6px 0px 0px var(--on-surface); }
-.dark .hard-shadow-primary { box-shadow: 4px 4px 0px 0px var(--primary); }
+.dark .neo-shadow-purple,
+.dark .hard-shadow-primary {
+  box-shadow:
+    0 16px 48px -16px color-mix(in oklab, var(--magenta) 35%, transparent),
+    0 8px 28px -12px color-mix(in oklab, var(--amber) 25%, transparent);
+}
 .dark .neo-shadow-hover:hover,
 .dark .neo-brutal-shadow:hover,
 .dark .btn-hover:hover,
 .dark .hover-press:hover,
 .dark .neo-button-hover:hover,
 .dark .brutalist-shadow-hover:hover,
+.dark .hover-lift:hover {
+  box-shadow:
+    0 22px 56px -14px color-mix(in oklab, var(--magenta) 45%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--amber) 40%, transparent);
+}
 .dark .btn-press:active,
-.dark .active-press:active { box-shadow: 2px 2px 0px 0px var(--on-surface); }
-.dark .hover-lift:hover { box-shadow: 6px 6px 0px 0px var(--on-surface); }
+.dark .active-press:active { box-shadow: none; transform: translateY(0); }
 .dark .halftone { background-image: radial-gradient(#fff 10%, transparent 11%); }
 .dark .halftone-overlay { background-image: radial-gradient(rgba(255,255,255,0.12) 2px, transparent 2px); }
 .dark .input-focus:focus {
   background-color: var(--surface-container-high);
-  box-shadow: 4px 4px 0px 0px var(--secondary-container);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--amber) 40%, transparent);
 }
 .dark .custom-scrollbar::-webkit-scrollbar-track { background: var(--surface-container); }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--primary);
-  border: 2px solid var(--on-surface);
+  border-radius: 999px;
 }
 
 
@@ -186,6 +203,10 @@
   --color-primary-container: var(--primary-container);
   --color-primary-fixed: var(--primary-fixed);
   --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-amber: var(--amber);
+  --color-magenta: var(--magenta);
+  --color-cobalt: var(--cobalt);
+  --color-pearl: var(--pearl);
   --color-secondary: var(--secondary);
   --color-secondary-container: var(--secondary-container);
   --color-secondary-fixed: var(--secondary-fixed);
@@ -208,7 +229,7 @@
   --spacing-margin-desktop: 64px;
   --spacing-unit: 4px;
   --spacing-gutter: 24px;
-  --spacing-margin-mobile: 16px;
+  --spacing-margin-mobile: 20px;
   --spacing-base: 8px;
   --spacing-stack-md: 24px;
   --spacing-stack-lg: 48px;
@@ -268,7 +289,9 @@
   html,
   body {
     max-width: 100%;
-    overflow-x: hidden;
+  }
+  html {
+    scroll-padding-top: 5.5rem;
   }
   body {
     background-color: var(--background);
@@ -284,16 +307,37 @@
             background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
             background-size: 8px 8px;
         }
-.brutalist-shadow {
-            box-shadow: 6px 6px 0px 0px rgba(27,27,31,1);
-        }
-.brutalist-shadow-hover:hover {
-            box-shadow: 2px 2px 0px 0px rgba(27,27,31,1);
-            transform: translate(4px, 4px);
-        }
-.comic-border {
-            border: 4px solid #1b1b1f;
-        }
+.brutalist-shadow,
+.brutalist-shadow-lg,
+.neo-shadow,
+.neo-shadow-lg,
+.neo-shadow-sm,
+.neo-shadow-purple,
+.hard-shadow,
+.hard-shadow-sm,
+.hard-shadow-primary,
+.neo-brutal-shadow,
+.neo-brutal-shadow-lg {
+  box-shadow:
+    0 16px 44px -16px color-mix(in oklab, var(--magenta) 22%, transparent),
+    0 10px 28px -14px color-mix(in oklab, var(--amber) 18%, transparent);
+}
+.brutalist-shadow-hover:hover,
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 22px 56px -14px color-mix(in oklab, var(--magenta) 32%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--amber) 35%, transparent);
+}
+.comic-border,
+.brutalist-border,
+.brutalist-border-thick,
+.neo-brutal-border,
+.border-heavy,
+.border-heavier {
+  border: 1px solid color-mix(in oklab, var(--on-background) 14%, transparent);
+  border-radius: 1.25rem;
+}
 canvas#shader-canvas-ANIMATION_26 {
             opacity: 0.4;
         }
@@ -304,119 +348,67 @@ canvas#shader-canvas-ANIMATION_26 {
             background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px);
             background-size: 8px 8px;
         }
-.neo-shadow {
-            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
-        }
-.neo-shadow-lg {
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-        }
 .neo-shadow-hover:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
-        }
-.border-heavy {
-            border: 2px solid #000000;
-        }
-.border-heavier {
-            border: 4px solid #000000;
-        }
-.neo-brutal-border {
-            border: 2px solid #000000;
-        }
-.neo-brutal-shadow {
-            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
-        }
-.neo-brutal-shadow-lg {
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+            transform: translateY(-3px);
         }
 .hover-lift:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+            transform: translateY(-4px);
         }
 .active-press:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+            transform: translateY(0);
         }
 
-.brutalist-border {
-            border: 2px solid #000000;
-        }
-.brutalist-shadow-lg {
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-        }
 .btn-hover:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+            transform: translateY(-2px);
         }
 .input-focus:focus {
             outline: none;
-            border-width: 3px;
-            background-color: #faf8ff;
-            box-shadow: 4px 4px 0px 0px #ffde59;
+            background-color: var(--surface-container-lowest);
+            box-shadow: 0 0 0 3px color-mix(in oklab, var(--amber) 40%, transparent);
         }
 .halftone-overlay {
             background-image: radial-gradient(rgba(0,0,0,0.1) 2px, transparent 2px);
             background-size: 8px 8px;
         }
 .neo-button-hover:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+            transform: translateY(-2px);
         }
 .hover-press:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+            transform: translateY(-2px);
         }
 .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
         }
 .custom-scrollbar::-webkit-scrollbar-track {
-            background: #faf8ff;
+            background: var(--surface-container);
         }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #630ed4;
-            border: 2px solid #000;
-        }
-.neo-shadow-purple {
-            box-shadow: 6px 6px 0px 0px #630ed4;
+            background: var(--primary);
+            border-radius: 999px;
         }
 .hover-press:active,
 .btn-press:active {
-            transform: translate(4px, 4px);
-            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
+            transform: translateY(0);
         }
 .skew-hover:hover {
-            transform: skewX(-2deg) scale(1.02);
-        }
-.hard-shadow {
-            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
-        }
-.hard-shadow-sm {
-            box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
-        }
-.hard-shadow-primary {
-            box-shadow: 4px 4px 0px 0px #630ed4;
+            transform: translateY(-2px) scale(1.01);
         }
 .btn-press:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+            transform: translateY(0);
         }
 .hero-gradient {
-            background: linear-gradient(to bottom, rgba(26, 27, 33, 0.4), rgba(26, 27, 33, 1));
-        }
-.neo-shadow-sm {
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+            background: linear-gradient(to bottom, rgba(6, 7, 10, 0.15), rgba(6, 7, 10, 0.45) 45%, rgba(6, 7, 10, 0.88));
+            pointer-events: none;
         }
 .halftone {
             background-image: radial-gradient(#000 10%, transparent 11%);
             background-size: 8px 8px;
-            opacity: 0.05;
+            opacity: 0.04;
         }
 .active-neo-shadow {
-            box-shadow: 2px 2px 0px 0px rgba(19,16,22,1);
-            transform: translate(2px, 2px);
-        }
-.brutalist-border-thick {
-            border: 4px solid #000000;
+            box-shadow:
+              0 0 0 1px color-mix(in oklab, var(--amber) 40%, transparent),
+              0 12px 32px -10px color-mix(in oklab, var(--magenta) 30%, transparent);
         }
 
 .dark .halftone-bg,
@@ -474,7 +466,7 @@ button:hover,
   cursor: pointer;
 }
 
-/* Neo-brutalist 3D press: shadow acts as depth, pressing collapses it. */
+/* Cards and buttons lift with a glow instead of a comic press. */
 .btn-neo,
 .brutalist-shadow,
 .brutalist-shadow-lg,
@@ -488,17 +480,18 @@ button:hover,
 .hover-press,
 .btn-press {
   transition:
-    transform 150ms ease,
-    box-shadow 150ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease,
     background-color 200ms ease,
     color 200ms ease,
     border-color 200ms ease;
-  will-change: transform;
 }
 
 .btn-neo {
-  border: 2px solid var(--on-background);
-  box-shadow: 4px 4px 0px 0px var(--on-background);
+  border: 1px solid color-mix(in oklab, var(--on-background) 14%, transparent);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 12px 36px -14px color-mix(in oklab, var(--magenta) 28%, transparent);
 }
 
 .btn-neo:hover,
@@ -522,8 +515,10 @@ button.hard-shadow-primary:hover,
 a.hard-shadow-primary:hover,
 [role="button"].neo-shadow:hover,
 [role="button"].brutalist-shadow:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px var(--on-background);
+  transform: translateY(-3px);
+  box-shadow:
+    0 20px 48px -12px color-mix(in oklab, var(--magenta) 38%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--amber) 40%, transparent);
 }
 
 .btn-neo:active,
@@ -547,17 +542,32 @@ button.hard-shadow-primary:active,
 a.hard-shadow-primary:active,
 [role="button"].neo-shadow:active,
 [role="button"].brutalist-shadow:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px 0px var(--on-background);
+  transform: translateY(0);
 }
 
-/* Non-interactive cards keep a gentle lift instead of a press. */
 div.brutalist-shadow:hover,
 div.neo-shadow:hover,
 div.neo-shadow-lg:hover,
 div.hard-shadow:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px var(--on-background);
+  transform: translateY(-3px);
+}
+
+/* Soften leftover Tailwind comic borders. */
+.border-4.border-black,
+.border-4.border-gray-900,
+.border-2.border-black,
+.border-2.border-gray-900 {
+  border-width: 1px;
+  border-color: color-mix(in oklab, var(--on-background) 14%, transparent);
+  border-radius: 1.25rem;
+}
+.border-y-8.border-gray-900,
+.border-y-4.border-on-background,
+.border-t-4.border-on-background,
+.border-b-8.border-gray-900 {
+  border-color: color-mix(in oklab, var(--on-background) 10%, transparent);
+  border-top-width: 1px;
+  border-bottom-width: 1px;
 }
 
 
@@ -605,8 +615,8 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 4px 4px 0 0 var(--primary);
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--amber) 40%, transparent);
 }
 
 /* Smooth in-page navigation that clears the fixed header. */
@@ -635,7 +645,7 @@ img, video { max-width: 100%; }
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
 .hover-card:hover {
-  transform: translate(-2px, -2px);
+  transform: translateY(-3px);
 }
 
 /* Comfortable rhythm: never let a section hug the viewport edge. */
@@ -858,7 +868,7 @@ html.dark .site-logo {
 .dark .bg-gray-300 { background-color: var(--surface-container-high); }
 
 .dark .border-gray-900,
-.dark .border-gray-800 { border-color: var(--on-surface); }
+.dark .border-gray-800 { border-color: color-mix(in oklab, var(--pearl) 14%, transparent); }
 .dark .border-gray-300,
 .dark .border-gray-200 { border-color: var(--outline-variant); }
 
@@ -979,8 +989,7 @@ header button {
 main button:active,
 main a[class*="brutalist"]:active,
 main a[class*="comic"]:active {
-  transform: translate(3px, 3px);
-  box-shadow: none;
+  transform: translateY(0);
 }
 
 /* Material icons inside buttons nudge on hover. */
@@ -1032,6 +1041,25 @@ main button[class*="bg-primary"]:hover,
   transform: translateY(-2px);
 }
 
+/* Get in Touch on Toxic Amber bands: never hover-fill with the same amber,
+   and never pick up the global purple vibe-glow ring. */
+a.cta-on-amber {
+  border-radius: 9999px;
+}
+main a.cta-on-amber.bg-primary:hover,
+main a.cta-on-amber.bg-primary:focus-visible {
+  background-color: #06070a;
+  color: #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 10px 28px -10px rgb(6 7 10 / 0.55);
+  transform: translateY(-2px);
+}
+.dark .bg-secondary-container a.cta-on-amber.bg-primary:hover,
+.dark .bg-secondary-container a.cta-on-amber.bg-primary:focus-visible {
+  background-color: #06070a;
+  color: #ffffff;
+}
+
 /* Cards lift with a warm glow instead of tilting. */
 .comic-border,
 .brutalist-border,
@@ -1070,32 +1098,67 @@ main article:hover img {
   filter: brightness(1.06) saturate(1.08);
 }
 
-/* Nav links glow with a soft underline wash.
-   Scope to direct children only so dropdown items (nav > div > … > a)
-   keep their own per-label underline and don't sweep a full-width bar
-   under the blurb text. */
-header nav > a {
-  position: relative;
-  transition: color 0.2s ease, text-shadow 0.25s ease;
+header {
+  overflow: visible !important;
 }
-header nav > a::after {
-  content: "";
+
+header .nav-icon-close {
+  display: none;
+}
+header:has(#site-nav-toggle:checked) .nav-icon-menu {
+  display: none;
+}
+header:has(#site-nav-toggle:checked) .nav-icon-close {
+  display: inline-block;
+}
+header:has(#site-nav-toggle:checked) .mobile-nav {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+header .nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  height: 72px;
+}
+header .nav-dropdown {
+  display: none;
   position: absolute;
   left: 0;
-  bottom: -4px;
-  height: 3px;
-  width: 100%;
-  border-radius: 999px;
-  background: var(--primary);
-  box-shadow: 0 0 10px 1px color-mix(in oklab, var(--primary) 70%, transparent);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.25s ease;
+  top: 100%;
+  z-index: 9999;
+  padding-top: 4px;
+  min-width: 17rem;
 }
-header nav > a:hover {
-  text-shadow: 0 0 14px color-mix(in oklab, var(--primary) 60%, transparent);
+header .nav-item:hover .nav-dropdown,
+header .nav-item.is-open .nav-dropdown,
+header .nav-item:focus-within .nav-dropdown {
+  display: block;
 }
-header nav > a:hover::after { transform: scaleX(1); }
+header .nav-dropdown-panel {
+  border-radius: 1.25rem;
+  background: var(--surface-container-lowest);
+  color: var(--on-background);
+  border: 1px solid color-mix(in oklab, var(--on-background) 12%, transparent);
+  box-shadow: 0 24px 50px -16px rgba(6, 7, 10, 0.45);
+  padding: 0.4rem;
+}
+header .nav-dropdown a {
+  display: block;
+  border-radius: 0.85rem;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+}
+header .nav-dropdown a:hover {
+  background: var(--surface-container);
+}
+
+header nav > a {
+  position: relative;
+  transition: color 0.2s ease;
+}
 
 footer a {
   text-decoration: none;
@@ -1120,6 +1183,117 @@ a:hover > .material-symbols-outlined {
 }
 .glow-text {
   text-shadow: 0 0 24px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+
+.vibe-mesh {
+  background:
+    radial-gradient(ellipse 80% 50% at 15% -10%, color-mix(in oklab, var(--magenta) 45%, transparent), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 90% 10%, color-mix(in oklab, var(--cobalt) 40%, transparent), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, color-mix(in oklab, var(--amber) 35%, transparent), transparent 55%);
+  pointer-events: none;
+}
+
+.vibe-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--amber) 45%, transparent),
+    0 12px 40px -8px color-mix(in oklab, var(--magenta) 40%, transparent);
+}
+
+/* Mission / vision switcher — CSS-only so it works even if React does not hydrate */
+.who-becoming:has(#who-main-vision:checked) .mission-pane {
+  display: none;
+}
+.who-becoming:has(#who-main-mission:checked) .vision-pane {
+  display: none;
+}
+.who-becoming .detail-pane {
+  display: none;
+}
+.who-becoming:has(#who-sub-0:checked) .detail-0,
+.who-becoming:has(#who-sub-1:checked) .detail-1,
+.who-becoming:has(#who-sub-2:checked) .detail-2,
+.who-becoming:has(#who-sub-3:checked) .detail-3 {
+  display: block;
+}
+.who-becoming .peer:checked + label {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--amber) 45%, transparent),
+    0 12px 40px -8px color-mix(in oklab, var(--magenta) 40%, transparent);
+}
+.who-becoming .peer:checked + label .who-icon {
+  background: rgb(26 11 0 / 0.1);
+  color: #1a0b00;
+}
+.who-becoming .peer:checked + label .who-sub {
+  color: rgb(26 11 0 / 0.7);
+}
+.who-becoming .peer:checked + label .who-num {
+  color: var(--amber);
+}
+.who-becoming .peer:checked + label .who-item-icon {
+  background: rgb(255 255 255 / 0.15);
+  color: #fff;
+}
+
+.faith-item {
+  overflow: hidden;
+  border-radius: 1rem;
+}
+.faith-item-summary {
+  list-style: none;
+  cursor: pointer;
+  border-radius: 1rem;
+}
+.faith-item-summary::-webkit-details-marker,
+.faith-item-summary::marker {
+  display: none;
+  content: "";
+}
+.faith-item[open] .faith-item-summary {
+  border-radius: 1rem 1rem 0 0;
+}
+.faith-item .faith-icon-remove {
+  display: none;
+}
+.faith-item[open] .faith-icon-add {
+  display: none;
+}
+.faith-item[open] .faith-icon-remove {
+  display: inline-block;
+}
+
+.vibe-card {
+  border-radius: 1.75rem;
+  overflow: hidden;
+  box-shadow:
+    0 20px 50px -20px rgba(6, 7, 10, 0.45),
+    0 0 0 1px color-mix(in oklab, var(--on-background) 8%, transparent);
+}
+
+@keyframes vibe-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.vibe-float {
+  animation: vibe-float 6s ease-in-out infinite;
+}
+
+dialog.ui-dialog {
+  margin: auto;
+  border: none;
+}
+dialog.testimony-dialog,
+dialog.testimony-dialog p,
+dialog.testimony-dialog h3 {
+  color: #000 !important;
+}
+dialog.ui-dialog::backdrop {
+  background: rgb(6 7 10 / 0.72);
+}
+@media (prefers-reduced-motion: reduce) {
+  .muted-hero-frame {
+    display: none;
+  }
 }
 
 /* ---------------------------------------------------------------
@@ -1147,8 +1321,8 @@ a:hover > .material-symbols-outlined {
   .gap-gutter { gap: 16px; }
 }
 
-/* Never let a decorative sticker or shadow create sideways scroll. */
-html, body { max-width: 100%; overflow-x: hidden; }
+/* Keep sideways scroll off the page without clipping fixed header menus. */
+main { max-width: 100%; overflow-x: clip; }
 
 /* Comfortable tap targets on touch devices. */
 @media (max-width: 767px) {

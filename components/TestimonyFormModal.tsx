@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { createPortal } from "react-dom";
 
 const CATEGORIES = [
   "Deliverance",
@@ -18,10 +17,10 @@ const CATEGORIES = [
 ] as const;
 
 const fieldClass =
-  "w-full brutalist-border bg-white p-3 font-body-md input-focus outline-none";
+  "w-full rounded-2xl border border-on-background/15 bg-surface-container-lowest p-3 font-body-md input-focus outline-none";
 const labelClass = "font-label-md text-xs uppercase tracking-widest text-on-surface";
 const chipClass =
-  "inline-flex items-center justify-center min-h-11 px-4 brutalist-border bg-white font-label-md text-xs uppercase tracking-wide cursor-pointer peer-checked:bg-primary peer-checked:text-white";
+  "inline-flex items-center justify-center min-h-11 px-4 rounded-full border border-on-background/15 bg-surface-container-lowest font-label-md text-xs uppercase tracking-wide cursor-pointer peer-checked:bg-amber peer-checked:text-[#1a0b00] peer-checked:border-amber";
 
 type Props = {
   open: boolean;
@@ -31,28 +30,30 @@ type Props = {
 export function TestimonyFormModal({ open, onClose }: Props) {
   const titleId = useId();
   const firstFieldRef = useRef<HTMLInputElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+  }, [open]);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const onNativeClose = () => onClose();
+    dialog.addEventListener("close", onNativeClose);
+    return () => dialog.removeEventListener("close", onNativeClose);
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     const t = window.setTimeout(() => firstFieldRef.current?.focus(), 80);
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.clearTimeout(t);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open, onClose]);
+    return () => window.clearTimeout(t);
+  }, [open]);
 
   useEffect(() => {
     if (!open) {
@@ -110,33 +111,26 @@ export function TestimonyFormModal({ open, onClose }: Props) {
     }
   };
 
-  if (!mounted || !open) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 pt-24">
-      <button
-        type="button"
-        className="absolute inset-0 bg-on-background/70"
-        aria-label="Close testimony form"
-        onClick={onClose}
-      />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        className="relative z-10 w-full max-w-2xl max-h-[85vh] overflow-hidden bg-white dark:bg-[#1f1c24] brutalist-border brutalist-shadow-lg flex flex-col"
-      >
-        <div className="relative shrink-0 border-b-2 border-black px-5 sm:px-6 py-4 pr-16 bg-secondary-container">
-          <p className="font-label-md text-xs uppercase tracking-[0.16em] text-primary mb-1">
+  return (
+    <dialog
+      ref={dialogRef}
+      id="testimony-form-dialog"
+      className="ui-dialog w-[min(42rem,calc(100vw-2rem))] max-h-[85vh] overflow-hidden rounded-3xl border border-on-background/10 bg-surface-container-lowest p-0 text-on-surface vibe-glow"
+      aria-labelledby={titleId}
+    >
+      <div className="relative z-10 flex max-h-[85vh] flex-col">
+        <div className="relative shrink-0 border-b border-on-background/10 px-5 sm:px-6 py-4 pr-16 bg-amber">
+          <p className="font-label-md text-xs uppercase tracking-[0.16em] text-[#1a0b00] mb-1">
             Testimony Form
           </p>
-          <h2 id={titleId} className="font-headline-md text-xl sm:text-2xl uppercase leading-tight">
+          <h2 id={titleId} className="font-headline-md text-xl sm:text-2xl uppercase leading-tight text-[#1a0b00]">
             Share what Jesus has done
           </h2>
           <button
             type="button"
+            data-ui="close-dialog"
             onClick={onClose}
-            className="absolute top-3 right-3 w-11 h-11 flex items-center justify-center brutalist-border bg-white"
+            className="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-xl border border-[#1a0b00]/15 bg-white/80"
             aria-label="Close"
           >
             <span className="material-symbols-outlined">close</span>
@@ -157,14 +151,20 @@ export function TestimonyFormModal({ open, onClose }: Props) {
               </p>
               <button
                 type="button"
-                className="mt-4 bg-primary text-white px-8 py-3 brutalist-border brutalist-shadow font-headline-md uppercase"
+                data-ui="close-dialog"
+                className="mt-4 rounded-2xl bg-primary text-on-primary px-8 py-3 font-headline-md uppercase vibe-glow"
                 onClick={onClose}
               >
                 Close
               </button>
             </div>
           ) : (
-            <form className="flex flex-col gap-5" onSubmit={onSubmit}>
+            <form
+                className="flex flex-col gap-5"
+                action="/api/testimonies"
+                method="POST"
+                onSubmit={onSubmit}
+              >
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="flex flex-col gap-2">
                   <span className={labelClass}>
@@ -332,7 +332,7 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-primary text-white px-8 py-3 brutalist-border brutalist-shadow font-headline-md uppercase disabled:opacity-60"
+                  className="rounded-2xl bg-primary text-on-primary px-8 py-3 font-headline-md uppercase vibe-glow disabled:opacity-60"
                 >
                   {submitting ? "Submitting..." : "Submit testimony"}
                 </button>
@@ -341,7 +341,6 @@ export function TestimonyFormModal({ open, onClose }: Props) {
           )}
         </div>
       </div>
-    </div>,
-    document.body,
+    </dialog>
   );
 }

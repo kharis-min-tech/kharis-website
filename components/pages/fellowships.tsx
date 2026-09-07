@@ -3,7 +3,6 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   splitFellowshipEvents,
   type ChurchEvent,
@@ -51,8 +50,8 @@ function HangoutCard({
   const place = event.location.split(",")[0]?.trim() || event.location;
 
   return (
-    <article className="bg-surface-container-lowest border-heavier neo-shadow hover-lift group flex flex-col">
-      <div className="h-48 border-b-2 border-on-background relative overflow-hidden">
+    <article className="bg-surface-container-lowest rounded-3xl vibe-card hover-lift group flex flex-col overflow-hidden">
+      <div className="h-48 relative overflow-hidden">
         <img
           src={image}
           alt={`${event.title} at Kharis Phase 2`}
@@ -60,14 +59,14 @@ function HangoutCard({
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 font-label-md border-heavy">
+        <div className="absolute top-4 left-4 rounded-full bg-primary text-on-primary px-3 py-1 font-label-md">
           {eventDateBadge(event)}
         </div>
       </div>
       <div className="p-stack-md space-y-base flex flex-col flex-1">
         <div className="flex flex-wrap gap-2">
           <span
-            className={`px-2 py-0.5 font-label-sm text-[10px] border uppercase ${
+            className={`px-2 py-0.5 font-label-sm text-[10px] rounded-full border uppercase ${
               featured
                 ? "bg-secondary-fixed text-on-secondary-fixed-variant"
                 : "bg-surface-variant text-on-surface-variant"
@@ -75,7 +74,7 @@ function HangoutCard({
           >
             {event.category}
           </span>
-          <span className="px-2 py-0.5 font-label-sm text-[10px] border bg-surface-variant text-on-surface-variant uppercase">
+          <span className="px-2 py-0.5 font-label-sm text-[10px] rounded-full border border-on-background/10 bg-surface-variant text-on-surface-variant uppercase">
             {place}
           </span>
         </div>
@@ -102,17 +101,17 @@ function HangoutCard({
 function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
   const { fellowships, others } = splitFellowshipEvents(events);
   return (
-    <div className="bg-background text-on-background font-body-md overflow-x-hidden">
+    <div className="bg-background text-on-background font-body-md">
       <SiteHeader />
       <main>
         {/* HERO */}
-        <section className="relative bg-on-background text-background overflow-hidden min-h-[60vh] md:min-h-[80vh] flex items-center border-b-4 border-primary pt-28 md:pt-32 pb-stack-lg">
-          <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
-          <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
+        <section className="relative bg-[#06070a] text-white overflow-hidden min-h-[60vh] md:min-h-[80vh] flex items-center pt-28 md:pt-32 pb-stack-lg">
+          <div className="vibe-mesh absolute inset-0"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-[#06070a]/40 to-transparent"></div>
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10 grid md:grid-cols-2 gap-stack-lg items-center">
             <div className="space-y-stack-md">
               <div
-                className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 border-heavy font-label-md uppercase tracking-widest animate-bounce motion-reduce:animate-none"
+                className="inline-block rounded-full bg-amber text-[#1a0b00] px-4 py-1 font-label-md uppercase tracking-widest"
               >
                 Community First
               </div>
@@ -129,14 +128,14 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
               </p>
               <div className="pt-base flex flex-wrap gap-stack-sm">
                 <a
-                  className="bg-primary text-on-primary font-headline-md text-headline-md px-8 py-4 border-heavy neo-shadow-lg hover-lift hover-press flex items-center gap-2"
+                  className="rounded-2xl bg-amber text-[#1a0b00] font-headline-md text-headline-md px-8 py-4 vibe-glow flex items-center gap-2"
                   href="#fellowship"
                 >
                   FIND YOUR FELLOWSHIP
                   <span className="material-symbols-outlined">arrow_downward</span>
                 </a>
                 <a
-                  className="keep-light px-8 py-4 font-headline-md text-headline-md border-2 border-black hover-press flex items-center gap-2"
+                  className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md px-8 py-4 font-headline-md text-headline-md flex items-center gap-2"
                   href="#hangouts"
                 >
                   UPCOMING EVENTS
@@ -144,7 +143,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
               </div>
             </div>
             <div className="relative hidden md:block">
-              <div className="border-heavier p-2 bg-background transform rotate-2 neo-shadow-lg overflow-hidden">
+              <div className="p-2 bg-background rounded-3xl vibe-card overflow-hidden">
                 <img
                   alt="Young adults fellowship at Kharis"
                   className="w-full grayscale hover:grayscale-0 transition-all duration-500 object-cover aspect-square"
@@ -153,7 +152,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
                   decoding="async"
                 />
               </div>
-              <div className="absolute -bottom-8 -left-8 bg-secondary-container text-on-secondary-container p-4 border-heavy neo-shadow transform -rotate-3 font-label-md max-w-[200px]">
+              <div className="absolute -bottom-8 -left-8 bg-amber text-[#1a0b00] p-4 rounded-2xl vibe-glow font-label-md max-w-[200px]">
                 JOIN THE MOVEMENT. WE'RE BETTER TOGETHER.
               </div>
             </div>
@@ -162,15 +161,15 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
 
         {/* THE ARMS */}
         <section
-          className="py-stack-lg bg-surface-container-low border-b-4 border-on-background overflow-hidden"
+          className="py-stack-lg bg-surface-container-low overflow-hidden"
           id="fellowship"
         >
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="text-center mb-stack-lg max-w-3xl mx-auto space-y-stack-sm">
-              <div className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 border-heavy font-label-md uppercase tracking-widest">
+              <div className="inline-block rounded-full bg-secondary-container text-on-secondary-container px-4 py-1 font-label-md uppercase tracking-widest">
                 No tribes. Just family.
               </div>
-              <h2 className="font-display-lg text-headline-lg-mobile md:text-headline-lg uppercase inline-block border-x-4 border-primary px-6 md:px-8">
+              <h2 className="font-display-lg text-headline-lg-mobile md:text-headline-lg uppercase inline-block px-6 md:px-8">
                 FIND YOUR FELLOWSHIP
               </h2>
               <p className="font-body-md text-on-surface-variant">
@@ -179,10 +178,8 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
             </div>
 
             <div className="max-w-3xl mx-auto">
-              <article className="bg-secondary-fixed text-on-secondary-fixed-variant border-heavier neo-shadow-lg flex flex-col relative group overflow-hidden transform rotate-1 hover:rotate-0 transition-transform duration-500">
-                <div className="halftone absolute inset-0 opacity-10 pointer-events-none"></div>
-
-                <div className="relative h-56 md:h-72 border-b-4 border-on-background overflow-hidden">
+              <article className="bg-secondary-fixed text-on-secondary-fixed-variant rounded-3xl vibe-card flex flex-col relative group overflow-hidden">
+                <div className="relative h-56 md:h-72 overflow-hidden">
                   <img
                     src={BRANCH_SLIDE_2}
                     alt="New Breeds fellowship"
@@ -190,7 +187,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="absolute top-4 right-4 bg-on-secondary-fixed-variant text-secondary-fixed px-3 py-1 font-label-md border-heavy uppercase">
+                  <div className="absolute top-4 right-4 rounded-full bg-on-secondary-fixed-variant text-secondary-fixed px-3 py-1 font-label-md uppercase">
                     New Areas
                   </div>
 
@@ -227,7 +224,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
                   <div className="mt-stack-md pt-stack-sm">
                     <Link
                       href="/branches"
-                      className="inline-flex items-center gap-2 bg-background text-on-background px-6 py-3 border-heavy font-headline-md text-label-md hover-lift hover-press"
+                      className="inline-flex items-center gap-2 rounded-2xl bg-background text-on-background px-6 py-3 font-headline-md text-label-md vibe-glow"
                     >
                       Find out more
                       <span className="material-symbols-outlined">arrow_forward</span>
@@ -255,7 +252,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
               </div>
               <Link
                 href="/events"
-                className="font-label-md uppercase tracking-tighter border-b-4 border-primary pb-1 hover:text-primary transition-colors self-start md:self-auto"
+                className="font-label-md uppercase tracking-tighter border-b-2 border-primary pb-1 hover:text-primary transition-colors self-start md:self-auto"
               >
                 View All Events
               </Link>
@@ -273,7 +270,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
                 ))}
               </div>
             ) : others.length > 0 ? (
-              <div className="border-2 border-dashed border-on-background bg-surface-container-low p-stack-md md:p-stack-lg mb-stack-lg">
+              <div className="rounded-3xl border border-dashed border-on-background/20 bg-surface-container-low p-stack-md md:p-stack-lg mb-stack-lg">
                 <p className="font-body-md text-on-surface-variant">
                   No fellowship nights on the calendar yet. When they&apos;re
                   announced they&apos;ll show up here first.
@@ -304,7 +301,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
             ) : null}
 
             {events.length === 0 ? (
-              <div className="border-2 border-dashed border-on-background bg-surface-container-low p-stack-lg text-center">
+              <div className="rounded-3xl border border-dashed border-on-background/20 bg-surface-container-low p-stack-lg text-center">
                 <span className="material-symbols-outlined text-5xl text-outline">
                   event_busy
                 </span>
@@ -316,7 +313,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
                 </p>
                 <Link
                   href="/events"
-                  className="mt-stack-md inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 border-heavy font-headline-md text-label-md hover-lift hover-press"
+                  className="mt-stack-md inline-flex items-center gap-2 rounded-2xl bg-primary text-on-primary px-6 py-3 font-headline-md text-label-md vibe-glow"
                 >
                   View all events
                   <span className="material-symbols-outlined">arrow_forward</span>
@@ -327,8 +324,7 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
         </section>
 
         {/* CTA */}
-        <section className="py-stack-lg bg-surface-container-low border-t-4 border-on-background relative overflow-hidden">
-          <div className="halftone absolute inset-0 opacity-5"></div>
+        <section className="py-stack-lg bg-surface-container-low relative overflow-hidden">
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop text-center">
             <div className="max-w-3xl mx-auto space-y-stack-md relative z-10">
               <h2 className="font-display-lg text-headline-lg-mobile md:text-display-lg uppercase leading-none">
@@ -347,13 +343,13 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
                 </label>
                 <input
                   id="fellowship-email"
-                  className="w-full md:w-80 px-6 py-4 border-heavier bg-surface-container-lowest text-on-background font-label-md placeholder:text-on-surface-variant focus:outline-none focus:ring-4 focus:ring-primary/40"
+                  className="w-full md:w-80 px-6 py-4 rounded-2xl border border-on-background/15 bg-surface-container-lowest text-on-background font-label-md placeholder:text-on-surface-variant focus:outline-none"
                   placeholder="YOUR EMAIL ADDRESS"
                   type="email"
                 />
                 <button
                   type="submit"
-                  className="w-full md:w-auto bg-primary text-on-primary px-10 py-4 border-heavy neo-shadow-lg font-headline-md text-headline-md hover-lift hover-press uppercase tracking-wider"
+                  className="w-full md:w-auto rounded-2xl bg-amber text-[#1a0b00] px-10 py-4 vibe-glow font-headline-md text-headline-md uppercase tracking-wider"
                 >
                   Get Plugged In
                 </button>
@@ -367,7 +363,6 @@ function FellowshipsPage({ events }: { events: ChurchEvent[] }) {
       </main>
 
       <SiteFooter />
-      <ThemeToggle />
     </div>
   );
 }

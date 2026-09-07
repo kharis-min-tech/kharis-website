@@ -55,13 +55,12 @@ export function DepartmentVideoHero() {
   }, [visibleName]);
 
   return (
-    <section className="relative overflow-hidden border-b-4 border-primary bg-on-background text-background px-margin-mobile py-16 md:px-margin-desktop md:py-24">
-      <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25" />
-      <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent" />
+    <section className="relative overflow-hidden bg-[#06070a] text-white px-margin-mobile py-16 md:px-margin-desktop md:py-24">
+      <div className="vibe-mesh absolute inset-0" />
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Left column */}
         <div className="min-w-0">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
+          <span className="inline-block rounded-full bg-amber text-[#1a0b00] font-label-md px-4 py-1 mb-6 uppercase tracking-widest">
             Get Busy Serving God
           </span>
           <h1
@@ -104,10 +103,10 @@ export function DepartmentVideoHero() {
                     aria-pressed={isActive}
                     aria-label={`Show ${d.name} video`}
                     onClick={() => select(d.name)}
-                    className={`shrink-0 inline-flex items-center gap-2 border-2 border-black font-black uppercase tracking-wider transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+                    className={`shrink-0 inline-flex items-center gap-2 rounded-full font-black uppercase tracking-wider transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber ${
                       isActive
-                        ? "bg-primary text-on-primary shadow-[4px_4px_0_0_#000]"
-                        : "bg-transparent text-surface hover:bg-primary hover:text-on-primary"
+                        ? "bg-amber text-[#1a0b00] vibe-glow"
+                        : "border border-white/20 bg-white/10 text-white hover:bg-amber hover:text-[#1a0b00]"
                     }`}
                     style={{
                       fontSize: "clamp(0.7rem, 0.62rem + 0.4vw, 1rem)",
@@ -127,7 +126,7 @@ export function DepartmentVideoHero() {
             </div>
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-on-background to-transparent"
+              className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#06070a] to-transparent"
             />
           </div>
         </div>
@@ -135,7 +134,7 @@ export function DepartmentVideoHero() {
         {/* Video frame */}
         <div className="w-full max-w-[min(100%,22rem)] mx-auto lg:max-w-[26rem]">
           <div
-            className="group relative w-full max-h-[70svh] overflow-hidden border-4 border-primary bg-on-background shadow-[10px_10px_0_0_var(--primary)] transition-shadow duration-300 hover:shadow-[10px_10px_30px_0_var(--primary)]"
+            className="group relative w-full max-h-[70svh] overflow-hidden rounded-[1.75rem] bg-on-background vibe-card"
             style={{ aspectRatio: "9 / 16" }}
           >
             <div
@@ -171,7 +170,7 @@ export function DepartmentVideoHero() {
                         : "opacity-100"
                     }`}
                   >
-                    <span className="grid h-20 w-20 place-items-center rounded-full border-4 border-black bg-primary text-on-primary shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
+                    <span className="grid h-20 w-20 place-items-center rounded-full bg-amber text-[#1a0b00] vibe-glow transition-transform duration-200 group-hover:scale-110">
                       <span className="material-symbols-outlined text-4xl" aria-hidden="true">
                         play_arrow
                       </span>
@@ -197,7 +196,7 @@ export function DepartmentVideoHero() {
                     <h2 className="font-headline-md text-headline-md leading-none text-surface">
                       {dept.name}
                     </h2>
-                    <span className="border-2 border-surface/50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-surface/80">
+                    <span className="rounded-full border border-surface/50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-surface/80">
                       Video coming soon
                     </span>
                   </div>

@@ -3,8 +3,6 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { useState } from "react";
 
 
 
@@ -66,127 +64,141 @@ const MAIN_TABS = [
 
 
 function WhoWeAreBecoming() {
-  const [mainTab, setMainTab] = useState(0);
-  const [subTab, setSubTab] = useState(0);
-const tab = MAIN_TABS[mainTab]!;
-  const item = tab.items[subTab]!;
+  const mission = MAIN_TABS[0]!;
+  const vision = MAIN_TABS[1]!;
 
   return (
-    <section className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop relative overflow-hidden bg-background">
-      {/* backdrop */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl"></div>
-        <div className="absolute -bottom-32 -left-24 w-96 h-96 rounded-full bg-secondary-fixed-dim/10 blur-3xl"></div>
+    <section className="relative overflow-hidden bg-background py-20 md:py-28 px-margin-mobile md:px-margin-desktop">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-magenta/15 blur-3xl" />
+        <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-cobalt/15 blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-on-background mb-6 uppercase tracking-widest">
+      <div className="relative z-10 mx-auto max-w-6xl">
+        <div className="mb-14 text-center">
+          <span className="mb-6 inline-block rounded-full bg-amber px-4 py-1 font-label-md uppercase tracking-widest text-[#1a0b00]">
             About Us
           </span>
-          <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-background uppercase leading-none">
+          <h2 className="font-display-lg text-headline-lg uppercase leading-none text-on-background md:text-display-lg">
             Who we are becoming
           </h2>
         </div>
 
-        {/* Main tabs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-          {MAIN_TABS.map((t, i) => (
-            <button
-              key={t.id}
-              onClick={() => {
-                setMainTab(i);
-                setSubTab(0);
-              }}
-              className={`text-left p-6 border-2 border-on-background brutalist-shadow transition-all duration-200 flex items-start gap-4 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
-                mainTab === i
-                  ? "bg-primary text-white"
-                  : "bg-surface text-on-background hover:bg-secondary-container"
-              }`}
-            >
-              <span className={`w-12 h-12 shrink-0 border-2 border-current flex items-center justify-center ${mainTab === i ? "bg-white/15" : "bg-primary/10"}`}>
-                <span className="material-symbols-outlined text-2xl" data-weight="fill">{t.icon}</span>
-              </span>
-              <span>
-                <span className={`block font-headline-md text-headline-md uppercase ${mainTab === i ? "text-white" : "text-on-background dark:text-[#e8e0e9]"}`}>
-                  {t.label}
-                </span>
-                <span className={`block font-label-sm uppercase mt-1 ${mainTab === i ? "text-white/75" : "text-on-surface-variant dark:text-[#ccc3d8]"}`}>
-                  {t.sub}
-                </span>
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Content area */}
-        <div className="bg-surface border-2 border-on-background brutalist-shadow-lg overflow-hidden">
-          {/* Content header */}
-          <div className="bg-primary px-6 md:px-10 py-8 md:py-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/10 -mr-10 -mt-10"></div>
-            <span className="relative z-10 font-label-md text-white/80 uppercase tracking-[0.2em] block mb-3">
-              {tab.eyebrow || "How we fulfil it"}
-            </span>
-            <h3 className="relative z-10 font-display-xl text-3xl md:text-5xl text-white uppercase leading-tight max-w-3xl">
-              {tab.headline}
-            </h3>
-            <p className="relative z-10 font-body-lg text-body-lg text-white/90 mt-4 max-w-3xl">
-              {tab.body}
-            </p>
+        <div className="who-becoming">
+          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {MAIN_TABS.map((t, i) => (
+              <div key={t.id}>
+                <input
+                  type="radio"
+                  name="who-main"
+                  id={`who-main-${t.id}`}
+                  defaultChecked={i === 0}
+                  className="peer sr-only"
+                />
+                <label
+                  htmlFor={`who-main-${t.id}`}
+                  className="flex cursor-pointer items-start gap-4 rounded-3xl border border-on-background/10 bg-surface-container-lowest p-5 text-on-background transition-all duration-200 hover:-translate-y-0.5 peer-checked:border-transparent peer-checked:bg-amber peer-checked:text-[#1a0b00] peer-checked:hover:translate-y-0"
+                >
+                  <span className="who-icon flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <span className="material-symbols-outlined text-2xl" data-weight="fill">
+                      {t.icon}
+                    </span>
+                  </span>
+                  <span>
+                    <span className="block font-headline-md text-headline-md uppercase">{t.label}</span>
+                    <span className="who-sub mt-1 block font-label-sm uppercase text-on-surface-variant">
+                      {t.sub}
+                    </span>
+                  </span>
+                </label>
+              </div>
+            ))}
           </div>
 
-          {tab.id === "vision" ? (
-            <VisionContent />
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12">
-              {/* Left: vertical list */}
-              <div className="lg:col-span-5 border-b-2 lg:border-b-0 lg:border-r-2 border-on-background bg-background">
-                {tab.items.map((it, i) => (
-                  <button
-                    key={it.title}
-                    onClick={() => setSubTab(i)}
-                    className={`w-full text-left flex items-center gap-4 px-6 md:px-8 py-5 border-b-2 border-on-background last:border-b-0 transition-colors duration-200 relative ${
-                      subTab === i
-                        ? "bg-surface text-on-background"
-                        : "bg-transparent text-on-background hover:bg-secondary-container"
-                    }`}
-                  >
-                    <span className={`absolute left-0 top-0 bottom-0 w-1.5 ${subTab === i ? "bg-primary" : "bg-transparent"}`}></span>
-                    <span className={`font-display-lg text-2xl md:text-3xl ${subTab === i ? "text-primary" : "text-on-surface-variant"}`}>
-                      {it.num}
-                    </span>
-                    <span className="w-10 h-10 shrink-0 border-2 border-current flex items-center justify-center">
-                      <span className="material-symbols-outlined" data-weight="fill">{it.icon}</span>
-                    </span>
-                    <span className="font-headline-md text-headline-md uppercase text-on-background dark:text-[#e8e0e9]">
-                      {it.title}
-                    </span>
-                  </button>
+          <div className="overflow-hidden rounded-[2rem] border border-on-background/10 bg-surface-container-lowest">
+            <div className="relative overflow-hidden bg-[#06070a] px-6 py-10 text-white md:px-10 md:py-12">
+              <div className="vibe-mesh pointer-events-none absolute inset-0" />
+              <div className="relative z-10 mission-pane">
+                <span className="mb-4 inline-block rounded-full border border-amber/40 bg-amber/15 px-4 py-1 font-label-md uppercase tracking-[0.2em] text-amber">
+                  {mission.eyebrow}
+                </span>
+                <h3 className="max-w-3xl font-display-xl text-3xl uppercase leading-tight md:text-5xl">
+                  {mission.headline}
+                </h3>
+                <p className="mt-4 max-w-3xl font-body-lg text-body-lg text-white/80">{mission.body}</p>
+              </div>
+              <div className="relative z-10 vision-pane">
+                <span className="mb-4 inline-block rounded-full border border-amber/40 bg-amber/15 px-4 py-1 font-label-md uppercase tracking-[0.2em] text-amber">
+                  {vision.eyebrow}
+                </span>
+                <h3 className="max-w-3xl font-display-xl text-3xl uppercase leading-tight md:text-5xl">
+                  {vision.headline}
+                </h3>
+                <p className="mt-4 max-w-3xl font-body-lg text-body-lg text-white/80">{vision.body}</p>
+              </div>
+            </div>
+
+            <div className="mission-pane grid grid-cols-1 gap-6 p-5 md:p-8 lg:grid-cols-12 lg:gap-8">
+              <div className="flex flex-col gap-2 lg:col-span-5">
+                {mission.items.map((it, i) => (
+                  <div key={it.title}>
+                    <input
+                      type="radio"
+                      name="who-sub"
+                      id={`who-sub-${i}`}
+                      defaultChecked={i === 0}
+                      className="peer sr-only"
+                    />
+                    <label
+                      htmlFor={`who-sub-${i}`}
+                      className="flex w-full cursor-pointer items-center gap-4 rounded-2xl bg-surface-container px-4 py-4 text-on-background transition-all duration-200 hover:bg-surface-container-high peer-checked:bg-primary peer-checked:text-white md:px-5"
+                    >
+                      <span className="who-num font-display-lg text-2xl text-on-surface-variant">
+                        {it.num}
+                      </span>
+                      <span className="who-item-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <span className="material-symbols-outlined" data-weight="fill">
+                          {it.icon}
+                        </span>
+                      </span>
+                      <span className="font-headline-md text-headline-md uppercase">{it.title}</span>
+                    </label>
+                  </div>
                 ))}
               </div>
 
-              {/* Right: detail card */}
-              <div className="lg:col-span-7 bg-surface p-6 md:p-10 lg:p-12">
-                <span className="font-label-md text-primary uppercase tracking-[0.2em] block mb-4">
-                  {tab.eyebrow || "How we fulfil it"}
-                </span>
-                <h4 className="font-display-xl text-4xl md:text-5xl text-on-background uppercase mb-5">
-                  {item.title}
-                </h4>
-                <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
-                  {item.desc}
-                </p>
-                <div className="border-2 border-on-background bg-secondary-container p-6">
-                  <span className="font-label-md text-on-secondary-container uppercase tracking-[0.2em] block mb-3">
-                    {item.ref}
-                  </span>
-                  <p className="font-body-lg text-body-lg italic text-on-secondary-container leading-relaxed">
-                    "{item.scripture}"
-                  </p>
-                </div>
+              <div className="lg:col-span-7">
+                {mission.items.map((it, i) => (
+                  <div
+                    key={it.title}
+                    className={`detail-pane detail-${i} rounded-3xl bg-surface-container p-6 md:p-8 lg:p-10`}
+                  >
+                    <span className="mb-4 block font-label-md uppercase tracking-[0.2em] text-primary">
+                      {mission.eyebrow}
+                    </span>
+                    <h4 className="mb-5 font-display-xl text-4xl uppercase text-on-background md:text-5xl">
+                      {it.title}
+                    </h4>
+                    <p className="mb-8 font-body-lg text-body-lg leading-relaxed text-on-surface-variant">
+                      {it.desc}
+                    </p>
+                    <div className="rounded-3xl bg-amber p-6 text-[#1a0b00]">
+                      <span className="mb-3 block font-label-md uppercase tracking-[0.2em]">
+                        {it.ref}
+                      </span>
+                      <p className="font-body-lg text-body-lg italic leading-relaxed">
+                        &ldquo;{it.scripture}&rdquo;
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          )}
+
+            <div className="vision-pane">
+              <VisionContent />
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -212,28 +224,27 @@ const VISION_STATEMENTS = [
 
 function VisionContent() {
   return (
-    <div className="bg-background p-6 md:p-10 lg:p-12">
-      <div className="flex flex-wrap gap-3 mb-10">
+    <div className="p-5 md:p-8 lg:p-10">
+      <div className="mb-8 flex flex-wrap gap-2">
         {VISION_PILLARS.map((pillar) => (
           <span
             key={pillar}
-            className="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container border-2 border-on-background brutalist-shadow px-4 py-2 font-headline-md text-headline-md uppercase tracking-wide"
+            className="inline-flex items-center gap-2 rounded-full bg-amber px-4 py-2 font-label-md uppercase tracking-wide text-[#1a0b00]"
           >
-            <span className="material-symbols-outlined text-primary" data-weight="fill">check_circle</span>
+            <span className="material-symbols-outlined text-base" data-weight="fill">
+              check_circle
+            </span>
             {pillar}
           </span>
         ))}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {VISION_STATEMENTS.map((statement, i) => (
-          <div
-            key={i}
-            className="bg-surface border-2 border-on-background brutalist-shadow p-6"
-          >
-            <span className="font-display-lg text-2xl text-primary block mb-3">
+          <div key={i} className="rounded-3xl bg-surface-container p-6">
+            <span className="mb-3 block font-display-lg text-2xl text-primary">
               {String(i + 1).padStart(2, "0")}
             </span>
-            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+            <p className="font-body-lg text-body-lg leading-relaxed text-on-surface-variant">
               {statement}
             </p>
           </div>
@@ -279,8 +290,6 @@ const FAITH_STATEMENTS = [
 ];
 
 function StatementOfFaith() {
-  const [open, setOpen] = useState<number | null>(0);
-
   return (
     <section className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-background">
       <div className="max-w-4xl mx-auto">
@@ -294,40 +303,31 @@ function StatementOfFaith() {
         </div>
 
         <div className="space-y-4">
-          {FAITH_STATEMENTS.map((s, i) => {
-            const isOpen = open === i;
-            return (
-              <div
-                key={s.title}
-                className="bg-surface border-2 border-on-background brutalist-shadow"
-              >
-                <button
-                  onClick={() => setOpen(isOpen ? null : i)}
-                  aria-expanded={isOpen}
-                  className="w-full flex items-center gap-4 text-left px-5 md:px-8 py-5 hover:bg-secondary-container transition-colors duration-200"
-                >
-                  <span className="font-display-lg text-xl md:text-2xl text-primary shrink-0">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="flex-1 font-headline-md text-headline-md uppercase text-on-background dark:text-[#e8e0e9]">
-                    {s.title}
-                  </span>
-                  <span className="w-9 h-9 shrink-0 border-2 border-on-background flex items-center justify-center text-on-background dark:text-[#e8e0e9]">
-                    <span className="material-symbols-outlined text-xl">
-                      {isOpen ? "remove" : "add"}
-                    </span>
-                  </span>
-                </button>
-                {isOpen && (
-                  <div className="px-5 md:px-8 pb-6 pt-0 border-t-2 border-on-background/10">
-                    <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed pt-5">
-                      {s.body}
-                    </p>
-                  </div>
-                )}
+          {FAITH_STATEMENTS.map((s, i) => (
+            <details
+              key={s.title}
+              className="faith-item bg-surface rounded-2xl border border-on-background/10 brutalist-shadow"
+              defaultOpen={i === 0}
+            >
+              <summary className="faith-item-summary w-full flex items-center gap-4 text-left px-5 md:px-8 py-5 hover:bg-secondary-container transition-colors duration-200">
+                <span className="font-display-lg text-xl md:text-2xl text-primary shrink-0">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="flex-1 font-headline-md text-headline-md uppercase text-on-background dark:text-[#e8e0e9]">
+                  {s.title}
+                </span>
+                <span className="w-9 h-9 shrink-0 rounded-2xl border border-on-background/10 flex items-center justify-center text-on-background dark:text-[#e8e0e9]">
+                  <span className="material-symbols-outlined text-xl faith-icon-add">add</span>
+                  <span className="material-symbols-outlined text-xl faith-icon-remove">remove</span>
+                </span>
+              </summary>
+              <div className="px-5 md:px-8 pb-6 pt-0 border-t-2 border-on-background/10">
+                <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed pt-5">
+                  {s.body}
+                </p>
               </div>
-            );
-          })}
+            </details>
+          ))}
         </div>
       </div>
     </section>
@@ -340,8 +340,7 @@ const PASTOR_AWO = "/assets/leadership-pastor-awo.jpg";
 
 function OurLeadership() {
   return (
-    <section className="relative py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-surface border-y-4 border-on-background overflow-hidden">
-      <div className="halftone-bg absolute inset-0 pointer-events-none opacity-10 text-on-background"></div>
+    <section className="relative py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-surface overflow-hidden">
       <div className="absolute -top-32 -left-24 w-[28rem] h-[28rem] rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
@@ -354,7 +353,7 @@ function OurLeadership() {
             02
           </span>
           <div>
-            <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-on-background mb-4 uppercase tracking-widest">
+            <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 rounded-2xl border border-on-background/10 mb-4 uppercase tracking-widest">
               Leadership
             </span>
             <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-background uppercase leading-none">
@@ -366,7 +365,7 @@ function OurLeadership() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Image composition */}
           <div className="lg:col-span-5 relative">
-            <div className="relative border-2 border-on-background brutalist-shadow-lg overflow-hidden group">
+            <div className="relative rounded-2xl border border-on-background/10 brutalist-shadow-lg overflow-hidden group">
               <img
                 src={PASTORS_TOGETHER}
                 alt="Pastors David and Awo Antwi"
@@ -387,14 +386,14 @@ function OurLeadership() {
                   alt={p.alt}
                   loading="lazy"
                   decoding="async"
-                  className="w-24 h-24 md:w-28 md:h-28 object-cover border-2 border-on-background brutalist-shadow bg-surface"
+                  className="w-24 h-24 md:w-28 md:h-28 object-cover rounded-2xl border border-on-background/10 brutalist-shadow bg-surface"
                 />
               ))}
             </div>
           </div>
 
           {/* Text */}
-          <div className="lg:col-span-7 bg-background border-2 border-on-background brutalist-shadow-lg p-6 md:p-10 mt-12 md:mt-16 lg:mt-0">
+          <div className="lg:col-span-7 bg-background rounded-2xl border border-on-background/10 brutalist-shadow-lg p-6 md:p-10 mt-12 md:mt-16 lg:mt-0">
             <h3 className="font-display-xl text-3xl md:text-5xl text-on-background uppercase leading-tight mb-2">
               Pastors David &amp; Awo Antwi
             </h3>
@@ -408,7 +407,7 @@ function OurLeadership() {
             <div className="flex flex-wrap gap-4 mt-8">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-primary text-on-primary font-headline-md px-6 py-3 border-2 border-on-background brutalist-shadow hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all uppercase"
+                className="inline-flex items-center gap-2 bg-primary text-on-primary font-headline-md px-6 py-3 rounded-2xl vibe-glow transition-all uppercase"
               >
                 <span className="material-symbols-outlined">alternate_email</span> Contact
               </Link>
@@ -416,7 +415,7 @@ function OurLeadership() {
                 href="https://instagram.com/kharisphasetwo"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container font-headline-md px-6 py-3 border-2 border-on-background brutalist-shadow hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all uppercase"
+                className="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container font-headline-md px-6 py-3 rounded-2xl transition-all uppercase"
               >
                 <span className="material-symbols-outlined">share</span> Instagram
               </a>
@@ -431,37 +430,37 @@ function OurLeadership() {
 
 function AboutPage() {
   return (
-    <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
+    <div className="bg-background text-on-surface font-body-md">
 
 
 <SiteHeader />
 
-<section className="relative h-[921px] w-full flex items-center justify-center overflow-hidden bg-on-background text-background border-b-4 border-primary">
-  <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
-  <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
+<section className="relative h-[921px] w-full flex items-center justify-center overflow-hidden bg-[#06070a] text-white">
+  <div className="vibe-mesh absolute inset-0"></div>
+  <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent"></div>
   <div className="relative z-20 text-center px-margin-mobile md:px-margin-desktop max-w-5xl">
-    <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">Established to Ignite</span>
+    <span className="inline-block rounded-full bg-amber text-[#1a0b00] font-label-md px-4 py-1 mb-6 uppercase tracking-widest">Established to Ignite</span>
     <h1 className="font-display-lg text-headline-lg md:text-display-lg text-primary-fixed-dim uppercase leading-none mb-4">Who We Are</h1>
-    <p className="font-body-lg text-body-lg text-background bg-surface/60 backdrop-blur-sm border border-on-surface/25 max-w-2xl mx-auto mb-8 font-medium px-6 py-4">
+    <p className="font-body-lg text-body-lg text-white/85 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl max-w-2xl mx-auto mb-8 font-medium px-6 py-4">
       Kharis Phase 2 is a spirit-filled, revival-seeking church led by our Head Pastor, Rev Dr David Antwi. We are young people serving God in a variety of ways, unashamed of Jesus and passionate about seeing the UK live with a genuine passion for Him.
     </p>
     <div className="flex flex-wrap justify-center gap-4">
-      <button className="bg-primary text-on-primary font-headline-md px-8 py-4 border-heavier neo-shadow-lg neo-shadow-hover transition-all flex items-center gap-2">
+      <a href="#our-story" className="rounded-2xl bg-amber text-[#1a0b00] font-headline-md px-8 py-4 vibe-glow transition-all flex items-center gap-2">
         OUR STORY <span className="material-symbols-outlined">arrow_forward</span>
-      </button>
+      </a>
     </div>
   </div>
 </section>
 
-<section className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-background transition-colors duration-300">
+<section className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-background transition-colors duration-300" id="our-story">
 <div className="max-w-6xl mx-auto">
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 mb-12">
-<div className="bg-[#f3edf7] dark:bg-[#1f1c24] border-l-8 border-primary p-8 md:p-10 neo-shadow transition-colors duration-300">
+<div className="bg-surface-container rounded-3xl vibe-card p-8 md:p-10">
 <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">Kharis</span>
 <h2 className="font-display-lg text-4xl md:text-5xl lg:text-6xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">χάρις, ιτος, ή</h2>
 <p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">Greek word for Grace</p>
 </div>
-<div className="bg-[#f3edf7] dark:bg-[#1f1c24] border-l-8 border-primary p-8 md:p-10 neo-shadow transition-colors duration-300">
+<div className="bg-surface-container rounded-3xl vibe-card p-8 md:p-10">
 <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">Ministries</span>
 <h2 className="font-display-lg text-4xl md:text-5xl lg:text-6xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">λειτουργία, ας, ή</h2>
 <p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">With various services providing units</p>
@@ -486,7 +485,6 @@ function AboutPage() {
 <SiteFooter />
 
 
-      <ThemeToggle />
     </div>
   );
 }

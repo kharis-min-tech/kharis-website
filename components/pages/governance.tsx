@@ -3,8 +3,6 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
-
 
 
 const POLICIES = [
@@ -30,13 +28,13 @@ const POLICIES = [
 
 function GovernancePage() {
   return (
-    <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
+    <div className="bg-background text-on-surface font-body-md">
       <SiteHeader />
 
       {/* Hero */}
       <section className="pt-[72px] px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto py-20 md:py-28">
         <div className="max-w-4xl">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
+          <span className="inline-block rounded-full bg-amber text-[#1a0b00] font-label-md px-4 py-1 mb-6 uppercase tracking-widest">
             Governance
           </span>
           <h1 className="font-display-lg text-headline-lg md:text-display-lg text-on-surface dark:text-[#e8e0e9] uppercase leading-none mb-6">
@@ -55,9 +53,9 @@ function GovernancePage() {
           {POLICIES.map((policy) => (
             <div
               key={policy.title}
-              className="bg-surface-container-lowest dark:bg-[#1c1820] border-heavy p-8 neo-shadow-hover transition-all group hover:-translate-y-1"
+              className="bg-surface-container-lowest rounded-3xl vibe-card p-8 transition-all group hover:-translate-y-1"
             >
-              <div className="w-16 h-16 bg-[#f5f0f6] dark:bg-[#2a2430] border-heavy flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
+              <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
                 <span
                   className="material-symbols-outlined text-3xl text-primary"
                   data-weight="fill"
@@ -78,10 +76,9 @@ function GovernancePage() {
 
       {/* Report an incident banner */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pb-24">
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#4a154b] via-[#6b1f63] to-[#7c3aed] border-heavy neo-shadow p-8 md:p-12 lg:p-16">
-          <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-white/5"></div>
+        <div className="relative overflow-hidden rounded-[2rem] bg-[#06070a] p-8 md:p-12 lg:p-16">
+          <div className="vibe-mesh absolute inset-0"></div>
           <div className="absolute -bottom-20 -left-10 w-72 h-72 rounded-full bg-white/5"></div>
-          <div className="absolute inset-0 halftone-pattern text-white/5 pointer-events-none"></div>
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
             <div className="max-w-2xl">
@@ -97,7 +94,7 @@ function GovernancePage() {
             </div>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-white text-[#4a154b] font-body-md text-sm font-bold uppercase tracking-wide px-8 py-4 border-heavy neo-shadow transition-all duration-150 hover:bg-secondary hover:text-on-secondary"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-amber text-[#1a0b00] font-body-md text-sm font-bold uppercase tracking-wide px-8 py-4 vibe-glow"
             >
               Report an Incident
               <span className="material-symbols-outlined">arrow_forward</span>
@@ -108,7 +105,6 @@ function GovernancePage() {
 
       <SiteFooter />
 
-      <ThemeToggle />
     </div>
   );
 }

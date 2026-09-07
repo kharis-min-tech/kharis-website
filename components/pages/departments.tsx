@@ -4,8 +4,6 @@ import { useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
-
 
 
 import { DEPARTMENTS, type Department } from "@/data/departments";
@@ -38,8 +36,8 @@ const WHY_SERVE = [
 
 function DepartmentCard({ dept }: { dept: Department }) {
   return (
-    <div className="group flex flex-col overflow-hidden border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]">
-      <div className="relative h-44 overflow-hidden border-b-2 border-black">
+    <div className="group flex flex-col overflow-hidden rounded-3xl vibe-card bg-surface-container-lowest transition-all duration-200 hover:-translate-y-1">
+      <div className="relative h-44 overflow-hidden">
         <img
           alt={dept.name}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -48,7 +46,7 @@ function DepartmentCard({ dept }: { dept: Department }) {
           decoding="async"
         />
         <span
-          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider text-on-background ${dept.accent} border-2 border-black`}
+          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider text-on-background ${dept.accent} rounded-2xl border border-on-background/10`}
         >
           <span className="material-symbols-outlined text-sm" aria-hidden="true">{dept.icon}</span>
           {dept.name}
@@ -59,12 +57,12 @@ function DepartmentCard({ dept }: { dept: Department }) {
         <p className="mb-4 text-sm text-on-surface-variant">{dept.description}</p>
         <div className="mb-5 flex flex-wrap gap-1.5">
           {dept.roles.map((r) => (
-            <span key={r} className="bg-surface-variant border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant">
+            <span key={r} className="bg-surface-variant rounded-full border border-on-background/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant">
               {r}
             </span>
           ))}
         </div>
-        <button className="mt-auto w-full border-2 border-black bg-on-background py-2.5 text-xs font-black uppercase tracking-wider text-surface transition-all hover:bg-primary active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000] active:shadow-none">
+        <button className="mt-auto w-full rounded-2xl border border-on-background/10 bg-on-background py-2.5 text-xs font-black uppercase tracking-wider text-surface transition-all hover:bg-primary">
           Join the Team
         </button>
       </div>
@@ -87,7 +85,7 @@ function DepartmentsPage() {
   }, [query, active]);
 
   return (
-    <div className="font-body-md text-body-md overflow-x-hidden">
+    <div className="font-body-md text-body-md">
       <SiteHeader />
       <main className="pt-20">
         {/* Hero */}
@@ -98,7 +96,7 @@ function DepartmentsPage() {
         <section className="relative z-10 bg-surface px-margin-mobile py-stack-lg md:px-margin-desktop">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="mb-3 inline-block border-2 border-black bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
+              <span className="mb-3 inline-block rounded-2xl border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
                 Start here
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase">
@@ -111,9 +109,9 @@ function DepartmentsPage() {
             {FEATURED.map((dept, i) => (
               <div
                 key={dept.name}
-                className="group flex flex-col overflow-hidden border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]"
+                className="group flex flex-col overflow-hidden rounded-3xl vibe-card bg-surface-container-lowest transition-all duration-200 hover:-translate-y-1"
               >
-                <div className="relative h-52 overflow-hidden border-b-2 border-black">
+                <div className="relative h-52 overflow-hidden">
                   <img
                     alt={dept.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -121,12 +119,12 @@ function DepartmentsPage() {
                     loading="lazy"
                     decoding="async"
                   />
-                  <span className="absolute left-3 top-3 border-2 border-black bg-surface px-2 py-1 text-[11px] font-black uppercase tracking-wider text-on-surface">
+                  <span className="absolute left-3 top-3 rounded-2xl border border-on-background/10 bg-surface px-2 py-1 text-[11px] font-black uppercase tracking-wider text-on-surface">
                     #{i + 1} · {dept.name}
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-6">
-                  <span className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} border-2 border-black`}>
+                  <span className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-2xl border border-on-background/10`}>
                     <span className="material-symbols-outlined text-sm" aria-hidden="true">{dept.icon}</span>
                     {dept.tagline}
                   </span>
@@ -134,12 +132,12 @@ function DepartmentsPage() {
                   <p className="mb-5 flex-1 text-sm text-on-surface-variant">{dept.description}</p>
                   <div className="mb-5 flex flex-wrap gap-1.5">
                     {dept.roles.map((r) => (
-                      <span key={r} className="bg-surface-variant border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant">
+                      <span key={r} className="bg-surface-variant rounded-full border border-on-background/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant">
                         {r}
                       </span>
                     ))}
                   </div>
-                  <button className="w-full border-2 border-black bg-primary py-3 text-xs font-black uppercase tracking-wider text-on-primary transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000] active:shadow-none">
+                  <button className="w-full rounded-2xl border border-on-background/10 bg-primary py-3 text-xs font-black uppercase tracking-wider text-on-primary transition-all hover:brightness-110">
                     Join the Team
                   </button>
                 </div>
@@ -149,10 +147,10 @@ function DepartmentsPage() {
         </section>
 
         {/* All departments - searchable grid */}
-        <section className="relative border-t-4 border-black bg-surface-container px-margin-mobile py-stack-lg md:px-margin-desktop">
+        <section className="relative border-t border-on-background/10 bg-surface-container px-margin-mobile py-stack-lg md:px-margin-desktop">
           <div className="mx-auto max-w-5xl">
             <div className="mb-8 text-center">
-              <span className="mb-3 inline-block border-2 border-black bg-primary px-3 py-1 text-xs font-black uppercase tracking-widest text-on-primary">
+              <span className="mb-3 inline-block rounded-2xl border border-on-background/10 bg-primary px-3 py-1 text-xs font-black uppercase tracking-widest text-on-primary">
                 The rest of the body
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase">Explore Every Department</h2>
@@ -170,7 +168,7 @@ function DepartmentsPage() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search by name or role — try 'prayer', 'sound' or 'kids'..."
-                  className="input-focus w-full border-2 border-black bg-surface-container-lowest px-11 py-3.5 text-sm font-medium text-on-surface placeholder:text-on-surface-variant"
+                  className="input-focus w-full rounded-2xl border border-on-background/10 bg-surface-container-lowest px-11 py-3.5 text-sm font-medium text-on-surface placeholder:text-on-surface-variant"
                 />
               </label>
 <div className="flex flex-wrap gap-2">
@@ -178,10 +176,10 @@ function DepartmentsPage() {
                   <button
                     key={f}
                     onClick={() => setActive(f)}
-                    className={`border-2 px-3 py-1.5 text-xs font-black uppercase tracking-wider transition-all active:translate-x-0.5 active:translate-y-0.5 ${
+                    className={`rounded-full border px-3 py-1.5 text-xs font-black uppercase tracking-wider transition-all ${
                       active === f
-                        ? "border-black bg-on-background text-surface shadow-[3px_3px_0_0_#000]"
-                        : "border-black bg-surface text-on-surface hover:bg-surface-variant"
+                        ? "border-transparent bg-on-background text-surface vibe-glow"
+                        : "border-on-background/15 bg-surface text-on-surface hover:bg-surface-variant"
                     }`}
                   >
                     {f}
@@ -198,7 +196,7 @@ function DepartmentsPage() {
                 ))}
               </div>
             ) : (
-              <div className="border-2 border-dashed border-black bg-surface py-16 text-center">
+              <div className="rounded-3xl border border-dashed border-on-background/20 bg-surface py-16 text-center">
                 <span className="material-symbols-outlined mb-3 text-4xl text-on-surface-variant" aria-hidden="true">search_off</span>
                 <p className="font-headline-md text-headline-md mb-2">No teams found</p>
                 <p className="text-sm text-on-surface-variant">
@@ -210,12 +208,12 @@ function DepartmentsPage() {
         </section>
 
         {/* Why serve God */}
-        <section className="relative overflow-hidden border-t-4 border-black bg-on-background text-background px-margin-mobile py-stack-lg md:px-margin-desktop">
-          <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25" />
+        <section className="relative overflow-hidden bg-[#06070a] text-white px-margin-mobile py-stack-lg md:px-margin-desktop">
+          <div className="vibe-mesh absolute inset-0" />
           <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent" />
           <div className="relative z-10 mx-auto max-w-5xl">
             <div className="mb-12 text-center">
-              <span className="mb-3 inline-block border-2 border-black bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
+              <span className="mb-3 inline-block rounded-2xl border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
                 The heart behind it
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase text-primary-fixed-dim">
@@ -230,7 +228,7 @@ function DepartmentsPage() {
               {WHY_SERVE.map((w, i) => (
                 <div
                   key={w.title}
-                  className={`relative flex flex-col border-2 border-black p-6 shadow-[6px_6px_0_0_#000] ${
+                  className={`relative flex flex-col rounded-3xl vibe-card p-6 ${
                     i % 2 === 0 ? "bg-secondary-container text-on-secondary-container" : "bg-primary text-on-primary"
                   }`}
                 >
@@ -238,7 +236,7 @@ function DepartmentsPage() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span
-                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center border-2 border-black ${
+                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-on-background/10 ${
                       i % 2 === 0 ? "bg-on-background text-surface" : "bg-surface text-on-surface"
                     }`}
                   >
@@ -251,14 +249,14 @@ function DepartmentsPage() {
               ))}
             </div>
 
-            <div className="mt-12 flex flex-col items-center gap-4 border-2 border-black bg-surface p-8 text-center shadow-[6px_6px_0_0_#000] sm:flex-row sm:justify-between sm:text-left">
+            <div className="mt-12 flex flex-col items-center gap-4 rounded-3xl vibe-card bg-surface p-8 text-center sm:flex-row sm:justify-between sm:text-left">
               <div>
                 <h3 className="font-headline-md mb-1 text-headline-md text-on-surface">Still not sure where you fit?</h3>
                 <p className="text-sm text-on-surface">
                   Fill out our gift assessment and we'll help you find your perfect team.
                 </p>
               </div>
-              <button className="shrink-0 border-2 border-black bg-primary px-8 py-3 text-sm font-black uppercase tracking-wider text-on-primary transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+              <button className="shrink-0 rounded-2xl border border-on-background/10 bg-primary px-8 py-3 text-sm font-black uppercase tracking-wider text-on-primary transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
                 Take the Assessment
               </button>
             </div>
@@ -268,7 +266,6 @@ function DepartmentsPage() {
 
       <SiteFooter />
 
-      <ThemeToggle />
     </div>
   );
 }
