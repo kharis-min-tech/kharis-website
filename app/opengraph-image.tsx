@@ -18,9 +18,10 @@ export default function OpenGraphImage() {
           padding: 72,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <div
             style={{
+              display: "flex",
               background: "#ffde59",
               color: "#221b00",
               fontWeight: 800,
@@ -31,13 +32,23 @@ export default function OpenGraphImage() {
           >
             KP2
           </div>
-          <div style={{ color: "#d2bbff", fontSize: 22, letterSpacing: 4 }}>
+          <div
+            style={{
+              display: "flex",
+              color: "#d2bbff",
+              fontSize: 22,
+              letterSpacing: 4,
+              marginLeft: 16,
+            }}
+          >
             KHARIS PHASE 2
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
+              display: "flex",
+              flexDirection: "column",
               color: "#ece6f0",
               fontSize: 72,
               fontWeight: 800,
@@ -46,11 +57,18 @@ export default function OpenGraphImage() {
               textTransform: "uppercase",
             }}
           >
-            Faith looks
-            <br />
-            different here.
+            <div style={{ display: "flex" }}>Faith looks</div>
+            <div style={{ display: "flex" }}>different here.</div>
           </div>
-          <div style={{ color: "#cac4d0", fontSize: 28, maxWidth: 820 }}>
+          <div
+            style={{
+              display: "flex",
+              color: "#cac4d0",
+              fontSize: 28,
+              maxWidth: 820,
+              marginTop: 20,
+            }}
+          >
             Youth church. Worship, fellowships, events and the Word — across the UK.
           </div>
         </div>
@@ -63,9 +81,10 @@ export default function OpenGraphImage() {
             fontSize: 22,
           }}
         >
-          <span>A Kharis Ministries church</span>
-          <span
+          <div style={{ display: "flex" }}>A Kharis Ministries church</div>
+          <div
             style={{
+              display: "flex",
               background: "#7c3aed",
               color: "#ffffff",
               padding: "12px 22px",
@@ -74,7 +93,7 @@ export default function OpenGraphImage() {
             }}
           >
             FIND A BRANCH
-          </span>
+          </div>
         </div>
       </div>
     ),

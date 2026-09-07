@@ -119,7 +119,7 @@ function cityFromName(name: string) {
 function fallbackImageFor(slug: string) {
   const index =
     Math.abs([...slug].reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % LOCAL_SLIDES.length;
-  return LOCAL_SLIDES[index]!;
+  return LOCAL_SLIDES[index] ?? FALLBACK_IMAGE;
 }
 
 function resolveBranchImage(url: string | null | undefined, slug: string) {
