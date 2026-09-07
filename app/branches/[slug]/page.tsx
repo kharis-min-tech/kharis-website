@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import BranchPage from "@/components/pages/branch";
 import { JsonLd } from "@/components/JsonLd";
 import { getBranch, listBranchSlugs, listBranches } from "@/lib/branches";
+import { getUpcomingEvents } from "@/lib/events";
 import { branchJsonLd, pageMeta } from "@/lib/seo";
+import { fetchLatestMessages } from "@/lib/youtube";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -36,13 +38,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-  const [branch, all] = await Promise.all([getBranch(slug), listBranches()]);
+  const [branch, all, messages, events] = await Promise.all([
+    getBranch(slug),
+    listBranches(),
+    fetchLatestMessages(1),
+    getUpcomingEvents(),
+  ]);
   if (!branch) notFound();
-  const others = all.filter((b) => b.slug !== branch.slug).slice(0, 3);
   return (
     <>
       <JsonLd data={branchJsonLd(branch)} />
-      <BranchPage branch={branch} others={others} />
+      <BranchPage
+        branch={branch}
+        branches={all}
+        featuredMessage={messages[0] ?? null}
+        events={events}
+      />
     </>
   );
 }

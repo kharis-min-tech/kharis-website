@@ -51,8 +51,7 @@ const COLUMNS: FooterColumn[] = [
   },
 ];
 
-const footerLinkClass =
-  "relative inline-block hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full";
+const footerLinkClass = "hover:text-primary transition-colors";
 
 export function SiteFooter() {
   return (
@@ -98,7 +97,7 @@ export function SiteFooter() {
         {COLUMNS.map((col) => (
           <div className="space-y-3" key={col.title}>
             <h4
-              className={`font-headline-md text-lg uppercase mb-3 border-b-4 border-primary inline-block pb-1 ${col.titleColor}`}
+              className={`font-headline-md text-lg uppercase mb-3 ${col.titleColor}`}
             >
               {col.title}
             </h4>

@@ -1097,6 +1097,14 @@ header nav > a:hover {
 }
 header nav > a:hover::after { transform: scaleX(1); }
 
+footer a {
+  text-decoration: none;
+}
+footer a::after {
+  content: none;
+  display: none;
+}
+
 /* Material icons in interactive elements catch a small glow. */
 button:hover > .material-symbols-outlined,
 a:hover > .material-symbols-outlined {

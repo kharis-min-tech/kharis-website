@@ -1,6 +1,15 @@
 import { SITE_WORKSPACE } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
+export type BranchService = {
+  id: string;
+  day: string;
+  time: string;
+  label: string;
+  description: string;
+  type: string;
+};
+
 export type Branch = {
   slug: string;
   name: string;
@@ -11,15 +20,21 @@ export type Branch = {
   lat: number;
   lng: number;
   serviceTimes: { day: string; time: string; label: string }[];
+  services: BranchService[];
   pastor: string;
   pastorRole: string;
+  pastorImage: string;
+  pastorBio: string;
   phone: string;
   email: string;
   instagram: string;
   blurb: string;
+  description: string;
   tags: string[];
   image: string;
   givingLink: string | null;
+  parkingInfo: string;
+  transitInfo: string;
 };
 
 type VenueRow = {
@@ -32,6 +47,8 @@ type VenueRow = {
   country: string | null;
   latitude: number | null;
   longitude: number | null;
+  parking_info: string | null;
+  public_transport_info: string | null;
 };
 
 type ServiceRow = {
@@ -58,6 +75,8 @@ type BranchRow = {
   hero_image_url: string | null;
   pastor_name: string | null;
   pastor_role: string | null;
+  pastor_image_url: string | null;
+  pastor_bio: string | null;
   contact_email: string | null;
   contact_phone: string | null;
   instagram: string | null;
@@ -68,6 +87,17 @@ type BranchRow = {
 };
 
 const FALLBACK_IMAGE = "/assets/branch-slide-1.jpg";
+const LOCAL_SLIDES = [
+  "/assets/branch-slide-1.jpg",
+  "/assets/branch-slide-2.jpg",
+  "/assets/branch-slide-3.jpg",
+  "/assets/branch-slide-4.jpg",
+  "/assets/branch-slide-5.jpg",
+];
+const FALLBACK_PASTOR = "/assets/leadership-pastor-david.jpg";
+const DEFAULT_PARKING = "Public parking is available near the venue.";
+const DEFAULT_TRANSIT =
+  "The venue is reachable by public transport. Check local bus and rail times before you travel.";
 
 function formatTime(time?: string | null): string {
   if (!time) return "";
@@ -77,6 +107,24 @@ function formatTime(time?: string | null): string {
   const ampm = hour >= 12 ? "PM" : "AM";
   hour = hour % 12 || 12;
   return `${hour}:${minute} ${ampm}`;
+}
+
+function cityFromName(name: string) {
+  return name
+    .replace(/^kharis phase 2\s*[—–-]?\s*/i, "")
+    .replace(/^kp2\s*[—–-]?\s*/i, "")
+    .trim();
+}
+
+function fallbackImageFor(slug: string) {
+  const index =
+    Math.abs([...slug].reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % LOCAL_SLIDES.length;
+  return LOCAL_SLIDES[index]!;
+}
+
+function resolveBranchImage(url: string | null | undefined, slug: string) {
+  if (!url || /assets\/design\//i.test(url)) return fallbackImageFor(slug);
+  return url.startsWith("/") || url.startsWith("http") ? url : fallbackImageFor(slug);
 }
 
 function roleLabel(role?: string | null): string {
@@ -127,16 +175,28 @@ function toBranch(row: BranchRow): Branch {
 
   const { pastor, pastorRole } = pastorDisplay(row.pastor_name, row.pastor_role);
 
-  const serviceTimes = services.map((s) => ({
+  const mappedServices: BranchService[] = services.map((s, index) => ({
+    id: s.id || `${row.slug}-service-${index}`,
     day: s.day || "Sunday",
     time: formatTime(s.start_time) || "TBC",
     label: s.name || s.description || s.type || "Gathering",
+    description: s.description || "",
+    type: s.type || "",
   }));
+
+  const serviceTimes = mappedServices.map((s) => ({
+    day: s.day,
+    time: s.time,
+    label: s.label,
+  }));
+
+  const blurb =
+    row.short_description || row.description || `${row.name} — a Kharis Phase 2 campus.`;
 
   return {
     slug: row.slug,
     name: row.name,
-    city: mainVenue?.city || row.name.replace(/^kharis phase 2\s*[—-]?\s*/i, "") || row.slug,
+    city: cityFromName(row.name) || mainVenue?.city || row.slug,
     region: row.subtitle || mainVenue?.country || "United Kingdom",
     address: address || "Location coming soon",
     postcode: mainVenue?.postcode || "",
@@ -145,15 +205,21 @@ function toBranch(row: BranchRow): Branch {
     serviceTimes: serviceTimes.length
       ? serviceTimes
       : [{ day: "Sunday", time: "TBC", label: "Service information coming soon" }],
+    services: mappedServices,
     pastor,
     pastorRole,
+    pastorImage: row.pastor_image_url || FALLBACK_PASTOR,
+    pastorBio: row.pastor_bio || `Welcome to ${row.name}.`,
     phone: row.contact_phone || "",
     email: row.contact_email || "",
     instagram: row.instagram || "",
-    blurb: row.short_description || row.description || `${row.name} — a Kharis Phase 2 campus.`,
+    blurb,
+    description: row.description || blurb,
     tags: ["Phase 2"].concat(mainVenue?.city ? [mainVenue.city] : []),
-    image: row.hero_image_url || FALLBACK_IMAGE,
+    image: resolveBranchImage(row.hero_image_url, row.slug),
     givingLink: row.giving_link,
+    parkingInfo: mainVenue?.parking_info || DEFAULT_PARKING,
+    transitInfo: mainVenue?.public_transport_info || DEFAULT_TRANSIT,
   };
 }
 
@@ -205,4 +271,40 @@ export function osmEmbedUrl(branch: { lat: number; lng: number }, zoomPad = 0.06
     .map((n) => n.toFixed(4))
     .join("%2C");
   return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
+}
+
+export function osmEmbedUrlAtZoom(branch: { lat: number; lng: number }, zoom = 15) {
+  const { lat, lng } = branch;
+  const span = (360 / Math.pow(2, zoom)) * 4;
+  const latSpan = span * 0.6;
+  const bbox = [lng - span, lat - latSpan, lng + span, lat + latSpan]
+    .map((n) => n.toFixed(5))
+    .join("%2C");
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
+}
+
+export function splitServices(services: BranchService[]) {
+  const sunday = services.filter((s) => {
+    const type = s.type.toLowerCase();
+    const day = s.day.toLowerCase();
+    if (type.includes("midweek")) return false;
+    return type.includes("sunday") || day.startsWith("sun");
+  });
+  const midweek = services.filter((s) => !sunday.includes(s));
+  if (sunday.length === 0) return { sunday: services, midweek: [] as BranchService[] };
+  return { sunday, midweek };
+}
+
+export function sundaySummary(branch: Branch) {
+  const { sunday } = splitServices(branch.services);
+  const service = sunday[0] ?? branch.serviceTimes[0];
+  if (!service) return "Service times coming soon";
+  return `${service.day} · ${service.time}`;
+}
+
+export function midweekSummary(branch: Branch) {
+  const { midweek } = splitServices(branch.services);
+  const service = midweek[0];
+  if (!service) return null;
+  return `${service.day} · ${service.time}`;
 }
