@@ -11,26 +11,7 @@ export const metadata = pageMeta({
   path: "/branches",
 });
 
-function parseOrigin(searchParams: { lat?: string; lng?: string }) {
-  const lat = Number(searchParams.lat);
-  const lng = Number(searchParams.lng);
-  if (
-    !Number.isFinite(lat) ||
-    !Number.isFinite(lng) ||
-    Math.abs(lat) > 90 ||
-    Math.abs(lng) > 180
-  ) {
-    return null;
-  }
-  return { lat, lng };
-}
-
-export default async function Branches({
-  searchParams,
-}: {
-  searchParams: Promise<{ lat?: string; lng?: string }>;
-}) {
-  const origin = parseOrigin(await searchParams);
+export default async function Branches() {
   const branches = await listBranches();
-  return <Page branches={branches} origin={origin} />;
+  return <Page branches={branches} />;
 }

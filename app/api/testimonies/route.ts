@@ -66,10 +66,7 @@ function restPost(
 
 export async function POST(request: Request) {
   try {
-    const contentType = request.headers.get("content-type") || "";
-    const body = contentType.includes("application/json")
-      ? ((await request.json()) as Record<string, unknown>)
-      : Object.fromEntries((await request.formData()).entries());
+    const body = await request.json();
 
     const firstName = asString(body.firstName, 80);
     const preferredName = asString(body.preferredName, 80);
@@ -136,17 +133,6 @@ export async function POST(request: Request) {
     if (!result.ok) {
       console.error("Supabase testimony insert error:", result.status, result.body);
       return NextResponse.json({ error: "Unable to submit testimony." }, { status: 500 });
-    }
-
-    const isForm =
-      contentType.includes("application/x-www-form-urlencoded") ||
-      contentType.includes("multipart/form-data");
-    if (isForm) {
-      const referer = request.headers.get("referer") || "/";
-      const next = new URL(referer);
-      next.searchParams.set("testimony", "sent");
-      next.hash = "testimonies";
-      return NextResponse.redirect(next, 303);
     }
 
     let id: string | undefined;

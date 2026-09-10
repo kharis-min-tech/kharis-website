@@ -4,6 +4,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { YoutubeEmbed } from "@/components/YoutubeEmbed";
 import {
   displayMessageTitle,
@@ -55,9 +57,27 @@ function SoundCloudIcon({ className = "" }: { className?: string }) {
   );
 }
 
+function AppIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M17 1.01 7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99ZM17 19H7V5h10v14Z" />
+    </svg>
+  );
+}
+
 /* ---------------- data ---------------- */
 
 const SOCIALS = [
+  {
+    label: "Kharis App",
+    handle: "iOS & Android",
+    copy: "Messages, notes and giving in one place.",
+    href: "/#app-stores",
+    cta: "GET THE APP",
+    Icon: AppIcon,
+    band: "bg-primary text-on-primary",
+    external: false,
+  },
   {
     label: "Instagram",
     handle: "@kharisphasetwo",
@@ -108,11 +128,11 @@ function MediaPage({
   const featured = messages[0];
   const more = messages.slice(1, 4);
   return (
-    <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
+    <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
       <ScrollReveal />
       <SiteHeader />
 
-      <header className="relative min-h-[440px] md:min-h-[520px] flex flex-col justify-center items-center bg-[#06070a] text-white pt-28 md:pt-32 pb-stack-lg overflow-hidden">
+      <header className="relative min-h-[440px] md:min-h-[520px] flex flex-col justify-center items-center bg-on-background text-primary-fixed pt-28 md:pt-32 pb-stack-lg overflow-hidden border-b-4 border-primary">
         <img
           alt="Kharis worship gathering"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
@@ -124,7 +144,7 @@ function MediaPage({
         <div className="absolute inset-0 pointer-events-none"></div>
 
         <div className="container mx-auto px-margin-mobile relative z-10 text-center">
-          <span className="inline-block rounded-full bg-amber text-[#1a0b00] font-label-sm px-3 py-1 mb-4">
+          <span className="inline-block bg-secondary-container text-on-background font-label-sm px-3 py-1 border-2 border-black -rotate-2 mb-4">
             FOLLOW · WATCH · LISTEN
           </span>
           <h1 className="font-display-lg text-6xl md:text-[72px] text-primary-fixed uppercase tracking-tight mb-4">
@@ -132,18 +152,18 @@ function MediaPage({
           </h1>
           <p className="font-body-lg text-primary-fixed-dim max-w-xl mx-auto mb-stack-md">
             Everywhere Kharis lives online. Follow the feeds, and tune into messages
-            from our head pastor on YouTube, Spotify and SoundCloud.
+            from our head pastor on YouTube, Spotify and SoundCloud — or listen in the app.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <a
               href="#follow"
-              className="rounded-2xl bg-amber text-[#1a0b00] font-label-md px-8 py-4 vibe-glow"
+              className="bg-primary text-on-primary font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
             >
               FOLLOW US
             </a>
             <a
               href="#listen"
-              className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md font-label-md px-8 py-4"
+              className="keep-light font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
             >
               LISTEN TO MESSAGES
             </a>
@@ -152,7 +172,7 @@ function MediaPage({
       </header>
 
       <main className="bg-surface relative">
-        <div className="absolute inset-0 pointer-events-none vibe-mesh opacity-40"></div>
+        <div className="absolute inset-0 halftone-bg pointer-events-none"></div>
 
         {/* Follow us */}
         <section id="follow" className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28">
@@ -162,15 +182,16 @@ function MediaPage({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {SOCIALS.map(({ label, handle, copy, href, cta, Icon, band }) => (
+            {SOCIALS.map(({ label, handle, copy, href, cta, Icon, band, external = true }) => (
               <a
                 key={label}
                 href={href}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="group bg-surface-container rounded-2xl overflow-hidden border border-on-background/10 neo-shadow hover-press flex flex-col"
+                {...(external
+                  ? { target: "_blank", rel: "noreferrer noopener" }
+                  : {})}
+                className="group bg-surface-container border-2 border-black rounded-none neo-shadow hover-press flex flex-col"
               >
-                <div className={`${band} p-6 flex items-center gap-4 rounded-t-2xl`}>
+                <div className={`${band} border-b-2 border-black p-6 flex items-center gap-4`}>
                   <Icon className="w-10 h-10 shrink-0 transition-transform duration-300 group-hover:scale-110" />
                   <div>
                     <h3 className="font-headline-md text-2xl uppercase leading-none">{label}</h3>
@@ -189,7 +210,7 @@ function MediaPage({
               </a>
             ))}
 
-            <div className="bg-primary text-on-primary rounded-2xl border border-on-background/10 neo-shadow p-6 flex flex-col justify-center">
+            <div className="bg-primary text-on-primary border-2 border-black neo-shadow p-6 flex flex-col justify-center">
               <h3 className="font-headline-md text-2xl uppercase mb-2">Tag us</h3>
               <p className="font-body-md text-primary-fixed mb-4">
                 Use <strong>#KharisPhase2</strong> and we might reshare your moment.
@@ -200,7 +221,7 @@ function MediaPage({
         </section>
 
         {/* Social feed */}
-        <section className="relative z-10 bg-surface-container-low border-y border-on-background/10 py-stack-lg">
+        <section className="relative z-10 bg-surface-container-low border-y-4 border-on-background py-stack-lg">
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-md">
               <div>
@@ -217,7 +238,7 @@ function MediaPage({
                   href={INSTAGRAM_PROFILE_URL}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="bg-secondary-container text-on-background font-label-sm px-4 py-2 rounded-2xl border border-on-background/10 neo-shadow hover-press flex items-center gap-2"
+                  className="bg-secondary-container text-on-background font-label-sm px-4 py-2 border-2 border-black neo-shadow hover-press flex items-center gap-2"
                 >
                   <InstagramIcon className="w-4 h-4" /> INSTAGRAM
                 </a>
@@ -232,9 +253,9 @@ function MediaPage({
                   href={post.permalink}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="bg-surface rounded-2xl border border-on-background/10 neo-shadow overflow-hidden group flex flex-col"
+                  className="bg-surface border-2 border-black neo-shadow overflow-hidden group flex flex-col"
                 >
-                  <div className="aspect-square overflow-hidden relative">
+                  <div className="aspect-square overflow-hidden border-b-2 border-black relative">
                     <img
                       alt={instagramCaption(post.caption, 80)}
                       src={post.image}
@@ -242,12 +263,12 @@ function MediaPage({
                       decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <span className="absolute top-3 right-3 bg-surface text-on-surface rounded-2xl border border-on-background/10 p-2 flex items-center justify-center">
+                    <span className="absolute top-3 right-3 bg-surface text-on-surface border-2 border-black p-2 flex items-center justify-center">
                       <InstagramIcon className="w-4 h-4" />
                     </span>
                     {post.mediaType === "VIDEO" ? (
                       <span className="absolute inset-0 flex items-center justify-center">
-                        <span className="bg-secondary-container rounded-2xl border border-on-background/10 p-3 rounded-full neo-shadow">
+                        <span className="bg-secondary-container border-2 border-black p-3 rounded-full neo-shadow">
                           <span
                             className="material-symbols-outlined text-3xl leading-none"
                             style={{ fontVariationSettings: "'FILL' 1" }}
@@ -270,7 +291,7 @@ function MediaPage({
               ))}
             </div>
             ) : (
-              <div className="rounded-3xl border border-dashed border-on-background/20 bg-surface p-stack-md md:p-stack-lg text-center">
+              <div className="border-2 border-dashed border-on-background bg-surface p-stack-md md:p-stack-lg text-center">
                 <InstagramIcon className="w-10 h-10 mx-auto mb-4" />
                 <h3 className="font-headline-md text-headline-md uppercase mb-2">
                   Follow @kharisphasetwo
@@ -283,7 +304,7 @@ function MediaPage({
                   href={INSTAGRAM_PROFILE_URL}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="inline-flex items-center gap-2 bg-secondary-container text-on-background font-label-md px-6 py-3 rounded-2xl border border-on-background/10 neo-shadow hover-press"
+                  className="inline-flex items-center gap-2 bg-secondary-container text-on-background font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press"
                 >
                   <InstagramIcon className="w-4 h-4" />
                   Open Instagram
@@ -301,7 +322,7 @@ function MediaPage({
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-            <div className="lg:col-span-7 bg-surface rounded-2xl border border-on-background/10 neo-shadow-lg overflow-hidden group">
+            <div className="lg:col-span-7 bg-surface border-2 border-black neo-shadow-lg overflow-hidden group">
               <div className="aspect-video relative bg-black">
                 {featured ? (
                   <YoutubeEmbed id={featured.id} title={featured.title} thumbnail={featured.thumbnail} />
@@ -314,7 +335,7 @@ function MediaPage({
                 )}
                 {featured ? (
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
-                    <span className="bg-secondary text-on-secondary font-label-sm px-2 py-1 mb-2 inline-block rounded-full">
+                    <span className="bg-secondary text-on-secondary font-label-sm px-2 py-1 mb-2 inline-block border border-black">
                       NEWEST RELEASE
                     </span>
                     <h3 className="font-headline-md text-white text-2xl uppercase">
@@ -323,17 +344,23 @@ function MediaPage({
                   </div>
                 ) : null}
               </div>
-              <div className="p-6 border-t border-on-background/10">
+              <div className="p-6 border-t-2 border-black">
                 <p className="font-body-md text-on-surface-variant mb-6">
                   Preached by Pastor David Antwi. Watch the full message on YouTube, or
                   take the audio with you on Spotify and SoundCloud.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <a
+                    href="/#app-stores"
+                    className="bg-primary text-on-primary font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined">smartphone</span> LISTEN VIA THE APP
+                  </a>
+                  <a
                     href={featured ? youtubeWatchUrl(featured.id) : "https://youtube.com/@davidantwi"}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="bg-error-container text-on-error-container font-label-md px-6 py-3 rounded-2xl border border-on-background/10 neo-shadow hover-press flex items-center gap-2"
+                    className="bg-error-container text-on-error-container font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
                   >
                     <YouTubeIcon className="w-5 h-5" /> WATCH
                   </a>
@@ -341,7 +368,7 @@ function MediaPage({
                     href="https://open.spotify.com/"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="bg-tertiary-container text-on-tertiary-container font-label-md px-6 py-3 rounded-2xl border border-on-background/10 neo-shadow hover-press flex items-center gap-2"
+                    className="bg-tertiary-container text-on-tertiary-container font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
                   >
                     <SpotifyIcon className="w-5 h-5" /> SPOTIFY
                   </a>
@@ -349,7 +376,7 @@ function MediaPage({
                     href="https://soundcloud.com/"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="bg-surface-container-highest text-on-surface font-label-md px-6 py-3 rounded-2xl border border-on-background/10 neo-shadow hover-press flex items-center gap-2"
+                    className="bg-surface-container-highest text-on-surface font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
                   >
                     <SoundCloudIcon className="w-5 h-5" /> SOUNDCLOUD
                   </a>
@@ -361,7 +388,7 @@ function MediaPage({
               {more.map((ep) => (
                 <article
                   key={ep.id}
-                  className="bg-surface-container rounded-2xl border border-on-background/10 neo-shadow hover-press p-6 flex-1"
+                  className="bg-surface-container border-2 border-black neo-shadow hover-press p-6 flex-1"
                 >
                   <h4 className="font-label-md text-primary mb-1">
                     {ep.publishedAt ? formatMessageDate(ep.publishedAt) : "Latest teaching"}
@@ -375,7 +402,7 @@ function MediaPage({
                       target="_blank"
                       rel="noreferrer noopener"
                       aria-label={`Watch ${ep.title} on YouTube`}
-                      className="w-11 h-11 bg-surface rounded-2xl border border-on-background/10 flex items-center justify-center hover:bg-error-container transition-colors"
+                      className="w-11 h-11 bg-surface border-2 border-black flex items-center justify-center hover:bg-error-container transition-colors"
                     >
                       <YouTubeIcon className="w-5 h-5" />
                     </a>
@@ -386,37 +413,18 @@ function MediaPage({
           </div>
         </section>
 
-        {/* Newsletter */}
-        <section className="relative z-10 pb-stack-lg container mx-auto px-margin-mobile">
-          <div className="bg-primary text-on-primary rounded-2xl border border-on-background/10 p-stack-md flex flex-col md:flex-row items-center gap-gutter relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/10 blur-3xl -mr-32 -mt-32"></div>
-            <div className="relative z-10 md:w-1/2">
-              <h2 className="font-headline-md text-4xl uppercase mb-4">Never Miss a Word</h2>
-              <p className="font-body-lg text-primary-fixed">
-                Get an email when a new message drops on YouTube, Spotify or SoundCloud.
-              </p>
-            </div>
-            <div className="relative z-10 md:w-1/2 w-full">
-              <form className="flex flex-col sm:flex-row gap-2" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  className="flex-1 bg-surface text-on-background rounded-2xl border border-on-background/10 px-4 py-3 font-label-md focus:ring-0"
-                  placeholder="Your email address"
-                  type="email"
-                  aria-label="Email address"
-                />
-                <button
-                  className="bg-secondary-container text-on-background px-8 py-3 rounded-2xl border border-on-background/10 font-headline-md uppercase neo-shadow hover-press"
-                  type="submit"
-                >
-                  Subscribe
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
+        <NewsletterSignup
+          title="Never Miss a Word"
+          copy="Get an email when a new message drops on YouTube, Spotify or SoundCloud."
+          placeholder="Your email address"
+          className="bg-primary text-on-primary"
+          copyClassName="text-primary-fixed"
+          buttonClassName="bg-secondary-container text-on-background"
+        />
       </main>
 
       <SiteFooter />
+      <ThemeToggle />
     </div>
   );
 }

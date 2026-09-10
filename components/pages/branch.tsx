@@ -2,6 +2,7 @@
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { YoutubeEmbed } from "@/components/YoutubeEmbed";
 import Link from "next/link";
@@ -9,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   hasCoords,
+  mapsEmbedUrl,
   osmEmbedUrlAtZoom,
   splitServices,
   type Branch,
@@ -56,11 +58,12 @@ function BranchNotFound() {
         </h1>
         <Link
           href="/branches"
-          className="inline-block bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-6 py-4 rounded-2xl vibe-glow"
+          className="inline-block bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-6 py-4 brutalist-border brutalist-shadow"
         >
           Back to all branches
         </Link>
       </main>
+      <ThemeToggle />
     </div>
   );
 }
@@ -119,9 +122,6 @@ function BranchPage({
   const campusEvents = eventsForBranch(events, branch);
   const others = branches.filter((item) => item.slug !== branch.slug);
   const giveHref = branch.givingLink || "/giving";
-  const pastorLead = branch.pastorRole.toLowerCase().includes("pastor")
-    ? "pastor"
-    : "lead";
 
   const [zoomLevel, setZoomLevel] = useState(15);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
@@ -142,38 +142,38 @@ function BranchPage({
   }, []);
 
   const mapSrc = useMemo(
-    () => (hasCoords(branch) ? osmEmbedUrlAtZoom(branch, zoomLevel) : ""),
+    () => (hasCoords(branch) ? osmEmbedUrlAtZoom(branch, zoomLevel) : mapsEmbedUrl(branch)),
     [branch, zoomLevel],
   );
 
-  const welcomeParagraphs = [
-    `I serve as the ${pastorLead} of ${branch.name}, part of the Kharis Phase 2 family.${branch.description ? ` ${branch.description}` : ""}`,
-    "We love teaching the Word of God, and we long to see believers established in their faith and our city strengthened.",
-    `Whether you are visiting ${branch.city} for a season or looking for a church to call home, there is a place for you here.`,
-  ];
-
-  function sendBranchMessage(event: FormEvent) {
+  function sendBranchMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const to = branch.email;
     if (!to) {
       router.push("/contact");
       return;
     }
+    const data = new FormData(event.currentTarget);
+    const name = String(data.get("name") || contactName).trim();
+    const email = String(data.get("email") || contactEmail).trim();
+    const phone = String(data.get("phone") || "").trim();
+    const message = String(data.get("message") || contactMessage).trim();
     const subject = encodeURIComponent(`Message for ${branch.name}`);
+    const phoneLine = phone ? `\nPhone: ${phone}` : "";
     const body = encodeURIComponent(
-      `From: ${contactName}\nEmail: ${contactEmail}\n\n${contactMessage}`,
+      `From: ${name}\nEmail: ${email}${phoneLine}\n\n${message}`,
     );
     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
   }
 
   return (
-    <div className="bg-background text-on-surface font-body-md">
+    <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
       <SiteHeader />
 
       <main className="pt-[74px]">
         {/* Hero */}
         <section className="relative flex w-full min-h-0 items-center justify-center px-4 pt-6 pb-8 sm:min-h-[65vh] sm:px-5 sm:pt-10 sm:pb-16 md:px-8 max-w-[1536px] mx-auto">
-          <div className="absolute inset-x-4 top-6 bottom-4 z-0 overflow-hidden rounded-2xl border border-on-background/10 sm:inset-x-5 sm:top-10 sm:bottom-8 md:inset-x-8">
+          <div className="absolute inset-x-4 top-6 bottom-4 z-0 overflow-hidden brutalist-border sm:inset-x-5 sm:top-10 sm:bottom-8 md:inset-x-8">
             <img
               src={branch.image}
               alt=""
@@ -184,7 +184,7 @@ function BranchPage({
 
           <div className="relative z-10 flex w-full max-w-4xl flex-col items-center px-3 pt-12 pb-8 text-center text-white sm:px-6 sm:pt-16 sm:pb-12">
             <div className="mb-8 flex flex-col items-center gap-3 sm:mb-6 sm:flex-row sm:flex-wrap sm:justify-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-black/40 backdrop-blur-md border border-white/30">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-md border-2 border-white/30">
                 <span className="material-symbols-outlined text-[18px] text-secondary-container">
                   location_on
                 </span>
@@ -197,7 +197,7 @@ function BranchPage({
                 <button
                   type="button"
                   onClick={() => setBranchDropdownOpen((open) => !open)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wider rounded-2xl border border-on-background/10"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wider brutalist-border"
                 >
                   <span>Switch branch</span>
                   <span
@@ -208,7 +208,7 @@ function BranchPage({
                 </button>
 
                 {branchDropdownOpen ? (
-                  <div className="absolute left-1/2 top-full z-50 mt-2 max-h-[70vh] w-64 -translate-x-1/2 overflow-auto bg-surface-container-lowest text-on-surface rounded-2xl vibe-glow p-2">
+                  <div className="absolute left-1/2 top-full z-50 mt-2 max-h-[70vh] w-64 -translate-x-1/2 overflow-auto bg-surface-container-lowest text-on-surface brutalist-border brutalist-shadow p-2">
                     <div className="mb-1 border-b-2 border-on-background/15 px-3 py-1.5 font-body-md text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">
                       Switch KP2 campus
                     </div>
@@ -258,7 +258,7 @@ function BranchPage({
                 <PlanVisitButton
                   item={nextVisit}
                   directionsUrl={directions}
-                  className="flex items-center justify-center gap-2 bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-3.5 rounded-2xl vibe-glow"
+                  className="flex items-center justify-center gap-2 bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-3.5 brutalist-border brutalist-shadow"
                 >
                   Plan your visit
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -268,7 +268,7 @@ function BranchPage({
                   href={directions}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-center gap-2 bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-3.5 rounded-2xl vibe-glow"
+                  className="flex items-center justify-center gap-2 bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-3.5 brutalist-border brutalist-shadow"
                 >
                   Plan your visit
                 </a>
@@ -276,7 +276,7 @@ function BranchPage({
 
               <a
                 href="#events"
-                className="flex items-center justify-center gap-2 rounded-2xl border border-white/40 bg-white/10 px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-white"
+                className="flex items-center justify-center gap-2 border-2 border-white/40 bg-white/10 px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-white"
               >
                 <span className="material-symbols-outlined text-[18px] text-secondary-container">
                   calendar_month
@@ -286,13 +286,21 @@ function BranchPage({
 
               <Link
                 href={giveHref}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-white/40 px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-white"
+                className="flex items-center justify-center gap-2 border-2 border-white/40 px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-white"
               >
                 <span className="material-symbols-outlined text-[18px] text-secondary-container">
                   favorite
                 </span>
                 Give
               </Link>
+
+              <a
+                href="#contact"
+                className="flex items-center justify-center gap-2 bg-white text-on-background px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide brutalist-border"
+              >
+                <span className="material-symbols-outlined text-[18px]">mail</span>
+                Contact Us
+              </a>
             </div>
           </div>
         </section>
@@ -311,7 +319,7 @@ function BranchPage({
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-5">
-              <div className="bg-surface-container-lowest rounded-2xl vibe-glow p-6 sm:p-8 h-full flex flex-col justify-between">
+              <div className="bg-surface-container-lowest brutalist-border brutalist-shadow p-6 sm:p-8 h-full flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-8 pb-4 border-b-2 border-on-background/15">
                     <div className="w-12 h-12 bg-secondary-container text-on-secondary-container flex items-center justify-center">
@@ -331,7 +339,7 @@ function BranchPage({
                       return (
                         <div
                           key={`${service.day}-${service.time}-${service.label}`}
-                          className="flex items-start gap-4 rounded-2xl p-4 border border-on-background/10 bg-background"
+                          className="flex items-start gap-4 p-4 border-2 border-on-background/15 bg-background"
                         >
                           <div className="flex-shrink-0 w-20 text-center">
                             <span className="block font-display-lg text-[22px] text-primary leading-none mb-1">
@@ -370,7 +378,7 @@ function BranchPage({
                       return (
                         <div
                           key={service.id}
-                          className="flex items-start gap-4 rounded-2xl p-4 border border-secondary-container bg-secondary-container/20"
+                          className="flex items-start gap-4 p-4 border-2 border-secondary-container bg-secondary-container/20"
                         >
                           <div className="flex-shrink-0 w-20 text-center">
                             <span className="block font-display-lg text-[22px] text-primary leading-none mb-1">
@@ -433,8 +441,8 @@ function BranchPage({
             </div>
 
             <div className="lg:col-span-7">
-              <div className="bg-surface-container-lowest rounded-2xl vibe-glow p-3 h-[500px] relative overflow-hidden">
-                {hasCoords(branch) ? (
+              <div className="bg-surface-container-lowest brutalist-border brutalist-shadow p-3 h-[500px] relative overflow-hidden">
+                {mapSrc ? (
                   <div className="absolute inset-3 overflow-hidden">
                     <iframe
                       title={`Map of ${branch.name}`}
@@ -453,7 +461,7 @@ function BranchPage({
                 )}
 
                 <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
-                  <div className="bg-surface-container-lowest/95 backdrop-blur-md p-4 max-w-xs pointer-events-auto rounded-2xl border border-on-background/10">
+                  <div className="bg-surface-container-lowest/95 backdrop-blur-md p-4 max-w-xs pointer-events-auto brutalist-border">
                     <h4 className="font-display-lg text-[18px] uppercase mb-1">{branch.name}</h4>
                     <p className="font-body-md text-[12px] text-on-surface-variant mb-3 leading-snug">
                       {[branch.address, branch.postcode].filter(Boolean).join(", ")}
@@ -476,7 +484,7 @@ function BranchPage({
                       <button
                         type="button"
                         onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
-                        className="w-10 h-10 bg-surface-container-lowest rounded-2xl border border-on-background/10 flex items-center justify-center"
+                        className="w-10 h-10 bg-surface-container-lowest brutalist-border flex items-center justify-center"
                         aria-label="Zoom in"
                       >
                         <span className="material-symbols-outlined">add</span>
@@ -484,7 +492,7 @@ function BranchPage({
                       <button
                         type="button"
                         onClick={() => setZoomLevel((z) => Math.max(z - 1, 10))}
-                        className="w-10 h-10 bg-surface-container-lowest rounded-2xl border border-on-background/10 flex items-center justify-center"
+                        className="w-10 h-10 bg-surface-container-lowest brutalist-border flex items-center justify-center"
                         aria-label="Zoom out"
                       >
                         <span className="material-symbols-outlined">remove</span>
@@ -497,79 +505,10 @@ function BranchPage({
           </div>
         </section>
 
-        {/* Pastor welcome */}
-        <section
-          id="pastor"
-          className="py-16 bg-surface-container-low border-y border-on-background/10"
-        >
-          <div className="max-w-[1536px] mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-center">
-              <div className="md:col-span-5 relative">
-                <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center bg-primary text-on-primary rounded-2xl border border-on-background/10 sm:flex">
-                  <span className="material-symbols-outlined">auto_awesome</span>
-                </div>
-                <div className="aspect-[4/5] overflow-hidden rounded-2xl vibe-glow bg-on-background">
-                  <img
-                    src={branch.pastorImage}
-                    alt={branch.pastor}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="absolute -bottom-4 -right-4 bg-background px-5 py-3 rounded-2xl vibe-glow">
-                  <p className="font-body-md text-[11px] font-bold uppercase tracking-wider text-primary">
-                    {branch.pastorRole || "Pastor"}
-                  </p>
-                  <p className="font-display-lg text-[18px] uppercase">{branch.pastor}</p>
-                </div>
-              </div>
-
-              <div className="md:col-span-7 space-y-5">
-                <h2 className="font-display-lg text-headline-lg uppercase leading-none">
-                  Welcome to{" "}
-                  <span className="text-primary">{branch.name}</span>
-                </h2>
-                <p className="font-body-md text-[13px] font-bold uppercase tracking-wider text-primary">
-                  {branch.pastorRole} {branch.pastor}
-                </p>
-                <div className="space-y-4">
-                  {welcomeParagraphs.map((para) => (
-                    <p key={para.slice(0, 24)} className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                      {para}
-                    </p>
-                  ))}
-                </div>
-                <blockquote className="border-l-4 border-secondary-container pl-4 font-body-md text-body-md italic">
-                  &ldquo;{branch.pastorBio}&rdquo;
-                </blockquote>
-                <div className="flex flex-wrap gap-3 pt-1">
-                  {branch.phone ? (
-                    <a
-                      href={`tel:${branch.phone.replace(/\s/g, "")}`}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-on-background/15 bg-background px-3 py-1.5 font-body-md text-[12px] font-bold"
-                    >
-                      <span className="material-symbols-outlined text-[16px] text-primary">call</span>
-                      {branch.phone}
-                    </a>
-                  ) : null}
-                  {branch.email ? (
-                    <a
-                      href={`mailto:${branch.email}`}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-on-background/15 bg-background px-3 py-1.5 font-body-md text-[12px] font-bold break-all"
-                    >
-                      <span className="material-symbols-outlined text-[16px] text-primary">mail</span>
-                      {branch.email}
-                    </a>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Watch */}
         <section id="watch" className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto">
           <div className="mb-10 text-center">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber text-[#1a0b00] px-3.5 py-1 font-body-md text-[12px] font-bold uppercase mb-3">
+            <div className="inline-flex items-center gap-1.5 border-2 border-on-background/20 bg-secondary-container text-on-secondary-container px-3.5 py-1 font-body-md text-[12px] font-bold uppercase mb-3">
               Watch
             </div>
             <h2 className="font-display-lg text-headline-lg uppercase leading-none">
@@ -577,7 +516,7 @@ function BranchPage({
             </h2>
           </div>
 
-          <div className="relative overflow-hidden rounded-2xl vibe-glow bg-on-background aspect-video">
+          <div className="relative overflow-hidden brutalist-border brutalist-shadow bg-on-background aspect-video">
             {featuredMessage ? (
               <>
                 <YoutubeEmbed
@@ -605,7 +544,7 @@ function BranchPage({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
-                  <span className="flex h-20 w-20 items-center justify-center bg-primary text-on-primary rounded-2xl border border-on-background/10">
+                  <span className="flex h-20 w-20 items-center justify-center bg-primary text-on-primary brutalist-border">
                     <span className="material-symbols-outlined text-[40px]">play_arrow</span>
                   </span>
                   <span className="font-body-md text-[13px] font-bold uppercase tracking-wider text-white">
@@ -620,7 +559,7 @@ function BranchPage({
         {/* Gallery */}
         <section className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto">
           <div className="mb-10 text-center">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber text-[#1a0b00] px-3.5 py-1 font-body-md text-[12px] font-bold uppercase mb-3">
+            <div className="inline-flex items-center gap-1.5 border-2 border-on-background/20 bg-secondary-container text-on-secondary-container px-3.5 py-1 font-body-md text-[12px] font-bold uppercase mb-3">
               Life at KP2 {branch.city}
             </div>
             <h2 className="font-display-lg text-headline-lg uppercase leading-none">
@@ -633,7 +572,7 @@ function BranchPage({
                 key={`${src}-${index}`}
                 type="button"
                 onClick={() => setGallerySrc(src)}
-                className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-on-background/10 text-left"
+                className="group relative aspect-[4/5] overflow-hidden brutalist-border text-left"
               >
                 <img
                   src={src}
@@ -643,7 +582,7 @@ function BranchPage({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-black/50 text-white border border-white/30">
+                  <span className="flex h-12 w-12 items-center justify-center bg-black/50 text-white border-2 border-white/30">
                     <span className="material-symbols-outlined">zoom_in</span>
                   </span>
                 </span>
@@ -677,7 +616,7 @@ function BranchPage({
             {campusEvents.map((event) => (
               <div
                 key={event.slug}
-                className="bg-surface-container-lowest rounded-2xl vibe-glow p-6 flex flex-col gap-3"
+                className="bg-surface-container-lowest brutalist-border brutalist-shadow p-6 flex flex-col gap-3"
               >
                 <p className="font-body-md text-[12px] font-bold uppercase tracking-wider text-primary">
                   {event.dayLabel} · {event.timeLabel}
@@ -694,21 +633,21 @@ function BranchPage({
                 <PlanVisitButton
                   item={eventToCalendarItem(event)}
                   directionsUrl={mapsDirectionsUrl(event.location)}
-                  className="mt-auto self-start bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 rounded-2xl border border-on-background/10"
+                  className="mt-auto self-start bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border"
                 >
                   Plan your visit
                 </PlanVisitButton>
               </div>
             ))}
             {campusEvents.length === 0 ? (
-              <div className="md:col-span-2 p-8 rounded-2xl border border-on-background/10 bg-surface-container-lowest">
+              <div className="md:col-span-2 p-8 brutalist-border bg-surface-container-lowest">
                 <p className="font-display-lg text-[22px] uppercase mb-2">More dates soon</p>
                 <p className="font-body-md text-on-surface-variant mb-4">
                   Check the events page for gatherings across Kharis Phase 2.
                 </p>
                 <Link
                   href="/events"
-                  className="inline-block bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 rounded-2xl border border-on-background/10"
+                  className="inline-block bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border"
                 >
                   View events
                 </Link>
@@ -751,16 +690,18 @@ function BranchPage({
             </div>
             <form
               onSubmit={sendBranchMessage}
-              className="bg-surface-container-lowest rounded-2xl vibe-glow p-6 sm:p-8 space-y-5"
+              className="bg-surface-container-lowest brutalist-border brutalist-shadow p-6 sm:p-8 space-y-5"
             >
               <div className="grid sm:grid-cols-2 gap-5">
                 <label className="flex flex-col gap-2">
                   <span className="font-label-md uppercase">Your name</span>
                   <input
                     required
+                    name="name"
+                    autoComplete="name"
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
-                    className="rounded-2xl border border-on-background/10 p-4 font-body-md bg-background"
+                    className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface"
                     placeholder="Jane Doe"
                   />
                 </label>
@@ -768,28 +709,42 @@ function BranchPage({
                   <span className="font-label-md uppercase">Email</span>
                   <input
                     required
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     value={contactEmail}
                     onChange={(e) => setContactEmail(e.target.value)}
-                    className="rounded-2xl border border-on-background/10 p-4 font-body-md bg-background"
+                    className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface"
                     placeholder="hello@example.com"
                   />
                 </label>
               </div>
               <label className="flex flex-col gap-2">
+                <span className="font-label-md uppercase">Phone</span>
+                <input
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface"
+                  placeholder="+44 20 0000 0000"
+                />
+              </label>
+              <label className="flex flex-col gap-2">
                 <span className="font-label-md uppercase">Message</span>
                 <textarea
                   required
+                  name="message"
                   rows={5}
                   value={contactMessage}
                   onChange={(e) => setContactMessage(e.target.value)}
-                  className="rounded-2xl border border-on-background/10 p-4 font-body-md bg-background resize-none"
+                  className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface resize-none"
                   placeholder={`How can the ${branch.city} team help?`}
                 />
               </label>
               <button
                 type="submit"
-                className="bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-8 py-4 rounded-2xl vibe-glow"
+                className="bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-8 py-4 brutalist-border brutalist-shadow"
               >
                 Send message
               </button>
@@ -798,10 +753,10 @@ function BranchPage({
         </section>
 
         {/* Parking + transit */}
-        <section className="py-16 bg-surface-container-low border-t border-on-background/10">
+        <section className="py-16 bg-surface-container-low border-t-4 border-on-background">
           <div className="max-w-[1536px] mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-surface-container-lowest p-6 sm:p-8 rounded-2xl vibe-glow space-y-3">
+              <div className="bg-surface-container-lowest p-6 sm:p-8 brutalist-border brutalist-shadow space-y-3">
                 <div className="w-12 h-12 bg-secondary-container text-on-secondary-container flex items-center justify-center">
                   <span className="material-symbols-outlined">local_parking</span>
                 </div>
@@ -810,7 +765,7 @@ function BranchPage({
                   {branch.parkingInfo}
                 </p>
               </div>
-              <div className="bg-surface-container-lowest p-6 sm:p-8 rounded-2xl vibe-glow space-y-3">
+              <div className="bg-surface-container-lowest p-6 sm:p-8 brutalist-border brutalist-shadow space-y-3">
                 <div className="w-12 h-12 bg-secondary-container text-on-secondary-container flex items-center justify-center">
                   <span className="material-symbols-outlined">train</span>
                 </div>
@@ -842,7 +797,7 @@ function BranchPage({
                 <Link
                   key={item.slug}
                   href={`/branches/${item.slug}`}
-                  className="group overflow-hidden rounded-2xl vibe-glow bg-surface-container-lowest block"
+                  className="group overflow-hidden brutalist-border brutalist-shadow bg-surface-container-lowest block"
                 >
                   <div className="relative h-40 overflow-hidden">
                     <img
@@ -851,7 +806,7 @@ function BranchPage({
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    <span className="absolute left-3 top-3 rounded-full bg-primary text-on-primary font-body-md text-[10px] font-bold uppercase tracking-wider px-3 py-1">
+                    <span className="absolute left-3 top-3 bg-primary text-on-primary font-body-md text-[10px] font-bold uppercase tracking-wider px-3 py-1">
                       {item.region}
                     </span>
                   </div>
@@ -872,6 +827,8 @@ function BranchPage({
       </main>
 
       <SiteFooter />
+      <ThemeToggle />
+
       {gallerySrc ? (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
           <button
@@ -883,7 +840,7 @@ function BranchPage({
           <img
             src={gallerySrc}
             alt=""
-            className="relative z-10 max-h-[85vh] max-w-[90vw] object-contain rounded-2xl border border-on-background/10"
+            className="relative z-10 max-h-[85vh] max-w-[90vw] object-contain brutalist-border"
           />
         </div>
       ) : null}

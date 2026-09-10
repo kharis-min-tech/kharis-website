@@ -153,6 +153,69 @@ export function isKp2Location(row: {
   return group.includes("phase 2") || slug.startsWith("kp2-") || name.includes("phase 2");
 }
 
+const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
+  barking: { lat: 51.539, lng: 0.0805 },
+  birmingham: { lat: 52.4862, lng: -1.8904 },
+  london: { lat: 51.5074, lng: -0.1278 },
+  manchester: { lat: 53.4808, lng: -2.2426 },
+  peterborough: { lat: 52.5695, lng: -0.2405 },
+  romford: { lat: 51.5776, lng: 0.1784 },
+};
+
+function cityFallbackCoords(city: string) {
+  return CITY_COORDS[city.trim().toLowerCase()] ?? null;
+}
+
+function venueLooksLike(venue: VenueRow, hint: string) {
+  if (!hint) return false;
+  return [venue.name, venue.city, venue.address_line1, venue.address_line2, venue.postcode]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .includes(hint);
+}
+
+/** Prefer a venue that actually belongs to this campus; never pin Barking to Sutton Coldfield. */
+function pickMainVenue(
+  row: BranchRow,
+  venues: VenueRow[],
+  sunday?: ServiceRow,
+): VenueRow | undefined {
+  if (!venues.length) return undefined;
+  const hint = cityFromName(row.name).toLowerCase();
+  const sundayVenue = sunday?.venue_id
+    ? venues.find((venue) => venue.id === sunday.venue_id)
+    : undefined;
+  const matching = hint ? venues.filter((venue) => venueLooksLike(venue, hint)) : [];
+  if (matching.length) {
+    return sundayVenue && matching.includes(sundayVenue) ? sundayVenue : matching[0];
+  }
+
+  const fallback = sundayVenue ?? venues[0];
+  if (!fallback || !hint) return fallback;
+
+  const fallbackCity = (fallback.city || "").toLowerCase();
+  const cityConflicts =
+    Boolean(fallbackCity) &&
+    fallbackCity !== hint &&
+    !fallbackCity.includes(hint) &&
+    !hint.includes(fallbackCity) &&
+    !venueLooksLike(fallback, hint);
+
+  if (!cityConflicts) return fallback;
+
+  return {
+    ...fallback,
+    name: null,
+    address_line1: null,
+    address_line2: null,
+    postcode: null,
+    latitude: null,
+    longitude: null,
+    city: cityFromName(row.name) || fallback.city,
+  };
+}
+
 function toBranch(row: BranchRow): Branch {
   const venues = row.venues ?? [];
   const services = [...(row.services ?? [])]
@@ -160,10 +223,9 @@ function toBranch(row: BranchRow): Branch {
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
   const sunday = services.find((s) => (s.type ?? "").toLowerCase() === "sunday");
-  const mainVenue =
-    (sunday?.venue_id ? venues.find((v) => v.id === sunday.venue_id) : undefined) ??
-    venues[0];
+  const mainVenue = pickMainVenue(row, venues, sunday);
 
+  const city = cityFromName(row.name) || mainVenue?.city || row.slug;
   const address = [
     mainVenue?.name,
     mainVenue?.address_line1,
@@ -172,6 +234,18 @@ function toBranch(row: BranchRow): Branch {
   ]
     .filter(Boolean)
     .join(", ");
+  const resolvedAddress = address || "Location coming soon";
+  const addressMatchesCity =
+    !city ||
+    /coming soon/i.test(resolvedAddress) ||
+    resolvedAddress.toLowerCase().includes(String(city).toLowerCase());
+  const lat = addressMatchesCity ? (mainVenue?.latitude ?? 0) : 0;
+  const lng = addressMatchesCity ? (mainVenue?.longitude ?? 0) : 0;
+  const fallback = (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0))
+    ? cityFallbackCoords(String(city))
+    : null;
+  const resolvedLat = fallback ? fallback.lat : lat;
+  const resolvedLng = fallback ? fallback.lng : lng;
 
   const { pastor, pastorRole } = pastorDisplay(row.pastor_name, row.pastor_role);
 
@@ -196,12 +270,12 @@ function toBranch(row: BranchRow): Branch {
   return {
     slug: row.slug,
     name: row.name,
-    city: cityFromName(row.name) || mainVenue?.city || row.slug,
+    city,
     region: row.subtitle || mainVenue?.country || "United Kingdom",
-    address: address || "Location coming soon",
-    postcode: mainVenue?.postcode || "",
-    lat: mainVenue?.latitude ?? 0,
-    lng: mainVenue?.longitude ?? 0,
+    address: addressMatchesCity ? resolvedAddress : city || "Location coming soon",
+    postcode: addressMatchesCity ? mainVenue?.postcode || "" : "",
+    lat: resolvedLat,
+    lng: resolvedLng,
     serviceTimes: serviceTimes.length
       ? serviceTimes
       : [{ day: "Sunday", time: "TBC", label: "Service information coming soon" }],
@@ -215,7 +289,9 @@ function toBranch(row: BranchRow): Branch {
     instagram: row.instagram || "",
     blurb,
     description: row.description || blurb,
-    tags: ["Phase 2"].concat(mainVenue?.city ? [mainVenue.city] : []),
+    tags: ["Phase 2"].concat(
+      addressMatchesCity && mainVenue?.city ? [mainVenue.city] : city ? [city] : [],
+    ),
     image: resolveBranchImage(row.hero_image_url, row.slug),
     givingLink: row.giving_link,
     parkingInfo: mainVenue?.parking_info || DEFAULT_PARKING,
@@ -281,6 +357,42 @@ export function osmEmbedUrlAtZoom(branch: { lat: number; lng: number }, zoom = 1
     .map((n) => n.toFixed(5))
     .join("%2C");
   return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
+}
+
+/** Search string for Google Maps: prefer a matching address, never a mismatched city pin. */
+export function mapsQuery(branch: {
+  name: string;
+  city: string;
+  address: string;
+  postcode: string;
+  lat: number;
+  lng: number;
+}) {
+  const city = (branch.city || "").trim();
+  const address = (branch.address || "").trim();
+  const postcode = (branch.postcode || "").trim();
+  const name = (branch.name || "").trim();
+  const blob = `${address} ${postcode}`.toLowerCase();
+  const cityOk = !city || blob.includes(city.toLowerCase());
+  if (address && !/coming soon/i.test(address) && cityOk) {
+    if (city && address.toLowerCase() === city.toLowerCase()) {
+      return [name, city, postcode, "United Kingdom"].filter(Boolean).join(", ");
+    }
+    return [address, postcode].filter(Boolean).join(", ");
+  }
+  if (hasCoords(branch) && (!city || cityOk)) return `${branch.lat},${branch.lng}`;
+  return [name, city, postcode, "United Kingdom"].filter(Boolean).join(", ");
+}
+
+export function mapsEmbedUrl(branch: {
+  name: string;
+  city: string;
+  address: string;
+  postcode: string;
+  lat: number;
+  lng: number;
+}) {
+  return `https://maps.google.com/maps?q=${encodeURIComponent(mapsQuery(branch))}&z=15&output=embed`;
 }
 
 export function splitServices(services: BranchService[]) {

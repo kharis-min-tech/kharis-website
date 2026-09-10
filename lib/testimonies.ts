@@ -31,12 +31,34 @@ const FALLBACK_IMAGES = [
   "/assets/testimony-3.jpg",
 ];
 
-const HOME_STYLES: Pick<Testimonial, "color">[] = [
-  { color: "#3D5AFE" },
-  { color: "#FF2FA3" },
-  { color: "#FF8A1E" },
-  { color: "#7C9CFF" },
-  { color: "#FF5C8A" },
+const HOME_STYLES: Pick<Testimonial, "color" | "pattern" | "patternSize">[] = [
+  {
+    color: "#7c3aed",
+    pattern: "radial-gradient(#a78bfa 1.5px, transparent 1.5px)",
+    patternSize: "18px 18px",
+  },
+  {
+    color: "#c44569",
+    pattern: "repeating-linear-gradient(45deg, #f4a3b5 0px, #f4a3b5 1px, transparent 1px, transparent 14px)",
+    patternSize: "auto",
+  },
+  {
+    color: "#4f46e5",
+    pattern:
+      "url(\"data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 3l1.5 4.5h4.5l-3.75 2.75 1.5 4.5L16 12.5l-3.75 2.25 1.5-4.5L9 7.5h4.5z' fill='%234f46e5' fill-opacity='0.12'/%3E%3C/svg%3E\")",
+    patternSize: "32px 32px",
+  },
+  {
+    color: "#e85d3a",
+    pattern: "linear-gradient(#fdba74 1px, transparent 1px), linear-gradient(90deg, #fdba74 1px, transparent 1px)",
+    patternSize: "22px 22px",
+  },
+  {
+    color: "#e84393",
+    pattern:
+      "url(\"data:image/svg+xml,%3Csvg width='40' height='20' viewBox='0 0 40 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q10 0 20 10 T40 10' stroke='%23e84393' stroke-opacity='0.15' fill='none' stroke-width='1.5'/%3E%3C/svg%3E\")",
+    patternSize: "40px 20px",
+  },
 ];
 
 function displayName(row: TestimonyRow) {
@@ -56,8 +78,16 @@ async function loadPublished(): Promise<TestimonyRow[]> {
   return rows.filter((row) => SITE_WORKSPACES.includes(row.workspace as (typeof SITE_WORKSPACES)[number]));
 }
 
+const TESTIMONY_FOCUS =
+  /salvation|heal|miracle|transform|deliverance|life change|new life/i;
+
 export async function getHomeTestimonials(): Promise<Testimonial[]> {
-  const rows = (await loadPublished()).filter((row) => row.is_featured);
+  const published = await loadPublished();
+  const featured = published.filter((row) => row.is_featured);
+  const focused = featured.filter((row) =>
+    TESTIMONY_FOCUS.test(`${row.category ?? ""} ${row.short_description ?? ""} ${row.description ?? ""}`),
+  );
+  const rows = focused.length ? focused : featured;
   return rows
     .map((row, i) => {
       const style = HOME_STYLES[i % HOME_STYLES.length]!;
@@ -74,7 +104,9 @@ export async function getHomeTestimonials(): Promise<Testimonial[]> {
 }
 
 export async function getGivingTestimonials(): Promise<GivingTestimony[]> {
-  const rows = (await loadPublished()).filter((row) => row.is_featured_giving);
+  const published = await loadPublished();
+  const giving = published.filter((row) => row.is_featured_giving);
+  const rows = giving.length ? giving : published.filter((row) => row.is_featured);
 
   return rows
     .map((row, i) => {
