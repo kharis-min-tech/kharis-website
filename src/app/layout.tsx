@@ -17,6 +17,13 @@ export const metadata: Metadata = {
   title: "Kharis Church",
   description:
     "Changing the world with a touch of His grace. Find a Kharis branch near you.",
+  other: {
+    "color-scheme": "light",
+  },
+};
+
+export const viewport = {
+  colorScheme: "light" as const,
 };
 
 export default function RootLayout({
@@ -27,9 +34,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={sans.variable} suppressHydrationWarning>
       <head>
+        <meta name="color-scheme" content="light" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('kharis-site-theme');document.documentElement.dataset.theme=t==='dark'?'dark':'light';}catch(e){document.documentElement.dataset.theme='light';}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('kharis-site-theme');var d=t==='dark'?'dark':'light';document.documentElement.dataset.theme=d;document.documentElement.style.colorScheme=d;}catch(e){document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light';}})();`,
           }}
         />
       </head>

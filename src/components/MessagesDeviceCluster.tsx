@@ -7,6 +7,9 @@ type Props = {
   messages: MessageVideo[];
 };
 
+/** Focus upper-centre of 16:9 thumbs so Pastor David stays framed on device screens. */
+const FIT = "object-cover object-[center_22%]";
+
 function pick(messages: MessageVideo[], i: number) {
   return messages[i % messages.length]!;
 }
@@ -41,7 +44,7 @@ export function MessagesDeviceCluster({ messages }: Props) {
               src={tv.thumbnail}
               alt=""
               fill
-              className="object-cover object-[center_top]"
+              className={FIT}
               sizes="(max-width: 900px) 92vw, 640px"
             />
             <div className="msg-devices__tv-mark">kharis</div>
@@ -69,11 +72,11 @@ export function MessagesDeviceCluster({ messages }: Props) {
                 src={laptopHero.thumbnail}
                 alt=""
                 fill
-                className="object-cover object-[center_top]"
+                className={FIT}
                 sizes="400px"
               />
               <div className="msg-devices__lap-hero-copy">
-                <em>Latest</em>
+                <em>Teachings</em>
                 <p>{cleanTitle(laptopHero.title)}</p>
               </div>
             </div>
@@ -86,7 +89,7 @@ export function MessagesDeviceCluster({ messages }: Props) {
                       src={m.thumbnail}
                       alt=""
                       fill
-                      className="object-cover object-[center_top]"
+                      className={FIT}
                       sizes="80px"
                     />
                   </span>
@@ -109,7 +112,7 @@ export function MessagesDeviceCluster({ messages }: Props) {
               src={tablet.thumbnail}
               alt=""
               fill
-              className="object-cover"
+              className={FIT}
               sizes="260px"
             />
           </div>
@@ -122,7 +125,7 @@ export function MessagesDeviceCluster({ messages }: Props) {
                     src={m.thumbnail}
                     alt=""
                     fill
-                    className="object-cover object-[center_top]"
+                    className={FIT}
                     sizes="60px"
                   />
                 </span>

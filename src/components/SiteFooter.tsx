@@ -85,11 +85,6 @@ export function SiteFooter({ tone }: Props) {
                   Testimony Form
                 </Link>
               </li>
-              <li>
-                <Link href="/life/departments" className={linkHover}>
-                  Departments
-                </Link>
-              </li>
             </ul>
           </div>
           <div className="site-footer__col">
@@ -109,11 +104,6 @@ export function SiteFooter({ tone }: Props) {
                 <a href="https://kharis.org/" className={linkHover}>
                   KP2
                 </a>
-              </li>
-              <li>
-                <Link href="/life/k-group" className={linkHover}>
-                  KGroup
-                </Link>
               </li>
               <li>
                 <Link href="/events" className={linkHover}>

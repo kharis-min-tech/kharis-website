@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MessageHoverTile } from "@/components/MessageHoverTile";
@@ -47,19 +47,19 @@ const ORIGINAL_WALL_POSTERS: MessageVideo[] = [
 const WHY_FAQ = [
   {
     q: "Why should I listen to messages?",
-    a: "Faith comes by hearing, and hearing by the word of God (Romans 10:17). These teachings strengthen what you believe and point you to Christ.",
+    a: "The Bible says faith comes by hearing, and hearing by the Word of God. This shows that faith is not a one-time event but a continuous process. Good preaching does not just build faith. It also helps spiritual maturity, guarding believers against being led astray by false teaching.",
   },
   {
     q: "What makes Kharis messages different?",
-    a: "They are Christ-centred, Bible-rooted teachings from Pastor David Antwi: clear, living Word for everyday life, discipleship and revival.",
+    a: "They are Christ-centric, text-driven, and gospel-saturated, with a focus on what the Bible is actually saying and revealing Christ through it, helping you to become a firm, sound believer.",
   },
   {
     q: "Where can I watch?",
-    a: "Watch on this Messages page or YouTube. Prefer audio? Listen on SoundCloud, Apple Podcasts, Spotify or Amazon Music.",
+    a: "Watch on this Messages page or on YouTube. Prefer audio? Listen on SoundCloud, Apple Podcasts, Spotify, or Amazon Music.",
   },
   {
     q: "How often are new messages added?",
-    a: "New teachings are added regularly from Sunday services and series. Use search above or the rows below to find the newest and older archive messages.",
+    a: "New teachings are added weekly from Sunday services and series. Browse the rows below for the newest and older archive messages.",
   },
   {
     q: "Can I go deeper in the Word at home?",
@@ -67,23 +67,91 @@ const WHY_FAQ = [
   },
   {
     q: "Is Scripture really for my situation?",
-    a: "All Scripture is God-breathed and useful for teaching, correcting and training in righteousness (2 Timothy 3:16). The Word is living and active (Hebrews 4:12).",
+    a: "All Scripture is God-breathed and useful for teaching, correcting, and training in righteousness (2 Timothy 3:16). The Word is living and active (Hebrews 4:12).",
   },
 ];
 
-function scoreMatch(query: string, title: string) {
-  const q = query.trim().toLowerCase();
-  if (!q) return 0;
-  const t = title.toLowerCase();
-  if (t === q) return 100;
-  if (t.startsWith(q)) return 90;
-  if (t.includes(q)) return 70;
-  const tokens = q.split(/\s+/).filter(Boolean);
-  let hit = 0;
-  for (const tok of tokens) {
-    if (t.includes(tok)) hit += 1;
+/** Curated Pastor David posters for Listen Anywhere (maxres quality, no “God” titles). */
+const LISTEN_DEVICE_POSTERS: MessageVideo[] = [
+  {
+    id: "AE2AXoQetmc",
+    title: "The Mystery Of Fasting | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/AE2AXoQetmc/maxresdefault.jpg",
+    publishedAt: "2019-01-13T00:00:00Z",
+  },
+  {
+    id: "9uYPZYrTHIA",
+    title: "Mercy, Repentance and Baptism | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/9uYPZYrTHIA/maxresdefault.jpg",
+    publishedAt: "2020-06-14T00:00:00Z",
+  },
+  {
+    id: "NOiT8EPTMrg",
+    title: "The Saving Power Of Baptism | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/NOiT8EPTMrg/maxresdefault.jpg",
+    publishedAt: "2021-04-27T00:00:00Z",
+  },
+  {
+    id: "ys4CMmykRh8",
+    title: "End Of Fast Impartation Service | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/ys4CMmykRh8/maxresdefault.jpg",
+  },
+  {
+    id: "CkFM6auEc_g",
+    title: "The Glorious Cross - Good Friday | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/CkFM6auEc_g/maxresdefault.jpg",
+    publishedAt: "2026-04-18T00:00:00Z",
+  },
+  {
+    id: "71yzF9EfC3g",
+    title: "The Implication Of The Virgin Birth | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/71yzF9EfC3g/maxresdefault.jpg",
+    publishedAt: "2025-12-21T00:00:00Z",
+  },
+  {
+    id: "JFRZoVbHaMg",
+    title: "THE LOGOS | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/JFRZoVbHaMg/maxresdefault.jpg",
+    publishedAt: "2026-06-01T00:00:00Z",
+  },
+  {
+    id: "8mANIl_heyI",
+    title: "Should We Continue In Sin? | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/8mANIl_heyI/maxresdefault.jpg",
+    publishedAt: "2026-05-25T00:00:00Z",
+  },
+];
+
+function pickListenDevicePosters(archive: MessageVideo[]): MessageVideo[] {
+  const skip = (t: string) =>
+    t.includes("just men") ||
+    t.includes("fragrance") ||
+    /\bgod\b/.test(t);
+
+  const fromArchive = [...archive]
+    .filter((m) => {
+      const t = m.title.toLowerCase();
+      return t.includes("david antwi") && !skip(t);
+    })
+    .sort((a, b) => {
+      const da = a.publishedAt ? Date.parse(a.publishedAt) : Number.POSITIVE_INFINITY;
+      const db = b.publishedAt ? Date.parse(b.publishedAt) : Number.POSITIVE_INFINITY;
+      return da - db;
+    });
+
+  const picked: MessageVideo[] = [];
+  const seen = new Set<string>();
+  for (const m of [...LISTEN_DEVICE_POSTERS, ...fromArchive]) {
+    if (seen.has(m.id)) continue;
+    if (skip(m.title.toLowerCase())) continue;
+    seen.add(m.id);
+    picked.push({
+      ...m,
+      thumbnail: `https://i.ytimg.com/vi/${m.id}/maxresdefault.jpg`,
+    });
+    if (picked.length >= 8) break;
   }
-  return hit ? 40 + (hit / tokens.length) * 25 : 0;
+  return picked.length ? picked : LISTEN_DEVICE_POSTERS;
 }
 
 type Props = {
@@ -94,26 +162,6 @@ type Props = {
 
 export function MessagesExperience({ messages, latest = [] }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [query, setQuery] = useState("");
-  const [yearFilter, setYearFilter] = useState<number | "all">("all");
-
-  const availableYears = useMemo(() => {
-    const years = new Set<number>();
-    for (const m of messages) {
-      if (m.publishedAt) {
-        years.add(new Date(m.publishedAt).getFullYear());
-      }
-    }
-    return [...years].sort((a, b) => b - a);
-  }, [messages]);
-
-  const yearFiltered = useMemo(() => {
-    if (yearFilter === "all") return messages;
-    return messages.filter((m) => {
-      if (!m.publishedAt) return false;
-      return new Date(m.publishedAt).getFullYear() === yearFilter;
-    });
-  }, [messages, yearFilter]);
 
   const wall = useMemo(() => {
     const base = [...ORIGINAL_WALL_POSTERS];
@@ -123,45 +171,18 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
     return base.slice(0, 9);
   }, []);
 
-  const results = useMemo(() => {
-    const q = query.trim();
-    if (!q) return [];
-    return [...yearFiltered]
-      .map((m) => ({ m, score: scoreMatch(q, m.title) }))
-      .filter((x) => x.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 12)
-      .map((x) => x.m);
-  }, [yearFiltered, query]);
-
   const topRow = useMemo(() => latest.slice(0, 4), [latest]);
 
   const listenMessages = useMemo(
-    () => (latest.length ? latest : messages.slice(0, 5)),
-    [latest, messages],
+    () => pickListenDevicePosters(messages),
+    [messages],
   );
 
   const shelves = useMemo(() => {
     const taken = new Set(topRow.map((m) => m.id));
-    const rest = yearFiltered.filter((m) => !taken.has(m.id));
-
-    if (yearFilter !== "all") {
-      if (!rest.length) return [];
-      const rows: MessageVideo[][] = [];
-      for (let i = 0; i < rest.length; i += 4) {
-        rows.push(rest.slice(i, i + 4));
-      }
-      return [
-        {
-          id: `year-${yearFilter}`,
-          title: `Messages from ${yearFilter}`,
-          rows,
-        },
-      ];
-    }
-
+    const rest = messages.filter((m) => !taken.has(m.id));
     return buildMessageShelves(rest);
-  }, [yearFiltered, topRow, yearFilter]);
+  }, [messages, topRow]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -268,7 +289,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         </svg>
       </div>
 
-      <section className="msg-hub__hero" aria-label="Search messages">
+      <section className="msg-hub__hero" aria-label="Kharis messages">
         <div className="msg-hub__wall" aria-hidden>
           {wall.map((msg, i) => (
             <div key={`${msg.id}-${i}`} className="msg-hub__wall-cell">
@@ -293,68 +314,6 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
             <br />
             <span>feed your faith.</span>
           </h1>
-
-          <label className="msg-hub__search">
-            <span className="sr-only">Search messages</span>
-            <svg viewBox="0 0 24 24" className="msg-hub__search-icon" aria-hidden>
-              <path
-                fill="currentColor"
-                d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4 4a1 1 0 0 1-1.4 1.4l-4-4A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"
-              />
-            </svg>
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search any message…"
-              autoComplete="off"
-            />
-            {query && (
-              <button
-                type="button"
-                className="msg-hub__search-clear"
-                onClick={() => setQuery("")}
-              >
-                Clear
-              </button>
-            )}
-          </label>
-
-          <div className="msg-hub__years" role="group" aria-label="Filter by year">
-            <button
-              type="button"
-              className={`msg-hub__year${yearFilter === "all" ? " is-on" : ""}`}
-              onClick={() => setYearFilter("all")}
-            >
-              All years
-            </button>
-            {availableYears.map((year) => (
-              <button
-                key={year}
-                type="button"
-                className={`msg-hub__year${yearFilter === year ? " is-on" : ""}`}
-                onClick={() => setYearFilter(year)}
-              >
-                {year}
-              </button>
-            ))}
-          </div>
-
-          {query.trim() && (
-            <div className="msg-hub__results" role="listbox" aria-label="Search results">
-              {results.length === 0 ? (
-                <p className="msg-hub__empty">No matches found.</p>
-              ) : (
-                results.map((msg) => (
-                  <MessageHoverTile
-                    key={msg.id}
-                    message={msg}
-                    className="msg-tile--result"
-                  />
-                ))
-              )}
-            </div>
-          )}
         </div>
       </section>
 

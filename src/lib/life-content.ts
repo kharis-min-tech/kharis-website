@@ -135,7 +135,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
       },
     ],
     next: "fasting",
-    cta: { label: "Speak to your branch", href: "/contact" },
+    cta: { label: "Join the family", href: "/life?open=baptism&followup=1" },
   },
   {
     slug: "fasting",
@@ -170,7 +170,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
       },
     ],
     next: "marriage",
-    cta: { label: "Join us in prayer", href: "/events" },
+    cta: { label: "Join us in prayer", href: "/locations" },
   },
   {
     slug: "marriage",
@@ -247,7 +247,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     title: "Departments",
     shortTitle: "Departments",
     badge: "Serve",
-    href: LIFE_DEPARTMENTS_URL,
+    href: "/life/departments",
     card: "Serving is part of our worship. From ushers to music to hospitality, every believer has a role in God’s house.",
     image: LIFE_SERVE_IMAGE,
     imageAlt: "Serving together at Kharis",
@@ -276,11 +276,21 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
         body: "The Kharis we see equips, enables, empowers and releases ordinary people to live extraordinary lives, helping them discover the gifts and talents God gave them. Get in touch with your local branch to join a department.",
       },
     ],
-    cta: { label: "Get involved", href: LIFE_DEPARTMENTS_URL },
+    cta: { label: "Discover your department", href: "/life/departments" },
   },
 ] as const;
 
-export const LIFE_PHOTO_CARDS = LIFE_CATEGORIES.filter((c) => c.layout === "photo");
+/** Cards shown on the Life landing grid (K-Group / marriage hidden from UI). */
+export const LIFE_VISIBLE_SLUGS = new Set<LifeSlug>([
+  "baptism",
+  "fasting",
+  "children",
+  "departments",
+]);
+
+export const LIFE_PHOTO_CARDS = LIFE_CATEGORIES.filter(
+  (c) => c.layout === "photo" && LIFE_VISIBLE_SLUGS.has(c.slug),
+);
 
 export function lifeBySlug(slug: string): LifeCategory | undefined {
   return LIFE_CATEGORIES.find((c) => c.slug === slug);

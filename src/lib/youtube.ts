@@ -468,6 +468,89 @@ export async function fetchLatestMessages(
   return picked.length ? picked : MESSAGE_FALLBACK.slice(0, limit);
 }
 
+export type HeroPreachClip = {
+  id: string;
+  title: string;
+  start: number;
+  duration: number;
+  thumbnail: string;
+};
+
+function isPreachTitle(title: string) {
+  const t = title.toLowerCase();
+  if (t.includes("just men") || t.includes("fragrance")) return false;
+  if (t.includes("music video") || t.includes("worship night")) return false;
+  if (
+    t.includes("choir") ||
+    t.includes("worship song") ||
+    t.includes("praise and worship") ||
+    t.includes("intro") ||
+    t.includes("trailer") ||
+    t.includes("announcement")
+  ) {
+    return false;
+  }
+  return t.includes("david antwi");
+}
+
+function clipWindowFor(id: string, index: number) {
+  // Deep mid-sermon only (≈16–22 min) — never cold open / intro / choir
+  const starts = [1260, 1140, 1200, 1080, 1020, 1320, 1100, 960];
+  const start = starts[index % starts.length]!;
+  return { start, duration: 5 };
+}
+
+/** Short muted hero clips: Pastor David preaching at Kharis / different messages. */
+export async function fetchHeroPreachClips(
+  limit = 8,
+): Promise<HeroPreachClip[]> {
+  const ENERGY_IDS = [
+    "KBFfpU0mX2U",
+    "6Y15Ja9E2hw",
+    "u4vxbcZhmUo",
+    "pbP3soO9lzg",
+    "NgJZ2RmkuXs",
+    "ys4CMmykRh8",
+    "CkFM6auEc_g",
+    "NOiT8EPTMrg",
+  ];
+
+  const all = await fetchPastorMessages(100);
+  const byId = new Map(all.map((m) => [m.id, m]));
+
+  const fromEnergy = ENERGY_IDS.map((id, i) => {
+    const m = byId.get(id);
+    const { start, duration } = clipWindowFor(id, i);
+    return {
+      id,
+      title: m?.title || id,
+      start,
+      duration,
+      thumbnail: `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
+    } satisfies HeroPreachClip;
+  });
+
+  if (fromEnergy.length >= limit) return fromEnergy.slice(0, limit);
+
+  const preaching = all.filter((m) => isPreachTitle(m.title));
+  const seen = new Set(fromEnergy.map((c) => c.id));
+  for (const m of preaching) {
+    if (fromEnergy.length >= limit) break;
+    if (seen.has(m.id)) continue;
+    seen.add(m.id);
+    const { start, duration } = clipWindowFor(m.id, fromEnergy.length);
+    fromEnergy.push({
+      id: m.id,
+      title: m.title,
+      start,
+      duration,
+      thumbnail: `https://i.ytimg.com/vi/${m.id}/maxresdefault.jpg`,
+    });
+  }
+
+  return fromEnergy;
+}
+
 function parseDuration(iso: string): number {
   const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!m) return 0;

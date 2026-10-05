@@ -17,14 +17,19 @@ const EARLY_SERIES: Array<{
     title: "The Issues of Life",
     match: (t) => t.includes("issues of life"),
   },
-  {
-    id: "podcasts",
-    title: "Podcasts",
-    match: (t) =>
-      t.includes("just men") ||
-      t.includes("fragrance"),
-  },
 ];
+
+const JUST_MEN_SERIES = {
+  id: "just-men",
+  title: "Just Men",
+  match: (t: string) => t.includes("just men"),
+};
+
+const FRAGRANCE_SERIES = {
+  id: "fragrance",
+  title: "Fragrance",
+  match: (t: string) => t.includes("fragrance"),
+};
 
 const LATE_SERIES: Array<{
   id: string;
@@ -87,7 +92,7 @@ function pushSeries(
 
 /**
  * Shelves under Latest:
- * Issues of Life → Podcasts (Just Men + Fragrance) → year packs →
+ * Issues of Life → year message packs → Just Men → Fragrance →
  * Let the Bible Speak last (small set).
  */
 export function buildMessageShelves(
@@ -98,42 +103,18 @@ export function buildMessageShelves(
   const used = new Set<string>();
 
   for (const series of EARLY_SERIES) {
-    if (series.id === "podcasts") {
-      const picked: MessageVideo[] = [];
-      for (const m of pool) {
-        if (used.has(m.id)) continue;
-        if (!series.match(m.title.toLowerCase())) continue;
-        picked.push(m);
-      }
-      const byYear = new Map<number, MessageVideo[]>();
-      for (const m of picked) {
-        const y = yearOf(m) ?? 2026;
-        const list = byYear.get(y) ?? [];
-        list.push(m);
-        byYear.set(y, list);
-      }
-      for (const year of [...byYear.keys()].sort((a, b) => b - a)) {
-        const rows = chunkRows(byYear.get(year) || []);
-        markShown(rows, used);
-        if (rows.length) {
-          shelves.push({
-            id: `podcasts-${year}`,
-            title: `Podcasts ${year}`,
-            rows,
-          });
-        }
-      }
-      continue;
-    }
     pushSeries(shelves, used, pool, series);
   }
+
+  const holdBack = (t: string) =>
+    JUST_MEN_SERIES.match(t) ||
+    FRAGRANCE_SERIES.match(t) ||
+    LATE_SERIES.some((s) => s.match(t));
 
   const years = new Set<number>();
   for (const m of pool) {
     if (used.has(m.id)) continue;
-    // Hold back late-series titles for the final shelf
-    const t = m.title.toLowerCase();
-    if (LATE_SERIES.some((s) => s.match(t))) continue;
+    if (holdBack(m.title.toLowerCase())) continue;
     const y = yearOf(m);
     if (y) years.add(y);
   }
@@ -143,8 +124,7 @@ export function buildMessageShelves(
     const picked: MessageVideo[] = [];
     for (const m of pool) {
       if (used.has(m.id)) continue;
-      const t = m.title.toLowerCase();
-      if (LATE_SERIES.some((s) => s.match(t))) continue;
+      if (holdBack(m.title.toLowerCase())) continue;
       if (yearOf(m) !== year) continue;
       picked.push(m);
     }
@@ -162,8 +142,7 @@ export function buildMessageShelves(
   const leftover: MessageVideo[] = [];
   for (const m of pool) {
     if (used.has(m.id)) continue;
-    const t = m.title.toLowerCase();
-    if (LATE_SERIES.some((s) => s.match(t))) continue;
+    if (holdBack(m.title.toLowerCase())) continue;
     leftover.push(m);
   }
   const leftoverRows = chunkRows(leftover);
@@ -176,9 +155,44 @@ export function buildMessageShelves(
     });
   }
 
+  pushPodcastShelf(shelves, used, pool, JUST_MEN_SERIES);
+  pushPodcastShelf(shelves, used, pool, FRAGRANCE_SERIES);
+
   for (const series of LATE_SERIES) {
     pushSeries(shelves, used, pool, series);
   }
 
   return shelves;
+}
+
+function pushPodcastShelf(
+  shelves: MessageShelf[],
+  used: Set<string>,
+  pool: MessageVideo[],
+  series: { id: string; title: string; match: (t: string) => boolean },
+) {
+  const picked: MessageVideo[] = [];
+  for (const m of pool) {
+    if (used.has(m.id)) continue;
+    if (!series.match(m.title.toLowerCase())) continue;
+    picked.push(m);
+  }
+  const byYear = new Map<number, MessageVideo[]>();
+  for (const m of picked) {
+    const y = yearOf(m) ?? 2026;
+    const list = byYear.get(y) ?? [];
+    list.push(m);
+    byYear.set(y, list);
+  }
+  for (const year of [...byYear.keys()].sort((a, b) => b - a)) {
+    const rows = chunkRows(byYear.get(year) || []);
+    markShown(rows, used);
+    if (rows.length) {
+      shelves.push({
+        id: `${series.id}-${year}`,
+        title: `${series.title} ${year}`,
+        rows,
+      });
+    }
+  }
 }

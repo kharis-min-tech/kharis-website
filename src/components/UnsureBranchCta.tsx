@@ -36,7 +36,7 @@ export function UnsureBranchCta() {
                 Contact Us
               </a>
               <a
-                href="#near-you"
+                href="/locations"
                 className="unsure-panel__btn unsure-panel__btn--ghost"
               >
                 Find a Branch

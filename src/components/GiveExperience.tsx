@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Check,
@@ -11,7 +10,6 @@ import {
   HeartHandshake,
   Landmark,
   Smartphone,
-  Sparkles,
   UsersRound,
   X,
   type LucideIcon,
@@ -22,6 +20,8 @@ import {
   BANK,
   BANK_ACCRA,
   MOMO,
+  ONLINE_BRANCHES,
+  ONLINE_GIVE_URL,
   TEXT_GIVE,
 } from "@/lib/giving";
 
@@ -73,7 +73,11 @@ function CopyRow({ label, value }: { label: string; value: string }) {
         <p className="give-copy__value">{value}</p>
       </div>
       <button type="button" className="give-copy__btn" onClick={copy}>
-        {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+        {copied ? (
+          <Check className="h-4 w-4" aria-hidden />
+        ) : (
+          <Copy className="h-4 w-4" aria-hidden />
+        )}
         {copied ? "Copied" : "Copy"}
       </button>
     </div>
@@ -98,14 +102,22 @@ function IconWell({
 
 export function GiveExperience() {
   const reduce = useReducedMotion();
-  const [flow, setFlow] = useState<Flow | null>(null);
+  const [flow, setFlow] = useState<Flow | null>("bank");
   const [fromBuilding, setFromBuilding] = useState(false);
   const [amount, setAmount] = useState<(typeof TEXT_AMOUNTS)[number]>(10);
+  const [branch, setBranch] = useState<(typeof ONLINE_BRANCHES)[number]>(
+    ONLINE_BRANCHES[0]!,
+  );
 
   const smsHref = useMemo(() => {
     const body = encodeURIComponent(`${TEXT_GIVE.keyword} ${amount}`);
     return `sms:${TEXT_GIVE.number}?&body=${body}`;
   }, [amount]);
+
+  const onlineHref = useMemo(() => {
+    const q = encodeURIComponent(branch);
+    return `${ONLINE_GIVE_URL}?branch=${q}`;
+  }, [branch]);
 
   const openFlow = (next: Flow, building = false) => {
     setFromBuilding(building);
@@ -113,7 +125,10 @@ export function GiveExperience() {
     window.setTimeout(() => {
       document
         .getElementById("give-flow")
-        ?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+        ?.scrollIntoView({
+          behavior: reduce ? "auto" : "smooth",
+          block: "center",
+        });
     }, 120);
   };
 
@@ -121,11 +136,14 @@ export function GiveExperience() {
     const applyHash = () => {
       if (window.location.hash !== "#building") return;
       setFromBuilding(true);
-      setFlow("online");
+      setFlow("bank");
       window.setTimeout(() => {
         document
           .getElementById("give-flow")
-          ?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+          ?.scrollIntoView({
+            behavior: reduce ? "auto" : "smooth",
+            block: "start",
+          });
       }, 60);
     };
     applyHash();
@@ -151,63 +169,13 @@ export function GiveExperience() {
             <span className="give-hero__gold">powers the mission</span>
           </h1>
           <p>
-            Kharis Phase 2 is about expanding our reach and deepening our
-            impact. Every seed sown directly supports community outreach,
-            digital fellowship, and regional development.
+            Giving at Kharis fuels worship, discipleship, and care for people.
+            Kharis Phase 2 is our students and young people&apos;s expression
+            of the same mission: raising the next generation to know God and
+            serve their generation.
           </p>
-          <button
-            type="button"
-            className="give-cta"
-            onClick={() => openFlow("online")}
-          >
-            Give online now
-          </button>
         </Reveal>
       </header>
-
-      <section className="give-why" aria-labelledby="why-we-give">
-        <Reveal className="give-why__intro">
-          <h2 id="why-we-give" className="give-why__title">
-            <span className="give-why__mark">Why</span> we give
-          </h2>
-          <p>
-            Giving is an act of worship, faith, and love. It fuels the mission,
-            cares for people, and plants seeds for the next generation.
-          </p>
-        </Reveal>
-
-        <RevealStagger className="give-why__grid" stagger={0.07}>
-          {WHY.map((card) => (
-            <RevealItem
-              key={card.title}
-              className={`give-why__card give-why__card--${card.tone}`}
-              variant="up"
-            >
-              <IconWell Glyph={card.Glyph} tone={card.well} />
-              <h3>{card.title}</h3>
-              <p>{card.text}</p>
-            </RevealItem>
-          ))}
-
-          <RevealItem variant="up" className="h-full">
-            <Link
-              href="/about"
-              className="give-why__card give-why__card--mist give-why__card--link"
-            >
-              <IconWell Glyph={Sparkles} />
-              <h3>Advance the Mission</h3>
-              <p>
-                From local outreach to media and new branches, giving sends the
-                message of Kharis further.
-              </p>
-              <span className="give-why__go">
-                About us
-                <Icon name="arrow" className="h-3.5 w-3.5" />
-              </span>
-            </Link>
-          </RevealItem>
-        </RevealStagger>
-      </section>
 
       <section id="ways" className="give-methods" aria-labelledby="ways-to-give">
         <Reveal className="give-methods__intro">
@@ -216,25 +184,66 @@ export function GiveExperience() {
           </h2>
           <p>
             Choose the method that is most convenient for you. All transactions
-            are securely encrypted.
+            are securely handled.
+          </p>
+          <p className="give-methods__note">
+            Every gift, large or small, is an act of worship. Thank you for
+            partnering with Kharis as we change the world with a touch of His
+            grace.
           </p>
         </Reveal>
 
         <RevealStagger className="give-methods__grid" stagger={0.08}>
+          <RevealItem className="give-way give-way--featured" variant="up">
+            <span className="give-way__badge">Recommended</span>
+            <IconWell Glyph={Landmark} tone="light" />
+            <h3>Bank transfer</h3>
+            <p>
+              Direct deposits for tithes, offerings, or structured monthly
+              transfers. Clear details for the UK and Ghana.
+            </p>
+            <button
+              type="button"
+              className="give-cta give-cta--on-dark"
+              onClick={() => openFlow("bank")}
+            >
+              View details
+            </button>
+          </RevealItem>
+
           <RevealItem className="give-way" variant="up">
             <IconWell Glyph={CreditCard} />
             <h3>Online portal</h3>
             <p>
-              A secure, one-click way to give using your credit card or PayPal
-              account.
+              Choose your branch and continue to the secure Kharis giving page.
             </p>
-            <button type="button" className="give-cta" onClick={() => openFlow("online")}>
-              Give online
-            </button>
+            <label className="give-branch-select">
+              <span>Branch</span>
+              <select
+                value={branch}
+                onChange={(e) =>
+                  setBranch(e.target.value as (typeof ONLINE_BRANCHES)[number])
+                }
+              >
+                {ONLINE_BRANCHES.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <a
+              href={onlineHref}
+              target="_blank"
+              rel="noreferrer"
+              className="give-cta"
+            >
+              Continue to give
+            </a>
           </RevealItem>
 
-          <RevealItem className="give-way give-way--featured" variant="up">
-            <IconWell Glyph={Smartphone} tone="light" />
+          <RevealItem className="give-way" variant="up">
+            <IconWell Glyph={Smartphone} />
             <h3>Mobile app</h3>
             <p>
               Download the Kharis Hub app. Manage recurring giving and track
@@ -242,23 +251,10 @@ export function GiveExperience() {
             </p>
             <button
               type="button"
-              className="give-cta give-cta--on-dark"
+              className="give-cta give-cta--quiet"
               onClick={() => openFlow("app")}
             >
               Get the app
-            </button>
-          </RevealItem>
-
-          <RevealItem className="give-way" variant="up">
-            <IconWell Glyph={Landmark} />
-            <h3>Bank transfer</h3>
-            <p>Direct deposits for large donations or structured monthly transfers.</p>
-            <button
-              type="button"
-              className="give-cta give-cta--quiet"
-              onClick={() => openFlow("bank")}
-            >
-              View details
             </button>
           </RevealItem>
         </RevealStagger>
@@ -270,9 +266,15 @@ export function GiveExperience() {
               <motion.div
                 key={flow}
                 className="give-panel"
-                initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(8px)" }}
+                initial={
+                  reduce ? false : { opacity: 0, y: 24, filter: "blur(8px)" }
+                }
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={reduce ? undefined : { opacity: 0, y: -16, filter: "blur(6px)" }}
+                exit={
+                  reduce
+                    ? undefined
+                    : { opacity: 0, y: -16, filter: "blur(6px)" }
+                }
                 transition={{ duration: 0.42, ease: panelEase }}
               >
                 <div className="give-panel__top">
@@ -304,7 +306,10 @@ export function GiveExperience() {
                             : "Transfer your tithe or offering directly using these bank details."}
                       </p>
                       <CopyRow label="Account name" value={BANK.accountName} />
-                      <CopyRow label="Account number" value={BANK.accountNumber} />
+                      <CopyRow
+                        label="Account number"
+                        value={BANK.accountNumber}
+                      />
                       <CopyRow label="Sort code" value={BANK.sortCode} />
                       <CopyRow label="IBAN" value={BANK.iban} />
                       <CopyRow label="SWIFT / BIC" value={BANK.swift} />
@@ -312,8 +317,14 @@ export function GiveExperience() {
                     <div className="give-panel__text">
                       <h3>Ghana (CalBank)</h3>
                       <p>For giving from Ghana, use the CalBank details below.</p>
-                      <CopyRow label="Account name" value={BANK_ACCRA.accountName} />
-                      <CopyRow label="Account number" value={BANK_ACCRA.accountNumber} />
+                      <CopyRow
+                        label="Account name"
+                        value={BANK_ACCRA.accountName}
+                      />
+                      <CopyRow
+                        label="Account number"
+                        value={BANK_ACCRA.accountNumber}
+                      />
                       <CopyRow label="Bank" value={BANK_ACCRA.bank} />
                       <CopyRow label="SWIFT / BIC" value={BANK_ACCRA.swift} />
                     </div>
@@ -367,22 +378,48 @@ export function GiveExperience() {
                     <div>
                       <h3>Kharis Ministries</h3>
                       <p>
-                        Direct deposits for large donations or structured monthly
-                        transfers. Use these details from your own bank.
+                        {fromBuilding
+                          ? "Transfer to the building fund using these bank details. Please use your name and 'Building Fund' as the reference."
+                          : "Direct deposits for tithes, offerings, or structured monthly transfers. Use these details from your own bank."}
                       </p>
                       <CopyRow label="Account name" value={BANK.accountName} />
-                      <CopyRow label="Account number" value={BANK.accountNumber} />
+                      <CopyRow
+                        label="Account number"
+                        value={BANK.accountNumber}
+                      />
                       <CopyRow label="Sort code" value={BANK.sortCode} />
                       <CopyRow label="IBAN" value={BANK.iban} />
                       <CopyRow label="SWIFT / BIC" value={BANK.swift} />
                     </div>
                     <div className="give-panel__text">
+                      <h3>Ghana (CalBank)</h3>
+                      <p>For giving from Ghana, use the CalBank details below.</p>
+                      <CopyRow
+                        label="Account name"
+                        value={BANK_ACCRA.accountName}
+                      />
+                      <CopyRow
+                        label="Account number"
+                        value={BANK_ACCRA.accountNumber}
+                      />
+                      <CopyRow label="Bank" value={BANK_ACCRA.bank} />
+                      <CopyRow label="SWIFT / BIC" value={BANK_ACCRA.swift} />
+                    </div>
+                    <div className="give-panel__text">
                       <h3>Or text (UK)</h3>
                       <p>
-                        Text <strong>{TEXT_GIVE.keyword} {amount}</strong> to{" "}
-                        <strong>{TEXT_GIVE.number}</strong>. Maximum £{TEXT_GIVE.maxPounds}.
+                        Text{" "}
+                        <strong>
+                          {TEXT_GIVE.keyword} {amount}
+                        </strong>{" "}
+                        to <strong>{TEXT_GIVE.number}</strong>. Maximum £
+                        {TEXT_GIVE.maxPounds}.
                       </p>
-                      <div className="give-amounts" role="group" aria-label="Amount">
+                      <div
+                        className="give-amounts"
+                        role="group"
+                        aria-label="Amount"
+                      >
                         {TEXT_AMOUNTS.map((n) => (
                           <button
                             key={n}
@@ -409,6 +446,32 @@ export function GiveExperience() {
         </div>
       </section>
 
+      <section className="give-why" aria-labelledby="why-we-give">
+        <Reveal className="give-why__intro">
+          <h2 id="why-we-give" className="give-why__title">
+            <span className="give-why__mark">Why</span> we give
+          </h2>
+          <p>
+            Giving is an act of worship, faith, and love. It fuels the mission,
+            cares for people, and plants seeds for the next generation.
+          </p>
+        </Reveal>
+
+        <RevealStagger className="give-why__grid" stagger={0.07}>
+          {WHY.map((card) => (
+            <RevealItem
+              key={card.title}
+              className={`give-why__card give-why__card--${card.tone}`}
+              variant="up"
+            >
+              <IconWell Glyph={card.Glyph} tone={card.well} />
+              <h3>{card.title}</h3>
+              <p>{card.text}</p>
+            </RevealItem>
+          ))}
+        </RevealStagger>
+      </section>
+
       <section className="give-close" aria-labelledby="ready-to-give">
         <Reveal className="give-banner">
           <div className="give-banner__shapes" aria-hidden>
@@ -418,29 +481,32 @@ export function GiveExperience() {
             <span className="unsure-shape unsure-shape--ring" />
           </div>
           <div className="give-banner__content">
-            <p className="give-banner__eyebrow">Still deciding?</p>
+            <p className="give-banner__eyebrow">Partner with the mission</p>
             <h2 id="ready-to-give">Ready to make a difference?</h2>
             <p>
-              Join hundreds of others who are investing in the next phase of our
-              journey. Your gift, regardless of size, makes a massive impact.
+              Your gift helps Kharis preach Christ, care for people, and raise
+              the next generation. Thank you for sowing into what God is doing
+              among us.
             </p>
             <div className="give-banner__actions">
               <button
                 type="button"
                 className="unsure-panel__btn unsure-panel__btn--solid"
-                onClick={() => openFlow("online")}
+                onClick={() => openFlow("bank")}
               >
-                Give now
+                Give by bank transfer
               </button>
               <button
                 type="button"
                 className="unsure-panel__btn unsure-panel__btn--ghost"
                 onClick={() => openFlow("monthly")}
               >
-                Give monthly
+                Set up monthly
               </button>
             </div>
-            <p className="give-banner__foot">Kharis Ministries · Charity number 1139291</p>
+            <p className="give-banner__foot">
+              Kharis Ministries · Charity number 1139291
+            </p>
           </div>
         </Reveal>
       </section>

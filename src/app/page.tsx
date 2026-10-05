@@ -1,5 +1,6 @@
 import { BuildHouseSection } from "@/components/BuildHouseSection";
 import { Hero } from "@/components/Hero";
+import { HomeSiteSkeleton } from "@/components/HomeSiteSkeleton";
 import { KnowUsStack } from "@/components/KnowUsStack";
 import { LatestMessages } from "@/components/LatestMessages";
 import { MissionSection } from "@/components/MissionSection";
@@ -10,24 +11,16 @@ import { getTestimonies } from "@/lib/testimonies";
 import { UnsureBranchCta } from "@/components/UnsureBranchCta";
 import { VisionSection } from "@/components/VisionSection";
 import { VisitSection } from "@/components/VisitSection";
-import { fetchBranchSlides } from "@/lib/branch-slides";
+import { CHARACTER_SLIDES } from "@/lib/branch-slides";
 import { fetchLatestMessages, type MessageVideo } from "@/lib/youtube";
-import type { BranchSlide } from "@/lib/branch-slides";
 
 export default async function Home() {
   let messages: MessageVideo[] = [];
-  let branchSlides: BranchSlide[] = [];
 
   try {
-    const result = await Promise.all([
-      fetchLatestMessages(5),
-      fetchBranchSlides(),
-    ]);
-    messages = result[0] ?? [];
-    branchSlides = result[1] ?? [];
+    messages = (await fetchLatestMessages(5)) ?? [];
   } catch {
     messages = await fetchLatestMessages(5).catch(() => []);
-    branchSlides = await fetchBranchSlides().catch(() => []);
   }
 
   const featured = messages[0];
@@ -36,20 +29,23 @@ export default async function Home() {
 
   return (
     <main className="home-page bg-bg text-fg">
-      <SiteHeader />
-      <Hero />
-      <div className="home-below-hero">
-        <MissionSection />
-        <KnowUsStack />
-        {featured ? (
-          <LatestMessages featured={featured} others={others} />
-        ) : null}
-        <VisitSection slides={branchSlides} />
-        <BuildHouseSection />
-        <TestimoniesSection testimonies={testimonies} />
-        <VisionSection />
-        <UnsureBranchCta />
-        <SiteFooter />
+      <HomeSiteSkeleton />
+      <div className="home-page-shell">
+        <SiteHeader />
+        <Hero />
+        <div className="home-below-hero">
+          <MissionSection />
+          <KnowUsStack />
+          {featured ? (
+            <LatestMessages featured={featured} others={others} />
+          ) : null}
+          <VisitSection slides={CHARACTER_SLIDES} />
+          <BuildHouseSection />
+          <TestimoniesSection testimonies={testimonies} />
+          <VisionSection />
+          <UnsureBranchCta />
+          <SiteFooter />
+        </div>
       </div>
     </main>
   );

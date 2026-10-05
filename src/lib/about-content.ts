@@ -175,6 +175,7 @@ export const GOVERNANCE = {
     blurb:
       "If something needs attention, tell us. Your report helps us keep our church family safe.",
     cta: "Report an Incident",
-    href: INCIDENT_FORM_URL,
+    href: "/governance/incident",
+    externalHref: INCIDENT_FORM_URL,
   },
 } as const;

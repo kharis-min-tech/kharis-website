@@ -16,6 +16,7 @@ export function ScrollToTopOnLoad() {
       const { hash } = window.location;
       if (
         hash === "#near-you" ||
+        hash === "#who-we-are" ||
         hash === "#branches" ||
         hash === "#top" ||
         hash === "#know" ||

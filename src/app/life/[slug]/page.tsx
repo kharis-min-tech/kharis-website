@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { LifeDetail } from "@/components/LifeDetail";
 import {
-  LIFE_DEPARTMENTS_URL,
   LIFE_SLUGS,
   lifeBySlug,
   type LifeSlug,
@@ -39,7 +38,7 @@ export default async function LifeCategoryPage({ params }: Props) {
   if (!page) notFound();
 
   if (page.slug === "departments") {
-    redirect(LIFE_DEPARTMENTS_URL);
+    return <LifeDetail slug="departments" />;
   }
 
   if (MODAL_SLUGS.has(page.slug as LifeSlug)) {

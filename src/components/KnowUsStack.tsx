@@ -30,7 +30,7 @@ const cards: Card[] = [
   {
     title: "Locations",
     label: "Visit Sunday",
-    href: "#near-you",
+    href: "/locations",
     image:
       "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=900&q=80",
     info: "Find a Kharis branch near you this Sunday.",

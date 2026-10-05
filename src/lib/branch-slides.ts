@@ -1,42 +1,57 @@
-import { BRANCHES_DATA } from "@/data/branchesData";
+/** Character / value slides for the homepage carousel (not locations). */
 
 export type BranchSlide = {
   name: string;
-  href: string;
   title: string;
   subtitle: string;
-  address?: string;
   image: string;
   accent: string;
 };
 
 const ACCENTS = ["#FD7F20", "#800654"] as const;
 
-/** Featured branches for the homepage carousel — sourced from branch data */
-const FEATURED_SLUGS = [
-  "london",
-  "birmingham",
-  "accra",
-  "freetown",
-  "brighton",
-  "bristol",
-  "nottingham",
-] as const;
+/**
+ * How Kharis Looks — character words with the original branch-carousel photos
+ * (branch-slide-1…5). No branch CTAs.
+ */
+export const CHARACTER_SLIDES: BranchSlide[] = [
+  {
+    name: "joyful",
+    title: "Joyful",
+    subtitle: "Full of life, worship and praise",
+    image: "/images/branch-slide-1.jpg",
+    accent: ACCENTS[0],
+  },
+  {
+    name: "christ-centred",
+    title: "Christ-centred",
+    subtitle: "Jesus at the heart of everything we do",
+    image: "/images/branch-slide-2.jpg",
+    accent: ACCENTS[1],
+  },
+  {
+    name: "biblical",
+    title: "Biblical",
+    subtitle: "Grounded in the Word, shaped by truth",
+    image: "/images/branch-slide-3.jpg",
+    accent: ACCENTS[0],
+  },
+  {
+    name: "love",
+    title: "Love",
+    subtitle: "A caring family where people belong",
+    image: "/images/branch-slide-4.jpg",
+    accent: ACCENTS[1],
+  },
+  {
+    name: "grace-filled",
+    title: "Grace-filled",
+    subtitle: "Changing the world with a touch of His grace",
+    image: "/images/branch-slide-5.jpg",
+    accent: ACCENTS[0],
+  },
+];
 
 export async function fetchBranchSlides(): Promise<BranchSlide[]> {
-  return FEATURED_SLUGS.map((slug, i) => {
-    const branch = BRANCHES_DATA[slug];
-    if (!branch) {
-      return null;
-    }
-    return {
-      name: branch.name,
-      href: `/locations/${slug}`,
-      title: "KHARIS",
-      subtitle: branch.city.toUpperCase(),
-      address: branch.address,
-      image: branch.heroImage,
-      accent: ACCENTS[i % ACCENTS.length]!,
-    };
-  }).filter((slide): slide is BranchSlide => slide !== null);
+  return CHARACTER_SLIDES;
 }

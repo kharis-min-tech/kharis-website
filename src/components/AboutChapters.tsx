@@ -379,60 +379,43 @@ function MissionPanel({ reduce }: { reduce: boolean }) {
 }
 
 const VISION_THEMES = [
-  { bg: "#800654", num: "#fd7f20" },
-  { bg: "#5c0440", num: "#ffc4a0" },
-  { bg: "#3d0a2e", num: "#f0a060" },
-  { bg: "#9a1870", num: "#ffe0c2" },
-  { bg: "#650445", num: "#fd9a4a" },
-  { bg: "#4a0a36", num: "#ffd0a8" },
-  { bg: "#2a051c", num: "#fd7f20" },
-  { bg: "#7a1054", num: "#ffb87a" },
+  "#800654",
+  "#5c0440",
+  "#3d0a2e",
+  "#9a1870",
+  "#650445",
+  "#4a0a36",
+  "#2a051c",
+  "#7a1054",
 ] as const;
 
 function VisionPanel({ reduce }: { reduce: boolean }) {
   const { vision } = ABOUT;
   const [index, setIndex] = useState(0);
-  const [typed, setTyped] = useState("");
-  const [fading, setFading] = useState(false);
+  const [paused, setPaused] = useState(false);
   const point = vision.points[index]!;
-  const theme = VISION_THEMES[index % VISION_THEMES.length]!;
+  const themeBg = VISION_THEMES[index % VISION_THEMES.length]!;
+  const total = vision.points.length;
+
+  const goTo = (next: number) => {
+    setPaused(true);
+    setIndex(((next % total) + total) % total);
+  };
 
   useEffect(() => {
-    setTyped("");
-    setFading(false);
-    if (reduce) {
-      setTyped(point);
-      const wait = window.setTimeout(() => {
-        setFading(true);
-        window.setTimeout(() => {
-          setIndex((i) => (i + 1) % vision.points.length);
-        }, 480);
-      }, 3200);
-      return () => window.clearTimeout(wait);
-    }
+    if (reduce || paused) return;
+    const id = window.setTimeout(() => {
+      setIndex((i) => (i + 1) % total);
+    }, 5200);
+    return () => window.clearTimeout(id);
+  }, [index, paused, reduce, total]);
 
-    let i = 0;
-    let advanceTimer: number | undefined;
-    const speed = Math.max(14, Math.min(28, 2200 / point.length));
-    const typeTimer = window.setInterval(() => {
-      i += 1;
-      setTyped(point.slice(0, i));
-      if (i >= point.length) {
-        window.clearInterval(typeTimer);
-        advanceTimer = window.setTimeout(() => {
-          setFading(true);
-          window.setTimeout(() => {
-            setIndex((n) => (n + 1) % vision.points.length);
-          }, 520);
-        }, 1400);
-      }
-    }, speed);
-
-    return () => {
-      window.clearInterval(typeTimer);
-      if (advanceTimer) window.clearTimeout(advanceTimer);
-    };
-  }, [index, point, reduce, vision.points.length]);
+  /* Resume auto-cycle a few seconds after manual pause so controls stay primary. */
+  useEffect(() => {
+    if (!paused || reduce) return;
+    const id = window.setTimeout(() => setPaused(false), 10000);
+    return () => window.clearTimeout(id);
+  }, [paused, index, reduce]);
 
   return (
     <div className="about-panel about-panel--vision">
@@ -446,37 +429,49 @@ function VisionPanel({ reduce }: { reduce: boolean }) {
       <div className="about-panel__body">
         <p className="about-panel__kicker">{vision.intro}</p>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={index}
-            className="about-panel__vision-stage"
-            style={
-              {
-                ["--vision-bg" as string]: theme.bg,
-                ["--vision-num" as string]: theme.num,
-              } as CSSProperties
-            }
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: fading ? 0 : 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease }}
+        <div
+          className="about-panel__vision-shell"
+          aria-label="The Kharis we see"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
+          <div
+            className="about-panel__vision-stage about-panel__vision-stage--compact"
+            style={{ ["--vision-bg" as string]: themeBg } as CSSProperties}
           >
-            <p className="about-panel__vision-num">
-              {String(index + 1).padStart(2, "0")}
-            </p>
-            <p className="about-panel__vision-text" aria-live="polite">
-              {typed}
-              {!reduce && typed.length < point.length ? (
-                <span className="about-panel__vision-caret" aria-hidden>
-                  |
-                </span>
-              ) : null}
-            </p>
-            <p className="about-panel__vision-count" aria-hidden>
-              {index + 1} / {vision.points.length}
-            </p>
-          </motion.div>
-        </AnimatePresence>
+            <button
+              type="button"
+              className="about-panel__vision-side about-panel__vision-side--prev"
+              onClick={() => goTo(index - 1)}
+              aria-label="Previous vision point"
+            >
+              Previous
+            </button>
+
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={index}
+                className="about-panel__vision-text"
+                aria-live="polite"
+                initial={reduce ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduce ? undefined : { opacity: 0, y: -8 }}
+                transition={{ duration: 0.32, ease }}
+              >
+                {point}
+              </motion.p>
+            </AnimatePresence>
+
+            <button
+              type="button"
+              className="about-panel__vision-side about-panel__vision-side--next"
+              onClick={() => goTo(index + 1)}
+              aria-label="Next vision point"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -570,11 +565,8 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
           viewport={{ once: true }}
           transition={{ delay: 0.24, duration: 0.4 }}
         >
-          <p className="about-lead__story-invite">
-            Do you need a spiritual parent in Christ? Then join us.
-          </p>
-          <Link href="/#near-you" className="about-lead__story-cta">
-            Join us this Sunday
+          <Link href="/life" className="about-lead__story-cta">
+            Explore Kharis Life
           </Link>
         </motion.div>
       </motion.div>

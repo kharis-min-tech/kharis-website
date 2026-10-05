@@ -76,7 +76,7 @@ export function BranchCarousel({ slides }: Props) {
   if (!n) return null;
 
   return (
-    <div className="apple-carousel" id="branches">
+    <div className="apple-carousel" id="who-we-are-carousel">
       <div className="apple-carousel__viewport">
         <div
           className="apple-carousel__track"
@@ -96,11 +96,11 @@ export function BranchCarousel({ slides }: Props) {
                 onClick={() => go(i)}
                 role="group"
                 aria-roledescription="slide"
-                aria-label={`${slide.title} ${slide.subtitle}`}
+                aria-label={`${slide.title}: ${slide.subtitle}`}
               >
                 <Image
                   src={slide.image}
-                  alt={`${slide.subtitle} branch`}
+                  alt=""
                   fill
                   unoptimized={slide.image.startsWith("/images/")}
                   className="object-cover object-center"
@@ -129,21 +129,7 @@ export function BranchCarousel({ slides }: Props) {
                   >
                     {slide.title}
                   </h3>
-                  <p className="apple-slide__meta">
-                    Sunday Service · {slide.subtitle}
-                  </p>
-                  {slide.address ? (
-                    <p className="apple-slide__address">{slide.address}</p>
-                  ) : null}
-                  {active && (
-                    <a
-                      href={slide.href}
-                      className="apple-slide__cta"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Find this Branch
-                    </a>
-                  )}
+                  <p className="apple-slide__meta">{slide.subtitle}</p>
                 </div>
               </article>
             );
@@ -152,14 +138,18 @@ export function BranchCarousel({ slides }: Props) {
       </div>
 
       <div className="apple-carousel__controls">
-        <div className="apple-carousel__dots" role="tablist" aria-label="Branches">
+        <div
+          className="apple-carousel__dots"
+          role="tablist"
+          aria-label="Who we are"
+        >
           {list.map((slide, i) => (
             <button
               key={slide.name}
               type="button"
               role="tab"
               aria-selected={i === realIndex}
-              aria-label={slide.subtitle}
+              aria-label={slide.title}
               className={`apple-dot${i === realIndex ? " apple-dot--active" : ""}`}
               onClick={() => go(n + i)}
             />

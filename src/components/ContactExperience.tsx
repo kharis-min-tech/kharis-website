@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   CheckCircle2,
   Clock,
@@ -9,9 +10,15 @@ import {
   Phone,
   Search,
 } from "lucide-react";
-import { BranchMap } from "@/components/BranchMap";
 import { Reveal } from "@/components/Reveal";
 import type { ContactLocation } from "@/lib/contactLocations";
+import {
+  buildContactPrefill,
+  clearGraceHandoff,
+  isGraceTicketId,
+  readGraceHandoff,
+  type GraceHandoffPayload,
+} from "@/lib/grace-handoff";
 
 const SUBJECTS = [
   { value: "General", label: "General Inquiry" },
@@ -19,6 +26,7 @@ const SUBJECTS = [
   { value: "Prayer", label: "Prayer" },
   { value: "Giving", label: "Giving" },
   { value: "Pastoral", label: "Pastoral" },
+  { value: "Chat follow-up", label: "Grace chat follow-up" },
 ] as const;
 
 type Props = {
@@ -128,6 +136,7 @@ function splitName(full: string) {
 }
 
 export function ContactExperience({ locations }: Props) {
+  const searchParams = useSearchParams();
   const CONTACT_BRANCHES = useMemo(
     () => locations.filter((b) => !b.name.startsWith("KP2")),
     [locations],
@@ -145,12 +154,17 @@ export function ContactExperience({ locations }: Props) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [chatHandoff, setChatHandoff] = useState<GraceHandoffPayload | null>(
+    null,
+  );
   const [form, setForm] = useState({
     name: "",
     email: "",
     topic: "General",
-    branch: HQ.name ?? "",
+    branch: HQ?.name ?? "",
     message: "",
+    chatTicket: "",
+    chatTranscript: "",
   });
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -178,6 +192,37 @@ export function ContactExperience({ locations }: Props) {
       );
     });
   }, [CONTACT_BRANCHES, query, region]);
+
+  useEffect(() => {
+    const rawTicket = searchParams.get("chatTicket")?.trim().toUpperCase();
+    const ticketFromQuery = isGraceTicketId(rawTicket) ? rawTicket : null;
+    const handoff = readGraceHandoff(ticketFromQuery);
+    if (!handoff && !ticketFromQuery) return;
+
+    const payload =
+      handoff ??
+      (ticketFromQuery
+        ? {
+            ticketId: ticketFromQuery,
+            createdAt: new Date().toISOString(),
+            messages: [],
+            summary: "Chat transcript unavailable in this browser session.",
+          }
+        : null);
+
+    if (!payload) return;
+
+    setChatHandoff(payload);
+    setForm((f) => ({
+      ...f,
+      topic: f.topic === "General" ? "Chat follow-up" : f.topic,
+      chatTicket: payload.ticketId,
+      chatTranscript: payload.summary,
+      message: f.message.trim()
+        ? f.message
+        : buildContactPrefill(payload),
+    }));
+  }, [searchParams]);
 
   useEffect(() => {
     if (!sent) return;
@@ -208,6 +253,8 @@ export function ContactExperience({ locations }: Props) {
           topic: form.topic,
           branch: form.branch,
           message: form.message,
+          chatTicket: form.chatTicket || undefined,
+          chatTranscript: form.chatTranscript || undefined,
         }),
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };
@@ -215,6 +262,7 @@ export function ContactExperience({ locations }: Props) {
         setError(data.error || "Please check the form and try again.");
         return;
       }
+      clearGraceHandoff();
       setSent(true);
     } catch {
       setError("Something went wrong. Please try again.");
@@ -224,6 +272,7 @@ export function ContactExperience({ locations }: Props) {
   };
 
   const thanksName = splitName(form.name).first;
+  const ticketId = form.chatTicket || chatHandoff?.ticketId || "";
 
   return (
     <div className="contact-page">
@@ -261,10 +310,33 @@ export function ContactExperience({ locations }: Props) {
                   <strong>{form.email}</strong>
                   {form.branch ? ` about ${form.branch}` : ""}.
                 </p>
+                {ticketId ? (
+                  <p className="contact-ticket-receipt">
+                    Conversation ticket: <strong>{ticketId}</strong>
+                  </p>
+                ) : null}
               </div>
             ) : (
               <form className="contact-form" onSubmit={onSubmit} noValidate>
                 <h2>Send a message</h2>
+                {ticketId ? (
+                  <div className="contact-ticket" role="status">
+                    <p className="contact-ticket__label">
+                      Grace conversation ticket
+                    </p>
+                    <p className="contact-ticket__id">{ticketId}</p>
+                    <p className="contact-ticket__hint">
+                      Your chat summary is included below so the team has
+                      context. Keep this ticket ID for your records.
+                    </p>
+                  </div>
+                ) : null}
+                <input type="hidden" name="chatTicket" value={form.chatTicket} />
+                <input
+                  type="hidden"
+                  name="chatTranscript"
+                  value={form.chatTranscript}
+                />
                 <div className="contact-form__row">
                   <label>
                     Your name
@@ -331,7 +403,7 @@ export function ContactExperience({ locations }: Props) {
                   Message
                   <textarea
                     required
-                    rows={7}
+                    rows={ticketId ? 10 : 7}
                     value={form.message}
                     onChange={(e) =>
                       setForm({ ...form, message: e.target.value })

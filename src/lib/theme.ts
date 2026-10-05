@@ -14,6 +14,7 @@ export function getSiteTheme(): SiteTheme {
 
 export function applySiteTheme(theme: SiteTheme) {
   document.documentElement.dataset.theme = theme;
+  document.documentElement.style.colorScheme = theme;
 }
 
 export function setSiteTheme(theme: SiteTheme) {

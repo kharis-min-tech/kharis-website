@@ -15,17 +15,13 @@ import {
   Heart,
   Car,
   Train,
-  Phone,
-  Mail,
   ChevronDown,
   Play,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { BranchData } from "@/lib/branches";
-import { listBranches } from "@/lib/branches";
 import { DEFAULT_GALLERY_IMAGES } from "@/data/branchesData";
 import PlanVisitModal from "@/components/PlanVisitModal";
-import GiveModal from "@/components/GiveModal";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import BranchGallery from "@/components/branches/BranchGallery";
@@ -118,7 +114,6 @@ export function BranchTemplate({
   const mapEmbedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${(lng - span).toFixed(5)}%2C${(lat - latSpan).toFixed(5)}%2C${(lng + span).toFixed(5)}%2C${(lat + latSpan).toFixed(5)}&layer=mapnik&marker=${lat}%2C${lng}`;
 
   const [isPlanVisitOpen, setIsPlanVisitOpen] = useState(false);
-  const [isGiveOpen, setIsGiveOpen] = useState(false);
   const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(
     null,
   );
@@ -256,13 +251,13 @@ export function BranchTemplate({
                 <span>Upcoming Events</span>
               </a>
 
-              <button
-                onClick={() => setIsGiveOpen(true)}
+              <a
+                href="/give"
                 className="bg-transparent hover:bg-white/10 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Heart className="w-4 h-4 text-[#e8a33d] fill-current" />
                 <span>Give</span>
-              </button>
+              </a>
             </div>
           </div>
         </section>
@@ -484,17 +479,6 @@ export function BranchTemplate({
                 <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-white">
                   "{currentBranch.pastor_bio}"
                 </blockquote>
-
-                <div className="flex flex-wrap gap-3 pt-1 text-xs font-semibold text-gray-300">
-                  <span className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-black/40 px-3 py-1.5">
-                    <Phone className="h-4 w-4 text-[#e8a33d]" />
-                    {currentBranch.contact_phone}
-                  </span>
-                  <span className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-black/40 px-3 py-1.5">
-                    <Mail className="h-4 w-4 text-[#e8a33d]" />
-                    {currentBranch.contact_email}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
@@ -510,7 +494,7 @@ export function BranchTemplate({
               <span>Watch</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Latest From {currentBranch.name}
+              This is {currentBranch.name}
             </h2>
           </div>
 
@@ -595,10 +579,14 @@ export function BranchTemplate({
 
       <PlanVisitModal
         isOpen={isPlanVisitOpen}
-        onClose={() => setIsPlanVisitOpen(false)}
+        onClose={() => {
+          setIsPlanVisitOpen(false);
+          setSelectedEventRsvp(null);
+        }}
+        branchName={currentBranch.name}
+        branchCity={currentBranch.city}
+        eventLabel={selectedEventRsvp}
       />
-
-      <GiveModal isOpen={isGiveOpen} onClose={() => setIsGiveOpen(false)} />
 
       <BranchMediaModal
         type={mediaModal?.type ?? null}

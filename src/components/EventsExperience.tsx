@@ -11,7 +11,7 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { EventDetailModal } from "@/components/EventDetailModal";
 import {
   formatEventCardDate,
@@ -23,7 +23,6 @@ import {
 } from "@/lib/events-content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
-const PREVIEW_COUNT = 6;
 
 function happeningEvents(events: ChurchEvent[], from = new Date()) {
   const stamp = from.toISOString().slice(0, 10);
@@ -125,7 +124,6 @@ type Props = {
 export function EventsExperience({ events }: Props) {
   const reduce = useReducedMotion();
   const [selected, setSelected] = useState<ChurchEvent | null>(null);
-  const [browse, setBrowse] = useState(false);
   const [query, setQuery] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [kind, setKind] = useState<
@@ -134,19 +132,6 @@ export function EventsExperience({ events }: Props) {
   const [place, setPlace] = useState<"all" | string>("all");
 
   const upcoming = useMemo(() => happeningEvents(events), [events]);
-  const preview = upcoming.slice(0, PREVIEW_COUNT);
-  const previewByMonth = useMemo(() => groupEventsByMonth(preview), [preview]);
-  const rest = useMemo(() => {
-  const shown = new Set(preview.map((e) => e.id));
-
-  return events
-    .filter((e) => !shown.has(e.id))
-    .sort(
-      (a, b) =>
-        new Date(a.start_time).getTime() -
-        new Date(b.start_time).getTime()
-    );
-}, [events, preview]);
 
   const venues = useMemo(
     () => [...new Set(events.map((e) => e.location))],
@@ -173,208 +158,143 @@ export function EventsExperience({ events }: Props) {
     [filtered],
   );
 
-  const openBrowse = () => {
-    setBrowse(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <div className="events-page">
-      <AnimatePresence mode="wait">
-        {browse ? (
-          <motion.section
-            key="browse"
-            className="events-browse"
-            aria-label="Search events"
-            initial={reduce ? false : { opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? undefined : { opacity: 0, y: -12 }}
-            transition={{ duration: 0.35, ease }}
-          >
-            <div className="events-browse__wrap">
-              <button
-                type="button"
-                className="events-browse__back"
-                onClick={() => setBrowse(false)}
-              >
-                ← Gather with Kharis
-              </button>
+      <section className="events-feature" aria-label="Kharis Events">
+        <div className="events-feature__wrap">
+          <h1 className="events-feature__heading">Gather with Kharis</h1>
 
-              <div className="events-browse__tools">
-                <label className="events-browse__search">
-                  <Search aria-hidden className="events-browse__search-ico" />
-                  <input
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search"
-                    aria-label="Search events"
-                  />
-                </label>
-                <button
-                  type="button"
-                  className={`events-browse__filters${filtersOpen ? " is-open" : ""}`}
-                  onClick={() => setFiltersOpen((v) => !v)}
-                  aria-expanded={filtersOpen}
-                >
-                  <SlidersHorizontal aria-hidden className="h-4 w-4" />
-                  Filters
-                </button>
+          <div className="events-feature__banner">
+            <Image
+              src="/images/events/hero-worship.jpg"
+              alt="Congregation worshipping together"
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+            <span className="events-feature__halftone" aria-hidden />
+            <span className="events-feature__veil" aria-hidden />
+
+            <div className="events-feature__brand">
+              <Image
+                src="/images/kharis-logo.png"
+                alt=""
+                width={72}
+                height={72}
+                className="events-feature__logo"
+              />
+              <div>
+                <p className="events-feature__name">Kharis</p>
+                <p className="events-feature__word">Events</p>
               </div>
-
-              <Link href="/#near-you" className="events-browse__near">
-                Find events near you
-                <ExternalLink aria-hidden className="h-3.5 w-3.5" />
-              </Link>
-
-              {filtersOpen ? (
-                <div className="events-browse__panel">
-                  <label>
-                    Gathering
-                    <select
-                      value={kind}
-                      onChange={(e) => setKind(e.target.value as typeof kind)}
-                    >
-                      <option value="all">All gatherings</option>
-                      <option value="Sunday Service">Sunday Service</option>
-                      <option value="Thursday Service">Thursday Service</option>
-                    </select>
-                  </label>
-                  <label>
-                    Venue
-                    <select
-                      value={place}
-                      onChange={(e) => setPlace(e.target.value)}
-                    >
-                      <option value="all">All venues</option>
-                      {venues.map((v) => (
-                        <option key={v} value={v}>
-                          {v}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-              ) : null}
-
-              <h2 className="events-happen__title">All events</h2>
-
-              {filtered.length === 0 ? (
-                <p className="events-happen__empty">
-                  No gatherings match that search. Try another word or clear
-                  filters.
-                </p>
-              ) : (
-                <div className="events-happen__months">
-                  {filteredByMonth.map((group) => (
-                    <EventMonthSection
-                      key={group.key}
-                      label={group.label}
-                      events={group.events}
-                      reduce={reduce}
-                      onOpen={setSelected}
-                    />
-                  ))}
-                </div>
-              )}
             </div>
-          </motion.section>
-        ) : (
-          <motion.div
-            key="home"
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={reduce ? undefined : { opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <section className="events-feature" aria-label="Kharis Events">
-              <div className="events-feature__wrap">
-                <h1 className="events-feature__heading">Gather with Kharis</h1>
 
-                <div className="events-feature__banner">
-                  <Image
-                    src="/images/events/hero-worship.jpg"
-                    alt="Congregation worshipping together"
-                    fill
-                    priority
-                    className="object-cover object-center"
-                    sizes="100vw"
-                  />
-                  <span className="events-feature__halftone" aria-hidden />
-                  <span className="events-feature__veil" aria-hidden />
-
-                  <div className="events-feature__brand">
-                    <Image
-                      src="/images/kharis-logo.png"
-                      alt=""
-                      width={72}
-                      height={72}
-                      className="events-feature__logo"
-                    />
-                    <div>
-                      <p className="events-feature__name">Kharis</p>
-                      <p className="events-feature__word">Events</p>
-                    </div>
-                  </div>
-
-                  <div className="events-feature__bar">
-                    <div>
-                      <p className="events-feature__bar-title">Kharis Church</p>
-                      <p className="events-feature__bar-copy">
-                        Come encounter God with us.
-                      </p>
-                    </div>
-                    <div className="events-feature__actions">
-                      <button
-                        type="button"
-                        className="events-feature__btn events-feature__btn--solid"
-                        onClick={openBrowse}
-                      >
-                        View events
-                      </button>
-                      <Link
-                        href="/#near-you"
-                        className="events-feature__btn events-feature__btn--ghost"
-                      >
-                        Find a branch
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+            <div className="events-feature__bar">
+              <div>
+                <p className="events-feature__bar-title">Kharis Church</p>
+                <p className="events-feature__bar-copy">
+                  Come encounter God with us.
+                </p>
               </div>
-            </section>
+              <div className="events-feature__actions">
+                <Link
+                  href="/locations"
+                  className="events-feature__btn events-feature__btn--ghost"
+                >
+                  Find events near you
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <section
-              className="events-happen"
-              aria-label="Happening at our church"
+      <section className="events-browse events-browse--inline" aria-label="Search events">
+        <div className="events-browse__wrap">
+          <div className="events-browse__tools">
+            <label className="events-browse__search">
+              <Search aria-hidden className="events-browse__search-ico" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search"
+                aria-label="Search events"
+              />
+            </label>
+            <button
+              type="button"
+              className={`events-browse__filters${filtersOpen ? " is-open" : ""}`}
+              onClick={() => setFiltersOpen((v) => !v)}
+              aria-expanded={filtersOpen}
             >
-              <div className="events-happen__wrap">
-                <h2 className="events-happen__title">
-                  Happening at our church
-                </h2>
+              <SlidersHorizontal aria-hidden className="h-4 w-4" />
+              Filters
+            </button>
+          </div>
 
-                {preview.length === 0 ? (
-                  <p className="events-happen__empty">
-                    No upcoming gatherings listed yet. Join us this Sunday.
-                  </p>
-                ) : (
-                  <div className="events-happen__months">
-                    {previewByMonth.map((group) => (
-                      <EventMonthSection
-                        key={group.key}
-                        label={group.label}
-                        events={group.events}
-                        reduce={reduce}
-                        onOpen={setSelected}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </section>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          <Link href="/locations" className="events-browse__near">
+            Find events near you
+            <ExternalLink aria-hidden className="h-3.5 w-3.5" />
+          </Link>
+
+          {filtersOpen ? (
+            <div className="events-browse__panel">
+              <label>
+                Gathering
+                <select
+                  value={kind}
+                  onChange={(e) => setKind(e.target.value as typeof kind)}
+                >
+                  <option value="all">All gatherings</option>
+                  <option value="Sunday Service">Sunday Service</option>
+                  <option value="Thursday Service">Thursday Service</option>
+                </select>
+              </label>
+              <label>
+                Venue
+                <select
+                  value={place}
+                  onChange={(e) => setPlace(e.target.value)}
+                >
+                  <option value="all">All venues</option>
+                  {venues.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          ) : null}
+        </div>
+      </section>
+
+      <section className="events-happen" aria-label="Happening at our church">
+        <div className="events-happen__wrap">
+          <h2 className="events-happen__title">Happening at our church</h2>
+
+          {filtered.length === 0 ? (
+            <p className="events-happen__empty">
+              No gatherings match that search. Try another word or clear
+              filters.
+            </p>
+          ) : (
+            <div className="events-happen__months">
+              {filteredByMonth.map((group) => (
+                <EventMonthSection
+                  key={group.key}
+                  label={group.label}
+                  events={group.events}
+                  reduce={reduce}
+                  onOpen={setSelected}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
 
       <EventDetailModal event={selected} onClose={() => setSelected(null)} />
     </div>

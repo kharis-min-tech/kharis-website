@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Icon } from "@/components/Icon";
+import { LifeChatbot } from "@/components/LifeChatbot";
 import { LifeDetailModal } from "@/components/LifeDetailModal";
 import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import {
   LIFE_CATEGORIES,
-  LIFE_DEPARTMENTS_URL,
   LIFE_HERO,
   LIFE_MEMBERSHIP_URL,
   LIFE_PHOTO_CARDS,
@@ -20,12 +20,7 @@ import {
   type LifeSlug,
 } from "@/lib/life-content";
 
-const MODAL_SLUGS = new Set<LifeSlug>([
-  "k-group",
-  "baptism",
-  "fasting",
-  "marriage",
-]);
+const MODAL_SLUGS = new Set<LifeSlug>(["baptism", "fasting", "departments"]);
 
 function LearnMore({
   card,
@@ -40,20 +35,6 @@ function LearnMore({
         Learn More
         <Icon name="arrow" className="h-3.5 w-3.5" />
       </Link>
-    );
-  }
-
-  if (card.slug === "departments") {
-    return (
-      <a
-        href={LIFE_DEPARTMENTS_URL}
-        className="life-cta"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Learn More
-        <Icon name="arrow" className="h-3.5 w-3.5" />
-      </a>
     );
   }
 
@@ -154,6 +135,34 @@ function KidsCard({ onOpen }: { onOpen: (slug: LifeSlug) => void }) {
   );
 }
 
+function JoinFamilyCard() {
+  return (
+    <article className="life-textcard life-textcard--cream life-joinfamily">
+      <div
+        className="life-joinfamily__media"
+        style={{ backgroundImage: "url(/images/community.jpg)" }}
+        role="img"
+        aria-label="Kharis family gathered together"
+      />
+      <div className="life-joinfamily__body">
+        <span className="life-card__badge life-card__badge--inline">Belong</span>
+        <div className="life-card__title-row">
+          <LifeIcon name="users" className="life-card__ico" />
+          <h3>Join the family</h3>
+        </div>
+        <p>
+          Find a local branch and take your place among people who will walk
+          with you in Christ.
+        </p>
+        <Link href="/locations" className="life-cta">
+          Find a branch
+          <Icon name="arrow" className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+    </article>
+  );
+}
+
 function CloserPanel() {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
@@ -175,7 +184,7 @@ function CloserPanel() {
           email,
           topic: "General",
           message:
-            "I'd like to get plugged into Kharis Life. Please connect me with a K-Group and next steps at my local branch.",
+            "I'd like to get plugged into Kharis Life. Please connect me with next steps at my local branch.",
         }),
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };
@@ -195,8 +204,8 @@ function CloserPanel() {
     <div className="life-closer__panel">
       <h2 id="life-closer-title">Don&apos;t do life alone</h2>
       <p>
-        Whether you&apos;re looking for a K-Group, ready for baptism, or
-        wanting to serve in the house, there&apos;s a space for you here.
+        Whether you are ready for baptism, wanting to serve in the house, or
+        looking for a place to belong, there is space for you here.
       </p>
       {sent ? (
         <p className="life-closer__thanks">
@@ -241,6 +250,7 @@ export function LifeExperience({ baptismVideoId }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [modalSlug, setModalSlug] = useState<LifeSlug | null>(null);
+  const [showBaptismFollowup, setShowBaptismFollowup] = useState(false);
 
   const openModal = useCallback(
     (slug: LifeSlug) => {
@@ -263,17 +273,15 @@ export function LifeExperience({ baptismVideoId }: Props) {
 
   useEffect(() => {
     const open = searchParams.get("open");
-    if (open === "departments") {
-      window.location.assign(LIFE_DEPARTMENTS_URL);
-      return;
-    }
     if (open && MODAL_SLUGS.has(open as LifeSlug)) {
       setModalSlug(open as LifeSlug);
+    }
+    if (searchParams.get("followup") === "1") {
+      setShowBaptismFollowup(true);
     }
   }, [searchParams]);
 
   const fasting = LIFE_CATEGORIES.find((c) => c.slug === "fasting")!;
-  const marriage = LIFE_CATEGORIES.find((c) => c.slug === "marriage")!;
   const modalCategory = modalSlug ? lifeBySlug(modalSlug) ?? null : null;
 
   return (
@@ -286,16 +294,9 @@ export function LifeExperience({ baptismVideoId }: Props) {
               <h1 id="life-hero-title">{LIFE_HERO.title}</h1>
               <p className="life-hero__body">{LIFE_HERO.body}</p>
               <div className="life-hero__actions">
-                <button
-                  type="button"
-                  className="life-cta"
-                  onClick={() => openModal("baptism")}
-                >
-                  Start with baptism
+                <Link href="/locations" className="life-cta">
+                  Join the family
                   <Icon name="arrow" className="h-3.5 w-3.5" />
-                </button>
-                <Link href="/events" className="life-cta life-cta--ghost">
-                  Upcoming events
                 </Link>
               </div>
             </Reveal>
@@ -335,9 +336,9 @@ export function LifeExperience({ baptismVideoId }: Props) {
               <span className="life-grid__bar" aria-hidden />
             </h2>
             <p>
-              The Church is a place for feeding on God&apos;s Word, fellowship and
-              accountability. Meet the arms of Kharis Life, and take a next
-              step that fits where you are.
+              Kharis is a family where you can grow in your relationship with
+              Jesus, fellowship with other Christ-like believers and discover
+              your place in God&apos;s house.
             </p>
           </Reveal>
 
@@ -356,7 +357,7 @@ export function LifeExperience({ baptismVideoId }: Props) {
               <TextCard card={fasting} onOpen={openModal} />
             </RevealItem>
             <RevealItem variant="up">
-              <TextCard card={marriage} onOpen={openModal} />
+              <JoinFamilyCard />
             </RevealItem>
             <RevealItem variant="scale" className="life-mixed__kids">
               <KidsCard onOpen={openModal} />
@@ -371,8 +372,10 @@ export function LifeExperience({ baptismVideoId }: Props) {
       <LifeDetailModal
         category={modalCategory}
         baptismVideoId={baptismVideoId}
+        showFollowup={showBaptismFollowup && modalSlug === "baptism"}
         onClose={closeModal}
       />
+      <LifeChatbot />
     </div>
   );
 }

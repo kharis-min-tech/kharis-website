@@ -12,7 +12,7 @@ export function MissionExperience() {
     <AboutChapter
       eyebrow="Who we are"
       title="Our Mission"
-      subtitle="A friendly, caring family church influencing society with God’s love."
+      subtitle={mission.lead}
       image="/images/serve-with-us.jpg"
       imagePosition="object-[center_22%]"
       next={{ href: "/about/vision", label: "Our Vision →" }}

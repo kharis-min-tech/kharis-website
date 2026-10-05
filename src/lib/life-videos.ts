@@ -1,16 +1,21 @@
 import type { LifeSlug } from "@/lib/life-content";
 
-export type LifeModalSlug = Exclude<LifeSlug, "children" | "departments">;
+export type LifeModalSlug = Extract<
+  LifeSlug,
+  "baptism" | "fasting" | "departments" | "k-group" | "marriage"
+>;
 
 export type LifeModalVideo = {
-  /** Fallback YouTube video ID on @davidantwi */
+  /** YouTube video ID, or local file path when kind is "file" */
   videoId: string;
+  kind?: "youtube" | "file";
   blurb: string;
 };
 
 /**
  * Learn More modal videos — Pastor David / Kharis YouTube.
  * Baptism may be overridden at runtime via messages API lookup.
+ * Departments uses an on-site clip until a dedicated serve message ID is provided.
  */
 export const LIFE_MODAL_VIDEOS: Record<LifeModalSlug, LifeModalVideo> = {
   "k-group": {
@@ -33,6 +38,12 @@ export const LIFE_MODAL_VIDEOS: Record<LifeModalSlug, LifeModalVideo> = {
     blurb:
       "We celebrate marriage because God created it — preparation, counselling, and a victorious Christian home.",
   },
+  departments: {
+    videoId: "/videos/hero-a.mp4",
+    kind: "file",
+    blurb:
+      "Serving is part of our worship. Every believer has a role in God’s house.",
+  },
 };
 
 export function lifeModalVideoId(
@@ -43,15 +54,28 @@ export function lifeModalVideoId(
   return LIFE_MODAL_VIDEOS[slug].videoId;
 }
 
+export function lifeModalVideoKind(
+  slug: LifeModalSlug,
+): "youtube" | "file" {
+  return LIFE_MODAL_VIDEOS[slug].kind ?? "youtube";
+}
+
 export function lifeModalBlurb(slug: LifeModalSlug): string {
   return LIFE_MODAL_VIDEOS[slug].blurb;
 }
 
-export function youtubeEmbedSrc(id: string) {
+export function youtubeEmbedSrc(
+  id: string,
+  opts?: { autoplay?: boolean },
+) {
   const params = new URLSearchParams({
     rel: "0",
     modestbranding: "1",
     playsinline: "1",
   });
+  if (opts?.autoplay) {
+    params.set("autoplay", "1");
+    params.set("mute", "1");
+  }
   return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
 }

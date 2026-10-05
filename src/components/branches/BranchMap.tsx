@@ -9,7 +9,7 @@ import countryOutlines from "@/data/countryOutlines.json";
 const W = 1000;
 const H = 500;
 
-type ViewId = "world" | "uk" | "ghana" | "sierra-leone";
+type ViewId = "world" | "ghana" | "sierra-leone";
 
 interface ViewConfig {
   id: ViewId;
@@ -27,15 +27,13 @@ interface ViewConfig {
 
 const VIEWS: ViewConfig[] = [
   {
-    id: "uk",
-    label: "United Kingdom",
-    flag: "🇬🇧",
-    centerLat: 52.6,
-    centerLng: -1.9,
-    spanLat: 7.2,
-    focus: ["uk"],
-    context: ["ireland", "france", "belgium", "netherlands"],
-    blurb: "Thirteen branches across England, from Brighton up to Nottingham.",
+    id: "world",
+    label: "Whole world",
+    flag: "🌍",
+    centerLat: 18,
+    centerLng: 0,
+    spanLat: 150,
+    blurb: "Every Kharis branch, one global family.",
   },
   {
     id: "ghana",
@@ -58,15 +56,6 @@ const VIEWS: ViewConfig[] = [
     focus: ["sierra-leone"],
     context: ["guinea", "liberia"],
     blurb: "Kharis Freetown, gathering on Robert Street.",
-  },
-  {
-    id: "world",
-    label: "Whole world",
-    flag: "🌍",
-    centerLat: 18,
-    centerLng: 0,
-    spanLat: 150,
-    blurb: "Every Kharis branch, one global family.",
   },
 ];
 
@@ -117,7 +106,7 @@ export function BranchMap({
   branches: branchesProp,
 }: BranchMapProps) {
   const router = useRouter();
-  const [viewId, setViewId] = useState<ViewId>("uk");
+  const [viewId, setViewId] = useState<ViewId>("world");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const [nearestSlug, setNearestSlug] = useState<string | null>(null);
@@ -283,7 +272,7 @@ export function BranchMap({
           // Jump the camera to whichever country holds the nearest branch.
           if (best.slug === "accra") setViewId("ghana");
           else if (best.slug === "freetown") setViewId("sierra-leone");
-          else setViewId("uk");
+          else setViewId("world");
         }
         setLocating(false);
       },
@@ -665,10 +654,6 @@ export function BranchMap({
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#f2b254]" /> Kharis
               branch
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#5c2a4d]" />{" "}
-              {visible.length} in {view.label}
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#5c2a4d]" />{" "}

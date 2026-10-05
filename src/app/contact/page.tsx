@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { ContactExperience } from "@/components/ContactExperience";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getContactLocations } from "@/lib/contactLocations";
-
-
 
 export const metadata: Metadata = {
   title: "Contact | Kharis Church",
@@ -13,13 +12,14 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-    const locations = await getContactLocations();
-
+  const locations = await getContactLocations();
 
   return (
     <main className="site-page text-fg">
       <SiteHeader />
-      <ContactExperience locations={locations}  />
+      <Suspense fallback={null}>
+        <ContactExperience locations={locations} />
+      </Suspense>
       <SiteFooter />
     </main>
   );

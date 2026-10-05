@@ -157,7 +157,12 @@ export function TestimoniesSection({
                       />
                     </svg>
                   </div>
-                  <p className="testimony-card__quote">{item.description}</p>
+                  <p className="testimony-card__quote">
+                    {item.short_description?.trim() ||
+                      (item.description.length > 280
+                        ? `${item.description.slice(0, 277).trimEnd()}…`
+                        : item.description)}
+                  </p>
                   <div className="testimony-card__meta">
                     <strong>{item.name}</strong>
                     <span>{item.branch_name}</span>

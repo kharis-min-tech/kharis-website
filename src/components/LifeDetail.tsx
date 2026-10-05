@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Sparkles, Users, Heart } from "lucide-react";
 import { Icon } from "@/components/Icon";
@@ -6,6 +8,8 @@ import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import {
   LIFE_CATEGORIES,
+  LIFE_DEPARTMENTS_URL,
+  LIFE_VISIBLE_SLUGS,
   lifeBySlug,
   type LifeSlug,
 } from "@/lib/life-content";
@@ -38,6 +42,34 @@ const KIDS_GROUPS = [
 
 const KIDS_VIDEO_ID = "iXo1fg_PRLM";
 
+const DEPT_BANDS = [
+  {
+    title: "Worship & Music",
+    body: "Instrumentalists, singers and sound teams who lead the house in praise as an act of service to God.",
+    image: "/images/worship.jpg",
+  },
+  {
+    title: "Welcome & Care",
+    body: "Ushers, host team, hospitality and welfare — the Kharis welcome from the door to the seat, and care for those in need.",
+    image: "/images/community.jpg",
+  },
+  {
+    title: "Kids & Youth",
+    body: "Teaching ages 3–16 with creativity and joy, and walking with young people as they grow in Christ.",
+    image: "/images/young-adults.jpg",
+  },
+  {
+    title: "Media & Production",
+    body: "Camera, graphics, social and stage production that carry the Word beyond the room.",
+    image: "/images/pastor-stage.jpg",
+  },
+  {
+    title: "Prayer & Evangelism",
+    body: "Intercession, follow-up and outreach — preaching Christ and establishing new people in the family.",
+    image: "/images/serve-with-us.jpg",
+  },
+] as const;
+
 export function LifeDetail({ slug }: { slug: LifeSlug }) {
   const page = lifeBySlug(slug);
   if (!page) return null;
@@ -45,6 +77,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
   const next = page.next ? lifeBySlug(page.next) : undefined;
   const kids = slug === "children";
   const depts = slug === "departments";
+  const navCats = LIFE_CATEGORIES.filter((c) => LIFE_VISIBLE_SLUGS.has(c.slug));
 
   if (kids) {
     return (
@@ -61,7 +94,10 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
               ))}
             </div>
             <div className="life-kids-hero__veil" />
-            <Reveal variant="blur" className="life-kids-hero__copy life-kids-hero__copy--v2">
+            <Reveal
+              variant="blur"
+              className="life-kids-hero__copy life-kids-hero__copy--v2"
+            >
               <Link href="/life" className="life-crumb">
                 Kharis Life
               </Link>
@@ -105,10 +141,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
                       ) : null}
                       <span className="life-kids-row__ages">{meta?.ages}</span>
                     </div>
-                    <div
-                      className="life-kids-row__copy"
-                      style={{ background: meta?.color }}
-                    >
+                    <div className="life-kids-row__copy">
                       <IconComp className="life-kids-row__ico" aria-hidden />
                       <h3>{section.title}</h3>
                       <p>{section.body}</p>
@@ -119,7 +152,10 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
             </div>
           </section>
 
-          <section className="life-kids-video life-kids-video--v2" aria-label="Watch with us">
+          <section
+            className="life-kids-video life-kids-video--v2"
+            aria-label="Watch with us"
+          >
             <Reveal variant="up" className="life-kids-video__card">
               <div className="life-kids-video__copy">
                 <p className="life-hero__eyebrow">See the vibe</p>
@@ -149,6 +185,112 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
               Back to Kharis Life
             </Link>
           </Reveal>
+        </div>
+      </div>
+    );
+  }
+
+  if (depts) {
+    return (
+      <div className="life-page life-page--detail life-page--depts">
+        <header className="life-dept-hero">
+          <div
+            className="life-dept-hero__media"
+            style={{ backgroundImage: `url(${page.image})` }}
+            aria-hidden
+          />
+          <div className="life-dept-hero__veil" aria-hidden />
+          <Reveal variant="blur" className="life-dept-hero__copy">
+            <Link href="/life" className="life-crumb">
+              Kharis Life
+            </Link>
+            <p className="life-hero__eyebrow">{page.badge}</p>
+            <h1>
+              <LifeIcon name={page.icon} className="life-detail-hero__ico" />
+              {page.title}
+            </h1>
+            <p>{page.intro}</p>
+          </Reveal>
+        </header>
+
+        <section className="life-dept-bands" aria-label="Ways to serve">
+          {DEPT_BANDS.map((band, i) => (
+            <Reveal
+              key={band.title}
+              variant="up"
+              className={`life-dept-band${i % 2 === 1 ? " life-dept-band--flip" : ""}`}
+            >
+              <div
+                className="life-dept-band__media"
+                style={{ backgroundImage: `url(${band.image})` }}
+                role="img"
+                aria-label={band.title}
+              />
+              <div className="life-dept-band__copy">
+                <h2>{band.title}</h2>
+                <p>{band.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </section>
+
+        <div className="life-wrap">
+          <Reveal variant="up" className="life-detail-depts life-detail-depts--wide">
+            <h2 className="life-dept-list__title">Teams you can join</h2>
+            <LifeDeptList />
+          </Reveal>
+
+          <Reveal variant="up" className="life-dept-discover">
+            <h2>Discover your Kharis department</h2>
+            <p>
+              Explore the teams and find where you can serve. If the interactive
+              finder does not load below, open it in a new tab.
+            </p>
+            <div className="life-dept-discover__frame">
+              <iframe
+                title="Discover your Kharis department"
+                src={LIFE_DEPARTMENTS_URL}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <p className="life-dept-discover__note">
+              Need an embeddable code from Ruth if this iframe is blocked.
+              Meanwhile use{" "}
+              <a href={LIFE_DEPARTMENTS_URL} target="_blank" rel="noreferrer">
+                discover.khar.is
+              </a>
+              .
+            </p>
+          </Reveal>
+
+          <Reveal className="life-detail-end">
+            <Link href="/locations" className="life-cta">
+              Find a branch to serve
+              <Icon name="arrow" className="h-3.5 w-3.5" />
+            </Link>
+            <Link href="/life" className="life-cta life-cta--quiet">
+              Back to Kharis Life
+            </Link>
+          </Reveal>
+
+          <nav className="life-detail-nav" aria-label="Kharis Life">
+            {navCats.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={
+                  cat.slug === "children" || cat.slug === "departments"
+                    ? cat.slug === "departments"
+                      ? "/life/departments"
+                      : cat.href
+                    : `/life?open=${cat.slug}`
+                }
+                className={cat.slug === slug ? "is-on" : undefined}
+              >
+                {cat.shortTitle}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     );
@@ -206,26 +348,18 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
             ))}
           </RevealStagger>
 
-          {depts ? (
-            <Reveal variant="up" className="life-detail-depts">
-              <h2 className="life-dept-list__title">Teams you can join</h2>
-              <LifeDeptList />
-            </Reveal>
-          ) : null}
-
           {page.contact ? (
             <p className="life-detail-contact">
-              Contact{" "}
-              <a href={`mailto:${page.contact}`}>{page.contact}</a>
+              Contact <a href={`mailto:${page.contact}`}>{page.contact}</a>
             </p>
           ) : null}
 
           <Reveal className="life-detail-end">
-            <Link href={page.cta.href} className="life-cta">
+            <a href={page.cta.href} className="life-cta">
               {page.cta.label}
               <Icon name="arrow" className="h-3.5 w-3.5" />
-            </Link>
-            {next ? (
+            </a>
+            {next && LIFE_VISIBLE_SLUGS.has(next.slug) ? (
               <Link href={next.href} className="life-cta life-cta--quiet">
                 Next: {next.shortTitle}
               </Link>
@@ -237,10 +371,16 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
           </Reveal>
 
           <nav className="life-detail-nav" aria-label="Kharis Life">
-            {LIFE_CATEGORIES.map((cat) => (
+            {navCats.map((cat) => (
               <Link
                 key={cat.slug}
-                href={cat.slug === "children" ? cat.href : `/life?open=${cat.slug}`}
+                href={
+                  cat.slug === "children" || cat.slug === "departments"
+                    ? cat.slug === "departments"
+                      ? "/life/departments"
+                      : cat.href
+                    : `/life?open=${cat.slug}`
+                }
                 className={cat.slug === slug ? "is-on" : undefined}
               >
                 {cat.shortTitle}

@@ -6,7 +6,7 @@ import { LifeShell } from "@/components/LifeShell";
 export const metadata: Metadata = {
   title: "Kharis Life | Kharis Church",
   description:
-    "The Christian life is a one-another life. Find K-Groups, baptism, fasting, marriage, children’s ministry, and departments at Kharis.",
+    "The Christian life is a one-another life. Baptism, fasting, children’s ministry, and serving in departments at Kharis.",
 };
 
 export default function LifeLayout({

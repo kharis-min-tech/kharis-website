@@ -40,8 +40,6 @@ export function GovernanceExperience() {
           </div>
           <a
             href={GOVERNANCE.incident.href}
-            target="_blank"
-            rel="noreferrer"
             className="gov-incident__cta"
           >
             {GOVERNANCE.incident.cta}
