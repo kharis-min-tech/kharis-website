@@ -12,6 +12,7 @@ import {
 } from "@/lib/events";
 import { eventToCalendarItem, mapsSearchUrl } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const HERO_WORSHIP = "/assets/events-hero-worship.jpg";
 const WORSHIP = "/assets/worship.jpg";
@@ -192,30 +193,6 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               <p className="font-headline-md text-headline-md text-primary-fixed-dim uppercase italic max-w-2xl mb-stack-md">
                 Don't miss a moment of the movement.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a
-                  href="#whats-on"
-                  className="inline-block bg-primary text-on-primary font-headline-md text-headline-md px-8 py-4 border-4 border-surface neo-shadow-lg neo-button-hover transition-all text-center uppercase"
-                >
-                  See What's On
-                </a>
-                {featured ? (
-                  <PlanVisitButton
-                    item={eventToCalendarItem(featured)}
-                    directionsUrl={mapsSearchUrl(featured.location)}
-                    className="inline-block keep-light font-headline-md text-headline-md px-8 py-4 border-4 border-black neo-shadow-lg neo-button-hover transition-all text-center uppercase"
-                  >
-                    Plan Your Visit
-                  </PlanVisitButton>
-                ) : (
-                  <Link
-                    href="/branches"
-                    className="inline-block keep-light font-headline-md text-headline-md px-8 py-4 border-4 border-black neo-shadow-lg neo-button-hover transition-all text-center uppercase"
-                  >
-                    Plan Your Visit
-                  </Link>
-                )}
-              </div>
             </div>
           </div>
         </section>
@@ -328,8 +305,8 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-stack-md gap-gutter">
               <div>
                 <h3 className="font-headline-lg text-headline-lg uppercase text-on-background">
-                  What's{" "}
-                  <span className="text-primary underline decoration-4">On</span>
+                  The{" "}
+                  <span className="text-primary underline decoration-4">Calendar</span>
                 </h3>
                 <p className="font-label-md text-outline uppercase tracking-widest">
                   {filtered.length} gathering{filtered.length === 1 ? "" : "s"}{" "}
@@ -415,7 +392,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 icon: "waving_hand",
                 title: "First time?",
                 copy: "Come as you are, arrive ten minutes early and look for the welcome team in purple.",
-                cta: "Plan Your Visit",
+                cta: "Find a Branch",
                 to: "/branches" as const,
               },
               {
@@ -427,7 +404,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               },
               {
                 icon: "handshake",
-                title: "Serve an event",
+                title: "Get Involved",
                 copy: "Hospitality, sound, media, kids — events run on volunteers who show up early.",
                 cta: "Join a Department",
                 to: "/departments" as const,
@@ -458,38 +435,13 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
           </div>
         </section>
 
-        {/* NEWSLETTER */}
-        <section className="py-stack-lg bg-secondary-container border-b-4 border-on-background">
-          <div className="container mx-auto px-margin-mobile md:px-margin-desktop text-center">
-            <h3 className="font-headline-lg text-headline-lg uppercase mb-4 text-on-secondary-container">
-              Get the schedule in your inbox
-            </h3>
-            <p className="font-body-lg text-on-secondary-container mb-stack-md max-w-2xl mx-auto">
-              Never miss an update. Subscribe to our Weekly Briefing for event
-              registration links, location changes and early access.
-            </p>
-            <form
-              className="flex flex-col md:flex-row gap-4 max-w-xl mx-auto"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <label className="flex-grow">
-                <span className="sr-only">Email address</span>
-                <input
-                  className="w-full p-4 bg-surface border-2 border-on-background font-label-md focus:ring-4 focus:ring-primary outline-none transition-all"
-                  placeholder="ENTER YOUR EMAIL"
-                  type="email"
-                  required
-                />
-              </label>
-              <button
-                type="submit"
-                className="bg-on-background text-surface font-headline-md px-8 py-4 border-2 border-on-background neo-shadow-lg neo-button-hover transition-all uppercase"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </section>
+        <NewsletterSignup
+          title="Get the schedule in your inbox"
+          copy="Never miss an update. Subscribe to our Weekly Briefing for event registration links, location changes and early access."
+          placeholder="ENTER YOUR EMAIL"
+          className="bg-secondary-container text-on-secondary-container"
+          copyClassName="text-on-secondary-container"
+        />
       </main>
 
       <SiteFooter />

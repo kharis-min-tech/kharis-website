@@ -62,7 +62,6 @@ const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 
 export const EVENT_CATEGORIES: EventCategory[] = [
   "Weekly",
-  "Conference",
   "Worship",
   "Fellowship",
   "Outreach",

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Kharis Phase 2 — Faith Looks Different Here";
+export const alt = "Kharis Phase 2 — Church for this generation";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

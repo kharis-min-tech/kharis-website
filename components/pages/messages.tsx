@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { YoutubeEmbed } from "@/components/YoutubeEmbed";
 import { ShareVideoButton } from "@/components/ShareVideoButton";
 import { MutedHeroVideo } from "@/components/MutedHeroVideo";
@@ -17,19 +17,12 @@ import {
 function MessagesPage({ messages }: { messages: MessageVideo[] }) {
   const featured = messages[0];
   const rest = messages.slice(1);
-  const [query, setQuery] = useState("");
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return rest;
-    return rest.filter((m) => m.title.toLowerCase().includes(q));
-  }, [query, rest]);
 
   return (
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
       <SiteHeader />
-      <main className="pt-20">
-        <section className="relative w-full min-h-[520px] md:h-[819px] bg-on-background overflow-hidden border-b-4 border-black">
+      <main>
+        <section className="relative box-border w-full h-svh max-h-svh overflow-hidden bg-on-background border-b-4 border-black">
           {featured ? (
             <MutedHeroVideo
               id={featured.id}
@@ -42,9 +35,9 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
               style={{ backgroundImage: "url('/assets/pastor-stage.jpg')" }}
             />
           )}
-          <div className="absolute inset-0 hero-gradient" />
+          <div className="absolute inset-0 hero-gradient pointer-events-none" />
           <div className="absolute inset-0 halftone-pattern text-white/5 pointer-events-none" />
-          <div className="relative z-10 h-full min-h-[520px] flex flex-col justify-end px-margin-desktop pb-16 max-w-7xl mx-auto">
+          <div className="relative z-10 h-full flex flex-col justify-end px-margin-mobile md:px-margin-desktop pt-24 pb-8 md:pb-10 max-w-7xl mx-auto">
             <div className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-black mb-6 uppercase w-fit">
               Latest Message
             </div>
@@ -121,39 +114,18 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
           </section>
         ) : null}
 
-        <section className="bg-surface-container-high border-b-2 border-black sticky top-20 z-40">
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-4 flex flex-wrap items-center justify-between gap-gutter">
-            <span className="font-label-md text-label-md uppercase flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">smart_display</span>
-              From @davidantwi
-            </span>
-            <div className="relative w-full md:w-64">
-              <input
-                className="w-full bg-white border-2 border-black font-label-sm px-4 py-2 focus:ring-2 focus:ring-secondary-container outline-none"
-                placeholder="SEARCH MESSAGES..."
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary">
-                search
-              </span>
-            </div>
-          </div>
-        </section>
-
         <section className="max-w-7xl mx-auto px-margin-desktop py-16">
-          {filtered.length === 0 ? (
-            <p className="font-body-lg text-on-surface-variant">No messages match that search.</p>
+          {rest.length === 0 ? (
+            <p className="font-body-lg text-on-surface-variant">More messages will appear here as they are published.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {filtered.map((msg) => (
+              {rest.map((msg) => (
                 <a
                   key={msg.id}
                   href={youtubeWatchUrl(msg.id)}
                   target="_blank"
                   rel="noreferrer"
-                  className="group border-2 border-black bg-white hard-shadow hover:translate-y-[-4px] transition-all"
+                  className="group border-2 border-black bg-white text-on-background hard-shadow hover:translate-y-[-4px] hover:bg-[#2a2a2a] hover:text-white transition-all"
                 >
                   <div className="relative aspect-video border-b-2 border-black overflow-hidden">
                     <img
@@ -170,13 +142,13 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                         YouTube
                       </span>
                     </div>
-                    <h3 className="font-headline-md text-headline-md leading-tight mb-2 uppercase group-hover:text-primary transition-colors">
+                    <h3 className="font-headline-md text-headline-md leading-tight mb-2 uppercase">
                       {displayMessageTitle(msg.title)}
                     </h3>
                     <div className="flex items-center justify-between border-t-2 border-black/10 pt-4">
                       <span className="font-label-sm text-xs uppercase">Pastor David Antwi</span>
                       {msg.publishedAt ? (
-                        <span className="font-label-sm text-[10px] text-outline uppercase">
+                        <span className="font-label-sm text-[10px] text-outline uppercase group-hover:text-white/70">
                           {formatMessageDate(msg.publishedAt)}
                         </span>
                       ) : null}
@@ -203,22 +175,22 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
               {[
+                { label: "Kharis App", copy: "Messages, notes and giving in one place.", cta: "Get the App", href: "/#app-stores", icon: "smartphone" },
                 { label: "Spotify", copy: "Stream the podcast and follow every series.", cta: "Listen on Spotify", href: "https://open.spotify.com/", icon: "podcasts" },
                 { label: "SoundCloud", copy: "Audio archive of past teachings and sessions.", cta: "Play on SoundCloud", href: "https://soundcloud.com/", icon: "graphic_eq" },
                 { label: "YouTube", copy: "Watch full services, clips and live streams.", cta: "Watch on YouTube", href: "https://youtube.com/@davidantwi", icon: "smart_display" },
-                { label: "Kharis App", copy: "Messages, notes and giving in one place.", cta: "Get the App", href: "/#app-stores", icon: "smartphone" },
               ].map(({ label, copy, cta, href, icon }) => (
                 <a
                   key={label}
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-                  className="group bg-surface-container-high border-2 border-black neo-shadow hover-press flex flex-col p-6"
+                  className="group bg-primary text-on-primary border-2 border-black rounded-none neo-shadow hover-press flex flex-col p-6 no-accent-fill"
                 >
-                  <span className="material-symbols-outlined text-4xl mb-4">{icon}</span>
-                  <h3 className="font-headline-md text-title-lg uppercase mb-2">{label}</h3>
-                  <p className="font-body-lg text-body-md text-on-surface-variant flex-1">{copy}</p>
-                  <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase">
+                  <span className="material-symbols-outlined text-4xl mb-4 !text-primary-fixed">{icon}</span>
+                  <h3 className="font-headline-md text-title-lg uppercase mb-2 text-on-primary">{label}</h3>
+                  <p className="font-body-lg text-body-md !text-primary-fixed flex-1">{copy}</p>
+                  <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase text-on-primary">
                     {cta}
                     <span className="material-symbols-outlined text-base transition-transform group-hover:translate-x-1">
                       arrow_forward
@@ -230,27 +202,12 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
           </div>
         </section>
 
-        <section className="bg-primary text-white border-y-4 border-black relative overflow-hidden">
-          <div className="absolute inset-0 halftone-pattern opacity-10" />
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-16 relative z-10 flex flex-col md:flex-row items-center justify-between gap-gutter">
-            <div className="max-w-xl text-center md:text-left">
-              <h2 className="font-display-lg text-headline-lg leading-tight uppercase mb-4">Never Miss A Word</h2>
-              <p className="font-body-lg text-body-lg text-primary-fixed">
-                Subscribe to get the latest messages, series notes, and study guides delivered straight to your inbox.
-              </p>
-            </div>
-            <div className="flex w-full md:w-auto gap-0 mt-8 md:mt-0">
-              <input
-                className="flex-1 md:w-80 bg-white border-2 border-black text-black font-label-sm px-6 py-4 focus:ring-4 focus:ring-secondary-container outline-none"
-                placeholder="YOUR EMAIL ADDRESS"
-                type="email"
-              />
-              <button className="bg-on-background text-white font-headline-md text-base px-5 sm:px-8 py-4 border-2 border-l-0 shrink-0 border-black hard-shadow btn-press uppercase">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </section>
+        <NewsletterSignup
+          title="Never Miss A Word"
+          copy="Subscribe to get the latest messages, series notes, and study guides delivered straight to your inbox."
+          className="bg-primary text-on-primary"
+          copyClassName="text-primary-fixed"
+        />
       </main>
       <SiteFooter />
       <ThemeToggle />

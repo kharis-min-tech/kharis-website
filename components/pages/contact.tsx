@@ -5,8 +5,27 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
+import type { FormEvent } from "react";
 
 function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
+  function sendContactMessage(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const name = String(data.get("name") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const subjectValue = String(data.get("subject") || "General Inquiry").trim();
+    const message = String(data.get("message") || "").trim();
+    const to = mainCampus?.email;
+    if (!to) return;
+    const phoneLine = phone ? `\nPhone: ${phone}` : "";
+    const subject = encodeURIComponent(subjectValue);
+    const body = encodeURIComponent(
+      `From: ${name}\nEmail: ${email}${phoneLine}\n\n${message}`,
+    );
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+  }
+
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container">
 
@@ -14,27 +33,32 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <SiteHeader />
 <main className="pt-20">
 
-<section className="relative bg-on-background text-background py-24 md:py-32 px-margin-mobile md:px-margin-desktop overflow-hidden border-b-4 border-primary">
-<div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
-<div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
-<div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<section className="relative box-border flex min-h-[calc(100svh-5rem)] h-auto lg:h-[calc(100dvh-5rem)] lg:max-h-[calc(100dvh-5rem)] items-center overflow-hidden border-b-4 border-primary bg-on-background px-margin-mobile py-8 text-background md:px-margin-desktop md:py-10">
+<div className="halftone-bg pointer-events-none absolute inset-0 opacity-25"></div>
+<div className="absolute top-0 right-0 h-full w-2/3 bg-gradient-to-l from-primary/25 to-transparent"></div>
+<div className="relative z-10 grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-gutter">
 <div className="lg:col-span-7">
-<span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">Feel Free To Reach Out</span>
-<h1 className="font-display-lg text-[64px] md:text-display-lg text-primary-fixed-dim uppercase leading-none mb-4">
+<span className="mb-6 inline-block animate-bounce border-heavy bg-secondary-container px-4 py-1 font-label-md uppercase tracking-widest text-on-secondary-container motion-reduce:animate-none">Feel Free To Reach Out</span>
+<h1 className="mb-4 font-display-lg text-[48px] uppercase leading-none text-primary-fixed-dim sm:text-[64px] md:text-display-lg">
                     CONTACT US
                 </h1>
-<p className="font-headline-md text-headline-md text-surface-container-low mb-8 max-w-xl">
+<p className="mb-8 max-w-xl font-headline-md text-headline-md text-surface-container-low">
                     We are here for you. Whether you have a question, a prayer request, or just want to say hi.
                 </p>
 <div className="flex gap-4">
-<div className="w-12 h-2 bg-secondary-container"></div>
-<div className="w-12 h-2 bg-primary"></div>
-<div className="w-12 h-2 bg-on-background"></div>
+<div className="h-2 w-12 bg-secondary-container"></div>
+<div className="h-2 w-12 bg-primary"></div>
+<div className="h-2 w-12 bg-on-background"></div>
 </div>
 </div>
 <div className="lg:col-span-5">
-<div className="brutalist-border brutalist-shadow-lg overflow-hidden hover-card">
-<img alt="Kharis congregation worshipping together" className="w-full h-64 lg:h-80 object-cover" src="/assets/worship.jpg" loading="eager" decoding="async"/>
+<div className="flex w-full flex-row gap-3 sm:gap-4 lg:ml-auto lg:w-[min(100%,calc((100dvh-10rem)/2))] lg:flex-col">
+<div className="relative aspect-square flex-1 overflow-hidden rounded-none border-2 border-black brutalist-shadow">
+<img alt="Worship on stage at Kharis" className="absolute inset-x-0 top-0 h-[200%] w-full max-w-none object-cover object-top" src="/assets/worship.jpg" loading="eager" decoding="async"/>
+</div>
+<div className="relative aspect-square flex-1 overflow-hidden rounded-none border-2 border-black brutalist-shadow">
+<img alt="Congregation gathered in the auditorium" className="absolute inset-x-0 bottom-0 h-[200%] w-full max-w-none object-cover object-bottom" src="/assets/worship.jpg" loading="eager" decoding="async"/>
+</div>
 </div>
 </div>
 </div>
@@ -49,20 +73,24 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-8 uppercase border-b-2 border-on-background pb-4">
                         Send a Message
                     </h2>
-<form className="space-y-6">
+<form className="space-y-6" onSubmit={sendContactMessage}>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div className="flex flex-col gap-2">
 <label className="font-label-md uppercase">Your Name</label>
-<input className="brutalist-border p-4 font-body-md input-focus" placeholder="John Doe" type="text" />
+<input className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus" placeholder="John Doe" type="text" name="name" autoComplete="name" />
 </div>
 <div className="flex flex-col gap-2">
 <label className="font-label-md uppercase">Email Address</label>
-<input className="brutalist-border p-4 font-body-md input-focus" placeholder="hello@example.com" type="email" />
+<input className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus" placeholder="hello@example.com" type="email" name="email" autoComplete="email" />
 </div>
 </div>
 <div className="flex flex-col gap-2">
+<label className="font-label-md uppercase">Phone</label>
+<input className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus" placeholder="+44 20 0000 0000" type="tel" name="phone" autoComplete="tel" inputMode="tel" />
+</div>
+<div className="flex flex-col gap-2">
 <label className="font-label-md uppercase">Subject</label>
-<select className="brutalist-border p-4 font-body-md input-focus appearance-none bg-white">
+<select name="subject" className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus appearance-none">
 <option>General Inquiry</option>
 <option>Prayer Request</option>
 <option>Join a Team</option>
@@ -72,7 +100,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 </div>
 <div className="flex flex-col gap-2">
 <label className="font-label-md uppercase">Message</label>
-<textarea className="brutalist-border p-4 font-body-md input-focus resize-none" placeholder="How can we help?" rows={5}></textarea>
+<textarea className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus resize-none" placeholder="How can we help?" rows={5} name="message"></textarea>
 </div>
 <button className="w-full md:w-auto px-12 py-5 bg-primary text-on-primary font-headline-md text-2xl brutalist-border brutalist-shadow btn-hover transition-all uppercase" type="submit">
                             Send It!
@@ -163,11 +191,15 @@ Find a campus
                     Follow the Vibe
                 </h2>
                 <div className="flex flex-wrap justify-center gap-4">
-                    <a className="p-4 bg-white brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2" href="https://instagram.com/kharisphasetwo" target="_blank" rel="noreferrer">
+                    <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="/#app-stores">
+                        <span className="material-symbols-outlined">smartphone</span>
+                        <span className="font-label-md">KHARIS APP</span>
+                    </a>
+                    <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="https://instagram.com/kharisphasetwo" target="_blank" rel="noreferrer">
                         <span className="material-symbols-outlined">public</span>
                         <span className="font-label-md">INSTAGRAM</span>
                     </a>
-                    <a className="p-4 bg-white brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2" href="https://youtube.com/@davidantwi" target="_blank" rel="noreferrer">
+                    <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="https://youtube.com/@davidantwi" target="_blank" rel="noreferrer">
                         <span className="material-symbols-outlined">video_library</span>
                         <span className="font-label-md">YOUTUBE</span>
                     </a>

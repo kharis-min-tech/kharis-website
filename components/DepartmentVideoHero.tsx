@@ -171,7 +171,7 @@ export function DepartmentVideoHero() {
                         : "opacity-100"
                     }`}
                   >
-                    <span className="grid h-20 w-20 place-items-center rounded-full border-4 border-black bg-primary text-on-primary shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
+                    <span className="grid h-20 w-20 place-items-center rounded-none border-4 border-black bg-primary text-on-primary shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
                       <span className="material-symbols-outlined text-4xl" aria-hidden="true">
                         play_arrow
                       </span>
@@ -189,7 +189,7 @@ export function DepartmentVideoHero() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-on-background/50 to-primary/30" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
-                    <span className="grid h-20 w-20 place-items-center rounded-full border-4 border-surface/40 text-surface/50">
+                    <span className="grid h-20 w-20 place-items-center rounded-none border-4 border-surface/40 text-surface/50">
                       <span className="material-symbols-outlined text-4xl" aria-hidden="true">
                         play_arrow
                       </span>

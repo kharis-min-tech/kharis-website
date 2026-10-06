@@ -19,7 +19,7 @@ const WHY_SERVE = [
   {
     icon: "favorite",
     title: "We serve because we've been served",
-    text: "Jesus didn't come to be served, but to serve. Our worship is simply a response to the grace we've already received.",
+    text: "Jesus did not come to be served, but to serve. Serving is worship — a response to the grace we have already received.",
     ref: "Matthew 20:28",
   },
   {
@@ -29,16 +29,16 @@ const WHY_SERVE = [
     ref: "1 Corinthians 12:12-27",
   },
   {
-    icon: "emoji_events",
-    title: "There's reward in faithfulness",
-    text: "Serving isn't just duty — it's how you grow, get noticed and walk into the calling God has placed on your life.",
+    icon: "volunteer_activism",
+    title: "We work as unto the Lord",
+    text: "Whatever you do, work at it with all your heart, as working for the Lord. Faithfulness in serving is how we honour Him.",
     ref: "Colossians 3:23-24",
   },
 ];
 
 function DepartmentCard({ dept }: { dept: Department }) {
   return (
-    <div className="group flex flex-col overflow-hidden border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]">
+    <div className="group flex flex-col overflow-hidden rounded-none border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]">
       <div className="relative h-44 overflow-hidden border-b-2 border-black">
         <img
           alt={dept.name}
@@ -48,7 +48,7 @@ function DepartmentCard({ dept }: { dept: Department }) {
           decoding="async"
         />
         <span
-          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider text-on-background ${dept.accent} border-2 border-black`}
+          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider text-on-background ${dept.accent} rounded-none border border-on-background/10`}
         >
           <span className="material-symbols-outlined text-sm" aria-hidden="true">{dept.icon}</span>
           {dept.name}
@@ -64,9 +64,12 @@ function DepartmentCard({ dept }: { dept: Department }) {
             </span>
           ))}
         </div>
-        <button className="mt-auto w-full border-2 border-black bg-on-background py-2.5 text-xs font-black uppercase tracking-wider text-surface transition-all hover:bg-primary active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000] active:shadow-none">
-          Join the Team
-        </button>
+        <Link
+          href="/branches"
+          className="mt-auto w-full rounded-none border-2 border-black bg-on-background py-2.5 text-xs font-black uppercase tracking-wider text-surface text-center transition-all hover:bg-primary active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000] active:shadow-none"
+        >
+          Find Out with Your Local Branch
+        </Link>
       </div>
     </div>
   );
@@ -98,7 +101,7 @@ function DepartmentsPage() {
         <section className="relative z-10 bg-surface px-margin-mobile py-stack-lg md:px-margin-desktop">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="mb-3 inline-block border-2 border-black bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
+              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
                 Start here
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase">
@@ -111,7 +114,7 @@ function DepartmentsPage() {
             {FEATURED.map((dept, i) => (
               <div
                 key={dept.name}
-                className="group flex flex-col overflow-hidden border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]"
+                className="group flex flex-col overflow-hidden rounded-none border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]"
               >
                 <div className="relative h-52 overflow-hidden border-b-2 border-black">
                   <img
@@ -121,12 +124,12 @@ function DepartmentsPage() {
                     loading="lazy"
                     decoding="async"
                   />
-                  <span className="absolute left-3 top-3 border-2 border-black bg-surface px-2 py-1 text-[11px] font-black uppercase tracking-wider text-on-surface">
+                  <span className="absolute left-3 top-3 rounded-none border border-on-background/10 bg-surface px-2 py-1 text-[11px] font-black uppercase tracking-wider text-on-surface">
                     #{i + 1} · {dept.name}
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-6">
-                  <span className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} border-2 border-black`}>
+                  <span className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border border-on-background/10`}>
                     <span className="material-symbols-outlined text-sm" aria-hidden="true">{dept.icon}</span>
                     {dept.tagline}
                   </span>
@@ -139,9 +142,12 @@ function DepartmentsPage() {
                       </span>
                     ))}
                   </div>
-                  <button className="w-full border-2 border-black bg-primary py-3 text-xs font-black uppercase tracking-wider text-on-primary transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000] active:shadow-none">
-                    Join the Team
-                  </button>
+                  <Link
+                    href="/branches"
+                    className="w-full rounded-none border-2 border-black bg-primary py-3 text-xs font-black uppercase tracking-wider text-on-primary text-center transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000] active:shadow-none"
+                  >
+                    Find Out with Your Local Branch
+                  </Link>
                 </div>
               </div>
             ))}
@@ -152,7 +158,7 @@ function DepartmentsPage() {
         <section className="relative border-t-4 border-black bg-surface-container px-margin-mobile py-stack-lg md:px-margin-desktop">
           <div className="mx-auto max-w-5xl">
             <div className="mb-8 text-center">
-              <span className="mb-3 inline-block border-2 border-black bg-primary px-3 py-1 text-xs font-black uppercase tracking-widest text-on-primary">
+              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-primary px-3 py-1 text-xs font-black uppercase tracking-widest text-on-primary">
                 The rest of the body
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase">Explore Every Department</h2>
@@ -170,7 +176,7 @@ function DepartmentsPage() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search by name or role — try 'prayer', 'sound' or 'kids'..."
-                  className="input-focus w-full border-2 border-black bg-surface-container-lowest px-11 py-3.5 text-sm font-medium text-on-surface placeholder:text-on-surface-variant"
+                  className="input-focus w-full rounded-none border border-on-background/10 bg-surface-container-lowest px-11 py-3.5 text-sm font-medium text-on-surface placeholder:text-on-surface-variant"
                 />
               </label>
 <div className="flex flex-wrap gap-2">
@@ -215,14 +221,14 @@ function DepartmentsPage() {
           <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent" />
           <div className="relative z-10 mx-auto max-w-5xl">
             <div className="mb-12 text-center">
-              <span className="mb-3 inline-block border-2 border-black bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
+              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
                 The heart behind it
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase text-primary-fixed-dim">
                 Why We Serve
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm text-surface-container-low">
-                Serving isn't about filling a rota — it's about responding to grace, finding your family and growing into who God made you to be.
+                Serving is worship. We respond to grace, take our place in the body, and grow as we minister to the total person.
               </p>
             </div>
 
@@ -230,7 +236,7 @@ function DepartmentsPage() {
               {WHY_SERVE.map((w, i) => (
                 <div
                   key={w.title}
-                  className={`relative flex flex-col border-2 border-black p-6 shadow-[6px_6px_0_0_#000] ${
+                  className={`relative flex flex-col rounded-none border border-on-background/10 p-6 shadow-[6px_6px_0_0_#000] ${
                     i % 2 === 0 ? "bg-secondary-container text-on-secondary-container" : "bg-primary text-on-primary"
                   }`}
                 >
@@ -238,7 +244,7 @@ function DepartmentsPage() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span
-                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center border-2 border-black ${
+                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-none border border-on-background/10 ${
                       i % 2 === 0 ? "bg-on-background text-surface" : "bg-surface text-on-surface"
                     }`}
                   >
@@ -251,16 +257,19 @@ function DepartmentsPage() {
               ))}
             </div>
 
-            <div className="mt-12 flex flex-col items-center gap-4 border-2 border-black bg-surface p-8 text-center shadow-[6px_6px_0_0_#000] sm:flex-row sm:justify-between sm:text-left">
+            <div className="mt-12 flex flex-col items-center gap-4 rounded-none border border-on-background/10 bg-surface p-8 text-center shadow-[6px_6px_0_0_#000] sm:flex-row sm:justify-between sm:text-left">
               <div>
                 <h3 className="font-headline-md mb-1 text-headline-md text-on-surface">Still not sure where you fit?</h3>
                 <p className="text-sm text-on-surface">
-                  Fill out our gift assessment and we'll help you find your perfect team.
+                  Take the quiz and we&apos;ll help you find where you fit in the local branch.
                 </p>
               </div>
-              <button className="shrink-0 border-2 border-black bg-primary px-8 py-3 text-sm font-black uppercase tracking-wider text-on-primary transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
-                Take the Assessment
-              </button>
+              <Link
+                href="/contact"
+                className="shrink-0 rounded-none border border-on-background/10 bg-primary px-8 py-3 text-sm font-black uppercase tracking-wider text-on-primary text-center transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+              >
+                To the Quiz
+              </Link>
             </div>
           </div>
         </section>

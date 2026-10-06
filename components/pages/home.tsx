@@ -112,7 +112,7 @@ function Index({
             </span>
           </div>
           <h1 className="font-display-xl text-[44px] sm:text-[60px] md:text-display-xl text-[#e8e0e9] uppercase leading-none drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] z-30 mix-blend-exclusion">
-            FAITH LOOKS <br /> DIFFERENT HERE.
+            THIS IS CHURCH <br /> FOR THIS GENERATION.
           </h1>
           <p className="font-body-lg text-base sm:text-body-lg text-[#e8e0e9] mt-5 md:mt-6 max-w-2xl bg-[#151218]/40 backdrop-blur-md p-4 border border-[#958da1]/30 pointer-events-auto rounded">
             A spirit-filled, revival-seeking church. We are young people serving God with passion, gathering to
@@ -125,13 +125,12 @@ function Index({
             >
               FIND A BRANCH
             </Link>
-            <Link
-              href="/messages"
-              className="bg-[#2c292f] text-[#e8e0e9] border-2 border-[#958da1] font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 hover:bg-[#37333a] transition-colors flex items-center justify-center gap-2"
+            <a
+              href="/mission"
+              className="bg-[#2c292f] text-[#e8e0e9] border-2 border-[#958da1] font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 hover:bg-[#37333a] transition-colors flex items-center justify-center"
             >
-              <span className="material-symbols-outlined">play_circle</span>
-              WATCH THE EXPERIENCE
-            </Link>
+              LEARN MORE
+            </a>
           </div>
         </div>
       </header>
@@ -172,8 +171,8 @@ function Index({
                 className="font-display-xl uppercase text-[#7c3aed] leading-[0.95]"
                 style={{ fontSize: "clamp(2.25rem, 5.2vw, 5.5rem)" }}
               >
-                WE ARE THE <br />
-                PHASE 2 GENERATION
+                WE ARE <br />
+                KHARIS PHASE 2
               </h2>
               <div
                 className="bg-[#7c3aed]"
@@ -197,7 +196,7 @@ function Index({
           </div>
         </section>
 
-        <section className="py-24 bg-gray-50 relative overflow-hidden border-y-8 border-gray-900" id="departments">
+        <section className="py-24 bg-gray-50 relative overflow-hidden border-b-4 border-gray-900" id="departments">
           <div className="max-w-7xl mx-auto px-margin-desktop relative z-10">
             <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#7c3aed] mb-3">We are passionate about God and His word.</p>
             <h2 className="font-display-xl text-5xl md:text-7xl uppercase text-gray-900 leading-none">
@@ -212,7 +211,7 @@ function Index({
               >
                 <img
                   alt="Our mandate: bringing Christ to people"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
                   src="/assets/mandate.png"
                   loading="lazy"
                   decoding="async"
@@ -236,7 +235,7 @@ function Index({
               >
                 <img
                   alt="Find a Kharis location"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
                   src="/assets/branch-slide-3.jpg"
                   loading="lazy"
                   decoding="async"
@@ -259,7 +258,7 @@ function Index({
               >
                 <img
                   alt="Young adults at Kharis"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
                   src="/assets/young-adults.jpg"
                   loading="lazy"
                   decoding="async"
@@ -280,7 +279,7 @@ function Index({
               >
                 <img
                   alt="Worship night"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
                   src="/assets/worship.jpg"
                   loading="lazy"
                   decoding="async"
@@ -301,7 +300,7 @@ function Index({
               >
                 <img
                   alt="Serve with us"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
                   src="/assets/serve-with-us.jpg"
                   loading="lazy"
                   decoding="async"
@@ -322,7 +321,7 @@ function Index({
         </section>
 
         <section
-          className="py-24 bg-[#7c3aed] dark:bg-[#151218] border-b-8 border-gray-900 relative overflow-hidden"
+          className="py-24 bg-[#7c3aed] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden"
           id="pastor"
         >
           <div className="halftone-bg absolute inset-0 text-white opacity-20"></div>
@@ -365,16 +364,19 @@ function Index({
 
         <section
           id="testimonies"
-          className="py-16 sm:py-20 lg:py-24 bg-[#f0e6f8] dark:bg-[#151218] border-y-8 border-gray-900 relative overflow-hidden transition-colors duration-300"
+          className="py-16 sm:py-20 lg:py-24 bg-[#f0e6f8] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
         >
           <div className="halftone-bg text-[#7c3aed]/10 opacity-30 absolute inset-0 z-0"></div>
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
             <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
-              FROM THE FAMILY
+              Salvation · Healing · Miracles
             </span>
-            <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-10 sm:mb-12 lg:mb-16 transition-colors duration-300">
-              REAL STORIES
+            <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-4 transition-colors duration-300">
+              TESTIMONIES
             </h2>
+            <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-2xl mb-10 sm:mb-12 lg:mb-16">
+              Salvation and life transformation, healing, and miracles — what God is doing in this house.
+            </p>
 
             {testimonials.length > 0 ? (
               <TestimonialCarousel testimonials={testimonials} />
@@ -399,7 +401,7 @@ function Index({
         </section>
 
         <section
-          className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#151218] border-y-8 border-gray-900 relative overflow-hidden transition-colors duration-300"
+          className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
           id="media"
         >
           <div className="halftone-bg text-[#7c3aed]/10 opacity-30 absolute inset-0 z-0"></div>
@@ -514,7 +516,7 @@ function Index({
         </section>
 
         <section
-          className="py-16 sm:py-20 lg:py-24 bg-[#f0e6f8] dark:bg-[#1a1625] border-y-8 border-gray-900 relative overflow-hidden transition-colors duration-300"
+          className="py-16 sm:py-20 lg:py-24 bg-[#f0e6f8] dark:bg-[#1a1625] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
           id="app"
         >
           <div className="halftone-bg text-[#7c3aed]/10 opacity-30 absolute inset-0 z-0"></div>
@@ -623,7 +625,7 @@ function Index({
               >
                 <div className="w-10 h-10 bg-gray-900 dark:bg-[#e8e0e9] rounded-lg flex items-center justify-center text-white dark:text-gray-900">
                   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M17.3 8.4c.5-.6 1-1.4 1-2.4 0-2.5-2-4.4-4.4-4.4-.6 0-1.2.1-1.7.4.2-.2.4-.5.4-.8 0-.5-.4-.9-.9-.9-.3 0-.5.1-.7.3C9.9.7 9 .6 8.2.6c-2.6 0-4.7 2-4.7 4.6 0 .4 0 .8.1 1.2C1.8 7.2 0 9.6 0 12.4c0 3.3 2.3 6 5.4 6.7-.3.5-.5 1-.5 1.6 0 1.3 1 2.3 2.3 2.3.6 0 1.1-.2 1.5-.6.4.4 1 .6 1.5.6 1.3 0 2.3-1 2.3-2.3 0-.3 0-.6-.1-.8 2.7-.7 4.7-3.1 4.7-6 0-2.6-1.6-4.8-3.9-5.8.5-.2 1-.3 1.6-.3.3 0 .5 0 .8-.1-.2.3-.3.6-.3 1 0 .5.2 1 .5 1.3zm-3.3-4.9c1.4 0 2.6 1.2 2.6 2.6 0 .4-.1.8-.3 1.1-1-.6-2.2-1-3.5-1.1-.3-1-.9-1.9-1.7-2.5.3-.1.6-.1 1-.1z" />
+                    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
                   </svg>
                 </div>
                 <div className="text-left">
@@ -639,9 +641,12 @@ function Index({
                 rel="noreferrer"
                 className="inline-flex items-center gap-3 bg-white dark:bg-[#1f1c24] text-gray-900 dark:text-[#e8e0e9] px-5 py-3 comic-border brutalist-shadow hover:-translate-y-1 transition-transform"
               >
-                <div className="w-10 h-10 bg-[#7c3aed] rounded-lg flex items-center justify-center text-white">
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.4154.4154 0 00-.5676.1521l-2.0225 3.503C15.5902 8.4799 13.8533 8.135 12 8.135c-1.8536 0-3.5906.3449-5.1371.9575L4.8404 5.5893a.4154.4154 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589.3432 18.6627h23.3136c0-4.0038-2.3457-7.476-5.7746-9.3413" />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#3ddc84]">
+                  <svg className="w-7 h-7" viewBox="2 5 20 12.5" aria-hidden="true">
+                    <path
+                      fill="#073042"
+                      d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.43 11.43 0 0 0-8.94 0L5.65 5.67c-.19-.29-.54-.37-.83-.22-.3.16-.42.54-.26.85l1.84 3.18C4.16 11.03 2.5 13.58 2.5 16.5h19c0-2.92-1.66-5.47-3.9-7.02z"
+                    />
                   </svg>
                 </div>
                 <div className="text-left">

@@ -78,8 +78,16 @@ async function loadPublished(): Promise<TestimonyRow[]> {
   return rows.filter((row) => SITE_WORKSPACES.includes(row.workspace as (typeof SITE_WORKSPACES)[number]));
 }
 
+const TESTIMONY_FOCUS =
+  /salvation|heal|miracle|transform|deliverance|life change|new life/i;
+
 export async function getHomeTestimonials(): Promise<Testimonial[]> {
-  const rows = (await loadPublished()).filter((row) => row.is_featured);
+  const published = await loadPublished();
+  const featured = published.filter((row) => row.is_featured);
+  const focused = featured.filter((row) =>
+    TESTIMONY_FOCUS.test(`${row.category ?? ""} ${row.short_description ?? ""} ${row.description ?? ""}`),
+  );
+  const rows = focused.length ? focused : featured;
   return rows
     .map((row, i) => {
       const style = HOME_STYLES[i % HOME_STYLES.length]!;
@@ -96,7 +104,9 @@ export async function getHomeTestimonials(): Promise<Testimonial[]> {
 }
 
 export async function getGivingTestimonials(): Promise<GivingTestimony[]> {
-  const rows = (await loadPublished()).filter((row) => row.is_featured_giving);
+  const published = await loadPublished();
+  const giving = published.filter((row) => row.is_featured_giving);
+  const rows = giving.length ? giving : published.filter((row) => row.is_featured);
 
   return rows
     .map((row, i) => {

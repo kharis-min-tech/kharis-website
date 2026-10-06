@@ -563,9 +563,9 @@ div.hard-shadow:hover {
 
 /* Filled buttons flip to the accent colour on hover. */
 button.bg-primary:hover,
-a.bg-primary:hover,
+a.bg-primary:hover:not(.no-accent-fill),
 button.bg-primary-container:hover,
-a.bg-primary-container:hover {
+a.bg-primary-container:hover:not(.no-accent-fill) {
   background-color: var(--secondary-container);
   color: var(--on-secondary-container);
 }
@@ -576,13 +576,15 @@ a.bg-secondary:hover {
   background-color: var(--primary);
   color: var(--on-primary);
 }
-/* Outline / ghost buttons fill in on hover. */
-button.bg-surface:hover,
-a.bg-surface:hover,
-button.bg-white:hover,
-a.bg-white:hover,
-button.bg-transparent:hover,
-a.bg-transparent:hover {
+/* Outline / ghost buttons fill in on hover.
+   Skip .group cards — those are large tiles, not buttons, and a purple
+   fill makes their titles unreadable. */
+button.bg-surface:hover:not(.no-accent-fill),
+a.bg-surface:hover:not(.group):not(.no-accent-fill),
+button.bg-white:hover:not(.no-accent-fill),
+a.bg-white:hover:not(.group):not(.no-accent-fill),
+button.bg-transparent:hover:not(.no-accent-fill),
+a.bg-transparent:hover:not(.group):not(.no-accent-fill) {
   background-color: var(--primary);
   color: var(--on-primary);
 }
@@ -645,10 +647,10 @@ main > div > section {
 }
 
 /* Fixed-tone and inverse filled buttons also react on hover. */
-button.bg-primary-fixed:hover,
-a.bg-primary-fixed:hover,
-button.bg-primary-fixed-dim:hover,
-a.bg-primary-fixed-dim:hover {
+button.bg-primary-fixed:hover:not(.no-accent-fill),
+a.bg-primary-fixed:hover:not(.no-accent-fill),
+button.bg-primary-fixed-dim:hover:not(.no-accent-fill),
+a.bg-primary-fixed-dim:hover:not(.no-accent-fill) {
   background-color: var(--primary);
   color: var(--on-primary);
 }
@@ -1157,3 +1159,39 @@ html, body { max-width: 100%; overflow-x: hidden; }
 
 .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+dialog.ui-dialog {
+  margin: auto;
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+}
+dialog.ui-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* Statement of faith: plus when closed, minus when open. */
+.faith-item > .faith-summary {
+  list-style: none;
+}
+.faith-item > .faith-summary::-webkit-details-marker,
+.faith-item > .faith-summary::marker {
+  display: none;
+  content: none;
+}
+.faith-toggle {
+  position: relative;
+}
+.faith-toggle .faith-icon-plus.material-symbols-outlined,
+.faith-toggle .faith-icon-minus.material-symbols-outlined {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.faith-toggle .faith-icon-minus.material-symbols-outlined {
+  display: none;
+}
+.faith-item[open] .faith-icon-plus.material-symbols-outlined {
+  display: none;
+}
+.faith-item[open] .faith-icon-minus.material-symbols-outlined {
+  display: inline-block;
+}

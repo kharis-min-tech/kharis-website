@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { YoutubeEmbed } from "@/components/YoutubeEmbed";
 import {
   displayMessageTitle,
@@ -56,9 +57,27 @@ function SoundCloudIcon({ className = "" }: { className?: string }) {
   );
 }
 
+function AppIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M17 1.01 7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99ZM17 19H7V5h10v14Z" />
+    </svg>
+  );
+}
+
 /* ---------------- data ---------------- */
 
 const SOCIALS = [
+  {
+    label: "Kharis App",
+    handle: "iOS & Android",
+    copy: "Messages, notes and giving in one place.",
+    href: "/#app-stores",
+    cta: "GET THE APP",
+    Icon: AppIcon,
+    band: "bg-primary text-on-primary",
+    external: false,
+  },
   {
     label: "Instagram",
     handle: "@kharisphasetwo",
@@ -133,7 +152,7 @@ function MediaPage({
           </h1>
           <p className="font-body-lg text-primary-fixed-dim max-w-xl mx-auto mb-stack-md">
             Everywhere Kharis lives online. Follow the feeds, and tune into messages
-            from our head pastor on YouTube, Spotify and SoundCloud.
+            from our head pastor on YouTube, Spotify and SoundCloud — or listen in the app.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <a
@@ -163,13 +182,14 @@ function MediaPage({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {SOCIALS.map(({ label, handle, copy, href, cta, Icon, band }) => (
+            {SOCIALS.map(({ label, handle, copy, href, cta, Icon, band, external = true }) => (
               <a
                 key={label}
                 href={href}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="group bg-surface-container border-2 border-black neo-shadow hover-press flex flex-col"
+                {...(external
+                  ? { target: "_blank", rel: "noreferrer noopener" }
+                  : {})}
+                className="group bg-surface-container border-2 border-black rounded-none neo-shadow hover-press flex flex-col"
               >
                 <div className={`${band} border-b-2 border-black p-6 flex items-center gap-4`}>
                   <Icon className="w-10 h-10 shrink-0 transition-transform duration-300 group-hover:scale-110" />
@@ -331,6 +351,12 @@ function MediaPage({
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <a
+                    href="/#app-stores"
+                    className="bg-primary text-on-primary font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined">smartphone</span> LISTEN VIA THE APP
+                  </a>
+                  <a
                     href={featured ? youtubeWatchUrl(featured.id) : "https://youtube.com/@davidantwi"}
                     target="_blank"
                     rel="noreferrer noopener"
@@ -387,34 +413,14 @@ function MediaPage({
           </div>
         </section>
 
-        {/* Newsletter */}
-        <section className="relative z-10 pb-stack-lg container mx-auto px-margin-mobile">
-          <div className="bg-primary text-on-primary border-4 border-black p-stack-md flex flex-col md:flex-row items-center gap-gutter relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 halftone-bg opacity-10 -mr-32 -mt-32 rounded-full"></div>
-            <div className="relative z-10 md:w-1/2">
-              <h2 className="font-headline-md text-4xl uppercase mb-4">Never Miss a Word</h2>
-              <p className="font-body-lg text-primary-fixed">
-                Get an email when a new message drops on YouTube, Spotify or SoundCloud.
-              </p>
-            </div>
-            <div className="relative z-10 md:w-1/2 w-full">
-              <form className="flex flex-col sm:flex-row gap-2" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  className="flex-1 bg-surface text-on-background border-2 border-black px-4 py-3 font-label-md focus:ring-0"
-                  placeholder="Your email address"
-                  type="email"
-                  aria-label="Email address"
-                />
-                <button
-                  className="bg-secondary-container text-on-background px-8 py-3 border-2 border-black font-headline-md uppercase neo-shadow hover-press"
-                  type="submit"
-                >
-                  Subscribe
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
+        <NewsletterSignup
+          title="Never Miss a Word"
+          copy="Get an email when a new message drops on YouTube, Spotify or SoundCloud."
+          placeholder="Your email address"
+          className="bg-primary text-on-primary"
+          copyClassName="text-primary-fixed"
+          buttonClassName="bg-secondary-container text-on-background"
+        />
       </main>
 
       <SiteFooter />

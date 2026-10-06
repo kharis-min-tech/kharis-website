@@ -24,10 +24,8 @@ const COLUMNS: FooterColumn[] = [
     title: "Get Involved",
     titleColor: "text-on-background",
     links: [
-      { label: "Become a Member", to: "/fellowships" },
+      { label: "Become a member", to: "https://kharis.org/", href: true },
       { label: "Volunteer", to: "/departments" },
-      { label: "Fellowships", to: "/fellowships" },
-      { label: "Departments", to: "/departments" },
       { label: "Testimony Form", to: "/#share-testimony" },
     ],
   },

@@ -80,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={organizationJsonLd()} />
         <ScrollReveal />
         {children}
+        <script src="/ui-boot.js?v=7" defer></script>
       </body>
     </html>
   );

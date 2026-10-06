@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   hasCoords,
+  mapsEmbedUrl,
   osmEmbedUrlAtZoom,
   splitServices,
   type Branch,
@@ -121,9 +122,6 @@ function BranchPage({
   const campusEvents = eventsForBranch(events, branch);
   const others = branches.filter((item) => item.slug !== branch.slug);
   const giveHref = branch.givingLink || "/giving";
-  const pastorLead = branch.pastorRole.toLowerCase().includes("pastor")
-    ? "pastor"
-    : "lead";
 
   const [zoomLevel, setZoomLevel] = useState(15);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
@@ -144,26 +142,26 @@ function BranchPage({
   }, []);
 
   const mapSrc = useMemo(
-    () => (hasCoords(branch) ? osmEmbedUrlAtZoom(branch, zoomLevel) : ""),
+    () => (hasCoords(branch) ? osmEmbedUrlAtZoom(branch, zoomLevel) : mapsEmbedUrl(branch)),
     [branch, zoomLevel],
   );
 
-  const welcomeParagraphs = [
-    `I serve as the ${pastorLead} of ${branch.name}, part of the Kharis Phase 2 family.${branch.description ? ` ${branch.description}` : ""}`,
-    "We love teaching the Word of God, and we long to see believers established in their faith and our city strengthened.",
-    `Whether you are visiting ${branch.city} for a season or looking for a church to call home, there is a place for you here.`,
-  ];
-
-  function sendBranchMessage(event: FormEvent) {
+  function sendBranchMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const to = branch.email;
     if (!to) {
       router.push("/contact");
       return;
     }
+    const data = new FormData(event.currentTarget);
+    const name = String(data.get("name") || contactName).trim();
+    const email = String(data.get("email") || contactEmail).trim();
+    const phone = String(data.get("phone") || "").trim();
+    const message = String(data.get("message") || contactMessage).trim();
     const subject = encodeURIComponent(`Message for ${branch.name}`);
+    const phoneLine = phone ? `\nPhone: ${phone}` : "";
     const body = encodeURIComponent(
-      `From: ${contactName}\nEmail: ${contactEmail}\n\n${contactMessage}`,
+      `From: ${name}\nEmail: ${email}${phoneLine}\n\n${message}`,
     );
     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
   }
@@ -295,6 +293,14 @@ function BranchPage({
                 </span>
                 Give
               </Link>
+
+              <a
+                href="#contact"
+                className="flex items-center justify-center gap-2 bg-white text-on-background px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide brutalist-border"
+              >
+                <span className="material-symbols-outlined text-[18px]">mail</span>
+                Contact Us
+              </a>
             </div>
           </div>
         </section>
@@ -436,7 +442,7 @@ function BranchPage({
 
             <div className="lg:col-span-7">
               <div className="bg-surface-container-lowest brutalist-border brutalist-shadow p-3 h-[500px] relative overflow-hidden">
-                {hasCoords(branch) ? (
+                {mapSrc ? (
                   <div className="absolute inset-3 overflow-hidden">
                     <iframe
                       title={`Map of ${branch.name}`}
@@ -492,75 +498,6 @@ function BranchPage({
                         <span className="material-symbols-outlined">remove</span>
                       </button>
                     </div>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Pastor welcome */}
-        <section
-          id="pastor"
-          className="py-16 bg-surface-container-low border-y-4 border-on-background"
-        >
-          <div className="max-w-[1536px] mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-center">
-              <div className="md:col-span-5 relative">
-                <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center bg-primary text-on-primary brutalist-border sm:flex">
-                  <span className="material-symbols-outlined">auto_awesome</span>
-                </div>
-                <div className="aspect-[4/5] overflow-hidden brutalist-border brutalist-shadow bg-on-background">
-                  <img
-                    src={branch.pastorImage}
-                    alt={branch.pastor}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="absolute -bottom-4 -right-4 bg-background px-5 py-3 brutalist-border brutalist-shadow">
-                  <p className="font-body-md text-[11px] font-bold uppercase tracking-wider text-primary">
-                    {branch.pastorRole || "Pastor"}
-                  </p>
-                  <p className="font-display-lg text-[18px] uppercase">{branch.pastor}</p>
-                </div>
-              </div>
-
-              <div className="md:col-span-7 space-y-5">
-                <h2 className="font-display-lg text-headline-lg uppercase leading-none">
-                  Welcome to{" "}
-                  <span className="text-primary">{branch.name}</span>
-                </h2>
-                <p className="font-body-md text-[13px] font-bold uppercase tracking-wider text-primary">
-                  {branch.pastorRole} {branch.pastor}
-                </p>
-                <div className="space-y-4">
-                  {welcomeParagraphs.map((para) => (
-                    <p key={para.slice(0, 24)} className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                      {para}
-                    </p>
-                  ))}
-                </div>
-                <blockquote className="border-l-4 border-secondary-container pl-4 font-body-md text-body-md italic">
-                  &ldquo;{branch.pastorBio}&rdquo;
-                </blockquote>
-                <div className="flex flex-wrap gap-3 pt-1">
-                  {branch.phone ? (
-                    <a
-                      href={`tel:${branch.phone.replace(/\s/g, "")}`}
-                      className="inline-flex items-center gap-1.5 border-2 border-on-background/20 bg-background px-3 py-1.5 font-body-md text-[12px] font-bold"
-                    >
-                      <span className="material-symbols-outlined text-[16px] text-primary">call</span>
-                      {branch.phone}
-                    </a>
-                  ) : null}
-                  {branch.email ? (
-                    <a
-                      href={`mailto:${branch.email}`}
-                      className="inline-flex items-center gap-1.5 border-2 border-on-background/20 bg-background px-3 py-1.5 font-body-md text-[12px] font-bold break-all"
-                    >
-                      <span className="material-symbols-outlined text-[16px] text-primary">mail</span>
-                      {branch.email}
-                    </a>
                   ) : null}
                 </div>
               </div>
@@ -760,9 +697,11 @@ function BranchPage({
                   <span className="font-label-md uppercase">Your name</span>
                   <input
                     required
+                    name="name"
+                    autoComplete="name"
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
-                    className="brutalist-border p-4 font-body-md bg-background"
+                    className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface"
                     placeholder="Jane Doe"
                   />
                 </label>
@@ -770,22 +709,36 @@ function BranchPage({
                   <span className="font-label-md uppercase">Email</span>
                   <input
                     required
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     value={contactEmail}
                     onChange={(e) => setContactEmail(e.target.value)}
-                    className="brutalist-border p-4 font-body-md bg-background"
+                    className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface"
                     placeholder="hello@example.com"
                   />
                 </label>
               </div>
               <label className="flex flex-col gap-2">
+                <span className="font-label-md uppercase">Phone</span>
+                <input
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface"
+                  placeholder="+44 20 0000 0000"
+                />
+              </label>
+              <label className="flex flex-col gap-2">
                 <span className="font-label-md uppercase">Message</span>
                 <textarea
                   required
+                  name="message"
                   rows={5}
                   value={contactMessage}
                   onChange={(e) => setContactMessage(e.target.value)}
-                  className="brutalist-border p-4 font-body-md bg-background resize-none"
+                  className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface resize-none"
                   placeholder={`How can the ${branch.city} team help?`}
                 />
               </label>

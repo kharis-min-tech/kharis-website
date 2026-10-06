@@ -31,6 +31,8 @@ function isSkippedMessage(title: string) {
   const hashCount = (lower.match(/#/g) || []).length;
   return (
     lower.includes("#shorts") ||
+    lower.includes("#short") ||
+    /\bshorts\b/.test(lower) ||
     lower.includes("#preach") ||
     hashCount >= 2 ||
     lower.endsWith(" shorts") ||
