@@ -15,7 +15,6 @@ import { PlanVisitButton } from "@/components/PlanVisitButton";
 
 const HERO_WORSHIP = "/assets/events-hero-worship.jpg";
 const WORSHIP = "/assets/worship.jpg";
-const PASTOR_DAVID = "/assets/leadership-pastor-david.jpg";
 
 const SPECIAL_SERVICES = [
   {
@@ -404,58 +403,6 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 </button>
               </div>
             )}
-          </div>
-        </section>
-
-        {/* HEAD PASTOR */}
-        <section className="bg-surface py-stack-lg">
-          <div className="container mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-              <div className="md:col-span-7">
-                <div className="relative neo-shadow-lg border-2 border-on-background group overflow-hidden">
-                  <div className="aspect-video w-full">
-                    <img
-                      alt="Pastor David Antwi, Head Pastor of Kharis Ministries"
-                      className="w-full h-full object-cover object-top grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-                      src={PASTOR_DAVID}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <div className="absolute top-4 left-4 bg-primary text-on-primary font-label-md px-4 py-2 border-2 border-on-background uppercase neo-shadow">
-                    Head Pastor
-                  </div>
-                </div>
-              </div>
-              <div className="md:col-span-5 flex flex-col gap-stack-md">
-                <h2 className="font-headline-lg text-headline-lg text-on-background uppercase leading-tight">
-                  Pastor <span className="text-primary italic">David</span>{" "}
-                  Antwi
-                </h2>
-                <div className="flex gap-4 items-center flex-wrap">
-                  <span className="bg-secondary-container text-on-secondary-container font-label-md px-3 py-1 border-2 border-on-background">
-                    HEAD PASTOR
-                  </span>
-                  <span className="font-label-md text-outline">
-                    KHARIS MINISTRIES
-                  </span>
-                </div>
-                <p className="text-body-lg font-body-lg text-on-surface-variant">
-                  Pastor David leads and teaches across our gatherings — from
-                  Sunday Culture to our conferences and nights of worship.
-                  Expect scripture handled with care, a heart for the city, and
-                  a call to live the faith out loud wherever you are.
-                </p>
-                <div className="pt-2">
-                  <Link
-                    href="/messages"
-                    className="inline-block bg-primary-container text-on-primary-container font-headline-md text-headline-md px-10 py-4 border-4 border-on-background neo-shadow-lg neo-button-hover transition-all w-full md:w-auto text-center uppercase"
-                  >
-                    Hear Him Preach
-                  </Link>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 

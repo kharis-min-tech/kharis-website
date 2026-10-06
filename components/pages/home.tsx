@@ -108,7 +108,7 @@ function Index({
         <div className="absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none px-margin-mobile md:px-margin-desktop text-center mt-0 md:mt-[-10vh]">
           <div className="bg-[#f7be1d] px-4 sm:px-6 py-2 sm:py-3 mb-5 md:mb-8 pointer-events-auto shadow-[4px_4px_0px_0px_rgba(19,16,22,1)] border-2 border-[#151218] rotate-[-2deg] max-w-full">
             <span className="font-label-comic text-[11px] sm:text-label-comic text-[#3f2e00] uppercase tracking-widest">
-              Your next chapter starts here.
+              Preach Christ Crucified.
             </span>
           </div>
           <h1 className="font-display-xl text-[44px] sm:text-[60px] md:text-display-xl text-[#e8e0e9] uppercase leading-none drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] z-30 mix-blend-exclusion">
@@ -164,7 +164,7 @@ function Index({
                   fontSize: "clamp(0.7rem, 1.1vw, 1rem)",
                 }}
               >
-                Our DNA
+                We are passionate about God and His word.
               </div>
             </div>
             <div className="order-1 md:order-2 flex flex-col" style={{ gap: "clamp(0.9rem, 2.2vh, 2rem)" }}>
@@ -183,9 +183,9 @@ function Index({
                 className="font-body-lg text-gray-600 leading-relaxed max-w-2xl"
                 style={{ fontSize: "clamp(1rem, 1.45vw, 1.6rem)" }}
               >
-                At Kharis Phase 2 we desire to see young people throughout the UK living with a genuine passion for
-                Jesus. Services are always dynamic, life-transforming and filled with the Word of God! We are a new
-                breed of Christian who are excited about Jesus and not ashamed to show it.
+                We are a new breed of Christian who are passionate about Jesus and not afraid to show it. We believe
+                in the sound teaching of Christ, the bible is our final authority, and Christ is the centre of our
+                lives.
               </p>
               <p
                 className="font-body-lg text-gray-600 italic border-l-4 md:border-l-8 border-[#7c3aed] max-w-2xl"
@@ -199,7 +199,7 @@ function Index({
 
         <section className="py-24 bg-gray-50 relative overflow-hidden border-y-8 border-gray-900" id="departments">
           <div className="max-w-7xl mx-auto px-margin-desktop relative z-10">
-            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#7c3aed] mb-3">Family</p>
+            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#7c3aed] mb-3">We are passionate about God and His word.</p>
             <h2 className="font-display-xl text-5xl md:text-7xl uppercase text-gray-900 leading-none">
               GET TO KNOW <span className="text-[#7c3aed]">KHARIS</span>
             </h2>
@@ -335,9 +335,12 @@ function Index({
                 <h2 className="font-display-xl text-5xl md:text-7xl text-white leading-none uppercase mb-6">
                   A WORD FROM <span className="text-[#f7be1d]">OUR HEAD PASTOR</span>
                 </h2>
+                <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-4 max-w-lg">
+                  Give yourself to the word of God. Are you struggling with sin? Are you addicted? Try the Bible and
+                  see if it won’t change your life.
+                </p>
                 <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-8 max-w-lg">
-                  "God is doing something new in this generation. Kharis Phase 2 is more than a church — it's a family
-                  where young people encounter Jesus and discover their purpose."
+                  Hebrews 4:12 — The word of God is living and powerful and sharper than any two edged sword.
                 </p>
                 <Link
                   href="/mission"

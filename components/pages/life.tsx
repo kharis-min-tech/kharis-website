@@ -35,13 +35,13 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
 
         <div className="absolute inset-0 halftone-pattern text-primary opacity-20 pointer-events-none"></div>
         <div className="relative z-10 px-margin-desktop w-full max-w-7xl mx-auto flex flex-col items-start gap-6">
-          <div className="bg-secondary-container text-on-secondary-container px-4 py-1 border-2 border-black inline-block font-label-md text-label-md uppercase -rotate-2 animate-bounce motion-reduce:animate-none">Lifestyle</div>
+          <div className="bg-secondary-container text-on-secondary-container px-4 py-1 border-2 border-black inline-block font-label-md text-label-md uppercase -rotate-2 animate-bounce motion-reduce:animate-none">Get busy serving!</div>
           <h1 className="font-display-lg text-display-lg max-w-4xl leading-[1] tracking-tighter uppercase mb-4">
             This isn't just a church.<br/>
             <span className="text-primary-fixed bg-primary px-4 py-2 inline-block skew-x-3">It's a Movement.</span>
           </h1>
           <p className="font-body-lg text-body-lg max-w-2xl text-surface-variant font-medium">
-            Experience a high-energy community where faith meets urban culture. We are young, bold, and driven by a mission to transform the world through love and creativity.
+            Experience a spirit-filled, faith lifting and powerpacked culture. Leave every service ready to impact your generation with Christ.
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8">
             <Link

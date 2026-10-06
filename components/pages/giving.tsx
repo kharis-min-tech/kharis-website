@@ -58,14 +58,14 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 <div className="absolute inset-0 halftone-pattern text-primary/20 pointer-events-none"></div>
 <div className="relative z-10 text-center max-w-4xl">
 <div className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 brutalist-border font-label-md text-label-md uppercase mb-6 animate-bounce">
-                    Impact Through Grace
+                    We are passionate about God and His word.
                 </div>
 <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg text-white mb-8 tracking-tighter uppercase">
                     Your Generosity <br/>
 <span className="text-secondary-fixed">Powers the Mission</span>
 </h1>
 <p className="font-body-lg text-body-lg text-white/80 mb-10 max-w-2xl mx-auto">
-                    Kharis Phase 2 is about expanding our reach and deepening our impact. Every seed sown directly supports community outreach, digital fellowship, and regional development.
+                    Giving tithes and offerings are biblical principles and part of our worship. In most of our services, we give everyone the opportunity to give. &lsquo;He who sows sparingly will also reap sparingly, and he who sows bountifully will also reap bountifully&rsquo; – 2 Corinthians 9:6.
                 </p>
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
                 <a href={ONLINE_GIVE_URL} target="_blank" rel="noreferrer" className="w-full md:w-auto bg-primary text-on-primary brutalist-border-thick neo-shadow-lg px-12 py-4 font-headline-md text-2xl hover:scale-105 transition-all">
