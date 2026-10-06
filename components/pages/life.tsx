@@ -36,13 +36,13 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
 
         <div className="absolute inset-0 halftone-pattern text-primary opacity-20 pointer-events-none"></div>
         <div className="relative z-10 px-margin-desktop w-full max-w-7xl mx-auto flex flex-col items-start gap-6">
-          <div className="bg-secondary-container text-on-secondary-container px-4 py-1 border-2 border-black inline-block font-label-md text-label-md uppercase -rotate-2 animate-bounce motion-reduce:animate-none">Life at Kharis</div>
+          <div className="bg-secondary-container text-on-secondary-container px-4 py-1 border-2 border-black inline-block font-label-md text-label-md uppercase -rotate-2 animate-bounce motion-reduce:animate-none">Get busy serving!</div>
           <h1 className="font-display-lg text-display-lg max-w-4xl leading-[1] tracking-tighter uppercase mb-4">
             A family church.<br/>
             <span className="text-primary-fixed bg-primary px-4 py-2 inline-block skew-x-3">Faith lived together.</span>
           </h1>
           <p className="font-body-lg text-body-lg max-w-2xl text-surface-variant font-medium">
-            We are a friendly, caring family seeking to influence society with the reality of God&apos;s love — gathering to worship, grow, and do life together.
+            Experience a spirit-filled, faith lifting and powerpacked culture. Leave every service ready to impact your generation with Christ.
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8">
             <Link

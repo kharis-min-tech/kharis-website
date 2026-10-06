@@ -22,7 +22,7 @@ const MAIN_TABS = [
         num: "01",
         title: "Discipleship",
         icon: "menu_book",
-        desc: "The heart of Christianity is the making of disciples",
+        desc: "The heart of Christianity is the making of disciples.",
         ref: "MATT 28:19 (KJV)",
         scripture: "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost",
       },
@@ -30,7 +30,7 @@ const MAIN_TABS = [
         num: "02",
         title: "Care",
         icon: "volunteer_activism",
-        desc: "Everyone is important and everyone deserves to be loved, cared for and supported as they pursue the right course in life",
+        desc: "Everyone is important and everyone deserves to be loved, cared for and supported as they pursue the right course in life.",
         ref: "ROMANS 12:9 (KJV)",
         scripture: "Let love be without dissimulation. Abhor that which is evil; cleave to that which is good.",
       },
@@ -38,7 +38,7 @@ const MAIN_TABS = [
         num: "03",
         title: "Outreach",
         icon: "public",
-        desc: "Jesus reached out to us and gave us the responsibility for reaching out to others with His love",
+        desc: "Jesus reached out to us and gave us the responsibility for reaching out to others with His love.",
         ref: "MARK 16:15 (KJV)",
         scripture: "And he said unto them, Go ye into all the world, and preach the gospel to every creature.",
       },
@@ -81,8 +81,8 @@ const tab = MAIN_TABS[mainTab]!;
 
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 rounded-none border-2 border-black mb-6 uppercase tracking-widest">
-            About Us
+          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-on-background mb-6 uppercase tracking-widest">
+            We are passionate about God and His word.
           </span>
           <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-background uppercase leading-none">
             Who we are becoming
@@ -437,7 +437,7 @@ function AboutPage() {
   <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
   <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
   <div className="relative z-20 text-center px-margin-mobile md:px-margin-desktop max-w-5xl">
-    <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">Established to Ignite</span>
+    <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">Preach Christ Crucified.</span>
     <h1 className="font-display-lg text-headline-lg md:text-display-lg text-primary-fixed-dim uppercase leading-none mb-4">Who We Are</h1>
     <p className="font-body-lg text-body-lg text-background bg-surface/60 backdrop-blur-sm border border-on-surface/25 max-w-2xl mx-auto mb-8 font-medium px-6 py-4">
       Kharis (χάρις) is the Greek word for Grace. While ministering to the total person, we seek to deepen people&apos;s commitment to God and to spiritual values such as holiness, prayer, evangelism, Christ-centred living, Bible study and fellowship.
