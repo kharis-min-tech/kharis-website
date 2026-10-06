@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ScrollReveal } from "@/components/ScrollReveal";
@@ -350,12 +351,12 @@ function MediaPage({
                   take the audio with you on Spotify and SoundCloud.
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  <a
+                  <Link
                     href="/#app-stores"
                     className="bg-primary text-on-primary font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
                   >
                     <span className="material-symbols-outlined">smartphone</span> LISTEN VIA THE APP
-                  </a>
+                  </Link>
                   <a
                     href={featured ? youtubeWatchUrl(featured.id) : "https://youtube.com/@davidantwi"}
                     target="_blank"

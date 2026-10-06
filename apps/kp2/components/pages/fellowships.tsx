@@ -28,19 +28,19 @@ function FellowshipsPage() {
                 life together in a space built for you.
               </p>
               <div className="pt-base flex flex-wrap gap-stack-sm">
-                <a
+                <Link
                   className="bg-primary text-on-primary font-headline-md text-headline-md px-8 py-4 border-heavy neo-shadow-lg hover-lift hover-press flex items-center gap-2"
                   href="/branches"
                 >
                   FIND YOUR FELLOWSHIP
                   <span className="material-symbols-outlined">arrow_downward</span>
-                </a>
-                <a
+                </Link>
+                <Link
                   className="keep-light px-8 py-4 font-headline-md text-headline-md border-2 border-black hover-press flex items-center gap-2"
                   href="/branches"
                 >
                   SEE SERVICES
-                </a>
+                </Link>
               </div>
             </div>
             <div className="relative hidden md:block">

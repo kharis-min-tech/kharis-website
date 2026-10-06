@@ -148,9 +148,9 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 </div>
 <h3 className="font-headline-md text-headline-md uppercase mb-4">Mobile App</h3>
 <p className="font-on-primary/80 font-body-md mb-8 flex-grow">Download the Kharis Hub app. Manage recurring giving and track your history easily.</p>
-<a href="/#app-stores" className="w-full bg-white text-primary brutalist-border neo-shadow py-3 font-label-md uppercase tracking-widest hover:bg-surface-variant transition-colors">
+<Link href="/#app-stores" className="w-full bg-white text-primary brutalist-border neo-shadow py-3 font-label-md uppercase tracking-widest hover:bg-surface-variant transition-colors">
                         GET THE APP
-                    </a>
+                    </Link>
 </div>
 
 <div className="bg-white brutalist-border-thick p-10 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform">
@@ -266,9 +266,9 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
       <p><span className="font-bold">SWIFT:</span> {BANK.swift}</p>
       <p><span className="font-bold">IBAN:</span> {BANK.iban}</p>
     </div>
-    <a href="/#app-stores" className="block w-full text-center py-3 font-label-md uppercase border-2 border-black">
+    <Link href="/#app-stores" className="block w-full text-center py-3 font-label-md uppercase border-2 border-black">
       Give in the app
-    </a>
+    </Link>
   </div>
 </dialog>
 

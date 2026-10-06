@@ -191,10 +191,10 @@ Find a campus
                     Follow the Vibe
                 </h2>
                 <div className="flex flex-wrap justify-center gap-4">
-                    <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="/#app-stores">
+                    <Link className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="/#app-stores">
                         <span className="material-symbols-outlined">smartphone</span>
                         <span className="font-label-md">KHARIS APP</span>
-                    </a>
+                    </Link>
                     <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="https://instagram.com/kharisphasetwo" target="_blank" rel="noreferrer">
                         <span className="material-symbols-outlined">public</span>
                         <span className="font-label-md">INSTAGRAM</span>

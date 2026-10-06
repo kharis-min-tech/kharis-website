@@ -190,7 +190,7 @@ function Index({
                 className="font-body-lg text-gray-600 italic border-l-4 md:border-l-8 border-[#7c3aed] max-w-2xl"
                 style={{ fontSize: "clamp(1rem, 1.45vw, 1.6rem)", paddingLeft: "clamp(1rem, 1.6vw, 1.75rem)" }}
               >
-                "Transforming the culture by reflecting Christ"
+                &quot;Transforming the culture by reflecting Christ&quot;
               </p>
             </div>
           </div>
@@ -675,11 +675,11 @@ function Index({
                 Still Deciding?
               </span>
               <h2 className="relative z-10 font-display-xl text-4xl sm:text-5xl lg:text-7xl text-white uppercase leading-none mb-6">
-                Can't decide which
+                Can&apos;t decide which
                 <br className="hidden sm:block" /> branch to come to?
               </h2>
               <p className="relative z-10 font-body-lg text-body-lg text-white/90 max-w-2xl mx-auto mb-10">
-                You don't have to figure it out alone. Reach out and we'll help you find a Kharis family near you, or
+                You don&apos;t have to figure it out alone. Reach out and we&apos;ll help you find a Kharis family near you, or
                 guide you to your first Sunday.
               </p>
               <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4">
