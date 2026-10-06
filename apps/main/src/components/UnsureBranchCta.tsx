@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 
 export function UnsureBranchCta() {
@@ -29,18 +30,18 @@ export function UnsureBranchCta() {
               Sunday.
             </p>
             <div className="unsure-panel__actions">
-              <a
+              <Link
                 href="/contact"
                 className="unsure-panel__btn unsure-panel__btn--solid"
               >
                 Contact Us
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/locations"
                 className="unsure-panel__btn unsure-panel__btn--ghost"
               >
                 Find a Branch
-              </a>
+              </Link>
             </div>
           </div>
         </div>

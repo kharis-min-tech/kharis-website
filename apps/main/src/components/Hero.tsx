@@ -1,6 +1,7 @@
 /** Homepage hero: self-hosted muted dual-clip crossfade loop (no YouTube UI). */
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type HeroClip = {
@@ -373,9 +374,9 @@ export function Hero() {
             Changing the world with a touch of His grace.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
-            <a href="/locations" className="btn-primary">
+            <Link href="/locations" className="btn-primary">
               Find a Branch
-            </a>
+            </Link>
             <a href="#messages" className="btn-ghost">
               Watch Messages
             </a>

@@ -123,10 +123,10 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
     <section id="events" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
       <div className="mb-10 text-center">
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 text-[#e8a33d] text-xs font-bold mb-3 border border-white/10">
-          <span>What's Happening</span>
+          <span>What&apos;s Happening</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-          What's Happening In {branch.city}
+          What&apos;s Happening In {branch.city}
         </h2>
       </div>
 
@@ -211,7 +211,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
                 onClick={() => onRsvp(entry.title)}
                 className="flex-shrink-0 rounded-xl bg-white/10 px-5 py-2.5 text-xs font-bold text-white! transition-colors hover:bg-[#d4920a] cursor-pointer"
               >
-                I'm Coming
+                I&apos;m Coming
               </button>
             </div>
           ))}

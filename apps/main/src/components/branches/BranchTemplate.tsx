@@ -272,7 +272,7 @@ export function BranchTemplate({
               Join Us This Sunday
             </h2>
             <p className="text-base font-medium text-gray-400 max-w-2xl mx-auto">
-              We can't wait to host you. Choose a service time that works best
+              We can&apos;t wait to host you. Choose a service time that works best
               for you and your family.
             </p>
           </div>
@@ -477,7 +477,7 @@ export function BranchTemplate({
                 </div>
 
                 <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-white">
-                  "{currentBranch.pastor_bio}"
+                  &ldquo;{currentBranch.pastor_bio}&rdquo;
                 </blockquote>
               </div>
             </div>
