@@ -1,0 +1,77 @@
+name: main-site
+
+# Only runs when apps/main or the shared root manifests change — see the
+# matching caveat in kp2.yml before making this a required status check.
+on:
+  pull_request:
+    paths:
+      - "apps/main/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/main.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/main/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/main.yml"
+
+concurrency:
+  group: main-site-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      # apps/main has pre-existing type errors, 59 of them from two different
+      # interfaces both named BranchData (@/lib/branches vs @/data/branchesData).
+      # Until those are reconciled the gate is a ratchet: errors may fall, never
+      # rise. Lower this number as they are fixed; at 0, replace the ratchet and
+      # the compile gate below with a plain `npx next build --turbopack`.
+      TSC_BASELINE: 70
+    defaults:
+      run:
+        working-directory: apps/main
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Root install — npm workspaces resolves both apps from the one lockfile.
+      - name: Install
+        run: npm ci
+        working-directory: .
+
+      - name: Lint
+        run: npx eslint
+
+      # `next build` lints, compiles, then typechecks. It cannot pass yet, so
+      # assert on the compile phase: this still catches real bundling breaks
+      # while the type errors are handled by the ratchet below.
+      - name: Compile
+        shell: bash
+        run: |
+          npx next build --turbopack 2>&1 | tee "$RUNNER_TEMP/build.log" || true
+          if ! grep -q "Compiled successfully" "$RUNNER_TEMP/build.log"; then
+            echo "::error::next build did not reach a successful compile."
+            exit 1
+          fi
+          echo "Compiled successfully; type errors are gated separately."
+
+      - name: Typecheck ratchet
+        shell: bash
+        run: |
+          count=$(npx tsc --noEmit 2>&1 | grep -c "error TS" || true)
+          echo "tsc errors: $count (baseline $TSC_BASELINE)"
+          if [ "$count" -gt "$TSC_BASELINE" ]; then
+            echo "::error::Type errors rose from $TSC_BASELINE to $count."
+            exit 1
+          fi
+          if [ "$count" -lt "$TSC_BASELINE" ]; then
+            echo "::notice::Down to $count — lower TSC_BASELINE in this workflow to lock it in."
+          fi

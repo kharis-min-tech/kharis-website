@@ -163,7 +163,7 @@ function DepartmentsPage() {
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase">Explore Every Department</h2>
               <p className="mx-auto mt-3 max-w-xl text-sm text-on-surface-variant">
-                Search or browse the full list. Pick whatever stirs you — there's a place for your gift.
+                Search or browse the full list. Pick whatever stirs you — there&apos;s a place for your gift.
               </p>
             </div>
 
@@ -208,7 +208,7 @@ function DepartmentsPage() {
                 <span className="material-symbols-outlined mb-3 text-4xl text-on-surface-variant" aria-hidden="true">search_off</span>
                 <p className="font-headline-md text-headline-md mb-2">No teams found</p>
                 <p className="text-sm text-on-surface-variant">
-                  Try a different search, or chat to a pastor — we'll find your fit.
+                  Try a different search, or chat to a pastor — we&apos;ll find your fit.
                 </p>
               </div>
             )}

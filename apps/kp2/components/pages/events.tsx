@@ -191,7 +191,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 EVENTS
               </h1>
               <p className="font-headline-md text-headline-md text-primary-fixed-dim uppercase italic max-w-2xl mb-stack-md">
-                Don't miss a moment of the movement.
+                Don&apos;t miss a moment of the movement.
               </p>
             </div>
           </div>
@@ -365,7 +365,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                   Nothing matches that yet
                 </h4>
                 <p className="font-body-md text-on-surface-variant mt-2">
-                  Try another category or clear your search — there's always
+                  Try another category or clear your search — there&apos;s always
                   something happening.
                 </p>
                 <button

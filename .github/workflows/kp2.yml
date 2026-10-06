@@ -1,0 +1,58 @@
+name: kp2
+
+# Only runs when apps/kp2 or the shared root manifests change, so the main
+# site's team cannot block this team's PRs (and vice versa — see main.yml).
+#
+# Caveat if you make this a required status check in branch protection:
+# a PR touching only apps/main will never trigger this workflow, so the
+# required check stays pending forever. To get both path filtering and
+# required checks, drop the `paths:` filters and gate the expensive steps
+# on a diff check instead, so the job always reports a conclusion.
+on:
+  pull_request:
+    paths:
+      - "apps/kp2/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/kp2.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/kp2/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/kp2.yml"
+
+concurrency:
+  group: kp2-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/kp2
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Root install — npm workspaces resolves both apps from the one lockfile.
+      - name: Install
+        run: npm ci
+        working-directory: .
+
+      - name: Lint
+        run: npx eslint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      # Builds run without secrets, so they exercise the fallback paths rather
+      # than live Supabase/YouTube data. That is enough to catch build breaks.
+      - name: Build
+        run: npx next build

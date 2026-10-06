@@ -54,7 +54,7 @@ function BranchNotFound() {
       <SiteHeader />
       <main className="pt-[74px] max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-24">
         <h1 className="font-display-lg text-headline-lg uppercase mb-4">
-          We couldn't find that branch
+          We couldn&apos;t find that branch
         </h1>
         <Link
           href="/branches"

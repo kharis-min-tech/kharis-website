@@ -181,7 +181,7 @@ const tab = MAIN_TABS[mainTab]!;
                     {item.ref}
                   </span>
                   <p className="font-body-lg text-body-lg italic text-on-secondary-container leading-relaxed">
-                    "{item.scripture}"
+                    &quot;{item.scripture}&quot;
                   </p>
                 </div>
               </div>
@@ -400,7 +400,7 @@ function OurLeadership() {
             </p>
             <div className="w-16 h-1.5 bg-primary mb-6"></div>
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Pastor David and Awo founded Kharis in 2003, a multifaceted ministry headquartered in London, United Kingdom, with several branches worldwide. Together, they also founded Kharis Phase 2 our students' and young people's services. Kharis also has a presence on university campuses across the UK. Their love for the Word of God is evident in how they lead, teach, and serve. Their greatest desire is to see believers established in their faith, local churches strengthened, and ultimately, for revival to sweep through the nations. They have been married for over 20 years and are blessed with two wonderful children.
+              Pastor David and Awo founded Kharis in 2003, a multifaceted ministry headquartered in London, United Kingdom, with several branches worldwide. Together, they also founded Kharis Phase 2 our students&apos; and young people&apos;s services. Kharis also has a presence on university campuses across the UK. Their love for the Word of God is evident in how they lead, teach, and serve. Their greatest desire is to see believers established in their faith, local churches strengthened, and ultimately, for revival to sweep through the nations. They have been married for over 20 years and are blessed with two wonderful children.
             </p>
             <div className="flex flex-wrap gap-4 mt-8">
               <Link
