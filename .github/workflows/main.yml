@@ -30,13 +30,11 @@ jobs:
       # Until those are reconciled the gate is a ratchet: errors may fall, never
       # rise. Lower this number as they are fixed; at 0, replace the ratchet and
       # the compile gate below with a plain `npx next build --turbopack`.
-      #
-      # Held at 70 because that is what a local `npm ci` + tsc reports, while
-      # this runner reported 67 on the first run and the 3-error gap is not yet
-      # explained (ruled out locally: dependency drift, .next/types, and
-      # next-env.d.ts all still give 70). 70 is the conservative choice — it
-      # cannot fail spuriously. The step prints the full error list, so once two
-      # runs agree on a number, tighten this to it and the slack disappears.
+      # Held at 70, what a local `npm ci` + tsc reports. The first CI run
+      # reported 67 and that 3-error gap is unexplained (ruled out locally:
+      # dependency drift, .next/types, next-env.d.ts). 70 is conservative so
+      # the gate cannot fail spuriously; the step prints the full list, so once
+      # two runs agree on a number, tighten this to it.
       TSC_BASELINE: 70
     defaults:
       run:
@@ -57,18 +55,18 @@ jobs:
       - name: Lint
         run: npx eslint
 
-      # `next build` lints, compiles, then typechecks. It cannot pass yet, so
-      # assert on the compile phase: this still catches real bundling breaks
-      # while the type errors are handled by the ratchet below.
-      - name: Compile
-        shell: bash
-        run: |
-          npx next build --turbopack 2>&1 | tee "$RUNNER_TEMP/build.log" || true
-          if ! grep -q "Compiled successfully" "$RUNNER_TEMP/build.log"; then
-            echo "::error::next build did not reach a successful compile."
-            exit 1
-          fi
-          echo "Compiled successfully; type errors are gated separately."
+      # Full build gate. This replaces an earlier compile-phase assertion that
+      # only grepped for "Compiled successfully" — a string Next prints BEFORE
+      # "Collecting page data", so it went green while the build actually died
+      # just after it (a module-scope Supabase client throwing without env
+      # vars, then a duplicate-React prerender crash). Running the real build
+      # is the only honest gate.
+      #
+      # It passes without secrets because lib/supabase.ts falls back to a
+      # placeholder, so data fetches fail and degrade rather than throw. That
+      # means this gate proves the build works, not that live data loads.
+      - name: Build
+        run: npx next build --turbopack
 
       - name: Typecheck ratchet
         shell: bash
