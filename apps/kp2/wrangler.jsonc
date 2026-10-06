@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "kharis-kp2",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-06",
+  // Required: Supabase/YouTube/Gemini clients pull in Node built-ins.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+  // Cutover switch — uncomment to take kharis.org/kp2* live on Cloudflare.
+  // Until then `wrangler deploy` only publishes to *.workers.dev and
+  // leaves the current production host untouched.
+  // "routes": [{ "pattern": "kharis.org/kp2*", "zone_name": "kharis.org" }]
+}
