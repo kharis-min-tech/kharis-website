@@ -3,7 +3,15 @@ import { createClient } from "@supabase/supabase-js";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body = (await request.json()) as {
+      firstName?: string;
+      preferredName?: string;
+      lastName?: string;
+      mobile?: string;
+      category?: string;
+      details?: string;
+      anonymous?: string;
+    };
 
     const {
       firstName,

@@ -66,7 +66,7 @@ function restPost(
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
 
     const firstName = asString(body.firstName, 80);
     const preferredName = asString(body.preferredName, 80);
