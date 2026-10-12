@@ -8,9 +8,12 @@
   "scripts": {
     "dev:main": "npm run dev -w @kharis/main",
     "dev:kp2": "npm run dev -w @kharis/kp2",
+    "dev:content": "npm run dev -w @kharis/content",
     "build:main": "npm run build -w @kharis/main",
     "build:kp2": "npm run build -w @kharis/kp2",
+    "build:content": "npm run build -w @kharis/content",
     "deploy:main": "npm run deploy -w @kharis/main",
-    "deploy:kp2": "npm run deploy -w @kharis/kp2"
+    "deploy:kp2": "npm run deploy -w @kharis/kp2",
+    "deploy:content": "npm run deploy -w @kharis/content"
   }
 }
