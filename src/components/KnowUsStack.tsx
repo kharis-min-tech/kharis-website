@@ -52,22 +52,21 @@ const cards: Card[] = [
     title: "Become a Believer",
     label: "Next step",
     href: "/life/baptism",
-    image:
-      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=900&q=80",
+    image: "/images/become-a-believer.jpg",
     info: "Take your next step with Jesus. Start with baptism at Kharis Life.",
     icon: "heart",
     size: "normal",
-    position: "object-center",
+    position: "object-[center_30%]",
   },
   {
     title: "Get Involved",
     label: "Serve with us",
     href: "/life/departments",
-    image: "/images/serve-with-us.jpg",
+    image: "/images/get-involved-sax.jpg",
     info: "Join a team and grow with the Kharis family.",
     icon: "home",
     size: "tall",
-    position: "object-top",
+    position: "object-[center_30%]",
   },
 ];
 

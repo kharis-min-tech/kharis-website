@@ -8,19 +8,22 @@ const BRAND = "Kharis";
 const FULL_LENGTH = WELCOME.length + BRAND.length;
 const LEAD = "We are";
 
-/** Each phrase gets its own entrance (styles live in hero-slider.css). */
+/**
+ * Each phrase gets its own entrance (styles live in hero-slider.css) and a brand
+ * shade from the purple / pink / gold family, light enough to read on the dark wall.
+ */
 const PHRASES = [
-  { text: "Christ-Centric", anim: "fade-up" },
-  { text: "Biblical", anim: "tracking" },
-  { text: "Spirit Filled", anim: "words" },
-  { text: "Revival Seeking", anim: "wipe" },
-  { text: "The Saints", anim: "blur-in" },
-  { text: "God\u2019s Elect", anim: "fade-up" },
-  { text: "Disciples", anim: "tracking" },
-  { text: "Hungry for God", anim: "words" },
-  { text: "Jesus Believers", anim: "wipe" },
-  { text: "Chosen by God", anim: "blur-in" },
-  { text: "Jesus Lovers", anim: "words" },
+  { text: "Christ Centric", anim: "fade-up", color: "#e58fc4" },
+  { text: "Biblical", anim: "tracking", color: "#f0b44c" },
+  { text: "Spirit Filled", anim: "words", color: "#b18cff" },
+  { text: "Revival Seeking", anim: "wipe", color: "#ff9f7a" },
+  { text: "The Saints", anim: "blur-in", color: "#ee8fd0" },
+  { text: "God\u2019s Elect", anim: "fade-up", color: "#e8a33d" },
+  { text: "Disciples", anim: "tracking", color: "#b98cff" },
+  { text: "Hungry for God", anim: "words", color: "#ffc98a" },
+  { text: "Jesus Believers", anim: "wipe", color: "#e070b5" },
+  { text: "Chosen by God", anim: "blur-in", color: "#f6d27a" },
+  { text: "Jesus Lovers", anim: "words", color: "#ff8fb1" },
 ] as const;
 
 const START_DELAY_MS = 500;
@@ -48,7 +51,7 @@ const HEADLINE_STYLE: CSSProperties = {
   placeItems: "center",
   width: "100%",
   height: "1.25em",
-  fontSize: "clamp(2rem, 8.2vw, 5.25rem)",
+  fontSize: "clamp(2rem, 8.2vw, 5.75rem)",
   fontWeight: 800,
   letterSpacing: "-0.025em",
   lineHeight: 1.1,
@@ -130,7 +133,7 @@ export function HeroHeadline() {
               {WELCOME}
               {BRAND}
             </span>
-            <span className="hero-type__live" style={LIVE_STYLE}>
+            <span className="hero-type__live hero-depth" style={LIVE_STYLE}>
               {welcome}
               <span className="kharis-brand" style={BRAND_STYLE}>
                 {brand}
@@ -153,14 +156,16 @@ export function HeroHeadline() {
       <div className="hero-headline" style={HEADLINE_STYLE}>
         <span
           key={step}
-          className={`hero-phrase hero-phrase--${phrase.anim}${out}`}
-          style={{ animationDelay: `${LEAD_MS}ms` }}
+          className={`hero-phrase hero-phrase--${phrase.anim}${out}${phrase.anim === "words" ? "" : " hero-3d"}`}
+          data-text={phrase.anim === "words" ? undefined : phrase.text}
+          style={{ animationDelay: `${LEAD_MS}ms`, color: phrase.color, "--c": phrase.color } as CSSProperties}
         >
           {phrase.anim === "words"
             ? words.map((word, i) => (
                 <span
                   key={word}
-                  className="hero-phrase__word"
+                  className="hero-phrase__word hero-3d"
+                  data-text={word}
                   style={{ animationDelay: `${LEAD_MS + i * 220}ms` }}
                 >
                   {word}
