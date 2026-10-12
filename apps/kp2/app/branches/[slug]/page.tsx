@@ -23,14 +23,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!branch) {
     return pageMeta({
       title: "Branch not found",
-      description: "That Kharis Phase 2 campus could not be found.",
+      description: "That Kharis Phase 2 branch could not be found.",
       path: `/branches/${slug}`,
       noIndex: true,
     });
   }
   return pageMeta({
     title: `${branch.city} Branch`,
-    description: `${branch.blurb} Service times, location and how to visit the Kharis Phase 2 ${branch.city} campus.`,
+    description: `${branch.blurb} Service times, location and how to visit the Kharis Phase 2 ${branch.city} branch.`,
     path: `/branches/${branch.slug}`,
     image: branch.image,
   });

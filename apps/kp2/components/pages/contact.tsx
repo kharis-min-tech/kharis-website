@@ -126,8 +126,8 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <div className="flex items-start gap-4">
 <span className="material-symbols-outlined text-primary text-3xl">location_on</span>
 <div>
-<p className="font-label-md uppercase text-secondary">Main Campus</p>
-<p className="font-body-lg">{mainCampus?.address ?? "Find a KP2 campus near you"}</p>
+<p className="font-label-md uppercase text-secondary">Main KP2 Branch</p>
+<p className="font-body-lg">{mainCampus?.address ?? "Find a KP2 branch near you"}</p>
 </div>
 </div>
 <div className="flex items-start gap-4">
@@ -140,7 +140,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
   ))
 ) : (
   <>
-    <p className="font-body-lg">Sunday gatherings. Times are on each campus page.</p>
+    <p className="font-body-lg">Sunday gatherings. Times are on each branch page.</p>
   </>
 )}
 </div>
@@ -149,7 +149,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <span className="material-symbols-outlined text-primary text-3xl">phone</span>
 <div>
 <p className="font-label-md uppercase text-secondary">Call Us</p>
-<p className="font-body-lg">{mainCampus?.phone || "See your campus page"}</p>
+<p className="font-body-lg">{mainCampus?.phone || "See your branch page"}</p>
 </div>
 </div>
 </div>
@@ -172,7 +172,7 @@ Get Directions
 </a>
 </div>
 <iframe
-title="Map of Kharis Phase 2 campus"
+title="Map of Kharis Phase 2 branch"
 src={osmEmbedUrl(mainCampus)}
 className="w-full h-72 md:h-80 block border-0"
 loading="lazy"
@@ -180,7 +180,7 @@ loading="lazy"
 </div>
 ) : (
 <Link href="/branches" className="block brutalist-border brutalist-shadow bg-surface-container-low p-6 font-label-md uppercase text-center hover:text-primary">
-Find a campus
+Find a branch
 </Link>
 )}
 

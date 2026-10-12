@@ -25,7 +25,7 @@ const NAV_ITEMS: NavItem[] = [
     to: "/departments",
     children: [
       { label: "DEPARTMENTS", to: "/departments", blurb: "Find a place to serve" },
-      { label: "LIFE", to: "/life", blurb: "Groups & campus life" },
+      { label: "LIFE", to: "/life", blurb: "Groups & branch life" },
       { label: "FELLOWSHIPS", to: "/fellowships", blurb: "Find your fellowship" },
       { label: "GALLERY", to: "/gallery", blurb: "Moments from the house" },
     ],

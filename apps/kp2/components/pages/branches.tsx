@@ -68,10 +68,10 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
             <h1 className="font-display-lg text-headline-lg md:text-display-lg uppercase leading-none">
               Find a{" "}
               <span className="text-primary">Kharis Phase 2</span>{" "}
-              campus near you
+              branch near you
             </h1>
             <p className="mx-auto max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
-              {branches.length} {branches.length === 1 ? "campus" : "campuses"} across the UK,
+              {branches.length} {branches.length === 1 ? "branch" : "branches"} across the UK,
               each with a family waiting to welcome you.
             </p>
 
@@ -361,7 +361,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                 Can&apos;t find a branch nearby?
               </h2>
               <p className="font-body-md text-body-md max-w-xl">
-                Tell us where you are — we&apos;re planting new campuses and we&apos;d love to
+                Tell us where you are. We&apos;re planting new branches and we&apos;d love to
                 connect you with a fellowship in your area.
               </p>
             </div>

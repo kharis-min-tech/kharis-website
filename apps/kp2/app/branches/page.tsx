@@ -7,7 +7,7 @@ export const revalidate = 60;
 export const metadata = pageMeta({
   title: "Find a Branch",
   description:
-    "Find a Kharis Phase 2 campus near you. Service times, locations and how to plan your first visit.",
+    "Find a Kharis Phase 2 branch near you. Service times, locations and how to plan your first visit.",
   path: "/branches",
 });
 
