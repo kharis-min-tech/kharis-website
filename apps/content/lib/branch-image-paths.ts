@@ -39,7 +39,18 @@ export function publicUrlForKey(publicBase: string, key: string) {
 }
 
 export function isR2ObjectKey(path: string | null | undefined) {
-  return Boolean(path?.startsWith("branch-images/"));
+  return Boolean(path?.startsWith("branch-images/") && !path.includes(".."));
+}
+
+/** Pulls branch-images/{id}/... out of a stored address. */
+export function branchImageKeyFromUrl(url: string | null | undefined) {
+  if (!url) return null;
+  if (isR2ObjectKey(url)) return url.split("?")[0] ?? null;
+  const marker = "branch-images/";
+  const index = url.indexOf(marker);
+  if (index === -1) return null;
+  const key = decodeURIComponent(url.slice(index).split("?")[0] ?? "");
+  return isR2ObjectKey(key) ? key : null;
 }
 
 /** Prefix marker. R2 has no folders; this object makes branch-images/{id}/ show up. */

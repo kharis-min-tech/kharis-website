@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { branchTemplate } from "@/lib/branch-template";
 import { emptyService, emptyVenue, pastorPreview, type BranchDraft, type BranchRow } from "@/lib/branch-types";
 import { deleteBranch, emptyBranch, listBranches, loadBranchDraft, saveBranch, saveBranchImageUrl, venueHasContent } from "@/lib/branches-repo";
-import { ensureBranchImageFolder, uploadBranchImage } from "@/lib/branch-images";
+import { deleteBranchImageFolder, ensureBranchImageFolder, pruneBranchImageFolder, uploadBranchImage } from "@/lib/branch-images";
 import { confirmDelete } from "@/lib/confirm";
 import { syncGallery, syncVenueImages } from "@/lib/media-repo";
 import { slugify } from "@/lib/utils";
@@ -142,6 +142,15 @@ export function BranchEditor() {
       } catch (caught) {
         toast.error(caught instanceof Error ? `Branch saved, but a venue photo was not: ${caught.message}` : "A venue photo was not saved");
       }
+      try {
+        await pruneBranchImageFolder(id);
+      } catch (caught) {
+        toast.error(
+          caught instanceof Error
+            ? `Branch saved, but unused images were not removed: ${caught.message}`
+            : "Branch saved, but unused images were not removed",
+        );
+      }
       clearPendingImages();
       toast.success("Branch saved");
       setDraft(null);
@@ -158,6 +167,7 @@ export function BranchEditor() {
     const confirmed = await confirmDelete(draft.name || "this branch");
     if (!confirmed) return;
     try {
+      await deleteBranchImageFolder(draft.id);
       await deleteBranch(draft.id);
       toast.success("Branch deleted");
       setDraft(null);

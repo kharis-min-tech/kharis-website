@@ -1,27 +1,14 @@
 import type { BranchData, Venue } from "@/lib/branches";
 
-/** Shared worship photos. Used only when a branch has no studio image yet. */
-export const TEMPLATE_GALLERY = [
-  "/images/branch-slide-1.jpg",
-  "/images/branch-slide-2.jpg",
-  "/images/branch-slide-3.jpg",
-  "/images/branch-slide-4.jpg",
-];
-
-const TEMPLATE_HERO = "/images/branch-slide-1.jpg";
-const TEMPLATE_PORTRAIT = "/images/community.jpg";
-
 function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
 }
 
-/** Keep a real studio URL. Relative placeholder paths are not files on this site. */
-export function templateImage(url: string | null | undefined, fallback: string) {
+/** Branch photos are remote files from Cloudflare. Local page images are not branch photos. */
+export function remoteImage(url: string | null | undefined) {
   const value = clean(url);
-  if (!value || /instagram\.com/i.test(value)) return fallback;
-  if (/^https?:\/\//i.test(value)) return value;
-  if (value.startsWith("/images/") || value.startsWith("/videos/")) return value;
-  return fallback;
+  if (!/^https?:\/\//i.test(value) || /instagram\.com/i.test(value)) return "";
+  return value;
 }
 
 export function placeholderDescription(city: string) {
@@ -68,8 +55,9 @@ export function presentBranch(branch: BranchData) {
     city,
     description,
     tagline,
-    hero: templateImage(branch.hero_image_url, TEMPLATE_HERO),
-    portrait: templateImage(branch.pastor_image_url, TEMPLATE_PORTRAIT),
+    hero: remoteImage(branch.hero_image_url),
+    portrait: remoteImage(branch.pastor_image_url),
+    gallery: branch.gallery ?? [],
     pastorName: pastorName || "Coming soon",
     pastorKnown: Boolean(pastorName),
     pastorRole: clean(branch.pastor_role) || "Pastor",

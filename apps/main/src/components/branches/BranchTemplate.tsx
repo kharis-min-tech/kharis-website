@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { BranchData } from "@/lib/branches";
-import { presentBranch, TEMPLATE_GALLERY } from "@/lib/branch-display";
+import { presentBranch } from "@/lib/branch-display";
 import PlanVisitModal from "@/components/PlanVisitModal";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -76,7 +76,7 @@ export function BranchTemplate({
     )
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
-  const galleryImages = TEMPLATE_GALLERY;
+  const galleryImages = view.gallery;
 
   const [zoomLevel, setZoomLevel] = useState(15);
 
@@ -119,15 +119,17 @@ export function BranchTemplate({
       <main className="w-full">
         {/* HERO SECTION */}
         <section className="branch-hero relative w-full min-h-[65vh] flex items-center justify-center pt-10 pb-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-          <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10">
-            <Image
-              src={view.hero}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover opacity-90 scale-105 transition-transform duration-1000 hover:scale-100"
-            />
+          <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10 bg-black">
+            {view.hero ? (
+              <Image
+                src={view.hero}
+                alt=""
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover opacity-90 scale-105 transition-transform duration-1000 hover:scale-100"
+              />
+            ) : null}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
           </div>
 
@@ -393,7 +395,7 @@ export function BranchTemplate({
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                     />
-                  ) : (
+                  ) : view.hero ? (
                     <Image
                       src={view.hero}
                       alt=""
@@ -401,6 +403,8 @@ export function BranchTemplate({
                       sizes="(min-width: 1024px) 60vw, 100vw"
                       className="object-cover opacity-80"
                     />
+                  ) : (
+                    <div className="h-full w-full bg-black" />
                   )}
                 </div>
 
@@ -455,7 +459,8 @@ export function BranchTemplate({
           className="py-16 bg-[#15131f] border-y border-white/10"
         >
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-center">
+            <div className={`grid grid-cols-1 gap-10 lg:gap-14 items-center ${view.portrait ? "md:grid-cols-12" : ""}`}>
+              {view.portrait ? (
               <div className="md:col-span-5 relative">
                 <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl bg-[#800654] text-white shadow-lg sm:flex">
                   <Sparkles className="h-6 w-6" />
@@ -463,7 +468,7 @@ export function BranchTemplate({
                 <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
                   <Image
                     src={view.portrait}
-                    alt={view.pastorKnown ? view.pastorName : "Kharis gathering"}
+                    alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
                     fill
                     sizes="(min-width: 768px) 40vw, 100vw"
                     className="object-cover"
@@ -478,8 +483,9 @@ export function BranchTemplate({
                   </p>
                 </div>
               </div>
+              ) : null}
 
-              <div className="md:col-span-7 space-y-5">
+              <div className={`${view.portrait ? "md:col-span-7" : ""} space-y-5`}>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-white!">
                   Welcome to{" "}
                   <span className="bg-gradient-to-r from-[#e8a33d] to-[#d4920a] bg-clip-text text-transparent">
@@ -530,6 +536,7 @@ export function BranchTemplate({
               onClick={() => setMediaModal({ type: "video" })}
               className="group relative block aspect-video w-full cursor-pointer text-left"
             >
+              {view.hero ? (
               <Image
                 src={view.hero}
                 alt={`Kharis ${view.city} worship`}
@@ -537,6 +544,7 @@ export function BranchTemplate({
                 sizes="100vw"
                 className="object-cover opacity-70 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
               />
+              ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
                 <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#800654] text-white shadow-2xl transition-transform duration-300 group-hover:scale-110">

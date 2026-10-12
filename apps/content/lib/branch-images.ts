@@ -53,6 +53,22 @@ function parseJson(value: string) {
 
 /** Makes branch-images/{id}/ exist. Existing branches get one the next time they are saved. */
 export async function ensureBranchImageFolder(branchId: string) {
+  const body = await storageRequest({ branchId, ensureFolder: true });
+  if (!body?.key) throw new Error(body?.error || "The Cloudflare folder could not be created.");
+  return body.key;
+}
+
+/** Deletes Cloudflare files for this branch that are no longer on the saved page. */
+export async function pruneBranchImageFolder(branchId: string) {
+  await storageRequest({ branchId, prune: true });
+}
+
+/** Deletes the whole Cloudflare folder when a branch is removed. */
+export async function deleteBranchImageFolder(branchId: string) {
+  await storageRequest({ branchId, deleteFolder: true });
+}
+
+async function storageRequest(body: Record<string, unknown>) {
   const token = await studioToken();
   const response = await fetch("/api/uploads/branch", {
     method: "POST",
@@ -60,13 +76,13 @@ export async function ensureBranchImageFolder(branchId: string) {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ branchId, ensureFolder: true }),
+    body: JSON.stringify(body),
   });
-  const body = (await response.json().catch(() => null)) as { error?: string; key?: string } | null;
-  if (!response.ok || !body?.key) {
-    throw new Error(body?.error || "The Cloudflare folder could not be created.");
+  const payload = (await response.json().catch(() => null)) as { error?: string; key?: string } | null;
+  if (!response.ok) {
+    throw new Error(payload?.error || "Image storage could not be updated.");
   }
-  return body.key;
+  return payload;
 }
 
 export async function uploadBranchImage({

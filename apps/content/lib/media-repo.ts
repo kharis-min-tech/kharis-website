@@ -95,7 +95,7 @@ export async function syncGallery(branchId: string, items: GalleryItem[], pendin
 
   for (const row of existing) {
     if (!row.id || kept.has(row.id)) continue;
-    // R2 objects stay in the bucket. Only the studio's reference is removed.
+    // Unused Cloudflare files are removed when the branch is saved.
     if (!isR2ObjectKey(row.path)) await removeStored(row.path).catch(() => undefined);
     const removed = await supabase.from("media").delete().eq("id", row.id);
     fail(removed.error);

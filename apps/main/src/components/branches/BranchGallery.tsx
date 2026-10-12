@@ -18,12 +18,13 @@ export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps
     for (let i = 0; i < images.length; i += perSlide) {
       chunks.push(images.slice(i, i + perSlide));
     }
-    return chunks.length ? chunks : [images];
+    return chunks;
   }, [images]);
 
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    if (slides.length <= 1) return;
     const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), 6000);
     return () => clearInterval(id);
   }, [slides.length]);
@@ -43,6 +44,12 @@ export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps
         </h2>
       </div>
 
+      {slides.length === 0 ? (
+        <p className="text-center text-sm font-medium text-gray-400">
+          Photos for this branch will show here after they are added in Content Studio.
+        </p>
+      ) : (
+      <>
       <div className="relative">
         <div className="overflow-hidden rounded-3xl">
           <motion.div
@@ -111,6 +118,8 @@ export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps
             />
           ))}
         </div>
+      )}
+      </>
       )}
     </section>
   );

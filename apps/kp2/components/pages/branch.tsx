@@ -7,7 +7,7 @@ import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { YoutubeEmbed } from "@/components/YoutubeEmbed";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   hasCoords,
   mapsEmbedUrl,
@@ -29,6 +29,100 @@ import {
 
 function galleryFor(branch: Branch) {
   return branch.gallery;
+}
+
+function GalleryCarousel({
+  images,
+  city,
+  onOpen,
+}: {
+  images: string[];
+  city: string;
+  onOpen: (index: number) => void;
+}) {
+  const scroller = useRef<HTMLDivElement>(null);
+  const [canScroll, setCanScroll] = useState(images.length > 1);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
+
+  const updateEdges = useCallback(() => {
+    const el = scroller.current;
+    if (!el) return;
+    setCanScroll(el.scrollWidth > el.clientWidth + 4);
+    setAtStart(el.scrollLeft <= 4);
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    updateEdges();
+    window.addEventListener("resize", updateEdges);
+    return () => window.removeEventListener("resize", updateEdges);
+  }, [images.length, updateEdges]);
+
+  function scrollByCard(direction: 1 | -1) {
+    const el = scroller.current;
+    const card = el?.querySelector("button");
+    if (!el || !card) return;
+    el.scrollBy({ left: direction * (card.clientWidth + 16), behavior: "smooth" });
+  }
+
+  return (
+    <div className="relative">
+      <div
+        ref={scroller}
+        onScroll={updateEdges}
+        className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={`Photos from ${city}`}
+      >
+        {images.map((src, index) => (
+          <button
+            key={`${src}-${index}`}
+            type="button"
+            onClick={() => onOpen(index)}
+            className="group relative aspect-[4/5] w-[78%] shrink-0 snap-start overflow-hidden brutalist-border text-left sm:w-[calc(50%-8px)] md:w-[calc(25%-12px)]"
+          >
+            <img
+              src={src}
+              alt={`Gathering at ${city}`}
+              loading={index < 4 ? "eager" : "lazy"}
+              decoding="async"
+              className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="flex h-12 w-12 items-center justify-center border-2 border-white/30 bg-black/50 text-white">
+                <span className="material-symbols-outlined">zoom_in</span>
+              </span>
+            </span>
+          </button>
+        ))}
+      </div>
+      {canScroll ? (
+        <>
+          <button
+            type="button"
+            aria-label="Previous photos"
+            disabled={atStart}
+            onClick={() => scrollByCard(-1)}
+            className="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center border-2 border-on-background bg-background text-on-background disabled:opacity-40"
+          >
+            <span className="material-symbols-outlined">chevron_left</span>
+          </button>
+          <button
+            type="button"
+            aria-label="Next photos"
+            disabled={atEnd}
+            onClick={() => scrollByCard(1)}
+            className="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center border-2 border-on-background bg-background text-on-background disabled:opacity-40"
+          >
+            <span className="material-symbols-outlined">chevron_right</span>
+          </button>
+        </>
+      ) : null}
+    </div>
+  );
 }
 
 function usablePhone(phone: string) {
@@ -128,7 +222,7 @@ function BranchPage({
 
   const [zoomLevel, setZoomLevel] = useState(15);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
-  const [gallerySrc, setGallerySrc] = useState<string | null>(null);
+  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactMessage, setContactMessage] = useState("");
@@ -143,6 +237,25 @@ function BranchPage({
     document.addEventListener("mousedown", onPointer);
     return () => document.removeEventListener("mousedown", onPointer);
   }, []);
+
+  useEffect(() => {
+    if (galleryIndex === null) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setGalleryIndex(null);
+      if (event.key === "ArrowRight") {
+        setGalleryIndex((current) =>
+          current === null ? 0 : (current + 1) % gallery.length,
+        );
+      }
+      if (event.key === "ArrowLeft") {
+        setGalleryIndex((current) =>
+          current === null ? 0 : (current - 1 + gallery.length) % gallery.length,
+        );
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [galleryIndex, gallery.length]);
 
   const mapSrc = useMemo(
     () => (hasCoords(branch) ? osmEmbedUrlAtZoom(branch, zoomLevel) : mapsEmbedUrl(branch)),
@@ -183,10 +296,10 @@ function BranchPage({
                 alt=""
                 fetchPriority="high"
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover opacity-90"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             ) : null}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
           </div>
 
           <div className="relative z-10 flex w-full max-w-4xl flex-col items-center px-3 pt-12 pb-8 text-center text-white sm:px-6 sm:pt-16 sm:pb-12">
@@ -311,6 +424,31 @@ function BranchPage({
             </div>
           </div>
         </section>
+
+        {branch.pastorImage ? (
+          <section className="px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto pb-4">
+            <div className="grid items-center gap-6 bg-surface-container-lowest brutalist-border brutalist-shadow p-5 sm:grid-cols-[220px_1fr] sm:p-6">
+              <img
+                src={branch.pastorImage}
+                alt={branch.pastor}
+                className="aspect-[4/5] w-full object-cover brutalist-border"
+              />
+              <div>
+                <p className="font-body-md text-[12px] font-bold uppercase tracking-wider text-primary">
+                  {branch.pastorRole || "Pastor"}
+                </p>
+                <h2 className="mt-2 font-display-lg text-[32px] uppercase leading-none">
+                  {branch.pastor}
+                </h2>
+                {branch.pastorBio ? (
+                  <p className="mt-4 max-w-xl font-body-md text-body-md leading-relaxed text-on-surface-variant">
+                    {branch.pastorBio}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         {/* Join us this Sunday */}
         <section id="services" className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto">
@@ -583,30 +721,7 @@ function BranchPage({
             </h2>
           </div>
           {gallery.length ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {gallery.slice(0, 4).map((src, index) => (
-              <button
-                key={`${src}-${index}`}
-                type="button"
-                onClick={() => setGallerySrc(src)}
-                className="group relative aspect-[4/5] overflow-hidden brutalist-border text-left"
-              >
-                <img
-                  src={src}
-                  alt={`Gathering at ${branch.city}`}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="flex h-12 w-12 items-center justify-center bg-black/50 text-white border-2 border-white/30">
-                    <span className="material-symbols-outlined">zoom_in</span>
-                  </span>
-                </span>
-              </button>
-            ))}
-          </div>
+            <GalleryCarousel images={gallery} city={branch.city} onOpen={setGalleryIndex} />
           ) : (
             <p className="text-center font-body-md text-[14px] text-on-surface-variant">
               Photos for this branch will show here after they are added in Content Studio.
@@ -895,19 +1010,47 @@ function BranchPage({
       <SiteFooter />
       <ThemeToggle />
 
-      {gallerySrc ? (
+      {galleryIndex !== null && gallery[galleryIndex] ? (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
           <button
             type="button"
             className="absolute inset-0 bg-on-background/80"
             aria-label="Close gallery"
-            onClick={() => setGallerySrc(null)}
+            onClick={() => setGalleryIndex(null)}
           />
+          {gallery.length > 1 ? (
+            <button
+              type="button"
+              aria-label="Previous photo"
+              onClick={() =>
+                setGalleryIndex((current) =>
+                  current === null ? 0 : (current - 1 + gallery.length) % gallery.length,
+                )
+              }
+              className="absolute left-4 z-20 flex h-12 w-12 items-center justify-center border-2 border-background bg-background text-on-background"
+            >
+              <span className="material-symbols-outlined">chevron_left</span>
+            </button>
+          ) : null}
           <img
-            src={gallerySrc}
-            alt=""
+            src={gallery[galleryIndex]}
+            alt={`Gathering at ${branch.city}`}
             className="relative z-10 max-h-[85vh] max-w-[90vw] object-contain brutalist-border"
           />
+          {gallery.length > 1 ? (
+            <button
+              type="button"
+              aria-label="Next photo"
+              onClick={() =>
+                setGalleryIndex((current) =>
+                  current === null ? 0 : (current + 1) % gallery.length,
+                )
+              }
+              className="absolute right-4 z-20 flex h-12 w-12 items-center justify-center border-2 border-background bg-background text-on-background"
+            >
+              <span className="material-symbols-outlined">chevron_right</span>
+            </button>
+          ) : null}
         </div>
       ) : null}
     </div>

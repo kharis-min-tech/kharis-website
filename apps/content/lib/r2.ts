@@ -1,6 +1,16 @@
-import { GetObjectCommand, PutObjectCommand, S3Client, type GetObjectCommandOutput, type S3ClientConfig } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectsCommand,
+  GetObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
+  type DeleteObjectsCommandOutput,
+  type GetObjectCommandOutput,
+  type ListObjectsV2CommandOutput,
+  type S3ClientConfig,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { branchImageFolderKey, publicUrlForKey } from "@/lib/branch-image-paths";
+import { branchImageFolderKey, isBranchId, isR2ObjectKey, publicUrlForKey } from "@/lib/branch-image-paths";
 
 function required(name: string) {
   const value = process.env[name]?.trim();
@@ -42,8 +52,10 @@ function clientFor(config: NonNullable<ReturnType<typeof storageConfig>>, reques
   });
 }
 
-async function sendCommand<T>(config: NonNullable<ReturnType<typeof storageConfig>>, command: PutObjectCommand | GetObjectCommand) {
-  const deliver = (client: S3Client) => client.send(command as PutObjectCommand) as Promise<T>;
+type StorageCommand = PutObjectCommand | GetObjectCommand | ListObjectsV2Command | DeleteObjectsCommand;
+
+async function sendCommand<T>(config: NonNullable<ReturnType<typeof storageConfig>>, command: StorageCommand) {
+  const deliver = (client: S3Client) => client.send(command) as Promise<T>;
   try {
     return await deliver(clientFor(config));
   } catch (error) {
@@ -108,6 +120,67 @@ export async function ensureBranchImageFolder(branchId: string) {
     }),
   );
   return key;
+}
+
+/** Lists every object under branch-images/{branchId}/. */
+export async function listBranchImageKeys(branchId: string) {
+  const config = storageConfig();
+  if (!config || !isBranchId(branchId)) return [];
+  const prefix = `branch-images/${branchId}/`;
+  const keys: string[] = [];
+  let token: string | undefined;
+  do {
+    const page = await sendCommand<ListObjectsV2CommandOutput>(
+      config,
+      new ListObjectsV2Command({
+        Bucket: config.bucket,
+        Prefix: prefix,
+        ContinuationToken: token,
+      }),
+    );
+    for (const item of page.Contents ?? []) {
+      if (item.Key && item.Key.startsWith(prefix) && isR2ObjectKey(item.Key)) keys.push(item.Key);
+    }
+    token = page.IsTruncated ? page.NextContinuationToken : undefined;
+  } while (token);
+  return keys;
+}
+
+/** Removes objects that are no longer used. The folder marker stays unless the whole folder is removed. */
+export async function deleteUnusedBranchImages(branchId: string, keep: Iterable<string>, removeFolder = false) {
+  const prefix = `branch-images/${branchId}/`;
+  const folderKey = branchImageFolderKey(branchId);
+  const kept = new Set<string>();
+  for (const key of keep) {
+    if (key.startsWith(prefix) && isR2ObjectKey(key)) kept.add(key);
+  }
+  const existing = await listBranchImageKeys(branchId);
+  const unused = existing.filter((key) => {
+    if (!removeFolder && key === folderKey) return false;
+    return removeFolder || !kept.has(key);
+  });
+  return deleteBranchImageKeys(unused);
+}
+
+async function deleteBranchImageKeys(keys: string[]) {
+  const config = storageConfig();
+  if (!config || keys.length === 0) return 0;
+  let removed = 0;
+  for (let index = 0; index < keys.length; index += 1000) {
+    const batch = keys.slice(index, index + 1000);
+    const result = await sendCommand<DeleteObjectsCommandOutput>(
+      config,
+      new DeleteObjectsCommand({
+        Bucket: config.bucket,
+        Delete: { Objects: batch.map((Key) => ({ Key })), Quiet: true },
+      }),
+    );
+    if (result.Errors?.length) {
+      throw new Error("Some unused images could not be removed from storage.");
+    }
+    removed += batch.length;
+  }
+  return removed;
 }
 
 export async function presignBranchUpload(key: string, contentType: string, fileSize: number) {

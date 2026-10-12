@@ -96,6 +96,7 @@ export function LocationsClient({ items: branches, full }: Props) {
               >
                 <div>
                   <div className="relative h-52 overflow-hidden bg-black">
+                    {branch.heroImage ? (
                     <Image
                       src={branch.heroImage}
                       alt={branch.name}
@@ -103,6 +104,7 @@ export function LocationsClient({ items: branches, full }: Props) {
                       sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                       className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
                     />
+                    ) : null}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                     <span className="absolute left-3 top-3 rounded-full bg-[#800654] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
                       {branch.region}
