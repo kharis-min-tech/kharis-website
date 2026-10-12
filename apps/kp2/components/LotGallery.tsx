@@ -12,18 +12,18 @@ export type LotClip = {
 };
 
 export const LOT_CLIPS: LotClip[] = [
-  { kind: "video", src: "/assets/dancing.mp4", alt: "KP2 dancing in worship", label: "The floor is shaking", span: "tall" },
-  { kind: "image", src: "/assets/K-dancers-img.jpg", alt: "KP2 dancers", label: "K-Dancers" },
-  { kind: "image", src: "/assets/praise-night.jpg", alt: "Praise night", label: "Praise night", span: "wide" },
-  { kind: "video", src: "/assets/crowd.mp4", alt: "The room in full voice", label: "The room" },
-  { kind: "image", src: "/assets/young-adults.jpg", alt: "Young adults together", label: "The lot" },
-  { kind: "image", src: "/assets/sports-day.jpg", alt: "Sports day", label: "Sports day" },
-  { kind: "video", src: "/assets/choir2.mp4", alt: "Choir in worship", label: "Choir" },
-  { kind: "image", src: "/assets/Spoken-word.jpg", alt: "Spoken word", label: "Spoken word" },
-  { kind: "image", src: "/assets/K-music-img.jpg", alt: "KP2 music", label: "K-Music" },
-  { kind: "image", src: "/assets/community.jpg", alt: "Community gathering", label: "Family" },
-  { kind: "video", src: "/assets/Choir-video.mp4", alt: "Worship set", label: "Worship", span: "wide" },
-  { kind: "image", src: "/assets/bass-sunday.jpg", alt: "Bring a soul Sunday", label: "BASS" },
+  { kind: "video", src: "/kp2/assets/dancing.mp4", alt: "KP2 dancing in worship", label: "The floor is shaking", span: "tall" },
+  { kind: "image", src: "/kp2/assets/K-dancers-img.jpg", alt: "KP2 dancers", label: "K-Dancers" },
+  { kind: "image", src: "/kp2/assets/praise-night.jpg", alt: "Praise night", label: "Praise night", span: "wide" },
+  { kind: "video", src: "/kp2/assets/crowd.mp4", alt: "The room in full voice", label: "The room" },
+  { kind: "image", src: "/kp2/assets/young-adults.jpg", alt: "Young adults together", label: "The lot" },
+  { kind: "image", src: "/kp2/assets/sports-day.jpg", alt: "Sports day", label: "Sports day" },
+  { kind: "video", src: "/kp2/assets/choir2.mp4", alt: "Choir in worship", label: "Choir" },
+  { kind: "image", src: "/kp2/assets/Spoken-word.jpg", alt: "Spoken word", label: "Spoken word" },
+  { kind: "image", src: "/kp2/assets/K-music-img.jpg", alt: "KP2 music", label: "K-Music" },
+  { kind: "image", src: "/kp2/assets/community.jpg", alt: "Community gathering", label: "Family" },
+  { kind: "video", src: "/kp2/assets/Choir-video.mp4", alt: "Worship set", label: "Worship", span: "wide" },
+  { kind: "image", src: "/kp2/assets/bass-sunday.jpg", alt: "Bring a soul Sunday", label: "BASS" },
 ];
 
 function spanClass(span?: LotClip["span"]) {

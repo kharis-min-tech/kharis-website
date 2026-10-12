@@ -137,7 +137,7 @@ function MediaPage({
         <img
           alt="Kharis worship gathering"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
-          src={posts[0]?.image || "/assets/worship.jpg"}
+          src={posts[0]?.image || "/kp2/assets/worship.jpg"}
           loading="eager"
           decoding="async"
         />
@@ -331,7 +331,7 @@ function MediaPage({
                   <img
                     alt="Senior Pastor preaching"
                     className="absolute inset-0 w-full h-full object-cover opacity-80"
-                    src="/assets/pastor-stage.jpg"
+                    src="/kp2/assets/pastor-stage.jpg"
                   />
                 )}
                 {featured ? (

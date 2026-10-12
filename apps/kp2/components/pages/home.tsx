@@ -61,7 +61,7 @@ function Index({
               loop
               playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/Choir-video.mp4"
+              src="/kp2/assets/Choir-video.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -73,7 +73,7 @@ function Index({
               loop
               playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/crowd.mp4"
+              src="/kp2/assets/crowd.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -85,7 +85,7 @@ function Index({
               loop
               playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/choir2.mp4"
+              src="/kp2/assets/choir2.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -97,7 +97,7 @@ function Index({
               loop
               playsInline
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
-              src="/assets/dancing.mp4"
+              src="/kp2/assets/dancing.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -151,7 +151,7 @@ function Index({
                   alt="Worship moment at Kharis"
                   className="w-full object-cover mix-blend-luminosity hover:mix-blend-normal transition-all duration-500"
                   style={{ height: "clamp(180px, 46vh, 620px)" }}
-                  src="/assets/pastor-stage.jpg"
+                  src="/kp2/assets/pastor-stage.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -212,7 +212,7 @@ function Index({
                 <img
                   alt="Our mandate: bringing Christ to people"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="/assets/mandate.png"
+                  src="/kp2/assets/mandate.png"
                   loading="lazy"
                   decoding="async"
                 />
@@ -236,7 +236,7 @@ function Index({
                 <img
                   alt="Find a Kharis location"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="/assets/branch-slide-3.jpg"
+                  src="/kp2/assets/branch-slide-3.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -259,7 +259,7 @@ function Index({
                 <img
                   alt="Young adults at Kharis"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="/assets/young-adults.jpg"
+                  src="/kp2/assets/young-adults.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -280,7 +280,7 @@ function Index({
                 <img
                   alt="Worship night"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="/assets/worship.jpg"
+                  src="/kp2/assets/worship.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -301,7 +301,7 @@ function Index({
                 <img
                   alt="Serve with us"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="/assets/serve-with-us.jpg"
+                  src="/kp2/assets/serve-with-us.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -353,7 +353,7 @@ function Index({
                 <img
                   alt="Pastor David Antwi, Head Pastor of Kharis Phase 2"
                   className="relative w-full aspect-[4/5] object-cover rounded-[2rem] shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500"
-                  src="/assets/leadership-pastor-david.jpg"
+                  src="/kp2/assets/leadership-pastor-david.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -566,7 +566,7 @@ function Index({
                   <img
                     alt="Kharis app home screen"
                     className="w-full h-auto rounded-2xl"
-                    src="/assets/app-steps-step-1-messages.png"
+                    src="/kp2/assets/app-steps-step-1-messages.png"
                     loading="lazy"
                     decoding="async"
                   />
@@ -587,7 +587,7 @@ function Index({
                   <img
                     alt="Kharis app search screen"
                     className="w-full h-auto rounded-2xl"
-                    src="/assets/app-steps-step-2-browse.png"
+                    src="/kp2/assets/app-steps-step-2-browse.png"
                     loading="lazy"
                     decoding="async"
                   />
@@ -608,7 +608,7 @@ function Index({
                   <img
                     alt="Kharis app player screen"
                     className="w-full h-auto rounded-2xl"
-                    src="/assets/app-steps-step-3-player.png"
+                    src="/kp2/assets/app-steps-step-3-player.png"
                     loading="lazy"
                     decoding="async"
                   />

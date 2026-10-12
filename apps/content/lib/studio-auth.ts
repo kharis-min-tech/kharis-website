@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { serverFetch } from "@/lib/server-fetch";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, isSupabaseConfigured } from "@/lib/supabase";
 
 export async function studioUserFromRequest(request: Request) {
@@ -8,7 +9,10 @@ export async function studioUserFromRequest(request: Request) {
   if (!token) return null;
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
+    global: {
+      fetch: serverFetch,
+      headers: { Authorization: `Bearer ${token}` },
+    },
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
   });
   const { data, error } = await supabase.auth.getUser(token);
