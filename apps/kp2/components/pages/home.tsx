@@ -339,9 +339,7 @@ function Index({
                   see if it won’t change your life.
                 </p>
                 <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-8 max-w-xl">
-                  For the word of God is quick, and powerful, and sharper than any twoedged sword, piercing even to the
-                  dividing asunder of soul and spirit, and of the joints and marrow, and is a discerner of the thoughts
-                  and intents of the heart. Hebrews 4:12 (KJV)
+                  &ldquo;For the word of God is quick, and powerful, and sharper than any twoedged sword...&rdquo; Hebrews 4:12
                 </p>
                 <Link
                   href="/mission"

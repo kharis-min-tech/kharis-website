@@ -8,6 +8,8 @@ import type { ChurchEvent } from "@/lib/events";
 import { eventToCalendarItem } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { TikTokIcon } from "@/components/TikTokIcon";
+import { TIKTOK_HANDLE, TIKTOK_URL } from "@/lib/social";
 
 function socialDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
@@ -137,6 +139,13 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
                     <div className="min-w-0">
                       <p className="font-label-md text-label-md uppercase">YouTube</p>
                       <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-white/80 break-all">@davidantwi</p>
+                    </div>
+                  </a>
+                  <a className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-secondary-container transition-colors neo-shadow group" href={TIKTOK_URL} target="_blank" rel="noreferrer">
+                    <TikTokIcon className="w-9 h-9 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="font-label-md text-label-md uppercase">TikTok</p>
+                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-secondary-container break-all">{TIKTOK_HANDLE}</p>
                     </div>
                   </a>
                 </div>

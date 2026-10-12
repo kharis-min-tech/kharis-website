@@ -386,7 +386,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
         {/* FIRST TIME / SERVE STRIP */}
         <section className="bg-on-background text-surface py-stack-lg border-y-4 border-primary relative overflow-hidden">
           <div className="absolute inset-0 halftone-overlay opacity-10 pointer-events-none" />
-          <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10 grid grid-cols-1 md:grid-cols-3 gap-gutter">
+          <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10 grid grid-cols-1 md:grid-cols-2 gap-gutter">
             {[
               {
                 icon: "waving_hand",
@@ -401,13 +401,6 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 copy: "Every gathering is easier with a friend. Invite someone and we'll save you both a seat.",
                 cta: "Find a Fellowship",
                 to: "/fellowships" as const,
-              },
-              {
-                icon: "handshake",
-                title: "Get Involved",
-                copy: "Hospitality, sound, media, kids. Events run on volunteers who show up early.",
-                cta: "Join a Department",
-                to: "/departments" as const,
               },
             ].map((item) => (
               <div

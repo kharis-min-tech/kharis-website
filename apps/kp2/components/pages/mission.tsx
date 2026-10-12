@@ -2,7 +2,6 @@
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useState } from "react";
 
@@ -402,22 +401,6 @@ function OurLeadership() {
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
               Pastor David and Awo founded Kharis in 2003, a multifaceted ministry headquartered in London, United Kingdom, with several branches worldwide. Together, they also founded Kharis Phase 2 our students&apos; and young people&apos;s services. Kharis also has a presence on university campuses across the UK. Their love for the Word of God is evident in how they lead, teach, and serve. Their greatest desire is to see believers established in their faith, local churches strengthened, and ultimately, for revival to sweep through the nations. They have been married for over 20 years and are blessed with two wonderful children.
             </p>
-            <div className="flex flex-wrap gap-4 mt-8">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-primary text-on-primary font-headline-md px-6 py-3 rounded-none border-2 border-black brutalist-shadow hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all uppercase"
-              >
-                <span className="material-symbols-outlined">alternate_email</span> Contact
-              </Link>
-              <a
-                href="https://instagram.com/kharisphasetwo"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container font-headline-md px-6 py-3 rounded-none border-2 border-black brutalist-shadow hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all uppercase"
-              >
-                <span className="material-symbols-outlined">share</span> Instagram
-              </a>
-            </div>
           </div>
         </div>
       </div>

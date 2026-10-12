@@ -20,6 +20,8 @@ import {
   instagramCaption,
   type InstagramPost,
 } from "@/lib/instagram";
+import { TikTokIcon } from "@/components/TikTokIcon";
+import { TIKTOK_HANDLE, TIKTOK_URL } from "@/lib/social";
 
 
 
@@ -96,6 +98,15 @@ const SOCIALS = [
     cta: "SUBSCRIBE",
     Icon: YouTubeIcon,
     band: "bg-error-container text-on-error-container",
+  },
+  {
+    label: "TikTok",
+    handle: TIKTOK_HANDLE,
+    copy: "Short clips, house moments and word in motion.",
+    href: TIKTOK_URL,
+    cta: "FOLLOW",
+    Icon: TikTokIcon,
+    band: "bg-on-background text-surface",
   },
   {
     label: "Spotify",

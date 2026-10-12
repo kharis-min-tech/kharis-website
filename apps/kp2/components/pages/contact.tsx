@@ -4,6 +4,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { TikTokIcon } from "@/components/TikTokIcon";
+import { TIKTOK_URL } from "@/lib/social";
 import { hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
 import type { FormEvent } from "react";
 
@@ -202,6 +204,10 @@ Find a campus
                     <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="https://youtube.com/@davidantwi" target="_blank" rel="noreferrer">
                         <span className="material-symbols-outlined">video_library</span>
                         <span className="font-label-md">YOUTUBE</span>
+                    </a>
+                    <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href={TIKTOK_URL} target="_blank" rel="noreferrer">
+                        <TikTokIcon className="w-5 h-5" />
+                        <span className="font-label-md">TIKTOK</span>
                     </a>
                 </div>
 </div>
