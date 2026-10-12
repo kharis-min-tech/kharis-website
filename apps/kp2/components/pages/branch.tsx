@@ -27,25 +27,28 @@ import {
   type MessageVideo,
 } from "@/lib/youtube";
 
-const GALLERY_FALLBACKS = [
-  "/kp2/assets/worship.jpg",
-  "/kp2/assets/young-adults.jpg",
-  "/kp2/assets/community.jpg",
-  "/kp2/assets/events-hero-worship.jpg",
-  "/kp2/assets/praise-night.jpg",
-  "/kp2/assets/events-sunday-service.jpg",
-];
-
 function galleryFor(branch: Branch) {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const src of [branch.image, ...GALLERY_FALLBACKS]) {
-    if (!src || seen.has(src)) continue;
-    seen.add(src);
-    out.push(src);
-    if (out.length >= 8) break;
-  }
-  return out;
+  return branch.gallery;
+}
+
+function usablePhone(phone: string) {
+  const national = phone.replace(/\D/g, "").replace(/^44/, "");
+  if (!national || /^0+$/.test(national)) return "";
+  return phone.trim();
+}
+
+function instagramHandle(value: string) {
+  const trimmed = value.trim();
+  const fromUrl = trimmed.match(/instagram\.com\/([^/?#]+)/i)?.[1];
+  const handle = (fromUrl || trimmed).replace(/^@/, "").replace(/\/$/, "");
+  if (!handle || /^https?:/i.test(handle)) return "";
+  return `@${handle}`;
+}
+
+function instagramHref(value: string) {
+  const trimmed = value.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://instagram.com/${trimmed.replace(/^@/, "")}`;
 }
 
 function BranchNotFound() {
@@ -174,13 +177,15 @@ function BranchPage({
         {/* Hero */}
         <section className="relative flex w-full min-h-0 items-center justify-center px-4 pt-6 pb-8 sm:min-h-[65vh] sm:px-5 sm:pt-10 sm:pb-16 md:px-8 max-w-[1536px] mx-auto">
           <div className="absolute inset-x-4 top-6 bottom-4 z-0 overflow-hidden brutalist-border sm:inset-x-5 sm:top-10 sm:bottom-8 md:inset-x-8">
-            <img
-              src={branch.image}
-              alt=""
-              fetchPriority="high"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover opacity-90"
-            />
+            {branch.image ? (
+              <img
+                src={branch.image}
+                alt=""
+                fetchPriority="high"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover opacity-90"
+              />
+            ) : null}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
           </div>
 
@@ -281,7 +286,7 @@ function BranchPage({
                 className="flex items-center justify-center gap-2 border-2 border-white/40 bg-white/10 px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-white"
               >
                 <span className="material-symbols-outlined text-[18px] text-secondary-container">
-                  calendar_month
+                  event
                 </span>
                 Upcoming events
               </a>
@@ -454,12 +459,14 @@ function BranchPage({
                       referrerPolicy="no-referrer-when-downgrade"
                     />
                   </div>
-                ) : (
+                ) : branch.image ? (
                   <img
                     src={branch.image}
                     alt={branch.name}
                     className="absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] object-cover"
                   />
+                ) : (
+                  <div className="absolute inset-3 bg-surface-container" />
                 )}
 
                 <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
@@ -537,7 +544,7 @@ function BranchPage({
                   ) : null}
                 </div>
               </>
-            ) : (
+            ) : branch.image ? (
               <Link href="/messages" className="group relative block h-full w-full">
                 <img
                   src={branch.image}
@@ -554,6 +561,13 @@ function BranchPage({
                   </span>
                 </div>
               </Link>
+            ) : (
+              <Link
+                href="/messages"
+                className="flex h-full w-full items-center justify-center font-body-md text-[13px] font-bold uppercase tracking-wider text-white"
+              >
+                Watch on YouTube
+              </Link>
             )}
           </div>
         </section>
@@ -568,6 +582,7 @@ function BranchPage({
               Moments from our family
             </h2>
           </div>
+          {gallery.length ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {gallery.slice(0, 4).map((src, index) => (
               <button
@@ -592,6 +607,11 @@ function BranchPage({
               </button>
             ))}
           </div>
+          ) : (
+            <p className="text-center font-body-md text-[14px] text-on-surface-variant">
+              Photos for this branch will show here after they are added in Content Studio.
+            </p>
+          )}
         </section>
 
         {/* Calendar */}
@@ -673,22 +693,65 @@ function BranchPage({
                 Questions about {branch.city}, parking, or your first Sunday? Send a note
                 and the team will get back to you.
               </p>
-              <ul className="space-y-2 font-body-md text-body-md">
-                {branch.phone ? (
+              <ul className="border-2 border-on-background bg-surface-container-lowest brutalist-shadow divide-y-2 divide-on-background/15">
+                {usablePhone(branch.phone) ? (
                   <li>
-                    <a href={`tel:${branch.phone.replace(/\s/g, "")}`} className="hover:text-primary">
-                      {branch.phone}
+                    <a
+                      href={`tel:${usablePhone(branch.phone).replace(/\s/g, "")}`}
+                      className="flex items-center gap-4 px-4 py-4 transition-colors hover:bg-secondary-container"
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center bg-on-background text-background">
+                        <span className="material-symbols-outlined text-[22px]">phone</span>
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-body-md text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
+                          Phone
+                        </span>
+                        <span className="block font-body-md text-[16px]">{usablePhone(branch.phone)}</span>
+                      </span>
                     </a>
                   </li>
                 ) : null}
                 {branch.email ? (
                   <li>
-                    <a href={`mailto:${branch.email}`} className="hover:text-primary break-all">
-                      {branch.email}
+                    <a
+                      href={`mailto:${branch.email}`}
+                      className="flex items-center gap-4 px-4 py-4 transition-colors hover:bg-secondary-container"
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center bg-on-background text-background">
+                        <span className="material-symbols-outlined text-[22px]">mail</span>
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-body-md text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
+                          Email
+                        </span>
+                        <span className="block truncate font-body-md text-[16px]">{branch.email}</span>
+                      </span>
                     </a>
                   </li>
                 ) : null}
-                {branch.instagram ? <li className="text-on-surface-variant">{branch.instagram}</li> : null}
+                {instagramHandle(branch.instagram) ? (
+                  <li>
+                    <a
+                      href={instagramHref(branch.instagram)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-4 px-4 py-4 transition-colors hover:bg-secondary-container"
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center bg-on-background text-background">
+                        <span className="material-symbols-outlined text-[22px]">photo_camera</span>
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-body-md text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
+                          Instagram
+                        </span>
+                        <span className="block truncate font-body-md text-[16px]">
+                          {instagramHandle(branch.instagram)}
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                ) : null}
               </ul>
             </div>
             <form

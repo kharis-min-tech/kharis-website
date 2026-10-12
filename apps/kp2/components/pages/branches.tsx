@@ -279,12 +279,14 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                     className="text-left w-full"
                   >
                     <div className="relative h-52 overflow-hidden bg-on-background">
-                      <img
-                        src={branch.image}
-                        alt={branch.name}
-                        loading="lazy"
-                        className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
-                      />
+                      {branch.image ? (
+                        <img
+                          src={branch.image}
+                          alt={branch.name}
+                          loading="lazy"
+                          className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : null}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                       <span className="absolute left-3 top-3 bg-primary text-on-primary px-3 py-1 font-body-md text-[10px] font-bold uppercase tracking-wider">
                         {branch.region}
@@ -330,10 +332,10 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                       </div>
                       {midweek ? (
                         <div className="flex items-center gap-2 px-3.5 py-3">
-                          <span className="material-symbols-outlined text-[18px] text-primary">
-                            calendar_month
+                          <span className="material-symbols-outlined shrink-0 text-[18px] text-primary">
+                            event
                           </span>
-                          <span className="font-body-md text-[12px] font-bold">{midweek}</span>
+                          <span className="min-w-0 font-body-md text-[12px] font-bold">{midweek}</span>
                         </div>
                       ) : null}
                     </div>
@@ -342,10 +344,10 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                   <div className="border-t-2 border-on-background/15 p-6 pt-4">
                     <Link
                       href={`/branches/${branch.slug}`}
-                      className="flex w-full items-center justify-center gap-2 bg-secondary text-on-secondary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border"
+                      className="flex w-full items-center justify-center gap-2 border-2 border-on-background bg-primary px-5 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-on-primary"
                     >
                       Explore {branch.city}
-                      <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </Link>
                   </div>
                 </article>
