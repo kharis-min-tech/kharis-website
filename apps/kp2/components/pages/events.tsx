@@ -14,8 +14,8 @@ import { eventToCalendarItem, mapsSearchUrl } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 
-const HERO_WORSHIP = "/assets/events-hero-worship.jpg";
-const WORSHIP = "/assets/worship.jpg";
+const HERO_WORSHIP = "/kp2/assets/events-hero-worship.jpg";
+const WORSHIP = "/kp2/assets/worship.jpg";
 
 const SPECIAL_SERVICES = [
   {
@@ -23,21 +23,21 @@ const SPECIAL_SERVICES = [
     time: "Monthly · Sunday",
     title: "Bring A Soul Sunday",
     note: "We fill the room with friends, family and first-timers — a high-energy Sunday built for souls.",
-    image: "/assets/bass-sunday.jpg",
+    image: "/kp2/assets/bass-sunday.jpg",
   },
   {
     day: "Sports Day",
     time: "Summer",
     title: "Sports Day",
     note: "Track, football and full-blown team rivalry — the church family outdoors for a day of games.",
-    image: "/assets/sports-day.jpg",
+    image: "/kp2/assets/sports-day.jpg",
   },
   {
     day: "Praise Night",
     time: "Seasonal",
     title: "Praise Night",
     note: "A night handed over to worship — live praise, testimony and the Word until the room shifts.",
-    image: "/assets/praise-night.jpg",
+    image: "/kp2/assets/praise-night.jpg",
   },
 ];
 

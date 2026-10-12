@@ -95,8 +95,8 @@ export function organizationJsonLd() {
         alternateName: ["KP2", "Kharis Phase Two"],
         url,
         description: SITE_DESCRIPTION,
-        image: absoluteUrl("/assets/worship.jpg"),
-        logo: absoluteUrl("/assets/kp2-logo-new.png"),
+        image: absoluteUrl("/kp2/assets/worship.jpg"),
+        logo: absoluteUrl("/kp2/assets/kp2-logo-new.png"),
         sameAs: [...SOCIAL_LINKS],
         parentOrganization: {
           "@type": "NGO",

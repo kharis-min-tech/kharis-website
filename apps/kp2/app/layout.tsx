@@ -38,8 +38,8 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
   },
   icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
+    icon: "/kp2/favicon.png",
+    apple: "/kp2/favicon.png",
   },
   robots: {
     index: true,
@@ -80,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={organizationJsonLd()} />
         <ScrollReveal />
         {children}
-        <script src="/ui-boot.js?v=7" defer></script>
+        <script src="/kp2/ui-boot.js?v=7" defer></script>
       </body>
     </html>
   );

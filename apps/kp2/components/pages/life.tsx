@@ -30,7 +30,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
 
       <header className="relative min-h-[620px] md:min-h-[760px] lg:min-h-[921px] flex items-center pt-24 overflow-hidden bg-black text-white">
         <div className="absolute inset-0 opacity-60">
-          <div className="w-full h-full bg-cover bg-center" data-alt="Young adults at Kharis Life" style={{backgroundImage: "url('/assets/young-adults.jpg')"}}></div>
+          <div className="w-full h-full bg-cover bg-center" data-alt="Young adults at Kharis Life" style={{backgroundImage: "url('/kp2/assets/young-adults.jpg')"}}></div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
 
