@@ -1,3 +1,4 @@
+import { publicAsset } from "@/lib/public-asset";
 import { SITE_WORKSPACE, SITE_WORKSPACES } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
@@ -230,7 +231,7 @@ function toChurchEvent(event: DisplayEvent): ChurchEvent {
     blurb: event.description || "Join us — all welcome.",
     cta: "Plan Your Visit",
     featured: Boolean(event.is_featured),
-    image: event.image_url || undefined,
+    image: event.image_url ? publicAsset(event.image_url) : undefined,
   };
 }
 

@@ -1,3 +1,4 @@
+import { studioImage } from "@/lib/public-asset";
 import { SITE_WORKSPACE } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
@@ -32,6 +33,7 @@ export type Branch = {
   description: string;
   tags: string[];
   image: string;
+  gallery: string[];
   givingLink: string | null;
   parkingInfo: string;
   transitInfo: string;
@@ -86,15 +88,15 @@ type BranchRow = {
   services: ServiceRow[] | null;
 };
 
-const FALLBACK_IMAGE = "/assets/branch-slide-1.jpg";
+const FALLBACK_IMAGE = "/kp2/assets/branch-slide-1.jpg";
 const LOCAL_SLIDES = [
-  "/assets/branch-slide-1.jpg",
-  "/assets/branch-slide-2.jpg",
-  "/assets/branch-slide-3.jpg",
-  "/assets/branch-slide-4.jpg",
-  "/assets/branch-slide-5.jpg",
+  "/kp2/assets/branch-slide-1.jpg",
+  "/kp2/assets/branch-slide-2.jpg",
+  "/kp2/assets/branch-slide-3.jpg",
+  "/kp2/assets/branch-slide-4.jpg",
+  "/kp2/assets/branch-slide-5.jpg",
 ];
-const FALLBACK_PASTOR = "/assets/leadership-pastor-david.jpg";
+const FALLBACK_PASTOR = "/kp2/assets/leadership-pastor-david.jpg";
 const DEFAULT_PARKING = "Public parking is available near the venue.";
 const DEFAULT_TRANSIT =
   "The venue is reachable by public transport. Check local bus and rail times before you travel.";
@@ -122,9 +124,8 @@ function fallbackImageFor(slug: string) {
   return LOCAL_SLIDES[index] ?? FALLBACK_IMAGE;
 }
 
-function resolveBranchImage(url: string | null | undefined, slug: string) {
-  if (!url || /assets\/design\//i.test(url)) return fallbackImageFor(slug);
-  return url.startsWith("/") || url.startsWith("http") ? url : fallbackImageFor(slug);
+function localAsset(url: string | null | undefined, fallback: string) {
+  return studioImage(url) ?? fallback;
 }
 
 function roleLabel(role?: string | null): string {
@@ -216,7 +217,7 @@ function pickMainVenue(
   };
 }
 
-function toBranch(row: BranchRow): Branch {
+function toBranch(row: BranchRow, gallery: string[] = [], extras?: { hero?: string; pastor?: string }): Branch {
   const venues = row.venues ?? [];
   const services = [...(row.services ?? [])]
     .filter((s) => s.is_active !== false)
@@ -282,7 +283,7 @@ function toBranch(row: BranchRow): Branch {
     services: mappedServices,
     pastor,
     pastorRole,
-    pastorImage: row.pastor_image_url || FALLBACK_PASTOR,
+    pastorImage: localAsset(row.pastor_image_url, extras?.pastor || FALLBACK_PASTOR),
     pastorBio: row.pastor_bio || `Welcome to ${row.name}.`,
     phone: row.contact_phone || "",
     email: row.contact_email || "",
@@ -292,7 +293,8 @@ function toBranch(row: BranchRow): Branch {
     tags: ["Phase 2"].concat(
       addressMatchesCity && mainVenue?.city ? [mainVenue.city] : city ? [city] : [],
     ),
-    image: resolveBranchImage(row.hero_image_url, row.slug),
+    image: studioImage(row.hero_image_url) ?? extras?.hero ?? fallbackImageFor(row.slug),
+    gallery,
     givingLink: row.giving_link,
     parkingInfo: mainVenue?.parking_info || DEFAULT_PARKING,
     transitInfo: mainVenue?.public_transport_info || DEFAULT_TRANSIT,
@@ -303,12 +305,51 @@ export function hasCoords(branch: { lat: number; lng: number }) {
   return Number.isFinite(branch.lat) && Number.isFinite(branch.lng) && (branch.lat !== 0 || branch.lng !== 0);
 }
 
-export async function listBranches(): Promise<Branch[]> {
-  const rows = await supabaseSelect<BranchRow>(
-    "branches",
-    "select=*,venues(*),services(*)&is_active=eq.true&order=sort_order.asc",
+type StudioMedia = {
+  owner_id: string | null;
+  owner_type: string | null;
+  url: string | null;
+};
+
+async function studioMediaByBranch() {
+  const rows = await supabaseSelect<StudioMedia>(
+    "media",
+    "select=owner_id,owner_type,url,sort_order&owner_type=in.(branch-gallery,branch-hero,branch-pastor)&order=sort_order.asc",
   );
-  return rows.filter(isKp2Location).map(toBranch);
+  const gallery = new Map<string, string[]>();
+  const hero = new Map<string, string>();
+  const pastor = new Map<string, string>();
+  for (const row of rows) {
+    if (!row.owner_id) continue;
+    const src = studioImage(row.url);
+    if (!src) continue;
+    if (row.owner_type === "branch-gallery") {
+      const list = gallery.get(row.owner_id) ?? [];
+      list.push(src);
+      gallery.set(row.owner_id, list);
+    } else if (row.owner_type === "branch-hero" && !hero.has(row.owner_id)) {
+      hero.set(row.owner_id, src);
+    } else if (row.owner_type === "branch-pastor" && !pastor.has(row.owner_id)) {
+      pastor.set(row.owner_id, src);
+    }
+  }
+  return { gallery, hero, pastor };
+}
+
+export async function listBranches(): Promise<Branch[]> {
+  const [rows, media] = await Promise.all([
+    supabaseSelect<BranchRow>(
+      "branches",
+      "select=*,venues(*),services(*)&is_active=eq.true&order=sort_order.asc",
+    ),
+    studioMediaByBranch(),
+  ]);
+  return rows.filter(isKp2Location).map((row) =>
+    toBranch(row, media.gallery.get(row.id) ?? [], {
+      hero: media.hero.get(row.id),
+      pastor: media.pastor.get(row.id),
+    }),
+  );
 }
 
 export async function getBranch(slug: string): Promise<Branch | null> {
@@ -318,7 +359,11 @@ export async function getBranch(slug: string): Promise<Branch | null> {
   );
   const row = rows[0];
   if (!row || !isKp2Location(row)) return null;
-  return toBranch(row);
+  const media = await studioMediaByBranch();
+  return toBranch(row, media.gallery.get(row.id) ?? [], {
+    hero: media.hero.get(row.id),
+    pastor: media.pastor.get(row.id),
+  });
 }
 
 export async function listBranchSlugs(): Promise<string[]> {

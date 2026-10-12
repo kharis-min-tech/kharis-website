@@ -1,4 +1,17 @@
+import { localImage, studioImage } from "@/lib/local-image";
 import { supabase } from "@/lib/supabase";
+
+/** Phase 2 campuses live on /kp2. They are stored with a kp2- slug, not a separate workspace. */
+export function isKharisBranch(row: {
+  workspace?: string | null;
+  slug?: string | null;
+  name?: string | null;
+}) {
+  if (row.workspace === "kp2") return false;
+  const slug = (row.slug ?? "").toLowerCase();
+  const name = (row.name ?? "").toLowerCase();
+  return !slug.startsWith("kp2-") && !name.includes("phase 2");
+}
 
 
 // ======================================================
@@ -82,6 +95,7 @@ export interface BranchData {
 
   venues: Venue[];
   services: Service[];
+  galleryImages?: string[];
 }
 
 
@@ -176,7 +190,7 @@ export async function listBranchData(): Promise<BranchData[]> {
   }));
 
 
-  return branches as BranchData[];
+  return withStudioImages(branches.filter(isKharisBranch) as BranchData[]);
 }
 
 
@@ -334,9 +348,7 @@ export function toBranchItem(
       mainVenue?.country ??
       "United Kingdom",
 
-    heroImage:
-      branch.hero_image_url ??
-      "/images/branch-slide-1.jpg",
+    heroImage: localImage(branch.hero_image_url, "/images/branch-slide-1.jpg"),
 
     postcode:
       mainVenue?.postcode ?? "",
@@ -410,22 +422,73 @@ export async function getBranchBySlug(
   }
 
 
-  if (!data) {
+  if (!data || !isKharisBranch(data)) {
     return null;
   }
 
 
-  return {
-    ...data,
+  const [branch] = await withStudioImages([
+    {
+      ...data,
+      venues: data.venues ?? [],
+      services: [...(data.services ?? [])].sort(
+        (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
+      ),
+    } as BranchData,
+  ]);
+  return branch ?? null;
+}
 
-    venues: data.venues ?? [],
+type StudioMedia = {
+  owner_id: string | null;
+  owner_type: string | null;
+  url: string | null;
+  sort_order: number | null;
+};
 
-    services: [...(data.services ?? [])].sort(
-      (a, b) =>
-        (a.sort_order ?? 0) -
-        (b.sort_order ?? 0)
-    ),
-  } as BranchData;
+/** Gallery, and hero/pastor uploads saved on media rows when the column is still a placeholder. */
+async function withStudioImages(branches: BranchData[]): Promise<BranchData[]> {
+  if (!branches.length) return branches;
+  const { data, error } = await supabase
+    .from("media")
+    .select("owner_id, owner_type, url, sort_order")
+    .in("owner_type", ["branch-gallery", "branch-hero", "branch-pastor"])
+    .in("owner_id", branches.map((branch) => branch.id))
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    console.error("Failed to load branch images:", error);
+    return branches;
+  }
+
+  const gallery = new Map<string, string[]>();
+  const hero = new Map<string, string>();
+  const pastor = new Map<string, string>();
+  for (const row of (data ?? []) as StudioMedia[]) {
+    if (!row.owner_id) continue;
+    const src = studioImage(row.url);
+    if (!src) continue;
+    if (row.owner_type === "branch-gallery") {
+      const list = gallery.get(row.owner_id) ?? [];
+      list.push(src);
+      gallery.set(row.owner_id, list);
+    } else if (row.owner_type === "branch-hero" && !hero.has(row.owner_id)) {
+      hero.set(row.owner_id, src);
+    } else if (row.owner_type === "branch-pastor" && !pastor.has(row.owner_id)) {
+      pastor.set(row.owner_id, src);
+    }
+  }
+
+  return branches.map((branch) => {
+    const columnHero = studioImage(branch.hero_image_url);
+    const columnPastor = studioImage(branch.pastor_image_url);
+    return {
+      ...branch,
+      hero_image_url: columnHero ?? hero.get(branch.id) ?? branch.hero_image_url,
+      pastor_image_url: columnPastor ?? pastor.get(branch.id) ?? branch.pastor_image_url,
+      galleryImages: gallery.get(branch.id) ?? [],
+    };
+  });
 }
 
 export async function listBranchIds(): Promise<string[]> {

@@ -32,7 +32,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
           ) : (
             <div
               className="absolute inset-0 bg-cover bg-center opacity-60"
-              style={{ backgroundImage: "url('/assets/pastor-stage.jpg')" }}
+              style={{ backgroundImage: "url('/kp2/assets/pastor-stage.jpg')" }}
             />
           )}
           <div className="absolute inset-0 hero-gradient pointer-events-none" />

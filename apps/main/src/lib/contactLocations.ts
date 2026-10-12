@@ -1,3 +1,4 @@
+import { isKharisBranch } from "@/lib/branches";
 import { supabase } from "@/lib/supabase";
 
 export interface ContactVenue {
@@ -50,5 +51,5 @@ export async function getContactLocations(): Promise<ContactLocation[]> {
     return [];
   }
 
-  return data ?? [];
+  return (data ?? []).filter(isKharisBranch);
 }

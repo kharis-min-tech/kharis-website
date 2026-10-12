@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "upload.wikimedia.org" },
       { protocol: "https", hostname: "cdn.shopify.com" },
       { protocol: "https", hostname: "cqgyiqxhpxwasogpdghx.supabase.co" },
+      { protocol: "https", hostname: "kharis.org" },
+      { protocol: "https", hostname: "www.kharis.org" },
+      { protocol: "https", hostname: "*.r2.dev" },
     ],
   },
   async headers() {

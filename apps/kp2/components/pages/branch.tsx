@@ -28,15 +28,16 @@ import {
 } from "@/lib/youtube";
 
 const GALLERY_FALLBACKS = [
-  "/assets/worship.jpg",
-  "/assets/young-adults.jpg",
-  "/assets/community.jpg",
-  "/assets/events-hero-worship.jpg",
-  "/assets/praise-night.jpg",
-  "/assets/events-sunday-service.jpg",
+  "/kp2/assets/worship.jpg",
+  "/kp2/assets/young-adults.jpg",
+  "/kp2/assets/community.jpg",
+  "/kp2/assets/events-hero-worship.jpg",
+  "/kp2/assets/praise-night.jpg",
+  "/kp2/assets/events-sunday-service.jpg",
 ];
 
 function galleryFor(branch: Branch) {
+  if (branch.gallery.length) return branch.gallery;
   const seen = new Set<string>();
   const out: string[] = [];
   for (const src of [branch.image, ...GALLERY_FALLBACKS]) {
@@ -567,7 +568,7 @@ function BranchPage({
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {gallery.slice(0, 4).map((src, index) => (
+            {gallery.slice(0, 8).map((src, index) => (
               <button
                 key={`${src}-${index}`}
                 type="button"

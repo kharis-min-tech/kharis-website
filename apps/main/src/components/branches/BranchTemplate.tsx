@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { BranchData } from "@/lib/branches";
+import { localImage } from "@/lib/local-image";
 import { DEFAULT_GALLERY_IMAGES } from "@/data/branchesData";
 import PlanVisitModal from "@/components/PlanVisitModal";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -59,6 +60,18 @@ export function BranchTemplate({
 }: BranchTemplateProps) {
   const router = useRouter();
   const currentBranch = branchData;
+  const picture = currentBranch as BranchData & {
+    heroImage?: string | null;
+    leadPastor?: { image?: string | null };
+  };
+  const heroSrc = localImage(
+    picture.hero_image_url || picture.heroImage,
+    "/images/branch-slide-1.jpg",
+  );
+  const pastorSrc = localImage(
+    picture.pastor_image_url || picture.leadPastor?.image,
+    "/images/leadership/pastor-david.jpg",
+  );
 
   const sundayServices = (currentBranch.services ?? [])
     .filter(
@@ -147,7 +160,7 @@ export function BranchTemplate({
             <div
               className="absolute inset-0 bg-cover bg-center opacity-90 scale-105 transform hover:scale-100 transition-transform duration-1000"
               style={{
-                backgroundImage: `url('${currentBranch.hero_image_url}')`,
+                backgroundImage: `url('${heroSrc}')`,
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
@@ -438,7 +451,7 @@ export function BranchTemplate({
                 </div>
                 <div className="aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
                   <img
-                    src={currentBranch.pastor_image_url}
+                    src={pastorSrc}
                     alt={currentBranch.pastor_name}
                     className="h-full w-full object-cover"
                   />
@@ -505,7 +518,7 @@ export function BranchTemplate({
               className="group relative block aspect-video w-full cursor-pointer text-left"
             >
               <img
-                src={currentBranch.heroImage}
+                src={heroSrc}
                 alt={`Kharis ${currentBranch.city} worship`}
                 className="h-full w-full object-cover opacity-70 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
               />

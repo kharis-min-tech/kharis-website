@@ -1,4 +1,5 @@
 import type { Testimonial } from "@/components/TestimonialCarousel";
+import { publicAsset } from "@/lib/public-asset";
 import { SITE_WORKSPACES } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
@@ -26,9 +27,9 @@ const SAFE_FIELDS =
   "name,branch_name,category,short_description,description,image_url,is_anonymous,workspace,is_featured,is_featured_giving";
 
 const FALLBACK_IMAGES = [
-  "/assets/testimony-1.jpg",
-  "/assets/testimony-2.jpg",
-  "/assets/testimony-3.jpg",
+  "/kp2/assets/testimony-1.jpg",
+  "/kp2/assets/testimony-2.jpg",
+  "/kp2/assets/testimony-3.jpg",
 ];
 
 const HOME_STYLES: Pick<Testimonial, "color" | "pattern" | "patternSize">[] = [
@@ -115,7 +116,9 @@ export async function getGivingTestimonials(): Promise<GivingTestimony[]> {
       return {
         name: displayName(row),
         role: row.category || row.branch_name || "Member",
-        image: row.image_url || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]!,
+        image: row.image_url
+          ? publicAsset(row.image_url)
+          : FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]!,
         quote: quote.startsWith('"') ? quote : `"${quote}"`,
       } satisfies GivingTestimony;
     })

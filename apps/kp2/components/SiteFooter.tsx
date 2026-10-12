@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-const eaLogoLight = "/assets/ea-logo-light.png";
-const eaLogoDark = "/assets/ea-logo-dark.png";
+const eaLogoLight = "/kp2/assets/ea-logo-light.png";
+const eaLogoDark = "/kp2/assets/ea-logo-dark.png";
 
 type FooterColumn = {
   title: string;
