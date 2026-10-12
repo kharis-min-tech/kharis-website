@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from 'react';
+import Image from "next/image";
 import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -58,11 +59,12 @@ export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps
                 onClick={() => onImageClick?.(src)}
                 className="group relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black text-left cursor-pointer"
               >
-                <img
+                <Image
                   src={src}
                   alt={`Kharis ${city} gathering`}
-                  loading="lazy"
-                  className="h-full w-full object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
+                  fill
+                  sizes="(min-width: 768px) 25vw, 50vw"
+                  className="object-cover opacity-85 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">

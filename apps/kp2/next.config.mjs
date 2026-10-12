@@ -4,6 +4,8 @@ const nextConfig = {
   // from this, so /kp2/_next/* resolves without a separate assetPrefix.
   basePath: "/kp2",
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 7,
     remotePatterns: [
       {
         protocol: "https",
@@ -17,7 +19,36 @@ const nextConfig = {
         protocol: "https",
         hostname: "cqgyiqxhpxwasogpdghx.supabase.co",
       },
+      {
+        protocol: "https",
+        hostname: "kharis.org",
+      },
+      {
+        protocol: "https",
+        hostname: "www.kharis.org",
+      },
+      {
+        protocol: "https",
+        hostname: "*.r2.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "content.kharis.org",
+      },
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: "/assets/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=2592000",
+          },
+        ],
+      },
+    ];
   },
 };
 

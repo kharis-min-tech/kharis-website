@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { AreaField, SelectField, TextField, ToggleField } from "@/components/studio/fields";
 import { ImageDrop, MultiImageDrop } from "@/components/studio/image-drop";
@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { branchTemplate } from "@/lib/branch-template";
 import { emptyService, emptyVenue, pastorPreview, type BranchDraft, type BranchRow } from "@/lib/branch-types";
-import { deleteBranch, emptyBranch, listBranches, loadBranchDraft, saveBranch, venueHasContent } from "@/lib/branches-repo";
+import { deleteBranch, emptyBranch, listBranches, loadBranchDraft, saveBranch, saveBranchImageUrl, venueHasContent } from "@/lib/branches-repo";
+import { ensureBranchImageFolder, uploadBranchImage } from "@/lib/branch-images";
 import { confirmDelete } from "@/lib/confirm";
 import { syncGallery, syncVenueImages } from "@/lib/media-repo";
 import { slugify } from "@/lib/utils";
@@ -29,6 +30,16 @@ export function BranchEditor() {
   const [saving, setSaving] = useState(false);
   const [originalIds, setOriginalIds] = useState<{ venues: string[]; services: string[] }>({ venues: [], services: [] });
   const [pendingOwner] = useState(() => crypto.randomUUID());
+  const pendingImages = useRef<{ hero: File | null; pastor: File | null; gallery: File[]; venues: Record<string, File> }>({
+    hero: null,
+    pastor: null,
+    gallery: [],
+    venues: {},
+  });
+
+  function clearPendingImages() {
+    pendingImages.current = { hero: null, pastor: null, gallery: [], venues: {} };
+  }
 
   function refresh() {
     setError("");
@@ -55,6 +66,7 @@ export function BranchEditor() {
   async function openRow(row: BranchRow) {
     try {
       const next = await loadBranchDraft(row);
+      clearPendingImages();
       setDraft(next);
       setSlugTouched(true);
       setOriginalIds({
@@ -67,6 +79,7 @@ export function BranchEditor() {
   }
 
   function openNew() {
+    clearPendingImages();
     setDraft(emptyBranch());
     setSlugTouched(false);
     setOriginalIds({ venues: [], services: [] });
@@ -82,19 +95,54 @@ export function BranchEditor() {
     setSaving(true);
     try {
       const id = await saveBranch(draft, originalIds);
+      const waiting = pendingImages.current;
       try {
-        await syncGallery(id, draft.gallery, pendingOwner);
+        await ensureBranchImageFolder(id);
+      } catch (caught) {
+        toast.error(
+          caught instanceof Error
+            ? `Branch saved, but its Cloudflare folder was not created: ${caught.message}`
+            : "Branch saved, but its Cloudflare folder was not created",
+        );
+      }
+      try {
+        if (waiting.hero) {
+          const uploaded = await uploadBranchImage({ branchId: id, category: "hero", file: waiting.hero });
+          await saveBranchImageUrl(id, "hero_image_url", uploaded.publicUrl);
+        }
+        if (waiting.pastor) {
+          const uploaded = await uploadBranchImage({ branchId: id, category: "pastor", file: waiting.pastor });
+          await saveBranchImageUrl(id, "pastor_image_url", uploaded.publicUrl);
+        }
+      } catch (caught) {
+        toast.error(caught instanceof Error ? `Branch saved, but an image was not uploaded: ${caught.message}` : "An image was not uploaded");
+      }
+      let gallery = draft.gallery;
+      try {
+        for (const file of waiting.gallery) {
+          const uploaded = await uploadBranchImage({ branchId: id, category: "gallery", file });
+          gallery = [...gallery, { key: crypto.randomUUID(), url: uploaded.publicUrl, path: uploaded.key }];
+        }
+        await syncGallery(id, gallery, pendingOwner);
       } catch (caught) {
         toast.error(caught instanceof Error ? `Branch saved, but the gallery was not: ${caught.message}` : "Gallery was not saved");
       }
       try {
-        await syncVenueImages(
-          id,
-          draft.venues.filter(venueHasContent).map((venue) => ({ imageUrl: venue.imageUrl, imageKey: venue.imageKey })),
-        );
+        const venues = [];
+        for (const venue of draft.venues.filter(venueHasContent)) {
+          const file = waiting.venues[venue.key];
+          if (!file) {
+            venues.push({ imageUrl: venue.imageUrl, imageKey: venue.imageKey });
+            continue;
+          }
+          const uploaded = await uploadBranchImage({ branchId: id, category: "venue", file });
+          venues.push({ imageUrl: uploaded.publicUrl, imageKey: uploaded.key });
+        }
+        await syncVenueImages(id, venues);
       } catch (caught) {
         toast.error(caught instanceof Error ? `Branch saved, but a venue photo was not: ${caught.message}` : "A venue photo was not saved");
       }
+      clearPendingImages();
       toast.success("Branch saved");
       setDraft(null);
       refresh();
@@ -215,6 +263,9 @@ export function BranchEditor() {
               value={draft.pastorPhoto}
               branch={{ id: draft.id ?? null, category: "pastor" }}
               onChange={(pastorPhoto) => patch({ pastorPhoto })}
+              onQueue={(file) => {
+                pendingImages.current.pastor = file;
+              }}
             />
           </section>
 
@@ -231,6 +282,9 @@ export function BranchEditor() {
             value={draft.heroImage}
             branch={{ id: draft.id ?? null, category: "hero" }}
             onChange={(heroImage) => patch({ heroImage })}
+            onQueue={(file) => {
+              pendingImages.current.hero = file;
+            }}
           />
 
           <section className="space-y-4">
@@ -304,6 +358,9 @@ export function BranchEditor() {
                   label="Venue photo"
                   value={venue.imageUrl}
                   branch={{ id: draft.id ?? null, category: "venue" }}
+                  onQueue={(file) => {
+                    pendingImages.current.venues[venue.key] = file;
+                  }}
                   onChange={(imageUrl, imageKey) =>
                     patch({
                       venues: draft.venues.map((item) =>
@@ -383,7 +440,18 @@ export function BranchEditor() {
             ))}
           </section>
 
-          <MultiImageDrop branchId={draft.id ?? null} items={draft.gallery} onChange={(gallery) => patch({ gallery })} />
+          <MultiImageDrop
+            branchId={draft.id ?? null}
+            items={draft.gallery}
+            onChange={(gallery) => patch({ gallery })}
+            onQueueFiles={(files) => {
+              pendingImages.current.gallery.push(...files);
+            }}
+          />
+
+          <p className="text-sm text-muted-foreground">
+            Saving creates this branch&apos;s Cloudflare folder, including for a campus that does not have one yet. Images chosen before the first save upload then.
+          </p>
 
           <div className="flex flex-wrap gap-2">
             <Button type="submit" disabled={saving}>

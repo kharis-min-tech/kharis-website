@@ -86,18 +86,21 @@ type BranchRow = {
   services: ServiceRow[] | null;
 };
 
-const FALLBACK_IMAGE = "/assets/branch-slide-1.jpg";
+const FALLBACK_IMAGE = "/kp2/assets/branch-slide-1.jpg";
 const LOCAL_SLIDES = [
-  "/assets/branch-slide-1.jpg",
-  "/assets/branch-slide-2.jpg",
-  "/assets/branch-slide-3.jpg",
-  "/assets/branch-slide-4.jpg",
-  "/assets/branch-slide-5.jpg",
+  "/kp2/assets/branch-slide-1.jpg",
+  "/kp2/assets/branch-slide-2.jpg",
+  "/kp2/assets/branch-slide-3.jpg",
+  "/kp2/assets/branch-slide-4.jpg",
+  "/kp2/assets/branch-slide-5.jpg",
 ];
-const FALLBACK_PASTOR = "/assets/leadership-pastor-david.jpg";
-const DEFAULT_PARKING = "Public parking is available near the venue.";
-const DEFAULT_TRANSIT =
-  "The venue is reachable by public transport. Check local bus and rail times before you travel.";
+const FALLBACK_PASTOR = "/kp2/assets/worship.jpg";
+const DEFAULT_PARKING = "Parking details for this branch will be added soon.";
+const DEFAULT_TRANSIT = "Travel details for this branch will be added soon.";
+
+function placeholderDescription(city: string) {
+  return `A thriving congregation serving ${city}. Experience uplifting worship, relevant biblical teaching, and deep kingdom connections.`;
+}
 
 function formatTime(time?: string | null): string {
   if (!time) return "";
@@ -133,7 +136,7 @@ function roleLabel(role?: string | null): string {
 
 function pastorDisplay(name?: string | null, role?: string | null) {
   const label = roleLabel(role);
-  if (!name?.trim()) return { pastor: "The KP2 Team", pastorRole: label };
+  if (!name?.trim()) return { pastor: "Coming soon", pastorRole: "Pastor" };
   const alreadyTitled = name.toLowerCase().startsWith(label.toLowerCase());
   return { pastor: name.trim(), pastorRole: alreadyTitled ? "" : label };
 }
@@ -254,7 +257,7 @@ function toBranch(row: BranchRow): Branch {
     day: s.day || "Sunday",
     time: formatTime(s.start_time) || "TBC",
     label: s.name || s.description || s.type || "Gathering",
-    description: s.description || "",
+    description: s.description || "Details will be added soon.",
     type: s.type || "",
   }));
 
@@ -265,7 +268,7 @@ function toBranch(row: BranchRow): Branch {
   }));
 
   const blurb =
-    row.short_description || row.description || `${row.name} — a Kharis Phase 2 campus.`;
+    row.short_description || row.description || placeholderDescription(String(city));
 
   return {
     slug: row.slug,
@@ -282,8 +285,13 @@ function toBranch(row: BranchRow): Branch {
     services: mappedServices,
     pastor,
     pastorRole,
-    pastorImage: row.pastor_image_url || FALLBACK_PASTOR,
-    pastorBio: row.pastor_bio || `Welcome to ${row.name}.`,
+    pastorImage:
+      row.pastor_image_url && /^https?:\/\//i.test(row.pastor_image_url)
+        ? row.pastor_image_url
+        : FALLBACK_PASTOR,
+    pastorBio:
+      row.pastor_bio ||
+      `We exist to build a home of faith, hope, and love for every soul in ${city}.`,
     phone: row.contact_phone || "",
     email: row.contact_email || "",
     instagram: row.instagram || "",

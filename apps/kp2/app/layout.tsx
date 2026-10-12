@@ -1,5 +1,89 @@
 import type { Metadata, Viewport } from "next";
+import { Anton, Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
+
+const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton", display: "swap" });
+const hanken = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  variable: "--font-hanken",
+  display: "swap",
+});
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-bricolage",
+  display: "swap",
+});
+const space = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-space",
+  display: "swap",
+});
+
+const MATERIAL_ICONS = [
+  "account_balance",
+  "add",
+  "alternate_email",
+  "arrow_back",
+  "arrow_downward",
+  "arrow_forward",
+  "auto_awesome",
+  "calendar_add_on",
+  "calendar_today",
+  "campaign",
+  "celebration",
+  "check_circle",
+  "chevron_left",
+  "chevron_right",
+  "close",
+  "dark_mode",
+  "download",
+  "event",
+  "event_busy",
+  "event_repeat",
+  "expand_more",
+  "explore",
+  "favorite",
+  "format_quote",
+  "groups",
+  "groups_2",
+  "handshake",
+  "home",
+  "language",
+  "light_mode",
+  "local_parking",
+  "location_on",
+  "mail",
+  "menu",
+  "music_note",
+  "my_location",
+  "near_me",
+  "north_east",
+  "open_in_new",
+  "person",
+  "phone",
+  "photo_camera",
+  "pin_drop",
+  "place",
+  "play_arrow",
+  "play_circle",
+  "public",
+  "remove",
+  "schedule",
+  "search",
+  "search_off",
+  "share",
+  "smart_display",
+  "smartphone",
+  "train",
+  "video_library",
+  "volunteer_activism",
+  "waving_hand",
+  "zoom_in",
+].join(",");
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { JsonLd } from "@/components/JsonLd";
 import { organizationJsonLd, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteUrl } from "@/lib/seo";
@@ -62,18 +146,23 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" suppressHydrationWarning>
+    <html
+      lang="en-GB"
+      className={`${anton.variable} ${hanken.variable} ${bricolage.variable} ${space.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{if(localStorage.getItem("kharis-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}})();`,
           }}
         />
+        <link rel="preconnect" href="https://cqgyiqxhpxwasogpdghx.supabase.co" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          href={`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=${MATERIAL_ICONS}&display=swap`}
         />
       </head>
       <body>

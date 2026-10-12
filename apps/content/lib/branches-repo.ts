@@ -253,6 +253,15 @@ export async function saveBranch(
   return branchId;
 }
 
+export async function saveBranchImageUrl(
+  branchId: string,
+  field: "hero_image_url" | "pastor_image_url",
+  url: string,
+) {
+  const { error } = await getSupabase().from("branches").update({ [field]: url }).eq("id", branchId);
+  fail(error);
+}
+
 export async function deleteBranch(id: string) {
   const supabase = getSupabase();
   const services = await supabase.from("services").delete().eq("branch_id", id);

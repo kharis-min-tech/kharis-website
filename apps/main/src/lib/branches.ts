@@ -1,3 +1,4 @@
+import { placeholderDescription, templateImage } from "@/lib/branch-display";
 import { supabase } from "@/lib/supabase";
 
 
@@ -334,9 +335,7 @@ export function toBranchItem(
       mainVenue?.country ??
       "United Kingdom",
 
-    heroImage:
-      branch.hero_image_url ??
-      "/images/branch-slide-1.jpg",
+    heroImage: templateImage(branch.hero_image_url, "/images/branch-slide-1.jpg"),
 
     postcode:
       mainVenue?.postcode ?? "",
@@ -346,7 +345,9 @@ export function toBranchItem(
     description:
       branch.short_description ??
       branch.description ??
-      "",
+      placeholderDescription(
+        mainVenue?.city ?? branch.name.replace(/ Branch$/i, ""),
+      ),
 
     serviceSummary,
 

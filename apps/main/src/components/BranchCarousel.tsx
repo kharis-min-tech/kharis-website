@@ -105,7 +105,7 @@ export function BranchCarousel({ slides }: Props) {
                   unoptimized={slide.image.startsWith("/images/")}
                   className="object-cover object-center"
                   sizes="(max-width: 768px) 86vw, 1000px"
-                  quality={95}
+                  quality={75}
                   priority={i === n}
                 />
                 <div className="apple-slide__scrim" />

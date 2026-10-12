@@ -28,12 +28,12 @@ import {
 } from "@/lib/youtube";
 
 const GALLERY_FALLBACKS = [
-  "/assets/worship.jpg",
-  "/assets/young-adults.jpg",
-  "/assets/community.jpg",
-  "/assets/events-hero-worship.jpg",
-  "/assets/praise-night.jpg",
-  "/assets/events-sunday-service.jpg",
+  "/kp2/assets/worship.jpg",
+  "/kp2/assets/young-adults.jpg",
+  "/kp2/assets/community.jpg",
+  "/kp2/assets/events-hero-worship.jpg",
+  "/kp2/assets/praise-night.jpg",
+  "/kp2/assets/events-sunday-service.jpg",
 ];
 
 function galleryFor(branch: Branch) {
@@ -177,6 +177,8 @@ function BranchPage({
             <img
               src={branch.image}
               alt=""
+              fetchPriority="high"
+              decoding="async"
               className="absolute inset-0 h-full w-full object-cover opacity-90"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
@@ -578,6 +580,7 @@ function BranchPage({
                   src={src}
                   alt={`Gathering at ${branch.city}`}
                   loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />

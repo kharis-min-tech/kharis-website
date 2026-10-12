@@ -21,22 +21,35 @@ export function ImageDrop({
   folder,
   onChange,
   branch,
+  onQueue,
 }: {
   label: string;
   value: string;
   folder?: string;
   onChange: (url: string, key?: string) => void;
   branch?: { id: string | null; category: BranchImageCategory };
+  onQueue?: (file: File) => void;
 }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
   const [paste, setPaste] = useState("");
-  const needsSave = Boolean(branch && !branch.id);
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
+  const waitingForSave = Boolean(branch && !branch.id);
+  const needsSave = waitingForSave && !onQueue;
 
   async function takeFile(file: File | undefined) {
     if (!file) return;
-    if (branch && !branch.id) {
-      toast.error("Save the branch before uploading images.");
+    if (waitingForSave) {
+      if (!onQueue) {
+        toast.error("Save the branch before uploading images.");
+        return;
+      }
+      setLocalPreview((current) => {
+        if (current) URL.revokeObjectURL(current);
+        return URL.createObjectURL(file);
+      });
+      onQueue(file);
+      toast.success("Ready. This image uploads when you save.");
       return;
     }
     setUploading(true);
@@ -78,8 +91,8 @@ export function ImageDrop({
           void takeFile(event.dataTransfer.files[0]);
         }}
       >
-        {value ? (
-          <img src={value} alt="" className="max-h-36 rounded-md object-cover" />
+        {localPreview || value ? (
+          <img src={localPreview || value} alt="" className="max-h-36 rounded-md object-cover" />
         ) : (
           <ImagePlus className="h-5 w-5" />
         )}
@@ -89,7 +102,9 @@ export function ImageDrop({
             <span className="block h-full bg-primary" style={{ width: `${progress}%` }} />
           </span>
         ) : null}
-        {needsSave ? <span>Save the branch before uploading. Renaming it later will not move the file.</span> : null}
+        {waitingForSave ? (
+          <span>Save the branch to create its Cloudflare folder and upload this image.</span>
+        ) : null}
         <input
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
@@ -145,21 +160,34 @@ export function MultiImageDrop({
   items,
   onChange,
   branchId,
+  onQueueFiles,
 }: {
   items: { key: string; id?: string; url: string; path?: string }[];
   onChange: (items: { key: string; id?: string; url: string; path?: string }[]) => void;
   branchId?: string | null;
+  onQueueFiles?: (files: File[]) => void;
 }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
+  const [queued, setQueued] = useState<{ key: string; url: string }[]>([]);
   const usesR2 = branchId !== undefined;
-  const needsSave = usesR2 && !branchId;
+  const waitingForSave = usesR2 && !branchId;
+  const needsSave = waitingForSave && !onQueueFiles;
 
   async function takeFiles(files: FileList | File[]) {
     const list = [...files].filter((file) => file.type.startsWith("image/"));
     if (!list.length) return;
-    if (needsSave) {
-      toast.error("Save the branch before uploading images.");
+    if (waitingForSave) {
+      if (!onQueueFiles) {
+        toast.error("Save the branch before uploading images.");
+        return;
+      }
+      setQueued((current) => [
+        ...current,
+        ...list.map((file) => ({ key: crypto.randomUUID(), url: URL.createObjectURL(file) })),
+      ]);
+      onQueueFiles(list);
+      toast.success(list.length === 1 ? "Ready. This image uploads when you save." : `${list.length} images upload when you save.`);
       return;
     }
     setUploading(true);
@@ -176,8 +204,7 @@ export function MultiImageDrop({
           });
           uploaded.push({ key: crypto.randomUUID(), url: image.publicUrl, path: image.key });
         } else {
-          const image = await uploadImage(file, "branches");
-          uploaded.push({ key: crypto.randomUUID(), url: image.url, path: image.path });
+          throw new Error("Save the branch before uploading gallery images.");
         }
       }
       onChange([...items, ...uploaded]);
@@ -208,7 +235,9 @@ export function MultiImageDrop({
             <span className="block h-full bg-primary" style={{ width: `${progress}%` }} />
           </span>
         ) : null}
-        {needsSave ? <span>Save the branch before uploading. Renaming it later will not move the files.</span> : null}
+        {waitingForSave ? (
+          <span>Save the branch to create its Cloudflare folder and upload these images.</span>
+        ) : null}
         <input
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
@@ -221,8 +250,13 @@ export function MultiImageDrop({
           }}
         />
       </label>
-      {items.length ? (
+      {items.length || queued.length ? (
         <ul className="mt-3 grid grid-cols-3 gap-2">
+          {queued.map((item) => (
+            <li key={item.key} className="relative">
+              <img src={item.url} alt="" className="h-24 w-full rounded-md object-cover" />
+            </li>
+          ))}
           {items.map((item, index) => (
             <li key={item.key} className="relative">
               <img src={item.url} alt="" className="h-24 w-full rounded-md object-cover" />

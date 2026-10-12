@@ -41,3 +41,8 @@ export function publicUrlForKey(publicBase: string, key: string) {
 export function isR2ObjectKey(path: string | null | undefined) {
   return Boolean(path?.startsWith("branch-images/"));
 }
+
+/** Prefix marker. R2 has no folders; this object makes branch-images/{id}/ show up. */
+export function branchImageFolderKey(branchId: string) {
+  return `branch-images/${branchId}/.keep`;
+}
