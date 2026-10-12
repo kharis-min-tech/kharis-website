@@ -82,7 +82,7 @@ const tab = MAIN_TABS[mainTab]!;
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-on-background mb-6 uppercase tracking-widest">
-            We are passionate about God and His word.
+            Passionate for God and His Word
           </span>
           <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-background uppercase leading-none">
             Who we are becoming

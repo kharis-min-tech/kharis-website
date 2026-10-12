@@ -100,7 +100,7 @@ const SOCIALS = [
   {
     label: "Spotify",
     handle: "Davidantwi",
-    copy: "Every sermon as a podcast — press play on your commute.",
+    copy: "Every sermon as a podcast. Press play on your commute.",
     href: "https://open.spotify.com/",
     cta: "LISTEN",
     Icon: SpotifyIcon,
@@ -153,7 +153,7 @@ function MediaPage({
           </h1>
           <p className="font-body-lg text-primary-fixed-dim max-w-xl mx-auto mb-stack-md">
             Everywhere Kharis lives online. Follow the feeds, and tune into messages
-            from our head pastor on YouTube, Spotify and SoundCloud — or listen in the app.
+            from our head pastor on YouTube, Spotify and SoundCloud, or listen in the app.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <a

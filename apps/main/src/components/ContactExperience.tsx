@@ -597,7 +597,7 @@ export function ContactExperience({ locations }: Props) {
         <div className="contact-vibe__veil" />
         <div className="contact-vibe__inner">
           <Reveal variant="left">
-            <h2>Follow the vibe</h2>
+            <h2>Follow the movement</h2>
           </Reveal>
           <Reveal variant="right" className="contact-vibe__links">
             {SOCIALS.map((social) => (

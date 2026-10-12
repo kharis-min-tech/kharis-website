@@ -138,7 +138,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
   ))
 ) : (
   <>
-    <p className="font-body-lg">Sunday gatherings — times on each campus page</p>
+    <p className="font-body-lg">Sunday gatherings. Times are on each campus page.</p>
   </>
 )}
 </div>
@@ -188,7 +188,7 @@ Find a campus
 <section className="relative z-10 bg-secondary-container border-y-4 border-on-background py-16 px-margin-mobile md:px-margin-desktop">
 <div className="flex flex-col md:flex-row items-center justify-between gap-gutter">
 <h2 className="font-display-lg text-headline-lg-mobile md:text-headline-lg uppercase text-on-secondary-container">
-                    Follow the Vibe
+                    Follow the Movement
                 </h2>
                 <div className="flex flex-wrap justify-center gap-4">
                     <Link className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="/#app-stores">

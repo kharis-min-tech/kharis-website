@@ -397,7 +397,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               },
               {
                 icon: "groups",
-                title: "Bring your people",
+                title: "Bring a friend",
                 copy: "Every gathering is easier with a friend. Invite someone and we'll save you both a seat.",
                 cta: "Find a Fellowship",
                 to: "/fellowships" as const,
@@ -405,7 +405,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               {
                 icon: "handshake",
                 title: "Get Involved",
-                copy: "Hospitality, sound, media, kids — events run on volunteers who show up early.",
+                copy: "Hospitality, sound, media, kids. Events run on volunteers who show up early.",
                 cta: "Join a Department",
                 to: "/departments" as const,
               },

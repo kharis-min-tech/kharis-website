@@ -57,7 +57,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 <div className="absolute inset-0 halftone-pattern text-primary/20 pointer-events-none"></div>
 <div className="relative z-10 text-center max-w-4xl">
 <div className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 brutalist-border font-label-md text-label-md uppercase mb-6 animate-bounce">
-                    We are passionate about God and His word.
+                    Passionate for God and His Word
                 </div>
 <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg text-white mb-4 md:mb-8 tracking-tighter uppercase">
                     Your Generosity <br/>

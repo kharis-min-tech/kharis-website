@@ -39,15 +39,15 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
           <div className="absolute inset-0 halftone-pattern text-white/5 pointer-events-none" />
           <div className="relative z-10 h-full flex flex-col justify-end px-margin-mobile md:px-margin-desktop pt-24 pb-8 md:pb-10 max-w-7xl mx-auto">
             <div className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-black mb-6 uppercase w-fit">
-              Latest Message
+              Hunger &amp; Zeal for God
             </div>
             <h1 className="font-display-lg text-display-lg text-white leading-none uppercase mb-4 tracking-tighter">
               {featured ? displayMessageTitle(featured.title) : "Messages"}
             </h1>
             <p className="font-body-lg text-body-lg text-white/80 max-w-2xl mb-8">
               {featured
-                ? "The newest teaching from Pastor David Antwi. Watch here or on YouTube."
-                : "Teachings from Pastor David Antwi will appear here as they go live."}
+                ? "Your hunger and zeal for God is your greatest advantage as a believer. Watch the newest teaching from Pastor David Antwi here or on YouTube."
+                : "Your hunger and zeal for God is your greatest advantage as a believer. Teachings from Pastor David Antwi will appear here as they go live."}
             </p>
             {featured ? (
               <div className="flex flex-wrap gap-4">
@@ -170,7 +170,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                 <h2 className="font-display-lg text-headline-lg leading-tight uppercase">Other Ways To Listen</h2>
               </div>
               <p className="font-body-lg text-body-md text-on-surface-variant max-w-md">
-                Catch every message on your favourite platform — or take Kharis with you in the app.
+                What it takes to sustain the move of God is a text-driven, gospel-saturated, Christ-exalting message. Catch every message on your favourite platform, or in the Kharis app.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
