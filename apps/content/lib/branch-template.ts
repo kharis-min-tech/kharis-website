@@ -13,6 +13,8 @@ function venue(partial: Pick<VenueDraft, "name" | "address" | "postcode" | "city
     longitude: partial.longitude,
     parkingInfo: "Public parking is available near the venue.",
     transitInfo: "The venue is reachable by public transport. Check local bus and rail times before you travel.",
+    imageUrl: "",
+    imageKey: "",
   };
 }
 

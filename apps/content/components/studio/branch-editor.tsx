@@ -12,9 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { branchTemplate } from "@/lib/branch-template";
 import { emptyService, emptyVenue, pastorPreview, type BranchDraft, type BranchRow } from "@/lib/branch-types";
-import { deleteBranch, emptyBranch, listBranches, loadBranchDraft, saveBranch } from "@/lib/branches-repo";
+import { deleteBranch, emptyBranch, listBranches, loadBranchDraft, saveBranch, venueHasContent } from "@/lib/branches-repo";
 import { confirmDelete } from "@/lib/confirm";
-import { syncGallery } from "@/lib/media-repo";
+import { syncGallery, syncVenueImages } from "@/lib/media-repo";
 import { slugify } from "@/lib/utils";
 import { WORKSPACES } from "@/lib/workspaces";
 
@@ -86,6 +86,14 @@ export function BranchEditor() {
         await syncGallery(id, draft.gallery, pendingOwner);
       } catch (caught) {
         toast.error(caught instanceof Error ? `Branch saved, but the gallery was not: ${caught.message}` : "Gallery was not saved");
+      }
+      try {
+        await syncVenueImages(
+          id,
+          draft.venues.filter(venueHasContent).map((venue) => ({ imageUrl: venue.imageUrl, imageKey: venue.imageKey })),
+        );
+      } catch (caught) {
+        toast.error(caught instanceof Error ? `Branch saved, but a venue photo was not: ${caught.message}` : "A venue photo was not saved");
       }
       toast.success("Branch saved");
       setDraft(null);
@@ -202,7 +210,12 @@ export function BranchEditor() {
             </div>
             <p className="text-sm text-muted-foreground">Shown on the site as {pastorPreview(draft.pastorName, draft.pastorRole)}.</p>
             <AreaField label="Bio" name="pastorBio" value={draft.pastorBio} onChange={(event) => patch({ pastorBio: event.target.value })} />
-            <ImageDrop label="Pastor photo" folder="branches" value={draft.pastorPhoto} onChange={(pastorPhoto) => patch({ pastorPhoto })} />
+            <ImageDrop
+              label="Pastor photo"
+              value={draft.pastorPhoto}
+              branch={{ id: draft.id ?? null, category: "pastor" }}
+              onChange={(pastorPhoto) => patch({ pastorPhoto })}
+            />
           </section>
 
           <section className="grid gap-4 md:grid-cols-2">
@@ -213,7 +226,12 @@ export function BranchEditor() {
             <TextField label="Instagram" name="instagram" placeholder="https://instagram.com/…" value={draft.instagram} onChange={(event) => patch({ instagram: event.target.value })} />
           </section>
 
-          <ImageDrop label="Hero image" folder="branches" value={draft.heroImage} onChange={(heroImage) => patch({ heroImage })} />
+          <ImageDrop
+            label="Hero image"
+            value={draft.heroImage}
+            branch={{ id: draft.id ?? null, category: "hero" }}
+            onChange={(heroImage) => patch({ heroImage })}
+          />
 
           <section className="space-y-4">
             <div className="flex items-center justify-between gap-3">
@@ -281,6 +299,18 @@ export function BranchEditor() {
                 <VenueLocation
                   venue={venue}
                   onChange={(next) => patch({ venues: draft.venues.map((item) => (item.key === venue.key ? next : item)) })}
+                />
+                <ImageDrop
+                  label="Venue photo"
+                  value={venue.imageUrl}
+                  branch={{ id: draft.id ?? null, category: "venue" }}
+                  onChange={(imageUrl, imageKey) =>
+                    patch({
+                      venues: draft.venues.map((item) =>
+                        item.key === venue.key ? { ...item, imageUrl, imageKey: imageKey ?? item.imageKey } : item,
+                      ),
+                    })
+                  }
                 />
               </div>
             ))}
@@ -353,7 +383,7 @@ export function BranchEditor() {
             ))}
           </section>
 
-          <MultiImageDrop items={draft.gallery} onChange={(gallery) => patch({ gallery })} />
+          <MultiImageDrop branchId={draft.id ?? null} items={draft.gallery} onChange={(gallery) => patch({ gallery })} />
 
           <div className="flex flex-wrap gap-2">
             <Button type="submit" disabled={saving}>

@@ -64,6 +64,8 @@ export type VenueDraft = {
   longitude: string;
   parkingInfo: string;
   transitInfo: string;
+  imageUrl: string;
+  imageKey: string;
 };
 
 export type ServiceDraft = {
@@ -131,6 +133,8 @@ export function emptyVenue(): VenueDraft {
     longitude: "",
     parkingInfo: "",
     transitInfo: "",
+    imageUrl: "",
+    imageKey: "",
   };
 }
 

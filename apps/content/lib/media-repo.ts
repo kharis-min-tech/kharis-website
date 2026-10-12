@@ -1,3 +1,4 @@
+import { isR2ObjectKey } from "@/lib/branch-image-paths";
 import { fail, getSupabase, MEDIA_BUCKET } from "@/lib/supabase";
 import type { GalleryItem } from "@/lib/branch-types";
 
@@ -94,7 +95,8 @@ export async function syncGallery(branchId: string, items: GalleryItem[], pendin
 
   for (const row of existing) {
     if (!row.id || kept.has(row.id)) continue;
-    await removeStored(row.path).catch(() => undefined);
+    // R2 objects stay in the bucket. Only the studio's reference is removed.
+    if (!isR2ObjectKey(row.path)) await removeStored(row.path).catch(() => undefined);
     const removed = await supabase.from("media").delete().eq("id", row.id);
     fail(removed.error);
   }
@@ -115,5 +117,71 @@ export async function syncGallery(branchId: string, items: GalleryItem[], pendin
     }
     const updated = await supabase.from("media").update({ sort_order: index, branch_id: branchId }).eq("id", item.id);
     fail(updated.error);
+  }
+}
+
+export type VenueImageRecord = {
+  id: string;
+  url: string;
+  path?: string;
+  sortOrder: number;
+};
+
+export async function listVenueImages(branchId: string): Promise<VenueImageRecord[]> {
+  const { data, error } = await getSupabase()
+    .from("media")
+    .select("id, url, storage_path, sort_order")
+    .eq("owner_type", "branch-venue")
+    .eq("owner_id", branchId)
+    .order("sort_order", { ascending: true });
+  if (error) {
+    if (error.code === "PGRST205") return [];
+    throw new Error(error.message);
+  }
+  return (data ?? []).map((row) => ({
+    id: row.id as string,
+    url: (row.url as string) ?? "",
+    path: (row.storage_path as string) ?? undefined,
+    sortOrder: Number(row.sort_order ?? 0),
+  }));
+}
+
+export async function syncVenueImages(
+  branchId: string,
+  venues: { imageUrl: string; imageKey?: string }[],
+) {
+  const supabase = getSupabase();
+  const existing = await listVenueImages(branchId);
+  const kept = new Set<string>();
+
+  for (const [index, venue] of venues.entries()) {
+    const url = venue.imageUrl.trim();
+    if (!url) continue;
+    const match = existing.find((row) => row.url === url);
+    if (match) {
+      kept.add(match.id);
+      const updated = await supabase
+        .from("media")
+        .update({ sort_order: index, branch_id: branchId, storage_path: venue.imageKey || match.path })
+        .eq("id", match.id);
+      fail(updated.error);
+      continue;
+    }
+    const inserted = await insertMedia({
+      ownerType: "branch-venue",
+      ownerId: branchId,
+      branchId,
+      path: venue.imageKey,
+      url,
+      folder: "venue",
+      sortOrder: index,
+    });
+    kept.add(inserted.id);
+  }
+
+  for (const row of existing) {
+    if (kept.has(row.id)) continue;
+    const removed = await supabase.from("media").delete().eq("id", row.id);
+    fail(removed.error);
   }
 }

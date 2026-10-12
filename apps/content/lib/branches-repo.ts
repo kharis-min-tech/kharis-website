@@ -1,6 +1,6 @@
 import type { BranchDraft, BranchRow, PastorRole, ServiceDraft, VenueDraft } from "@/lib/branch-types";
 import { emptyService, emptyVenue } from "@/lib/branch-types";
-import { listGallery } from "@/lib/media-repo";
+import { listGallery, listVenueImages, type VenueImageRecord } from "@/lib/media-repo";
 import { fail, getSupabase } from "@/lib/supabase";
 import type { BranchOption } from "@/lib/types";
 import { isWorkspaceId, type WorkspaceId } from "@/lib/workspaces";
@@ -44,23 +44,36 @@ export function emptyBranch(): BranchDraft {
   };
 }
 
-export function branchToDraft(row: BranchRow, gallery: BranchDraft["gallery"]): BranchDraft {
+export function venueHasContent(venue: Pick<VenueDraft, "name" | "address" | "city" | "postcode" | "imageUrl">) {
+  return [venue.name, venue.address, venue.city, venue.postcode, venue.imageUrl].some((value) => value.trim());
+}
+
+export function branchToDraft(
+  row: BranchRow,
+  gallery: BranchDraft["gallery"],
+  venueImages: VenueImageRecord[] = [],
+): BranchDraft {
   const venues = [...(row.venues ?? [])];
   const services = [...(row.services ?? [])].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
-  const venueDrafts: VenueDraft[] = venues.map((venue) => ({
-    key: venue.id,
-    id: venue.id,
-    name: venue.name ?? "",
-    address: venue.address_line1 ?? "",
-    addressLine2: venue.address_line2 ?? "",
-    city: venue.city ?? "",
-    postcode: venue.postcode ?? "",
-    country: venue.country ?? "",
-    latitude: venue.latitude == null ? "" : String(venue.latitude),
-    longitude: venue.longitude == null ? "" : String(venue.longitude),
-    parkingInfo: venue.parking_info ?? "",
-    transitInfo: venue.public_transport_info ?? "",
-  }));
+  const venueDrafts: VenueDraft[] = venues.map((venue, index) => {
+    const image = venueImages.find((item) => item.sortOrder === index);
+    return {
+      key: venue.id,
+      id: venue.id,
+      name: venue.name ?? "",
+      address: venue.address_line1 ?? "",
+      addressLine2: venue.address_line2 ?? "",
+      city: venue.city ?? "",
+      postcode: venue.postcode ?? "",
+      country: venue.country ?? "",
+      latitude: venue.latitude == null ? "" : String(venue.latitude),
+      longitude: venue.longitude == null ? "" : String(venue.longitude),
+      parkingInfo: venue.parking_info ?? "",
+      transitInfo: venue.public_transport_info ?? "",
+      imageUrl: image?.url ?? "",
+      imageKey: image?.path ?? "",
+    };
+  });
 
   return {
     id: row.id,
@@ -106,8 +119,11 @@ export async function listBranches() {
 }
 
 export async function loadBranchDraft(row: BranchRow) {
-  const gallery = await listGallery(row.id).catch(() => []);
-  return branchToDraft(row, gallery);
+  const [gallery, venueImages] = await Promise.all([
+    listGallery(row.id).catch(() => []),
+    listVenueImages(row.id).catch(() => []),
+  ]);
+  return branchToDraft(row, gallery, venueImages);
 }
 
 export async function listBranchOptions(): Promise<BranchOption[]> {
@@ -210,7 +226,7 @@ export async function saveBranch(
   try {
     const venueIdByIndex: (string | null)[] = [];
     for (const [index, venue] of draft.venues.entries()) {
-      const hasContent = [venue.name, venue.address, venue.city, venue.postcode].some((value) => value.trim());
+      const hasContent = venueHasContent(venue);
       if (!hasContent) {
         venueIdByIndex[index] = null;
         continue;
