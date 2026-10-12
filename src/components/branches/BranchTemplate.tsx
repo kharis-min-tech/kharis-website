@@ -271,7 +271,7 @@ export function BranchTemplate({
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
               Join Us This Sunday
             </h2>
-            <p className="text-base font-medium text-gray-400 max-w-2xl mx-auto">
+            <p className="text-base font-medium text-[var(--muted)] max-w-2xl mx-auto">
               We can't wait to host you. Choose a service time that works best
               for you and your family.
             </p>
@@ -490,7 +490,7 @@ export function BranchTemplate({
           className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
         >
           <div className="mb-10 text-center">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#e8a33d] mb-3">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[var(--orange-ink)] mb-3">
               <span>Watch</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">

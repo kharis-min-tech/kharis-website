@@ -197,7 +197,7 @@ export function TestimoniesSection({
             </button>
           </div>
 
-          <p className="mt-4 max-w-xl text-center text-sm font-medium text-muted/80 mx-auto">
+          <p className="mt-4 max-w-xl text-center text-sm font-medium text-muted mx-auto">
             Has Jesus done something in your life? Share it and give Him glory.
           </p>
         </Reveal>

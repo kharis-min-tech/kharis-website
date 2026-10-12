@@ -184,7 +184,7 @@ export function SiteFooter({ tone }: Props) {
           <div className="site-footer__bottom">
             <p
               className={`site-footer__legal ${
-                dark ? "text-white/40" : "text-muted"
+                dark ? "text-white/60" : "text-muted"
               }`}
             >
               2026 Kharis Ministries | All Rights Reserved | Charity Number

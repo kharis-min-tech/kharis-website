@@ -122,7 +122,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
   return (
     <section id="events" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
       <div className="mb-10 text-center">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 text-[#e8a33d] text-xs font-bold mb-3 border border-white/10">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 text-[var(--orange-ink)] text-xs font-bold mb-3 border border-white/10">
           <span>What's Happening</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">

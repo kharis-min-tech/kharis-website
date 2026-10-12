@@ -50,7 +50,7 @@ const DEPT_BANDS = [
   },
   {
     title: "Welcome & Care",
-    body: "Ushers, host team, hospitality and welfare — the Kharis welcome from the door to the seat, and care for those in need.",
+    body: "Ushers, host team, hospitality and welfare: the Kharis welcome from the door to the seat, and care for those in need.",
     image: "/images/community.jpg",
   },
   {
@@ -65,7 +65,7 @@ const DEPT_BANDS = [
   },
   {
     title: "Prayer & Evangelism",
-    body: "Intercession, follow-up and outreach — preaching Christ and establishing new people in the family.",
+    body: "Intercession, follow-up and outreach, preaching Christ and establishing new people in the family.",
     image: "/images/serve-with-us.jpg",
   },
 ] as const;
@@ -158,7 +158,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
           >
             <Reveal variant="up" className="life-kids-video__card">
               <div className="life-kids-video__copy">
-                <p className="life-hero__eyebrow">See the vibe</p>
+                <p className="life-hero__eyebrow">Watch with us</p>
                 <h2>Worship that&apos;s alive</h2>
                 <p>
                   Our children learn the Word with energy and joy. The same

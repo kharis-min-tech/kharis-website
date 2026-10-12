@@ -46,7 +46,7 @@ export function VisionSection() {
               Watch messages
             </a>
           </div>
-          <p className="mt-3 text-xs font-medium text-muted/70">
+          <p className="mt-3 text-xs font-medium text-muted">
             Available on iPhone &amp; Android
           </p>
         </Reveal>

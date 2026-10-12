@@ -1,0 +1,354 @@
+/* Homepage hero media wall (two drifting rows). Scoped to .hero-shell so no other section is affected. */
+
+.hero-shell {
+  --wall-top: 4.5rem;
+  --wall-bottom: 0.75rem;
+  --wall-gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .hero-shell {
+    --wall-top: 5.25rem;
+    --wall-bottom: 1rem;
+    --wall-gap: 1rem;
+  }
+}
+
+.hero-shell .hero-wall {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wall-gap);
+  padding: var(--wall-top) 0 var(--wall-bottom);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hero-shell .hero-wall.is-dragging {
+  cursor: grabbing;
+}
+
+.hero-wall__row {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.hero-wall__track {
+  position: relative;
+  display: flex;
+  gap: var(--wall-gap);
+  height: 100%;
+  width: max-content;
+  will-change: transform;
+}
+
+.hero-wall__card {
+  position: relative;
+  flex: none;
+  height: 100%;
+  width: 80vw;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background: #140c22;
+  filter: grayscale(1) brightness(0.5);
+  transition:
+    filter 0.8s cubic-bezier(0.33, 0, 0.2, 1),
+    box-shadow 0.8s ease;
+}
+
+@media (min-width: 640px) {
+  .hero-wall__card {
+    width: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-wall__card {
+    border-radius: 1.15rem;
+  }
+}
+
+.hero-wall__card.is-spot {
+  filter: none;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* Tailwind preflight pins <video> to max-width:100%/height:auto — force full cover. */
+.hero-wall__card video,
+.hero-wall__card img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* Darkest behind the centred copy and along the bottom, so white text reads over any card. */
+.hero-wall__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 58% 42% at 50% 54%,
+      rgba(8, 4, 18, 0.62) 0%,
+      rgba(8, 4, 18, 0.38) 45%,
+      rgba(8, 4, 18, 0) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(8, 4, 18, 0.6) 0%,
+      rgba(8, 4, 18, 0.2) 22%,
+      rgba(8, 4, 18, 0) 40%
+    ),
+    linear-gradient(180deg, rgba(8, 4, 18, 0.45) 0%, rgba(8, 4, 18, 0) 14%);
+}
+
+/* Centred copy layer: eyebrow, animated headline, tagline, CTAs. */
+.hero-shell.hero-shell {
+  --hero-purple: #650445;
+}
+
+/* Same deep purple as "Get to Know Kharis"; a soft light halo keeps it legible on the dark wall. */
+.hero-shell .hero-headline .kharis-brand {
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 18px rgba(255, 255, 255, 0.35);
+}
+
+.hero-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4.5rem 1.25rem 2rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hero-shell .hero-copy__eyebrow {
+  margin: 0 0 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+}
+
+.hero-headline {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 1.25em;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(2rem, 8.2vw, 5.25rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: #fff;
+  white-space: nowrap;
+  text-shadow:
+    0 2px 22px rgba(0, 0, 0, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.hero-shell .hero-copy__tagline {
+  margin: 1.1rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  font-weight: 600;
+  opacity: 0.92;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
+}
+
+.hero-copy__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  pointer-events: auto;
+}
+
+.hero-shell .hero-lead {
+  margin-bottom: 0.15rem;
+  opacity: 0.92;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
+  animation: hero-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease,
+    filter 0.55s ease;
+}
+
+/* "Welcome to Kharis" is typed out. */
+.hero-shell .hero-type {
+  position: relative;
+  display: inline-block;
+  width: max-content;
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease,
+    filter 0.55s ease;
+}
+
+.hero-type__sizer {
+  visibility: hidden;
+}
+
+.hero-shell .hero-type .hero-type__live {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  text-align: left;
+}
+
+.hero-type__caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.9em;
+  margin-left: 0.04em;
+  vertical-align: -0.08em;
+  background: #fff;
+  border-radius: 1px;
+  animation: hero-caret 0.9s steps(1) infinite;
+}
+
+/* Church values: one phrase at a time, each with its own entrance. */
+.hero-phrase {
+  display: inline-block;
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease,
+    filter 0.55s ease;
+}
+
+.hero-type.is-out,
+.hero-lead.is-out,
+.hero-phrase.is-out {
+  animation: none;
+  opacity: 0;
+  transform: translateY(-0.18em);
+  filter: blur(6px);
+}
+
+.hero-phrase--fade-up {
+  animation: hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-phrase--blur-in {
+  animation: hero-blur-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-phrase--tracking {
+  animation: hero-tracking-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-phrase__word {
+  display: inline-block;
+  animation: hero-word-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-phrase--wipe {
+  animation: hero-wipe 1s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes hero-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.45em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(18px);
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@keyframes hero-tracking-in {
+  from {
+    opacity: 0;
+    letter-spacing: 0.45em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: -0.025em;
+  }
+}
+
+@keyframes hero-word-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.6em) rotate(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-wipe {
+  from {
+    opacity: 0.4;
+    clip-path: inset(0 100% 0 0);
+    transform: translateX(-0.25em);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-wall__card,
+  .hero-shell .hero-type,
+  .hero-shell .hero-lead,
+  .hero-phrase {
+    transition: none;
+  }
+
+  .hero-type__caret {
+    display: none;
+  }
+}

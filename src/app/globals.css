@@ -12,6 +12,11 @@
   --purple-deep: #650445;
   /* Dark yellow-orangish accent (CTAs + accents) */
   --orange: #d4920a;
+  /* Filled buttons/pills behind white text, and the reverse (purple text on white) */
+  --purple-fill: #800654;
+  --purple-fill-deep: #650445;
+  /* Orange as small text on light surfaces (raw --orange is only 2.6:1 on white) */
+  --orange-ink: #8a5700;
   --shadow: 0 18px 50px rgba(80, 10, 50, 0.1);
   --shadow-lift: 0 28px 60px rgba(128, 6, 84, 0.16);
 }
@@ -159,14 +164,14 @@ h6 {
 .hero-shell .btn-primary {
   border-color: #d4920a;
   background: #d4920a;
-  color: #fff;
+  color: #1c1c1f;
   box-shadow: 0 12px 30px rgba(212, 146, 10, 0.28);
 }
 
 .hero-shell .btn-primary:hover {
   border-color: #b87c08;
   background: #b87c08;
-  color: #fff;
+  color: #1c1c1f;
   box-shadow: 0 16px 36px rgba(184, 124, 8, 0.42);
 }
 
@@ -1203,7 +1208,7 @@ h6 {
 .vision-phone__download:hover {
   background: var(--orange);
   border-color: var(--orange);
-  color: #fff;
+  color: #1c1c1f;
   transform: translateY(-2px);
   box-shadow: 0 14px 30px rgba(212, 146, 10, 0.35);
 }
@@ -1274,7 +1279,7 @@ h6 {
   border-radius: 999px;
   border: 1.5px solid var(--orange);
   background: #fff;
-  color: var(--orange);
+  color: var(--orange-ink);
   font-weight: 800;
   font-size: 0.875rem;
   padding: 0.9rem 1.45rem;
@@ -1290,7 +1295,7 @@ h6 {
 .btn-primary:hover {
   background: var(--orange);
   border-color: var(--orange);
-  color: #fff;
+  color: #1c1c1f;
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(212, 146, 10, 0.32);
 }
@@ -1867,7 +1872,7 @@ h6 {
 
 .testimony-modal__radios label:has(input:checked) span,
 .testimony-modal__chips label:has(input:checked) span {
-  background: var(--purple);
+  background: var(--purple-fill);
   border-color: var(--purple);
   color: #fff;
 }
@@ -1949,7 +1954,7 @@ h6 {
 }
 
 .btn-secondary:hover {
-  background: var(--purple);
+  background: var(--purple-fill);
   border-color: var(--purple);
   color: #fff;
   transform: translateY(-2px);
@@ -1963,7 +1968,7 @@ h6 {
   width: auto;
   border-radius: 999px;
   border: 2px solid var(--purple);
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
   font-weight: 800;
   font-size: 0.9rem;
@@ -1982,7 +1987,7 @@ h6 {
 .btn-give:hover {
   background: #fff;
   border-color: var(--purple);
-  color: var(--purple);
+  color: var(--purple-fill);
   transform: translateY(-2px);
   box-shadow: 0 10px 28px rgba(128, 6, 84, 0.18);
 }
@@ -4350,7 +4355,7 @@ html[data-theme="dark"] .hero-site-skeleton__bone {
 .msg-btn--primary {
   border: 1.5px solid #d4920a;
   background: #d4920a;
-  color: #fff;
+  color: #1c1c1f;
 }
 
 .msg-btn--primary:hover {
@@ -4569,7 +4574,7 @@ html[data-theme="dark"] .hero-site-skeleton__bone {
 }
 
 .about-jump__link.is-active {
-  background: var(--purple);
+  background: var(--purple-fill);
   border-color: var(--purple);
   color: #fff;
   box-shadow: 0 16px 36px rgba(128, 6, 84, 0.28);
@@ -4907,7 +4912,7 @@ html[data-theme="dark"] .hero-site-skeleton__bone {
 }
 
 .about-panel__pillar.is-active {
-  background: var(--purple);
+  background: var(--purple-fill);
   border-color: var(--purple);
   color: #fff;
 }
@@ -4955,7 +4960,7 @@ html[data-theme="dark"] .hero-site-skeleton__bone {
   padding: 1.45rem 1.4rem 1.6rem;
   background:
     radial-gradient(ellipse at 12% 0%, rgba(253, 127, 32, 0.28), transparent 42%),
-    linear-gradient(145deg, #9a1870 0%, var(--purple) 42%, var(--purple-deep) 100%);
+    linear-gradient(145deg, #9a1870 0%, var(--purple-fill) 42%, var(--purple-fill-deep) 100%);
   border: 0;
   min-height: 100%;
   color: #fff;
@@ -4963,7 +4968,7 @@ html[data-theme="dark"] .hero-site-skeleton__bone {
 }
 
 .about-panel__focus .about-panel__focus-kicker {
-  color: rgba(255, 220, 190, 0.92);
+  color: #fff2e6;
 }
 
 .about-panel__focus h4 {
@@ -4988,7 +4993,7 @@ html[data-theme="dark"] .hero-site-skeleton__bone {
   font-weight: 800 !important;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #ffc48a !important;
+  color: #ffe9d4 !important;
 }
 
 .about-panel__focus blockquote {
@@ -5053,7 +5058,7 @@ html[data-theme="dark"] .hero-site-skeleton__bone {
 }
 
 .about-panel__mandate-nav button:hover {
-  background: var(--purple);
+  background: var(--purple-fill);
   border-color: var(--purple);
   color: #fff;
 }
@@ -5259,7 +5264,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--orange);
+  color: var(--orange-ink);
 }
 
 .about-lead__profile-copy h4 {
@@ -5294,7 +5299,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   padding: clamp(1.6rem, 4vw, 2.35rem) clamp(1.35rem, 3.5vw, 2.1rem)
     clamp(1.75rem, 4vw, 2.5rem);
   background:
-    linear-gradient(145deg, #9a1870 0%, var(--purple) 42%, var(--purple-deep) 100%);
+    linear-gradient(145deg, #9a1870 0%, var(--purple-fill) 42%, var(--purple-fill-deep) 100%);
   color: #fff;
   box-shadow: none;
 }
@@ -5365,7 +5370,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   border-radius: 999px;
   border: 1.5px solid #fff;
   background: #fff;
-  color: var(--purple);
+  color: var(--purple-fill);
   font-weight: 800;
   font-size: 0.875rem;
   text-decoration: none;
@@ -5382,7 +5387,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 .about-lead__story-cta:hover {
   background: var(--orange);
   border-color: var(--orange);
-  color: #fff;
+  color: #1c1c1f;
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(212, 146, 10, 0.35);
 }
@@ -5963,7 +5968,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 
 .about-bible__tab.is-active,
 .about-bible__tab:hover {
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
   transform: translateY(-2px);
 }
@@ -6155,7 +6160,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   padding: 0.55rem 0.95rem;
   border-radius: 0.35rem;
   color: #fff;
-  background: var(--purple);
+  background: var(--purple-fill);
   box-shadow: 0 4px 0 var(--purple-deep);
   transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -7115,7 +7120,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--purple);
+  color: var(--purple-fill);
 }
 
 .events-happen__date-day {
@@ -7477,7 +7482,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .event-modal__cal:hover {
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
 }
 
@@ -7508,7 +7513,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 0.85rem;
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
   font-weight: 800;
   font-size: 1.1rem;
@@ -7626,7 +7631,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   margin-top: 1.5rem;
   border: 0;
   border-radius: 999px;
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
   font: inherit;
   font-size: 0.88rem;
@@ -7653,7 +7658,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 
 .give-cta--on-dark {
   background: #fff;
-  color: var(--purple);
+  color: var(--purple-fill);
   box-shadow: 0 12px 28px rgba(18, 6, 28, 0.22);
 }
 
@@ -7718,7 +7723,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   bottom: 0.06em;
   height: 0.2em;
   border-radius: 3px;
-  background: var(--purple);
+  background: var(--purple-fill);
 }
 
 .give-why__intro > p,
@@ -7893,7 +7898,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .give-way--featured {
-  background: linear-gradient(160deg, #9a1a6c 0%, var(--purple) 48%, var(--purple-deep) 100%);
+  background: linear-gradient(160deg, #9a1a6c 0%, var(--purple-fill) 48%, var(--purple-fill-deep) 100%);
   border-color: transparent;
   color: #fff;
   box-shadow: 0 22px 48px rgba(128, 6, 84, 0.28);
@@ -8061,7 +8066,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 .give-amounts__chip.is-on,
 .give-amounts__chip:hover {
   border-color: var(--purple);
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
 }
 
@@ -8105,7 +8110,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   border-radius: 999px;
   border: 0;
   background: var(--orange);
-  color: #fff;
+  color: #1c1c1f;
   font-weight: 800;
   font-size: 0.88rem;
   padding: 0.75rem 1.15rem;
@@ -8282,7 +8287,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .contact-hero__bar--purple {
-  background: var(--purple);
+  background: var(--purple-fill);
 }
 
 .contact-hero__bar--grey {
@@ -8388,7 +8393,8 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   width: 100%;
   justify-self: stretch;
   margin-top: 0.35rem;
-  background: var(--purple);
+  background: var(--purple-fill);
+  color: #fff;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   box-shadow: 0 12px 28px rgba(128, 6, 84, 0.28);
@@ -8755,7 +8761,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .contact-regions button.is-on {
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
   border-color: var(--purple);
 }
@@ -8885,24 +8891,32 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   align-items: center;
   gap: 0.5rem;
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--fg);
+  background: rgba(255, 255, 255, 0.95);
+  color: #2a0a22;
   text-decoration: none;
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   padding: 0.85rem 1.1rem;
   box-shadow: 0 10px 28px rgba(18, 4, 14, 0.14);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .contact-vibe__btn svg {
-  color: var(--purple);
+  color: #800654;
 }
 
-.contact-vibe__btn:hover {
+.contact-vibe__btn:hover,
+.contact-vibe__btn:focus-visible {
+  background: #fff;
+  color: #2a0a22;
   transform: translateY(-2px);
   box-shadow: var(--shadow-lift);
+}
+
+.contact-vibe__btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
 }
 
 /* —— Kharis Life —— */
@@ -8933,7 +8947,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   gap: 0.4rem;
   border: 0;
   border-radius: 999px;
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
   font: inherit;
   font-size: 0.86rem;
@@ -9172,7 +9186,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   width: 0.38rem;
   height: 2.1rem;
   border-radius: 999px;
-  background: var(--purple);
+  background: var(--purple-fill);
 }
 
 @media (min-width: 640px) {
@@ -9961,7 +9975,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 .life-chat__who {
   font-size: 0.72rem;
   font-weight: 700;
-  color: #7a6d80;
+  color: #6b5e71;
   padding-left: 0.15rem;
 }
 
@@ -10760,7 +10774,7 @@ html[data-theme="dark"] .life-chat__nudge-no {
 
 .life-detail-nav a:hover,
 .life-detail-nav a.is-on {
-  background: var(--purple);
+  background: var(--purple-fill);
   border-color: var(--purple);
   color: #fff;
 }
@@ -10825,55 +10839,158 @@ html[data-theme="dark"] .life-chat__nudge-no {
 }
 
 .life-modal__panel--slides {
-  width: min(40rem, 100%);
-  max-height: min(92vh, 48rem);
+  width: min(44rem, 100%);
+  max-height: min(94vh, 52rem);
 }
 
+/* Slide stage is a dark plum surface in every theme, so its text is always light. */
 .life-modal__stage {
   position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: stretch;
-  gap: 0.15rem;
-  min-height: 16rem;
-  background: color-mix(in srgb, var(--purple) 8%, #12040e);
+  align-items: center;
+  gap: 0.25rem;
+  min-height: clamp(20rem, 58vw, 27rem);
+  padding: 1.1rem 0.35rem 1.25rem;
+  background:
+    radial-gradient(ellipse 80% 55% at 0% 0%, rgba(200, 90, 158, 0.18), transparent 62%),
+    linear-gradient(165deg, #1f0a1b 0%, #14060f 100%);
+  color: #f7f0f5;
 }
 
 .life-modal__slide {
-  min-height: 16rem;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .life-modal__clip {
   position: relative;
+  isolation: isolate;
   width: 100%;
   aspect-ratio: 16 / 9;
-  max-height: 14rem;
-  background: #12040e;
+  border-radius: 1rem;
   overflow: hidden;
+  background: #0d040a;
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.life-modal__poster {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.life-modal__clip.is-playing .life-modal__poster {
+  opacity: 0;
 }
 
 .life-modal__clip .life-modal__video {
   position: absolute;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   border: 0;
   object-fit: cover;
+  pointer-events: none;
+}
+
+/* Taller than the frame: YouTube letterboxes the 16:9 video into the middle,
+   pushing its title bar and branding into the cropped bands. */
+.life-modal__clip .life-modal__video--yt {
+  inset: -20% 0;
+  height: 140%;
+}
+
+.life-modal__clip-bar {
+  position: absolute;
+  z-index: 3;
+  inset: auto 0 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 1.6rem 0.65rem 0.65rem;
+  background: linear-gradient(0deg, rgba(10, 3, 8, 0.6) 0%, transparent 100%);
+}
+
+.life-modal__clip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 2.15rem;
+  padding: 0 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  background: rgba(18, 6, 14, 0.66);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.life-modal__clip-btn--icon {
+  width: 2.15rem;
+  padding: 0;
+}
+
+.life-modal__clip-btn:hover,
+.life-modal__clip-btn:focus-visible {
+  background: #fff;
+  color: #2a0a22;
+}
+
+.life-modal__clip-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .life-modal__slide-copy {
-  padding: 1rem 1.15rem 0.35rem;
+  display: grid;
+  gap: 0.45rem;
+  padding: 0 0.25rem;
 }
 
 .life-modal__text-panel {
-  padding: 1.35rem 1.25rem 1.1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  min-height: 16rem;
   justify-content: center;
+  gap: 0.85rem;
+  padding: 1rem 0.5rem;
+}
+
+.life-modal__stage .life-modal__title {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+.life-modal__slide-copy .life-modal__title {
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+}
+
+.life-modal__stage .life-modal__ico {
+  flex-shrink: 0;
+  color: #f2b254;
+}
+
+.life-modal__stage .life-modal__intro,
+.life-modal__stage .life-modal__bullets {
+  max-width: 36rem;
+  color: rgba(247, 240, 245, 0.86) !important;
 }
 
 .life-modal__bullets {
@@ -10883,30 +11000,41 @@ html[data-theme="dark"] .life-chat__nudge-no {
   gap: 0.35rem;
   font-size: 0.9rem;
   font-weight: 600;
-  line-height: 1.45;
-  color: var(--fg-soft);
+  line-height: 1.5;
+}
+
+.life-modal__bullets li::marker {
+  color: #f2b254;
 }
 
 .life-modal__nav {
   align-self: center;
   z-index: 2;
-  width: 2.35rem;
-  height: 2.35rem;
-  margin: 0 0.35rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin: 0 0.3rem;
   display: grid;
   place-items: center;
+  flex-shrink: 0;
   border: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--purple);
+  background: #fff;
+  color: #800654;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(20, 4, 16, 0.18);
-  transition: transform 0.18s ease, background 0.18s ease;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 
-.life-modal__nav:hover {
-  background: #fff;
+.life-modal__nav:hover,
+.life-modal__nav:focus-visible {
+  background: #f2b254;
+  color: #1c1c1f;
   transform: scale(1.06);
+}
+
+.life-modal__nav:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .life-modal__nav:active {
@@ -10917,22 +11045,31 @@ html[data-theme="dark"] .life-chat__nudge-no {
   display: flex;
   justify-content: center;
   gap: 0.4rem;
-  padding: 0.65rem 1rem 0.15rem;
+  padding: 0.75rem 1rem 0.15rem;
 }
 
 .life-modal__dots button {
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.5rem;
+  height: 0.5rem;
   border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--purple) 28%, transparent);
+  background: color-mix(in srgb, #800654 42%, #fff);
   cursor: pointer;
   padding: 0;
+  transition: width 0.2s ease, background 0.2s ease;
 }
 
 .life-modal__dots button.is-on {
-  width: 1.15rem;
-  background: var(--purple);
+  width: 1.25rem;
+  background: #800654;
+}
+
+html[data-theme="dark"] .life-modal__dots button {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+html[data-theme="dark"] .life-modal__dots button.is-on {
+  background: #f2b254;
 }
 
 .life-modal__body--slides {
@@ -10940,19 +11077,22 @@ html[data-theme="dark"] .life-chat__nudge-no {
   padding: 0.75rem 1.25rem 1.25rem;
 }
 
-html[data-theme="dark"] .life-modal__nav {
-  background: rgba(32, 20, 40, 0.92);
-  color: #f5eef3;
-}
+@media (max-width: 560px) {
+  .life-modal__stage {
+    gap: 0;
+    padding-inline: 0.15rem;
+  }
 
-html[data-theme="dark"] .life-modal__text-panel,
-html[data-theme="dark"] .life-modal__slide-copy .life-modal__title,
-html[data-theme="dark"] .life-modal__intro {
-  color: #f5eef3;
-}
+  .life-modal__nav {
+    width: 2rem;
+    height: 2rem;
+    margin: 0 0.2rem;
+  }
 
-html[data-theme="dark"] .life-modal__bullets {
-  color: #d8cad4;
+  .life-modal__clip-btn {
+    font-size: 0.68rem;
+    padding: 0 0.65rem;
+  }
 }
 
 .life-modal__hero {
@@ -11589,7 +11729,10 @@ html[data-theme="dark"] {
   --line: rgba(255, 255, 255, 0.1);
   --purple: #c85a9e;
   --purple-deep: #a0447e;
+  --purple-fill: #8e3570;
+  --purple-fill-deep: #6e2456;
   --orange: #e8a33d;
+  --orange-ink: #e8a33d;
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
   --shadow-lift: 0 28px 60px rgba(0, 0, 0, 0.45);
   --page-bg: var(--bg);
@@ -12106,7 +12249,7 @@ html[data-theme="dark"] .not-found__scene {
   margin-top: 1.75rem;
   padding: 0.95rem 1.65rem;
   border-radius: 999px;
-  background: var(--purple);
+  background: var(--purple-fill);
   color: #fff;
   font-size: 0.88rem;
   font-weight: 800;
@@ -12384,7 +12527,7 @@ html[data-theme="dark"] .life-modal__toolbar {
   z-index: 1;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.94);
-  color: var(--purple);
+  color: var(--purple-fill);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -12562,7 +12705,7 @@ html[data-theme="light"] .msg-hub__year {
 }
 
 html[data-theme="light"] .msg-hub__year.is-on {
-  background: var(--purple);
+  background: var(--purple-fill);
   border-color: var(--purple);
   color: #fff;
 }
@@ -12587,7 +12730,7 @@ html[data-theme="dark"] .btn-primary {
 }
 
 html[data-theme="dark"] .btn-primary:hover {
-  background: #c85a9e;
+  background: var(--purple-fill);
   border-color: #c85a9e;
   color: #fff;
 }
@@ -12896,7 +13039,7 @@ html[data-theme="dark"] .give-amounts__chip {
 
 html[data-theme="dark"] .give-amounts__chip.is-on,
 html[data-theme="dark"] .give-amounts__chip:hover {
-  background: var(--purple);
+  background: var(--purple-fill);
   border-color: var(--purple);
   color: #fff;
 }
@@ -13752,4 +13895,105 @@ html[data-theme="dark"] .life-modal__followup-form input {
 
 .events-browse--inline .events-browse__wrap {
   padding-top: 0;
+}
+
+/* —— Contrast fixes (WCAG AA, light + dark) —— */
+
+/* Orange pills keep dark text in every theme */
+.life-grid__eyebrow,
+.life-hero__banner,
+html[data-theme="dark"] .life-hero__banner,
+html[data-theme="dark"] .life-grid__intro .life-grid__eyebrow {
+  color: #1c1c1f !important;
+  -webkit-text-fill-color: #1c1c1f !important;
+}
+
+/* Department hero + bands sit on a darkened photo / fixed dark panel */
+.life-dept-band__copy h2,
+.life-dept-hero__copy h1 {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+.life-dept-hero__copy h1 {
+  text-shadow: 0 2px 18px rgba(12, 4, 14, 0.45);
+}
+
+.life-dept-hero__copy .life-crumb {
+  color: #ffd38a !important;
+}
+
+.listen-card__detail,
+.vision-store__copy span {
+  color: #3f3f46;
+}
+
+.unsure-panel__eyebrow {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.give-banner__foot {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.give-way--featured :is(h3, h4) {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+.give-way--featured p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.contact-hub strong {
+  color: var(--orange-ink);
+}
+
+html[data-theme="light"] .msg-btn--ghost {
+  border-color: rgba(28, 28, 31, 0.28);
+  color: var(--fg);
+}
+
+html[data-theme="light"] .msg-btn--ghost:hover {
+  border-color: var(--purple);
+  background: var(--bg-purple);
+  color: var(--purple);
+}
+
+html[data-theme="light"] .incident-actions .btn-ghost {
+  border-color: rgba(28, 28, 31, 0.28);
+  background: #fff;
+  color: var(--fg);
+  backdrop-filter: none;
+}
+
+html[data-theme="light"] .incident-actions .btn-ghost:hover {
+  border-color: var(--purple);
+  background: var(--bg-purple);
+  color: var(--purple);
+}
+
+html[data-theme="dark"] .kharis-word {
+  color: #e58fc4;
+}
+
+html[data-theme="dark"] .about-panel__pillar:not(.is-active) .about-panel__pillar-num {
+  color: #e48fc3 !important;
+}
+
+html[data-theme="dark"] .life-detail-nav a:not(.is-on) {
+  background: var(--card-bg);
+  border-color: var(--line);
+  color: var(--fg-soft);
+}
+
+html[data-theme="dark"] .life-detail-nav a:not(.is-on):hover {
+  border-color: var(--purple);
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .contact-regions button:not(.is-on) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--line);
+  color: var(--fg);
 }
