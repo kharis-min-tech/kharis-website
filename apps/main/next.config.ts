@@ -34,7 +34,6 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "content.kharis.org" },
       { protocol: "http", hostname: "localhost", port: "3002", pathname: "/api/media/**" },
     ],
-    dangerouslyAllowLocalIP: true,
   },
   async headers() {
     return [

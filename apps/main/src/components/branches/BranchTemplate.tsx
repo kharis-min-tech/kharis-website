@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   MapPin,
@@ -121,16 +120,13 @@ export function BranchTemplate({
         <section className="branch-hero relative w-full min-h-[65vh] flex items-center justify-center pt-10 pb-16 px-5 md:px-8 max-w-[1536px] mx-auto">
           <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10 bg-black">
             {view.hero ? (
-              <Image
+              <img
                 src={view.hero}
                 alt=""
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover opacity-90 scale-105 transition-transform duration-1000 hover:scale-100"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             ) : null}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
           </div>
 
           <div className="relative z-10 flex flex-col items-center text-center max-w-4xl pt-16 text-white">
@@ -396,13 +392,7 @@ export function BranchTemplate({
                       referrerPolicy="no-referrer-when-downgrade"
                     />
                   ) : view.hero ? (
-                    <Image
-                      src={view.hero}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1024px) 60vw, 100vw"
-                      className="object-cover opacity-80"
-                    />
+                    <img src={view.hero} alt="" className="h-full w-full object-cover" />
                   ) : (
                     <div className="h-full w-full bg-black" />
                   )}
@@ -466,12 +456,10 @@ export function BranchTemplate({
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
-                  <Image
+                  <img
                     src={view.portrait}
                     alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
-                    fill
-                    sizes="(min-width: 768px) 40vw, 100vw"
-                    className="object-cover"
+                    className="h-full w-full object-cover"
                   />
                 </div>
                 <div className="absolute -bottom-4 -right-4 rounded-2xl border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
@@ -537,12 +525,10 @@ export function BranchTemplate({
               className="group relative block aspect-video w-full cursor-pointer text-left"
             >
               {view.hero ? (
-              <Image
+              <img
                 src={view.hero}
                 alt={`Kharis ${view.city} worship`}
-                fill
-                sizes="100vw"
-                className="object-cover opacity-70 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
+                className="absolute inset-0 h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
               />
               ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />

@@ -55,7 +55,7 @@ function clientFor(config: NonNullable<ReturnType<typeof storageConfig>>, reques
 type StorageCommand = PutObjectCommand | GetObjectCommand | ListObjectsV2Command | DeleteObjectsCommand;
 
 async function sendCommand<T>(config: NonNullable<ReturnType<typeof storageConfig>>, command: StorageCommand) {
-  const deliver = (client: S3Client) => client.send(command) as Promise<T>;
+  const deliver = (client: S3Client) => client.send(command as PutObjectCommand) as Promise<T>;
   try {
     return await deliver(clientFor(config));
   } catch (error) {
