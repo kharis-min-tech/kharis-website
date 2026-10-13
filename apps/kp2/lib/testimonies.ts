@@ -26,9 +26,9 @@ const SAFE_FIELDS =
   "name,branch_name,category,short_description,description,image_url,is_anonymous,workspace,is_featured,is_featured_giving";
 
 const FALLBACK_IMAGES = [
-  "/assets/testimony-1.jpg",
-  "/assets/testimony-2.jpg",
-  "/assets/testimony-3.jpg",
+  "/kp2/assets/testimony-1.jpg",
+  "/kp2/assets/testimony-2.jpg",
+  "/kp2/assets/testimony-3.jpg",
 ];
 
 const HOME_STYLES: Pick<Testimonial, "color" | "pattern" | "patternSize">[] = [

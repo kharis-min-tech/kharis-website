@@ -51,7 +51,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 
 <section className="relative box-border h-[calc(100svh-5rem)] max-h-[calc(100svh-5rem)] flex items-center justify-center bg-black overflow-hidden px-margin-mobile md:px-margin-desktop py-8">
 <div className="absolute inset-0 opacity-40">
-<div className="w-full h-full bg-cover bg-center" data-alt="Kharis vision campaign" style={{backgroundImage: "url('/assets/vision-campaign.jpg')"}}></div>
+<div className="w-full h-full bg-cover bg-center" data-alt="Kharis vision campaign" style={{backgroundImage: "url('/kp2/assets/vision-campaign.jpg')"}}></div>
 </div>
 
 <div className="absolute inset-0 halftone-pattern text-primary/20 pointer-events-none"></div>

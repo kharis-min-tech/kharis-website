@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/base-path";
 import { SITE_WORKSPACE } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
@@ -86,15 +87,15 @@ type BranchRow = {
   services: ServiceRow[] | null;
 };
 
-const FALLBACK_IMAGE = "/assets/branch-slide-1.jpg";
+const FALLBACK_IMAGE = "/kp2/assets/branch-slide-1.jpg";
 const LOCAL_SLIDES = [
-  "/assets/branch-slide-1.jpg",
-  "/assets/branch-slide-2.jpg",
-  "/assets/branch-slide-3.jpg",
-  "/assets/branch-slide-4.jpg",
-  "/assets/branch-slide-5.jpg",
+  "/kp2/assets/branch-slide-1.jpg",
+  "/kp2/assets/branch-slide-2.jpg",
+  "/kp2/assets/branch-slide-3.jpg",
+  "/kp2/assets/branch-slide-4.jpg",
+  "/kp2/assets/branch-slide-5.jpg",
 ];
-const FALLBACK_PASTOR = "/assets/leadership-pastor-david.jpg";
+const FALLBACK_PASTOR = "/kp2/assets/leadership-pastor-david.jpg";
 const DEFAULT_PARKING = "Public parking is available near the venue.";
 const DEFAULT_TRANSIT =
   "The venue is reachable by public transport. Check local bus and rail times before you travel.";
@@ -124,7 +125,9 @@ function fallbackImageFor(slug: string) {
 
 function resolveBranchImage(url: string | null | undefined, slug: string) {
   if (!url || /assets\/design\//i.test(url)) return fallbackImageFor(slug);
-  return url.startsWith("/") || url.startsWith("http") ? url : fallbackImageFor(slug);
+  if (url.startsWith("http")) return url;
+  if (url.startsWith("/")) return withBasePath(url);
+  return fallbackImageFor(slug);
 }
 
 function roleLabel(role?: string | null): string {

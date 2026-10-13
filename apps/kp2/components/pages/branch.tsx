@@ -28,12 +28,12 @@ import {
 } from "@/lib/youtube";
 
 const GALLERY_FALLBACKS = [
-  "/assets/worship.jpg",
-  "/assets/young-adults.jpg",
-  "/assets/community.jpg",
-  "/assets/events-hero-worship.jpg",
-  "/assets/praise-night.jpg",
-  "/assets/events-sunday-service.jpg",
+  "/kp2/assets/worship.jpg",
+  "/kp2/assets/young-adults.jpg",
+  "/kp2/assets/community.jpg",
+  "/kp2/assets/events-hero-worship.jpg",
+  "/kp2/assets/praise-night.jpg",
+  "/kp2/assets/events-sunday-service.jpg",
 ];
 
 function galleryFor(branch: Branch) {

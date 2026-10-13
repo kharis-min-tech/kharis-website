@@ -54,10 +54,10 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <div className="lg:col-span-5">
 <div className="flex w-full flex-row gap-3 sm:gap-4 lg:ml-auto lg:w-[min(100%,calc((100dvh-10rem)/2))] lg:flex-col">
 <div className="relative aspect-square flex-1 overflow-hidden rounded-none border-2 border-black brutalist-shadow">
-<img alt="Worship on stage at Kharis" className="absolute inset-x-0 top-0 h-[200%] w-full max-w-none object-cover object-top" src="/assets/worship.jpg" loading="eager" decoding="async"/>
+<img alt="Worship on stage at Kharis" className="absolute inset-x-0 top-0 h-[200%] w-full max-w-none object-cover object-top" src="/kp2/assets/worship.jpg" loading="eager" decoding="async"/>
 </div>
 <div className="relative aspect-square flex-1 overflow-hidden rounded-none border-2 border-black brutalist-shadow">
-<img alt="Congregation gathered in the auditorium" className="absolute inset-x-0 bottom-0 h-[200%] w-full max-w-none object-cover object-bottom" src="/assets/worship.jpg" loading="eager" decoding="async"/>
+<img alt="Congregation gathered in the auditorium" className="absolute inset-x-0 bottom-0 h-[200%] w-full max-w-none object-cover object-bottom" src="/kp2/assets/worship.jpg" loading="eager" decoding="async"/>
 </div>
 </div>
 </div>
@@ -112,7 +112,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <div className="md:col-span-5 space-y-gutter">
 
 <div className="brutalist-border brutalist-shadow overflow-hidden aspect-square md:aspect-video relative">
-<img alt="Community gathering at Kharis" className="w-full h-full object-cover" src="/assets/community.jpg" loading="lazy" decoding="async"/>
+<img alt="Community gathering at Kharis" className="w-full h-full object-cover" src="/kp2/assets/community.jpg" loading="lazy" decoding="async"/>
 <div className="absolute bottom-4 left-4 bg-secondary-container px-4 py-2 brutalist-border font-label-md">
                         #KHARISFAMILY
                     </div>

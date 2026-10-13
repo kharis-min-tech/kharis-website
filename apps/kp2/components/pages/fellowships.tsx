@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-const YOUNG_ADULTS = "/assets/young-adults.jpg";
+const YOUNG_ADULTS = "/kp2/assets/young-adults.jpg";
 
 function FellowshipsPage() {
   return (
