@@ -44,7 +44,7 @@ function restPost(
           ...headers,
           "Content-Length": Buffer.byteLength(payload),
         },
-        agent: new https.Agent({ rejectUnauthorized: false }),
+        agent: new https.Agent({ rejectUnauthorized: true }),
       },
       (res) => {
         const chunks: Buffer[] = [];

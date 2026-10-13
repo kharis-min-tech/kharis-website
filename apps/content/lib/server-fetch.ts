@@ -42,7 +42,7 @@ function nodeFetch(input: RequestInfo | URL, init?: RequestInit) {
         method,
         headers: headerRecord,
         agent:
-          url.protocol === "https:" ? new https.Agent({ rejectUnauthorized: false }) : undefined,
+          url.protocol === "https:" ? new https.Agent({ rejectUnauthorized: true }) : undefined,
       },
       (response) => {
         const chunks: Buffer[] = [];
