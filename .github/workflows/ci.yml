@@ -11,6 +11,11 @@ on:
   push:
     branches: [main]
 
+# Least-privilege GITHUB_TOKEN: these jobs only read the repo (checkout, tests,
+# build). No job writes via GITHUB_TOKEN.
+permissions:
+  contents: read
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
