@@ -1,8 +1,5 @@
 import { unstable_cache } from "next/cache";
-import {
-  EVENTS as FALLBACK_EVENTS,
-  type ChurchEvent,
-} from "@/lib/events-content";
+import { EVENTS as FALLBACK_EVENTS, type ChurchEvent } from "@/lib/events-content";
 
 const KHARIS_EVENTS_API = "https://kharis.org/wp-json/wp/v2/ajde_events";
 const SERVICE_TITLES = new Set(["Sunday Service", "Thursday Service"]);
@@ -10,10 +7,7 @@ const SERVICE_TITLES = new Set(["Sunday Service", "Thursday Service"]);
 const SUNDAY_IMAGE = "/images/events/sunday-service.jpg";
 const THURSDAY_IMAGE = "/images/events/thursday-service.jpg";
 
-const LOCATION_BY_SLUG: Record<
-  string,
-  { location: string; address: string; city: string }
-> = {
+const LOCATION_BY_SLUG: Record<string, { location: string; address: string; city: string }> = {
   "event_location-kensington-town-hall": {
     location: "Kensington Town Hall",
     address: "Hornton Street, London W8 7NX",
@@ -112,10 +106,9 @@ async function fetchWpServiceEvents(): Promise<WpEvent[]> {
   let totalPages = 1;
 
   while (page <= totalPages) {
-    const res = await fetch(
-      `${KHARIS_EVENTS_API}?per_page=100&page=${page}&status=publish`,
-      { next: { revalidate: 3600 } },
-    );
+    const res = await fetch(`${KHARIS_EVENTS_API}?per_page=100&page=${page}&status=publish`, {
+      next: { revalidate: 3600 },
+    });
     if (!res.ok) break;
 
     totalPages = Number(res.headers.get("x-wp-totalpages") || "1");
@@ -184,10 +177,7 @@ async function fetchInBatches<T, R>(
   return results;
 }
 
-function mergeEvents(
-  generated: ChurchEvent[],
-  fromApi: ChurchEvent[],
-): ChurchEvent[] {
+function mergeEvents(generated: ChurchEvent[], fromApi: ChurchEvent[]): ChurchEvent[] {
   const byKey = new Map<string, ChurchEvent>();
 
   for (const event of generated) {
@@ -204,9 +194,9 @@ function mergeEvents(
 async function loadKharisEvents(): Promise<ChurchEvent[]> {
   try {
     const wpEvents = await fetchWpServiceEvents();
-    const mapped = (
-      await fetchInBatches(wpEvents, 10, mapWpEvent)
-    ).filter((e): e is ChurchEvent => e !== null);
+    const mapped = (await fetchInBatches(wpEvents, 10, mapWpEvent)).filter(
+      (e): e is ChurchEvent => e !== null,
+    );
 
     const generated = generateRecurringServices(
       new Date("2024-01-01T12:00:00"),
@@ -220,8 +210,6 @@ async function loadKharisEvents(): Promise<ChurchEvent[]> {
   }
 }
 
-export const getKharisEvents = unstable_cache(
-  loadKharisEvents,
-  ["kharis-events-v1"],
-  { revalidate: 3600 },
-);
+export const getKharisEvents = unstable_cache(loadKharisEvents, ["kharis-events-v1"], {
+  revalidate: 3600,
+});

@@ -115,7 +115,10 @@ export async function syncGallery(branchId: string, items: GalleryItem[], pendin
       });
       continue;
     }
-    const updated = await supabase.from("media").update({ sort_order: index, branch_id: branchId }).eq("id", item.id);
+    const updated = await supabase
+      .from("media")
+      .update({ sort_order: index, branch_id: branchId })
+      .eq("id", item.id);
     fail(updated.error);
   }
 }
@@ -162,7 +165,11 @@ export async function syncVenueImages(
       kept.add(match.id);
       const updated = await supabase
         .from("media")
-        .update({ sort_order: index, branch_id: branchId, storage_path: venue.imageKey || match.path })
+        .update({
+          sort_order: index,
+          branch_id: branchId,
+          storage_path: venue.imageKey || match.path,
+        })
         .eq("id", match.id);
       fail(updated.error);
       continue;

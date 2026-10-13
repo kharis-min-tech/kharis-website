@@ -99,9 +99,7 @@ export function TestimonyFormModal({ open, onClose }: Props) {
       console.error(error);
 
       setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Unable to submit testimony. Please try again.",
+        error instanceof Error ? error.message : "Unable to submit testimony. Please try again.",
       );
     } finally {
       setSubmitting(false);
@@ -139,7 +137,9 @@ export function TestimonyFormModal({ open, onClose }: Props) {
           >
             <div className="testimony-modal__toolbar">
               <p className="testimony-modal__toolbar-label">Testimony Form</p>
-              <h2 id={titleId} className="testimony-modal__toolbar-title">Share what Jesus has done</h2>
+              <h2 id={titleId} className="testimony-modal__toolbar-title">
+                Share what Jesus has done
+              </h2>
               <button
                 type="button"
                 className="testimony-modal__close"
@@ -147,7 +147,10 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                 aria-label="Close"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
-                  <path fill="currentColor" d="M18.3 5.7a1 1 0 0 0-1.4 0L12 10.6 7.1 5.7a1 1 0 0 0-1.4 1.4L10.6 12l-4.9 4.9a1 1 0 1 0 1.4 1.4L12 13.4l4.9 4.9a1 1 0 0 0 1.4-1.4L13.4 12l4.9-4.9a1 1 0 0 0 0-1.4Z" />
+                  <path
+                    fill="currentColor"
+                    d="M18.3 5.7a1 1 0 0 0-1.4 0L12 10.6 7.1 5.7a1 1 0 0 0-1.4 1.4L10.6 12l-4.9 4.9a1 1 0 1 0 1.4 1.4L12 13.4l4.9 4.9a1 1 0 0 0 1.4-1.4L13.4 12l4.9-4.9a1 1 0 0 0 0-1.4Z"
+                  />
                 </svg>
               </button>
             </div>
@@ -158,14 +161,10 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                   <p className="testimony-modal__thanks-kicker">Thank you</p>
                   <h3>Your testimony has been received</h3>
                   <p>
-                    Glory to God. Our team will review your story. Thank you for
-                    giving Him the praise.
+                    Glory to God. Our team will review your story. Thank you for giving Him the
+                    praise.
                   </p>
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={onClose}
-                  >
+                  <button type="button" className="btn-primary" onClick={onClose}>
                     Close
                   </button>
                 </div>
@@ -186,31 +185,17 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                     </label>
                     <label className="testimony-modal__field">
                       <span>Preferred Name</span>
-                      <input
-                        name="preferredName"
-                        type="text"
-                        autoComplete="nickname"
-                      />
+                      <input name="preferredName" type="text" autoComplete="nickname" />
                     </label>
                     <label className="testimony-modal__field">
                       <span>
                         Last Name <em>*</em>
                       </span>
-                      <input
-                        name="lastName"
-                        type="text"
-                        required
-                        autoComplete="family-name"
-                      />
+                      <input name="lastName" type="text" required autoComplete="family-name" />
                     </label>
                     <label className="testimony-modal__field">
                       <span>Mobile Number</span>
-                      <input
-                        name="mobile"
-                        type="tel"
-                        autoComplete="tel"
-                        inputMode="tel"
-                      />
+                      <input name="mobile" type="tel" autoComplete="tel" inputMode="tel" />
                     </label>
                     <label className="testimony-modal__field">
                       <span>Date</span>
@@ -243,12 +228,7 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                     <div className="testimony-modal__chips">
                       {CATEGORIES.map((cat) => (
                         <label key={cat}>
-                          <input
-                            type="radio"
-                            name="category"
-                            value={cat}
-                            required
-                          />
+                          <input type="radio" name="category" value={cat} required />
                           <span>{cat}</span>
                         </label>
                       ))}
@@ -269,17 +249,11 @@ export function TestimonyFormModal({ open, onClose }: Props) {
 
                   <fieldset className="testimony-modal__choice">
                     <legend>
-                      Do you want your testimony to be shared anonymously?{" "}
-                      <em>*</em>
+                      Do you want your testimony to be shared anonymously? <em>*</em>
                     </legend>
                     <div className="testimony-modal__radios">
                       <label>
-                        <input
-                          type="radio"
-                          name="anonymous"
-                          value="Yes"
-                          required
-                        />
+                        <input type="radio" name="anonymous" value="Yes" required />
                         <span>Yes</span>
                       </label>
                       <label>
@@ -291,17 +265,11 @@ export function TestimonyFormModal({ open, onClose }: Props) {
 
                   <fieldset className="testimony-modal__choice">
                     <legend>
-                      Would you like your testimony to be read on your behalf?{" "}
-                      <em>*</em>
+                      Would you like your testimony to be read on your behalf? <em>*</em>
                     </legend>
                     <div className="testimony-modal__radios">
                       <label>
-                        <input
-                          type="radio"
-                          name="readOnBehalf"
-                          value="Yes"
-                          required
-                        />
+                        <input type="radio" name="readOnBehalf" value="Yes" required />
                         <span>Yes</span>
                       </label>
                       <label>
@@ -312,10 +280,7 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                   </fieldset>
 
                   <fieldset className="testimony-modal__choice">
-                    <legend>
-                      Are you happy for your testimony to be used for online
-                      content?
-                    </legend>
+                    <legend>Are you happy for your testimony to be used for online content?</legend>
                     <div className="testimony-modal__radios">
                       <label>
                         <input type="radio" name="onlineUse" value="Yes" />
@@ -341,11 +306,7 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                   )}
 
                   <div className="testimony-modal__actions">
-                    <button
-                      type="submit"
-                      className="btn-primary"
-                      disabled={submitting}
-                    >
+                    <button type="submit" className="btn-primary" disabled={submitting}>
                       {submitting ? "Submitting..." : "Submit testimony"}
                     </button>
                   </div>

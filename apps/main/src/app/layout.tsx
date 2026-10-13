@@ -15,8 +15,7 @@ const sans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: "Kharis Church",
-  description:
-    "Changing the world with a touch of His grace. Find a Kharis branch near you.",
+  description: "Changing the world with a touch of His grace. Find a Kharis branch near you.",
   other: {
     "color-scheme": "light",
   },

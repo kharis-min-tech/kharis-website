@@ -25,11 +25,7 @@ export function ScrollToTopOnLoad() {
         hash === "#vision" ||
         hash === "#testimonies"
       ) {
-        history.replaceState(
-          null,
-          "",
-          `${window.location.pathname}${window.location.search}`,
-        );
+        history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
       }
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     };

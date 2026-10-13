@@ -128,8 +128,7 @@ export const BRANCHES: Branch[] = [
   },
   {
     name: "Kharis Nottingham",
-    address:
-      "Bluecoat Wollaton Academy, Sutton Passeys Crescent, Wollaton Park",
+    address: "Bluecoat Wollaton Academy, Sutton Passeys Crescent, Wollaton Park",
     city: "Nottingham",
     region: "United Kingdom",
     href: branchHref("Nottingham", "https://kharis.org/locations/nottingham/"),
@@ -181,9 +180,7 @@ export const BRANCHES: Branch[] = [
 ];
 
 export function branchQuery(branch: Branch) {
-  return encodeURIComponent(
-    [branch.name, branch.address, branch.city].filter(Boolean).join(", "),
-  );
+  return encodeURIComponent([branch.name, branch.address, branch.city].filter(Boolean).join(", "));
 }
 
 export function branchDirectionsUrl(branch: Branch) {

@@ -17,7 +17,11 @@ const sizes: Record<Size, string> = {
   icon: "h-9 w-9",
 };
 
-export function buttonClasses(variant: Variant = "default", size: Size = "default", className?: string) {
+export function buttonClasses(
+  variant: Variant = "default",
+  size: Size = "default",
+  className?: string,
+) {
   return cn(
     "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     variants[variant],
@@ -31,6 +35,12 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: Size;
 };
 
-export function Button({ className, variant = "default", size = "default", type = "button", ...props }: ButtonProps) {
+export function Button({
+  className,
+  variant = "default",
+  size = "default",
+  type = "button",
+  ...props
+}: ButtonProps) {
   return <button type={type} className={buttonClasses(variant, size, className)} {...props} />;
 }

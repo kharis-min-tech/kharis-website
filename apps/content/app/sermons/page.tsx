@@ -45,7 +45,11 @@ export default function SermonsPage() {
         published: row.published ? "true" : "false",
       })}
       titleOf={(row) => row.title}
-      metaOf={(row) => [row.speaker, row.date?.slice(0, 10), row.published ? "Published" : "Draft"].filter(Boolean).join(" · ")}
+      metaOf={(row) =>
+        [row.speaker, row.date?.slice(0, 10), row.published ? "Published" : "Draft"]
+          .filter(Boolean)
+          .join(" · ")
+      }
       searchOf={(row) => `${row.title} ${row.speaker ?? ""} ${row.series ?? ""}`}
       save={(draft, id) =>
         saveSermon({

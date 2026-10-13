@@ -47,7 +47,11 @@ export function AdminShell({ email, children }: { email: string; children: React
   const params = useSearchParams();
   const workspaceParam = params.get("workspace");
   const pathWorkspace = pathname.startsWith("/workspace/") ? pathname.split("/")[2] : null;
-  const workspace = isWorkspaceId(workspaceParam) ? workspaceParam : isWorkspaceId(pathWorkspace) ? pathWorkspace : null;
+  const workspace = isWorkspaceId(workspaceParam)
+    ? workspaceParam
+    : isWorkspaceId(pathWorkspace)
+      ? pathWorkspace
+      : null;
   const current = WORKSPACES.find((item) => item.id === workspace) ?? null;
   const [open, setOpen] = useState(false);
   const [unread, setUnread] = useState<number | null>(null);
@@ -82,7 +86,11 @@ export function AdminShell({ email, children }: { email: string; children: React
     <WorkspaceProvider value={workspace}>
       <div className="min-h-screen md:grid md:grid-cols-[16rem_minmax(0,1fr)]">
         {open ? (
-          <button className="fixed inset-0 z-30 bg-black/40 md:hidden" aria-label="Close menu" onClick={() => setOpen(false)} />
+          <button
+            className="fixed inset-0 z-30 bg-black/40 md:hidden"
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+          />
         ) : null}
         <aside
           className={cn(
@@ -101,7 +109,9 @@ export function AdminShell({ email, children }: { email: string; children: React
           </div>
           <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4" aria-label="Studio">
             <div>
-              <p className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">Workspaces</p>
+              <p className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Workspaces
+              </p>
               <ul className="mt-2 space-y-1">
                 {WORKSPACES.map((item) => (
                   <li key={item.id}>
@@ -121,7 +131,9 @@ export function AdminShell({ email, children }: { email: string; children: React
             </div>
             {current ? (
               <div>
-                <p className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{current.name}</p>
+                <p className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {current.name}
+                </p>
                 <ul className="mt-2 space-y-1">
                   {current.nav.map((item) => {
                     const Icon = ICONS[item.href] ?? BookOpen;
@@ -139,7 +151,9 @@ export function AdminShell({ email, children }: { email: string; children: React
                           <Icon className="h-4 w-4" />
                           <span className="flex-1">{item.label}</span>
                           {item.href === "/messages" && unread ? (
-                            <span className="rounded-md bg-primary px-1.5 text-xs text-primary-foreground">{unread}</span>
+                            <span className="rounded-md bg-primary px-1.5 text-xs text-primary-foreground">
+                              {unread}
+                            </span>
                           ) : null}
                         </Link>
                       </li>
@@ -148,17 +162,27 @@ export function AdminShell({ email, children }: { email: string; children: React
                 </ul>
               </div>
             ) : (
-              <p className="px-2 text-sm text-muted-foreground">Choose a workspace to see its sections.</p>
+              <p className="px-2 text-sm text-muted-foreground">
+                Choose a workspace to see its sections.
+              </p>
             )}
           </nav>
         </aside>
         <div className="min-w-0">
           <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/85 px-4 py-3 backdrop-blur">
-            <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu" onClick={() => setOpen((value) => !value)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              aria-label="Open menu"
+              onClick={() => setOpen((value) => !value)}
+            >
               {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </Button>
             <div className="min-w-0 flex-1">
-              <p className="truncate font-heading text-sm font-semibold">{current?.name ?? "Content Studio"}</p>
+              <p className="truncate font-heading text-sm font-semibold">
+                {current?.name ?? "Content Studio"}
+              </p>
               <p className="truncate text-xs text-muted-foreground">{email}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={signOut}>

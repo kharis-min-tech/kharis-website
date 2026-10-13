@@ -13,9 +13,6 @@ export const metadata = pageMeta({
 });
 
 export default async function Media() {
-  const [messages, posts] = await Promise.all([
-    fetchLatestMessages(4),
-    fetchInstagramPosts(6),
-  ]);
+  const [messages, posts] = await Promise.all([fetchLatestMessages(4), fetchInstagramPosts(6)]);
   return <Page messages={messages} posts={posts} />;
 }

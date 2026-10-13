@@ -3,14 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import {
-  Calendar,
-  Clock,
-  ExternalLink,
-  MapPin,
-  Search,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Calendar, Clock, ExternalLink, MapPin, Search, SlidersHorizontal } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { EventDetailModal } from "@/components/EventDetailModal";
 import {
@@ -26,9 +19,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 function happeningEvents(events: ChurchEvent[], from = new Date()) {
   const stamp = from.toISOString().slice(0, 10);
-  return events
-    .filter((e) => e.date >= stamp)
-    .sort((a, b) => a.date.localeCompare(b.date));
+  return events.filter((e) => e.date >= stamp).sort((a, b) => a.date.localeCompare(b.date));
 }
 
 function EventCard({
@@ -60,12 +51,8 @@ function EventCard({
           sizes="(max-width: 900px) 100vw, 33vw"
         />
         <div className="events-happen__date-badge" aria-hidden>
-          <span className="events-happen__date-month">
-            {formatEventMonthShort(event.date)}
-          </span>
-          <span className="events-happen__date-day">
-            {formatEventDateNum(event.date)}
-          </span>
+          <span className="events-happen__date-month">{formatEventMonthShort(event.date)}</span>
+          <span className="events-happen__date-day">{formatEventDateNum(event.date)}</span>
         </div>
       </div>
       <div className="events-happen__copy">
@@ -126,17 +113,12 @@ export function EventsExperience({ events }: Props) {
   const [selected, setSelected] = useState<ChurchEvent | null>(null);
   const [query, setQuery] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [kind, setKind] = useState<
-    "all" | "Sunday Service" | "Thursday Service"
-  >("all");
+  const [kind, setKind] = useState<"all" | "Sunday Service" | "Thursday Service">("all");
   const [place, setPlace] = useState<"all" | string>("all");
 
   const upcoming = useMemo(() => happeningEvents(events), [events]);
 
-  const venues = useMemo(
-    () => [...new Set(events.map((e) => e.location))],
-    [events],
-  );
+  const venues = useMemo(() => [...new Set(events.map((e) => e.location))], [events]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -153,10 +135,7 @@ export function EventsExperience({ events }: Props) {
     });
   }, [upcoming, query, kind, place]);
 
-  const filteredByMonth = useMemo(
-    () => groupEventsByMonth(filtered),
-    [filtered],
-  );
+  const filteredByMonth = useMemo(() => groupEventsByMonth(filtered), [filtered]);
 
   return (
     <div className="events-page">
@@ -193,15 +172,10 @@ export function EventsExperience({ events }: Props) {
             <div className="events-feature__bar">
               <div>
                 <p className="events-feature__bar-title">Kharis Church</p>
-                <p className="events-feature__bar-copy">
-                  Come encounter God with us.
-                </p>
+                <p className="events-feature__bar-copy">Come encounter God with us.</p>
               </div>
               <div className="events-feature__actions">
-                <Link
-                  href="/locations"
-                  className="events-feature__btn events-feature__btn--ghost"
-                >
+                <Link href="/locations" className="events-feature__btn events-feature__btn--ghost">
                   Find events near you
                 </Link>
               </div>
@@ -243,10 +217,7 @@ export function EventsExperience({ events }: Props) {
             <div className="events-browse__panel">
               <label>
                 Gathering
-                <select
-                  value={kind}
-                  onChange={(e) => setKind(e.target.value as typeof kind)}
-                >
+                <select value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>
                   <option value="all">All gatherings</option>
                   <option value="Sunday Service">Sunday Service</option>
                   <option value="Thursday Service">Thursday Service</option>
@@ -254,10 +225,7 @@ export function EventsExperience({ events }: Props) {
               </label>
               <label>
                 Venue
-                <select
-                  value={place}
-                  onChange={(e) => setPlace(e.target.value)}
-                >
+                <select value={place} onChange={(e) => setPlace(e.target.value)}>
                   <option value="all">All venues</option>
                   {venues.map((v) => (
                     <option key={v} value={v}>
@@ -277,8 +245,7 @@ export function EventsExperience({ events }: Props) {
 
           {filtered.length === 0 ? (
             <p className="events-happen__empty">
-              No gatherings match that search. Try another word or clear
-              filters.
+              No gatherings match that search. Try another word or clear filters.
             </p>
           ) : (
             <div className="events-happen__months">

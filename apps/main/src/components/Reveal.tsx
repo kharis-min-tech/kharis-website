@@ -3,14 +3,7 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
-export type RevealVariant =
-  | "up"
-  | "down"
-  | "left"
-  | "right"
-  | "scale"
-  | "blur"
-  | "fade";
+export type RevealVariant = "up" | "down" | "left" | "right" | "scale" | "blur" | "fade";
 
 type RevealProps = {
   children: ReactNode;
@@ -27,10 +20,7 @@ type RevealProps = {
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-function makeVariants(
-  variant: RevealVariant,
-  distance: number,
-): Variants {
+function makeVariants(variant: RevealVariant, distance: number): Variants {
   const hiddenBase = { opacity: 0, filter: "blur(0px)" };
   const shown = {
     opacity: 1,
@@ -99,8 +89,7 @@ export function Reveal({
 }: RevealProps) {
   const reduce = useReducedMotion();
   const dist =
-    distance ??
-    (variant === "left" || variant === "right" ? 56 : variant === "scale" ? 40 : 64);
+    distance ?? (variant === "left" || variant === "right" ? 56 : variant === "scale" ? 40 : 64);
   const variants = makeVariants(variant, dist);
   const MotionTag = as === "section" ? motion.section : motion.div;
 
@@ -188,11 +177,7 @@ export function RevealItem({
   }
 
   return (
-    <motion.div
-      className={className}
-      variants={variants}
-      transition={{ duration: 0.9, ease }}
-    >
+    <motion.div className={className} variants={variants} transition={{ duration: 0.9, ease }}>
       {children}
     </motion.div>
   );

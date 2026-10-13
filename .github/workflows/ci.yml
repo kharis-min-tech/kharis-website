@@ -1,0 +1,186 @@
+name: ci
+
+# The quality gate for pull requests and for main. It always runs and always
+# reports one conclusion through the `ci-ok` job, so `ci-ok` can be marked as a
+# REQUIRED status check in branch protection — even though the per-app verify
+# jobs are path-filtered (a skipped job does not fail the aggregator). This is
+# the fix for the "required check stays pending" trap noted in the deploy
+# workflows.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Least-privilege GITHUB_TOKEN: these jobs only read the repo (checkout, tests,
+# build). No job writes via GITHUB_TOKEN.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # Detect which apps a change touches, so unaffected apps skip their heavy
+  # verify job. Shared root manifests count as touching every app.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      content: ${{ steps.filter.outputs.content }}
+      kp2: ${{ steps.filter.outputs.kp2 }}
+      main: ${{ steps.filter.outputs.main }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            content:
+              - 'apps/content/**'
+              - 'package.json'
+              - 'package-lock.json'
+            kp2:
+              - 'apps/kp2/**'
+              - 'package.json'
+              - 'package-lock.json'
+            main:
+              - 'apps/main/**'
+              - 'package.json'
+              - 'package-lock.json'
+
+  # Repo-wide gates that always run, regardless of which app changed.
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Format check
+        run: npm run format:check
+      - name: Unit tests
+        run: npm test
+      # Blocks only on CRITICAL vulnerabilities in production deps. High/moderate
+      # and dev-only issues come through weekly Dependabot PRs instead. Tighten
+      # to --audit-level=high once the current Next.js advisories are bumped.
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=critical
+
+  content:
+    needs: changes
+    if: needs.changes.outputs.content == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/content
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+        working-directory: .
+      - name: Lint
+        run: npx eslint
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Build
+        run: npx next build
+
+  kp2:
+    needs: changes
+    if: needs.changes.outputs.kp2 == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/kp2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+        working-directory: .
+      - name: Lint
+        run: npx eslint
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Build
+        run: npx next build
+
+  main:
+    needs: changes
+    if: needs.changes.outputs.main == 'true'
+    runs-on: ubuntu-latest
+    env:
+      # apps/main ships with typescript.ignoreBuildErrors and ~70 pre-existing
+      # type errors (two interfaces both named BranchData). This ratchet lets the
+      # count fall but never rise. Lower it as errors are fixed; at 0, drop the
+      # ratchet and the ignoreBuildErrors escape hatch.
+      TSC_BASELINE: 70
+    defaults:
+      run:
+        working-directory: apps/main
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+        working-directory: .
+      - name: Lint
+        run: npx eslint
+      # Webpack build, NOT --turbopack: this is the engine the Cloudflare deploy
+      # runs through opennextjs-cloudflare, and Turbopack production builds
+      # intermittently fail to resolve next/font/google in CI (the internal
+      # "@vercel/turbopack-next/internal/font/google/font" module). Both engines
+      # build cleanly locally; the gate should match what actually ships.
+      - name: Build
+        run: npx next build
+      - name: Typecheck ratchet
+        shell: bash
+        run: |
+          npx tsc --noEmit > "$RUNNER_TEMP/tsc.log" 2>&1 || true
+          count=$(grep -c "error TS" "$RUNNER_TEMP/tsc.log" || true)
+          echo "::group::tsc output ($count errors)"
+          cat "$RUNNER_TEMP/tsc.log"
+          echo "::endgroup::"
+          echo "tsc errors: $count (baseline $TSC_BASELINE)"
+          if [ "$count" -gt "$TSC_BASELINE" ]; then
+            echo "::error::Type errors rose from $TSC_BASELINE to $count."
+            exit 1
+          fi
+          if [ "$count" -lt "$TSC_BASELINE" ]; then
+            echo "::notice::Down to $count — lower TSC_BASELINE in ci.yml to lock it in."
+          fi
+
+  # Single required check. Always runs; fails only if a needed job actually
+  # failed or was cancelled. Skipped (path-filtered-out) jobs are fine.
+  ci-ok:
+    needs: [quality, content, kp2, main]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm required jobs passed
+        run: |
+          for r in \
+            "${{ needs.quality.result }}" \
+            "${{ needs.content.result }}" \
+            "${{ needs.kp2.result }}" \
+            "${{ needs.main.result }}"; do
+            echo "job result: $r"
+            if [ "$r" = "failure" ] || [ "$r" = "cancelled" ]; then
+              echo "::error::A required CI job did not pass."
+              exit 1
+            fi
+          done
+          echo "All required jobs passed (skipped app jobs are OK)."

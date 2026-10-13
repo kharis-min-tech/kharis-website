@@ -4,11 +4,11 @@ npm-workspaces monorepo holding the Kharis sites and the content studio. They sh
 project and nothing else — **no shared components, tokens, fonts or CSS.** Each
 app owns its own design system and deploys independently.
 
-| App | Workspace | Served at | Worker | Design system |
-| --- | --- | --- | --- | --- |
-| `apps/main` | `@kharis/main` | `kharis.org` | `kharis-main` | Hand-rolled tokens (`--bg`/`--fg`/`--purple`) |
-| `apps/kp2` | `@kharis/kp2` | `kharis.org/kp2` | `kharis-kp2` | Material Design 3 tokens + `tw-animate-css` |
-| `apps/content` | `@kharis/content` | `content.kharis.org` | `kharis-content` | Slate tokens, Maven Pro + DM Sans |
+| App            | Workspace         | Served at            | Worker           | Design system                                 |
+| -------------- | ----------------- | -------------------- | ---------------- | --------------------------------------------- |
+| `apps/main`    | `@kharis/main`    | `kharis.org`         | `kharis-main`    | Hand-rolled tokens (`--bg`/`--fg`/`--purple`) |
+| `apps/kp2`     | `@kharis/kp2`     | `kharis.org/kp2`     | `kharis-kp2`     | Material Design 3 tokens + `tw-animate-css`   |
+| `apps/content` | `@kharis/content` | `content.kharis.org` | `kharis-content` | Slate tokens, Maven Pro + DM Sans             |
 
 ## Why they are separate
 

@@ -64,7 +64,10 @@ export function MessageInbox() {
   async function update(id: string, next: ContactStatus) {
     try {
       await setMessageStatus(id, next);
-      setRows((current) => current?.map((row) => (row.id === id ? { ...row, status: next } : row)) ?? current);
+      setRows(
+        (current) =>
+          current?.map((row) => (row.id === id ? { ...row, status: next } : row)) ?? current,
+      );
       toast.success(next === "archived" ? "Archived" : "Marked read");
     } catch (caught) {
       toast.error(caught instanceof Error ? caught.message : "Could not update the message.");
@@ -89,10 +92,19 @@ export function MessageInbox() {
     <div>
       <PageHeader
         title="Messages"
-        description={fresh ? `${fresh} new in this view.` : "Contact form inbox. Reply opens the visitor's email."}
+        description={
+          fresh
+            ? `${fresh} new in this view.`
+            : "Contact form inbox. Reply opens the visitor's email."
+        }
       />
       <div className="mb-4 flex flex-wrap gap-2">
-        <Select aria-label="Workspace filter" value={scope} onChange={(event) => setScope(event.target.value)} className="max-w-48">
+        <Select
+          aria-label="Workspace filter"
+          value={scope}
+          onChange={(event) => setScope(event.target.value)}
+          className="max-w-48"
+        >
           <option value="all">All workspaces</option>
           {WORKSPACES.map((item) => (
             <option key={item.id} value={item.id}>
@@ -100,7 +112,12 @@ export function MessageInbox() {
             </option>
           ))}
         </Select>
-        <Select aria-label="Status filter" value={status} onChange={(event) => setStatus(event.target.value)} className="max-w-40">
+        <Select
+          aria-label="Status filter"
+          value={status}
+          onChange={(event) => setStatus(event.target.value)}
+          className="max-w-40"
+        >
           <option value="all">All statuses</option>
           {STATUSES.map((item) => (
             <option key={item} value={item}>
@@ -108,7 +125,12 @@ export function MessageInbox() {
             </option>
           ))}
         </Select>
-        <Input value={search} placeholder="Search" onChange={(event) => setSearch(event.target.value)} className="max-w-xs" />
+        <Input
+          value={search}
+          placeholder="Search"
+          onChange={(event) => setSearch(event.target.value)}
+          className="max-w-xs"
+        />
       </div>
       {rows === null ? (
         <div className="space-y-3">
@@ -118,7 +140,9 @@ export function MessageInbox() {
       ) : error ? (
         <p className="text-sm text-destructive">{error}</p>
       ) : visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">No messages.</div>
+        <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">
+          No messages.
+        </div>
       ) : (
         <ul className="space-y-3">
           {visible.map((row) => {
@@ -126,7 +150,11 @@ export function MessageInbox() {
             const subject = encodeURIComponent(`Re: ${row.topic}`);
             return (
               <li key={row.id} className="rounded-xl border border-border bg-card p-4">
-                <button type="button" className="flex w-full flex-wrap items-center gap-2 text-left" onClick={() => setOpenId(open ? null : row.id)}>
+                <button
+                  type="button"
+                  className="flex w-full flex-wrap items-center gap-2 text-left"
+                  onClick={() => setOpenId(open ? null : row.id)}
+                >
                   <span className="min-w-0 flex-1">
                     <span className="block font-medium">
                       {row.first_name} {row.last_name}
@@ -148,20 +176,35 @@ export function MessageInbox() {
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {row.status !== "read" ? (
-                        <Button size="sm" variant="outline" onClick={() => void update(row.id, "read")}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => void update(row.id, "read")}
+                        >
                           Mark read
                         </Button>
                       ) : null}
                       {row.status !== "archived" ? (
-                        <Button size="sm" variant="outline" onClick={() => void update(row.id, "archived")}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => void update(row.id, "archived")}
+                        >
                           Archive
                         </Button>
                       ) : (
-                        <Button size="sm" variant="outline" onClick={() => void update(row.id, "read")}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => void update(row.id, "read")}
+                        >
                           Restore
                         </Button>
                       )}
-                      <a className="inline-flex h-8 items-center rounded-md border border-border px-2.5 text-xs font-medium hover:bg-accent" href={`mailto:${row.email}?subject=${subject}`}>
+                      <a
+                        className="inline-flex h-8 items-center rounded-md border border-border px-2.5 text-xs font-medium hover:bg-accent"
+                        href={`mailto:${row.email}?subject=${subject}`}
+                      >
                         Reply
                       </a>
                       <Button size="sm" variant="ghost" onClick={() => void remove(row)}>

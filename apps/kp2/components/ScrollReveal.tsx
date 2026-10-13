@@ -22,18 +22,14 @@ export function ScrollReveal() {
     const setup = () => {
       if (cancelled) return;
 
-      const targets = Array.from(
-        document.querySelectorAll<HTMLElement>("main section"),
-      );
+      const targets = Array.from(document.querySelectorAll<HTMLElement>("main section"));
       if (!targets.length) return;
 
       targets.forEach((el, i) => {
         el.classList.add("reveal-on-scroll");
         // Every third section wipes in diagonally, alternating direction.
         if (i % 3 === 2) {
-          el.classList.add(
-            (i / 3) % 2 < 1 ? "reveal-diagonal-left" : "reveal-diagonal-right",
-          );
+          el.classList.add((i / 3) % 2 < 1 ? "reveal-diagonal-left" : "reveal-diagonal-right");
         }
         el.style.setProperty("--reveal-delay", `${(i % 4) * 70}ms`);
       });

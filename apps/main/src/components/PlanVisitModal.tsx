@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  MapPin,
-  Check,
-  X,
-  ChevronRight,
-} from "lucide-react";
+import { MapPin, Check, X, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface PlanVisitModalProps {
@@ -104,9 +99,7 @@ export default function PlanVisitModal({
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-extrabold text-xl text-white!">
-                  Plan Your Visit
-                </h3>
+                <h3 className="font-extrabold text-xl text-white!">Plan Your Visit</h3>
                 <p className="text-xs font-semibold text-[#b2aec1]">
                   {branchName
                     ? `We are excited to host you at ${branchName}.`
@@ -131,8 +124,7 @@ export default function PlanVisitModal({
                 You are all set, {name.split(" ")[0]}!
               </h4>
               <p className="text-sm font-semibold text-[#b2aec1] max-w-sm mx-auto">
-                Our host team has your details and will follow up before your
-                visit.
+                Our host team has your details and will follow up before your visit.
               </p>
             </div>
           ) : (
@@ -187,9 +179,7 @@ export default function PlanVisitModal({
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#800654]"
                 >
-                  {eventLabel ? (
-                    <option value={eventLabel}>{eventLabel}</option>
-                  ) : null}
+                  {eventLabel ? <option value={eventLabel}>{eventLabel}</option> : null}
                   <option value="Next Sunday">Next Sunday service</option>
                   <option value="Midweek">Midweek gathering</option>
                   <option value="Other">Other / not sure yet</option>
@@ -204,17 +194,12 @@ export default function PlanVisitModal({
                   onChange={(e) => setChildren(e.target.checked)}
                   className="w-4 h-4 rounded text-[#800654] focus:ring-[#800654] bg-[#15131f] border-[#2e2942]"
                 />
-                <label
-                  htmlFor="kids"
-                  className="text-xs font-bold text-[#f3f0f8] cursor-pointer"
-                >
+                <label htmlFor="kids" className="text-xs font-bold text-[#f3f0f8] cursor-pointer">
                   I will be bringing children (ages 0-12) for Kharis Kids
                 </label>
               </div>
 
-              {error ? (
-                <p className="text-xs font-semibold text-[#ff8a8a]">{error}</p>
-              ) : null}
+              {error ? <p className="text-xs font-semibold text-[#ff8a8a]">{error}</p> : null}
 
               <button
                 type="submit"

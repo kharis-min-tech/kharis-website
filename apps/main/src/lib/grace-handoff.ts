@@ -30,9 +30,7 @@ function randomChunk(len = 4): string {
   return out;
 }
 
-export function isGraceTicketId(
-  value: string | null | undefined,
-): value is string {
+export function isGraceTicketId(value: string | null | undefined): value is string {
   return Boolean(value && GRACE_TICKET_PATTERN.test(value));
 }
 
@@ -51,13 +49,8 @@ function plainText(content: string): string {
     .trim();
 }
 
-export function summarizeGraceChat(
-  messages: GraceHandoffMessage[],
-  maxTurns = 8,
-): string {
-  const usable = messages
-    .filter((m) => m.content.trim())
-    .slice(-maxTurns);
+export function summarizeGraceChat(messages: GraceHandoffMessage[], maxTurns = 8): string {
+  const usable = messages.filter((m) => m.content.trim()).slice(-maxTurns);
   if (!usable.length) return "No prior chat turns captured.";
   return usable
     .map((m) => {
@@ -99,9 +92,7 @@ export function saveGraceHandoff(
   return payload;
 }
 
-export function readGraceHandoff(
-  ticketIdFromQuery?: string | null,
-): GraceHandoffPayload | null {
+export function readGraceHandoff(ticketIdFromQuery?: string | null): GraceHandoffPayload | null {
   try {
     const raw = sessionStorage.getItem(GRACE_HANDOFF_KEY);
     if (!raw) return null;

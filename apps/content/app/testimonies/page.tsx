@@ -65,8 +65,14 @@ export default function TestimoniesPage() {
         published: row.is_published ? "true" : "false",
       })}
       titleOf={(row) => row.name}
-      metaOf={(row) => [row.branch_name, slotOf(row) || "Not featured", row.is_published ? "Published" : "Draft"].filter(Boolean).join(" · ")}
-      searchOf={(row) => `${row.name} ${row.branch_name ?? ""} ${row.category ?? ""} ${row.description ?? ""}`}
+      metaOf={(row) =>
+        [row.branch_name, slotOf(row) || "Not featured", row.is_published ? "Published" : "Draft"]
+          .filter(Boolean)
+          .join(" · ")
+      }
+      searchOf={(row) =>
+        `${row.name} ${row.branch_name ?? ""} ${row.category ?? ""} ${row.description ?? ""}`
+      }
       save={(draft, id) =>
         saveTestimony({
           id,

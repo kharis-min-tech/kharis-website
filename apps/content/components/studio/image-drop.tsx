@@ -96,7 +96,11 @@ export function ImageDrop({
         ) : (
           <ImagePlus className="h-5 w-5" />
         )}
-        <span>{uploading ? `Uploading${progress != null ? ` ${progress}%` : "…"}` : "Drop an image, or click to browse"}</span>
+        <span>
+          {uploading
+            ? `Uploading${progress != null ? ` ${progress}%` : "…"}`
+            : "Drop an image, or click to browse"}
+        </span>
         {progress != null ? (
           <span className="h-1 w-full max-w-xs overflow-hidden rounded-full bg-muted">
             <span className="block h-full bg-primary" style={{ width: `${progress}%` }} />
@@ -187,7 +191,11 @@ export function MultiImageDrop({
         ...list.map((file) => ({ key: crypto.randomUUID(), url: URL.createObjectURL(file) })),
       ]);
       onQueueFiles(list);
-      toast.success(list.length === 1 ? "Ready. This image uploads when you save." : `${list.length} images upload when you save.`);
+      toast.success(
+        list.length === 1
+          ? "Ready. This image uploads when you save."
+          : `${list.length} images upload when you save.`,
+      );
       return;
     }
     setUploading(true);
@@ -200,7 +208,8 @@ export function MultiImageDrop({
             branchId,
             category: "gallery",
             file,
-            onProgress: (percent) => setProgress(Math.round(((index + percent / 100) / list.length) * 100)),
+            onProgress: (percent) =>
+              setProgress(Math.round(((index + percent / 100) / list.length) * 100)),
           });
           uploaded.push({ key: crypto.randomUUID(), url: image.publicUrl, path: image.key });
         } else {
@@ -208,7 +217,9 @@ export function MultiImageDrop({
         }
       }
       onChange([...items, ...uploaded]);
-      toast.success(uploaded.length === 1 ? "Image uploaded" : `${uploaded.length} images uploaded`);
+      toast.success(
+        uploaded.length === 1 ? "Image uploaded" : `${uploaded.length} images uploaded`,
+      );
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Upload failed");
     } finally {
@@ -229,7 +240,11 @@ export function MultiImageDrop({
         }}
       >
         <ImagePlus className="h-5 w-5" />
-        <span>{uploading ? `Uploading${progress != null ? ` ${progress}%` : "…"}` : "Drop gallery images, or click to browse"}</span>
+        <span>
+          {uploading
+            ? `Uploading${progress != null ? ` ${progress}%` : "…"}`
+            : "Drop gallery images, or click to browse"}
+        </span>
         {progress != null ? (
           <span className="h-1 w-full max-w-xs overflow-hidden rounded-full bg-muted">
             <span className="block h-full bg-primary" style={{ width: `${progress}%` }} />
@@ -266,7 +281,8 @@ export function MultiImageDrop({
                 className="absolute right-1 top-1 h-7 w-7"
                 aria-label="Remove gallery image"
                 onClick={() => {
-                  if (!isR2ObjectKey(item.path)) void removeStored(item.path).catch(() => undefined);
+                  if (!isR2ObjectKey(item.path))
+                    void removeStored(item.path).catch(() => undefined);
                   onChange(items.filter((_, itemIndex) => itemIndex !== index));
                 }}
               >

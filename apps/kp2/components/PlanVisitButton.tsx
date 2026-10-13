@@ -89,10 +89,7 @@ export function PlanVisitButton({
                   <p className="font-label-md text-xs uppercase tracking-[0.16em] text-primary mb-1">
                     Plan your visit
                   </p>
-                  <h2
-                    id={titleId}
-                    className="font-headline-md text-xl uppercase leading-tight"
-                  >
+                  <h2 id={titleId} className="font-headline-md text-xl uppercase leading-tight">
                     {item.title}
                   </h2>
                   <button
@@ -107,20 +104,16 @@ export function PlanVisitButton({
 
                 <div className="p-5 space-y-4">
                   <p className="font-body-md text-on-surface-variant">
-                    Add this gathering to your phone or laptop so you get a reminder
-                    when it&apos;s time to go.
+                    Add this gathering to your phone or laptop so you get a reminder when it&apos;s
+                    time to go.
                   </p>
                   <p className="font-label-md uppercase tracking-wide flex items-start gap-2">
-                    <span className="material-symbols-outlined text-primary">
-                      schedule
-                    </span>
+                    <span className="material-symbols-outlined text-primary">schedule</span>
                     {formatVisitWhen(item)}
                   </p>
                   {item.location ? (
                     <p className="font-label-md uppercase tracking-wide flex items-start gap-2">
-                      <span className="material-symbols-outlined text-primary">
-                        place
-                      </span>
+                      <span className="material-symbols-outlined text-primary">place</span>
                       {item.location}
                     </p>
                   ) : null}

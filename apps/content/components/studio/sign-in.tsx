@@ -37,7 +37,8 @@ export function SignIn() {
         </div>
         {configured ? null : (
           <p className="mb-4 rounded-md bg-accent px-3 py-2 text-sm">
-            Supabase is not configured. Add the public URL and publishable key to apps/content/.env.local.
+            Supabase is not configured. Add the public URL and publishable key to
+            apps/content/.env.local.
           </p>
         )}
         <form className="space-y-4" onSubmit={onSubmit}>

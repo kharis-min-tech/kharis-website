@@ -1,7 +1,6 @@
 import { placeholderDescription, remoteImage } from "@/lib/branch-display";
 import { supabase } from "@/lib/supabase";
 
-
 // ======================================================
 // TYPES
 // ======================================================
@@ -27,7 +26,6 @@ export interface Venue {
   directions_text: string | null;
 }
 
-
 export interface Service {
   id: string;
   branch_id?: string;
@@ -49,7 +47,6 @@ export interface Service {
 
   is_active: boolean;
 }
-
 
 export interface BranchData {
   id: string;
@@ -86,7 +83,6 @@ export interface BranchData {
   gallery: string[];
 }
 
-
 // ======================================================
 // TYPE USED BY YOUR LOCATIONS CARDS
 // ======================================================
@@ -112,7 +108,6 @@ export interface BranchItem {
   latitude?: number;
   longitude?: number;
 }
-
 
 // ======================================================
 // FORMAT DATABASE TIME
@@ -166,7 +161,6 @@ async function galleriesByBranch() {
   return map;
 }
 
-
 // ======================================================
 // GET ALL BRANCH DATA FROM SUPABASE
 // ======================================================
@@ -175,26 +169,23 @@ export async function listBranchData(): Promise<BranchData[]> {
   const [{ data, error }, galleries] = await Promise.all([
     supabase
       .from("branches")
-      .select(`
+      .select(
+        `
       *,
       venues (*),
       services (*)
-    `)
+    `,
+      )
       .eq("is_active", true)
       .order("sort_order", { ascending: true }),
     galleriesByBranch(),
   ]);
 
-
   if (error) {
-    console.error(
-      "Failed to load branches from Supabase:",
-      error
-    );
+    console.error("Failed to load branches from Supabase:", error);
 
     return [];
   }
-
 
   // Sort services inside each branch
   const branches = (data ?? []).map((branch) => ({
@@ -203,57 +194,43 @@ export async function listBranchData(): Promise<BranchData[]> {
     venues: branch.venues ?? [],
 
     services: [...(branch.services ?? [])].sort(
-      (a, b) =>
-        (a.sort_order ?? 0) - (b.sort_order ?? 0)
+      (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
     ),
 
     gallery: galleries.get(branch.id) ?? [],
   }));
 
-
   return branches as BranchData[];
 }
-
 
 // ======================================================
 // TURN SUPABASE BRANCH INTO LOCATION CARD DATA
 // ======================================================
 
-export function toBranchItem(
-  branch: BranchData
-): BranchItem {
-
+export function toBranchItem(branch: BranchData): BranchItem {
   // ------------------------------------------
   // ACTIVE SERVICES ONLY
   // ------------------------------------------
 
   const activeServices = (branch.services ?? [])
     .filter((service) => service.is_active)
-    .sort(
-      (a, b) =>
-        (a.sort_order ?? 0) - (b.sort_order ?? 0)
-    );
-
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
   // ------------------------------------------
   // SUNDAY SERVICES
   // ------------------------------------------
 
   const sundayServices = activeServices.filter(
-    (service) =>
-      service.type?.toLowerCase() === "sunday"
+    (service) => service.type?.toLowerCase() === "sunday",
   );
-
 
   // ------------------------------------------
   // MIDWEEK SERVICE
   // ------------------------------------------
 
   const midweekServices = activeServices.filter(
-    (service) =>
-      service.type?.toLowerCase() === "midweek"
+    (service) => service.type?.toLowerCase() === "midweek",
   );
-
 
   // ------------------------------------------
   // MAIN SUNDAY SERVICE
@@ -264,21 +241,15 @@ export function toBranchItem(
 
   const mainSundayService = sundayServices[0];
 
-
   // ------------------------------------------
   // FIND MAIN VENUE
   // ------------------------------------------
 
   let mainVenue: Venue | undefined;
 
-
   if (mainSundayService?.venue_id) {
-    mainVenue = branch.venues.find(
-      (venue) =>
-        venue.id === mainSundayService.venue_id
-    );
+    mainVenue = branch.venues.find((venue) => venue.id === mainSundayService.venue_id);
   }
-
 
   // If no Sunday venue exists,
   // fall back to the first venue.
@@ -286,7 +257,6 @@ export function toBranchItem(
   if (!mainVenue) {
     mainVenue = branch.venues?.[0];
   }
-
 
   // ------------------------------------------
   // ADDRESS
@@ -301,7 +271,6 @@ export function toBranchItem(
     .filter(Boolean)
     .join(", ");
 
-
   // ------------------------------------------
   // SUNDAY SERVICE TEXT
   //
@@ -312,22 +281,16 @@ export function toBranchItem(
   // Sunday 10:00 AM & 1:00 PM
   // ------------------------------------------
 
-  let serviceSummary =
-    "Service information coming soon";
-
+  let serviceSummary = "Service information coming soon";
 
   if (sundayServices.length > 0) {
     const sundayTimes = sundayServices
-      .map((service) =>
-        formatTime(service.start_time)
-      )
+      .map((service) => formatTime(service.start_time))
       .filter(Boolean)
       .join(" & ");
 
-
     serviceSummary = `Sunday ${sundayTimes}`;
   }
-
 
   // ------------------------------------------
   // MIDWEEK TEXT
@@ -338,18 +301,11 @@ export function toBranchItem(
 
   let midweekSummary: string | undefined;
 
-
   if (midweekServices.length > 0) {
     midweekSummary = midweekServices
-      .map(
-        (service) =>
-          `${service.day} ${formatTime(
-            service.start_time
-          )}`
-      )
+      .map((service) => `${service.day} ${formatTime(service.start_time)}`)
       .join(" & ");
   }
-
 
   // ------------------------------------------
   // FINAL LOCATION CARD
@@ -360,54 +316,40 @@ export function toBranchItem(
 
     name: branch.name,
 
-    city:
-      mainVenue?.city ??
-      branch.name.replace(/ Branch$/i, ""),
+    city: mainVenue?.city ?? branch.name.replace(/ Branch$/i, ""),
 
-    region:
-      branch.subtitle ??
-      mainVenue?.country ??
-      "United Kingdom",
+    region: branch.subtitle ?? mainVenue?.country ?? "United Kingdom",
 
     heroImage: remoteImage(branch.hero_image_url) || branch.gallery[0] || "",
 
-    postcode:
-      mainVenue?.postcode ?? "",
+    postcode: mainVenue?.postcode ?? "",
 
     address,
 
     description:
       branch.short_description ??
       branch.description ??
-      placeholderDescription(
-        mainVenue?.city ?? branch.name.replace(/ Branch$/i, ""),
-      ),
+      placeholderDescription(mainVenue?.city ?? branch.name.replace(/ Branch$/i, "")),
 
     serviceSummary,
 
     midweekSummary,
 
-    latitude:
-      mainVenue?.latitude ?? undefined,
+    latitude: mainVenue?.latitude ?? undefined,
 
-    longitude:
-      mainVenue?.longitude ?? undefined,
+    longitude: mainVenue?.longitude ?? undefined,
   };
 }
-
 
 // ======================================================
 // GET DATA SPECIFICALLY FOR LOCATIONS CARDS
 // ======================================================
 
-export async function listBranches(): Promise<
-  BranchItem[]
-> {
+export async function listBranches(): Promise<BranchItem[]> {
   const branches = await listBranchData();
 
   return branches.map(toBranchItem);
 }
-
 
 // ======================================================
 // GET ONE BRANCH BY SLUG
@@ -419,50 +361,39 @@ export async function listBranches(): Promise<
 // /locations/brighton
 // ======================================================
 
-export async function getBranchBySlug(
-  slug: string
-): Promise<BranchData | null> {
-
+export async function getBranchBySlug(slug: string): Promise<BranchData | null> {
   const [{ data, error }, galleries] = await Promise.all([
     supabase
       .from("branches")
-      .select(`
+      .select(
+        `
       *,
       venues (*),
       services (*)
-    `)
+    `,
+      )
       .eq("slug", slug)
       .eq("is_active", true)
       .single(),
     galleriesByBranch(),
   ]);
 
-
   if (error) {
-    console.error(
-      `Failed to load branch "${slug}":`,
-      error
-    );
+    console.error(`Failed to load branch "${slug}":`, error);
 
     return null;
   }
-
 
   if (!data) {
     return null;
   }
-
 
   return {
     ...data,
 
     venues: data.venues ?? [],
 
-    services: [...(data.services ?? [])].sort(
-      (a, b) =>
-        (a.sort_order ?? 0) -
-        (b.sort_order ?? 0)
-    ),
+    services: [...(data.services ?? [])].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)),
 
     gallery: galleries.get(data.id) ?? [],
   } as BranchData;

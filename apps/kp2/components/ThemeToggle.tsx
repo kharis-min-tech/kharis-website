@@ -7,8 +7,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const stored = localStorage.getItem("kharis-theme");
-    const isDark =
-      document.documentElement.classList.contains("dark") || stored === "dark";
+    const isDark = document.documentElement.classList.contains("dark") || stored === "dark";
     setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
   }, []);
@@ -18,11 +17,11 @@ export function ThemeToggle() {
     const root = document.documentElement;
 
     root.classList.add("theme-transition");
-    window.clearTimeout(
-      (window as unknown as { __themeTimer?: number }).__themeTimer,
+    window.clearTimeout((window as unknown as { __themeTimer?: number }).__themeTimer);
+    (window as unknown as { __themeTimer?: number }).__themeTimer = window.setTimeout(
+      () => root.classList.remove("theme-transition"),
+      400,
     );
-    (window as unknown as { __themeTimer?: number }).__themeTimer =
-      window.setTimeout(() => root.classList.remove("theme-transition"), 400);
 
     setDark(next);
     root.classList.toggle("dark", next);

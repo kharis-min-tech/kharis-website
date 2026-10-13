@@ -5,21 +5,11 @@ import { useRef, useSyncExternalStore } from "react";
 import { Reveal } from "@/components/Reveal";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
-const WORDS = [
-  "Establishing",
-  "believers",
-  "and",
-  "strengthening",
-  "churches.",
-];
+const WORDS = ["Establishing", "believers", "and", "strengthening", "churches."];
 
 export function MissionSection() {
   const ref = useRef<HTMLElement>(null);
-  const theme = useSyncExternalStore(
-    subscribeSiteTheme,
-    getSiteTheme,
-    () => "light" as const,
-  );
+  const theme = useSyncExternalStore(subscribeSiteTheme, getSiteTheme, () => "light" as const);
   const isDark = theme === "dark";
   const { scrollYProgress } = useScroll({
     target: ref,

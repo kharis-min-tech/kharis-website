@@ -36,9 +36,7 @@ export function NewsletterSignup({
             <h2 className="mb-4 font-headline-lg text-headline-lg uppercase leading-tight">
               {title}
             </h2>
-            <p className={cn("mb-stack-md font-body-lg text-body-lg", copyClassName)}>
-              {copy}
-            </p>
+            <p className={cn("mb-stack-md font-body-lg text-body-lg", copyClassName)}>{copy}</p>
             <form
               className="flex flex-col gap-4 md:flex-row"
               data-newsletter="true"

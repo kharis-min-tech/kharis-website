@@ -36,7 +36,10 @@ function pad(value: number) {
 
 /** UTC stamp: 20260906T080000Z */
 export function calendarStamp(iso: string) {
-  return new Date(iso).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  return new Date(iso)
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}/, "");
 }
 
 function icsText(value: string) {
@@ -170,7 +173,11 @@ export function downloadIcs(item: CalendarItem) {
     type: "text/calendar;charset=utf-8",
   });
   const stamp = `${pad(new Date(item.start).getUTCMonth() + 1)}${pad(new Date(item.start).getUTCDate())}`;
-  const safe = item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "kharis-event";
+  const safe =
+    item.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") || "kharis-event";
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;

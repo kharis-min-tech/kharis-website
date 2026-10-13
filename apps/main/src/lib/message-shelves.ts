@@ -40,9 +40,7 @@ const LATE_SERIES: Array<{
     id: "let-the-bible-speak",
     title: "Let the Bible Speak",
     match: (t) =>
-      t.includes("let the bible speak") ||
-      t.includes("ltbsc") ||
-      t.includes("try the bible"),
+      t.includes("let the bible speak") || t.includes("ltbsc") || t.includes("try the bible"),
   },
 ];
 
@@ -95,9 +93,7 @@ function pushSeries(
  * Issues of Life → year message packs → Just Men → Fragrance →
  * Let the Bible Speak last (small set).
  */
-export function buildMessageShelves(
-  messages: MessageVideo[],
-): MessageShelf[] {
+export function buildMessageShelves(messages: MessageVideo[]): MessageShelf[] {
   const pool = [...messages];
   const shelves: MessageShelf[] = [];
   const used = new Set<string>();
@@ -107,9 +103,7 @@ export function buildMessageShelves(
   }
 
   const holdBack = (t: string) =>
-    JUST_MEN_SERIES.match(t) ||
-    FRAGRANCE_SERIES.match(t) ||
-    LATE_SERIES.some((s) => s.match(t));
+    JUST_MEN_SERIES.match(t) || FRAGRANCE_SERIES.match(t) || LATE_SERIES.some((s) => s.match(t));
 
   const years = new Set<number>();
   for (const m of pool) {

@@ -20,8 +20,7 @@ export type LifeModalVideo = {
 export const LIFE_MODAL_VIDEOS: Record<LifeModalSlug, LifeModalVideo> = {
   "k-group": {
     videoId: "0Aburds8DqQ",
-    blurb:
-      "Small home fellowships where we discuss the Word, pray, and care for one another.",
+    blurb: "Small home fellowships where we discuss the Word, pray, and care for one another.",
   },
   baptism: {
     videoId: "NOiT8EPTMrg",
@@ -30,8 +29,7 @@ export const LIFE_MODAL_VIDEOS: Record<LifeModalSlug, LifeModalVideo> = {
   },
   fasting: {
     videoId: "AE2AXoQetmc",
-    blurb:
-      "We abstain from food to signal dependence on God, fasting joined with prayer.",
+    blurb: "We abstain from food to signal dependence on God, fasting joined with prayer.",
   },
   marriage: {
     videoId: "XdCNUHBdzh4",
@@ -41,22 +39,16 @@ export const LIFE_MODAL_VIDEOS: Record<LifeModalSlug, LifeModalVideo> = {
   departments: {
     videoId: "/videos/hero-a.mp4",
     kind: "file",
-    blurb:
-      "Serving is part of our worship. Every believer has a role in God’s house.",
+    blurb: "Serving is part of our worship. Every believer has a role in God’s house.",
   },
 };
 
-export function lifeModalVideoId(
-  slug: LifeModalSlug,
-  baptismOverride?: string,
-): string {
+export function lifeModalVideoId(slug: LifeModalSlug, baptismOverride?: string): string {
   if (slug === "baptism" && baptismOverride) return baptismOverride;
   return LIFE_MODAL_VIDEOS[slug].videoId;
 }
 
-export function lifeModalVideoKind(
-  slug: LifeModalSlug,
-): "youtube" | "file" {
+export function lifeModalVideoKind(slug: LifeModalSlug): "youtube" | "file" {
   return LIFE_MODAL_VIDEOS[slug].kind ?? "youtube";
 }
 
@@ -64,10 +56,7 @@ export function lifeModalBlurb(slug: LifeModalSlug): string {
   return LIFE_MODAL_VIDEOS[slug].blurb;
 }
 
-export function youtubeEmbedSrc(
-  id: string,
-  opts?: { autoplay?: boolean },
-) {
+export function youtubeEmbedSrc(id: string, opts?: { autoplay?: boolean }) {
   const params = new URLSearchParams({
     rel: "0",
     modestbranding: "1",

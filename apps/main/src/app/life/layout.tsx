@@ -9,11 +9,7 @@ export const metadata: Metadata = {
     "The Christian life is a one-another life. Baptism, fasting, children’s ministry, and serving in departments at Kharis.",
 };
 
-export default function LifeLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function LifeLayout({ children }: { children: React.ReactNode }) {
   return (
     <main className="bg-bg text-fg">
       <SiteHeader />

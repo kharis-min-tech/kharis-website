@@ -2,10 +2,10 @@
 
 Password-protected admin for the shared Supabase project. It is its own workspace and its own Cloudflare Worker, served on the subdomain **content.kharis.org**.
 
-| App | Host | How it is mounted |
-| --- | --- | --- |
-| `apps/main` | `kharis.org` | Apex domain, no `basePath` |
-| `apps/kp2` | `kharis.org/kp2` | Path prefix via `basePath: "/kp2"` |
+| App            | Host                 | How it is mounted                                        |
+| -------------- | -------------------- | -------------------------------------------------------- |
+| `apps/main`    | `kharis.org`         | Apex domain, no `basePath`                               |
+| `apps/kp2`     | `kharis.org/kp2`     | Path prefix via `basePath: "/kp2"`                       |
 | `apps/content` | `content.kharis.org` | Subdomain. No `basePath` — the hostname is the whole app |
 
 ## Run

@@ -2,12 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useSyncExternalStore } from "react";
-import {
-  getSiteTheme,
-  subscribeSiteTheme,
-  toggleSiteTheme,
-  type SiteTheme,
-} from "@/lib/theme";
+import { getSiteTheme, subscribeSiteTheme, toggleSiteTheme, type SiteTheme } from "@/lib/theme";
 
 type Props = {
   onDark?: boolean;
@@ -15,11 +10,7 @@ type Props = {
 };
 
 export function ThemeToggle({ onDark = false, className = "" }: Props) {
-  const theme = useSyncExternalStore(
-    subscribeSiteTheme,
-    getSiteTheme,
-    () => "light" as SiteTheme,
-  );
+  const theme = useSyncExternalStore(subscribeSiteTheme, getSiteTheme, () => "light" as SiteTheme);
   const isDark = theme === "dark";
 
   return (
