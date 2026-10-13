@@ -134,8 +134,13 @@ jobs:
         working-directory: .
       - name: Lint
         run: npx eslint
+      # Webpack build, NOT --turbopack: this is the engine the Cloudflare deploy
+      # runs through opennextjs-cloudflare, and Turbopack production builds
+      # intermittently fail to resolve next/font/google in CI (the internal
+      # "@vercel/turbopack-next/internal/font/google/font" module). Both engines
+      # build cleanly locally; the gate should match what actually ships.
       - name: Build
-        run: npx next build --turbopack
+        run: npx next build
       - name: Typecheck ratchet
         shell: bash
         run: |
