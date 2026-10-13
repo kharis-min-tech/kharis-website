@@ -33,7 +33,7 @@ export function LocationsClient({ items: branches, full }: Props) {
       <SiteHeader tone="light" />
 
       <section className="relative overflow-hidden px-5 pt-16 pb-14 md:px-8">
-        <div className="pointer-events-none absolute -top-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#800654]/20 blur-3xl" />
+        <div className="pointer-events-none absolute -top-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#630ed4]/20 blur-3xl" />
         <div className="relative z-10 mx-auto max-w-[1536px] space-y-6 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-1.5 text-xs font-bold text-[var(--purple)]">
             <Compass className="h-4 w-4 text-[#d4920a]" />
@@ -96,7 +96,7 @@ export function LocationsClient({ items: branches, full }: Props) {
                       />
                     ) : null}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <span className="absolute left-3 top-3 rounded-full bg-[#800654] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                    <span className="absolute left-3 top-3 rounded-full bg-[#630ed4] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
                       {branch.region}
                     </span>
                     <div className="absolute bottom-3 left-3 right-3 text-white">

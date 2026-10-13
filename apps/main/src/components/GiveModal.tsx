@@ -85,7 +85,7 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
                   onClick={() => setFrequency("one-time")}
                   className={`py-2.5 text-xs font-extrabold rounded-xl transition-all ${
                     frequency === "one-time"
-                      ? "bg-[#800654] text-white shadow-md shadow-[#800654]/20"
+                      ? "bg-[#630ed4] text-white shadow-md shadow-[#630ed4]/20"
                       : "text-[#b2aec1] hover:text-[#f3f0f8]"
                   }`}
                 >
@@ -96,7 +96,7 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
                   onClick={() => setFrequency("recurring")}
                   className={`py-2.5 text-xs font-extrabold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
                     frequency === "recurring"
-                      ? "bg-[#800654] text-white shadow-md shadow-[#800654]/20"
+                      ? "bg-[#630ed4] text-white shadow-md shadow-[#630ed4]/20"
                       : "text-[#b2aec1] hover:text-[#f3f0f8]"
                   }`}
                 >
@@ -113,7 +113,7 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
                 <select
                   value={fund}
                   onChange={(e) => setFund(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#800654]"
+                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
                 >
                   {funds.map((f) => (
                     <option key={f} value={f} className="bg-[#1a1826] text-[#f3f0f8]">
@@ -154,7 +154,7 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="Custom amount"
-                    className="w-full pl-8 pr-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#800654]"
+                    className="w-full pl-8 pr-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
                   />
                 </div>
               </div>

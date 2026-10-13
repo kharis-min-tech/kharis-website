@@ -5,11 +5,30 @@ import { useEffect } from "react";
 /**
  * Refresh / restart always opens at the hero top.
  * (Hash links like #near-you from “Find a Branch” otherwise stick on reload.)
+ * A link straight to a section (e.g. /#messages from another page) still lands on that section.
  */
 export function ScrollToTopOnLoad() {
   useEffect(() => {
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
+    }
+
+    const [entry] = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
+    const section =
+      entry?.type === "navigate" && window.location.hash.length > 1
+        ? document.getElementById(decodeURIComponent(window.location.hash.slice(1)))
+        : null;
+    if (section) {
+      // The page shifts while the hero loads, so re-apply a few times; stop once the visitor scrolls.
+      let expected = -1;
+      const timers = [0, 250, 900, 1800].map((ms) =>
+        window.setTimeout(() => {
+          if (expected >= 0 && Math.abs(window.scrollY - expected) > 4) return;
+          section.scrollIntoView({ behavior: "auto", block: "start" });
+          expected = window.scrollY;
+        }, ms),
+      );
+      return () => timers.forEach((t) => window.clearTimeout(t));
     }
 
     const forceTop = () => {

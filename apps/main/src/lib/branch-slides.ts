@@ -8,7 +8,8 @@ export type BranchSlide = {
   accent: string;
 };
 
-const ACCENTS = ["#FD7F20", "#800654"] as const;
+/** Campaign yellow and white: both read over photography. */
+const ACCENTS = ["#ffde59", "#ffffff"] as const;
 
 /**
  * How Kharis Looks — character words with the original branch-carousel photos
@@ -19,7 +20,7 @@ export const CHARACTER_SLIDES: BranchSlide[] = [
     name: "joyful",
     title: "Joyful",
     subtitle: "Full of life, worship and praise",
-    image: "/images/branch-slide-1.jpg",
+    image: "/images/joyful-worship.jpg",
     accent: ACCENTS[0],
   },
   {
@@ -33,21 +34,21 @@ export const CHARACTER_SLIDES: BranchSlide[] = [
     name: "biblical",
     title: "Biblical",
     subtitle: "Grounded in the Word, shaped by truth",
-    image: "/images/branch-slide-3.jpg",
+    image: "/images/biblical-open-bible.jpg",
     accent: ACCENTS[0],
   },
   {
     name: "love",
     title: "Love",
     subtitle: "A caring family where people belong",
-    image: "/images/branch-slide-4.jpg",
+    image: "/images/love-greeting.jpg",
     accent: ACCENTS[1],
   },
   {
     name: "grace-filled",
     title: "Grace-filled",
     subtitle: "Changing the world with a touch of His grace",
-    image: "/images/branch-slide-5.jpg",
+    image: "/images/grace-filled-prayer.jpg",
     accent: ACCENTS[0],
   },
 ];

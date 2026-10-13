@@ -152,7 +152,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
               <button
                 type="submit"
                 disabled={busy}
-                className="inline-flex items-center gap-2 rounded-2xl bg-[#800654] px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-[#800654]/25 transition-all hover:-translate-y-0.5 hover:bg-[#5c033c] cursor-pointer disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-2xl bg-[#630ed4] px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-[#630ed4]/25 transition-all hover:-translate-y-0.5 hover:bg-[#2a035c] cursor-pointer disabled:opacity-60"
               >
                 {sent ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />}
                 <span>{busy ? "Sending…" : sent ? "Message Sent" : "Send Message"}</span>

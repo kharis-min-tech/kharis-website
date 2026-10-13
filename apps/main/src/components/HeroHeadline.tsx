@@ -8,21 +8,18 @@ const BRAND = "Kharis";
 const FULL_LENGTH = WELCOME.length + BRAND.length;
 const LEAD = "We are";
 
-/**
- * Each phrase gets its own entrance (styles live in hero-slider.css) and a brand
- * shade from the purple / pink / gold family, light enough to read on the dark wall.
- */
+/** Each phrase gets its own entrance (styles live in hero-slider.css). */
 const PHRASES = [
-  { text: "Jesus Believers", anim: "wipe", color: "#f6d27a" },
-  { text: "Christ Centric", anim: "fade-up", color: "#e58fc4" },
-  { text: "Biblical", anim: "tracking", color: "#f0b44c" },
-  { text: "Spirit Filled", anim: "words", color: "#b18cff" },
-  { text: "Revival Seeking", anim: "wipe", color: "#ff9f7a" },
-  { text: "Sound Believers", anim: "blur-in", color: "#ee8fd0" },
-  { text: "God\u2019s Elect", anim: "fade-up", color: "#e8a33d" },
-  { text: "Disciples", anim: "tracking", color: "#b98cff" },
-  { text: "Hungry for God", anim: "words", color: "#ffc98a" },
-  { text: "Jesus Lovers", anim: "blur-in", color: "#ff8fb1" },
+  { text: "Jesus Believers", anim: "wipe" },
+  { text: "Christ Centric", anim: "fade-up" },
+  { text: "Biblical", anim: "tracking" },
+  { text: "Spirit Filled", anim: "words" },
+  { text: "Revival Seeking", anim: "wipe" },
+  { text: "Sound Believers", anim: "blur-in" },
+  { text: "God\u2019s Elect", anim: "fade-up" },
+  { text: "Disciples", anim: "tracking" },
+  { text: "Hungry for God", anim: "words" },
+  { text: "Jesus Lovers", anim: "blur-in" },
 ] as const;
 
 const START_DELAY_MS = 500;
@@ -69,7 +66,9 @@ const LIVE_STYLE: CSSProperties = {
   zIndex: 1,
   textAlign: "left",
 };
-const BRAND_STYLE: CSSProperties = { color: "#650445", WebkitTextFillColor: "#650445" };
+/** Campaign yellow: "Kharis" in the welcome line and every "We are …" phrase. */
+const ACCENT = "#ffde59";
+const BRAND_STYLE: CSSProperties = { color: ACCENT, WebkitTextFillColor: ACCENT };
 
 export function HeroHeadline() {
   const [step, setStep] = useState(0);
@@ -156,12 +155,11 @@ export function HeroHeadline() {
         <span
           key={step}
           className={`hero-phrase hero-phrase--${phrase.anim}${out}${phrase.anim === "words" ? "" : " hero-3d"}`}
-          data-text={phrase.anim === "words" ? undefined : phrase.text}
           style={
             {
               animationDelay: `${LEAD_MS}ms`,
-              color: phrase.color,
-              "--c": phrase.color,
+              color: ACCENT,
+              "--c": ACCENT,
             } as CSSProperties
           }
         >
@@ -170,7 +168,6 @@ export function HeroHeadline() {
                 <span
                   key={word}
                   className="hero-phrase__word hero-3d"
-                  data-text={word}
                   style={{ animationDelay: `${LEAD_MS + i * 220}ms` }}
                 >
                   {word}

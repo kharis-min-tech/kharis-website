@@ -26,7 +26,7 @@ export function BrandLogo({ tone = "onLight", className = "", showWordmark = tru
             onDark ? "text-white" : "text-fg"
           }`}
         >
-          kharis
+          Kharis
         </span>
       )}
     </span>

@@ -270,8 +270,8 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         <svg className="msg-mist__svg" viewBox="0 0 1200 800" preserveAspectRatio="none">
           <defs>
             <radialGradient id="msgMistA" cx="30%" cy="20%" r="55%">
-              <stop offset="0%" stopColor="#800654" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#800654" stopOpacity="0" />
+              <stop offset="0%" stopColor="#630ed4" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#630ed4" stopOpacity="0" />
             </radialGradient>
             <radialGradient id="msgMistB" cx="80%" cy="60%" r="50%">
               <stop offset="0%" stopColor="#6b34fa" stopOpacity="0.22" />

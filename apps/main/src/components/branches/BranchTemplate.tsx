@@ -103,7 +103,7 @@ export function BranchTemplate({
   };
 
   return (
-    <div className="min-h-screen font-sans text-[var(--page-fg)] overflow-x-hidden pt-[4.5rem] selection:bg-[#800654] selection:text-white flex flex-col bg-[var(--page-bg)] text-white">
+    <div className="min-h-screen font-sans text-[var(--page-fg)] overflow-x-hidden pt-[4.5rem] selection:bg-[#630ed4] selection:text-white flex flex-col bg-[var(--page-bg)] text-white">
       <SiteHeader tone="light" />
 
       {/* Main Content Area */}
@@ -130,7 +130,7 @@ export function BranchTemplate({
               <div className="relative">
                 <button
                   onClick={() => setBranchDropdownOpen(!branchDropdownOpen)}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#800654] border border-[#800654] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#5c033c] cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#630ed4] border border-[#630ed4] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#2a035c] cursor-pointer"
                 >
                   <span>Switch branch</span>
                   <ChevronDown
@@ -159,7 +159,7 @@ export function BranchTemplate({
                           }}
                           className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs font-bold transition-colors cursor-pointer ${
                             b.slug === currentBranch.slug
-                              ? "bg-[#800654] text-white"
+                              ? "bg-[#630ed4] text-white"
                               : "text-gray-300 hover:bg-white/5 hover:text-white"
                           }`}
                         >
@@ -199,7 +199,7 @@ export function BranchTemplate({
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <button
                 onClick={() => setIsPlanVisitOpen(true)}
-                className="bg-[#800654] hover:bg-[#5c033c] text-white! font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-[#800654]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="bg-[#630ed4] hover:bg-[#2a035c] text-white! font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-[#630ed4]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Plan Your Visit</span>
                 <ArrowRight className="w-4 h-4" />
@@ -430,7 +430,7 @@ export function BranchTemplate({
             >
               {view.portrait ? (
                 <div className="md:col-span-5 relative">
-                  <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl bg-[#800654] text-white shadow-lg sm:flex">
+                  <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl bg-[#630ed4] text-white shadow-lg sm:flex">
                     <Sparkles className="h-6 w-6" />
                   </div>
                   <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
@@ -503,7 +503,7 @@ export function BranchTemplate({
               ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
-                <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#800654] text-white shadow-2xl transition-transform duration-300 group-hover:scale-110">
+                <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#630ed4] text-white shadow-2xl transition-transform duration-300 group-hover:scale-110">
                   <Play className="ml-1 h-8 w-8 fill-current" />
                 </span>
                 <span className="text-sm font-extrabold uppercase tracking-wider text-white">

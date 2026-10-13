@@ -279,8 +279,8 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
   return (
     <section className="relative px-5 md:px-8 pb-20 -mt-6">
       <div className="max-w-[1536px] mx-auto">
-        <div className="relative rounded-[2rem] overflow-hidden border border-[#3a1030] bg-[#12060f] shadow-2xl shadow-[#800654]/20">
-          <div className="absolute -top-32 -left-24 w-96 h-96 bg-[#800654]/25 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative rounded-[2rem] overflow-hidden border border-[#22103a] bg-[#0b0612] shadow-2xl shadow-[#630ed4]/20">
+          <div className="absolute -top-32 -left-24 w-96 h-96 bg-[#630ed4]/25 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-32 -right-24 w-96 h-96 bg-[#d4920a]/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-20 flex flex-col md:flex-row md:items-end justify-between gap-4 px-6 md:px-10 pt-8 pb-2">
@@ -317,7 +317,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                     <div className="fixed inset-0 z-20" onClick={() => setPickerOpen(false)} />
                     <ul
                       role="listbox"
-                      className="absolute z-30 mt-2 right-0 w-60 rounded-2xl border border-[#e8a33d]/25 bg-[#1a0b16]/98 backdrop-blur-md p-2 shadow-2xl"
+                      className="absolute z-30 mt-2 right-0 w-60 rounded-2xl border border-[#e8a33d]/25 bg-[#110b1a]/98 backdrop-blur-md p-2 shadow-2xl"
                     >
                       {VIEWS.map((v) => {
                         const count = source.filter((b) => {
@@ -346,7 +346,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                               }}
                               className={`w-full flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition-colors cursor-pointer ${
                                 v.id === viewId
-                                  ? "bg-[#e8a33d] text-[#1a0b16]"
+                                  ? "bg-[#e8a33d] text-[#110b1a]"
                                   : "text-white/80 hover:bg-white/10"
                               }`}
                             >
@@ -354,7 +354,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                                 {v.flag} {v.label}
                               </span>
                               <span
-                                className={v.id === viewId ? "text-[#1a0b16]/70" : "text-white/40"}
+                                className={v.id === viewId ? "text-[#110b1a]/70" : "text-white/40"}
                               >
                                 {count} {count === 1 ? "branch" : "branches"}
                               </span>
@@ -370,7 +370,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
               <button
                 onClick={locateMe}
                 disabled={locating}
-                className="inline-flex items-center gap-2 rounded-full bg-[#e8a33d] px-5 py-2.5 text-xs font-extrabold text-[#1a0b16] shadow-lg shadow-[#e8a33d]/25 hover:bg-[#f2b254] transition-colors disabled:opacity-60 cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full bg-[#e8a33d] px-5 py-2.5 text-xs font-extrabold text-[#110b1a] shadow-lg shadow-[#e8a33d]/25 hover:bg-[#f2b254] transition-colors disabled:opacity-60 cursor-pointer"
               >
                 {locating ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -389,7 +389,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                   {geoError}
                 </p>
               ) : nearestBranch ? (
-                <div className="flex flex-wrap items-center justify-between gap-3 bg-[#800654]/25 border border-[#e8a33d]/30 rounded-xl px-4 py-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 bg-[#630ed4]/25 border border-[#e8a33d]/30 rounded-xl px-4 py-3">
                   <p className="text-sm font-bold text-white flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-[#e8a33d]" />
                     Your nearest branch is{" "}
@@ -420,8 +420,8 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
             >
               <defs>
                 <linearGradient id="focusFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#8c1a63" stopOpacity="0.55" />
-                  <stop offset="100%" stopColor="#4a0b34" stopOpacity="0.45" />
+                  <stop offset="0%" stopColor="#4b1a8c" stopOpacity="0.55" />
+                  <stop offset="100%" stopColor="#260b4a" stopOpacity="0.45" />
                 </linearGradient>
                 <filter id="landGlow" x="-20%" y="-20%" width="140%" height="140%">
                   <feGaussianBlur stdDeviation="8" result="b" />
@@ -462,12 +462,12 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
 
               {/* world view: dotted landmass */}
               {dots.map((d, i) => (
-                <circle key={i} cx={d.x} cy={d.y} r={1.7} fill="#6b2c55" opacity={0.55} />
+                <circle key={i} cx={d.x} cy={d.y} r={1.7} fill="#472c6b" opacity={0.55} />
               ))}
 
               {/* neighbouring countries for context */}
               {paths.context.map((p) => (
-                <path key={p.key} d={p.d} fill="#2a0d22" stroke="#4b1a3c" strokeWidth={1} />
+                <path key={p.key} d={p.d} fill="#1a0d2a" stroke="#2f1a4b" strokeWidth={1} />
               ))}
 
               {/* focus country */}
@@ -516,7 +516,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                     <circle
                       r={r}
                       fill={active ? "#ffffff" : "#f2b254"}
-                      stroke="#12060f"
+                      stroke="#0b0612"
                       strokeWidth={1.4}
                       style={{ transition: "r 0.2s" }}
                     />
@@ -528,7 +528,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                         fontSize={13}
                         fontWeight={800}
                         style={{ pointerEvents: "none", paintOrder: "stroke" }}
-                        stroke="#12060f"
+                        stroke="#0b0612"
                         strokeWidth={3.5}
                       >
                         {b.city}
@@ -565,7 +565,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                       width={122}
                       height={26}
                       rx={13}
-                      fill={active ? "#e8a33d" : "#1a0b16"}
+                      fill={active ? "#e8a33d" : "#110b1a"}
                       fillOpacity={active ? 1 : 0.72}
                       stroke={active ? "#e8a33d" : "#e8a33d"}
                       strokeOpacity={active ? 1 : 0.2}
@@ -574,7 +574,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                       x={isLeft ? anchorX : b.railX + 16}
                       y={b.slotY + 5}
                       textAnchor={isLeft ? "end" : "start"}
-                      fill={active ? "#1a0b16" : "#ffffff"}
+                      fill={active ? "#110b1a" : "#ffffff"}
                       fontSize={14}
                       fontWeight={800}
                     >
@@ -586,7 +586,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
             </svg>
 
             {hoveredBranch && (
-              <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-10 bg-[#1a0b16]/95 backdrop-blur-md border border-[#e8a33d]/30 rounded-2xl px-5 py-4 shadow-2xl min-w-[220px]">
+              <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-10 bg-[#110b1a]/95 backdrop-blur-md border border-[#e8a33d]/30 rounded-2xl px-5 py-4 shadow-2xl min-w-[220px]">
                 <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#e8a33d]">
                   {hoveredBranch.region}
                 </p>
@@ -607,7 +607,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
               <span className="w-2 h-2 rounded-full bg-[#f2b254]" /> Kharis branch
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#5c2a4d]" /> {branches.length} worldwide
+              <span className="w-2 h-2 rounded-full bg-[#402a5c]" /> {branches.length} worldwide
             </span>
           </div>
         </div>
