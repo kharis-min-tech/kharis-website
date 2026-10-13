@@ -255,15 +255,21 @@ export function Hero() {
       el.addEventListener("ended", onEnded);
     }
 
-    // Boot: slot A plays clip 0; slot B preloads clip 1
+    // Play the first clip immediately. Start the second only after the first is on screen.
     clipIndex.current = 0;
     activeSlot.current = 0;
     a.src = HERO_CLIPS[0]!.src;
     a.preload = "auto";
     a.load();
-    b.src = HERO_CLIPS[1]!.src;
-    b.preload = "auto";
-    b.load();
+    b.preload = "none";
+    const warmSecond = () => {
+      if (b.getAttribute("src")) return;
+      b.src = HERO_CLIPS[1]!.src;
+      b.preload = "auto";
+      b.load();
+    };
+    a.addEventListener("playing", warmSecond, { once: true });
+    const warmTimer = window.setTimeout(warmSecond, 4000);
     void tryPlay(a);
 
     const fallback = window.setTimeout(() => revealSite(), FALLBACK_REVEAL_MS);
@@ -283,6 +289,8 @@ export function Hero() {
       clearRotate();
       if (fadeTimer.current != null) window.clearTimeout(fadeTimer.current);
       window.clearTimeout(fallback);
+      window.clearTimeout(warmTimer);
+      a.removeEventListener("playing", warmSecond);
       document.documentElement.classList.remove("hero-ready");
     };
   }, [advance, clearRotate, markVisible, refs, revealSite, scheduleRotate, tryPlay]);
@@ -290,7 +298,6 @@ export function Hero() {
   const videoProps = {
     muted: true,
     playsInline: true,
-    preload: "auto" as const,
     controls: false,
     controlsList: "nodownload nofullscreen noremoteplayback noplaybackrate",
     disablePictureInPicture: true,
@@ -328,11 +335,13 @@ export function Hero() {
           className={`hero-local-video hero-local-video--a${visible && active === 0 ? " is-active" : ""}${visible ? " is-ready" : ""}`}
           poster={HERO_POSTER}
           autoPlay
+          preload="auto"
           {...videoProps}
         />
         <video
           ref={bRef}
           className={`hero-local-video hero-local-video--b${visible && active === 1 ? " is-active" : ""}`}
+          preload="none"
           {...videoProps}
         />
       </div>

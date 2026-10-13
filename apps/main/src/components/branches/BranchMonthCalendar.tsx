@@ -7,6 +7,8 @@ import type { BranchData } from '@/data/branchesData';
 interface BranchMonthCalendarProps {
   branch: BranchData;
   onRsvp: (title: string) => void;
+  city?: string;
+  address?: string;
 }
 
 interface Entry {
@@ -42,7 +44,9 @@ function formatServiceTime(time?: string | null) {
   return `${displayHour}:${minute} ${ampm}`;
 }
 
-export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps) {
+export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMonthCalendarProps) {
+  const placeName = city || branch.city;
+  const placeAddress = address || branch.address;
   const [offset, setOffset] = useState(0);
 
   const viewDate = useMemo(() => {
@@ -62,7 +66,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
     const list: Entry[] = [];
 
     (branch.services ?? []).forEach((service, si) => {
-      const target = serviceWeekday(service.day);
+      const target = serviceWeekday(service.day || "Sunday");
       for (let day = 1; day <= daysInMonth; day += 1) {
         const date = new Date(year, month, day);
         if (date.getDay() !== target) continue;
@@ -73,7 +77,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
           title: service.name,
           time: `${formatServiceTime(service.start_time)}`,
           description: service.description,
-          location: branch.address,
+          location: placeAddress,
           category: 'Gathering',
         });
       }
@@ -92,7 +96,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
           title: branch.midweek.name,
           time: `${branch.midweek.time} ${branch.midweek.ampm}`,
           description: branch.midweek.description ?? '',
-          location: branch.address,
+          location: placeAddress,
           category: 'Midweek',
         });
       }
@@ -117,7 +121,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
     });
 
     return list.sort((a, b) => a.day - b.day);
-  }, [branch, viewDate]);
+  }, [branch, viewDate, placeAddress]);
 
   return (
     <section id="events" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
@@ -126,7 +130,7 @@ export function BranchMonthCalendar({ branch, onRsvp }: BranchMonthCalendarProps
           <span>What&apos;s Happening</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-          What&apos;s Happening In {branch.city}
+          What&apos;s Happening In {placeName}
         </h2>
       </div>
 

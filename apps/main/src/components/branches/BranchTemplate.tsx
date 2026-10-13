@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { BranchData } from "@/lib/branches";
-import { DEFAULT_GALLERY_IMAGES } from "@/data/branchesData";
+import { presentBranch } from "@/lib/branch-display";
 import PlanVisitModal from "@/components/PlanVisitModal";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -59,6 +59,7 @@ export function BranchTemplate({
 }: BranchTemplateProps) {
   const router = useRouter();
   const currentBranch = branchData;
+  const view = presentBranch(currentBranch);
 
   const sundayServices = (currentBranch.services ?? [])
     .filter(
@@ -74,44 +75,18 @@ export function BranchTemplate({
     )
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
-  const welcomeParagraphs: string[] = currentBranch.welcomeParagraphs?.length
-    ? currentBranch.welcomeParagraphs
-    : [
-        `I serve as the ${currentBranch.pastor_role.toLowerCase().includes("pastor") ? "pastor" : "lead"} of ${currentBranch.name}, part of the Kharis Church family. ${currentBranch.description}`,
-        `${currentBranch.tagline} We love teaching the Word of God, and we long to see believers established in their faith and our city strengthened.`,
-        `Whether you are visiting ${currentBranch.city} for a season or looking for a church to call home, there is a place for you here.`,
-      ];
-
-  const galleryImages: string[] = currentBranch.galleryImages?.length
-    ? currentBranch.galleryImages
-    : DEFAULT_GALLERY_IMAGES;
+  const galleryImages = view.gallery;
 
   const [zoomLevel, setZoomLevel] = useState(15);
 
-  const mainSundayService = sundayServices[0];
-
-  const mainVenue =
-    currentBranch.venues.find(
-      (venue) => venue.id === mainSundayService?.venue_id,
-    ) ?? currentBranch.venues[0];
-
-  const lat = mainVenue?.latitude ?? 51.4543;
-  const lng = mainVenue?.longitude ?? -0.9781;
-
-  const city = mainVenue?.city ?? currentBranch.name.replace(/ Branch$/i, "");
-
-  const fullAddress = [
-    mainVenue?.name,
-    mainVenue?.address_line1,
-    mainVenue?.address_line2,
-    mainVenue?.city,
-    mainVenue?.postcode,
-  ]
-    .filter(Boolean)
-    .join(", "); // OpenStreetMap embed: bbox size derived from the zoom level.
+  const lat = view.lat;
+  const lng = view.lng;
   const span = (360 / Math.pow(2, zoomLevel)) * 4;
   const latSpan = span * 0.6;
-  const mapEmbedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${(lng - span).toFixed(5)}%2C${(lat - latSpan).toFixed(5)}%2C${(lng + span).toFixed(5)}%2C${(lat + latSpan).toFixed(5)}&layer=mapnik&marker=${lat}%2C${lng}`;
+  const mapEmbedSrc =
+    lat != null && lng != null
+      ? `https://www.openstreetmap.org/export/embed.html?bbox=${(lng - span).toFixed(5)}%2C${(lat - latSpan).toFixed(5)}%2C${(lng + span).toFixed(5)}%2C${(lat + latSpan).toFixed(5)}&layer=mapnik&marker=${lat}%2C${lng}`
+      : "";
 
   const [isPlanVisitOpen, setIsPlanVisitOpen] = useState(false);
   const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(
@@ -143,14 +118,15 @@ export function BranchTemplate({
       <main className="w-full">
         {/* HERO SECTION */}
         <section className="branch-hero relative w-full min-h-[65vh] flex items-center justify-center pt-10 pb-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-          <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10">
-            <div
-              className="absolute inset-0 bg-cover bg-center opacity-90 scale-105 transform hover:scale-100 transition-transform duration-1000"
-              style={{
-                backgroundImage: `url('${currentBranch.hero_image_url}')`,
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+          <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10 bg-black">
+            {view.hero ? (
+              <img
+                src={view.hero}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : null}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
           </div>
 
           <div className="relative z-10 flex flex-col items-center text-center max-w-4xl pt-16 text-white">
@@ -158,7 +134,7 @@ export function BranchTemplate({
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
                 <MapPin className="w-4 h-4 text-[#d4920a]" />
                 <span className="font-semibold text-xs text-white uppercase tracking-wider">
-                  Kharis Church UK • {currentBranch.city} Branch
+                  Kharis Church UK • {view.city} Branch
                 </span>
               </div>
 
@@ -231,7 +207,7 @@ export function BranchTemplate({
             </h1>
 
             <p className="text-base sm:text-lg md:text-xl font-medium text-gray-300 max-w-2xl mb-10 leading-relaxed">
-              {currentBranch.description}
+              {view.description}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -296,6 +272,21 @@ export function BranchTemplate({
                   </div>
 
                   <div className="space-y-4">
+                    {sundayServices.length === 0 ? (
+                      <div className="flex items-start gap-4 p-4 rounded-2xl bg-black/30 border border-white/10">
+                        <div className="flex-shrink-0 w-20 text-center">
+                          <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
+                            TBC
+                          </span>
+                        </div>
+                        <div className="flex-grow pt-0.5">
+                          <h4 className="text-sm font-bold text-white! mb-1">Sunday gathering</h4>
+                          <p className="text-xs font-medium text-gray-300 leading-relaxed">
+                            Service time will be confirmed soon.
+                          </p>
+                        </div>
+                      </div>
+                    ) : null}
                     {sundayServices.map((service, index) => (
                       <div
                         key={index}
@@ -314,7 +305,7 @@ export function BranchTemplate({
                             {service.name}
                           </h4>
                           <p className="text-xs font-medium text-gray-300 leading-relaxed">
-                            {service.description}
+                            {service.description || "Details will be added soon."}
                           </p>
                         </div>
 
@@ -322,32 +313,49 @@ export function BranchTemplate({
                       </div>
                     ))}
 
-                    {currentBranch.midweek && (
-                      <div
-                        onClick={() => setIsPlanVisitOpen(true)}
-                        className="flex items-start gap-4 p-4 rounded-2xl bg-black/30 border border-[#e8a33d]/30 hover:bg-white/5 transition-colors group cursor-pointer relative overflow-hidden"
-                      >
+                    {midweekServices.length === 0 ? (
+                      <div className="flex items-start gap-4 p-4 rounded-2xl bg-black/30 border border-[#e8a33d]/30">
                         <div className="flex-shrink-0 w-20 text-center">
                           <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
-                            {currentBranch.midweek.time}
-                          </span>
-                          <span className="text-[10px] font-extrabold text-gray-300 uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded-full">
-                            {currentBranch.midweek.ampm}
+                            TBC
                           </span>
                         </div>
                         <div className="flex-grow pt-0.5">
                           <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[#e8a33d] mb-1">
-                            {currentBranch.midweek.day} · Midweek
+                            Midweek
                           </span>
-                          <h4 className="text-sm font-bold text-white mb-1 group-hover:text-[#e8a33d] transition-colors">
-                            {currentBranch.midweek.name}
-                          </h4>
+                          <h4 className="text-sm font-bold text-white mb-1">Midweek gathering</h4>
                           <p className="text-xs font-medium text-gray-300 leading-relaxed">
-                            {currentBranch.midweek.description}
+                            Midweek details will be added soon.
                           </p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors pt-1" />
                       </div>
+                    ) : (
+                      midweekServices.map((service) => (
+                        <div
+                          key={service.id}
+                          onClick={() => setIsPlanVisitOpen(true)}
+                          className="flex items-start gap-4 p-4 rounded-2xl bg-black/30 border border-[#e8a33d]/30 hover:bg-white/5 transition-colors group cursor-pointer relative overflow-hidden"
+                        >
+                          <div className="flex-shrink-0 w-20 text-center">
+                            <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
+                              {formatServiceTime(service.start_time) || "TBC"}
+                            </span>
+                          </div>
+                          <div className="flex-grow pt-0.5">
+                            <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[#e8a33d] mb-1">
+                              {service.day || "Midweek"} · Midweek
+                            </span>
+                            <h4 className="text-sm font-bold text-white mb-1 group-hover:text-[#e8a33d] transition-colors">
+                              {service.name || "Midweek gathering"}
+                            </h4>
+                            <p className="text-xs font-medium text-gray-300 leading-relaxed">
+                              {service.description || "Details will be added soon."}
+                            </p>
+                          </div>
+                          <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors pt-1" />
+                        </div>
+                      ))
                     )}
                   </div>
                 </div>
@@ -375,13 +383,19 @@ export function BranchTemplate({
             <div className="lg:col-span-7 flex flex-col gap-6">
               <div className="bg-[#15131f] rounded-3xl p-3 border border-white/10 shadow-sm h-[500px] relative overflow-hidden group">
                 <div className="absolute inset-3 rounded-2xl overflow-hidden">
-                  <iframe
-                    title={`Map of ${currentBranch.name}`}
-                    src={mapEmbedSrc}
-                    className="h-full w-full border-0"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
+                  {mapEmbedSrc ? (
+                    <iframe
+                      title={`Map of ${currentBranch.name}`}
+                      src={mapEmbedSrc}
+                      className="h-full w-full border-0"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  ) : view.hero ? (
+                    <img src={view.hero} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="h-full w-full bg-black" />
+                  )}
                 </div>
 
                 <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
@@ -390,19 +404,22 @@ export function BranchTemplate({
                       {currentBranch.name}
                     </h4>
                     <p className="font-medium text-xs text-gray-300 mb-3 leading-snug">
-                      {currentBranch.fullAddress}
+                      {view.address}
                     </p>
-                    <a
-                      href={`https://maps.google.com/?q=${encodeURIComponent(currentBranch.fullAddress)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[#e8a33d] text-xs font-bold hover:underline"
-                    >
-                      <Navigation className="w-3.5 h-3.5" />
-                      <span>Get Directions</span>
-                    </a>
+                    {view.hasAddress ? (
+                      <a
+                        href={`https://maps.google.com/?q=${encodeURIComponent(view.address)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-[#e8a33d] text-xs font-bold hover:underline"
+                      >
+                        <Navigation className="w-3.5 h-3.5" />
+                        <span>Get Directions</span>
+                      </a>
+                    ) : null}
                   </div>
 
+                  {mapEmbedSrc ? (
                   <div className="flex flex-col gap-2 pointer-events-auto">
                     <button
                       onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
@@ -419,6 +436,7 @@ export function BranchTemplate({
                       <Minus className="w-5 h-5" />
                     </button>
                   </div>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -431,29 +449,31 @@ export function BranchTemplate({
           className="py-16 bg-[#15131f] border-y border-white/10"
         >
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-center">
+            <div className={`grid grid-cols-1 gap-10 lg:gap-14 items-center ${view.portrait ? "md:grid-cols-12" : ""}`}>
+              {view.portrait ? (
               <div className="md:col-span-5 relative">
                 <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl bg-[#800654] text-white shadow-lg sm:flex">
                   <Sparkles className="h-6 w-6" />
                 </div>
-                <div className="aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
+                <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
                   <img
-                    src={currentBranch.pastor_image_url}
-                    alt={currentBranch.pastor_name}
+                    src={view.portrait}
+                    alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
                     className="h-full w-full object-cover"
                   />
                 </div>
                 <div className="absolute -bottom-4 -right-4 rounded-2xl border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
                   <p className="text-xs font-extrabold uppercase tracking-wider text-[#e8a33d]">
-                    {currentBranch.pastor_role}
+                    {view.pastorRole}
                   </p>
                   <p className="text-sm font-bold text-white">
-                    {currentBranch.pastor_name}
+                    {view.pastorName}
                   </p>
                 </div>
               </div>
+              ) : null}
 
-              <div className="md:col-span-7 space-y-5">
+              <div className={`${view.portrait ? "md:col-span-7" : ""} space-y-5`}>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-white!">
                   Welcome to{" "}
                   <span className="bg-gradient-to-r from-[#e8a33d] to-[#d4920a] bg-clip-text text-transparent">
@@ -462,11 +482,11 @@ export function BranchTemplate({
                 </h2>
 
                 <p className="text-sm font-bold uppercase tracking-wider text-[#e8a33d]">
-                  {currentBranch.pastor_role} {currentBranch.pastor_name}
+                  {view.pastorRole} {view.pastorKnown ? `· ${view.pastorName}` : ""}
                 </p>
 
                 <div className="space-y-4">
-                  {welcomeParagraphs.map((para, i) => (
+                  {view.welcome.map((para, i) => (
                     <p
                       key={i}
                       className="text-base font-medium leading-relaxed text-gray-300"
@@ -477,7 +497,7 @@ export function BranchTemplate({
                 </div>
 
                 <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-white">
-                  &ldquo;{currentBranch.pastor_bio}&rdquo;
+                  &ldquo;{view.quote}&rdquo;
                 </blockquote>
               </div>
             </div>
@@ -504,20 +524,20 @@ export function BranchTemplate({
               onClick={() => setMediaModal({ type: "video" })}
               className="group relative block aspect-video w-full cursor-pointer text-left"
             >
+              {view.hero ? (
               <img
-                src={currentBranch.heroImage}
-                alt={`Kharis ${currentBranch.city} worship`}
-                className="h-full w-full object-cover opacity-70 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
+                src={view.hero}
+                alt={`Kharis ${view.city} worship`}
+                className="absolute inset-0 h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
               />
+              ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
                 <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#800654] text-white shadow-2xl transition-transform duration-300 group-hover:scale-110">
                   <Play className="ml-1 h-8 w-8 fill-current" />
                 </span>
                 <span className="text-sm font-extrabold uppercase tracking-wider text-white">
-                  {currentBranch.videoId
-                    ? "Watch Latest Message"
-                    : "Watch on YouTube"}
+                  Watch on YouTube
                 </span>
               </div>
             </button>
@@ -527,13 +547,15 @@ export function BranchTemplate({
         {/* GALLERY */}
         <BranchGallery
           images={galleryImages}
-          city={currentBranch.city}
+          city={view.city}
           onImageClick={(src) => setMediaModal({ type: "image", src })}
         />
 
         {/* MONTHLY EVENTS CALENDAR */}
         <BranchMonthCalendar
           branch={currentBranch}
+          city={view.city}
+          address={view.address}
           onRsvp={(title) => {
             setSelectedEventRsvp(title);
             setIsPlanVisitOpen(true);
@@ -541,7 +563,9 @@ export function BranchTemplate({
         />
 
         {/* CONTACT BRANCH */}
-        <BranchContactForm branch={currentBranch} />
+        <BranchContactForm
+          branch={{ name: currentBranch.name, city: view.city, fullAddress: view.address }}
+        />
 
         {/* TRANSIT & PARKING INFO SECTION */}
         <section className="py-16 bg-[#15131f] border-t border-white/10">
@@ -555,7 +579,7 @@ export function BranchTemplate({
                   Parking Information
                 </h3>
                 <p className="text-sm text-gray-300 font-medium leading-relaxed">
-                  {currentBranch.parkingInfo}
+                  {view.parking}
                 </p>
               </div>
 
@@ -565,7 +589,7 @@ export function BranchTemplate({
                 </div>
                 <h3 className="text-xl font-bold text-white!">Public Transit</h3>
                 <p className="text-sm text-gray-300 font-medium leading-relaxed">
-                  {currentBranch.transitInfo}
+                  {view.transit}
                 </p>
               </div>
             </div>
@@ -584,15 +608,14 @@ export function BranchTemplate({
           setSelectedEventRsvp(null);
         }}
         branchName={currentBranch.name}
-        branchCity={currentBranch.city}
+        branchCity={view.city}
         eventLabel={selectedEventRsvp}
       />
 
       <BranchMediaModal
         type={mediaModal?.type ?? null}
         imageSrc={mediaModal?.src}
-        videoId={currentBranch.videoId}
-        city={currentBranch.city}
+        city={view.city}
         onClose={() => setMediaModal(null)}
       />
     </div>

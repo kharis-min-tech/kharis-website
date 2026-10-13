@@ -56,7 +56,7 @@ export async function generateMetadata({
   const description =
     branch.short_description ??
     branch.description ??
-    `Visit Kharis Church ${location}.`;
+    `Visit Kharis Church ${branchLocation}.`;
 
   return {
     title,

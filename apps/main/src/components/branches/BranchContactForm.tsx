@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 import { MapPin, Send, Check } from "lucide-react";
-import type { BranchData } from "@/data/branchesData";
-
 interface BranchContactFormProps {
-  branch: BranchData;
+  branch: {
+    name: string;
+    city: string;
+    fullAddress: string;
+  };
 }
 
 export function BranchContactForm({ branch }: BranchContactFormProps) {

@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { serverFetch } from "@/lib/server-fetch";
 
 // createClient throws if the URL is empty, and because this module is imported
 // at the top level of server components it threw during `next build`'s
@@ -14,7 +15,6 @@ const supabaseUrl =
 const supabaseKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "placeholder-key";
 
-export const supabase = createClient(
-  supabaseUrl,
-  supabaseKey
-);
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  global: { fetch: serverFetch },
+});

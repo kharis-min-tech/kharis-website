@@ -26,6 +26,9 @@ export const viewport = {
   colorScheme: "light" as const,
 };
 
+/** Public pages can be a minute old. Repeat visits skip a fresh database round trip. */
+export const revalidate = 60;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,6 +38,7 @@ export default function RootLayout({
     <html lang="en" className={sans.variable} suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light" />
+        <link rel="preconnect" href="https://cqgyiqxhpxwasogpdghx.supabase.co" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('kharis-site-theme');var d=t==='dark'?'dark':'light';document.documentElement.dataset.theme=d;document.documentElement.style.colorScheme=d;}catch(e){document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light';}})();`,

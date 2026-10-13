@@ -33,6 +33,7 @@ export type Branch = {
   description: string;
   tags: string[];
   image: string;
+  gallery: string[];
   givingLink: string | null;
   parkingInfo: string;
   transitInfo: string;
@@ -87,6 +88,21 @@ type BranchRow = {
   services: ServiceRow[] | null;
 };
 
+function placeholderDescription(city: string) {
+  return `A thriving congregation serving ${city}. Experience uplifting worship, relevant biblical teaching, and deep kingdom connections.`;
+}
+
+const CAMPUS_NAMES = ["london", "birmingham", "manchester", "barking", "peterborough", "romford"];
+
+function ownBlurb(stored: string, city: string) {
+  const text = stored.trim();
+  if (!text) return placeholderDescription(city);
+  const here = city.toLowerCase();
+  const namesAnotherCampus = CAMPUS_NAMES.some(
+    (name) => text.toLowerCase().includes(name) && !here.includes(name),
+  );
+  return namesAnotherCampus ? placeholderDescription(city) : text;
+}
 const FALLBACK_IMAGE = "/kp2/assets/branch-slide-1.jpg";
 const LOCAL_SLIDES = [
   "/kp2/assets/branch-slide-1.jpg",
@@ -117,6 +133,13 @@ function cityFromName(name: string) {
     .trim();
 }
 
+/** Branch photos are remote files from Cloudflare. Local page assets are not branch photos. */
+function remoteImage(url: string | null | undefined) {
+  const value = url?.trim() ?? "";
+  if (!/^https?:\/\//i.test(value) || /instagram\.com/i.test(value)) return "";
+  return value;
+}
+
 function fallbackImageFor(slug: string) {
   const index =
     Math.abs([...slug].reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % LOCAL_SLIDES.length;
@@ -136,7 +159,7 @@ function roleLabel(role?: string | null): string {
 
 function pastorDisplay(name?: string | null, role?: string | null) {
   const label = roleLabel(role);
-  if (!name?.trim()) return { pastor: "The KP2 Team", pastorRole: label };
+  if (!name?.trim()) return { pastor: "Coming soon", pastorRole: "Pastor" };
   const alreadyTitled = name.toLowerCase().startsWith(label.toLowerCase());
   return { pastor: name.trim(), pastorRole: alreadyTitled ? "" : label };
 }
@@ -219,7 +242,7 @@ function pickMainVenue(
   };
 }
 
-function toBranch(row: BranchRow): Branch {
+function toBranch(row: BranchRow, gallery: string[]): Branch {
   const venues = row.venues ?? [];
   const services = [...(row.services ?? [])]
     .filter((s) => s.is_active !== false)
@@ -257,7 +280,7 @@ function toBranch(row: BranchRow): Branch {
     day: s.day || "Sunday",
     time: formatTime(s.start_time) || "TBC",
     label: s.name || s.description || s.type || "Gathering",
-    description: s.description || "",
+    description: s.description || "Details will be added soon.",
     type: s.type || "",
   }));
 
@@ -267,8 +290,7 @@ function toBranch(row: BranchRow): Branch {
     label: s.label,
   }));
 
-  const blurb =
-    row.short_description || row.description || `${row.name} — a Kharis Phase 2 branch.`;
+  const blurb = ownBlurb(row.short_description || row.description || "", String(city));
 
   return {
     slug: row.slug,
@@ -285,8 +307,10 @@ function toBranch(row: BranchRow): Branch {
     services: mappedServices,
     pastor,
     pastorRole,
-    pastorImage: row.pastor_image_url || FALLBACK_PASTOR,
-    pastorBio: row.pastor_bio || `Welcome to ${row.name}.`,
+    pastorImage: remoteImage(row.pastor_image_url),
+    pastorBio:
+      row.pastor_bio ||
+      `We exist to build a home of faith, hope, and love for every soul in ${city}.`,
     phone: row.contact_phone || "",
     email: row.contact_email || "",
     instagram: row.instagram || "",
@@ -295,7 +319,8 @@ function toBranch(row: BranchRow): Branch {
     tags: ["Phase 2"].concat(
       addressMatchesCity && mainVenue?.city ? [mainVenue.city] : city ? [city] : [],
     ),
-    image: resolveBranchImage(row.hero_image_url, row.slug),
+    image: remoteImage(row.hero_image_url) || gallery[0] || "",
+    gallery,
     givingLink: row.giving_link,
     parkingInfo: mainVenue?.parking_info || DEFAULT_PARKING,
     transitInfo: mainVenue?.public_transport_info || DEFAULT_TRANSIT,
@@ -306,12 +331,38 @@ export function hasCoords(branch: { lat: number; lng: number }) {
   return Number.isFinite(branch.lat) && Number.isFinite(branch.lng) && (branch.lat !== 0 || branch.lng !== 0);
 }
 
-export async function listBranches(): Promise<Branch[]> {
-  const rows = await supabaseSelect<BranchRow>(
-    "branches",
-    "select=*,venues(*),services(*)&is_active=eq.true&order=sort_order.asc",
+type GalleryRow = {
+  branch_id: string | null;
+  owner_id: string | null;
+  url: string | null;
+};
+
+async function galleriesByBranch() {
+  const rows = await supabaseSelect<GalleryRow>(
+    "media",
+    "select=branch_id,owner_id,url,sort_order&owner_type=eq.branch-gallery&order=sort_order.asc",
   );
-  return rows.filter(isKp2Location).map(toBranch);
+  const map = new Map<string, string[]>();
+  for (const row of rows) {
+    const id = row.branch_id || row.owner_id;
+    const url = remoteImage(row.url);
+    if (!id || !url) continue;
+    const list = map.get(id) ?? [];
+    list.push(url);
+    map.set(id, list);
+  }
+  return map;
+}
+
+export async function listBranches(): Promise<Branch[]> {
+  const [rows, galleries] = await Promise.all([
+    supabaseSelect<BranchRow>(
+      "branches",
+      "select=*,venues(*),services(*)&is_active=eq.true&order=sort_order.asc",
+    ),
+    galleriesByBranch(),
+  ]);
+  return rows.filter(isKp2Location).map((row) => toBranch(row, galleries.get(row.id) ?? []));
 }
 
 export async function getBranch(slug: string): Promise<Branch | null> {
@@ -321,7 +372,8 @@ export async function getBranch(slug: string): Promise<Branch | null> {
   );
   const row = rows[0];
   if (!row || !isKp2Location(row)) return null;
-  return toBranch(row);
+  const galleries = await galleriesByBranch();
+  return toBranch(row, galleries.get(row.id) ?? []);
 }
 
 export async function listBranchSlugs(): Promise<string[]> {

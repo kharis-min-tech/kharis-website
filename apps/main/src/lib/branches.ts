@@ -1,3 +1,4 @@
+import { placeholderDescription, remoteImage } from "@/lib/branch-display";
 import { supabase } from "@/lib/supabase";
 
 
@@ -82,6 +83,7 @@ export interface BranchData {
 
   venues: Venue[];
   services: Service[];
+  gallery: string[];
 }
 
 
@@ -136,21 +138,52 @@ function formatTime(time?: string | null): string {
   return `${hour}:${minute} ${ampm}`;
 }
 
+type GalleryRow = {
+  branch_id: string | null;
+  owner_id: string | null;
+  url: string | null;
+};
+
+async function galleriesByBranch() {
+  const map = new Map<string, string[]>();
+  const { data, error } = await supabase
+    .from("media")
+    .select("branch_id,owner_id,url,sort_order")
+    .eq("owner_type", "branch-gallery")
+    .order("sort_order", { ascending: true });
+
+  if (error || !data) return map;
+
+  for (const row of data as GalleryRow[]) {
+    const id = row.branch_id || row.owner_id;
+    const url = remoteImage(row.url);
+    if (!id || !url) continue;
+    const list = map.get(id) ?? [];
+    list.push(url);
+    map.set(id, list);
+  }
+
+  return map;
+}
+
 
 // ======================================================
 // GET ALL BRANCH DATA FROM SUPABASE
 // ======================================================
 
 export async function listBranchData(): Promise<BranchData[]> {
-  const { data, error } = await supabase
-    .from("branches")
-    .select(`
+  const [{ data, error }, galleries] = await Promise.all([
+    supabase
+      .from("branches")
+      .select(`
       *,
       venues (*),
       services (*)
     `)
-    .eq("is_active", true)
-    .order("sort_order", { ascending: true });
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true }),
+    galleriesByBranch(),
+  ]);
 
 
   if (error) {
@@ -173,6 +206,8 @@ export async function listBranchData(): Promise<BranchData[]> {
       (a, b) =>
         (a.sort_order ?? 0) - (b.sort_order ?? 0)
     ),
+
+    gallery: galleries.get(branch.id) ?? [],
   }));
 
 
@@ -334,9 +369,7 @@ export function toBranchItem(
       mainVenue?.country ??
       "United Kingdom",
 
-    heroImage:
-      branch.hero_image_url ??
-      "/images/branch-slide-1.jpg",
+    heroImage: remoteImage(branch.hero_image_url) || branch.gallery[0] || "",
 
     postcode:
       mainVenue?.postcode ?? "",
@@ -346,7 +379,9 @@ export function toBranchItem(
     description:
       branch.short_description ??
       branch.description ??
-      "",
+      placeholderDescription(
+        mainVenue?.city ?? branch.name.replace(/ Branch$/i, ""),
+      ),
 
     serviceSummary,
 
@@ -388,16 +423,19 @@ export async function getBranchBySlug(
   slug: string
 ): Promise<BranchData | null> {
 
-  const { data, error } = await supabase
-    .from("branches")
-    .select(`
+  const [{ data, error }, galleries] = await Promise.all([
+    supabase
+      .from("branches")
+      .select(`
       *,
       venues (*),
       services (*)
     `)
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .single();
+      .eq("slug", slug)
+      .eq("is_active", true)
+      .single(),
+    galleriesByBranch(),
+  ]);
 
 
   if (error) {
@@ -425,6 +463,8 @@ export async function getBranchBySlug(
         (a.sort_order ?? 0) -
         (b.sort_order ?? 0)
     ),
+
+    gallery: galleries.get(data.id) ?? [],
   } as BranchData;
 }
 
