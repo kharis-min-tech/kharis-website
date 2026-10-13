@@ -58,6 +58,8 @@
 
 .dark {
   color-scheme: dark;
+  --kp-glow: 0 0 0 1px rgba(210, 187, 255, 0.35), 0 0 22px rgba(157, 78, 255, 0.8);
+  --kp-glow-strong: 0 0 0 1px rgba(210, 187, 255, 0.55), 0 0 30px rgba(157, 78, 255, 0.95);
   --background: #121014;
   --error: #ffb4ab;
   --error-container: #93000a;
@@ -135,37 +137,29 @@
 
 .dark .neo-shadow,
 .dark .neo-brutal-shadow,
-.dark .hard-shadow-sm {
-  box-shadow: 4px 4px 0px 0px var(--on-surface);
-}
-.dark .neo-shadow-sm {
-  box-shadow: 2px 2px 0px 0px var(--on-surface);
-}
+.dark .hard-shadow-sm,
+.dark .neo-shadow-sm,
 .dark .neo-shadow-lg,
 .dark .neo-brutal-shadow-lg,
-.dark .brutalist-shadow-lg {
-  box-shadow: 8px 8px 0px 0px var(--on-surface);
-}
+.dark .brutalist-shadow-lg,
 .dark .brutalist-shadow,
 .dark .hard-shadow,
-.dark .neo-shadow-purple {
-  box-shadow: 6px 6px 0px 0px var(--on-surface);
+.dark .neo-shadow-purple,
+.dark .hard-shadow-primary,
+.dark .btn-neo,
+.dark .theme-toggle,
+.dark .active-neo-shadow,
+.dark [class*="shadow-[6px_6px_0_0_var(--on-surface)]"],
+.dark [class*="shadow-[4px_4px_0_0_var(--on-surface)]"] {
+  box-shadow: var(--kp-glow);
 }
-.dark .hard-shadow-primary {
-  box-shadow: 4px 4px 0px 0px var(--primary);
-}
-.dark .neo-shadow-hover:hover,
-.dark .neo-brutal-shadow:hover,
-.dark .btn-hover:hover,
-.dark .hover-press:hover,
-.dark .neo-button-hover:hover,
-.dark .brutalist-shadow-hover:hover,
-.dark .btn-press:active,
-.dark .active-press:active {
-  box-shadow: 2px 2px 0px 0px var(--on-surface);
-}
-.dark .hover-lift:hover {
-  box-shadow: 6px 6px 0px 0px var(--on-surface);
+.dark a.header-branch-cta.brutalist-shadow,
+.dark a.header-branch-cta.brutalist-shadow:hover,
+.dark a.header-branch-cta.brutalist-shadow:active,
+.dark .theme-toggle:hover,
+.dark .theme-toggle:active {
+  transform: none;
+  box-shadow: var(--kp-glow);
 }
 .dark .halftone {
   background-image: radial-gradient(#fff 10%, transparent 11%);
@@ -606,6 +600,65 @@ div.hard-shadow:hover {
   box-shadow: 2px 2px 0px 0px var(--on-background);
 }
 
+/* Dark mode replaces the light offset with a purple glow, including hover. */
+.dark .btn-neo:hover,
+.dark button.brutalist-shadow:hover,
+.dark a.brutalist-shadow:hover,
+.dark button.brutalist-shadow-lg:hover,
+.dark a.brutalist-shadow-lg:hover,
+.dark button.neo-shadow:hover,
+.dark a.neo-shadow:hover,
+.dark button.neo-shadow-sm:hover,
+.dark a.neo-shadow-sm:hover,
+.dark button.neo-shadow-lg:hover,
+.dark a.neo-shadow-lg:hover,
+.dark button.neo-shadow-purple:hover,
+.dark a.neo-shadow-purple:hover,
+.dark button.hard-shadow:hover,
+.dark a.hard-shadow:hover,
+.dark button.hard-shadow-sm:hover,
+.dark a.hard-shadow-sm:hover,
+.dark button.hard-shadow-primary:hover,
+.dark a.hard-shadow-primary:hover,
+.dark [role="button"].neo-shadow:hover,
+.dark [role="button"].brutalist-shadow:hover,
+.dark .btn-neo:active,
+.dark button.brutalist-shadow:active,
+.dark a.brutalist-shadow:active,
+.dark button.brutalist-shadow-lg:active,
+.dark a.brutalist-shadow-lg:active,
+.dark button.neo-shadow:active,
+.dark a.neo-shadow:active,
+.dark button.neo-shadow-sm:active,
+.dark a.neo-shadow-sm:active,
+.dark button.neo-shadow-lg:active,
+.dark a.neo-shadow-lg:active,
+.dark button.neo-shadow-purple:active,
+.dark a.neo-shadow-purple:active,
+.dark button.hard-shadow:active,
+.dark a.hard-shadow:active,
+.dark button.hard-shadow-sm:active,
+.dark a.hard-shadow-sm:active,
+.dark button.hard-shadow-primary:active,
+.dark a.hard-shadow-primary:active,
+.dark [role="button"].neo-shadow:active,
+.dark [role="button"].brutalist-shadow:active,
+.dark div.brutalist-shadow:hover,
+.dark div.neo-shadow:hover,
+.dark div.neo-shadow-lg:hover,
+.dark div.hard-shadow:hover,
+.dark .neo-shadow-hover:hover,
+.dark .neo-brutal-shadow:hover,
+.dark .btn-hover:hover,
+.dark .hover-press:hover,
+.dark .neo-button-hover:hover,
+.dark .brutalist-shadow-hover:hover,
+.dark .hover-lift:hover,
+.dark .btn-press:active,
+.dark .active-press:active,
+.dark .active-neo-shadow {
+  box-shadow: var(--kp-glow-strong);
+}
 /* Filled buttons flip to the accent colour on hover. */
 button.bg-primary:hover,
 a.bg-primary:hover:not(.no-accent-fill),

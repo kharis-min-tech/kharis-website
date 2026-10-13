@@ -46,8 +46,8 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
       <SiteHeader />
-      <main className="pt-20">
-        <section className="relative box-border h-[calc(100svh-5rem)] max-h-[calc(100svh-5rem)] flex items-center justify-center bg-black overflow-hidden px-margin-mobile md:px-margin-desktop py-8">
+      <main className="pt-[74px]">
+        <section className="relative box-border h-[calc(100svh-74px)] max-h-[calc(100svh-74px)] flex items-center justify-center bg-black overflow-hidden px-margin-mobile md:px-margin-desktop py-8">
           <div className="absolute inset-0 opacity-40">
             <div
               className="w-full h-full bg-cover bg-center"

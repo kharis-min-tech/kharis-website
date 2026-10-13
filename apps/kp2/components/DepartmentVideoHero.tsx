@@ -164,7 +164,7 @@ export function DepartmentVideoHero() {
                     aria-label={`Play ${dept.name} video`}
                     onClick={() => videoRef.current?.play()}
                     tabIndex={playing ? -1 : 0}
-                    className={`absolute inset-x-0 top-0 bottom-16 grid place-items-center bg-on-background/45 transition-opacity duration-300 ${
+                    className={`absolute inset-x-0 top-0 bottom-16 grid place-items-center bg-black/45 transition-opacity duration-300 ${
                       playing ? "pointer-events-none opacity-0" : "opacity-100"
                     }`}
                   >
@@ -184,7 +184,7 @@ export function DepartmentVideoHero() {
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-on-background/50 to-primary/30" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-black/50 to-primary/30" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
                     <span className="grid h-20 w-20 place-items-center rounded-none border-4 border-surface/40 text-surface/50">
                       <span className="material-symbols-outlined text-4xl" aria-hidden="true">

@@ -36,7 +36,13 @@ export function siteUrl() {
 export function absoluteUrl(path: string) {
   if (!path) return siteUrl();
   if (/^https?:\/\//i.test(path)) return path;
-  return `${siteUrl()}${path.startsWith("/") ? path : `/${path}`}`;
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const origin = siteUrl();
+  // NEXT_PUBLIC_SITE_URL already includes /kp2 (https://kharis.org/kp2).
+  if (origin.endsWith("/kp2") && (normalized === "/kp2" || normalized.startsWith("/kp2/"))) {
+    return `${origin}${normalized.slice("/kp2".length)}`;
+  }
+  return `${origin}${normalized}`;
 }
 
 export function pageMeta({
