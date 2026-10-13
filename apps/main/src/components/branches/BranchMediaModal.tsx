@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 import React, { useEffect } from "react";
 import { X, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

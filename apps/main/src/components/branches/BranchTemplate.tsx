@@ -1,6 +1,7 @@
 "use client";
+/* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   MapPin,
@@ -84,7 +85,6 @@ export function BranchTemplate({
 
   const [isPlanVisitOpen, setIsPlanVisitOpen] = useState(false);
   const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(null);
-  const [copiedLink, setCopiedLink] = useState(false);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
   const [mediaModal, setMediaModal] = useState<{
     type: "image" | "video";
@@ -95,12 +95,6 @@ export function BranchTemplate({
   //   document.documentElement.classList.add("branch-light");
   //   return () => document.documentElement.classList.remove("branch-light");
   // }, []);
-
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2500);
-  };
 
   return (
     <div className="min-h-screen font-sans text-[var(--page-fg)] overflow-x-hidden pt-[4.5rem] selection:bg-[#630ed4] selection:text-white flex flex-col bg-[var(--page-bg)] text-white">

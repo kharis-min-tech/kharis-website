@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
