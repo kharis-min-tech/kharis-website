@@ -163,7 +163,7 @@ function Index({
                   fontSize: "clamp(0.7rem, 1.1vw, 1rem)",
                 }}
               >
-                We are passionate about God and His word.
+                Passionate for God and His Word
               </div>
             </div>
             <div className="order-1 md:order-2 flex flex-col" style={{ gap: "clamp(0.9rem, 2.2vh, 2rem)" }}>
@@ -198,7 +198,7 @@ function Index({
 
         <section className="py-24 bg-gray-50 relative overflow-hidden border-b-4 border-gray-900" id="departments">
           <div className="max-w-7xl mx-auto px-margin-desktop relative z-10">
-            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#7c3aed] mb-3">We are passionate about God and His word.</p>
+            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#7c3aed] mb-3">Passionate for God and His Word</p>
             <h2 className="font-display-xl text-5xl md:text-7xl uppercase text-gray-900 leading-none">
               GET TO KNOW <span className="text-[#7c3aed]">KHARIS</span>
             </h2>
@@ -338,8 +338,8 @@ function Index({
                   Give yourself to the word of God. Are you struggling with sin? Are you addicted? Try the Bible and
                   see if it won’t change your life.
                 </p>
-                <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-8 max-w-lg">
-                  Hebrews 4:12 — The word of God is living and powerful and sharper than any two edged sword.
+                <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-8 max-w-xl">
+                  &ldquo;For the word of God is quick, and powerful, and sharper than any twoedged sword...&rdquo; Hebrews 4:12
                 </p>
                 <Link
                   href="/mission"

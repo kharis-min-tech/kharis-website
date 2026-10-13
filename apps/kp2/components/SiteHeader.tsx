@@ -22,10 +22,12 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     label: "COMMUNITY",
-    to: "/life",
+    to: "/departments",
     children: [
-      { label: "LIFE", to: "/life", blurb: "Groups & campus life" },
+      { label: "DEPARTMENTS", to: "/departments", blurb: "Find a place to serve" },
+      { label: "LIFE", to: "/life", blurb: "Groups & branch life" },
       { label: "FELLOWSHIPS", to: "/fellowships", blurb: "Find your fellowship" },
+      { label: "GALLERY", to: "/gallery", blurb: "Moments from the house" },
     ],
   },
   { label: "EVENTS", to: "/events" },
@@ -48,8 +50,13 @@ const KP2_LOGO = "/kp2/assets/kp2-logo-new.png";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const isActive = (to: string) =>
+  const pathActive = (to: string) =>
     to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/");
+  const isActive = (item: NavItem | string) => {
+    if (typeof item === "string") return pathActive(item);
+    if (item.children?.some((child) => pathActive(child.to))) return true;
+    return pathActive(item.to);
+  };
   const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
@@ -89,7 +96,7 @@ export function SiteHeader() {
                 >
                   <Link
                     href={item.to}
-                    className={`${linkBase} flex items-center gap-1 ${openMenu === item.label || isActive(item.to) ? "text-primary after:w-full" : ""}`}
+                    className={`${linkBase} flex items-center gap-1 ${openMenu === item.label || isActive(item) ? "text-primary after:w-full" : ""}`}
                   >
                     {item.label}
                     <span className="material-symbols-outlined text-[16px] leading-none">
@@ -126,7 +133,7 @@ export function SiteHeader() {
                 <Link
                   key={item.to}
                   href={item.to}
-                  className={`${linkBase} ${isActive(item.to) ? "text-primary after:w-full" : ""}`}
+                  className={`${linkBase} ${isActive(item) ? "text-primary after:w-full" : ""}`}
                 >
                   {item.label}
                 </Link>

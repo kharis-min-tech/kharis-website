@@ -4,6 +4,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { TikTokIcon } from "@/components/TikTokIcon";
+import { TIKTOK_URL } from "@/lib/social";
 import { hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
 import type { FormEvent } from "react";
 
@@ -54,10 +56,10 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <div className="lg:col-span-5">
 <div className="flex w-full flex-row gap-3 sm:gap-4 lg:ml-auto lg:w-[min(100%,calc((100dvh-10rem)/2))] lg:flex-col">
 <div className="relative aspect-square flex-1 overflow-hidden rounded-none border-2 border-black brutalist-shadow">
-<img alt="Worship on stage at Kharis" className="absolute inset-x-0 top-0 h-[200%] w-full max-w-none object-cover object-top" src="/kp2/assets/worship.jpg" fetchPriority="high" decoding="async"/>
+<img alt="Worship on stage at Kharis" className="absolute inset-x-0 top-0 h-[200%] w-full max-w-none object-cover object-top" src="/kp2/assets/worship.jpg" loading="eager" decoding="async"/>
 </div>
 <div className="relative aspect-square flex-1 overflow-hidden rounded-none border-2 border-black brutalist-shadow">
-<img alt="Congregation gathered in the auditorium" className="absolute inset-x-0 bottom-0 h-[200%] w-full max-w-none object-cover object-bottom" src="/kp2/assets/worship.jpg" loading="lazy" decoding="async"/>
+<img alt="Congregation gathered in the auditorium" className="absolute inset-x-0 bottom-0 h-[200%] w-full max-w-none object-cover object-bottom" src="/kp2/assets/worship.jpg" loading="eager" decoding="async"/>
 </div>
 </div>
 </div>
@@ -124,8 +126,8 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <div className="flex items-start gap-4">
 <span className="material-symbols-outlined text-primary text-3xl">location_on</span>
 <div>
-<p className="font-label-md uppercase text-secondary">Main Campus</p>
-<p className="font-body-lg">{mainCampus?.address ?? "Find a KP2 campus near you"}</p>
+<p className="font-label-md uppercase text-secondary">Main KP2 Branch</p>
+<p className="font-body-lg">{mainCampus?.address ?? "Find a KP2 branch near you"}</p>
 </div>
 </div>
 <div className="flex items-start gap-4">
@@ -138,7 +140,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
   ))
 ) : (
   <>
-    <p className="font-body-lg">Sunday gatherings — times on each campus page</p>
+    <p className="font-body-lg">Sunday gatherings. Times are on each branch page.</p>
   </>
 )}
 </div>
@@ -147,7 +149,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
 <span className="material-symbols-outlined text-primary text-3xl">phone</span>
 <div>
 <p className="font-label-md uppercase text-secondary">Call Us</p>
-<p className="font-body-lg">{mainCampus?.phone || "See your campus page"}</p>
+<p className="font-body-lg">{mainCampus?.phone || "See your branch page"}</p>
 </div>
 </div>
 </div>
@@ -170,7 +172,7 @@ Get Directions
 </a>
 </div>
 <iframe
-title="Map of Kharis Phase 2 campus"
+title="Map of Kharis Phase 2 branch"
 src={osmEmbedUrl(mainCampus)}
 className="w-full h-72 md:h-80 block border-0"
 loading="lazy"
@@ -178,7 +180,7 @@ loading="lazy"
 </div>
 ) : (
 <Link href="/branches" className="block brutalist-border brutalist-shadow bg-surface-container-low p-6 font-label-md uppercase text-center hover:text-primary">
-Find a campus
+Find a branch
 </Link>
 )}
 
@@ -188,7 +190,7 @@ Find a campus
 <section className="relative z-10 bg-secondary-container border-y-4 border-on-background py-16 px-margin-mobile md:px-margin-desktop">
 <div className="flex flex-col md:flex-row items-center justify-between gap-gutter">
 <h2 className="font-display-lg text-headline-lg-mobile md:text-headline-lg uppercase text-on-secondary-container">
-                    Follow the Vibe
+                    Follow the Movement
                 </h2>
                 <div className="flex flex-wrap justify-center gap-4">
                     <Link className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="/#app-stores">
@@ -202,6 +204,10 @@ Find a campus
                     <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href="https://youtube.com/@davidantwi" target="_blank" rel="noreferrer">
                         <span className="material-symbols-outlined">video_library</span>
                         <span className="font-label-md">YOUTUBE</span>
+                    </a>
+                    <a className="p-4 bg-white text-on-background rounded-none brutalist-border brutalist-shadow btn-hover transition-all flex items-center gap-2 shrink-0" href={TIKTOK_URL} target="_blank" rel="noreferrer">
+                        <TikTokIcon className="w-5 h-5" />
+                        <span className="font-label-md">TIKTOK</span>
                     </a>
                 </div>
 </div>

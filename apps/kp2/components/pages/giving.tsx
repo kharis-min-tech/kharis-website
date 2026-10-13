@@ -57,7 +57,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 <div className="absolute inset-0 halftone-pattern text-primary/20 pointer-events-none"></div>
 <div className="relative z-10 text-center max-w-4xl">
 <div className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 brutalist-border font-label-md text-label-md uppercase mb-6 animate-bounce">
-                    We are passionate about God and His word.
+                    Passionate for God and His Word
                 </div>
 <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg text-white mb-4 md:mb-8 tracking-tighter uppercase">
                     Your Generosity <br/>
@@ -129,44 +129,49 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">Ways to Give</h2>
 <p className="font-body-lg text-on-surface-variant max-w-2xl mx-auto">Choose the method that is most convenient for you. All transactions are securely encrypted.</p>
 </div>
-<div className="grid grid-cols-1 md:grid-cols-3 gap-gutter max-w-7xl mx-auto">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-gutter max-w-7xl mx-auto">
 
-<div className="bg-white brutalist-border-thick p-10 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform">
-<div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-<span className="material-symbols-outlined text-primary text-4xl">language</span>
-</div>
-<h3 className="font-headline-md text-headline-md uppercase mb-4">Online Portal</h3>
-<p className="font-body-md text-on-surface-variant mb-8 flex-grow">A secure, one-click way to give using your credit card or PayPal account.</p>
-<button type="button" data-ui="open-dialog" data-dialog="give-online-dialog" className="w-full bg-primary text-on-primary brutalist-border neo-shadow py-3 font-label-md uppercase tracking-widest hover:bg-primary-container transition-colors">
-                        GIVE ONLINE
-                    </button>
-</div>
-
-<div className="bg-primary text-on-primary brutalist-border-thick p-10 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform">
-<div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mb-6">
-<span className="material-symbols-outlined text-white text-4xl">smartphone</span>
-</div>
-<h3 className="font-headline-md text-headline-md uppercase mb-4">Mobile App</h3>
-<p className="font-on-primary/80 font-body-md mb-8 flex-grow">Download the Kharis Hub app. Manage recurring giving and track your history easily.</p>
-<Link href="/#app-stores" className="w-full bg-white text-primary brutalist-border neo-shadow py-3 font-label-md uppercase tracking-widest hover:bg-surface-variant transition-colors">
-                        GET THE APP
-                    </Link>
-</div>
-
-<div className="bg-white brutalist-border-thick p-10 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform">
+<div className="bg-white brutalist-border-thick p-8 md:p-10 flex flex-col group hover:-translate-y-2 transition-transform">
 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
 <span className="material-symbols-outlined text-primary text-4xl">account_balance</span>
 </div>
-<h3 className="font-headline-md text-headline-md uppercase mb-4">Bank Transfer</h3>
-<p className="font-body-md text-on-surface-variant mb-8 flex-grow">Direct deposits for large donations or structured monthly transfers. Full details below.</p>
-<div className="mt-2 text-left font-label-sm p-4 bg-surface-container-high w-full border-2 border-black space-y-1" id="bank-details">
-<p><span className="font-bold">Account name:</span> {BANK.accountName}</p>
-<p><span className="font-bold">Account number:</span> {BANK.accountNumber}</p>
-<p><span className="font-bold">Sort code:</span> {BANK.sortCode}</p>
-<p><span className="font-bold">SWIFT:</span> {BANK.swift}</p>
+<h3 className="font-headline-md text-headline-md uppercase mb-6">Bank Transfer</h3>
+<div className="text-left font-label-sm p-4 bg-surface-container-high w-full border-2 border-black space-y-2 flex-grow" id="bank-details">
+<p><span className="font-bold">Account Name:</span> {BANK.accountName}</p>
+<p><span className="font-bold">Account Number:</span> {BANK.accountNumber}</p>
+<p><span className="font-bold">Sort Code:</span> {BANK.sortCode}</p>
+<p><span className="font-bold">SWIFT/BIC:</span> {BANK.swift}</p>
 <p><span className="font-bold">IBAN:</span> {BANK.iban}</p>
 </div>
+</div>
 
+<div className="bg-white brutalist-border-thick p-8 md:p-10 flex flex-col group hover:-translate-y-2 transition-transform">
+<div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+<span className="material-symbols-outlined text-primary text-4xl">sms</span>
+</div>
+<h3 className="font-headline-md text-headline-md uppercase mb-4">Text Giving (UK Only)</h3>
+<p className="font-body-lg text-on-surface mb-4">
+  Text <span className="font-bold">{SMS_GIVE.keyword} [Amount]</span> to <span className="font-bold">{SMS_GIVE.number}</span>{" "}
+  (e.g. {SMS_GIVE.keyword} 5).
+</p>
+<p className="font-body-md text-on-surface-variant">
+  NB: You can give up to £20. Giving will be added to your next phone bill or taken from your pay as you go balance.
+</p>
+</div>
+
+<div className="md:col-span-2 bg-primary text-on-primary brutalist-border-thick p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 group hover:-translate-y-2 transition-transform">
+<div className="flex items-start gap-6">
+<div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center shrink-0">
+<span className="material-symbols-outlined text-white text-4xl">smartphone</span>
+</div>
+<div>
+<h3 className="font-headline-md text-headline-md uppercase mb-3">Mobile App</h3>
+<p className="font-body-md text-on-primary/90 max-w-xl">Download the Kharis Hub app. Manage recurring giving and track your history easily.</p>
+</div>
+</div>
+<Link href="/#app-stores" className="w-full md:w-auto text-center bg-white text-primary brutalist-border neo-shadow py-3 px-10 font-label-md uppercase tracking-widest hover:bg-surface-variant transition-colors">
+                        GET THE APP
+                    </Link>
 </div>
 </div>
 </section>

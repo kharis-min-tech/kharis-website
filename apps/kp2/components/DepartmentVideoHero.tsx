@@ -62,7 +62,7 @@ export function DepartmentVideoHero() {
         {/* Left column */}
         <div className="min-w-0">
           <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
-            Get Busy Serving God
+            Get busy serving!
           </span>
           <h1
 
@@ -75,7 +75,7 @@ export function DepartmentVideoHero() {
             className="font-headline-md max-w-2xl text-surface-container-low"
             style={{ fontSize: "clamp(1rem, 0.9rem + 0.8vw, 1.5rem)" }}
           >
-            Find where your gift meets our mission.
+            Find where your gift meets the mission. Get busy serving.
           </p>
           <div className="mt-8 flex gap-4">
             <div className="h-2 w-12 bg-secondary-container" />

@@ -7,7 +7,7 @@ export const revalidate = 60;
 export const metadata = pageMeta({
   title: "Life",
   description:
-    "Kharis Life: campus culture, small groups, socials and the everyday community of Kharis Phase 2.",
+    "Kharis Life: branch culture, small groups, socials and the everyday community of Kharis Phase 2.",
   path: "/life",
 });
 

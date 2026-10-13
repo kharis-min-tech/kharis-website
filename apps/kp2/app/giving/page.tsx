@@ -7,7 +7,7 @@ export const revalidate = 60;
 export const metadata = pageMeta({
   title: "Giving",
   description:
-    "Give to Kharis Phase 2 online or by bank transfer. Your generosity powers worship, outreach, media and new campuses.",
+    "Give to Kharis Phase 2 online or by bank transfer. Your generosity powers worship, outreach, media and new branches.",
   path: "/giving",
 });
 

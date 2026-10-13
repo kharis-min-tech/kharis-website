@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/base-path";
 import { SITE_WORKSPACE } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
@@ -105,6 +106,18 @@ function ownBlurb(stored: string, city: string) {
   );
   return namesAnotherCampus ? placeholderDescription(city) : text;
 }
+const FALLBACK_IMAGE = "/kp2/assets/branch-slide-1.jpg";
+const LOCAL_SLIDES = [
+  "/kp2/assets/branch-slide-1.jpg",
+  "/kp2/assets/branch-slide-2.jpg",
+  "/kp2/assets/branch-slide-3.jpg",
+  "/kp2/assets/branch-slide-4.jpg",
+  "/kp2/assets/branch-slide-5.jpg",
+];
+const FALLBACK_PASTOR = "/kp2/assets/leadership-pastor-david.jpg";
+const DEFAULT_PARKING = "Public parking is available near the venue.";
+const DEFAULT_TRANSIT =
+  "The venue is reachable by public transport. Check local bus and rail times before you travel.";
 
 function formatTime(time?: string | null): string {
   if (!time) return "";
@@ -130,6 +143,19 @@ function remoteImage(url: string | null | undefined) {
   return value;
 }
 
+function fallbackImageFor(slug: string) {
+  const index =
+    Math.abs([...slug].reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % LOCAL_SLIDES.length;
+  return LOCAL_SLIDES[index] ?? FALLBACK_IMAGE;
+}
+
+function resolveBranchImage(url: string | null | undefined, slug: string) {
+  if (!url || /assets\/design\//i.test(url)) return fallbackImageFor(slug);
+  if (url.startsWith("http")) return url;
+  if (url.startsWith("/")) return withBasePath(url);
+  return fallbackImageFor(slug);
+}
+
 function roleLabel(role?: string | null): string {
   return role === "lead" ? "Branch Lead" : "Pastor";
 }
@@ -141,7 +167,7 @@ function pastorDisplay(name?: string | null, role?: string | null) {
   return { pastor: name.trim(), pastorRole: alreadyTitled ? "" : label };
 }
 
-/** KP2 site: Phase 2 campuses, or rows explicitly tagged kp2. Never dump the main Kharis network. */
+/** KP2 site: Phase 2 branches, or rows explicitly tagged kp2. Never dump the main Kharis network. */
 export function isKp2Location(row: {
   workspace?: string | null;
   group?: string | null;
@@ -178,7 +204,7 @@ function venueLooksLike(venue: VenueRow, hint: string) {
     .includes(hint);
 }
 
-/** Prefer a venue that actually belongs to this campus; never pin Barking to Sutton Coldfield. */
+/** Prefer a venue that actually belongs to this branch; never pin Barking to Sutton Coldfield. */
 function pickMainVenue(
   row: BranchRow,
   venues: VenueRow[],

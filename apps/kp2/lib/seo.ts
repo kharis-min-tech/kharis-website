@@ -10,6 +10,7 @@ export const SITE_DESCRIPTION =
 export const SOCIAL_LINKS = [
   "https://www.instagram.com/kharisphasetwo/",
   "https://www.youtube.com/@davidantwi",
+  "https://www.tiktok.com/@kharisphasetwo_",
 ] as const;
 
 export const STATIC_PATHS = [
@@ -19,6 +20,7 @@ export const STATIC_PATHS = [
   "/life",
   "/fellowships",
   "/departments",
+  "/gallery",
   "/events",
   "/messages",
   "/media",
@@ -95,8 +97,8 @@ export function organizationJsonLd() {
         alternateName: ["KP2", "Kharis Phase Two"],
         url,
         description: SITE_DESCRIPTION,
-        image: absoluteUrl("/assets/worship.jpg"),
-        logo: absoluteUrl("/assets/kp2-logo-new.png"),
+        image: absoluteUrl("/kp2/assets/worship.jpg"),
+        logo: absoluteUrl("/kp2/assets/kp2-logo-new.png"),
         sameAs: [...SOCIAL_LINKS],
         parentOrganization: {
           "@type": "NGO",
