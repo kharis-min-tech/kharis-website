@@ -16,12 +16,15 @@ function postcodeFrom(address: string) {
 }
 
 function cityFrom(address: string, postcode: string | null) {
-  const parts = address.split(",").map((part) => part.trim()).filter(Boolean);
+  const parts = address
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
   if (postcode) {
     const index = parts.findIndex((part) => part.toUpperCase().includes(postcode));
     if (index > 0) return parts[index - 1] ?? null;
   }
-  return parts.length > 1 ? parts[parts.length - 2] ?? null : null;
+  return parts.length > 1 ? (parts[parts.length - 2] ?? null) : null;
 }
 
 function component(components: { long_name: string; types: string[] }[] | undefined, type: string) {
@@ -56,7 +59,10 @@ function rejected(status: string | undefined) {
 export async function GET(request: Request) {
   const key = process.env.GOOGLE_MAPS_API_KEY;
   if (!key) {
-    return NextResponse.json({ results: [], error: "Geocoding is not configured." }, { status: 503 });
+    return NextResponse.json(
+      { results: [], error: "Geocoding is not configured." },
+      { status: 503 },
+    );
   }
 
   const { searchParams } = new URL(request.url);
@@ -108,7 +114,9 @@ export async function GET(request: Request) {
             label: formatted,
             address: formatted,
             postcode: component(item.address_components, "postal_code") ?? postcodeFrom(formatted),
-            city: component(item.address_components, "postal_town") ?? component(item.address_components, "locality"),
+            city:
+              component(item.address_components, "postal_town") ??
+              component(item.address_components, "locality"),
             latitude,
             longitude,
           } satisfies GeoResult,

@@ -5,8 +5,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useState } from "react";
 
-
-
 const MAIN_TABS = [
   {
     id: "mission",
@@ -23,7 +21,8 @@ const MAIN_TABS = [
         icon: "menu_book",
         desc: "The heart of Christianity is the making of disciples.",
         ref: "MATT 28:19 (KJV)",
-        scripture: "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost",
+        scripture:
+          "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost",
       },
       {
         num: "02",
@@ -31,7 +30,8 @@ const MAIN_TABS = [
         icon: "volunteer_activism",
         desc: "Everyone is important and everyone deserves to be loved, cared for and supported as they pursue the right course in life.",
         ref: "ROMANS 12:9 (KJV)",
-        scripture: "Let love be without dissimulation. Abhor that which is evil; cleave to that which is good.",
+        scripture:
+          "Let love be without dissimulation. Abhor that which is evil; cleave to that which is good.",
       },
       {
         num: "03",
@@ -39,7 +39,8 @@ const MAIN_TABS = [
         icon: "public",
         desc: "Jesus reached out to us and gave us the responsibility for reaching out to others with His love.",
         ref: "MARK 16:15 (KJV)",
-        scripture: "And he said unto them, Go ye into all the world, and preach the gospel to every creature.",
+        scripture:
+          "And he said unto them, Go ye into all the world, and preach the gospel to every creature.",
       },
       {
         num: "04",
@@ -47,7 +48,8 @@ const MAIN_TABS = [
         icon: "groups",
         desc: "Everybody has the potential to lead. We have the responsibility to raise Godly leaders who will rise up to influence their society with the principles of The Kingdom of God.",
         ref: "PROV 29:2 (KJV)",
-        scripture: "When the righteous are in authority, the people rejoice: but when the wicked beareth rule, the people mourn.",
+        scripture:
+          "When the righteous are in authority, the people rejoice: but when the wicked beareth rule, the people mourn.",
       },
     ],
   },
@@ -63,11 +65,10 @@ const MAIN_TABS = [
   },
 ];
 
-
 function WhoWeAreBecoming() {
   const [mainTab, setMainTab] = useState(0);
   const [subTab, setSubTab] = useState(0);
-const tab = MAIN_TABS[mainTab]!;
+  const tab = MAIN_TABS[mainTab]!;
   const item = tab.items[subTab]!;
 
   return (
@@ -103,14 +104,22 @@ const tab = MAIN_TABS[mainTab]!;
                   : "bg-surface text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
               }`}
             >
-              <span className={`w-12 h-12 shrink-0 border-2 border-current flex items-center justify-center ${mainTab === i ? "bg-white/15" : "bg-primary/10"}`}>
-                <span className="material-symbols-outlined text-2xl" data-weight="fill">{t.icon}</span>
+              <span
+                className={`w-12 h-12 shrink-0 border-2 border-current flex items-center justify-center ${mainTab === i ? "bg-white/15" : "bg-primary/10"}`}
+              >
+                <span className="material-symbols-outlined text-2xl" data-weight="fill">
+                  {t.icon}
+                </span>
               </span>
               <span>
-                <span className={`block font-headline-md text-headline-md uppercase ${mainTab === i ? "text-white" : "text-on-background dark:text-[#e8e0e9]"}`}>
+                <span
+                  className={`block font-headline-md text-headline-md uppercase ${mainTab === i ? "text-white" : "text-on-background dark:text-[#e8e0e9]"}`}
+                >
                   {t.label}
                 </span>
-                <span className={`block font-label-sm uppercase mt-1 ${mainTab === i ? "text-white/75" : "text-on-surface-variant dark:text-[#ccc3d8]"}`}>
+                <span
+                  className={`block font-label-sm uppercase mt-1 ${mainTab === i ? "text-white/75" : "text-on-surface-variant dark:text-[#ccc3d8]"}`}
+                >
                   {t.sub}
                 </span>
               </span>
@@ -150,16 +159,20 @@ const tab = MAIN_TABS[mainTab]!;
                         : "bg-transparent text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
                     }`}
                   >
-                    <span className={`absolute left-0 top-0 bottom-0 w-1.5 ${subTab === i ? "bg-primary" : "bg-transparent"}`}></span>
-                    <span className={`font-display-lg text-2xl md:text-3xl ${subTab === i ? "text-primary" : "text-on-surface-variant"}`}>
+                    <span
+                      className={`absolute left-0 top-0 bottom-0 w-1.5 ${subTab === i ? "bg-primary" : "bg-transparent"}`}
+                    ></span>
+                    <span
+                      className={`font-display-lg text-2xl md:text-3xl ${subTab === i ? "text-primary" : "text-on-surface-variant"}`}
+                    >
                       {it.num}
                     </span>
                     <span className="w-10 h-10 shrink-0 border-2 border-current flex items-center justify-center">
-                      <span className="material-symbols-outlined" data-weight="fill">{it.icon}</span>
+                      <span className="material-symbols-outlined" data-weight="fill">
+                        {it.icon}
+                      </span>
                     </span>
-                    <span className="font-headline-md text-headline-md uppercase">
-                      {it.title}
-                    </span>
+                    <span className="font-headline-md text-headline-md uppercase">{it.title}</span>
                   </button>
                 ))}
               </div>
@@ -192,12 +205,7 @@ const tab = MAIN_TABS[mainTab]!;
   );
 }
 
-const VISION_PILLARS = [
-  "Christ Centred",
-  "Purpose Driven",
-  "People Developing",
-  "Disciple Making",
-];
+const VISION_PILLARS = ["Christ Centred", "Purpose Driven", "People Developing", "Disciple Making"];
 
 const VISION_STATEMENTS = [
   "Is exciting and full of life. It is a church that is both numerically large and spiritually deep",
@@ -218,7 +226,9 @@ function VisionContent() {
             key={pillar}
             className="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container rounded-none border-2 border-black brutalist-shadow px-4 py-2 font-headline-md text-headline-md uppercase tracking-wide"
           >
-            <span className="material-symbols-outlined text-primary" data-weight="fill">check_circle</span>
+            <span className="material-symbols-outlined text-primary" data-weight="fill">
+              check_circle
+            </span>
             {pillar}
           </span>
         ))}
@@ -312,7 +322,10 @@ function StatementOfFaith() {
                 <span className="flex-1 font-headline-md text-headline-md uppercase text-on-background dark:text-[#e8e0e9]">
                   {s.title}
                 </span>
-                <span className="faith-toggle w-9 h-9 shrink-0 border-2 border-black flex items-center justify-center text-on-background dark:text-[#e8e0e9]" aria-hidden="true">
+                <span
+                  className="faith-toggle w-9 h-9 shrink-0 border-2 border-black flex items-center justify-center text-on-background dark:text-[#e8e0e9]"
+                  aria-hidden="true"
+                >
                   <span className="faith-icon-plus material-symbols-outlined text-xl">add</span>
                   <span className="faith-icon-minus material-symbols-outlined text-xl">remove</span>
                 </span>
@@ -399,7 +412,14 @@ function OurLeadership() {
             </p>
             <div className="w-16 h-1.5 bg-primary mb-6"></div>
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Pastor David and Awo founded Kharis in 2003, a multifaceted ministry headquartered in London, United Kingdom, with several branches worldwide. Together, they also founded Kharis Phase 2 our students&apos; and young people&apos;s services. Kharis also has a presence on university campuses across the UK. Their love for the Word of God is evident in how they lead, teach, and serve. Their greatest desire is to see believers established in their faith, local churches strengthened, and ultimately, for revival to sweep through the nations. They have been married for over 20 years and are blessed with two wonderful children.
+              Pastor David and Awo founded Kharis in 2003, a multifaceted ministry headquartered in
+              London, United Kingdom, with several branches worldwide. Together, they also founded
+              Kharis Phase 2 our students&apos; and young people&apos;s services. Kharis also has a
+              presence on university campuses across the UK. Their love for the Word of God is
+              evident in how they lead, teach, and serve. Their greatest desire is to see believers
+              established in their faith, local churches strengthened, and ultimately, for revival
+              to sweep through the nations. They have been married for over 20 years and are blessed
+              with two wonderful children.
             </p>
           </div>
         </div>
@@ -408,63 +428,81 @@ function OurLeadership() {
   );
 }
 
-
 function AboutPage() {
   return (
     <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
+      <SiteHeader />
 
+      <section className="relative h-[921px] w-full flex items-center justify-center overflow-hidden bg-on-background text-background border-b-4 border-primary">
+        <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
+        <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
+        <div className="relative z-20 text-center px-margin-mobile md:px-margin-desktop max-w-5xl">
+          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
+            Preach Christ Crucified.
+          </span>
+          <h1 className="font-display-lg text-headline-lg md:text-display-lg text-primary-fixed-dim uppercase leading-none mb-4">
+            Who We Are
+          </h1>
+          <p className="font-body-lg text-body-lg text-background bg-surface/60 backdrop-blur-sm border border-on-surface/25 max-w-2xl mx-auto mb-8 font-medium px-6 py-4">
+            Kharis (χάρις) is the Greek word for Grace. While ministering to the total person, we
+            seek to deepen people&apos;s commitment to God and to spiritual values such as holiness,
+            prayer, evangelism, Christ-centred living, Bible study and fellowship.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href="#kharis-name"
+              className="bg-primary text-on-primary font-headline-md px-8 py-4 border-heavier neo-shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-2"
+            >
+              OUR STORY <span className="material-symbols-outlined">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </section>
 
-<SiteHeader />
+      <section
+        id="kharis-name"
+        className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-background transition-colors duration-300"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 mb-12">
+            <div className="bg-[#f3edf7] dark:bg-[#1f1c24] border-l-8 border-primary p-8 md:p-10 neo-shadow transition-colors duration-300">
+              <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">
+                Kharis
+              </span>
+              <h2 className="font-display-lg text-4xl md:text-5xl lg:text-6xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">
+                χάρις, ιτος, ή
+              </h2>
+              <p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">
+                Greek word for Grace
+              </p>
+            </div>
+            <div className="bg-[#f3edf7] dark:bg-[#1f1c24] border-l-8 border-primary p-8 md:p-10 neo-shadow transition-colors duration-300">
+              <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">
+                Ministries
+              </span>
+              <h2 className="font-display-lg text-4xl md:text-5xl lg:text-6xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">
+                λειτουργία, ας, ή
+              </h2>
+              <p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">
+                With various services providing units
+              </p>
+            </div>
+          </div>
+          <p className="font-body-lg text-body-lg text-on-surface dark:text-[#e8e0e9] leading-relaxed max-w-4xl transition-colors duration-300">
+            While ministering to the total person, we seek to deepen people’s commitment to God and
+            to spiritual values such as holiness, prayer, evangelism, Christ-centred living, Bible
+            study and fellowship.
+          </p>
+        </div>
+      </section>
 
-<section className="relative h-[921px] w-full flex items-center justify-center overflow-hidden bg-on-background text-background border-b-4 border-primary">
-  <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
-  <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
-  <div className="relative z-20 text-center px-margin-mobile md:px-margin-desktop max-w-5xl">
-    <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">Preach Christ Crucified.</span>
-    <h1 className="font-display-lg text-headline-lg md:text-display-lg text-primary-fixed-dim uppercase leading-none mb-4">Who We Are</h1>
-    <p className="font-body-lg text-body-lg text-background bg-surface/60 backdrop-blur-sm border border-on-surface/25 max-w-2xl mx-auto mb-8 font-medium px-6 py-4">
-      Kharis (χάρις) is the Greek word for Grace. While ministering to the total person, we seek to deepen people&apos;s commitment to God and to spiritual values such as holiness, prayer, evangelism, Christ-centred living, Bible study and fellowship.
-    </p>
-    <div className="flex flex-wrap justify-center gap-4">
-      <a href="#kharis-name" className="bg-primary text-on-primary font-headline-md px-8 py-4 border-heavier neo-shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-2">
-        OUR STORY <span className="material-symbols-outlined">arrow_forward</span>
-      </a>
-    </div>
-  </div>
-</section>
+      <WhoWeAreBecoming />
 
-<section id="kharis-name" className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-background transition-colors duration-300">
-<div className="max-w-6xl mx-auto">
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 mb-12">
-<div className="bg-[#f3edf7] dark:bg-[#1f1c24] border-l-8 border-primary p-8 md:p-10 neo-shadow transition-colors duration-300">
-<span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">Kharis</span>
-<h2 className="font-display-lg text-4xl md:text-5xl lg:text-6xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">χάρις, ιτος, ή</h2>
-<p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">Greek word for Grace</p>
-</div>
-<div className="bg-[#f3edf7] dark:bg-[#1f1c24] border-l-8 border-primary p-8 md:p-10 neo-shadow transition-colors duration-300">
-<span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">Ministries</span>
-<h2 className="font-display-lg text-4xl md:text-5xl lg:text-6xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">λειτουργία, ας, ή</h2>
-<p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">With various services providing units</p>
-</div>
-</div>
-<p className="font-body-lg text-body-lg text-on-surface dark:text-[#e8e0e9] leading-relaxed max-w-4xl transition-colors duration-300">
-                    While ministering to the total person, we seek to deepen people’s commitment to God and to spiritual values such as holiness, prayer, evangelism, Christ-centred living, Bible study and fellowship.
-                </p>
-</div>
-</section>
+      <OurLeadership />
 
-<WhoWeAreBecoming />
+      <StatementOfFaith />
 
-<OurLeadership />
-
-
-
-<StatementOfFaith />
-
-
-
-<SiteFooter />
-
+      <SiteFooter />
 
       <ThemeToggle />
     </div>

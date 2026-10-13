@@ -38,10 +38,7 @@ export function GovernanceExperience() {
             <h2>{GOVERNANCE.incident.title}</h2>
             <p>{GOVERNANCE.incident.blurb}</p>
           </div>
-          <a
-            href={GOVERNANCE.incident.href}
-            className="gov-incident__cta"
-          >
+          <a href={GOVERNANCE.incident.href} className="gov-incident__cta">
             {GOVERNANCE.incident.cta}
           </a>
         </Reveal>

@@ -84,16 +84,11 @@ function haversineKm(aLat: number, aLng: number, bLat: number, bLng: number) {
   const dLng = ((bLng - aLng) * Math.PI) / 180;
   const s =
     Math.sin(dLat / 2) ** 2 +
-    Math.cos((aLat * Math.PI) / 180) *
-      Math.cos((bLat * Math.PI) / 180) *
-      Math.sin(dLng / 2) ** 2;
+    Math.cos((aLat * Math.PI) / 180) * Math.cos((bLat * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(s));
 }
 
-const OUTLINES = countryOutlines as unknown as Record<
-  string,
-  [number, number][][]
->;
+const OUTLINES = countryOutlines as unknown as Record<string, [number, number][][]>;
 
 interface BranchMapProps {
   onSelectBranch?: (slug: string) => void;
@@ -101,10 +96,7 @@ interface BranchMapProps {
   branches?: BranchData[];
 }
 
-export function BranchMap({
-  onSelectBranch,
-  branches: branchesProp,
-}: BranchMapProps) {
+export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapProps) {
   const router = useRouter();
   const [viewId, setViewId] = useState<ViewId>("world");
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -128,9 +120,7 @@ export function BranchMap({
       source
         .map((b) => {
           const venue =
-            b.venues?.find(
-              (v) => v.latitude !== null && v.longitude !== null,
-            ) ?? b.venues?.[0];
+            b.venues?.find((v) => v.latitude !== null && v.longitude !== null) ?? b.venues?.[0];
 
           if (!venue || venue.latitude == null || venue.longitude == null) {
             return null;
@@ -263,8 +253,7 @@ export function BranchMap({
         let best: { slug: string; km: number; region: string } | null = null;
         for (const b of branches) {
           const km = haversineKm(latitude, longitude, b.lat, b.lng);
-          if (!best || km < best.km)
-            best = { slug: b.slug, km, region: b.region };
+          if (!best || km < best.km) best = { slug: b.slug, km, region: b.region };
         }
         if (best) {
           setNearestSlug(best.slug);
@@ -277,9 +266,7 @@ export function BranchMap({
         setLocating(false);
       },
       () => {
-        setGeoError(
-          "Location access was denied, browse the map or search below instead.",
-        );
+        setGeoError("Location access was denied, browse the map or search below instead.");
         setLocating(false);
       },
       { timeout: 10000 },
@@ -304,9 +291,7 @@ export function BranchMap({
               <h2 className="text-2xl md:text-3xl font-extrabold text-white! tracking-tight">
                 Find a Kharis Branch
               </h2>
-              <p className="text-sm text-white/60 font-medium mt-1">
-                {view.blurb}
-              </p>
+              <p className="text-sm text-white/60 font-medium mt-1">{view.blurb}</p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
@@ -329,10 +314,7 @@ export function BranchMap({
 
                 {pickerOpen && (
                   <>
-                    <div
-                      className="fixed inset-0 z-20"
-                      onClick={() => setPickerOpen(false)}
-                    />
+                    <div className="fixed inset-0 z-20" onClick={() => setPickerOpen(false)} />
                     <ul
                       role="listbox"
                       className="absolute z-30 mt-2 right-0 w-60 rounded-2xl border border-[#e8a33d]/25 bg-[#1a0b16]/98 backdrop-blur-md p-2 shadow-2xl"
@@ -342,10 +324,7 @@ export function BranchMap({
                           const p = makeProjection(v).bounds;
                           const venue = b.venues?.[0];
 
-                          if (
-                            venue?.longitude == null ||
-                            venue?.latitude == null
-                          ) {
+                          if (venue?.longitude == null || venue?.latitude == null) {
                             return false;
                           }
 
@@ -375,11 +354,7 @@ export function BranchMap({
                                 {v.flag} {v.label}
                               </span>
                               <span
-                                className={
-                                  v.id === viewId
-                                    ? "text-[#1a0b16]/70"
-                                    : "text-white/40"
-                                }
+                                className={v.id === viewId ? "text-[#1a0b16]/70" : "text-white/40"}
                               >
                                 {count} {count === 1 ? "branch" : "branches"}
                               </span>
@@ -448,13 +423,7 @@ export function BranchMap({
                   <stop offset="0%" stopColor="#8c1a63" stopOpacity="0.55" />
                   <stop offset="100%" stopColor="#4a0b34" stopOpacity="0.45" />
                 </linearGradient>
-                <filter
-                  id="landGlow"
-                  x="-20%"
-                  y="-20%"
-                  width="140%"
-                  height="140%"
-                >
+                <filter id="landGlow" x="-20%" y="-20%" width="140%" height="140%">
                   <feGaussianBlur stdDeviation="8" result="b" />
                   <feMerge>
                     <feMergeNode in="b" />
@@ -493,25 +462,12 @@ export function BranchMap({
 
               {/* world view: dotted landmass */}
               {dots.map((d, i) => (
-                <circle
-                  key={i}
-                  cx={d.x}
-                  cy={d.y}
-                  r={1.7}
-                  fill="#6b2c55"
-                  opacity={0.55}
-                />
+                <circle key={i} cx={d.x} cy={d.y} r={1.7} fill="#6b2c55" opacity={0.55} />
               ))}
 
               {/* neighbouring countries for context */}
               {paths.context.map((p) => (
-                <path
-                  key={p.key}
-                  d={p.d}
-                  fill="#2a0d22"
-                  stroke="#4b1a3c"
-                  strokeWidth={1}
-                />
+                <path key={p.key} d={p.d} fill="#2a0d22" stroke="#4b1a3c" strokeWidth={1} />
               ))}
 
               {/* focus country */}
@@ -564,9 +520,7 @@ export function BranchMap({
                       strokeWidth={1.4}
                       style={{ transition: "r 0.2s" }}
                     />
-                    {(isWorld
-                      ? active || b.slug === "london"
-                      : callouts.length === 0) && (
+                    {(isWorld ? active || b.slug === "london" : callouts.length === 0) && (
                       <text
                         y={-10}
                         textAnchor="middle"
@@ -639,9 +593,7 @@ export function BranchMap({
                 <p className="text-lg font-extrabold text-white leading-tight">
                   {hoveredBranch.name}
                 </p>
-                <p className="text-xs font-medium text-white/60 mt-0.5">
-                  {hoveredBranch.address}
-                </p>
+                <p className="text-xs font-medium text-white/60 mt-0.5">{hoveredBranch.address}</p>
                 <p className="text-[11px] font-bold text-[#e8a33d] mt-2">
                   Click to explore branch →
                 </p>
@@ -652,12 +604,10 @@ export function BranchMap({
           {/* legend */}
           <div className="relative z-10 flex flex-wrap items-center gap-5 px-6 md:px-10 pb-6 text-[11px] font-semibold text-white/50">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#f2b254]" /> Kharis
-              branch
+              <span className="w-2 h-2 rounded-full bg-[#f2b254]" /> Kharis branch
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#5c2a4d]" />{" "}
-              {branches.length} worldwide
+              <span className="w-2 h-2 rounded-full bg-[#5c2a4d]" /> {branches.length} worldwide
             </span>
           </div>
         </div>

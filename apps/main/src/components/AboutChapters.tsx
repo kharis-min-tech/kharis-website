@@ -3,11 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-} from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ContentIcon } from "@/components/ContentIcon";
 import { ABOUT } from "@/lib/about-content";
 
@@ -82,25 +78,15 @@ function AboutSvgWallpaper({
             patternUnits="userSpaceOnUse"
             patternTransform="rotate(28)"
           >
-            <path
-              d="M0 20 H40"
-              stroke="rgba(255,255,255,0.16)"
-              strokeWidth="1.2"
-            />
+            <path d="M0 20 H40" stroke="rgba(255,255,255,0.16)" strokeWidth="1.2" />
           </pattern>
         </defs>
         <rect width="1200" height="220" fill={`url(#${id}-fade)`} />
         <rect width="1200" height="220" fill={`url(#${id}-lines)`} />
         <circle cx="90" cy="180" r="70" fill="rgba(255,255,255,0.12)" />
         <circle cx="1120" cy="30" r="95" fill="rgba(253,127,32,0.18)" />
-        <path
-          d="M420 0 L520 110 L420 220 L320 110 Z"
-          fill="rgba(255,255,255,0.08)"
-        />
-        <path
-          d="M780 0 L860 90 L780 180 L700 90 Z"
-          fill="rgba(255,255,255,0.06)"
-        />
+        <path d="M420 0 L520 110 L420 220 L320 110 Z" fill="rgba(255,255,255,0.08)" />
+        <path d="M780 0 L860 90 L780 180 L700 90 Z" fill="rgba(255,255,255,0.06)" />
       </svg>
     );
   }
@@ -117,14 +103,8 @@ function AboutSvgWallpaper({
       : tone === "leadership"
         ? "rgba(255,255,255,0.18)"
         : "rgba(253,127,32,0.16)";
-  const dot =
-    tone === "vision"
-      ? "rgba(128, 6, 84, 0.12)"
-      : "rgba(255,255,255,0.14)";
-  const wash =
-    tone === "vision"
-      ? "rgba(255,255,255,0.55)"
-      : "rgba(255,255,255,0.08)";
+  const dot = tone === "vision" ? "rgba(128, 6, 84, 0.12)" : "rgba(255,255,255,0.14)";
+  const wash = tone === "vision" ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.08)";
 
   return (
     <svg
@@ -134,12 +114,7 @@ function AboutSvgWallpaper({
       aria-hidden
     >
       <defs>
-        <pattern
-          id={`${id}-dots`}
-          width="28"
-          height="28"
-          patternUnits="userSpaceOnUse"
-        >
+        <pattern id={`${id}-dots`} width="28" height="28" patternUnits="userSpaceOnUse">
           <circle cx="3" cy="3" r="1.4" fill={dot} />
         </pattern>
         <linearGradient id={`${id}-fade`} x1="0" y1="0" x2="1" y2="1">
@@ -154,15 +129,11 @@ function AboutSvgWallpaper({
       <circle cx="1080" cy="220" r="120" fill={wash} />
       <path
         d="M0 210 C220 150 380 250 600 190 C820 130 980 230 1200 170 L1200 280 L0 280 Z"
-        fill={
-          tone === "vision" ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.06)"
-        }
+        fill={tone === "vision" ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.06)"}
       />
       <path
         d="M740 30c40 0 70 28 70 68s-30 68-70 68c-18 0-34-6-47-16 22 8 48 4 64-14 16-18 14-46-4-62-12-10-28-14-44-12 8-20 28-32 51-32z"
-        fill={
-          tone === "vision" ? "rgba(128, 6, 84, 0.06)" : "rgba(255,255,255,0.07)"
-        }
+        fill={tone === "vision" ? "rgba(128, 6, 84, 0.06)" : "rgba(255,255,255,0.07)"}
       />
     </svg>
   );
@@ -201,11 +172,7 @@ function PanelHero({
 /**
  * Interactive About stage: one chapter in focus, full content via progressive UI.
  */
-export function AboutChapters({
-  initialId,
-}: {
-  initialId?: AboutChapterId | null;
-}) {
+export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null }) {
   const reduce = useReducedMotion();
   const [active, setActive] = useState<AboutChapterId>(initialId ?? "mission");
 
@@ -283,9 +250,7 @@ export function AboutChapters({
           >
             {active === "mission" ? <MissionPanel reduce={!!reduce} /> : null}
             {active === "vision" ? <VisionPanel reduce={!!reduce} /> : null}
-            {active === "leadership" ? (
-              <LeadershipPanel reduce={!!reduce} />
-            ) : null}
+            {active === "leadership" ? <LeadershipPanel reduce={!!reduce} /> : null}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -347,9 +312,7 @@ function MissionPanel({ reduce }: { reduce: boolean }) {
                   <ContentIcon name={item.icon} className="h-6 w-6" />
                 </span>
                 <span>
-                  <span className="about-panel__pillar-num">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+                  <span className="about-panel__pillar-num">{String(i + 1).padStart(2, "0")}</span>
                   <span className="about-panel__pillar-title">{item.title}</span>
                 </span>
               </motion.button>
@@ -419,12 +382,7 @@ function VisionPanel({ reduce }: { reduce: boolean }) {
 
   return (
     <div className="about-panel about-panel--vision">
-      <PanelHero
-        reduce={!!reduce}
-        tone="vision"
-        eyebrow="Our Vision"
-        title={vision.lead}
-      />
+      <PanelHero reduce={!!reduce} tone="vision" eyebrow="Our Vision" title={vision.lead} />
 
       <div className="about-panel__body">
         <p className="about-panel__kicker">{vision.intro}</p>
@@ -505,9 +463,7 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
                   alt={pastor.name}
                   fill
                   className={`object-cover ${
-                    pastor.id === "david"
-                      ? "object-[center_12%]"
-                      : "object-[center_18%]"
+                    pastor.id === "david" ? "object-[center_12%]" : "object-[center_18%]"
                   }`}
                   sizes="(max-width: 860px) 100vw, 40vw"
                 />
@@ -533,11 +489,7 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
         <motion.span
           className="about-lead__story-glow"
           aria-hidden
-          animate={
-            reduce
-              ? undefined
-              : { opacity: [0.45, 0.8, 0.45], scale: [1, 1.08, 1] }
-          }
+          animate={reduce ? undefined : { opacity: [0.45, 0.8, 0.45], scale: [1, 1.08, 1] }}
           transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.p

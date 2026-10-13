@@ -12,18 +12,46 @@ const CHANNEL_ID = "UC4l8WmdF9ivMDQHHVOdYKqQ";
 const UPLOADS_PLAYLIST = "UU4l8WmdF9ivMDQHHVOdYKqQ";
 
 function thumbFor(id: string, high?: string) {
-  if (high && (high.includes("maxresdefault") || high.includes("mqdefault") || high.includes("hq720"))) {
+  if (
+    high &&
+    (high.includes("maxresdefault") || high.includes("mqdefault") || high.includes("hq720"))
+  ) {
     return high;
   }
   return `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
 }
 
 const MESSAGE_FALLBACK: MessageVideo[] = [
-  { id: "iXo1fg_PRLM", title: "From Acts To Us | Acts 28:27-31 | David Antwi", thumbnail: thumbFor("iXo1fg_PRLM"), publishedAt: "2026-08-23T00:00:00Z" },
-  { id: "iRCcSWEdbPo", title: "The Most Important 3 Days | John 1:19-29 | David Antwi | Kharis Phase Two", thumbnail: thumbFor("iRCcSWEdbPo"), publishedAt: "2026-08-24T00:00:00Z" },
-  { id: "El1RpnRYA30", title: "John The Witness | John 1:6-18 | David Antwi | Kharis Phase Two", thumbnail: thumbFor("El1RpnRYA30"), publishedAt: "2026-08-19T00:00:00Z" },
-  { id: "bHv6lharURs", title: "Let The Bible Speak | Acts 28:23-27 | David Antwi", thumbnail: thumbFor("bHv6lharURs"), publishedAt: "2026-08-16T00:00:00Z" },
-  { id: "KBFfpU0mX2U", title: "A Living Witness For Jesus | Acts 28:1-10 | David Antwi", thumbnail: thumbFor("KBFfpU0mX2U"), publishedAt: "2026-07-20T00:00:00Z" },
+  {
+    id: "iXo1fg_PRLM",
+    title: "From Acts To Us | Acts 28:27-31 | David Antwi",
+    thumbnail: thumbFor("iXo1fg_PRLM"),
+    publishedAt: "2026-08-23T00:00:00Z",
+  },
+  {
+    id: "iRCcSWEdbPo",
+    title: "The Most Important 3 Days | John 1:19-29 | David Antwi | Kharis Phase Two",
+    thumbnail: thumbFor("iRCcSWEdbPo"),
+    publishedAt: "2026-08-24T00:00:00Z",
+  },
+  {
+    id: "El1RpnRYA30",
+    title: "John The Witness | John 1:6-18 | David Antwi | Kharis Phase Two",
+    thumbnail: thumbFor("El1RpnRYA30"),
+    publishedAt: "2026-08-19T00:00:00Z",
+  },
+  {
+    id: "bHv6lharURs",
+    title: "Let The Bible Speak | Acts 28:23-27 | David Antwi",
+    thumbnail: thumbFor("bHv6lharURs"),
+    publishedAt: "2026-08-16T00:00:00Z",
+  },
+  {
+    id: "KBFfpU0mX2U",
+    title: "A Living Witness For Jesus | Acts 28:1-10 | David Antwi",
+    thumbnail: thumbFor("KBFfpU0mX2U"),
+    publishedAt: "2026-07-20T00:00:00Z",
+  },
 ];
 
 function isSkippedMessage(title: string) {
@@ -252,8 +280,10 @@ export function formatMessageDate(iso?: string) {
 }
 
 export function displayMessageTitle(title: string) {
-  return title
-    .replace(/\s*\|\s*David Antwi.*$/i, "")
-    .replace(/\s*\|\s*Kharis Phase Two.*$/i, "")
-    .trim() || title;
+  return (
+    title
+      .replace(/\s*\|\s*David Antwi.*$/i, "")
+      .replace(/\s*\|\s*Kharis Phase Two.*$/i, "")
+      .trim() || title
+  );
 }

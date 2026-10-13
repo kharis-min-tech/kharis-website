@@ -54,12 +54,14 @@ export const GIVE_WAYS = [
   {
     id: "bank",
     title: "Bank transfer",
-    blurb: "Give tithes or offerings directly to Kharis Ministries. Use these details from your own bank.",
+    blurb:
+      "Give tithes or offerings directly to Kharis Ministries. Use these details from your own bank.",
   },
   {
     id: "text",
     title: "Text (UK)",
-    blurb: "Send a short text. The gift is added to your phone bill or taken from pay-as-you-go, up to £20.",
+    blurb:
+      "Send a short text. The gift is added to your phone bill or taken from pay-as-you-go, up to £20.",
   },
   {
     id: "online",

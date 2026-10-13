@@ -30,10 +30,7 @@ export const STATIC_PATHS = [
 ] as const;
 
 export function siteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL || "https://kharisphase2.org").replace(
-    /\/$/,
-    "",
-  );
+  return (process.env.NEXT_PUBLIC_SITE_URL || "https://kharisphase2.org").replace(/\/$/, "");
 }
 
 export function absoluteUrl(path: string) {
@@ -79,9 +76,7 @@ export function pageMeta({
       title: fullTitle,
       description,
     },
-    robots: noIndex
-      ? { index: false, follow: false }
-      : { index: true, follow: true },
+    robots: noIndex ? { index: false, follow: false } : { index: true, follow: true },
   };
 }
 

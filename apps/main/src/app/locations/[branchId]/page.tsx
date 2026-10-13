@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { LocationBranchView } from "./LocationBranchView";
-import {
-  listBranchData,
-  getBranchBySlug,
-} from "@/lib/branches";
+import { listBranchData, getBranchBySlug } from "@/lib/branches";
 
 interface PageProps {
   params: Promise<{
@@ -29,9 +26,7 @@ export async function generateStaticParams() {
 // PAGE METADATA
 // ======================================================
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { branchId } = await params;
 
   const branch = await getBranchBySlug(branchId);
@@ -47,16 +42,12 @@ export async function generateMetadata({
 
   const mainVenue = branch.venues?.[0];
 
-  const branchLocation =
-    mainVenue?.city ??
-    branch.name.replace(/ Branch$/i, "");
+  const branchLocation = mainVenue?.city ?? branch.name.replace(/ Branch$/i, "");
 
   const title = `${branch.name} | Kharis Church ${branchLocation}`;
 
   const description =
-    branch.short_description ??
-    branch.description ??
-    `Visit Kharis Church ${branchLocation}.`;
+    branch.short_description ?? branch.description ?? `Visit Kharis Church ${branchLocation}.`;
 
   return {
     title,
@@ -96,9 +87,7 @@ export async function generateMetadata({
 // BRANCH PAGE
 // ======================================================
 
-export default async function BranchPage({
-  params,
-}: PageProps) {
+export default async function BranchPage({ params }: PageProps) {
   const { branchId } = await params;
 
   const branch = await getBranchBySlug(branchId);
@@ -107,9 +96,5 @@ export default async function BranchPage({
     notFound();
   }
 
-  return (
-    <LocationBranchView
-      branch={branch}
-    />
-  );
+  return <LocationBranchView branch={branch} />;
 }

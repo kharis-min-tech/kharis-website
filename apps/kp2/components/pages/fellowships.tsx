@@ -24,8 +24,8 @@ function FellowshipsPage() {
                 FELLOWSHIPS
               </h1>
               <p className="font-body-lg text-body-lg max-w-md opacity-90 border-l-4 border-primary pl-6">
-                Smaller circles, deeper connections. Find your people, grow your faith, and do
-                life together in a space built for you.
+                Smaller circles, deeper connections. Find your people, grow your faith, and do life
+                together in a space built for you.
               </p>
               <div className="pt-base flex flex-wrap gap-stack-sm">
                 <Link

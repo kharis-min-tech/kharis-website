@@ -23,9 +23,7 @@ export function VisionExperience() {
       <RevealStagger className="about-chapter__grid3" stagger={0.06}>
         {vision.points.map((point, i) => (
           <RevealItem key={point} className="about-chapter__card">
-            <span className="about-chapter__num">
-              {String(i + 1).padStart(2, "0")}
-            </span>
+            <span className="about-chapter__num">{String(i + 1).padStart(2, "0")}</span>
             <p>{point}</p>
           </RevealItem>
         ))}

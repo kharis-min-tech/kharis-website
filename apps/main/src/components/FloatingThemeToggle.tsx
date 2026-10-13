@@ -2,19 +2,10 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useSyncExternalStore } from "react";
-import {
-  getSiteTheme,
-  subscribeSiteTheme,
-  toggleSiteTheme,
-  type SiteTheme,
-} from "@/lib/theme";
+import { getSiteTheme, subscribeSiteTheme, toggleSiteTheme, type SiteTheme } from "@/lib/theme";
 
 export function FloatingThemeToggle() {
-  const theme = useSyncExternalStore(
-    subscribeSiteTheme,
-    getSiteTheme,
-    () => "light" as SiteTheme,
-  );
+  const theme = useSyncExternalStore(subscribeSiteTheme, getSiteTheme, () => "light" as SiteTheme);
   const dark = theme === "dark";
 
   return (

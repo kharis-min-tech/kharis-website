@@ -68,13 +68,7 @@ export function MessagesDeviceCluster({ messages }: Props) {
               <span>Listen</span>
             </div>
             <div className="msg-devices__lap-hero">
-              <Image
-                src={laptopHero.thumbnail}
-                alt=""
-                fill
-                className={FIT}
-                sizes="400px"
-              />
+              <Image src={laptopHero.thumbnail} alt="" fill className={FIT} sizes="400px" />
               <div className="msg-devices__lap-hero-copy">
                 <em>Teachings</em>
                 <p>{cleanTitle(laptopHero.title)}</p>
@@ -85,13 +79,7 @@ export function MessagesDeviceCluster({ messages }: Props) {
               <div className="msg-devices__lap-picks">
                 {picks.map((m) => (
                   <span key={m.id} className="msg-devices__lap-pick">
-                    <Image
-                      src={m.thumbnail}
-                      alt=""
-                      fill
-                      className={FIT}
-                      sizes="80px"
-                    />
+                    <Image src={m.thumbnail} alt="" fill className={FIT} sizes="80px" />
                   </span>
                 ))}
               </div>
@@ -108,26 +96,14 @@ export function MessagesDeviceCluster({ messages }: Props) {
       <div className="msg-devices__tablet">
         <div className="msg-devices__screen msg-devices__screen--tablet">
           <div className="msg-devices__tab-hero">
-            <Image
-              src={tablet.thumbnail}
-              alt=""
-              fill
-              className={FIT}
-              sizes="260px"
-            />
+            <Image src={tablet.thumbnail} alt="" fill className={FIT} sizes="260px" />
           </div>
           <div className="msg-devices__tab-more">
             <p>Up next</p>
             <div className="msg-devices__tab-picks">
               {tabMore.map((m) => (
                 <span key={m.id} className="msg-devices__tab-pick">
-                  <Image
-                    src={m.thumbnail}
-                    alt=""
-                    fill
-                    className={FIT}
-                    sizes="60px"
-                  />
+                  <Image src={m.thumbnail} alt="" fill className={FIT} sizes="60px" />
                 </span>
               ))}
             </div>

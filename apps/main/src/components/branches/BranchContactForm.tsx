@@ -17,8 +17,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
 
   const inputClass =
     "w-full rounded-xl border border-white/12 bg-black/40 px-4 py-3 text-sm font-medium text-white placeholder:text-gray-500 outline-none transition-colors focus:border-[#e8a33d]";
-  const labelClass =
-    "mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-400";
+  const labelClass = "mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-400";
 
   return (
     <section id="contact" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
@@ -31,8 +30,8 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
             Contact {branch.city}
           </h2>
           <p className="mt-4 max-w-md text-sm font-medium leading-relaxed text-gray-300">
-            Have a question, a prayer request, or want to know more before you
-            visit? Our {branch.city} team would love to hear from you.
+            Have a question, a prayer request, or want to know more before you visit? Our{" "}
+            {branch.city} team would love to hear from you.
           </p>
 
           <div className="mt-8 space-y-3">
@@ -155,25 +154,15 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
                 disabled={busy}
                 className="inline-flex items-center gap-2 rounded-2xl bg-[#800654] px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-[#800654]/25 transition-all hover:-translate-y-0.5 hover:bg-[#5c033c] cursor-pointer disabled:opacity-60"
               >
-                {sent ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <Send className="h-4 w-4" />
-                )}
-                <span>
-                  {busy ? "Sending…" : sent ? "Message Sent" : "Send Message"}
-                </span>
+                {sent ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />}
+                <span>{busy ? "Sending…" : sent ? "Message Sent" : "Send Message"}</span>
               </button>
               {sent && (
                 <span className="text-xs font-semibold text-[#e8a33d]">
                   Thank you. The {branch.city} team will be in touch shortly.
                 </span>
               )}
-              {error ? (
-                <span className="text-xs font-semibold text-[#ff8a8a]">
-                  {error}
-                </span>
-              ) : null}
+              {error ? <span className="text-xs font-semibold text-[#ff8a8a]">{error}</span> : null}
             </div>
           </form>
         </div>

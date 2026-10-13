@@ -16,8 +16,7 @@ const CONTACT_INLINE =
   /\b(using|via|through|with|use|fill in|fill out|complete)\s+(?:the\s+|our\s+)?\[\[\s*CONTACT[_ ]FORM\s*\]\]/gi;
 const CONTACT_AS_NOUN = /\b(?:the|our)\s+\[\[\s*CONTACT[_ ]FORM\s*\]\]/gi;
 /** A marker still arriving at the end of a streamed buffer, e.g. "[[MES". */
-const PARTIAL_MARKER_AT_END =
-  /\[(?:\[\s*(?:[A-Za-z_ ]*|MESSAGE\s*:\s*[A-Za-z0-9_-]*)\s*\]?)?$/i;
+const PARTIAL_MARKER_AT_END = /\[(?:\[\s*(?:[A-Za-z_ ]*|MESSAGE\s*:\s*[A-Za-z0-9_-]*)\s*\]?)?$/i;
 
 export function extractMessageMarkerIds(text: string, max = 3): string[] {
   const ids: string[] = [];

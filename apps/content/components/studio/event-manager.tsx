@@ -69,7 +69,9 @@ function blank(workspace: string): EventDraft {
 function fromRow(row: EventRow): EventDraft {
   const start = splitTimestamp(row.start_time);
   const end = splitTimestamp(row.end_time);
-  const sites = (row.sites ?? []).filter((site): site is EventSite => SITES.some((item) => item.id === site));
+  const sites = (row.sites ?? []).filter((site): site is EventSite =>
+    SITES.some((item) => item.id === site),
+  );
   return {
     id: row.id,
     title: row.title ?? "",
@@ -127,7 +129,9 @@ export function EventManager() {
     const needle = query.trim().toLowerCase();
     if (!rows) return [];
     if (!needle) return rows;
-    return rows.filter((row) => `${row.title} ${row.location ?? ""} ${row.branch_name ?? ""}`.toLowerCase().includes(needle));
+    return rows.filter((row) =>
+      `${row.title} ${row.location ?? ""} ${row.branch_name ?? ""}`.toLowerCase().includes(needle),
+    );
   }, [query, rows]);
 
   if (!workspace) return <PickWorkspace />;
@@ -197,7 +201,12 @@ export function EventManager() {
         description="Category, which sites show it, and an optional weekly repeat. Unpublished events are hidden because their site list is cleared."
         action={<Button onClick={() => setDraft(blank(workspace))}>New event</Button>}
       />
-      <Input value={query} placeholder="Search events" onChange={(event) => setQuery(event.target.value)} className="mb-4 max-w-sm" />
+      <Input
+        value={query}
+        placeholder="Search events"
+        onChange={(event) => setQuery(event.target.value)}
+        className="mb-4 max-w-sm"
+      />
       {rows === null ? (
         <div className="space-y-3">
           <Skeleton className="h-16" />
@@ -206,12 +215,18 @@ export function EventManager() {
       ) : error ? (
         <p className="text-sm text-destructive">{error}</p>
       ) : visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">No events in this workspace.</div>
+        <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">
+          No events in this workspace.
+        </div>
       ) : (
         <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
           {visible.map((row) => (
             <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
-              <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setDraft(fromRow(row))}>
+              <button
+                type="button"
+                className="min-w-0 flex-1 text-left"
+                onClick={() => setDraft(fromRow(row))}
+              >
                 <span className="block truncate font-medium">{row.title}</span>
                 <span className="block truncate text-sm text-muted-foreground">
                   {formatWhen(row.start_time)}
@@ -230,15 +245,49 @@ export function EventManager() {
       {draft ? (
         <Panel title={draft.id ? "Edit event" : "New event"} onClose={() => setDraft(null)}>
           <form className="space-y-4" onSubmit={onSave}>
-            <TextField label="Title" required value={draft.title} onChange={(event) => patch({ title: event.target.value })} />
-            <AreaField label="Description" value={draft.description} onChange={(event) => patch({ description: event.target.value })} />
+            <TextField
+              label="Title"
+              required
+              value={draft.title}
+              onChange={(event) => patch({ title: event.target.value })}
+            />
+            <AreaField
+              label="Description"
+              value={draft.description}
+              onChange={(event) => patch({ description: event.target.value })}
+            />
             <div className="grid gap-3 sm:grid-cols-3">
-              <TextField label="Date" type="date" required value={draft.date} onChange={(event) => patch({ date: event.target.value })} />
-              <TextField label="Start" type="time" required value={draft.time} onChange={(event) => patch({ time: event.target.value })} />
-              <TextField label="End" type="time" value={draft.endTime} onChange={(event) => patch({ endTime: event.target.value })} />
+              <TextField
+                label="Date"
+                type="date"
+                required
+                value={draft.date}
+                onChange={(event) => patch({ date: event.target.value })}
+              />
+              <TextField
+                label="Start"
+                type="time"
+                required
+                value={draft.time}
+                onChange={(event) => patch({ time: event.target.value })}
+              />
+              <TextField
+                label="End"
+                type="time"
+                value={draft.endTime}
+                onChange={(event) => patch({ endTime: event.target.value })}
+              />
             </div>
-            <TextField label="Location" value={draft.location} onChange={(event) => patch({ location: event.target.value })} />
-            <SelectField label="Branch" value={draft.branchId} onChange={(event) => patch({ branchId: event.target.value })}>
+            <TextField
+              label="Location"
+              value={draft.location}
+              onChange={(event) => patch({ location: event.target.value })}
+            />
+            <SelectField
+              label="Branch"
+              value={draft.branchId}
+              onChange={(event) => patch({ branchId: event.target.value })}
+            >
               <option value="">No branch</option>
               {branches.map((branch) => (
                 <option key={branch.id} value={branch.id}>
@@ -246,7 +295,11 @@ export function EventManager() {
                 </option>
               ))}
             </SelectField>
-            <SelectField label="Category" value={draft.category} onChange={(event) => patch({ category: event.target.value as EventCategory })}>
+            <SelectField
+              label="Category"
+              value={draft.category}
+              onChange={(event) => patch({ category: event.target.value as EventCategory })}
+            >
               {CATEGORIES.map((category) => (
                 <option key={category} value={category}>
                   {category}
@@ -256,7 +309,9 @@ export function EventManager() {
             <SelectField
               label="Repeats"
               value={draft.recurrence}
-              onChange={(event) => patch({ recurrence: event.target.value as EventDraft["recurrence"] })}
+              onChange={(event) =>
+                patch({ recurrence: event.target.value as EventDraft["recurrence"] })
+              }
             >
               <option value="none">Does not repeat</option>
               <option value="weekly">Weekly</option>
@@ -281,7 +336,9 @@ export function EventManager() {
                           checked={checked}
                           onChange={() =>
                             patch({
-                              days: checked ? draft.days.filter((day) => day !== index) : [...draft.days, index].sort(),
+                              days: checked
+                                ? draft.days.filter((day) => day !== index)
+                                : [...draft.days, index].sort(),
                             })
                           }
                         />
@@ -290,7 +347,12 @@ export function EventManager() {
                     );
                   })}
                 </div>
-                <TextField label="Repeat until" type="date" value={draft.until} onChange={(event) => patch({ until: event.target.value })} />
+                <TextField
+                  label="Repeat until"
+                  type="date"
+                  value={draft.until}
+                  onChange={(event) => patch({ until: event.target.value })}
+                />
               </div>
             ) : null}
             <fieldset>
@@ -304,7 +366,9 @@ export function EventManager() {
                       checked={draft.sites.includes(site.id)}
                       onChange={(event) =>
                         patch({
-                          sites: event.target.checked ? [...draft.sites, site.id] : draft.sites.filter((item) => item !== site.id),
+                          sites: event.target.checked
+                            ? [...draft.sites, site.id]
+                            : draft.sites.filter((item) => item !== site.id),
                         })
                       }
                     />
@@ -313,9 +377,22 @@ export function EventManager() {
                 ))}
               </div>
             </fieldset>
-            <ToggleField label="Published" checked={draft.published} onChange={(published) => patch({ published })} />
-            <ToggleField label="Featured" checked={draft.featured} onChange={(featured) => patch({ featured })} />
-            <ImageDrop label="Cover image" folder="events" value={draft.imageUrl} onChange={(imageUrl) => patch({ imageUrl })} />
+            <ToggleField
+              label="Published"
+              checked={draft.published}
+              onChange={(published) => patch({ published })}
+            />
+            <ToggleField
+              label="Featured"
+              checked={draft.featured}
+              onChange={(featured) => patch({ featured })}
+            />
+            <ImageDrop
+              label="Cover image"
+              folder="events"
+              value={draft.imageUrl}
+              onChange={(imageUrl) => patch({ imageUrl })}
+            />
             <Button type="submit" disabled={saving}>
               {saving ? "Saving…" : "Save event"}
             </Button>

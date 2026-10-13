@@ -165,8 +165,7 @@ export const GOVERNANCE = {
     {
       id: "disclaimer",
       title: "Website Disclaimer",
-      blurb:
-        "Important notes about information on this website and your use of our online spaces.",
+      blurb: "Important notes about information on this website and your use of our online spaces.",
       icon: "scroll-text",
     },
   ],

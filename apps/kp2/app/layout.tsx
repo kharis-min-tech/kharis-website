@@ -2,7 +2,12 @@ import type { Metadata, Viewport } from "next";
 import { Anton, Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 
-const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton", display: "swap" });
+const anton = Anton({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-anton",
+  display: "swap",
+});
 const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],

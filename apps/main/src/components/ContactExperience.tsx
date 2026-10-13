@@ -2,14 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  CheckCircle2,
-  Clock,
-  MapPin,
-  Navigation,
-  Phone,
-  Search,
-} from "lucide-react";
+import { CheckCircle2, Clock, MapPin, Navigation, Phone, Search } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import type { ContactLocation } from "@/lib/contactLocations";
 import {
@@ -46,13 +39,7 @@ function getBranchAddress(branch: ContactLocation) {
 
   if (!venue) return "";
 
-  return [
-    venue.name,
-    venue.address_line1,
-    venue.address_line2,
-    venue.city,
-    venue.postcode,
-  ]
+  return [venue.name, venue.address_line1, venue.address_line2, venue.city, venue.postcode]
     .filter(Boolean)
     .join(", ");
 }
@@ -72,9 +59,7 @@ function getDirectionsUrl(branch: ContactLocation) {
     .filter(Boolean)
     .join(", ");
 
-  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-    destination,
-  )}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
 }
 
 const THANKS_DISMISS_MS = 6500;
@@ -143,20 +128,14 @@ export function ContactExperience({ locations }: Props) {
   );
 
   const HQ =
-    CONTACT_BRANCHES.find((b) => b.name === "Kharis London") ??
-    CONTACT_BRANCHES[0] ??
-    null;
-  const [region, setRegion] = useState<
-    "all" | "United Kingdom" | "International"
-  >("all");
+    CONTACT_BRANCHES.find((b) => b.name === "Kharis London") ?? CONTACT_BRANCHES[0] ?? null;
+  const [region, setRegion] = useState<"all" | "United Kingdom" | "International">("all");
   const [query, setQuery] = useState("");
   const [active, setActive] = useState<ContactLocation | null>(HQ);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [chatHandoff, setChatHandoff] = useState<GraceHandoffPayload | null>(
-    null,
-  );
+  const [chatHandoff, setChatHandoff] = useState<GraceHandoffPayload | null>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -218,9 +197,7 @@ export function ContactExperience({ locations }: Props) {
       topic: f.topic === "General" ? "Chat follow-up" : f.topic,
       chatTicket: payload.ticketId,
       chatTranscript: payload.summary,
-      message: f.message.trim()
-        ? f.message
-        : buildContactPrefill(payload),
+      message: f.message.trim() ? f.message : buildContactPrefill(payload),
     }));
   }, [searchParams]);
 
@@ -286,8 +263,8 @@ export function ContactExperience({ locations }: Props) {
           <Reveal variant="blur" className="contact-hero__copy" amount={0.05}>
             <h1>Contact us</h1>
             <p>
-              We are here for you. Whether you have a question, a prayer
-              request, or just want to say hi.
+              We are here for you. Whether you have a question, a prayer request, or just want to
+              say hi.
             </p>
             <div className="contact-hero__bars" aria-hidden>
               <span className="contact-hero__bar contact-hero__bar--gold" />
@@ -321,22 +298,16 @@ export function ContactExperience({ locations }: Props) {
                 <h2>Send a message</h2>
                 {ticketId ? (
                   <div className="contact-ticket" role="status">
-                    <p className="contact-ticket__label">
-                      Grace conversation ticket
-                    </p>
+                    <p className="contact-ticket__label">Grace conversation ticket</p>
                     <p className="contact-ticket__id">{ticketId}</p>
                     <p className="contact-ticket__hint">
-                      Your chat summary is included below so the team has
-                      context. Keep this ticket ID for your records.
+                      Your chat summary is included below so the team has context. Keep this ticket
+                      ID for your records.
                     </p>
                   </div>
                 ) : null}
                 <input type="hidden" name="chatTicket" value={form.chatTicket} />
-                <input
-                  type="hidden"
-                  name="chatTranscript"
-                  value={form.chatTranscript}
-                />
+                <input type="hidden" name="chatTranscript" value={form.chatTranscript} />
                 <div className="contact-form__row">
                   <label>
                     Your name
@@ -345,9 +316,7 @@ export function ContactExperience({ locations }: Props) {
                       autoComplete="name"
                       placeholder="John Doe"
                       value={form.name}
-                      onChange={(e) =>
-                        setForm({ ...form, name: e.target.value })
-                      }
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
                     />
                   </label>
                   <label>
@@ -358,9 +327,7 @@ export function ContactExperience({ locations }: Props) {
                       autoComplete="email"
                       placeholder="hello@example.com"
                       value={form.email}
-                      onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                      }
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
                     />
                   </label>
                 </div>
@@ -369,9 +336,7 @@ export function ContactExperience({ locations }: Props) {
                     Subject
                     <select
                       value={form.topic}
-                      onChange={(e) =>
-                        setForm({ ...form, topic: e.target.value })
-                      }
+                      onChange={(e) => setForm({ ...form, topic: e.target.value })}
                     >
                       {SUBJECTS.map((s) => (
                         <option key={s.value} value={s.value}>
@@ -385,9 +350,7 @@ export function ContactExperience({ locations }: Props) {
                     <select
                       value={form.branch}
                       onChange={(e) => {
-                        const branch = CONTACT_BRANCHES.find(
-                          (b) => b.name === e.target.value,
-                        );
+                        const branch = CONTACT_BRANCHES.find((b) => b.name === e.target.value);
                         if (branch) selectBranch(branch);
                       }}
                     >
@@ -405,18 +368,12 @@ export function ContactExperience({ locations }: Props) {
                     required
                     rows={ticketId ? 10 : 7}
                     value={form.message}
-                    onChange={(e) =>
-                      setForm({ ...form, message: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
                     placeholder="How can we help?"
                   />
                 </label>
                 {error ? <p className="contact-error">{error}</p> : null}
-                <button
-                  type="submit"
-                  className="contact-submit"
-                  disabled={busy}
-                >
+                <button type="submit" className="contact-submit" disabled={busy}>
                   {busy ? "Sending…" : "Send it!"}
                 </button>
               </form>
@@ -431,9 +388,7 @@ export function ContactExperience({ locations }: Props) {
                   <MapPin className="h-4 w-4" aria-hidden />
                   <div>
                     <strong>Main KP2 branch</strong>
-                    <span>
-                      {HQ ? getBranchAddress(HQ) : "Address Unavailiable"}
-                    </span>
+                    <span>{HQ ? getBranchAddress(HQ) : "Address Unavailiable"}</span>
                   </div>
                 </li>
                 <li>
@@ -449,9 +404,7 @@ export function ContactExperience({ locations }: Props) {
                   <div>
                     <strong>Call us</strong>
                     {HQ?.contact_phone ? (
-                      <a href={`tel:${HQ.contact_phone.replace(/\D/g, "")}`}>
-                        {HQ.contact_phone}
-                      </a>
+                      <a href={`tel:${HQ.contact_phone.replace(/\D/g, "")}`}>{HQ.contact_phone}</a>
                     ) : (
                       <span>Phone unavailable</span>
                     )}{" "}
@@ -481,11 +434,7 @@ export function ContactExperience({ locations }: Props) {
             </a>
           </Reveal>
 
-          <Reveal
-            variant="up"
-            delay={0.06}
-            className="contact-map-section__tools"
-          >
+          <Reveal variant="up" delay={0.06} className="contact-map-section__tools">
             <div className="contact-search">
               <Search className="h-4 w-4" aria-hidden />
               <input
@@ -497,32 +446,22 @@ export function ContactExperience({ locations }: Props) {
               />
             </div>
             <div className="contact-regions" role="tablist" aria-label="Region">
-              {(["all", "United Kingdom", "International"] as const).map(
-                (id) => (
-                  <button
-                    key={id}
-                    type="button"
-                    role="tab"
-                    aria-selected={region === id}
-                    className={region === id ? "is-on" : ""}
-                    onClick={() => setRegion(id)}
-                  >
-                    {id === "all"
-                      ? "All"
-                      : id === "United Kingdom"
-                        ? "UK"
-                        : "International"}
-                  </button>
-                ),
-              )}
+              {(["all", "United Kingdom", "International"] as const).map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  role="tab"
+                  aria-selected={region === id}
+                  className={region === id ? "is-on" : ""}
+                  onClick={() => setRegion(id)}
+                >
+                  {id === "all" ? "All" : id === "United Kingdom" ? "UK" : "International"}
+                </button>
+              ))}
             </div>
           </Reveal>
 
-          <Reveal
-            variant="up"
-            delay={0.1}
-            className="contact-map-section__grid"
-          >
+          <Reveal variant="up" delay={0.1} className="contact-map-section__grid">
             <ul className="contact-branches">
               {filtered.map((branch) => {
                 const venue = getPrimaryVenue(branch);
@@ -531,9 +470,7 @@ export function ContactExperience({ locations }: Props) {
                   <li key={branch.id}>
                     <button
                       type="button"
-                      className={`contact-branch${
-                        active?.id === branch.id ? " is-on" : ""
-                      }`}
+                      className={`contact-branch${active?.id === branch.id ? " is-on" : ""}`}
                       onClick={() => selectBranch(branch)}
                     >
                       <MapPin className="h-4 w-4" aria-hidden />
@@ -543,9 +480,7 @@ export function ContactExperience({ locations }: Props) {
 
                         <em>
                           {venue
-                            ? [venue.address_line1, venue.city]
-                                .filter(Boolean)
-                                .join(" · ")
+                            ? [venue.address_line1, venue.city].filter(Boolean).join(" · ")
                             : "Location unavailable"}
                         </em>
                       </span>
@@ -554,37 +489,34 @@ export function ContactExperience({ locations }: Props) {
                 );
               })}
               {filtered.length === 0 ? (
-                <li className="contact-empty">
-                  No branches match that search.
-                </li>
+                <li className="contact-empty">No branches match that search.</li>
               ) : null}
             </ul>
 
-              <div className="contact-map-section__map">
-                {active ? (
-                  <iframe
-                    title={`Map for ${active.name}`}
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(
-                      getBranchAddress(active),
-                    )}&output=embed`}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                ) : null}
+            <div className="contact-map-section__map">
+              {active ? (
+                <iframe
+                  title={`Map for ${active.name}`}
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(
+                    getBranchAddress(active),
+                  )}&output=embed`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              ) : null}
 
-                {active && (
-                  <div className="contact-map-section__caption">
-                    <div>
-                      <p>{active.name}</p>
-                      <span>{getBranchAddress(active)}</span>
-                    </div>
+              {active && (
+                <div className="contact-map-section__caption">
+                  <div>
+                    <p>{active.name}</p>
+                    <span>{getBranchAddress(active)}</span>
                   </div>
-                )}
-              </div>
-            
+                </div>
+              )}
+            </div>
           </Reveal>
         </div>
       </section>

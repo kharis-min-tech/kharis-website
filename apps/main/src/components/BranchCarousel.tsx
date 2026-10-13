@@ -82,9 +82,7 @@ export function BranchCarousel({ slides }: Props) {
           className="apple-carousel__track"
           style={{
             transform: `translateX(calc(50% - ${index} * (var(--slide-w) + var(--slide-gap)) - var(--slide-w) / 2))`,
-            transition: animate
-              ? "transform 0.75s cubic-bezier(0.22, 1, 0.36, 1)"
-              : "none",
+            transition: animate ? "transform 0.75s cubic-bezier(0.22, 1, 0.36, 1)" : "none",
           }}
         >
           {reel.map((slide, i) => {
@@ -123,10 +121,7 @@ export function BranchCarousel({ slides }: Props) {
                 </div>
 
                 <div className="apple-slide__copy">
-                  <h3
-                    className="apple-slide__title"
-                    style={{ color: slide.accent }}
-                  >
+                  <h3 className="apple-slide__title" style={{ color: slide.accent }}>
                     {slide.title}
                   </h3>
                   <p className="apple-slide__meta">{slide.subtitle}</p>
@@ -138,11 +133,7 @@ export function BranchCarousel({ slides }: Props) {
       </div>
 
       <div className="apple-carousel__controls">
-        <div
-          className="apple-carousel__dots"
-          role="tablist"
-          aria-label="Who we are"
-        >
+        <div className="apple-carousel__dots" role="tablist" aria-label="Who we are">
           {list.map((slide, i) => (
             <button
               key={slide.name}

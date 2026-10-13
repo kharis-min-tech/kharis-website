@@ -27,7 +27,9 @@ export async function serverFetch(input: RequestInfo | URL, init?: RequestInit):
 }
 
 function nodeFetch(input: RequestInfo | URL, init?: RequestInit) {
-  const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url);
+  const url = new URL(
+    typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url,
+  );
   const method = init?.method ?? (input instanceof Request ? input.method : "GET");
   const headers = new Headers(input instanceof Request ? input.headers : undefined);
   if (init?.headers) new Headers(init.headers).forEach((value, key) => headers.set(key, value));
@@ -43,7 +45,8 @@ function nodeFetch(input: RequestInfo | URL, init?: RequestInit) {
       {
         method,
         headers: headerRecord,
-        agent: url.protocol === "https:" ? new https.Agent({ rejectUnauthorized: false }) : undefined,
+        agent:
+          url.protocol === "https:" ? new https.Agent({ rejectUnauthorized: false }) : undefined,
       },
       (response) => {
         const chunks: Buffer[] = [];
@@ -57,7 +60,12 @@ function nodeFetch(input: RequestInfo | URL, init?: RequestInit) {
           const bytes = Buffer.concat(chunks);
           const copy = new Uint8Array(bytes.byteLength);
           copy.set(bytes);
-          resolve(new Response(new Blob([copy]), { status: response.statusCode ?? 500, headers: responseHeaders }));
+          resolve(
+            new Response(new Blob([copy]), {
+              status: response.statusCode ?? 500,
+              headers: responseHeaders,
+            }),
+          );
         });
       },
     );

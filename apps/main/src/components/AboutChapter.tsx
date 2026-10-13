@@ -69,7 +69,5 @@ export function ChapterPanel({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <Reveal className={`about-chapter__panel ${className}`}>{children}</Reveal>
-  );
+  return <Reveal className={`about-chapter__panel ${className}`}>{children}</Reveal>;
 }

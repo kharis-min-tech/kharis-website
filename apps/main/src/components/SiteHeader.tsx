@@ -35,11 +35,7 @@ type Props = {
 
 export function SiteHeader({ tone = "auto" }: Props) {
   const pathname = usePathname();
-  const siteTheme = useSyncExternalStore(
-    subscribeSiteTheme,
-    getSiteTheme,
-    () => "light" as const,
-  );
+  const siteTheme = useSyncExternalStore(subscribeSiteTheme, getSiteTheme, () => "light" as const);
   const siteDark = siteTheme === "dark";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -74,13 +70,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [aboutOpen]);
 
-  const onDark = siteDark
-    ? true
-    : forceLight
-      ? false
-      : forceDark
-        ? !open
-        : !scrolled && !open;
+  const onDark = siteDark ? true : forceLight ? false : forceDark ? !open : !scrolled && !open;
   const solid = siteDark
     ? true
     : forceLight
@@ -101,9 +91,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
     }`;
 
   const aboutActive =
-    pathname === "/about" ||
-    pathname.startsWith("/about/") ||
-    pathname === "/governance";
+    pathname === "/about" || pathname.startsWith("/about/") || pathname === "/governance";
 
   return (
     <header
@@ -117,9 +105,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
     >
       <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-4 px-5 md:px-8">
         <Link href="/" aria-label="Kharis home" className="relative z-10">
-          <BrandLogo
-            tone={onDark || (forceDark && !open) ? "onDark" : "onLight"}
-          />
+          <BrandLogo tone={onDark || (forceDark && !open) ? "onDark" : "onLight"} />
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex">
@@ -233,9 +219,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
             type="button"
             aria-label="Menu"
             className={`grid h-10 w-10 place-items-center rounded-full border lg:hidden ${
-              onDark || (forceDark && !open)
-                ? "border-white/35 text-white"
-                : "border-line text-fg"
+              onDark || (forceDark && !open) ? "border-white/35 text-white" : "border-line text-fg"
             }`}
             onClick={() => setOpen((v) => !v)}
           >
@@ -247,9 +231,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
       {open && (
         <div
           className={`border-t px-5 py-4 lg:hidden ${
-            forceDark
-              ? "border-white/10 bg-[#0a0612] text-white"
-              : "border-line bg-white"
+            forceDark ? "border-white/10 bg-[#0a0612] text-white" : "border-line bg-white"
           }`}
         >
           {links.map((link) => {

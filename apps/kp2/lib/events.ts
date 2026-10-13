@@ -10,12 +10,7 @@ export type EventCategory =
   | "Social";
 
 /** Raw `events.category` from the shared database (architecture v5). */
-export type DbEventCategory =
-  | "service"
-  | "fellowship"
-  | "conference"
-  | "camp"
-  | "general";
+export type DbEventCategory = "service" | "fellowship" | "conference" | "camp" | "general";
 
 export type ChurchEvent = {
   slug: string;
@@ -106,12 +101,7 @@ function isForThisSite(event: EventRow): boolean {
 
 function normalizeKind(value: string | null | undefined): DbEventCategory {
   const kind = (value ?? "general").toLowerCase();
-  if (
-    kind === "service" ||
-    kind === "fellowship" ||
-    kind === "conference" ||
-    kind === "camp"
-  ) {
+  if (kind === "service" || kind === "fellowship" || kind === "conference" || kind === "camp") {
     return kind;
   }
   return "general";
@@ -195,12 +185,15 @@ function londonDate(date: Date) {
 }
 
 function londonTime(date: Date) {
-  return date.toLocaleTimeString("en-GB", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-    timeZone: "Europe/London",
-  }).replace(":00", "").toUpperCase();
+  return date
+    .toLocaleTimeString("en-GB", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "Europe/London",
+    })
+    .replace(":00", "")
+    .toUpperCase();
 }
 
 function occurrenceEnd(event: DisplayEvent): Date {

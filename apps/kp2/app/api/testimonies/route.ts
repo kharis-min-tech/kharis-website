@@ -77,10 +77,7 @@ export async function POST(request: Request) {
     const anonymous = asString(body.anonymous, 8);
 
     if (!firstName || !lastName || !category || !details || !anonymous) {
-      return NextResponse.json(
-        { error: "Please complete all required fields." },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Please complete all required fields." }, { status: 400 });
     }
 
     if (!CATEGORIES.has(category)) {
@@ -96,8 +93,7 @@ export async function POST(request: Request) {
     }
 
     const displayName = preferredName || `${firstName} ${lastName}`;
-    const shortDescription =
-      details.length > 180 ? `${details.slice(0, 177).trim()}...` : details;
+    const shortDescription = details.length > 180 ? `${details.slice(0, 177).trim()}...` : details;
 
     const payload = JSON.stringify({
       name: displayName,

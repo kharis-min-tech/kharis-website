@@ -260,11 +260,7 @@ const paths: Record<IconProps["name"], ReactNode> = {
 
 export function Icon({ name, className = "" }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden
-      className={`inline-block shrink-0 ${className}`}
-    >
+    <svg viewBox="0 0 24 24" aria-hidden className={`inline-block shrink-0 ${className}`}>
       {paths[name]}
     </svg>
   );

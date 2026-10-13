@@ -4,12 +4,16 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 function isCertError(error: unknown) {
-  const code = (error as { cause?: { code?: string }; code?: string } | null)?.cause?.code
-    ?? (error as { code?: string } | null)?.code;
+  const code =
+    (error as { cause?: { code?: string }; code?: string } | null)?.cause?.code ??
+    (error as { code?: string } | null)?.code;
   return code === "UNABLE_TO_VERIFY_LEAF_SIGNATURE" || code === "CERT_UNTRUSTED";
 }
 
-async function restGet(url: string, headers: Record<string, string>): Promise<{ ok: boolean; status: number; body: string }> {
+async function restGet(
+  url: string,
+  headers: Record<string, string>,
+): Promise<{ ok: boolean; status: number; body: string }> {
   return new Promise((resolve, reject) => {
     const req = https.get(
       url,

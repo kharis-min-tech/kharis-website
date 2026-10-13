@@ -1,6 +1,8 @@
 import type { BranchDraft, ServiceDraft, VenueDraft } from "@/lib/branch-types";
 
-function venue(partial: Pick<VenueDraft, "name" | "address" | "postcode" | "city" | "latitude" | "longitude">): VenueDraft {
+function venue(
+  partial: Pick<VenueDraft, "name" | "address" | "postcode" | "city" | "latitude" | "longitude">,
+): VenueDraft {
   return {
     key: crypto.randomUUID(),
     name: partial.name,
@@ -12,7 +14,8 @@ function venue(partial: Pick<VenueDraft, "name" | "address" | "postcode" | "city
     latitude: partial.latitude,
     longitude: partial.longitude,
     parkingInfo: "Public parking is available near the venue.",
-    transitInfo: "The venue is reachable by public transport. Check local bus and rail times before you travel.",
+    transitInfo:
+      "The venue is reachable by public transport. Check local bus and rail times before you travel.",
     imageUrl: "",
     imageKey: "",
   };
@@ -34,7 +37,8 @@ export function branchTemplate(current: BranchDraft): BranchDraft {
     ...current,
     city: current.city || "Sample City",
     shortDescription:
-      current.shortDescription || "A local church family gathering around Jesus, the Word, and prayer.",
+      current.shortDescription ||
+      "A local church family gathering around Jesus, the Word, and prayer.",
     description:
       current.description ||
       "Sunday worship and a midweek meeting. Replace this copy, the sample address, and the map pin before publishing.",

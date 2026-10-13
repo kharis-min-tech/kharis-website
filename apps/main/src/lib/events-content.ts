@@ -45,9 +45,7 @@ export function eventsForMonth(year: number, monthIndex: number) {
 /** Soonest upcoming gatherings from kharis.org. */
 export function happeningEvents(from = new Date()) {
   const stamp = from.toISOString().slice(0, 10);
-  return EVENTS.filter((e) => e.date >= stamp).sort((a, b) =>
-    a.date.localeCompare(b.date),
-  );
+  return EVENTS.filter((e) => e.date >= stamp).sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export function featuredEvent() {
@@ -89,9 +87,7 @@ export function eventMonthKey(date: string | Date) {
     return "";
   }
 
-  return `${value.getFullYear()}-${String(
-    value.getMonth() + 1
-  ).padStart(2, "0")}`;
+  return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}`;
 }
 
 export function groupEventsByMonth(events: ChurchEvent[]) {
