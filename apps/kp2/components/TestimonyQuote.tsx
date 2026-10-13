@@ -8,7 +8,10 @@ const TEASER_CHARS = 160;
 function excerpt(text: string, max = TEASER_CHARS) {
   const clean = text.replace(/^["“]|["”]$/g, "").trim();
   if (clean.length <= max) return { teaser: clean, truncated: false };
-  const cut = clean.slice(0, max).replace(/\s+\S*$/, "").trim();
+  const cut = clean
+    .slice(0, max)
+    .replace(/\s+\S*$/, "")
+    .trim();
   return { teaser: `${cut}…`, truncated: true };
 }
 
@@ -84,9 +87,7 @@ export function TestimonyQuote({
         <h3 id={titleId} className="font-headline-md text-2xl uppercase mt-6">
           — {name}
         </h3>
-        {meta ? (
-          <p className="font-label-sm text-primary uppercase mt-1">{meta}</p>
-        ) : null}
+        {meta ? <p className="font-label-sm text-primary uppercase mt-1">{meta}</p> : null}
       </div>
     </div>
   );

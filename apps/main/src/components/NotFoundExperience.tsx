@@ -29,10 +29,8 @@ export function NotFoundExperience() {
       if (!el) return;
       hovering.current = true;
       const rect = el.getBoundingClientRect();
-      const clientX =
-        "touches" in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
-      const clientY =
-        "touches" in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
+      const clientX = "touches" in e ? (e.touches[0]?.clientX ?? 0) : e.clientX;
+      const clientY = "touches" in e ? (e.touches[0]?.clientY ?? 0) : e.clientY;
       target.current = {
         x: ((clientX - rect.left) / rect.width - 0.5) * 2,
         y: ((clientY - rect.top) / rect.height - 0.5) * 2,
@@ -84,10 +82,7 @@ export function NotFoundExperience() {
         aria-hidden
         style={parallaxVars}
       >
-        <div
-          className="not-found__glow"
-          style={{ ["--nd" as string]: 8 } as CSSProperties}
-        />
+        <div className="not-found__glow" style={{ ["--nd" as string]: 8 } as CSSProperties} />
         <div
           className="not-found__orb not-found__orb--a"
           style={{ ["--nd" as string]: 18 } as CSSProperties}
@@ -120,19 +115,10 @@ export function NotFoundExperience() {
               d="M0 290 C120 250 200 300 320 270 C440 240 520 300 640 275 L640 360 L0 360 Z"
               fill="url(#nfHillNear)"
             />
-            <ellipse
-              cx="320"
-              cy="300"
-              rx="210"
-              ry="28"
-              fill="rgba(128,6,84,0.08)"
-            />
+            <ellipse cx="320" cy="300" rx="210" ry="28" fill="rgba(128,6,84,0.08)" />
           </g>
 
-          <g
-            className="not-found__layer not-found__twinkle"
-            style={{ ["--nd" as string]: 28 }}
-          >
+          <g className="not-found__layer not-found__twinkle" style={{ ["--nd" as string]: 28 }}>
             <circle cx="90" cy="70" r="3.5" fill="#d4920a" />
             <circle cx="520" cy="55" r="2.5" fill="#800654" />
             <circle cx="570" cy="120" r="3" fill="#d4920a" opacity="0.7" />
@@ -149,10 +135,7 @@ export function NotFoundExperience() {
             />
           </g>
 
-          <g
-            className="not-found__layer not-found__sign"
-            style={{ ["--nd" as string]: 36 }}
-          >
+          <g className="not-found__layer not-found__sign" style={{ ["--nd" as string]: 36 }}>
             <rect
               x="198"
               y="88"
@@ -163,14 +146,7 @@ export function NotFoundExperience() {
               stroke="rgba(128,6,84,0.14)"
               strokeWidth="3"
             />
-            <rect
-              x="210"
-              y="100"
-              width="220"
-              height="108"
-              rx="16"
-              fill="url(#nfCard)"
-            />
+            <rect x="210" y="100" width="220" height="108" rx="16" fill="url(#nfCard)" />
             <text
               x="320"
               y="178"
@@ -184,42 +160,13 @@ export function NotFoundExperience() {
               404
             </text>
             <rect x="308" y="220" width="24" height="70" rx="6" fill="#650445" />
-            <rect
-              x="286"
-              y="284"
-              width="68"
-              height="14"
-              rx="7"
-              fill="#800654"
-              opacity="0.35"
-            />
+            <rect x="286" y="284" width="68" height="14" rx="7" fill="#800654" opacity="0.35" />
           </g>
 
-          <g
-            className="not-found__layer not-found__figure"
-            style={{ ["--nd" as string]: 44 }}
-          >
-            <ellipse
-              cx="140"
-              cy="278"
-              rx="28"
-              ry="8"
-              fill="rgba(18,4,14,0.12)"
-            />
-            <circle
-              cx="140"
-              cy="208"
-              r="22"
-              fill="#f7eef4"
-              stroke="#800654"
-              strokeWidth="3"
-            />
-            <path
-              d="M140 230 v48"
-              stroke="#800654"
-              strokeWidth="5"
-              strokeLinecap="round"
-            />
+          <g className="not-found__layer not-found__figure" style={{ ["--nd" as string]: 44 }}>
+            <ellipse cx="140" cy="278" rx="28" ry="8" fill="rgba(18,4,14,0.12)" />
+            <circle cx="140" cy="208" r="22" fill="#f7eef4" stroke="#800654" strokeWidth="3" />
+            <path d="M140 230 v48" stroke="#800654" strokeWidth="5" strokeLinecap="round" />
             <path
               d="M140 250 l-22 18 M140 250 l22 18"
               stroke="#800654"
@@ -233,22 +180,12 @@ export function NotFoundExperience() {
               strokeLinecap="round"
             />
             <circle cx="178" cy="178" r="18" fill="#d4920a" />
-            <text
-              x="178"
-              y="185"
-              textAnchor="middle"
-              fontSize="20"
-              fontWeight="800"
-              fill="#1c1c1f"
-            >
+            <text x="178" y="185" textAnchor="middle" fontSize="20" fontWeight="800" fill="#1c1c1f">
               ?
             </text>
           </g>
 
-          <g
-            className="not-found__layer not-found__map"
-            style={{ ["--nd" as string]: 50 }}
-          >
+          <g className="not-found__layer not-found__map" style={{ ["--nd" as string]: 50 }}>
             <rect
               x="470"
               y="210"
@@ -300,8 +237,7 @@ export function NotFoundExperience() {
         <p className="not-found__eyebrow">Lost the path</p>
         <h1 id="not-found-title">This page wandered off</h1>
         <p className="not-found__lede">
-          The link you followed does not exist here. Let&apos;s get you back to
-          church.
+          The link you followed does not exist here. Let&apos;s get you back to church.
         </p>
         <Link href="/" className="not-found__cta">
           Take me home

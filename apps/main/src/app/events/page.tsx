@@ -7,8 +7,7 @@ import type { ChurchEvent } from "@/lib/events-content";
 
 export const metadata: Metadata = {
   title: "Events | Kharis Church",
-  description:
-    "Explore Kharis Church services, gatherings, and upcoming events.",
+  description: "Explore Kharis Church services, gatherings, and upcoming events.",
 };
 
 export default async function EventsPage() {

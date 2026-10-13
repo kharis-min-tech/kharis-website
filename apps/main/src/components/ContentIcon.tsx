@@ -39,11 +39,7 @@ type Props = {
   strokeWidth?: number;
 };
 
-export function ContentIcon({
-  name,
-  className = "h-7 w-7",
-  strokeWidth = 1.75,
-}: Props) {
+export function ContentIcon({ name, className = "h-7 w-7", strokeWidth = 1.75 }: Props) {
   const Icon = MAP[name] ?? Sparkles;
   return <Icon className={className} strokeWidth={strokeWidth} aria-hidden />;
 }

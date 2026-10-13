@@ -1,14 +1,10 @@
-name: content
+name: deploy-content
 
-# Only runs when apps/content or the shared root manifests change.
-# See the required-check caveat in kp2.yml before making this required.
+# Ships apps/content to Cloudflare on merge to main, only when its files (or the
+# shared root manifests) changed — so unrelated merges don't redeploy it.
+# Quality is gated by ci.yml on the PR; with branch protection requiring the
+# `ci-ok` check, code reaching main has already passed CI.
 on:
-  pull_request:
-    paths:
-      - "apps/content/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/content.yml"
   push:
     branches: [main]
     paths:
@@ -17,16 +13,29 @@ on:
       - "package-lock.json"
       - ".github/workflows/content.yml"
 
+# Least-privilege GITHUB_TOKEN: checkout only. The deploy authenticates to
+# Cloudflare with CLOUDFLARE_API_TOKEN, not GITHUB_TOKEN.
+permissions:
+  contents: read
+
 concurrency:
-  group: content-${{ github.ref }}
-  cancel-in-progress: true
+  group: content-deploy
+  cancel-in-progress: false
 
 jobs:
-  verify:
+  deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: apps/content
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: a94432b07dae8050b83efdec72a492a3
+      # Public, baked into the client bundle at build time. Set as repo
+      # Variables: Settings → Secrets and variables → Actions → Variables.
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_SITE_URL: https://content.kharis.org
     steps:
       - uses: actions/checkout@v4
 
@@ -35,18 +44,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      # Root install — npm workspaces resolves every app from the one lockfile.
       - name: Install
         run: npm ci
         working-directory: .
 
-      - name: Lint
-        run: npx eslint
+      - name: Check deploy config
+        run: |
+          : "${CLOUDFLARE_API_TOKEN:?set the CLOUDFLARE_API_TOKEN repo secret}"
+          : "${NEXT_PUBLIC_SUPABASE_URL:?set the NEXT_PUBLIC_SUPABASE_URL repo variable}"
+          : "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?set the NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY repo variable}"
 
-      - name: Typecheck
-        run: npx tsc --noEmit
-
-      # Builds without secrets. Data calls happen in the browser after sign-in,
-      # so the build does not need Supabase or Google keys.
-      - name: Build
-        run: npx next build
+      # opennextjs-cloudflare build && deploy. Worker runtime secrets
+      # (GOOGLE_MAPS_API_KEY, the R2 binding, etc.) are not touched by a deploy.
+      - name: Deploy to Cloudflare
+        run: npm run deploy

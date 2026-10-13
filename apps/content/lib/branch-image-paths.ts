@@ -29,7 +29,11 @@ export function isBranchImageContentType(value: string): value is BranchImageCon
 }
 
 /** Object key only. R2 has no real folders; the slashes are part of the key. */
-export function branchImageObjectKey(branchId: string, category: BranchImageCategory, contentType: BranchImageContentType) {
+export function branchImageObjectKey(
+  branchId: string,
+  category: BranchImageCategory,
+  contentType: BranchImageContentType,
+) {
   const extension = BRANCH_IMAGE_TYPES[contentType];
   return `branch-images/${branchId}/${category}/${crypto.randomUUID()}.${extension}`;
 }

@@ -44,10 +44,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "The upload request was not valid." }, { status: 400 });
   }
   if (!isBranchId(branchId)) {
-    return NextResponse.json({ error: "Save the branch before creating its image folder." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Save the branch before creating its image folder." },
+      { status: 400 },
+    );
   }
 
-  const branch = await studio.supabase.from("branches").select("id").eq("id", branchId).maybeSingle();
+  const branch = await studio.supabase
+    .from("branches")
+    .select("id")
+    .eq("id", branchId)
+    .maybeSingle();
   if (branch.error) {
     return NextResponse.json({ error: "The branch could not be checked." }, { status: 500 });
   }
@@ -62,7 +69,10 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ key });
   } catch {
-    return NextResponse.json({ error: "The Cloudflare folder could not be created. Try again." }, { status: 502 });
+    return NextResponse.json(
+      { error: "The Cloudflare folder could not be created. Try again." },
+      { status: 502 },
+    );
   }
 }
 
@@ -95,7 +105,10 @@ async function pruneBranchFolder(
       .select("url, storage_path")
       .or(`branch_id.eq.${branchId},owner_id.eq.${branchId}`);
     if (media.error && media.error.code !== "PGRST205") {
-      return NextResponse.json({ error: "The branch images could not be checked." }, { status: 500 });
+      return NextResponse.json(
+        { error: "The branch images could not be checked." },
+        { status: 500 },
+      );
     }
     for (const row of media.data ?? []) {
       rememberImageKey(row.url, keep);
@@ -107,7 +120,10 @@ async function pruneBranchFolder(
     const removed = await deleteUnusedBranchImages(branchId, keep, deleteFolder);
     return NextResponse.json({ removed });
   } catch {
-    return NextResponse.json({ error: "Unused images could not be removed from storage." }, { status: 502 });
+    return NextResponse.json(
+      { error: "Unused images could not be removed from storage." },
+      { status: 502 },
+    );
   }
 }
 
@@ -131,7 +147,10 @@ async function storeUploadedBranchImage(
   const category = form.get("category");
   const file = form.get("file");
   if (typeof branchId !== "string" || !isBranchId(branchId)) {
-    return NextResponse.json({ error: "Save the branch before uploading images." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Save the branch before uploading images." },
+      { status: 400 },
+    );
   }
   if (typeof category !== "string" || !isBranchImageCategory(category)) {
     return NextResponse.json({ error: "That image category is not supported." }, { status: 400 });
@@ -140,13 +159,20 @@ async function storeUploadedBranchImage(
     return NextResponse.json({ error: "Choose an image file." }, { status: 400 });
   }
   if (!isBranchImageContentType(file.type)) {
-    return NextResponse.json({ error: "Use a JPEG, PNG, WebP, GIF, or AVIF image." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Use a JPEG, PNG, WebP, GIF, or AVIF image." },
+      { status: 400 },
+    );
   }
   if (file.size <= 0 || file.size > MAX_BRANCH_IMAGE_BYTES) {
     return NextResponse.json({ error: "Images need to be 8MB or smaller." }, { status: 400 });
   }
 
-  const branch = await studio.supabase.from("branches").select("id").eq("id", branchId).maybeSingle();
+  const branch = await studio.supabase
+    .from("branches")
+    .select("id")
+    .eq("id", branchId)
+    .maybeSingle();
   if (branch.error) {
     return NextResponse.json({ error: "The branch could not be checked." }, { status: 500 });
   }
@@ -163,6 +189,9 @@ async function storeUploadedBranchImage(
     const publicUrl = stored.publicUrl ?? `${new URL(request.url).origin}/api/media/${stored.key}`;
     return NextResponse.json({ key: stored.key, publicUrl, contentType: file.type });
   } catch {
-    return NextResponse.json({ error: "Image storage could not be reached. Try again." }, { status: 502 });
+    return NextResponse.json(
+      { error: "Image storage could not be reached. Try again." },
+      { status: 502 },
+    );
   }
 }

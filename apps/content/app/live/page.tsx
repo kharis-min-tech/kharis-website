@@ -20,7 +20,9 @@ export default function LivePage() {
   useEffect(() => {
     getLiveSettings()
       .then(setSettings)
-      .catch((caught) => setError(caught instanceof Error ? caught.message : "Could not load live settings."));
+      .catch((caught) =>
+        setError(caught instanceof Error ? caught.message : "Could not load live settings."),
+      );
   }, []);
 
   if (!workspace) return <PickWorkspace />;
@@ -41,13 +43,29 @@ export default function LivePage() {
 
   return (
     <div className="max-w-xl">
-      <PageHeader title="Live" description="The stream URL, title, and whether the app should show the broadcast as live." />
+      <PageHeader
+        title="Live"
+        description="The stream URL, title, and whether the app should show the broadcast as live."
+      />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       {settings ? (
         <form className="space-y-4" onSubmit={onSave}>
-          <TextField label="Title" value={settings.title} onChange={(event) => setSettings({ ...settings, title: event.target.value })} />
-          <TextField label="Stream URL" type="url" value={settings.url} onChange={(event) => setSettings({ ...settings, url: event.target.value })} />
-          <ToggleField label="Live now" checked={settings.isLive} onChange={(isLive) => setSettings({ ...settings, isLive })} />
+          <TextField
+            label="Title"
+            value={settings.title}
+            onChange={(event) => setSettings({ ...settings, title: event.target.value })}
+          />
+          <TextField
+            label="Stream URL"
+            type="url"
+            value={settings.url}
+            onChange={(event) => setSettings({ ...settings, url: event.target.value })}
+          />
+          <ToggleField
+            label="Live now"
+            checked={settings.isLive}
+            onChange={(isLive) => setSettings({ ...settings, isLive })}
+          />
           <Button type="submit" disabled={saving}>
             {saving ? "Saving…" : "Save"}
           </Button>

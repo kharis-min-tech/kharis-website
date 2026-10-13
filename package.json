@@ -14,6 +14,19 @@
     "build:content": "npm run build -w @kharis/content",
     "deploy:main": "npm run deploy -w @kharis/main",
     "deploy:kp2": "npm run deploy -w @kharis/kp2",
-    "deploy:content": "npm run deploy -w @kharis/content"
+    "deploy:content": "npm run deploy -w @kharis/content",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
+    "vitest": "^3.2.4"
   }
 }

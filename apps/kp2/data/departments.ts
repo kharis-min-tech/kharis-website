@@ -13,7 +13,8 @@ export const DEPARTMENTS: Department[] = [
   {
     name: "K-MUSIC",
     tagline: "SOUND OF A NEW BREED",
-    description: "Vocalists and rappers who preach Christ crucified through song. Get busy serving.",
+    description:
+      "Vocalists and rappers who preach Christ crucified through song. Get busy serving.",
     image: "/kp2/assets/K-music-img.jpg",
     accent: "bg-primary",
     icon: "music_note",
@@ -23,7 +24,8 @@ export const DEPARTMENTS: Department[] = [
   {
     name: "K-DRAMA",
     tagline: "STORY THAT MOVES",
-    description: "Sketches and stage work that tell the gospel. Christ-exalting, text-driven drama.",
+    description:
+      "Sketches and stage work that tell the gospel. Christ-exalting, text-driven drama.",
     image: "/kp2/assets/K-drama-img.jpg",
     accent: "bg-secondary-container",
     icon: "theater_comedy",

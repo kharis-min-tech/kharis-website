@@ -17,8 +17,7 @@ const CATEGORIES = [
   "Other",
 ] as const;
 
-const fieldClass =
-  "w-full brutalist-border bg-white p-3 font-body-md input-focus outline-none";
+const fieldClass = "w-full brutalist-border bg-white p-3 font-body-md input-focus outline-none";
 const labelClass = "font-label-md text-xs uppercase tracking-widest text-on-surface";
 const chipClass =
   "inline-flex items-center justify-center min-h-11 px-4 brutalist-border bg-white font-label-md text-xs uppercase tracking-wide cursor-pointer peer-checked:bg-primary peer-checked:text-white";
@@ -101,9 +100,7 @@ export function TestimonyFormModal({ open, onClose }: Props) {
     } catch (error) {
       console.error(error);
       setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Unable to submit testimony. Please try again.",
+        error instanceof Error ? error.message : "Unable to submit testimony. Please try again.",
       );
     } finally {
       setSubmitting(false);
@@ -221,7 +218,9 @@ export function TestimonyFormModal({ open, onClose }: Props) {
               </div>
 
               <fieldset>
-                <legend className={`${labelClass} mb-3`}>Are you a member of Kharis Phase 2?</legend>
+                <legend className={`${labelClass} mb-3`}>
+                  Are you a member of Kharis Phase 2?
+                </legend>
                 <div className="flex flex-wrap gap-2">
                   {["Yes", "No"].map((value) => (
                     <label key={`member-${value}`}>

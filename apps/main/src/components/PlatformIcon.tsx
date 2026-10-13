@@ -35,13 +35,7 @@ const icons: Record<PlatformId, ReactNode> = {
   ),
 };
 
-export function PlatformIcon({
-  id,
-  className = "h-8 w-8",
-}: {
-  id: string;
-  className?: string;
-}) {
+export function PlatformIcon({ id, className = "h-8 w-8" }: { id: string; className?: string }) {
   const node = icons[id as PlatformId];
   if (!node) return null;
   return (

@@ -12,10 +12,7 @@ type Props = {
   items: FaqItem[];
 };
 
-export function MessagesFaq({
-  title = "Why listen to messages",
-  items,
-}: Props) {
+export function MessagesFaq({ title = "Why listen to messages", items }: Props) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (

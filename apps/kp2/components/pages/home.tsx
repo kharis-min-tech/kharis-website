@@ -31,11 +31,7 @@ function Index({
   const closeForm = useCallback(() => {
     setFormOpen(false);
     if (window.location.hash === "#share-testimony") {
-      window.history.replaceState(
-        {},
-        "",
-        window.location.pathname + window.location.search,
-      );
+      window.history.replaceState({}, "", window.location.pathname + window.location.search);
     }
   }, []);
 
@@ -115,8 +111,8 @@ function Index({
             THIS IS CHURCH <br /> FOR THIS GENERATION.
           </h1>
           <p className="font-body-lg text-base sm:text-body-lg text-[#e8e0e9] mt-5 md:mt-6 max-w-2xl bg-[#151218]/40 backdrop-blur-md p-4 border border-[#958da1]/30 pointer-events-auto rounded">
-            A spirit-filled, revival-seeking church. We are young people serving God with passion, gathering to
-            encounter Jesus and live transformed lives.
+            A spirit-filled, revival-seeking church. We are young people serving God with passion,
+            gathering to encounter Jesus and live transformed lives.
           </p>
           <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 pointer-events-auto w-full sm:w-auto max-w-sm sm:max-w-none">
             <Link
@@ -166,7 +162,10 @@ function Index({
                 Passionate for God and His Word
               </div>
             </div>
-            <div className="order-1 md:order-2 flex flex-col" style={{ gap: "clamp(0.9rem, 2.2vh, 2rem)" }}>
+            <div
+              className="order-1 md:order-2 flex flex-col"
+              style={{ gap: "clamp(0.9rem, 2.2vh, 2rem)" }}
+            >
               <h2
                 className="font-display-xl uppercase text-[#7c3aed] leading-[0.95]"
                 style={{ fontSize: "clamp(2.25rem, 5.2vw, 5.5rem)" }}
@@ -182,13 +181,16 @@ function Index({
                 className="font-body-lg text-gray-600 leading-relaxed max-w-2xl"
                 style={{ fontSize: "clamp(1rem, 1.45vw, 1.6rem)" }}
               >
-                We are a new breed of Christian who are passionate about Jesus and not afraid to show it. We believe
-                in the sound teaching of Christ, the bible is our final authority, and Christ is the centre of our
-                lives.
+                We are a new breed of Christian who are passionate about Jesus and not afraid to
+                show it. We believe in the sound teaching of Christ, the bible is our final
+                authority, and Christ is the centre of our lives.
               </p>
               <p
                 className="font-body-lg text-gray-600 italic border-l-4 md:border-l-8 border-[#7c3aed] max-w-2xl"
-                style={{ fontSize: "clamp(1rem, 1.45vw, 1.6rem)", paddingLeft: "clamp(1rem, 1.6vw, 1.75rem)" }}
+                style={{
+                  fontSize: "clamp(1rem, 1.45vw, 1.6rem)",
+                  paddingLeft: "clamp(1rem, 1.6vw, 1.75rem)",
+                }}
               >
                 &quot;Transforming the culture by reflecting Christ&quot;
               </p>
@@ -196,13 +198,20 @@ function Index({
           </div>
         </section>
 
-        <section className="py-24 bg-gray-50 relative overflow-hidden border-b-4 border-gray-900" id="departments">
+        <section
+          className="py-24 bg-gray-50 relative overflow-hidden border-b-4 border-gray-900"
+          id="departments"
+        >
           <div className="max-w-7xl mx-auto px-margin-desktop relative z-10">
-            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#7c3aed] mb-3">Passionate for God and His Word</p>
+            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#7c3aed] mb-3">
+              Passionate for God and His Word
+            </p>
             <h2 className="font-display-xl text-5xl md:text-7xl uppercase text-gray-900 leading-none">
               GET TO KNOW <span className="text-[#7c3aed]">KHARIS</span>
             </h2>
-            <p className="font-body-lg text-body-lg text-gray-600 mt-4 mb-12">Everything you need, one tap away.</p>
+            <p className="font-body-lg text-body-lg text-gray-600 mt-4 mb-12">
+              Everything you need, one tap away.
+            </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:auto-rows-[220px]">
               <Link
@@ -218,8 +227,12 @@ function Index({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 md:p-8">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">Who We Are</p>
-                  <h3 className="font-headline-lg text-3xl md:text-4xl uppercase !text-white">About Us</h3>
+                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
+                    Who We Are
+                  </p>
+                  <h3 className="font-headline-lg text-3xl md:text-4xl uppercase !text-white">
+                    About Us
+                  </h3>
                   <p className="font-body-md text-body-md !text-white/85 mt-2 max-w-sm">
                     Our mandate is to bring Christ to people everywhere.
                   </p>
@@ -245,7 +258,9 @@ function Index({
                   <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
                     Visit Sunday
                   </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">Locations</h3>
+                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
+                    Locations
+                  </h3>
                   <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
                     Explore →
                   </span>
@@ -265,8 +280,12 @@ function Index({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">KHARIS HOME</p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">Kharis Home</h3>
+                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
+                    KHARIS HOME
+                  </p>
+                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
+                    Kharis Home
+                  </h3>
                   <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
                     Explore →
                   </span>
@@ -286,8 +305,12 @@ function Index({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">Next Step</p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">Become a Believer</h3>
+                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
+                    Next Step
+                  </p>
+                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
+                    Become a Believer
+                  </h3>
                   <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
                     Explore →
                   </span>
@@ -310,7 +333,9 @@ function Index({
                   <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
                     Serve With Us
                   </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">Get Involved</h3>
+                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
+                    Get Involved
+                  </h3>
                   <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
                     Explore →
                   </span>
@@ -335,11 +360,12 @@ function Index({
                   A WORD FROM <span className="text-[#f7be1d]">OUR HEAD PASTOR</span>
                 </h2>
                 <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-4 max-w-lg">
-                  Give yourself to the word of God. Are you struggling with sin? Are you addicted? Try the Bible and
-                  see if it won’t change your life.
+                  Give yourself to the word of God. Are you struggling with sin? Are you addicted?
+                  Try the Bible and see if it won’t change your life.
                 </p>
                 <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-8 max-w-xl">
-                  &ldquo;For the word of God is quick, and powerful, and sharper than any twoedged sword...&rdquo; Hebrews 4:12
+                  &ldquo;For the word of God is quick, and powerful, and sharper than any twoedged
+                  sword...&rdquo; Hebrews 4:12
                 </p>
                 <Link
                   href="/mission"
@@ -375,7 +401,8 @@ function Index({
               TESTIMONIES
             </h2>
             <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-2xl mb-10 sm:mb-12 lg:mb-16">
-              Salvation and life transformation, healing, and miracles — what God is doing in this house.
+              Salvation and life transformation, healing, and miracles — what God is doing in this
+              house.
             </p>
 
             {testimonials.length > 0 ? (
@@ -396,7 +423,6 @@ function Index({
                 Share Your Testimony
               </button>
             </div>
-
           </div>
         </section>
 
@@ -415,80 +441,90 @@ function Index({
 
             {featured ? (
               <>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter gap-6 lg:gap-8 mb-12 lg:mb-16">
-              <div className="lg:col-span-8 bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow overflow-hidden group transition-colors duration-300">
-                <div className="aspect-video relative bg-black">
-                  <YoutubeEmbed id={featured.id} title={featured.title} thumbnail={featured.thumbnail} />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
-                    <span className="bg-[#5c532b] text-white font-label-comic text-xs px-2 py-1 mb-2 inline-block border-2 border-gray-900">
-                      NEWEST RELEASE
-                    </span>
-                    <h3 className="font-headline-lg text-white text-2xl uppercase">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter gap-6 lg:gap-8 mb-12 lg:mb-16">
+                  <div className="lg:col-span-8 bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow overflow-hidden group transition-colors duration-300">
+                    <div className="aspect-video relative bg-black">
+                      <YoutubeEmbed
+                        id={featured.id}
+                        title={featured.title}
+                        thumbnail={featured.thumbnail}
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
+                        <span className="bg-[#5c532b] text-white font-label-comic text-xs px-2 py-1 mb-2 inline-block border-2 border-gray-900">
+                          NEWEST RELEASE
+                        </span>
+                        <h3 className="font-headline-lg text-white text-2xl uppercase">
+                          {displayMessageTitle(featured.title)}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-4 bg-[#f3f3fb] dark:bg-[#23202a] border-4 border-gray-900 brutalist-shadow p-6 sm:p-8 flex flex-col transition-colors duration-300">
+                    <h4 className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] mb-2 uppercase">
+                      Now Playing
+                    </h4>
+                    <h3 className="font-headline-lg text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-4 transition-colors duration-300">
                       {displayMessageTitle(featured.title)}
                     </h3>
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-4 bg-[#f3f3fb] dark:bg-[#23202a] border-4 border-gray-900 brutalist-shadow p-6 sm:p-8 flex flex-col transition-colors duration-300">
-                <h4 className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] mb-2 uppercase">
-                  Now Playing
-                </h4>
-                <h3 className="font-headline-lg text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-4 transition-colors duration-300">
-                  {displayMessageTitle(featured.title)}
-                </h3>
-                <p className="font-body-md text-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
-                  The latest teaching from Pastor David Antwi on YouTube.
-                </p>
-                <div className="space-y-3 mb-6">
-                  {featured.publishedAt ? (
-                    <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                      <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">calendar_today</span>
-                      <span>{formatMessageDate(featured.publishedAt)}</span>
+                    <p className="font-body-md text-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
+                      The latest teaching from Pastor David Antwi on YouTube.
+                    </p>
+                    <div className="space-y-3 mb-6">
+                      {featured.publishedAt ? (
+                        <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
+                          <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">
+                            calendar_today
+                          </span>
+                          <span>{formatMessageDate(featured.publishedAt)}</span>
+                        </div>
+                      ) : null}
+                      <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
+                        <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">
+                          person
+                        </span>
+                        <span>Pastor David Antwi</span>
+                      </div>
                     </div>
-                  ) : null}
-                  <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                    <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">person</span>
-                    <span>Pastor David Antwi</span>
-                  </div>
-                </div>
-                <div className="flex gap-4 mt-auto">
-                  <ShareVideoButton
-                    id={featured.id}
-                    title={featured.title}
-                    className="flex-1 bg-[#7c3aed] text-white font-label-comic text-sm uppercase px-4 py-3 border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-              {others.map((msg) => (
-                <a
-                  key={msg.id}
-                  href={youtubeWatchUrl(msg.id)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group transition-colors duration-300"
-                >
-                  <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
-                    <img
-                      alt=""
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                      src={msg.thumbnail}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="material-symbols-outlined !text-white text-5xl">play_circle</span>
+                    <div className="flex gap-4 mt-auto">
+                      <ShareVideoButton
+                        id={featured.id}
+                        title={featured.title}
+                        className="flex-1 bg-[#7c3aed] text-white font-label-comic text-sm uppercase px-4 py-3 border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2"
+                      />
                     </div>
                   </div>
-                  <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
-                    {displayMessageTitle(msg.title)}
-                  </p>
-                </a>
-              ))}
-            </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+                  {others.map((msg) => (
+                    <a
+                      key={msg.id}
+                      href={youtubeWatchUrl(msg.id)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group transition-colors duration-300"
+                    >
+                      <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
+                        <img
+                          alt=""
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                          src={msg.thumbnail}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="material-symbols-outlined !text-white text-5xl">
+                            play_circle
+                          </span>
+                        </div>
+                      </div>
+                      <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
+                        {displayMessageTitle(msg.title)}
+                      </p>
+                    </a>
+                  ))}
+                </div>
               </>
             ) : (
               <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl mb-10">
@@ -529,7 +565,8 @@ function Index({
                 Church in your pocket.
               </h2>
               <p className="font-body-lg text-body-lg text-gray-600 dark:text-[#ccc3d8] transition-colors duration-300">
-                Download the Kharis app, then listen to any message in three simple steps — home, search, and play.
+                Download the Kharis app, then listen to any message in three simple steps — home,
+                search, and play.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
                 <a
@@ -616,7 +653,10 @@ function Index({
               </div>
             </div>
 
-            <div id="app-stores" className="scroll-mt-28 flex flex-wrap items-center justify-center gap-4 mt-12 md:mt-16">
+            <div
+              id="app-stores"
+              className="scroll-mt-28 flex flex-wrap items-center justify-center gap-4 mt-12 md:mt-16"
+            >
               <a
                 href="https://apps.apple.com/"
                 target="_blank"
@@ -624,7 +664,12 @@ function Index({
                 className="inline-flex items-center gap-3 bg-white dark:bg-[#1f1c24] text-gray-900 dark:text-[#e8e0e9] px-5 py-3 comic-border brutalist-shadow hover:-translate-y-1 transition-transform"
               >
                 <div className="w-10 h-10 bg-gray-900 dark:bg-[#e8e0e9] rounded-lg flex items-center justify-center text-white dark:text-gray-900">
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <svg
+                    className="w-6 h-6"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
                     <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
                   </svg>
                 </div>
@@ -679,8 +724,8 @@ function Index({
                 <br className="hidden sm:block" /> branch to come to?
               </h2>
               <p className="relative z-10 font-body-lg text-body-lg text-white/90 max-w-2xl mx-auto mb-10">
-                You don&apos;t have to figure it out alone. Reach out and we&apos;ll help you find a Kharis family near you, or
-                guide you to your first Sunday.
+                You don&apos;t have to figure it out alone. Reach out and we&apos;ll help you find a
+                Kharis family near you, or guide you to your first Sunday.
               </p>
               <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link

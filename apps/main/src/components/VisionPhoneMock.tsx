@@ -53,17 +53,11 @@ export function VisionPhoneMock() {
             </div>
             <a href="#messages" className="vision-phone__message">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/pastor-stage.jpg"
-                alt=""
-                className="vision-phone__message-img"
-              />
+              <img src="/images/pastor-stage.jpg" alt="" className="vision-phone__message-img" />
               <span className="vision-phone__play" aria-hidden>
                 <Icon name="play" className="h-3.5 w-3.5" />
               </span>
-              <span className="vision-phone__message-copy">
-                Watch latest teaching
-              </span>
+              <span className="vision-phone__message-copy">Watch latest teaching</span>
             </a>
           </div>
 
@@ -99,10 +93,7 @@ export function VisionPhoneMock() {
 
           {/* Info details + Download app */}
           <div className="vision-phone__block vision-phone__block--foot">
-            <a
-              href="https://kharis.org/about-us/"
-              className="vision-phone__info"
-            >
+            <a href="https://kharis.org/about-us/" className="vision-phone__info">
               <span className="vision-phone__info-icon" aria-hidden>
                 <Icon name="spark" className="h-3.5 w-3.5" />
               </span>
@@ -113,10 +104,7 @@ export function VisionPhoneMock() {
               <Icon name="arrow" className="h-3.5 w-3.5 opacity-60" />
             </a>
 
-            <a
-              href="https://kharis.org/"
-              className="vision-phone__download"
-            >
+            <a href="https://kharis.org/" className="vision-phone__download">
               Download app
               <Icon name="arrow" className="h-3.5 w-3.5" />
             </a>

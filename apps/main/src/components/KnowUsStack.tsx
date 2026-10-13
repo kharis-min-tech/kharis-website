@@ -96,19 +96,14 @@ function cardLayout(size: Card["size"]) {
 
 export function KnowUsStack() {
   return (
-    <section
-      id="know"
-      className="bg-bg-soft px-5 pb-5 pt-8 md:px-8 md:pb-5 md:pt-10"
-    >
+    <section id="know" className="bg-bg-soft px-5 pb-5 pt-8 md:px-8 md:pb-5 md:pt-10">
       <div className="mx-auto max-w-7xl">
         <Reveal variant="blur" className="mb-5 max-w-2xl md:mb-6">
           <p className="eyebrow">Family</p>
           <h2 className="section-title mt-2">
             Get to Know <span className="kharis-word">Kharis</span>
           </h2>
-          <p className="mt-4 text-lg text-fg-soft">
-            Everything you need, one tap away.
-          </p>
+          <p className="mt-4 text-lg text-fg-soft">Everything you need, one tap away.</p>
         </Reveal>
 
         <RevealStagger

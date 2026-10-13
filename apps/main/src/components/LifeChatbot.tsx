@@ -1,24 +1,10 @@
 "use client";
 
-import {
-  FormEvent,
-  KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { ChatMarkdown } from "@/components/ChatMarkdown";
 import { Icon } from "@/components/Icon";
-import {
-  contactHandoffUrl,
-  replyOffersContact,
-  saveGraceHandoff,
-} from "@/lib/grace-handoff";
-import {
-  hasAppMarker,
-  hasContactMarker,
-  stripGraceMarkers,
-} from "@/lib/grace-markers";
+import { contactHandoffUrl, replyOffersContact, saveGraceHandoff } from "@/lib/grace-handoff";
+import { hasAppMarker, hasContactMarker, stripGraceMarkers } from "@/lib/grace-markers";
 import { KHARIS_APP } from "@/lib/kharis-app";
 
 type Role = "user" | "assistant";
@@ -85,8 +71,7 @@ function normalizeCards(cards: MessageCard[] | undefined): MessageCard[] | undef
 
 const HANDOFF_LINE =
   "I can pass this to our team along with our chat so you don't have to repeat yourself.";
-const APP_LINE =
-  "The Kharis app has the full library of Pastor David's messages:";
+const APP_LINE = "The Kharis app has the full library of Pastor David's messages:";
 
 /** Hide control markers; keep bubble tidy when poster cards carry the links. */
 function tidyAssistantText(content: string, hasCards: boolean): string {
@@ -95,15 +80,13 @@ function tidyAssistantText(content: string, hasCards: boolean): string {
   if (hasAppMarker(content)) {
     const storeLink =
       /\[([^\]\n]+)\]\((?:https?:\/\/)?(?:apps\.apple\.com|play\.google\.com)[^)]*\)/gi;
-    const storeUrl =
-      /(?:https?:\/\/)?(?:apps\.apple\.com|play\.google\.com)\/[^\s)]+/gi;
+    const storeUrl = /(?:https?:\/\/)?(?:apps\.apple\.com|play\.google\.com)\/[^\s)]+/gi;
     text = text
       .replace(storeLink, "$1")
       .replace(storeUrl, "")
       .replace(/\(\s*\)/g, "")
       .replace(/^[ \t]*(?:[-•*]|\d+[.)])[ \t]*[^\n]{0,32}$/gm, (line) =>
-        /iphone|ios|android|app store|google play|apple/i.test(line) ||
-        !/[A-Za-z]{3}/.test(line)
+        /iphone|ios|android|app store|google play|apple/i.test(line) || !/[A-Za-z]{3}/.test(line)
           ? ""
           : line,
       )
@@ -114,8 +97,7 @@ function tidyAssistantText(content: string, hasCards: boolean): string {
     if (!text) return APP_LINE;
   }
   if (hasCards) {
-    const ytLink =
-      /\[([^\]\n]+)\]\((?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)[^)]*\)/gi;
+    const ytLink = /\[([^\]\n]+)\]\((?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)[^)]*\)/gi;
     const ytUrl =
       /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?[^\s)]*|shorts\/[^\s)]+|embed\/[^\s)]+)|youtu\.be\/[^\s)]+)/gi;
     text = text
@@ -339,10 +321,7 @@ export function LifeChatbot() {
           cards?: MessageCard[];
         };
         if (!res.ok || !data.ok || !data.reply) {
-          setError(
-            data.error ||
-              "I'm a bit busy right now, please try again in a moment.",
-          );
+          setError(data.error || "I'm a bit busy right now, please try again in a moment.");
           return;
         }
         const cards = normalizeCards(data.cards);
@@ -377,10 +356,7 @@ export function LifeChatbot() {
         if (!started) {
           started = true;
           setStreaming(true);
-          setMessages((prev) => [
-            ...prev,
-            { role: "assistant", content: assistant },
-          ]);
+          setMessages((prev) => [...prev, { role: "assistant", content: assistant }]);
         } else {
           const snapshot = assistant;
           setMessages((prev) => {
@@ -438,11 +414,7 @@ export function LifeChatbot() {
             sawDone = true;
             if (typeof evt.reply === "string" && evt.reply && !assistant) {
               appendChunk(evt.reply);
-            } else if (
-              typeof evt.reply === "string" &&
-              evt.reply &&
-              evt.reply !== assistant
-            ) {
+            } else if (typeof evt.reply === "string" && evt.reply && evt.reply !== assistant) {
               // Prefer server-assembled final text (trimmed) if it differs.
               assistant = evt.reply;
               setMessages((prev) => {
@@ -461,9 +433,7 @@ export function LifeChatbot() {
             }
             applyCards(normalizeCards(evt.cards));
           } else if (evt.type === "error") {
-            streamError =
-              evt.error ||
-              "I'm a bit busy right now, please try again in a moment.";
+            streamError = evt.error || "I'm a bit busy right now, please try again in a moment.";
           }
         }
       }
@@ -514,12 +484,9 @@ export function LifeChatbot() {
     }
   };
 
-  const showTopics =
-    !busy && messages.filter((m) => m.role === "user").length === 0;
+  const showTopics = !busy && messages.filter((m) => m.role === "user").length === 0;
   const showFab = launcherReady && (nudgeDismissed || open);
-  const lastAssistant = [...messages]
-    .reverse()
-    .find((m) => m.role === "assistant");
+  const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
   const showContactCta =
     !busy &&
     !showTopics &&
@@ -532,11 +499,7 @@ export function LifeChatbot() {
   return (
     <>
       {launcherReady && nudgeOpen && !open ? (
-        <div
-          className="life-chat__nudge"
-          role="dialog"
-          aria-label="Need help from Grace?"
-        >
+        <div className="life-chat__nudge" role="dialog" aria-label="Need help from Grace?">
           <span className="life-chat__nudge-icon" aria-hidden>
             <ChatIcon size={18} />
           </span>
@@ -546,11 +509,7 @@ export function LifeChatbot() {
               I&apos;m Grace. Ask me about faith, Life, branches or messages.
             </p>
             <div className="life-chat__nudge-actions">
-              <button
-                type="button"
-                className="life-chat__nudge-yes"
-                onClick={openChat}
-              >
+              <button type="button" className="life-chat__nudge-yes" onClick={openChat}>
                 Yes, please
               </button>
               <button
@@ -593,9 +552,7 @@ export function LifeChatbot() {
           ) : (
             <ChatIcon />
           )}
-          {unread && !open ? (
-            <span className="life-chat__badge" aria-label="New reply" />
-          ) : null}
+          {unread && !open ? <span className="life-chat__badge" aria-label="New reply" /> : null}
         </button>
       ) : null}
 
@@ -634,10 +591,7 @@ export function LifeChatbot() {
 
         <div className="life-chat__thread" role="log" aria-live="polite">
           {messages.map((m, i) => (
-            <div
-              key={`${m.role}-${i}`}
-              className={`life-chat__row life-chat__row--${m.role}`}
-            >
+            <div key={`${m.role}-${i}`} className={`life-chat__row life-chat__row--${m.role}`}>
               {m.role === "assistant" ? (
                 <div className="life-chat__meta">
                   <GraceAvatar className="is-mini" />
@@ -645,10 +599,7 @@ export function LifeChatbot() {
                     <span className="life-chat__who">Grace</span>
                     <div className="life-chat__bubble life-chat__bubble--assistant">
                       <ChatMarkdown
-                        text={tidyAssistantText(
-                          m.content,
-                          Boolean(m.cards?.length),
-                        )}
+                        text={tidyAssistantText(m.content, Boolean(m.cards?.length))}
                         onContactClick={goToContact}
                         onNavigate={() => setOpen(false)}
                       />
@@ -659,9 +610,7 @@ export function LifeChatbot() {
                 </div>
               ) : (
                 <div className="life-chat__bubble life-chat__bubble--user">
-                  <p className="life-chat__p life-chat__p--plain">
-                    {m.content}
-                  </p>
+                  <p className="life-chat__p life-chat__p--plain">{m.content}</p>
                 </div>
               )}
             </div>
@@ -698,11 +647,7 @@ export function LifeChatbot() {
           ) : null}
 
           {showContactCta ? (
-            <button
-              type="button"
-              className="life-chat__handoff"
-              onClick={goToContact}
-            >
+            <button type="button" className="life-chat__handoff" onClick={goToContact}>
               Open contact form with chat ticket
             </button>
           ) : null}

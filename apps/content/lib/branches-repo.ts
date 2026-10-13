@@ -1,4 +1,10 @@
-import type { BranchDraft, BranchRow, PastorRole, ServiceDraft, VenueDraft } from "@/lib/branch-types";
+import type {
+  BranchDraft,
+  BranchRow,
+  PastorRole,
+  ServiceDraft,
+  VenueDraft,
+} from "@/lib/branch-types";
 import { emptyService, emptyVenue } from "@/lib/branch-types";
 import { listGallery, listVenueImages, type VenueImageRecord } from "@/lib/media-repo";
 import { fail, getSupabase } from "@/lib/supabase";
@@ -44,8 +50,12 @@ export function emptyBranch(): BranchDraft {
   };
 }
 
-export function venueHasContent(venue: Pick<VenueDraft, "name" | "address" | "city" | "postcode" | "imageUrl">) {
-  return [venue.name, venue.address, venue.city, venue.postcode, venue.imageUrl].some((value) => value.trim());
+export function venueHasContent(
+  venue: Pick<VenueDraft, "name" | "address" | "city" | "postcode" | "imageUrl">,
+) {
+  return [venue.name, venue.address, venue.city, venue.postcode, venue.imageUrl].some((value) =>
+    value.trim(),
+  );
 }
 
 export function branchToDraft(
@@ -54,7 +64,9 @@ export function branchToDraft(
   venueImages: VenueImageRecord[] = [],
 ): BranchDraft {
   const venues = [...(row.venues ?? [])];
-  const services = [...(row.services ?? [])].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  const services = [...(row.services ?? [])].sort(
+    (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
+  );
   const venueDrafts: VenueDraft[] = venues.map((venue, index) => {
     const image = venueImages.find((item) => item.sortOrder === index);
     return {
@@ -102,7 +114,10 @@ export function branchToDraft(
           day: service.day ?? "Sunday",
           time: (service.start_time ?? "").slice(0, 5),
           label: service.name ?? "",
-          venueIndex: Math.max(0, venues.findIndex((venue) => venue.id === service.venue_id)),
+          venueIndex: Math.max(
+            0,
+            venues.findIndex((venue) => venue.id === service.venue_id),
+          ),
         }))
       : [emptyService()],
     gallery,
@@ -151,12 +166,21 @@ function venuePayload(branchId: string, venue: VenueDraft) {
 }
 
 async function insertVenue(branchId: string, venue: VenueDraft) {
-  const { data, error } = await getSupabase().from("venues").insert(venuePayload(branchId, venue)).select("id").single();
+  const { data, error } = await getSupabase()
+    .from("venues")
+    .insert(venuePayload(branchId, venue))
+    .select("id")
+    .single();
   fail(error);
   return (data as { id: string }).id;
 }
 
-async function insertService(branchId: string, service: ServiceDraft, venueId: string | null, sortOrder: number) {
+async function insertService(
+  branchId: string,
+  service: ServiceDraft,
+  venueId: string | null,
+  sortOrder: number,
+) {
   const day = service.day || "Sunday";
   const { data, error } = await getSupabase()
     .from("services")
@@ -258,7 +282,10 @@ export async function saveBranchImageUrl(
   field: "hero_image_url" | "pastor_image_url",
   url: string,
 ) {
-  const { error } = await getSupabase().from("branches").update({ [field]: url }).eq("id", branchId);
+  const { error } = await getSupabase()
+    .from("branches")
+    .update({ [field]: url })
+    .eq("id", branchId);
   fail(error);
 }
 

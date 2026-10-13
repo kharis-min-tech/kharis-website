@@ -124,9 +124,7 @@ const LISTEN_DEVICE_POSTERS: MessageVideo[] = [
 
 function pickListenDevicePosters(archive: MessageVideo[]): MessageVideo[] {
   const skip = (t: string) =>
-    t.includes("just men") ||
-    t.includes("fragrance") ||
-    /\bgod\b/.test(t);
+    t.includes("just men") || t.includes("fragrance") || /\bgod\b/.test(t);
 
   const fromArchive = [...archive]
     .filter((m) => {
@@ -173,10 +171,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
 
   const topRow = useMemo(() => latest.slice(0, 4), [latest]);
 
-  const listenMessages = useMemo(
-    () => pickListenDevicePosters(messages),
-    [messages],
-  );
+  const listenMessages = useMemo(() => pickListenDevicePosters(messages), [messages]);
 
   const shelves = useMemo(() => {
     const taken = new Set(topRow.map((m) => m.id));
@@ -208,8 +203,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
 
       gsap.utils.toArray<HTMLElement>(".msg-row").forEach((row) => {
         const gridRow =
-          row.classList.contains("msg-row--series") ||
-          row.classList.contains("msg-row--wide");
+          row.classList.contains("msg-row--series") || row.classList.contains("msg-row--wide");
         gsap.fromTo(
           row.querySelectorAll(".msg-tile"),
           gridRow ? { y: 18, opacity: 0 } : { x: 40, opacity: 0 },
@@ -323,11 +317,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         </div>
         <div className="msg-row msg-row--series">
           {topRow.map((msg) => (
-            <MessageHoverTile
-              key={msg.id}
-              message={msg}
-              className="msg-tile--series"
-            />
+            <MessageHoverTile key={msg.id} message={msg} className="msg-tile--series" />
           ))}
         </div>
       </section>
@@ -341,11 +331,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
             {shelf.rows.map((row, ri) => (
               <div key={`${shelf.id}-r${ri}`} className="msg-row msg-row--wide">
                 {row.map((msg) => (
-                  <MessageHoverTile
-                    key={msg.id}
-                    message={msg}
-                    className="msg-tile--wide"
-                  />
+                  <MessageHoverTile key={msg.id} message={msg} className="msg-tile--wide" />
                 ))}
               </div>
             ))}
@@ -358,9 +344,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         <h2 className="msg-listen__title">
           Listen <span>anywhere.</span>
         </h2>
-        <p className="msg-listen__lede">
-          Same Word. Pick the app you already open every day.
-        </p>
+        <p className="msg-listen__lede">Same Word. Pick the app you already open every day.</p>
 
         <MessagesDeviceCluster messages={listenMessages} />
 

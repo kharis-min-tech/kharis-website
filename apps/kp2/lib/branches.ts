@@ -267,9 +267,10 @@ function toBranch(row: BranchRow, gallery: string[]): Branch {
     resolvedAddress.toLowerCase().includes(String(city).toLowerCase());
   const lat = addressMatchesCity ? (mainVenue?.latitude ?? 0) : 0;
   const lng = addressMatchesCity ? (mainVenue?.longitude ?? 0) : 0;
-  const fallback = (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0))
-    ? cityFallbackCoords(String(city))
-    : null;
+  const fallback =
+    !Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)
+      ? cityFallbackCoords(String(city))
+      : null;
   const resolvedLat = fallback ? fallback.lat : lat;
   const resolvedLng = fallback ? fallback.lng : lng;
 
@@ -328,7 +329,11 @@ function toBranch(row: BranchRow, gallery: string[]): Branch {
 }
 
 export function hasCoords(branch: { lat: number; lng: number }) {
-  return Number.isFinite(branch.lat) && Number.isFinite(branch.lng) && (branch.lat !== 0 || branch.lng !== 0);
+  return (
+    Number.isFinite(branch.lat) &&
+    Number.isFinite(branch.lng) &&
+    (branch.lat !== 0 || branch.lng !== 0)
+  );
 }
 
 type GalleryRow = {
@@ -382,10 +387,7 @@ export async function listBranchSlugs(): Promise<string[]> {
 }
 
 /** Great-circle distance in miles. */
-export function distanceMiles(
-  a: { lat: number; lng: number },
-  b: { lat: number; lng: number },
-) {
+export function distanceMiles(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
   const toRad = (d: number) => (d * Math.PI) / 180;
   const R = 3958.8;
   const dLat = toRad(b.lat - a.lat);

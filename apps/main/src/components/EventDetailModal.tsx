@@ -5,11 +5,7 @@ import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Icon } from "@/components/Icon";
-import {
-  formatEventLong,
-  googleCalendarUrl,
-  type ChurchEvent,
-} from "@/lib/events-content";
+import { formatEventLong, googleCalendarUrl, type ChurchEvent } from "@/lib/events-content";
 
 type Props = {
   event: ChurchEvent | null;
@@ -84,7 +80,9 @@ export function EventDetailModal({ event, onClose }: Props) {
               </button>
               <div className="event-modal__hero-copy">
                 <p className="event-modal__eyebrow">{event.category}</p>
-                <h2 className="text-white!" id={titleId}>{event.title}</h2>
+                <h2 className="text-white!" id={titleId}>
+                  {event.title}
+                </h2>
                 <p className="event-modal__hero-place">{event.location}</p>
               </div>
             </div>
@@ -96,9 +94,7 @@ export function EventDetailModal({ event, onClose }: Props) {
                     <Icon name="watch" className="h-4 w-4" />
                     Time
                   </p>
-                  <p>
-                    {formatEventLong(event.date, event.time, event.timezone)}
-                  </p>
+                  <p>{formatEventLong(event.date, event.time, event.timezone)}</p>
                 </div>
                 <div className="event-modal__fact">
                   <p className="event-modal__fact-label">

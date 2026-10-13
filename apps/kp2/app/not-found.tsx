@@ -10,7 +10,10 @@ export default function NotFound() {
   return (
     <section className="relative isolate overflow-hidden bg-background">
       {/* Halftone texture backdrop */}
-      <div className="halftone-overlay pointer-events-none absolute inset-0 -z-10 opacity-60" aria-hidden="true" />
+      <div
+        className="halftone-overlay pointer-events-none absolute inset-0 -z-10 opacity-60"
+        aria-hidden="true"
+      />
       {/* Decorative accent shapes */}
       <div
         className="pointer-events-none absolute -left-16 top-16 -z-10 h-56 w-56 rounded-full bg-[var(--secondary-container)] opacity-30 blur-2xl"
@@ -41,8 +44,8 @@ export default function NotFound() {
         </div>
 
         <p className="mt-8 max-w-xl font-[var(--font-body-md)] text-lg leading-relaxed text-[var(--on-surface-variant)]">
-          Looks like the link broke, the page moved, or God is telling you to
-          head back to the altar. No worries — we&apos;ll get you right.
+          Looks like the link broke, the page moved, or God is telling you to head back to the
+          altar. No worries — we&apos;ll get you right.
         </p>
 
         {/* Action buttons with brutalist 3D press */}
@@ -51,27 +54,33 @@ export default function NotFound() {
             href="/"
             className="btn-neo inline-flex items-center gap-2 border-4 border-[var(--on-surface)] bg-[var(--primary)] px-8 py-4 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[var(--on-primary)] shadow-[6px_6px_0_0_var(--on-surface)]"
           >
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">home</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">
+              home
+            </span>
             Take me home
           </Link>
           <Link
             href="/events"
             className="btn-neo inline-flex items-center gap-2 border-4 border-[var(--on-surface)] bg-[var(--surface)] px-8 py-4 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[var(--on-surface)] shadow-[6px_6px_0_0_var(--on-surface)]"
           >
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">event</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">
+              event
+            </span>
             See events
           </Link>
           <Link
             href="/branches"
             className="btn-neo inline-flex items-center gap-2 border-4 border-[var(--on-surface)] bg-[var(--secondary-container)] px-8 py-4 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[var(--on-secondary-container)] shadow-[6px_6px_0_0_var(--on-surface)]"
           >
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">pin_drop</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">
+              pin_drop
+            </span>
             Find a branch
           </Link>
         </div>
 
         {/* Monospace hint */}
-<p className="mt-12 font-[Space_Mono,monospace] text-xs uppercase tracking-widest text-[var(--on-surface-variant)]">
+        <p className="mt-12 font-[Space_Mono,monospace] text-xs uppercase tracking-widest text-[var(--on-surface-variant)]">
           / error 404 · kharis &nbsp;/&nbsp; page not found
         </p>
       </div>

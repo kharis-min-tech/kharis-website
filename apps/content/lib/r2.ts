@@ -16,13 +16,15 @@ interface R2BucketLike {
     value: Uint8Array | ArrayBuffer | string,
     options?: { httpMetadata?: { contentType?: string } },
   ): Promise<unknown>;
-  get(
-    key: string,
-  ): Promise<{ arrayBuffer(): Promise<ArrayBuffer>; httpMetadata?: { contentType?: string } } | null>;
+  get(key: string): Promise<{
+    arrayBuffer(): Promise<ArrayBuffer>;
+    httpMetadata?: { contentType?: string };
+  } | null>;
   delete(keys: string | string[]): Promise<void>;
-  list(
-    options?: { prefix?: string; cursor?: string },
-  ): Promise<{ objects: Array<{ key: string }>; truncated: boolean; cursor?: string }>;
+  list(options?: {
+    prefix?: string;
+    cursor?: string;
+  }): Promise<{ objects: Array<{ key: string }>; truncated: boolean; cursor?: string }>;
 }
 
 /** The bound bucket, or null when the binding is unavailable (e.g. misconfigured dev). */
@@ -84,7 +86,11 @@ export async function listBranchImageKeys(branchId: string) {
 }
 
 /** Removes objects that are no longer used. The folder marker stays unless the whole folder is removed. */
-export async function deleteUnusedBranchImages(branchId: string, keep: Iterable<string>, removeFolder = false) {
+export async function deleteUnusedBranchImages(
+  branchId: string,
+  keep: Iterable<string>,
+  removeFolder = false,
+) {
   const prefix = `branch-images/${branchId}/`;
   const folderKey = branchImageFolderKey(branchId);
   const kept = new Set<string>();

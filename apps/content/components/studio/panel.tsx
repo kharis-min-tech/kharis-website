@@ -23,7 +23,11 @@ export function Panel({
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end bg-black/40">
-      <button className="absolute inset-0 cursor-default" aria-label="Close editor" onClick={onClose} />
+      <button
+        className="absolute inset-0 cursor-default"
+        aria-label="Close editor"
+        onClick={onClose}
+      />
       <div className="relative z-10 flex h-full w-full max-w-2xl flex-col border-l border-border bg-card shadow-xl">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <h2 className="font-heading text-lg font-semibold">{title}</h2>

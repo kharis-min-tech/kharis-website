@@ -11,10 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function MessagesPage() {
-  const [latest, messages] = await Promise.all([
-    fetchLatestMessages(4),
-    fetchPastorMessages(120),
-  ]);
+  const [latest, messages] = await Promise.all([fetchLatestMessages(4), fetchPastorMessages(120)]);
 
   if (!messages.length && !latest.length) {
     return (

@@ -16,7 +16,10 @@ const UPLOADS_PLAYLIST = "UU4l8WmdF9ivMDQHHVOdYKqQ";
 
 function thumbFor(id: string, high?: string) {
   // mqdefault is true 16:9 — hqdefault letterboxes with black bars
-  if (high && (high.includes("maxresdefault") || high.includes("mqdefault") || high.includes("hq720"))) {
+  if (
+    high &&
+    (high.includes("maxresdefault") || high.includes("mqdefault") || high.includes("hq720"))
+  ) {
     return high;
   }
   return `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
@@ -318,10 +321,9 @@ function mergeMessages(...lists: MessageVideo[][]) {
 
 async function fetchFromRss(): Promise<MessageVideo[]> {
   try {
-    const res = await fetch(
-      `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`,
-      { next: { revalidate: 1800 } },
-    );
+    const res = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`, {
+      next: { revalidate: 1800 },
+    });
     if (!res.ok) return [];
     const xml = await res.text();
     const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)];
@@ -352,9 +354,7 @@ async function fetchFromRss(): Promise<MessageVideo[]> {
  * Fetch many pastor upload videos in upload order (newest → older).
  * No random reshuffle — hub / search need the real stack of teachings.
  */
-export async function fetchPastorMessages(
-  limit = 120,
-): Promise<MessageVideo[]> {
+export async function fetchPastorMessages(limit = 120): Promise<MessageVideo[]> {
   const key = process.env.YOUTUBE_API_KEY;
   if (!key) {
     const rss = await fetchFromRss();
@@ -404,10 +404,7 @@ export async function fetchPastorMessages(
           id,
           title,
           publishedAt: item.snippet?.publishedAt,
-          thumbnail: thumbFor(
-            id,
-            item.snippet?.thumbnails?.maxres?.url,
-          ),
+          thumbnail: thumbFor(id, item.snippet?.thumbnails?.maxres?.url),
         });
         if (messages.length >= limit) break;
       }
@@ -456,9 +453,7 @@ export async function findPastorMessage(
   return matches[0] ?? null;
 }
 
-export async function fetchLatestMessages(
-  limit = 5,
-): Promise<MessageVideo[]> {
+export async function fetchLatestMessages(limit = 5): Promise<MessageVideo[]> {
   // Homepage still prefers Acts for featured warmth
   const all = await fetchPastorMessages(Math.max(limit * 3, 25));
   const acts = all.filter((m) => m.title.toLowerCase().includes("acts"));
@@ -501,9 +496,7 @@ function clipWindowFor(id: string, index: number) {
 }
 
 /** Short muted hero clips: Pastor David preaching at Kharis / different messages. */
-export async function fetchHeroPreachClips(
-  limit = 8,
-): Promise<HeroPreachClip[]> {
+export async function fetchHeroPreachClips(limit = 8): Promise<HeroPreachClip[]> {
   const ENERGY_IDS = [
     "KBFfpU0mX2U",
     "6Y15Ja9E2hw",
@@ -554,9 +547,7 @@ export async function fetchHeroPreachClips(
 function parseDuration(iso: string): number {
   const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!m) return 0;
-  return (
-    Number(m[1] || 0) * 3600 + Number(m[2] || 0) * 60 + Number(m[3] || 0)
-  );
+  return Number(m[1] || 0) * 3600 + Number(m[2] || 0) * 60 + Number(m[3] || 0);
 }
 
 function scoreVideo(input: {
@@ -570,15 +561,7 @@ function scoreVideo(input: {
   if (input.definition === "hd") score += 40;
   if (input.duration >= 90 && input.duration <= 2400) score += 35;
   else if (input.duration >= 45 && input.duration < 90) score += 25;
-  for (const kw of [
-    "worship",
-    "praise",
-    "mettle",
-    "yahweh",
-    "service",
-    "impartation",
-    "live",
-  ]) {
+  for (const kw of ["worship", "praise", "mettle", "yahweh", "service", "impartation", "live"]) {
     if (t.includes(kw)) score += 18;
   }
   // Prefer Just Men / message atmosphere for hero
@@ -590,8 +573,7 @@ function scoreVideo(input: {
 
 export async function resolveHeroVideo(): Promise<HeroVideo> {
   const key = process.env.YOUTUBE_API_KEY;
-  const fallbackId =
-    process.env.YOUTUBE_HERO_FALLBACK_ID || "qFvmiRYWWh4";
+  const fallbackId = process.env.YOUTUBE_HERO_FALLBACK_ID || "qFvmiRYWWh4";
 
   if (!key) {
     return {
@@ -609,10 +591,7 @@ export async function resolveHeroVideo(): Promise<HeroVideo> {
     if (!playlistRes.ok) throw new Error("playlist fetch failed");
     const playlist = await playlistRes.json();
     const ids: string[] = (playlist.items || [])
-      .map(
-        (item: { contentDetails?: { videoId?: string } }) =>
-          item.contentDetails?.videoId,
-      )
+      .map((item: { contentDetails?: { videoId?: string } }) => item.contentDetails?.videoId)
       .filter(Boolean);
 
     // Always include known cinematic candidates

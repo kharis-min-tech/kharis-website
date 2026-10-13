@@ -22,13 +22,7 @@ import {
 
 const MODAL_SLUGS = new Set<LifeSlug>(["baptism", "fasting", "departments"]);
 
-function LearnMore({
-  card,
-  onOpen,
-}: {
-  card: LifeCategory;
-  onOpen: (slug: LifeSlug) => void;
-}) {
+function LearnMore({ card, onOpen }: { card: LifeCategory; onOpen: (slug: LifeSlug) => void }) {
   if (card.slug === "children") {
     return (
       <Link href={card.href} className="life-cta">
@@ -39,24 +33,14 @@ function LearnMore({
   }
 
   return (
-    <button
-      type="button"
-      className="life-cta"
-      onClick={() => onOpen(card.slug)}
-    >
+    <button type="button" className="life-cta" onClick={() => onOpen(card.slug)}>
       Learn More
       <Icon name="arrow" className="h-3.5 w-3.5" />
     </button>
   );
 }
 
-function PhotoCard({
-  card,
-  onOpen,
-}: {
-  card: LifeCategory;
-  onOpen: (slug: LifeSlug) => void;
-}) {
+function PhotoCard({ card, onOpen }: { card: LifeCategory; onOpen: (slug: LifeSlug) => void }) {
   return (
     <article className={`life-card life-card--${card.tone}`}>
       <div className="life-card__media">
@@ -151,8 +135,7 @@ function JoinFamilyCard() {
           <h3>Join the family</h3>
         </div>
         <p>
-          Find a local branch and take your place among people who will walk
-          with you in Christ.
+          Find a local branch and take your place among people who will walk with you in Christ.
         </p>
         <Link href="/locations" className="life-cta">
           Find a branch
@@ -204,8 +187,8 @@ function CloserPanel() {
     <div className="life-closer__panel">
       <h2 id="life-closer-title">Don&apos;t do life alone</h2>
       <p>
-        Whether you are ready for baptism, wanting to serve in the house, or
-        looking for a place to belong, there is space for you here.
+        Whether you are ready for baptism, wanting to serve in the house, or looking for a place to
+        belong, there is space for you here.
       </p>
       {sent ? (
         <p className="life-closer__thanks">
@@ -235,8 +218,7 @@ function CloserPanel() {
       )}
       <p className="life-closer__note">
         We&apos;ll connect you with a local branch, or{" "}
-        <a href={LIFE_MEMBERSHIP_URL}>become a member</a> when you&apos;re
-        ready.
+        <a href={LIFE_MEMBERSHIP_URL}>become a member</a> when you&apos;re ready.
       </p>
     </div>
   );
@@ -282,7 +264,7 @@ export function LifeExperience({ baptismVideoId }: Props) {
   }, [searchParams]);
 
   const fasting = LIFE_CATEGORIES.find((c) => c.slug === "fasting")!;
-  const modalCategory = modalSlug ? lifeBySlug(modalSlug) ?? null : null;
+  const modalCategory = modalSlug ? (lifeBySlug(modalSlug) ?? null) : null;
 
   return (
     <div className="life-page">
@@ -336,9 +318,8 @@ export function LifeExperience({ baptismVideoId }: Props) {
               <span className="life-grid__bar" aria-hidden />
             </h2>
             <p>
-              Kharis is a family where you can grow in your relationship with
-              Jesus, fellowship with other Christ-like believers and discover
-              your place in God&apos;s house.
+              Kharis is a family where you can grow in your relationship with Jesus, fellowship with
+              other Christ-like believers and discover your place in God&apos;s house.
             </p>
           </Reveal>
 

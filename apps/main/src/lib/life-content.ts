@@ -1,12 +1,6 @@
 export type LifeTone = "gold" | "dark" | "purple" | "cream";
 
-export type LifeSlug =
-  | "k-group"
-  | "baptism"
-  | "fasting"
-  | "marriage"
-  | "children"
-  | "departments";
+export type LifeSlug = "k-group" | "baptism" | "fasting" | "marriage" | "children" | "departments";
 
 export type LifeSection = {
   title: string;
@@ -52,8 +46,7 @@ export const LIFE_HERO = {
   banner: "A one-another life. Belong here",
   quoteSource: "David Antwi",
   image: "/images/branch-slide-4.jpg",
-  imageAlt:
-    "The Kharis congregation gathered in a full hall during Sunday service",
+  imageAlt: "The Kharis congregation gathered in a full hall during Sunday service",
 } as const;
 
 /** Real Kharis departments from kharis.org/get-involved. */

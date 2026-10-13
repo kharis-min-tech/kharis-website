@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Heart, X, Check, ShieldCheck, Sparkles, CreditCard, RefreshCw } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { Heart, X, Check, ShieldCheck, Sparkles, CreditCard, RefreshCw } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface GiveModalProps {
   isOpen: boolean;
@@ -11,18 +11,18 @@ interface GiveModalProps {
 
 export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
   const [amount, setAmount] = useState<number | string>(100);
-  const [fund, setFund] = useState('Tithes & Offerings');
-  const [frequency, setFrequency] = useState<'one-time' | 'recurring'>('one-time');
+  const [fund, setFund] = useState("Tithes & Offerings");
+  const [frequency, setFrequency] = useState<"one-time" | "recurring">("one-time");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
   const presetAmounts = [25, 50, 100, 250, 500];
   const funds = [
-    'Tithes & Offerings',
-    'Kharis Outreach & Missions',
-    'Youth & NextGen Ministry',
-    'Building & Expansion Fund',
+    "Tithes & Offerings",
+    "Kharis Outreach & Missions",
+    "Youth & NextGen Ministry",
+    "Building & Expansion Fund",
   ];
 
   const handleCompleteGive = (e: React.FormEvent) => {
@@ -52,7 +52,9 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
               </div>
               <div>
                 <h3 className="font-extrabold text-xl text-[#f3f0f8]">Kharis Generosity</h3>
-                <p className="text-xs font-semibold text-[#b2aec1]">Empowering Ministry & Community Transformation</p>
+                <p className="text-xs font-semibold text-[#b2aec1]">
+                  Empowering Ministry & Community Transformation
+                </p>
               </div>
             </div>
             <button
@@ -70,7 +72,8 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
               </div>
               <h4 className="text-2xl font-extrabold text-[#f3f0f8]">Thank You For Your Heart!</h4>
               <p className="text-sm font-semibold text-[#b2aec1] max-w-sm mx-auto">
-                Your contribution of <span className="font-bold text-[#d4920a]">${amount}</span> directly fuels transformation and hope.
+                Your contribution of <span className="font-bold text-[#d4920a]">${amount}</span>{" "}
+                directly fuels transformation and hope.
               </p>
             </div>
           ) : (
@@ -79,22 +82,22 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
               <div className="grid grid-cols-2 gap-2 p-1 bg-[#1a1826] rounded-2xl border border-[#2e2942]">
                 <button
                   type="button"
-                  onClick={() => setFrequency('one-time')}
+                  onClick={() => setFrequency("one-time")}
                   className={`py-2.5 text-xs font-extrabold rounded-xl transition-all ${
-                    frequency === 'one-time'
-                      ? 'bg-[#800654] text-white shadow-md shadow-[#800654]/20'
-                      : 'text-[#b2aec1] hover:text-[#f3f0f8]'
+                    frequency === "one-time"
+                      ? "bg-[#800654] text-white shadow-md shadow-[#800654]/20"
+                      : "text-[#b2aec1] hover:text-[#f3f0f8]"
                   }`}
                 >
                   One-Time Gift
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFrequency('recurring')}
+                  onClick={() => setFrequency("recurring")}
                   className={`py-2.5 text-xs font-extrabold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                    frequency === 'recurring'
-                      ? 'bg-[#800654] text-white shadow-md shadow-[#800654]/20'
-                      : 'text-[#b2aec1] hover:text-[#f3f0f8]'
+                    frequency === "recurring"
+                      ? "bg-[#800654] text-white shadow-md shadow-[#800654]/20"
+                      : "text-[#b2aec1] hover:text-[#f3f0f8]"
                   }`}
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
@@ -133,8 +136,8 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
                       onClick={() => setAmount(amt)}
                       className={`py-2.5 rounded-xl font-extrabold text-sm transition-all ${
                         amount === amt
-                          ? 'bg-[#d4920a] text-white shadow-md shadow-[#d4920a]/25'
-                          : 'bg-[#1a1826] text-[#f3f0f8] hover:bg-[#201d2e] border border-[#2e2942]'
+                          ? "bg-[#d4920a] text-white shadow-md shadow-[#d4920a]/25"
+                          : "bg-[#1a1826] text-[#f3f0f8] hover:bg-[#201d2e] border border-[#2e2942]"
                       }`}
                     >
                       ${amt}
@@ -143,7 +146,9 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
                 </div>
 
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-[#b2aec1]">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-[#b2aec1]">
+                    $
+                  </span>
                   <input
                     type="number"
                     value={amount}
@@ -160,7 +165,7 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
                 className="w-full py-4 rounded-2xl bg-[#d4920a] hover:bg-[#b87a08] text-white font-extrabold text-base shadow-lg shadow-[#d4920a]/30 transition-all flex items-center justify-center gap-2"
               >
                 <Heart className="w-5 h-5 fill-white" />
-                <span>Give ${amount || '0'} Now</span>
+                <span>Give ${amount || "0"} Now</span>
               </button>
 
               <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#b2aec1] pt-1">

@@ -7,7 +7,8 @@ export function StudioToaster() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   useEffect(() => {
-    const read = () => setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+    const read = () =>
+      setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
     read();
     const observer = new MutationObserver(read);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });

@@ -94,10 +94,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
               ))}
             </div>
             <div className="life-kids-hero__veil" />
-            <Reveal
-              variant="blur"
-              className="life-kids-hero__copy life-kids-hero__copy--v2"
-            >
+            <Reveal variant="blur" className="life-kids-hero__copy life-kids-hero__copy--v2">
               <Link href="/life" className="life-crumb">
                 Kharis Life
               </Link>
@@ -114,8 +111,8 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
             <Reveal variant="up" className="life-kids-showcase__intro">
               <h2>Three groups, one big family</h2>
               <p>
-                Fun, vibrant, and full of life. Each age group meets children
-                where they are with worship, teaching, and friendship.
+                Fun, vibrant, and full of life. Each age group meets children where they are with
+                worship, teaching, and friendship.
               </p>
             </Reveal>
 
@@ -152,17 +149,14 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
             </div>
           </section>
 
-          <section
-            className="life-kids-video life-kids-video--v2"
-            aria-label="Watch with us"
-          >
+          <section className="life-kids-video life-kids-video--v2" aria-label="Watch with us">
             <Reveal variant="up" className="life-kids-video__card">
               <div className="life-kids-video__copy">
                 <p className="life-hero__eyebrow">See the vibe</p>
                 <h2>Worship that&apos;s alive</h2>
                 <p>
-                  Our children learn the Word with energy and joy. The same
-                  fire you feel in the main hall, made for young hearts.
+                  Our children learn the Word with energy and joy. The same fire you feel in the
+                  main hall, made for young hearts.
                 </p>
               </div>
               <div className="life-kids-video__frame">
@@ -243,8 +237,8 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
           <Reveal variant="up" className="life-dept-discover">
             <h2>Discover your Kharis department</h2>
             <p>
-              Explore the teams and find where you can serve. If the interactive
-              finder does not load below, open it in a new tab.
+              Explore the teams and find where you can serve. If the interactive finder does not
+              load below, open it in a new tab.
             </p>
             <div className="life-dept-discover__frame">
               <iframe
@@ -255,8 +249,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
               />
             </div>
             <p className="life-dept-discover__note">
-              Need an embeddable code from Ruth if this iframe is blocked.
-              Meanwhile use{" "}
+              Need an embeddable code from Ruth if this iframe is blocked. Meanwhile use{" "}
               <a href={LIFE_DEPARTMENTS_URL} target="_blank" rel="noreferrer">
                 discover.khar.is
               </a>
@@ -330,11 +323,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
 
           <RevealStagger className="life-detail-sections" stagger={0.07}>
             {page.sections.map((section) => (
-              <RevealItem
-                key={section.title}
-                variant="up"
-                className="life-detail-block"
-              >
+              <RevealItem key={section.title} variant="up" className="life-detail-block">
                 <h2>{section.title}</h2>
                 <p>{section.body}</p>
                 {section.items ? (

@@ -31,7 +31,7 @@ function restGet(url: string): Promise<{ ok: boolean; status: number; body: stri
       url,
       {
         headers: { Accept: "application/json" },
-        agent: new https.Agent({ rejectUnauthorized: false }),
+        agent: new https.Agent({ rejectUnauthorized: true }),
       },
       (res) => {
         const chunks: Buffer[] = [];

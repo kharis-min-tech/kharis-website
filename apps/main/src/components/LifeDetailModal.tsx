@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import {
-  FormEvent,
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-  useState,
-} from "react";
+import { FormEvent, useCallback, useEffect, useId, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Icon } from "@/components/Icon";
@@ -38,9 +31,7 @@ const SLIDE_MS = 5200;
 const VIDEO_SLIDE_MS = 9000;
 
 function buildSlides(category: LifeCategory, blurb: string): Slide[] {
-  const slides: Slide[] = [
-    { kind: "video", title: category.title, blurb },
-  ];
+  const slides: Slide[] = [{ kind: "video", title: category.title, blurb }];
 
   if (category.intro) {
     slides.push({
@@ -93,7 +84,7 @@ export function LifeDetailModal({
     if (!category) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-            const onKey = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") setSlide((s) => s - 1);
       if (e.key === "ArrowRight") setSlide((s) => s + 1);
@@ -119,10 +110,7 @@ export function LifeDetailModal({
   const isBaptism = category?.slug === "baptism";
   const isDepartments = category?.slug === "departments";
 
-  const slides = useMemo(
-    () => (category ? buildSlides(category, blurb) : []),
-    [category, blurb],
-  );
+  const slides = useMemo(() => (category ? buildSlides(category, blurb) : []), [category, blurb]);
   const total = slides.length;
   const activeSlide = total ? ((slide % total) + total) % total : 0;
   const current = slides[activeSlide];
@@ -138,8 +126,7 @@ export function LifeDetailModal({
 
   useEffect(() => {
     if (!category || !total || reduce || paused || showFollowup) return;
-    const delay =
-      current?.kind === "video" ? VIDEO_SLIDE_MS : SLIDE_MS;
+    const delay = current?.kind === "video" ? VIDEO_SLIDE_MS : SLIDE_MS;
     const id = window.setTimeout(() => {
       setSlide((s) => (s + 1) % total);
     }, delay);
@@ -191,12 +178,12 @@ export function LifeDetailModal({
     ? "/life?open=baptism&followup=1"
     : isDepartments
       ? "/locations"
-      : category?.cta.href ?? "/life";
+      : (category?.cta.href ?? "/life");
   const ctaLabel = isBaptism
     ? "Join the family"
     : isDepartments
       ? "Find a branch"
-      : category?.cta.label ?? "Learn more";
+      : (category?.cta.label ?? "Learn more");
 
   return createPortal(
     <AnimatePresence>
@@ -283,10 +270,7 @@ export function LifeDetailModal({
                       </div>
                       <div className="life-modal__slide-copy">
                         <h2 id={titleId} className="life-modal__title">
-                          <LifeIcon
-                            name={category.icon}
-                            className="life-modal__ico"
-                          />
+                          <LifeIcon name={category.icon} className="life-modal__ico" />
                           {current.title}
                         </h2>
                         <p className="life-modal__intro life-modal__intro--short">
@@ -297,10 +281,7 @@ export function LifeDetailModal({
                   ) : (
                     <div className="life-modal__text-panel">
                       <h2 id={titleId} className="life-modal__title">
-                        <LifeIcon
-                          name={category.icon}
-                          className="life-modal__ico"
-                        />
+                        <LifeIcon name={category.icon} className="life-modal__ico" />
                         {current.title}
                       </h2>
                       <p className="life-modal__intro">{current.body}</p>
@@ -343,18 +324,15 @@ export function LifeDetailModal({
                 <div className="life-modal__followup">
                   <p className="life-modal__followup-title">Join the family</p>
                   <p className="life-modal__followup-copy">
-                    Leave your details and we will help you take the next step
-                    toward baptism at your local branch.
+                    Leave your details and we will help you take the next step toward baptism at
+                    your local branch.
                   </p>
                   {sent ? (
                     <p className="life-modal__followup-thanks">
                       Thank you. A member of the team will follow up soon.
                     </p>
                   ) : (
-                    <form
-                      className="life-modal__followup-form"
-                      onSubmit={onFollowup}
-                    >
+                    <form className="life-modal__followup-form" onSubmit={onFollowup}>
                       <input
                         type="text"
                         required
@@ -374,9 +352,7 @@ export function LifeDetailModal({
                       <button type="submit" className="life-cta" disabled={busy}>
                         {busy ? "Sending…" : "Request follow-up"}
                       </button>
-                      {error ? (
-                        <p className="life-modal__followup-err">{error}</p>
-                      ) : null}
+                      {error ? <p className="life-modal__followup-err">{error}</p> : null}
                     </form>
                   )}
                 </div>
@@ -390,8 +366,7 @@ export function LifeDetailModal({
                         e.preventDefault();
                         onClose();
                         window.setTimeout(() => {
-                          window.location.href =
-                            "/life?open=baptism&followup=1";
+                          window.location.href = "/life?open=baptism&followup=1";
                         }, 80);
                       } else {
                         onClose();

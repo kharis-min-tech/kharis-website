@@ -16,7 +16,9 @@ const MAX_TICKET = 64;
 const MAX_TRANSCRIPT = 6000;
 
 function sanitizeTicket(raw: unknown): string {
-  const t = String(raw ?? "").trim().toUpperCase();
+  const t = String(raw ?? "")
+    .trim()
+    .toUpperCase();
   if (!t || t.length > MAX_TICKET) return "";
   if (!isGraceTicketId(t)) return "";
   return t;
@@ -33,10 +35,7 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { ok: false, error: "Invalid request." },
-      { status: 400 },
-    );
+    return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
   const data = body as Record<string, unknown>;
@@ -70,16 +69,10 @@ export async function POST(request: Request) {
   }
 
   if (!first || !last) {
-    return NextResponse.json(
-      { ok: false, error: "Please enter your name." },
-      { status: 400 },
-    );
+    return NextResponse.json({ ok: false, error: "Please enter your name." }, { status: 400 });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json(
-      { ok: false, error: "Please enter a valid email." },
-      { status: 400 },
-    );
+    return NextResponse.json({ ok: false, error: "Please enter a valid email." }, { status: 400 });
   }
   if (message.length < 8) {
     return NextResponse.json(
@@ -91,10 +84,7 @@ export async function POST(request: Request) {
     );
   }
   if (!TOPICS.has(topic)) {
-    return NextResponse.json(
-      { ok: false, error: "Please choose a topic." },
-      { status: 400 },
-    );
+    return NextResponse.json({ ok: false, error: "Please choose a topic." }, { status: 400 });
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -102,10 +92,7 @@ export async function POST(request: Request) {
 
   if (!supabaseUrl || !serviceRoleKey) {
     console.error("Missing Supabase server environment variables");
-    return NextResponse.json(
-      { ok: false, error: "Server configuration error." },
-      { status: 500 },
-    );
+    return NextResponse.json({ ok: false, error: "Server configuration error." }, { status: 500 });
   }
 
   const supabase = createClient(supabaseUrl, serviceRoleKey, {

@@ -19,9 +19,7 @@ import { fetchPastorMessages, type MessageVideo } from "@/lib/youtube";
 export const GRACE_MESSAGE_LIMIT = 1500;
 
 export async function buildKharisChatContext(
-  messagesSource: Promise<MessageVideo[]> = fetchPastorMessages(
-    GRACE_MESSAGE_LIMIT,
-  ),
+  messagesSource: Promise<MessageVideo[]> = fetchPastorMessages(GRACE_MESSAGE_LIMIT),
 ): Promise<string> {
   const parts: string[] = [];
 
@@ -41,16 +39,11 @@ Departments: ${LIFE_DEPARTMENTS.join(", ")}
 Join the family: people looking for community or a church home should find their local branch at /locations ("Join the family" on the Life page).
 `);
 
-  for (const cat of LIFE_CATEGORIES.filter((c) =>
-    LIFE_VISIBLE_SLUGS.has(c.slug),
-  )) {
+  for (const cat of LIFE_CATEGORIES.filter((c) => LIFE_VISIBLE_SLUGS.has(c.slug))) {
     parts.push(`### ${cat.title}
 ${cat.intro}
 ${cat.sections
-  .map(
-    (s) =>
-      `${s.title}: ${s.body}${s.items?.length ? ` (${s.items.join("; ")})` : ""}`,
-  )
+  .map((s) => `${s.title}: ${s.body}${s.items?.length ? ` (${s.items.join("; ")})` : ""}`)
   .join("\n")}
 CTA: ${cat.cta.label} -> ${cat.cta.href}
 `);
@@ -104,9 +97,7 @@ More messages: /messages
 `);
     }
   } catch {
-    parts.push(
-      "## Messages\nMessage list unavailable. Send people to /messages on the site.\n",
-    );
+    parts.push("## Messages\nMessage list unavailable. Send people to /messages on the site.\n");
   }
 
   parts.push(`## ${KHARIS_APP.name} ("${KHARIS_APP.tagline}")

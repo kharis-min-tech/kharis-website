@@ -10,10 +10,7 @@ import {
   sundaySummary,
   type Branch,
 } from "@/lib/branches";
-import {
-  mapsDirectionsUrl,
-  weeklyServiceToCalendarItem,
-} from "@/lib/calendar";
+import { mapsDirectionsUrl, weeklyServiceToCalendarItem } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 
 function branchVisitItem(branch: Branch) {
@@ -66,13 +63,11 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
               Locations
             </div>
             <h1 className="font-display-lg text-headline-lg md:text-display-lg uppercase leading-none">
-              Find a{" "}
-              <span className="text-primary">Kharis Phase 2</span>{" "}
-              branch near you
+              Find a <span className="text-primary">Kharis Phase 2</span> branch near you
             </h1>
             <p className="mx-auto max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
-              {branches.length} {branches.length === 1 ? "branch" : "branches"} across the UK,
-              each with a family waiting to welcome you.
+              {branches.length} {branches.length === 1 ? "branch" : "branches"} across the UK, each
+              with a family waiting to welcome you.
             </p>
 
             <div className="mx-auto max-w-2xl space-y-4 pt-4">
@@ -124,8 +119,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                 role="status"
                 aria-live="polite"
               >
-                Sorted by distance from you.{" "}
-                <span data-closest-line />{" "}
+                Sorted by distance from you. <span data-closest-line />{" "}
                 <button type="button" data-ui="reset-location" className="text-primary">
                   Reset
                 </button>
@@ -230,7 +224,11 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
             Our branches (<span data-branch-count>{branches.length}</span>)
           </h2>
 
-          <div data-branch-empty hidden className="brutalist-border bg-surface-container-lowest p-12 text-center">
+          <div
+            data-branch-empty
+            hidden
+            className="brutalist-border bg-surface-container-lowest p-12 text-center"
+          >
             <h3 className="font-display-lg text-[24px] uppercase mb-2">
               No branches matched your search
             </h3>
@@ -335,7 +333,9 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                           <span className="material-symbols-outlined shrink-0 text-[18px] text-primary">
                             event
                           </span>
-                          <span className="min-w-0 font-body-md text-[12px] font-bold">{midweek}</span>
+                          <span className="min-w-0 font-body-md text-[12px] font-bold">
+                            {midweek}
+                          </span>
                         </div>
                       ) : null}
                     </div>

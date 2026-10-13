@@ -54,10 +54,7 @@ export function MessageHoverTile({
   const [ready, setReady] = useState(false);
   const timer = useRef<number | null>(null);
 
-  const src = useMemo(
-    () => (ready ? cleanEmbedSrc(message.id) : ""),
-    [ready, message.id],
-  );
+  const src = useMemo(() => (ready ? cleanEmbedSrc(message.id) : ""), [ready, message.id]);
 
   const onEnter = useCallback(() => {
     if (!playOnHover) return;
@@ -77,9 +74,7 @@ export function MessageHoverTile({
     };
   }, []);
 
-  const year = message.publishedAt
-    ? new Date(message.publishedAt).getFullYear()
-    : null;
+  const year = message.publishedAt ? new Date(message.publishedAt).getFullYear() : null;
 
   return (
     <a

@@ -24,7 +24,10 @@ function asSites(value: string[]): EventSite[] {
 }
 
 export async function listEvents(workspace: WorkspaceId) {
-  const { data, error } = await getSupabase().from("events").select("*").order("start_time", { ascending: false });
+  const { data, error } = await getSupabase()
+    .from("events")
+    .select("*")
+    .order("start_time", { ascending: false });
   fail(error);
   return ((data ?? []) as EventRow[]).filter((row) => {
     if (row.workspace === workspace) return true;
@@ -66,7 +69,8 @@ export async function saveEvent(input: EventInput) {
     category: input.category,
     recurrence: input.recurrence,
     recurrence_days: input.recurrence === "weekly" ? input.recurrenceDays : [],
-    recurrence_until: input.recurrence === "weekly" && input.recurrenceUntil ? input.recurrenceUntil : null,
+    recurrence_until:
+      input.recurrence === "weekly" && input.recurrenceUntil ? input.recurrenceUntil : null,
     sites: asSites(input.sites),
     is_featured: input.featured,
     image_url: input.imageUrl.trim() || null,
@@ -83,7 +87,10 @@ export async function deleteEvent(id: string) {
 }
 
 export async function listSermons() {
-  const { data, error } = await getSupabase().from("sermons").select("*").order("date", { ascending: false });
+  const { data, error } = await getSupabase()
+    .from("sermons")
+    .select("*")
+    .order("date", { ascending: false });
   fail(error);
   return (data ?? []) as SermonRow[];
 }
@@ -176,7 +183,10 @@ export async function deleteTestimony(id: string) {
 }
 
 export async function listVisitors() {
-  const { data, error } = await getSupabase().from("visitors").select("*").order("created_at", { ascending: false });
+  const { data, error } = await getSupabase()
+    .from("visitors")
+    .select("*")
+    .order("created_at", { ascending: false });
   fail(error);
   return (data ?? []) as VisitorRow[];
 }
@@ -233,12 +243,20 @@ export async function deleteDaily(id: string) {
 }
 
 export async function listDailyMessages() {
-  const { data, error } = await getSupabase().from("daily_messages").select("*").order("date", { ascending: true });
+  const { data, error } = await getSupabase()
+    .from("daily_messages")
+    .select("*")
+    .order("date", { ascending: true });
   fail(error);
   return (data ?? []) as DailyMessageRow[];
 }
 
-export async function saveDailyMessage(row: { id?: string; date: string; sermonId: string; note: string }) {
+export async function saveDailyMessage(row: {
+  id?: string;
+  date: string;
+  sermonId: string;
+  note: string;
+}) {
   if (!row.date) throw new Error("Choose a date.");
   if (!row.sermonId) throw new Error("Choose a sermon.");
   const payload = {
@@ -262,7 +280,11 @@ export async function deleteDailyMessage(id: string) {
 const LIVE_KEY = "live_stream";
 
 export async function getLiveSettings(): Promise<LiveSettings> {
-  const { data, error } = await getSupabase().from("app_config").select("value").eq("key", LIVE_KEY).maybeSingle();
+  const { data, error } = await getSupabase()
+    .from("app_config")
+    .select("value")
+    .eq("key", LIVE_KEY)
+    .maybeSingle();
   fail(error);
   const value = (data?.value ?? {}) as Record<string, unknown>;
   return {
@@ -273,15 +295,20 @@ export async function getLiveSettings(): Promise<LiveSettings> {
 }
 
 export async function saveLiveSettings(settings: LiveSettings) {
-  const { error } = await getSupabase().from("app_config").upsert({
-    key: LIVE_KEY,
-    value: { url: settings.url.trim(), is_live: settings.isLive, title: settings.title.trim() },
-  });
+  const { error } = await getSupabase()
+    .from("app_config")
+    .upsert({
+      key: LIVE_KEY,
+      value: { url: settings.url.trim(), is_live: settings.isLive, title: settings.title.trim() },
+    });
   fail(error);
 }
 
 export async function listFeatured(workspace: WorkspaceId) {
-  const { data, error } = await getSupabase().from("featured_videos").select("*").eq("workspace", workspace);
+  const { data, error } = await getSupabase()
+    .from("featured_videos")
+    .select("*")
+    .eq("workspace", workspace);
   fail(error);
   return (data ?? []) as FeaturedVideoRow[];
 }
@@ -304,9 +331,18 @@ export async function deleteFeatured(id: string) {
   fail(error);
 }
 
-export async function listMessages(filters: { workspace?: string; status?: string; search?: string }) {
-  let query = getSupabase().from("contact_messages").select("*").order("created_at", { ascending: false }).limit(300);
-  if (filters.workspace && filters.workspace !== "all") query = query.eq("workspace", filters.workspace);
+export async function listMessages(filters: {
+  workspace?: string;
+  status?: string;
+  search?: string;
+}) {
+  let query = getSupabase()
+    .from("contact_messages")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(300);
+  if (filters.workspace && filters.workspace !== "all")
+    query = query.eq("workspace", filters.workspace);
   if (filters.status && filters.status !== "all") query = query.eq("status", filters.status);
   const { data, error } = await query;
   fail(error);

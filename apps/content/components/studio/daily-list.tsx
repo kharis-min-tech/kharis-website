@@ -6,7 +6,15 @@ import { deleteDaily, listDaily, saveDaily } from "@/lib/content-repo";
 import type { DailyEntryRow, DailyKind } from "@/lib/types";
 import { useWorkspaceId } from "@/lib/workspace-context";
 
-export function DailyList({ kind, title, description }: { kind: DailyKind; title: string; description: string }) {
+export function DailyList({
+  kind,
+  title,
+  description,
+}: {
+  kind: DailyKind;
+  title: string;
+  description: string;
+}) {
   const workspace = useWorkspaceId();
   if (!workspace) return <PickWorkspace />;
 

@@ -106,19 +106,14 @@ export function SiteFooter() {
         {/* Link columns */}
         {COLUMNS.map((col) => (
           <div className="space-y-3" key={col.title}>
-            <h4
-              className={`font-headline-md text-lg uppercase mb-3 ${col.titleColor}`}
-            >
+            <h4 className={`font-headline-md text-lg uppercase mb-3 ${col.titleColor}`}>
               {col.title}
             </h4>
             <ul className="space-y-2 font-body-md text-on-surface-variant">
               {col.links.map((link) => (
                 <li key={link.label}>
                   {link.href ? (
-                    <a
-                      className={footerLinkClass}
-                      href={link.to}
-                    >
+                    <a className={footerLinkClass} href={link.to}>
                       {link.label}
                     </a>
                   ) : (
@@ -159,7 +154,6 @@ export function SiteFooter() {
       <div className="text-center mt-6 pb-8 font-body-md text-xs text-on-surface-variant px-margin-mobile md:px-margin-desktop uppercase tracking-wide">
         © 2026 Kharis Ministries | All Rights Reserved | Charity Number 1139291
       </div>
-
     </footer>
   );
 }

@@ -29,9 +29,7 @@ export function LeadershipExperience() {
           />
         </Reveal>
         <ChapterPanel className="about-chapter__leader-copy">
-          <h2 className="about-chapter__h2 about-chapter__h2--flush">
-            {leadership.title}
-          </h2>
+          <h2 className="about-chapter__h2 about-chapter__h2--flush">{leadership.title}</h2>
           <p className="about-chapter__copy">{leadership.body}</p>
           <Link href="/messages" className="btn-primary about-chapter__cta">
             Watch messages
@@ -41,8 +39,8 @@ export function LeadershipExperience() {
 
       <Reveal className="about-chapter__panel about-chapter__panel--strip">
         <p>
-          Together they founded Kharis Phase 2 for students and young people, with a
-          presence on university campuses across the UK.
+          Together they founded Kharis Phase 2 for students and young people, with a presence on
+          university campuses across the UK.
         </p>
       </Reveal>
     </AboutChapter>
