@@ -19,7 +19,8 @@ on:
 
 concurrency:
   group: content-${{ github.ref }}
-  cancel-in-progress: true
+  # Cancel superseded PR runs; never cancel an in-flight deploy on main.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   verify:
@@ -50,3 +51,44 @@ jobs:
       # so the build does not need Supabase or Google keys.
       - name: Build
         run: npx next build
+
+  # Deploy only on merge to main, and only after verify passes. Because this
+  # workflow is path-filtered, a push that doesn't touch apps/content never gets
+  # here — so content is not redeployed for unrelated changes.
+  deploy:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/content
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: a94432b07dae8050b83efdec72a492a3
+      # Public, baked into the client bundle at build time. Set as repo
+      # Variables: Settings → Secrets and variables → Actions → Variables.
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_SITE_URL: https://content.kharis.org
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+        working-directory: .
+
+      - name: Check deploy config
+        run: |
+          : "${CLOUDFLARE_API_TOKEN:?set the CLOUDFLARE_API_TOKEN repo secret}"
+          : "${NEXT_PUBLIC_SUPABASE_URL:?set the NEXT_PUBLIC_SUPABASE_URL repo variable}"
+          : "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?set the NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY repo variable}"
+
+      # opennextjs-cloudflare build && deploy. Worker runtime secrets
+      # (GOOGLE_MAPS_API_KEY, the R2 binding, etc.) are not touched by a deploy.
+      - name: Deploy to Cloudflare
+        run: npm run deploy
