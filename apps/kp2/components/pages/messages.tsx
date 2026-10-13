@@ -191,10 +191,42 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
               {[
-                { label: "Kharis App", copy: "Messages, notes and giving in one place.", cta: "Get the App", href: "/#app-stores", icon: "smartphone", card: "bg-primary text-on-primary", muted: "!text-primary-fixed" },
-                { label: "Spotify", copy: "Stream the podcast and follow every series.", cta: "Listen on Spotify", href: "https://open.spotify.com/", icon: "podcasts", card: "bg-[#1DB954] text-white", muted: "text-white/90" },
-                { label: "SoundCloud", copy: "Audio archive of past teachings and sessions.", cta: "Play on SoundCloud", href: "https://soundcloud.com/", icon: "graphic_eq", card: "bg-[#FF5500] text-white", muted: "text-white/90" },
-                { label: "YouTube", copy: "Watch full services, clips and live streams.", cta: "Watch on YouTube", href: "https://youtube.com/@davidantwi", icon: "smart_display", card: "bg-[#FF0000] text-white", muted: "text-white/90" },
+                {
+                  label: "Kharis App",
+                  copy: "Messages, notes and giving in one place.",
+                  cta: "Get the App",
+                  href: "/#app-stores",
+                  icon: "smartphone",
+                  card: "bg-primary text-on-primary",
+                  muted: "!text-primary-fixed",
+                },
+                {
+                  label: "Spotify",
+                  copy: "Stream the podcast and follow every series.",
+                  cta: "Listen on Spotify",
+                  href: "https://open.spotify.com/",
+                  icon: "podcasts",
+                  card: "bg-[#1DB954] text-white",
+                  muted: "text-white/90",
+                },
+                {
+                  label: "SoundCloud",
+                  copy: "Audio archive of past teachings and sessions.",
+                  cta: "Play on SoundCloud",
+                  href: "https://soundcloud.com/",
+                  icon: "graphic_eq",
+                  card: "bg-[#FF5500] text-white",
+                  muted: "text-white/90",
+                },
+                {
+                  label: "YouTube",
+                  copy: "Watch full services, clips and live streams.",
+                  cta: "Watch on YouTube",
+                  href: "https://youtube.com/@davidantwi",
+                  icon: "smart_display",
+                  card: "bg-[#FF0000] text-white",
+                  muted: "text-white/90",
+                },
               ].map(({ label, copy, cta, href, icon, card, muted }) => (
                 <a
                   key={label}

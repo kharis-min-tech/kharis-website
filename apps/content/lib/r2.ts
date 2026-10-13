@@ -1,5 +1,10 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { branchImageFolderKey, isBranchId, isR2ObjectKey, publicUrlForKey } from "@/lib/branch-image-paths";
+import {
+  branchImageFolderKey,
+  isBranchId,
+  isR2ObjectKey,
+  publicUrlForKey,
+} from "@/lib/branch-image-paths";
 
 /**
  * Branch images are stored in the `kharis-images` R2 bucket, bound to this

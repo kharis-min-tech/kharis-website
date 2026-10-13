@@ -16,7 +16,7 @@
   // Worker — no S3 access keys to leak. Objects are served back to the browser
   // through /api/media/[...key]. Saved image addresses use the public host.
   "vars": {
-    "R2_PUBLIC_URL": "https://images.kharis.org"
+    "R2_PUBLIC_URL": "https://images.kharis.org",
   },
   "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "kharis-images", "jurisdiction": "eu" }],
   // Cutover switch — uncomment to take content.kharis.org/* live on Cloudflare.

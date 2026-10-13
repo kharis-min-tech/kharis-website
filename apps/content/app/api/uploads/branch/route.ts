@@ -6,7 +6,12 @@ import {
   isBranchImageCategory,
   isBranchImageContentType,
 } from "@/lib/branch-image-paths";
-import { branchImagePublicUrl, ensureBranchImageFolder, deleteUnusedBranchImages, storeBranchImage } from "@/lib/r2";
+import {
+  branchImagePublicUrl,
+  ensureBranchImageFolder,
+  deleteUnusedBranchImages,
+  storeBranchImage,
+} from "@/lib/r2";
 import { branchImageKeyFromUrl } from "@/lib/branch-image-paths";
 import { studioUserFromRequest } from "@/lib/studio-auth";
 

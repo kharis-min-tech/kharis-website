@@ -161,8 +161,12 @@
   transform: none;
   box-shadow: var(--kp-glow);
 }
-.dark .halftone { background-image: radial-gradient(#fff 10%, transparent 11%); }
-.dark .halftone-overlay { background-image: radial-gradient(rgba(255,255,255,0.12) 2px, transparent 2px); }
+.dark .halftone {
+  background-image: radial-gradient(#fff 10%, transparent 11%);
+}
+.dark .halftone-overlay {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 2px, transparent 2px);
+}
 .dark .input-focus:focus {
   background-color: var(--surface-container-high);
   box-shadow: 4px 4px 0px 0px var(--secondary-container);

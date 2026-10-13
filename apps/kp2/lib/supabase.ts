@@ -57,9 +57,10 @@ export async function supabaseSelect<T>(
     let status: number;
 
     try {
-      const res = await fetch(url, revalidate === false
-        ? { headers, cache: "no-store" }
-        : { headers, next: { revalidate } });
+      const res = await fetch(
+        url,
+        revalidate === false ? { headers, cache: "no-store" } : { headers, next: { revalidate } },
+      );
       ok = res.ok;
       status = res.status;
       body = await res.text();

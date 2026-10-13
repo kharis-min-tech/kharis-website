@@ -2,12 +2,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
-import {
-  hasCoords,
-  midweekSummary,
-  sundaySummary,
-  type Branch,
-} from "@/lib/branches";
+import { hasCoords, midweekSummary, sundaySummary, type Branch } from "@/lib/branches";
 
 function searchText(branch: Branch) {
   return [branch.name, branch.city, branch.region, branch.address, branch.postcode, ...branch.tags]
