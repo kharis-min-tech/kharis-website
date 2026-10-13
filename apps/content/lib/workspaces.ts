@@ -60,13 +60,15 @@ export const WORKSPACES: StudioWorkspace[] = [
   {
     id: "app",
     name: "Mobile App",
-    description: "App events, announcements, daily reading, daily messages, daily prayers, and live stream.",
+    description:
+      "App events, announcements, daily reading, daily messages, daily prayers, and live stream.",
     nav: appNav,
   },
   {
     id: "kharis",
     name: "Kharis Website",
-    description: "Website events, testimonies, featured video, announcements, and contact messages for kharis.org.",
+    description:
+      "Website events, testimonies, featured video, announcements, and contact messages for kharis.org.",
     nav: kharisNav,
   },
   {

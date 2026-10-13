@@ -24,7 +24,8 @@ export interface ContactLocation {
 export async function getContactLocations(): Promise<ContactLocation[]> {
   const { data, error } = await supabase
     .from("branches")
-    .select(`
+    .select(
+      `
       id,
       slug,
       name,
@@ -41,7 +42,8 @@ export async function getContactLocations(): Promise<ContactLocation[]> {
         postcode,
         country
       )
-    `)
+    `,
+    )
     .eq("is_active", true)
     .order("sort_order", { ascending: true });
 

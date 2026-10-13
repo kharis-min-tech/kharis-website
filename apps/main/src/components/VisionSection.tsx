@@ -33,8 +33,8 @@ export function VisionSection() {
           <p className="eyebrow">Get the app</p>
           <h2 className="section-title mt-2">Church in your pocket.</h2>
           <p className="mx-auto mt-4 max-w-xl text-[0.98rem] font-semibold leading-relaxed text-muted">
-            Download the Kharis app, then listen to any message in three simple
-            steps: home, search, and play.
+            Download the Kharis app, then listen to any message in three simple steps: home, search,
+            and play.
           </p>
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
@@ -51,11 +51,7 @@ export function VisionSection() {
           </p>
         </Reveal>
 
-        <Reveal
-          variant="up"
-          delay={0.08}
-          className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5"
-        >
+        <Reveal variant="up" delay={0.08} className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
           {LISTEN_STEPS.map((step, i) => (
             <article key={step.title} className="listen-card">
               <div className="listen-card__copy">

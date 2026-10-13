@@ -5,11 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { FaithSvgBackdrop } from "@/components/FaithSvgBackdrop";
-import {
-  AboutChapters,
-  isAboutChapterId,
-  type AboutChapterId,
-} from "@/components/AboutChapters";
+import { AboutChapters, isAboutChapterId, type AboutChapterId } from "@/components/AboutChapters";
 import { ABOUT } from "@/lib/about-content";
 
 /** About hub: Mission, Vision, and Leadership on one page. */
@@ -20,15 +16,8 @@ export function AboutExperience() {
 
   useEffect(() => {
     const q = search.get("story") || search.get("chapter");
-    const hash =
-      typeof window !== "undefined"
-        ? window.location.hash.replace("#", "")
-        : "";
-    const id = isAboutChapterId(q)
-      ? q
-      : isAboutChapterId(hash)
-        ? hash
-        : null;
+    const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "") : "";
+    const id = isAboutChapterId(q) ? q : isAboutChapterId(hash) ? hash : null;
     if (id) setChapterId(id);
   }, [search]);
 
@@ -84,19 +73,14 @@ export function AboutExperience() {
             {ABOUT.faith.map((item, i) => {
               const open = openFaith === i;
               return (
-                <div
-                  key={item.title}
-                  className={`about-faith__item${open ? " is-open" : ""}`}
-                >
+                <div key={item.title} className={`about-faith__item${open ? " is-open" : ""}`}>
                   <button
                     type="button"
                     className="about-faith__q"
                     aria-expanded={open}
                     onClick={() => setOpenFaith(open ? null : i)}
                   >
-                    <span className="about-faith__num">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
+                    <span className="about-faith__num">{String(i + 1).padStart(2, "0")}</span>
                     <span className="about-faith__title">{item.title}</span>
                     <span className="about-faith__icon" aria-hidden>
                       {open ? "−" : "+"}

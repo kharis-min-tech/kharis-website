@@ -125,48 +125,8 @@
       }
     }
 
-    var city = root.querySelector("[data-branch-featured-city]");
-    var map = root.querySelector("[data-branch-featured-map]");
-    var address = root.querySelector("[data-branch-featured-address]");
-    var directions = root.querySelector("[data-branch-featured-directions]");
-    var link = root.querySelector("[data-branch-featured-link]");
-    if (city) city.textContent = card.getAttribute("data-city") || "";
-    if (address) address.textContent = card.getAttribute("data-address") || "";
-    if (map) {
-      var src = card.getAttribute("data-map-src") || "";
-      if (src && map.getAttribute("src") !== src) map.setAttribute("src", src);
-      map.setAttribute("title", "Map of " + (card.getAttribute("data-name") || ""));
-    }
-    if (directions) {
-      var href = card.getAttribute("data-directions") || "";
-      if (href) {
-        directions.setAttribute("href", href);
-        setHidden(directions, false);
-      } else {
-        directions.removeAttribute("href");
-        setHidden(directions, true);
-      }
-    }
-    if (link) {
-      var to = card.getAttribute("data-href") || "/branches/" + slug;
-      link.setAttribute("href", to);
-    }
-
-    var plans = root.querySelectorAll("[data-featured-plan]");
-    Array.prototype.forEach.call(plans, function (el) {
-      setHidden(el, el.getAttribute("data-featured-plan") !== slug);
-    });
-
-    if (opts && opts.scroll) {
-      var featured = root.querySelector("[data-branch-featured]");
-      if (featured && featured.scrollIntoView) {
-        featured.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-      if (card.scrollIntoView) {
-        window.setTimeout(function () {
-          card.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 250);
-      }
+    if (opts && opts.scroll && card.scrollIntoView) {
+      card.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }
 

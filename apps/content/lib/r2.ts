@@ -1,11 +1,17 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { branchImageFolderKey, isBranchId, isR2ObjectKey } from "@/lib/branch-image-paths";
+import {
+  branchImageFolderKey,
+  isBranchId,
+  isR2ObjectKey,
+  publicUrlForKey,
+} from "@/lib/branch-image-paths";
 
 /**
  * Branch images are stored in the `kharis-images` R2 bucket, bound to this
  * Worker as `BUCKET` (see wrangler.jsonc). There are no S3 access keys: every
  * call goes through the native binding, and images are served back to the
- * browser through /api/media/[...key], so the bucket needs no public domain.
+ * browser through /api/media/[...key]. Saved addresses use R2_PUBLIC_URL
+ * (https://images.kharis.org) when that host is set.
  */
 
 // Structural type for the subset of the R2 binding we use. Kept local so the
@@ -16,13 +22,33 @@ interface R2BucketLike {
     value: Uint8Array | ArrayBuffer | string,
     options?: { httpMetadata?: { contentType?: string } },
   ): Promise<unknown>;
-  get(
-    key: string,
-  ): Promise<{ arrayBuffer(): Promise<ArrayBuffer>; httpMetadata?: { contentType?: string } } | null>;
+  get(key: string): Promise<{
+    arrayBuffer(): Promise<ArrayBuffer>;
+    httpMetadata?: { contentType?: string };
+  } | null>;
   delete(keys: string | string[]): Promise<void>;
-  list(
-    options?: { prefix?: string; cursor?: string },
-  ): Promise<{ objects: Array<{ key: string }>; truncated: boolean; cursor?: string }>;
+  list(options?: {
+    prefix?: string;
+    cursor?: string;
+  }): Promise<{ objects: Array<{ key: string }>; truncated: boolean; cursor?: string }>;
+}
+
+/** Custom domain for stored image addresses. Empty in local dev falls back to /api/media. */
+export function branchImagePublicUrl(key: string, fallbackOrigin?: string) {
+  const configured = process.env.R2_PUBLIC_URL?.trim() || cloudflarePublicUrl();
+  const base = configured.replace(/\/$/, "");
+  if (base) return publicUrlForKey(base, key);
+  if (!fallbackOrigin) return null;
+  return `${fallbackOrigin.replace(/\/$/, "")}/api/media/${key}`;
+}
+
+function cloudflarePublicUrl() {
+  try {
+    const env = getCloudflareContext().env as unknown as { R2_PUBLIC_URL?: string };
+    return env.R2_PUBLIC_URL?.trim() ?? "";
+  } catch {
+    return "";
+  }
 }
 
 /** The bound bucket, or null when the binding is unavailable (e.g. misconfigured dev). */
@@ -35,7 +61,7 @@ function bucket(): R2BucketLike | null {
   }
 }
 
-/** Writes a branch photo to R2. Served via /api/media, so no public URL is returned. */
+/** Writes a branch photo to R2. The upload route attaches the public address. */
 export async function storeBranchImage(key: string, body: Uint8Array, contentType: string) {
   const store = bucket();
   if (!store) return null;
@@ -84,7 +110,11 @@ export async function listBranchImageKeys(branchId: string) {
 }
 
 /** Removes objects that are no longer used. The folder marker stays unless the whole folder is removed. */
-export async function deleteUnusedBranchImages(branchId: string, keep: Iterable<string>, removeFolder = false) {
+export async function deleteUnusedBranchImages(
+  branchId: string,
+  keep: Iterable<string>,
+  removeFolder = false,
+) {
   const prefix = `branch-images/${branchId}/`;
   const folderKey = branchImageFolderKey(branchId);
   const kept = new Set<string>();

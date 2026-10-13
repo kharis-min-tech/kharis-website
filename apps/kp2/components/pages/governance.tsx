@@ -4,8 +4,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-
-
 const POLICIES = [
   {
     icon: "shield_person",
@@ -42,8 +40,7 @@ function GovernancePage() {
             Policies to protect everyone
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant dark:text-[#ccc3d8] max-w-2xl leading-relaxed">
-            Our policy and practice guidance documents inform the governance of
-            Kharis Ministries.
+            Our policy and practice guidance documents inform the governance of Kharis Ministries.
           </p>
         </div>
       </section>

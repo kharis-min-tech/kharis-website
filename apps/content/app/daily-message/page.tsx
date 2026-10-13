@@ -8,7 +8,12 @@ import { PickWorkspace } from "@/components/studio/pick-workspace";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { confirmDelete } from "@/lib/confirm";
-import { deleteDailyMessage, listDailyMessages, listSermons, saveDailyMessage } from "@/lib/content-repo";
+import {
+  deleteDailyMessage,
+  listDailyMessages,
+  listSermons,
+  saveDailyMessage,
+} from "@/lib/content-repo";
 import type { DailyMessageRow, SermonRow } from "@/lib/types";
 import { useWorkspaceId } from "@/lib/workspace-context";
 
@@ -98,8 +103,19 @@ export default function DailyMessagePage() {
           title="Daily message"
           description="Pick a sermon for a date. Saving the same date again replaces that day."
         />
-        <TextField label="Date" type="date" required value={date} onChange={(event) => setDate(event.target.value)} />
-        <SelectField label="Sermon" required value={sermonId} onChange={(event) => setSermonId(event.target.value)}>
+        <TextField
+          label="Date"
+          type="date"
+          required
+          value={date}
+          onChange={(event) => setDate(event.target.value)}
+        />
+        <SelectField
+          label="Sermon"
+          required
+          value={sermonId}
+          onChange={(event) => setSermonId(event.target.value)}
+        >
           <option value="">Choose a sermon</option>
           {sermons.map((sermon) => (
             <option key={sermon.id} value={sermon.id}>
@@ -132,8 +148,20 @@ export default function DailyMessagePage() {
           <p className="text-sm text-destructive">{error}</p>
         ) : (
           <div className="space-y-6">
-            <MessageGroup title="Upcoming" rows={upcoming} sermonTitle={sermonTitle} onEdit={edit} onDelete={remove} />
-            <MessageGroup title="Earlier" rows={earlier} sermonTitle={sermonTitle} onEdit={edit} onDelete={remove} />
+            <MessageGroup
+              title="Upcoming"
+              rows={upcoming}
+              sermonTitle={sermonTitle}
+              onEdit={edit}
+              onDelete={remove}
+            />
+            <MessageGroup
+              title="Earlier"
+              rows={earlier}
+              sermonTitle={sermonTitle}
+              onEdit={edit}
+              onDelete={remove}
+            />
           </div>
         )}
       </div>
@@ -165,7 +193,9 @@ function MessageGroup({
             <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{row.date.slice(0, 10)}</p>
-                <p className="truncate text-sm text-muted-foreground">{sermonTitle(row.sermon_id)}</p>
+                <p className="truncate text-sm text-muted-foreground">
+                  {sermonTitle(row.sermon_id)}
+                </p>
               </div>
               <Button variant="outline" size="sm" onClick={() => onEdit(row)}>
                 Edit

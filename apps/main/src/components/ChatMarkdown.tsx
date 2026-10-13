@@ -42,15 +42,7 @@ function shortUrl(url: string): string {
   return bare.length > 34 ? `${bare.slice(0, 32)}…` : bare;
 }
 
-function SiteLink({
-  href,
-  label,
-  ctx,
-}: {
-  href: string;
-  label?: ReactNode;
-  ctx: Ctx;
-}) {
+function SiteLink({ href, label, ctx }: { href: string; label?: ReactNode; ctx: Ctx }) {
   const text = label ?? href.split("?")[0];
   if (/^\/contact(\?|$)/i.test(href) && ctx.onContactClick) {
     return (
@@ -97,20 +89,14 @@ function linkFor(href: string, label: ReactNode, key: string, ctx: Ctx) {
 const RULES: Rule[] = [
   {
     re: /\[([^\]\n]+)\]\(([^)\s]+)\)/,
-    render: (m, key, ctx) =>
-      linkFor(m[2], renderInline(m[1], ctx, key), key, ctx),
+    render: (m, key, ctx) => linkFor(m[2], renderInline(m[1], ctx, key), key, ctx),
   },
   {
     re: /`([^`\n]+)`/,
     render: (m, key, ctx) => {
       const inner = m[1].trim();
       if (SITE_PATH_EXACT.test(inner) || URL_EXACT.test(inner)) {
-        return linkFor(
-          inner,
-          SITE_PATH_EXACT.test(inner) ? undefined : shortUrl(inner),
-          key,
-          ctx,
-        );
+        return linkFor(inner, SITE_PATH_EXACT.test(inner) ? undefined : shortUrl(inner), key, ctx);
       }
       return (
         <span key={key} className="life-chat__code">
@@ -121,9 +107,7 @@ const RULES: Rule[] = [
   },
   {
     re: /\*\*(?!\s)([^\n]+?)\*\*|__(?!\s)([^\n]+?)__/,
-    render: (m, key, ctx) => (
-      <strong key={key}>{renderInline(m[1] ?? m[2], ctx, key)}</strong>
-    ),
+    render: (m, key, ctx) => <strong key={key}>{renderInline(m[1] ?? m[2], ctx, key)}</strong>,
   },
   {
     re: /(^|[^\w*])\*(?![\s*])([^*\n]+?)\*(?![\w*])/,
@@ -136,15 +120,11 @@ const RULES: Rule[] = [
   },
   {
     re: /https?:\/\/[^\s<>()[\]]*[^\s<>()[\].,;:!?'"]/i,
-    render: (m, key) => (
-      <ExternalLink key={key} href={m[0]} label={shortUrl(m[0])} />
-    ),
+    render: (m, key) => <ExternalLink key={key} href={m[0]} label={shortUrl(m[0])} />,
   },
   {
     re: /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/,
-    render: (m, key) => (
-      <ExternalLink key={key} href={`mailto:${m[0]}`} label={m[0]} />
-    ),
+    render: (m, key) => <ExternalLink key={key} href={`mailto:${m[0]}`} label={m[0]} />,
   },
   {
     re: new RegExp(`(^|[\\s("'])(${SITE_PATH})(?=$|[\\s.,;:!?)"'])`, "i"),
@@ -258,11 +238,7 @@ export function ChatMarkdown({
           <li key={li}>{renderInline(item, ctx, `${key}-${li}`)}</li>
         ));
         return block.type === "ol" ? (
-          <ol
-            key={key}
-            className="life-chat__list life-chat__list--ol"
-            start={block.start}
-          >
+          <ol key={key} className="life-chat__list life-chat__list--ol" start={block.start}>
             {items}
           </ol>
         ) : (

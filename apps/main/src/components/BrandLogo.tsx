@@ -7,11 +7,7 @@ type Props = {
   showWordmark?: boolean;
 };
 
-export function BrandLogo({
-  tone = "onLight",
-  className = "",
-  showWordmark = true,
-}: Props) {
+export function BrandLogo({ tone = "onLight", className = "", showWordmark = true }: Props) {
   const onDark = tone === "onDark";
 
   return (
@@ -21,9 +17,7 @@ export function BrandLogo({
         alt="Kharis"
         width={40}
         height={40}
-        className={`h-9 w-9 object-contain md:h-10 md:w-10 ${
-          onDark ? "" : "brightness-0"
-        }`}
+        className={`h-9 w-9 object-contain md:h-10 md:w-10 ${onDark ? "" : "brightness-0"}`}
         priority
       />
       {showWordmark && (

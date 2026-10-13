@@ -31,12 +31,11 @@ export interface DisplayEvent extends EventRow {
  * getEvents("app")    -> App events
  * getEvents()         -> All events
  */
-export async function getEvents(
-  site?: EventSite
-): Promise<EventRow[]> {
+export async function getEvents(site?: EventSite): Promise<EventRow[]> {
   const query = supabase
     .from("events")
-    .select(`
+    .select(
+      `
       id,
       title,
       description,
@@ -51,9 +50,9 @@ export async function getEvents(
       is_featured,
       image_url,
       sites
-    `)
+    `,
+    )
     .order("start_time", { ascending: true });
-
 
   const { data, error } = await query;
 
@@ -64,15 +63,11 @@ export async function getEvents(
 
   const events = (data ?? []) as EventRow[];
 
-if (!site) {
-  return events;
-}
+  if (!site) {
+    return events;
+  }
 
-return events.filter(
-  (event) =>
-    event.sites?.includes(site) ||
-    event.sites?.includes("general")
-);
+  return events.filter((event) => event.sites?.includes(site) || event.sites?.includes("general"));
 }
 
 /**
@@ -82,10 +77,7 @@ return events.filter(
  * A weekly Thursday Bible study becomes individual
  * Thursday events for the requested period.
  */
-export function expandEvents(
-  events: EventRow[],
-  daysAhead = 90
-): DisplayEvent[] {
+export function expandEvents(events: EventRow[], daysAhead = 90): DisplayEvent[] {
   const today = startOfDay(new Date());
 
   const windowEnd = new Date(today);
@@ -100,10 +92,7 @@ export function expandEvents(
     if (event.recurrence === "none") {
       const occurrence = new Date(event.start_time);
 
-      if (
-        occurrence >= today &&
-        occurrence <= endOfDay(windowEnd)
-      ) {
+      if (occurrence >= today && occurrence <= endOfDay(windowEnd)) {
         output.push({
           ...event,
           occurrence_date: occurrence,
@@ -117,24 +106,13 @@ export function expandEvents(
     // WEEKLY EVENT
     // -------------------------
     if (event.recurrence === "weekly") {
-      const baseDate = startOfDay(
-        new Date(event.start_time)
-      );
+      const baseDate = startOfDay(new Date(event.start_time));
 
-      const recurrenceUntil =
-        event.recurrence_until
-          ? endOfDay(
-              new Date(
-                `${event.recurrence_until}T00:00:00`
-              )
-            )
-          : null;
+      const recurrenceUntil = event.recurrence_until
+        ? endOfDay(new Date(`${event.recurrence_until}T00:00:00`))
+        : null;
 
-      for (
-        let day = new Date(today);
-        day <= windowEnd;
-        day.setDate(day.getDate() + 1)
-      ) {
+      for (let day = new Date(today); day <= windowEnd; day.setDate(day.getDate() + 1)) {
         const candidate = new Date(day);
 
         // Don't create occurrences before
@@ -144,40 +122,25 @@ export function expandEvents(
         }
 
         // Stop after recurrence_until.
-        if (
-          recurrenceUntil &&
-          candidate > recurrenceUntil
-        ) {
+        if (recurrenceUntil && candidate > recurrenceUntil) {
           continue;
         }
 
         // Check whether this weekday is selected.
-        if (
-          !event.recurrence_days?.includes(
-            candidate.getDay()
-          )
-        ) {
+        if (!event.recurrence_days?.includes(candidate.getDay())) {
           continue;
         }
 
         output.push({
           ...event,
-          occurrence_date:
-            combineDateWithEventTime(
-              candidate,
-              event.start_time
-            ),
+          occurrence_date: combineDateWithEventTime(candidate, event.start_time),
         });
       }
     }
   }
 
   // Sort all occurrences chronologically.
-  return output.sort(
-    (a, b) =>
-      a.occurrence_date.getTime() -
-      b.occurrence_date.getTime()
-  );
+  return output.sort((a, b) => a.occurrence_date.getTime() - b.occurrence_date.getTime());
 }
 
 /**
@@ -187,10 +150,7 @@ export function expandEvents(
  * getUpcomingEvents("kharis")
  * getUpcomingEvents("kp2")
  */
-export async function getUpcomingEvents(
-  site?: EventSite,
-  daysAhead = 90
-): Promise<DisplayEvent[]> {
+export async function getUpcomingEvents(site?: EventSite, daysAhead = 90): Promise<DisplayEvent[]> {
   const events = await getEvents(site);
 
   return expandEvents(events, daysAhead);
@@ -203,16 +163,11 @@ export async function getUpcomingEvents(
 export async function getFeaturedEvents(
   site?: EventSite,
   limit = 3,
-  daysAhead = 90
+  daysAhead = 90,
 ): Promise<DisplayEvent[]> {
-  const events = await getUpcomingEvents(
-    site,
-    daysAhead
-  );
+  const events = await getUpcomingEvents(site, daysAhead);
 
-  return events
-    .filter((event) => event.is_featured)
-    .slice(0, limit);
+  return events.filter((event) => event.is_featured).slice(0, limit);
 }
 
 // ============================================
@@ -235,20 +190,12 @@ function endOfDay(date: Date): Date {
   return result;
 }
 
-function combineDateWithEventTime(
-  date: Date,
-  eventDateTime: string
-): Date {
+function combineDateWithEventTime(date: Date, eventDateTime: string): Date {
   const source = new Date(eventDateTime);
 
   const result = new Date(date);
 
-  result.setHours(
-    source.getHours(),
-    source.getMinutes(),
-    source.getSeconds(),
-    0
-  );
+  result.setHours(source.getHours(), source.getMinutes(), source.getSeconds(), 0);
 
   return result;
 }

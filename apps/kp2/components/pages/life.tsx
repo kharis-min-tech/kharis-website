@@ -22,7 +22,10 @@ function socialDate(iso: string) {
 function socialBlurb(text: string) {
   const clean = text.trim();
   if (clean.length <= 90) return clean;
-  return `${clean.slice(0, 90).replace(/\s+\S*$/, "").trim()}…`;
+  return `${clean
+    .slice(0, 90)
+    .replace(/\s+\S*$/, "")
+    .trim()}…`;
 }
 
 function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
@@ -30,23 +33,34 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
       <SiteHeader />
 
-      <header className="relative min-h-[620px] md:min-h-[760px] lg:min-h-[921px] flex items-center pt-24 overflow-hidden bg-black text-white">
+      <header className="relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden bg-black pt-24 pb-8 text-white">
         <div className="absolute inset-0 opacity-60">
-          <div className="w-full h-full bg-cover bg-center" data-alt="Young adults at Kharis Life" style={{backgroundImage: "url('/kp2/assets/young-adults.jpg')"}}></div>
+          <div
+            className="w-full h-full bg-cover bg-center"
+            data-alt="Young adults at Kharis Life"
+            style={{ backgroundImage: "url('/kp2/assets/young-adults.jpg')" }}
+          ></div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
 
         <div className="absolute inset-0 halftone-pattern text-primary opacity-20 pointer-events-none"></div>
         <div className="relative z-10 px-margin-desktop w-full max-w-7xl mx-auto flex flex-col items-start gap-6">
-          <div className="bg-secondary-container text-on-secondary-container px-4 py-1 border-2 border-black inline-block font-label-md text-label-md uppercase -rotate-2 animate-bounce motion-reduce:animate-none">Christ Exalting</div>
+          <div className="bg-secondary-container text-on-secondary-container px-4 py-1 border-2 border-black inline-block font-label-md text-label-md uppercase -rotate-2 animate-bounce motion-reduce:animate-none">
+            Christ Exalting
+          </div>
           <h1 className="font-display-lg text-display-lg max-w-4xl leading-[1] tracking-tighter uppercase mb-4">
-            A family church.<br/>
-            <span className="text-primary-fixed bg-primary px-4 py-2 inline-block skew-x-3">Faith lived together.</span>
+            A family church.
+            <br />
+            <span className="text-primary-fixed bg-primary px-4 py-2 inline-block skew-x-3">
+              Faith lived together.
+            </span>
           </h1>
           <p className="font-body-lg text-body-lg max-w-2xl text-surface-variant font-medium">
-            We are passionate about God and His word. Experience a spirit-filled, faith lifting and powerpacked culture. Get busy serving, and leave every service ready to impact your generation with Christ.
+            We are passionate about God and His word. Experience a spirit-filled, faith lifting and
+            powerpacked culture. Get busy serving, and leave every service ready to impact your
+            generation with Christ.
           </p>
-          <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-2">
             <Link
               href="/branches"
               className="bg-primary text-white px-8 py-4 border-4 border-black neo-shadow-lg font-headline-md text-headline-md uppercase hover-press transition-all skew-hover inline-block"
@@ -61,12 +75,10 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
             </Link>
           </div>
         </div>
-
       </header>
 
       <main className="relative z-20">
         {/* Fellowship section removed */}
-
 
         <section className="py-stack-lg px-margin-desktop max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
@@ -76,7 +88,12 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
                 <div className="bg-white border-4 border-black p-8 neo-shadow relative z-10 rotate-1">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-primary flex items-center justify-center border-2 border-black">
-                      <span className="material-symbols-outlined text-white" style={{fontVariationSettings: "'FILL' 1"}}>event</span>
+                      <span
+                        className="material-symbols-outlined text-white"
+                        style={{ fontVariationSettings: "'FILL' 1" }}
+                      >
+                        event
+                      </span>
                     </div>
                     <h3 className="font-headline-md text-headline-md uppercase">Upcoming Events</h3>
                   </div>
@@ -91,7 +108,9 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
                           <div className="font-label-md text-label-md text-primary w-14 pt-1 uppercase shrink-0">
                             {socialDate(event.starts)}
                           </div>
-                          <div className={`flex-1 ${i > 0 ? "border-t-2 border-outline-variant pt-4" : ""}`}>
+                          <div
+                            className={`flex-1 ${i > 0 ? "border-t-2 border-outline-variant pt-4" : ""}`}
+                          >
                             <h4 className="font-body-lg text-body-lg font-bold group-hover:text-primary transition-colors">
                               <Link href="/events">{event.title}</Link>
                             </h4>
@@ -123,29 +142,63 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
             </div>
             <div className="md:col-span-7 order-1 md:order-2">
               <div className="p-8">
-                <div className="inline-block bg-primary-container text-on-primary-container px-3 py-1 font-label-md text-label-md uppercase mb-6">Stay Connected</div>
-                <h2 className="font-display-lg text-headline-lg uppercase leading-[0.9] mb-8">Stay connected <br/><span className="text-primary italic">beyond Sunday</span></h2>
-                <p className="font-body-lg text-body-lg text-on-surface mb-8">We are passionate about God and His word. Get daily inspiration, community highlights, and event updates, then get busy serving. This is a kingdom culture that does not stop when Sunday ends.</p>
+                <div className="inline-block bg-primary-container text-on-primary-container px-3 py-1 font-label-md text-label-md uppercase mb-6">
+                  Stay Connected
+                </div>
+                <h2 className="font-display-lg text-headline-lg uppercase leading-[0.9] mb-8">
+                  Stay connected <br />
+                  <span className="text-primary italic">beyond Sunday</span>
+                </h2>
+                <p className="font-body-lg text-body-lg text-on-surface mb-8">
+                  We are passionate about God and His word. Get daily inspiration, community
+                  highlights, and event updates, then get busy serving. This is a kingdom culture
+                  that does not stop when Sunday ends.
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <a className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-secondary-container transition-colors neo-shadow group" href="https://instagram.com/kharisphasetwo" target="_blank" rel="noreferrer">
-                    <span className="material-symbols-outlined text-4xl shrink-0">photo_camera</span>
+                  <a
+                    className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-secondary-container transition-colors neo-shadow group"
+                    href="https://instagram.com/kharisphasetwo"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <span className="material-symbols-outlined text-4xl shrink-0">
+                      photo_camera
+                    </span>
                     <div className="min-w-0">
                       <p className="font-label-md text-label-md uppercase">Instagram</p>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-secondary-container break-all">@kharisphasetwo</p>
+                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-secondary-container break-all">
+                        @kharisphasetwo
+                      </p>
                     </div>
                   </a>
-                  <a className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-primary hover:text-white transition-colors neo-shadow group" href="https://youtube.com/@davidantwi" target="_blank" rel="noreferrer">
-                    <span className="material-symbols-outlined text-4xl shrink-0">video_library</span>
+                  <a
+                    className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-primary hover:text-white transition-colors neo-shadow group"
+                    href="https://youtube.com/@davidantwi"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <span className="material-symbols-outlined text-4xl shrink-0">
+                      video_library
+                    </span>
                     <div className="min-w-0">
                       <p className="font-label-md text-label-md uppercase">YouTube</p>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-white/80 break-all">@davidantwi</p>
+                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-white/80 break-all">
+                        @davidantwi
+                      </p>
                     </div>
                   </a>
-                  <a className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-secondary-container transition-colors neo-shadow group" href={TIKTOK_URL} target="_blank" rel="noreferrer">
+                  <a
+                    className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-secondary-container transition-colors neo-shadow group"
+                    href={TIKTOK_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <TikTokIcon className="w-9 h-9 shrink-0" />
                     <div className="min-w-0">
                       <p className="font-label-md text-label-md uppercase">TikTok</p>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-secondary-container break-all">{TIKTOK_HANDLE}</p>
+                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-secondary-container break-all">
+                        {TIKTOK_HANDLE}
+                      </p>
                     </div>
                   </a>
                 </div>

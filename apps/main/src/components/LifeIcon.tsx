@@ -10,17 +10,10 @@ const paths: Record<LifeCategory["icon"], string> = {
     "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z",
   sparkles:
     "M11 2 9.4 7.4 4 9.1l5.4 1.7L11 16l1.6-5.2L18 9.1l-5.4-1.7ZM19 14l-.8 2.7L15.5 17.5l2.7.8.8 2.7.8-2.7 2.7-.8-2.7-.8Z",
-  layout:
-    "M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z",
+  layout: "M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z",
 };
 
-export function LifeIcon({
-  name,
-  className,
-}: {
-  name: LifeCategory["icon"];
-  className?: string;
-}) {
+export function LifeIcon({ name, className }: { name: LifeCategory["icon"]; className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"

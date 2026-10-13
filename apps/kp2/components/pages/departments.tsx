@@ -6,11 +6,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-
-
 import { DEPARTMENTS, type Department } from "@/data/departments";
 import { DepartmentVideoHero } from "@/components/DepartmentVideoHero";
-
 
 const FEATURED = DEPARTMENTS.filter((d) => d.featured);
 const OTHERS = DEPARTMENTS.filter((d) => !d.featured);
@@ -50,7 +47,9 @@ function DepartmentCard({ dept }: { dept: Department }) {
         <span
           className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider text-on-background ${dept.accent} rounded-none border border-on-background/10`}
         >
-          <span className="material-symbols-outlined text-sm" aria-hidden="true">{dept.icon}</span>
+          <span className="material-symbols-outlined text-sm" aria-hidden="true">
+            {dept.icon}
+          </span>
           {dept.name}
         </span>
       </div>
@@ -59,7 +58,10 @@ function DepartmentCard({ dept }: { dept: Department }) {
         <p className="mb-4 text-sm text-on-surface-variant">{dept.description}</p>
         <div className="mb-5 flex flex-wrap gap-1.5">
           {dept.roles.map((r) => (
-            <span key={r} className="bg-surface-variant border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant">
+            <span
+              key={r}
+              className="bg-surface-variant border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant"
+            >
               {r}
             </span>
           ))}
@@ -92,10 +94,9 @@ function DepartmentsPage() {
   return (
     <div className="font-body-md text-body-md overflow-x-hidden">
       <SiteHeader />
-      <main className="pt-20">
+      <main className="pt-[74px]">
         {/* Hero */}
         <DepartmentVideoHero />
-
 
         {/* Featured top 3 */}
         <section className="relative z-10 bg-surface px-margin-mobile py-stack-lg md:px-margin-desktop">
@@ -129,15 +130,24 @@ function DepartmentsPage() {
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-6">
-                  <span className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border border-on-background/10`}>
-                    <span className="material-symbols-outlined text-sm" aria-hidden="true">{dept.icon}</span>
+                  <span
+                    className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border border-on-background/10`}
+                  >
+                    <span className="material-symbols-outlined text-sm" aria-hidden="true">
+                      {dept.icon}
+                    </span>
                     {dept.tagline}
                   </span>
-                  <h3 className="font-display-lg mb-2 text-headline-lg leading-none uppercase">{dept.name}</h3>
+                  <h3 className="font-display-lg mb-2 text-headline-lg leading-none uppercase">
+                    {dept.name}
+                  </h3>
                   <p className="mb-5 flex-1 text-sm text-on-surface-variant">{dept.description}</p>
                   <div className="mb-5 flex flex-wrap gap-1.5">
                     {dept.roles.map((r) => (
-                      <span key={r} className="bg-surface-variant border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant">
+                      <span
+                        key={r}
+                        className="bg-surface-variant border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant"
+                      >
                         {r}
                       </span>
                     ))}
@@ -161,7 +171,9 @@ function DepartmentsPage() {
               <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-primary px-3 py-1 text-xs font-black uppercase tracking-widest text-on-primary">
                 The rest of the body
               </span>
-              <h2 className="font-display-lg text-headline-lg leading-none uppercase">Explore Every Department</h2>
+              <h2 className="font-display-lg text-headline-lg leading-none uppercase">
+                Explore Every Department
+              </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm text-on-surface-variant">
                 Search or browse. There is a place for your gift. Get busy serving.
               </p>
@@ -170,7 +182,12 @@ function DepartmentsPage() {
             {/* Search + filters */}
             <div className="mb-8 flex flex-col gap-4">
               <label className="relative block">
-                <span className="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" aria-hidden="true">search</span>
+                <span
+                  className="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                  aria-hidden="true"
+                >
+                  search
+                </span>
                 <input
                   type="search"
                   value={query}
@@ -179,7 +196,7 @@ function DepartmentsPage() {
                   className="input-focus w-full rounded-none border border-on-background/10 bg-surface-container-lowest px-11 py-3.5 text-sm font-medium text-on-surface placeholder:text-on-surface-variant"
                 />
               </label>
-<div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
                 {["ALL", ...OTHERS.map((d) => d.name)].map((f) => (
                   <button
                     key={f}
@@ -205,7 +222,12 @@ function DepartmentsPage() {
               </div>
             ) : (
               <div className="border-2 border-dashed border-black bg-surface py-16 text-center">
-                <span className="material-symbols-outlined mb-3 text-4xl text-on-surface-variant" aria-hidden="true">search_off</span>
+                <span
+                  className="material-symbols-outlined mb-3 text-4xl text-on-surface-variant"
+                  aria-hidden="true"
+                >
+                  search_off
+                </span>
                 <p className="font-headline-md text-headline-md mb-2">No teams found</p>
                 <p className="text-sm text-on-surface-variant">
                   Try a different search, or talk to a pastor. We will find your fit.
@@ -237,7 +259,9 @@ function DepartmentsPage() {
                 <div
                   key={w.title}
                   className={`relative flex flex-col rounded-none border border-on-background/10 p-6 shadow-[6px_6px_0_0_#000] ${
-                    i % 2 === 0 ? "bg-secondary-container text-on-secondary-container" : "bg-primary text-on-primary"
+                    i % 2 === 0
+                      ? "bg-secondary-container text-on-secondary-container"
+                      : "bg-primary text-on-primary"
                   }`}
                 >
                   <span className="absolute right-4 top-3 font-display-lg text-6xl leading-none opacity-20">
@@ -248,18 +272,26 @@ function DepartmentsPage() {
                       i % 2 === 0 ? "bg-on-background text-surface" : "bg-surface text-on-surface"
                     }`}
                   >
-                    <span className="material-symbols-outlined text-2xl" aria-hidden="true">{w.icon}</span>
+                    <span className="material-symbols-outlined text-2xl" aria-hidden="true">
+                      {w.icon}
+                    </span>
                   </span>
-                  <h3 className="font-headline-md mb-2 text-headline-md leading-tight">{w.title}</h3>
+                  <h3 className="font-headline-md mb-2 text-headline-md leading-tight">
+                    {w.title}
+                  </h3>
                   <p className="mb-4 flex-1 text-sm leading-relaxed">{w.text}</p>
-                  <p className="font-[Space_Mono,monospace] text-xs uppercase tracking-widest opacity-80">{w.ref}</p>
+                  <p className="font-[Space_Mono,monospace] text-xs uppercase tracking-widest opacity-80">
+                    {w.ref}
+                  </p>
                 </div>
               ))}
             </div>
 
             <div className="mt-12 flex flex-col items-center gap-4 rounded-none border border-on-background/10 bg-surface p-8 text-center shadow-[6px_6px_0_0_#000] sm:flex-row sm:justify-between sm:text-left">
               <div>
-                <h3 className="font-headline-md mb-1 text-headline-md text-on-surface">Still not sure where you fit?</h3>
+                <h3 className="font-headline-md mb-1 text-headline-md text-on-surface">
+                  Still not sure where you fit?
+                </h3>
                 <p className="text-sm text-on-surface">
                   Take the quiz and we&apos;ll help you find where you fit in the local branch.
                 </p>

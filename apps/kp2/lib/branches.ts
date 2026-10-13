@@ -133,11 +133,19 @@ function cityFromName(name: string) {
     .trim();
 }
 
-/** Branch photos are remote files from Cloudflare. Local page assets are not branch photos. */
+/** Public host for the kharis-images R2 bucket. Override with NEXT_PUBLIC_R2_PUBLIC_URL. */
+function branchImageHost() {
+  return (process.env.NEXT_PUBLIC_R2_PUBLIC_URL || "https://images.kharis.org").replace(/\/$/, "");
+}
+
+/** Branch photos live in Cloudflare. Stored studio URLs are rewritten onto images.kharis.org. */
 function remoteImage(url: string | null | undefined) {
   const value = url?.trim() ?? "";
-  if (!/^https?:\/\//i.test(value) || /instagram\.com/i.test(value)) return "";
-  return value;
+  if (!value || /instagram\.com/i.test(value)) return "";
+  const key = value.match(/branch-images\/[^\s?#]+/i)?.[0];
+  if (key) return `${branchImageHost()}/${key}`;
+  if (/^https?:\/\//i.test(value)) return value;
+  return "";
 }
 
 function fallbackImageFor(slug: string) {
@@ -267,9 +275,10 @@ function toBranch(row: BranchRow, gallery: string[]): Branch {
     resolvedAddress.toLowerCase().includes(String(city).toLowerCase());
   const lat = addressMatchesCity ? (mainVenue?.latitude ?? 0) : 0;
   const lng = addressMatchesCity ? (mainVenue?.longitude ?? 0) : 0;
-  const fallback = (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0))
-    ? cityFallbackCoords(String(city))
-    : null;
+  const fallback =
+    !Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)
+      ? cityFallbackCoords(String(city))
+      : null;
   const resolvedLat = fallback ? fallback.lat : lat;
   const resolvedLng = fallback ? fallback.lng : lng;
 
@@ -328,7 +337,11 @@ function toBranch(row: BranchRow, gallery: string[]): Branch {
 }
 
 export function hasCoords(branch: { lat: number; lng: number }) {
-  return Number.isFinite(branch.lat) && Number.isFinite(branch.lng) && (branch.lat !== 0 || branch.lng !== 0);
+  return (
+    Number.isFinite(branch.lat) &&
+    Number.isFinite(branch.lng) &&
+    (branch.lat !== 0 || branch.lng !== 0)
+  );
 }
 
 type GalleryRow = {
@@ -341,6 +354,7 @@ async function galleriesByBranch() {
   const rows = await supabaseSelect<GalleryRow>(
     "media",
     "select=branch_id,owner_id,url,sort_order&owner_type=eq.branch-gallery&order=sort_order.asc",
+    false,
   );
   const map = new Map<string, string[]>();
   for (const row of rows) {
@@ -359,6 +373,7 @@ export async function listBranches(): Promise<Branch[]> {
     supabaseSelect<BranchRow>(
       "branches",
       "select=*,venues(*),services(*)&is_active=eq.true&order=sort_order.asc",
+      false,
     ),
     galleriesByBranch(),
   ]);
@@ -369,6 +384,7 @@ export async function getBranch(slug: string): Promise<Branch | null> {
   const rows = await supabaseSelect<BranchRow>(
     "branches",
     `select=*,venues(*),services(*)&slug=eq.${encodeURIComponent(slug)}&is_active=eq.true`,
+    false,
   );
   const row = rows[0];
   if (!row || !isKp2Location(row)) return null;
@@ -382,10 +398,7 @@ export async function listBranchSlugs(): Promise<string[]> {
 }
 
 /** Great-circle distance in miles. */
-export function distanceMiles(
-  a: { lat: number; lng: number },
-  b: { lat: number; lng: number },
-) {
+export function distanceMiles(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
   const toRad = (d: number) => (d * Math.PI) / 180;
   const R = 3958.8;
   const dLat = toRad(b.lat - a.lat);

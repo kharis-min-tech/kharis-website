@@ -64,7 +64,9 @@ export function BranchThemeToggle() {
     <motion.button
       type="button"
       onClick={onToggle}
-      aria-label={theme === "dark" ? "Switch branch pages to light mode" : "Switch branch pages to dark mode"}
+      aria-label={
+        theme === "dark" ? "Switch branch pages to light mode" : "Switch branch pages to dark mode"
+      }
       title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       className="fixed bottom-5 right-5 z-[90] flex h-12 w-12 items-center justify-center rounded-full border border-[#e8a33d]/40 bg-[#800654] text-[#f2b254] shadow-xl shadow-[#800654]/40 backdrop-blur-md transition-transform hover:scale-105 cursor-pointer"
       initial={{ opacity: 0, scale: 0.6, y: 12 }}

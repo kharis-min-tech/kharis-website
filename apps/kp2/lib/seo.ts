@@ -30,16 +30,19 @@ export const STATIC_PATHS = [
 ] as const;
 
 export function siteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL || "https://kharisphase2.org").replace(
-    /\/$/,
-    "",
-  );
+  return (process.env.NEXT_PUBLIC_SITE_URL || "https://kharisphase2.org").replace(/\/$/, "");
 }
 
 export function absoluteUrl(path: string) {
   if (!path) return siteUrl();
   if (/^https?:\/\//i.test(path)) return path;
-  return `${siteUrl()}${path.startsWith("/") ? path : `/${path}`}`;
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const origin = siteUrl();
+  // NEXT_PUBLIC_SITE_URL already includes /kp2 (https://kharis.org/kp2).
+  if (origin.endsWith("/kp2") && (normalized === "/kp2" || normalized.startsWith("/kp2/"))) {
+    return `${origin}${normalized.slice("/kp2".length)}`;
+  }
+  return `${origin}${normalized}`;
 }
 
 export function pageMeta({
@@ -79,9 +82,7 @@ export function pageMeta({
       title: fullTitle,
       description,
     },
-    robots: noIndex
-      ? { index: false, follow: false }
-      : { index: true, follow: true },
+    robots: noIndex ? { index: false, follow: false } : { index: true, follow: true },
   };
 }
 

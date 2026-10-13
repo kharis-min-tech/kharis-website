@@ -13,21 +13,10 @@ export async function POST(request: Request) {
       anonymous?: string;
     };
 
-    const {
-      firstName,
-      preferredName,
-      lastName,
-      mobile,
-      category,
-      details,
-      anonymous,
-    } = body;
+    const { firstName, preferredName, lastName, mobile, category, details, anonymous } = body;
 
     if (!firstName || !lastName || !category || !details) {
-      return NextResponse.json(
-        { error: "Please complete all required fields." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Please complete all required fields." }, { status: 400 });
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -36,33 +25,22 @@ export async function POST(request: Request) {
     if (!supabaseUrl || !serviceRoleKey) {
       console.error("Missing Supabase server environment variables");
 
-      return NextResponse.json(
-        { error: "Server configuration error." },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Server configuration error." }, { status: 500 });
     }
 
-    const supabase = createClient(
-      supabaseUrl,
-      serviceRoleKey,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-        },
-      }
-    );
+    const supabase = createClient(supabaseUrl, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
 
-    const displayName =
-      preferredName?.trim() ||
-      `${firstName.trim()} ${lastName.trim()}`;
+    const displayName = preferredName?.trim() || `${firstName.trim()} ${lastName.trim()}`;
 
     const description = details.trim();
 
     const shortDescription =
-      description.length > 180
-        ? `${description.slice(0, 177).trim()}...`
-        : description;
+      description.length > 180 ? `${description.slice(0, 177).trim()}...` : description;
 
     const { data, error } = await supabase
       .from("testimonies")
@@ -89,10 +67,7 @@ export async function POST(request: Request) {
     if (error) {
       console.error("Supabase testimony insert error:", error);
 
-      return NextResponse.json(
-        { error: "Unable to submit testimony." },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Unable to submit testimony." }, { status: 500 });
     }
 
     return NextResponse.json(
@@ -100,14 +75,11 @@ export async function POST(request: Request) {
         success: true,
         id: data.id,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Testimony API error:", error);
 
-    return NextResponse.json(
-      { error: "Something went wrong." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
   }
 }

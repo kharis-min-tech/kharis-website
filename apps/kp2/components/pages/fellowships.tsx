@@ -12,7 +12,7 @@ function FellowshipsPage() {
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
       <main>
-        <section className="relative bg-on-background text-background overflow-hidden min-h-[60vh] md:min-h-[80vh] flex items-center border-b-4 border-primary pt-28 md:pt-32 pb-stack-lg">
+        <section className="relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden border-b-4 border-primary bg-on-background pt-24 pb-8 text-background">
           <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
           <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10 grid md:grid-cols-2 gap-stack-lg items-center">
@@ -24,8 +24,8 @@ function FellowshipsPage() {
                 FELLOWSHIPS
               </h1>
               <p className="font-body-lg text-body-lg max-w-md opacity-90 border-l-4 border-primary pl-6">
-                Smaller circles, deeper connections. Find your people, grow your faith, and do
-                life together in a space built for you.
+                Smaller circles, deeper connections. Find your people, grow your faith, and do life
+                together in a space built for you.
               </p>
               <div className="pt-base flex flex-wrap gap-stack-sm">
                 <Link
@@ -47,7 +47,7 @@ function FellowshipsPage() {
               <div className="border-heavier p-2 bg-background transform rotate-2 neo-shadow-lg overflow-hidden">
                 <img
                   alt="Young adults fellowship at Kharis"
-                  className="w-full grayscale hover:grayscale-0 transition-all duration-500 object-cover aspect-square"
+                  className="max-h-[calc(100svh-12rem)] w-full object-cover grayscale transition-all duration-500 hover:grayscale-0"
                   src={YOUNG_ADULTS}
                   loading="eager"
                   decoding="async"

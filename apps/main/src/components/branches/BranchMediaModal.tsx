@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect } from 'react';
-import { X, ExternalLink } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect } from "react";
+import { X, ExternalLink } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface BranchMediaModalProps {
-  type: 'image' | 'video' | null;
+  type: "image" | "video" | null;
   imageSrc?: string;
   videoId?: string;
   city?: string;
@@ -15,20 +15,20 @@ export function BranchMediaModal({
   type,
   imageSrc,
   videoId,
-  city = '',
+  city = "",
   onClose,
 }: BranchMediaModalProps) {
   useEffect(() => {
     if (!type) return;
     const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
-      window.removeEventListener('keydown', onKey);
+      window.removeEventListener("keydown", onKey);
     };
   }, [type, onClose]);
 
@@ -55,7 +55,7 @@ export function BranchMediaModal({
             initial={{ opacity: 0, scale: 0.94, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+            transition={{ type: "spring", stiffness: 300, damping: 28 }}
             className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#0d0710] shadow-2xl"
           >
             {/* Close */}
@@ -68,7 +68,7 @@ export function BranchMediaModal({
               <X className="h-5 w-5" />
             </button>
 
-            {type === 'image' && imageSrc && (
+            {type === "image" && imageSrc && (
               <div className="flex h-full max-h-[80vh] items-center justify-center p-2">
                 <img
                   src={imageSrc}
@@ -78,7 +78,7 @@ export function BranchMediaModal({
               </div>
             )}
 
-            {type === 'video' && videoId && (
+            {type === "video" && videoId && (
               <div className="aspect-video w-full">
                 <iframe
                   src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
@@ -90,9 +90,11 @@ export function BranchMediaModal({
               </div>
             )}
 
-            {type === 'video' && !videoId && (
+            {type === "video" && !videoId && (
               <div className="flex aspect-video flex-col items-center justify-center gap-4 px-6 text-center">
-                <p className="text-lg font-bold text-white">No featured video for this branch yet.</p>
+                <p className="text-lg font-bold text-white">
+                  No featured video for this branch yet.
+                </p>
                 <a
                   href="https://www.youtube.com/@kharischurch"
                   target="_blank"

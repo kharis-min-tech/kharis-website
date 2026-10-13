@@ -1,4 +1,5 @@
 import type { Testimonial } from "@/components/TestimonialCarousel";
+import { publicAsset } from "@/lib/public-asset";
 import { SITE_WORKSPACES } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
@@ -39,7 +40,8 @@ const HOME_STYLES: Pick<Testimonial, "color" | "pattern" | "patternSize">[] = [
   },
   {
     color: "#c44569",
-    pattern: "repeating-linear-gradient(45deg, #f4a3b5 0px, #f4a3b5 1px, transparent 1px, transparent 14px)",
+    pattern:
+      "repeating-linear-gradient(45deg, #f4a3b5 0px, #f4a3b5 1px, transparent 1px, transparent 14px)",
     patternSize: "auto",
   },
   {
@@ -50,7 +52,8 @@ const HOME_STYLES: Pick<Testimonial, "color" | "pattern" | "patternSize">[] = [
   },
   {
     color: "#e85d3a",
-    pattern: "linear-gradient(#fdba74 1px, transparent 1px), linear-gradient(90deg, #fdba74 1px, transparent 1px)",
+    pattern:
+      "linear-gradient(#fdba74 1px, transparent 1px), linear-gradient(90deg, #fdba74 1px, transparent 1px)",
     patternSize: "22px 22px",
   },
   {
@@ -75,17 +78,20 @@ async function loadPublished(): Promise<TestimonyRow[]> {
     "testimonies",
     `select=${SAFE_FIELDS}&is_published=eq.true`,
   );
-  return rows.filter((row) => SITE_WORKSPACES.includes(row.workspace as (typeof SITE_WORKSPACES)[number]));
+  return rows.filter((row) =>
+    SITE_WORKSPACES.includes(row.workspace as (typeof SITE_WORKSPACES)[number]),
+  );
 }
 
-const TESTIMONY_FOCUS =
-  /salvation|heal|miracle|transform|deliverance|life change|new life/i;
+const TESTIMONY_FOCUS = /salvation|heal|miracle|transform|deliverance|life change|new life/i;
 
 export async function getHomeTestimonials(): Promise<Testimonial[]> {
   const published = await loadPublished();
   const featured = published.filter((row) => row.is_featured);
   const focused = featured.filter((row) =>
-    TESTIMONY_FOCUS.test(`${row.category ?? ""} ${row.short_description ?? ""} ${row.description ?? ""}`),
+    TESTIMONY_FOCUS.test(
+      `${row.category ?? ""} ${row.short_description ?? ""} ${row.description ?? ""}`,
+    ),
   );
   const rows = focused.length ? focused : featured;
   return rows
@@ -115,7 +121,9 @@ export async function getGivingTestimonials(): Promise<GivingTestimony[]> {
       return {
         name: displayName(row),
         role: row.category || row.branch_name || "Member",
-        image: row.image_url || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]!,
+        image: row.image_url
+          ? publicAsset(row.image_url)
+          : FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]!,
         quote: quote.startsWith('"') ? quote : `"${quote}"`,
       } satisfies GivingTestimony;
     })

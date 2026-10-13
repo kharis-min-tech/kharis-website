@@ -5,23 +5,41 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const PLACEHOLDERS = [
-  { src: "/kp2/assets/worship.jpg", alt: "Worship at Kharis Phase 2", quote: "Preach Christ Crucified.", wide: true },
+  {
+    src: "/kp2/assets/worship.jpg",
+    alt: "Worship at Kharis Phase 2",
+    quote: "Preach Christ Crucified.",
+    wide: true,
+  },
   { src: "/kp2/assets/young-adults.jpg", alt: "Young adults together", quote: "Get busy serving!" },
   { src: "/kp2/assets/community.jpg", alt: "Community gathering", quote: null },
   { src: null, alt: "Photo coming soon", quote: "We are passionate about God and His word." },
   { src: "/kp2/assets/praise-night.jpg", alt: "Praise night", quote: null },
-  { src: "/kp2/assets/bass-sunday.jpg", alt: "Bring a soul Sunday", quote: "Preach Christ Crucified." },
+  {
+    src: "/kp2/assets/bass-sunday.jpg",
+    alt: "Bring a soul Sunday",
+    quote: "Preach Christ Crucified.",
+  },
   { src: "/kp2/assets/choir2.mp4", alt: "Choir in worship", quote: null, video: true },
-  { src: null, alt: "Photo coming soon", quote: "Your hunger and zeal for God is your greatest advantage as a believer." },
+  {
+    src: null,
+    alt: "Photo coming soon",
+    quote: "Your hunger and zeal for God is your greatest advantage as a believer.",
+  },
   { src: "/kp2/assets/sports-day.jpg", alt: "Sports day", quote: "Get busy serving!" },
-  { src: "/kp2/assets/leadership-pastors-together.jpg", alt: "Pastors David and Awo Antwi", quote: null, wide: true },
+  {
+    src: "/kp2/assets/leadership-pastors-together.jpg",
+    alt: "Pastors David and Awo Antwi",
+    quote: null,
+    wide: true,
+  },
 ];
 
 function GalleryPage() {
   return (
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
-      <main className="pt-20">
+      <main className="pt-[74px]">
         <header className="relative min-h-[420px] md:min-h-[520px] flex items-end bg-on-background text-white overflow-hidden border-b-4 border-primary">
           <img
             src="/kp2/assets/events-hero-worship.jpg"
@@ -43,7 +61,8 @@ function GalleryPage() {
         <section className="py-16 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
           <blockquote className="border-l-8 border-primary bg-surface-container-low p-6 md:p-10 mb-12 brutalist-border">
             <p className="font-headline-md text-2xl md:text-3xl uppercase leading-snug mb-4">
-              What it takes to sustain the move of God is a text-driven, gospel-saturated, Christ-exalting message.
+              What it takes to sustain the move of God is a text-driven, gospel-saturated,
+              Christ-exalting message.
             </p>
             <p className="font-label-md uppercase tracking-widest text-primary">House word</p>
           </blockquote>
@@ -66,7 +85,11 @@ function GalleryPage() {
                     playsInline
                   />
                 ) : item.src ? (
-                  <img src={item.src} alt={item.alt} className="absolute inset-0 w-full h-full object-cover" />
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-container-low text-on-surface-variant px-6 text-center">
                     <span className="material-symbols-outlined text-5xl">image</span>

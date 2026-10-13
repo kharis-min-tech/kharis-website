@@ -1,8 +1,8 @@
 "use client";
-import React, { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Clock, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
-import type { BranchData } from '@/data/branchesData';
+import React, { useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
+import type { BranchData } from "@/data/branchesData";
 
 interface BranchMonthCalendarProps {
   branch: BranchData;
@@ -22,13 +22,21 @@ interface Entry {
   category: string;
 }
 
-const WEEKDAY_LABEL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const WEEKDAY_LABEL = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 function serviceWeekday(name: string): number {
   const lower = name.toLowerCase();
-  if (lower.includes('thursday') || lower.includes('midweek') || lower.includes('bible')) return 4;
-  if (lower.includes('friday') || lower.includes('prayer')) return 5;
-  if (lower.includes('saturday') || lower.includes('youth')) return 6;
+  if (lower.includes("thursday") || lower.includes("midweek") || lower.includes("bible")) return 4;
+  if (lower.includes("friday") || lower.includes("prayer")) return 5;
+  if (lower.includes("saturday") || lower.includes("youth")) return 6;
   return 0;
 }
 
@@ -55,9 +63,9 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
   }, [offset]);
 
   const monthLabel = viewDate
-    .toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
+    .toLocaleDateString("en-GB", { month: "long", year: "numeric" })
     .toUpperCase()
-    .replace(' ', ', ');
+    .replace(" ", ", ");
 
   const entries = useMemo<Entry[]>(() => {
     const year = viewDate.getFullYear();
@@ -78,13 +86,21 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
           time: `${formatServiceTime(service.start_time)}`,
           description: service.description,
           location: placeAddress,
-          category: 'Gathering',
+          category: "Gathering",
         });
       }
     });
 
     if (branch.midweek) {
-      const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      const dayNames = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+      ];
       const target = Math.max(0, dayNames.indexOf(branch.midweek.day.toLowerCase()));
       for (let day = 1; day <= daysInMonth; day += 1) {
         const date = new Date(year, month, day);
@@ -95,14 +111,12 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
           weekday: WEEKDAY_LABEL[target]!,
           title: branch.midweek.name,
           time: `${branch.midweek.time} ${branch.midweek.ampm}`,
-          description: branch.midweek.description ?? '',
+          description: branch.midweek.description ?? "",
           location: placeAddress,
-          category: 'Midweek',
+          category: "Midweek",
         });
       }
     }
-
-
 
     (branch.upcomingEvents ?? []).forEach((evt, i) => {
       const parsed = new Date(evt.date);
@@ -179,7 +193,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
                 <div className="flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-[#800654] text-white!">
                   <span className="text-xl font-extrabold leading-none">{entry.day}</span>
                   <span className="text-[10px] font-bold uppercase tracking-wider opacity-80">
-                    {viewDate.toLocaleDateString('en-GB', { month: 'short' })}
+                    {viewDate.toLocaleDateString("en-GB", { month: "short" })}
                   </span>
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-400">

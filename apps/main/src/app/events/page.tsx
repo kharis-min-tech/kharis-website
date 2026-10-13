@@ -3,12 +3,12 @@ import { EventsExperience } from "@/components/EventsExperience";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getUpcomingEvents } from "@/lib/events";
+import { localImage } from "@/lib/local-image";
 import type { ChurchEvent } from "@/lib/events-content";
 
 export const metadata: Metadata = {
   title: "Events | Kharis Church",
-  description:
-    "Explore Kharis Church services, gatherings, and upcoming events.",
+  description: "Explore Kharis Church services, gatherings, and upcoming events.",
 };
 
 export default async function EventsPage() {
@@ -38,7 +38,7 @@ export default async function EventsPage() {
       location: event.location ?? "",
       address: event.location ?? "",
       description: event.description ?? "",
-      image: event.image_url ?? "/images/events/hero-worship.jpg",
+      image: localImage(event.image_url, "/images/events/hero-worship.jpg"),
     };
   });
 

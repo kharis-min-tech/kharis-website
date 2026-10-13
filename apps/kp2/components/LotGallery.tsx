@@ -12,17 +12,40 @@ export type LotClip = {
 };
 
 export const LOT_CLIPS: LotClip[] = [
-  { kind: "video", src: "/kp2/assets/dancing.mp4", alt: "KP2 dancing in worship", label: "The floor is shaking", span: "tall" },
+  {
+    kind: "video",
+    src: "/kp2/assets/dancing.mp4",
+    alt: "KP2 dancing in worship",
+    label: "The floor is shaking",
+    span: "tall",
+  },
   { kind: "image", src: "/kp2/assets/K-dancers-img.jpg", alt: "KP2 dancers", label: "K-Dancers" },
-  { kind: "image", src: "/kp2/assets/praise-night.jpg", alt: "Praise night", label: "Praise night", span: "wide" },
+  {
+    kind: "image",
+    src: "/kp2/assets/praise-night.jpg",
+    alt: "Praise night",
+    label: "Praise night",
+    span: "wide",
+  },
   { kind: "video", src: "/kp2/assets/crowd.mp4", alt: "The room in full voice", label: "The room" },
-  { kind: "image", src: "/kp2/assets/young-adults.jpg", alt: "Young adults together", label: "The lot" },
+  {
+    kind: "image",
+    src: "/kp2/assets/young-adults.jpg",
+    alt: "Young adults together",
+    label: "The lot",
+  },
   { kind: "image", src: "/kp2/assets/sports-day.jpg", alt: "Sports day", label: "Sports day" },
   { kind: "video", src: "/kp2/assets/choir2.mp4", alt: "Choir in worship", label: "Choir" },
   { kind: "image", src: "/kp2/assets/Spoken-word.jpg", alt: "Spoken word", label: "Spoken word" },
   { kind: "image", src: "/kp2/assets/K-music-img.jpg", alt: "KP2 music", label: "K-Music" },
   { kind: "image", src: "/kp2/assets/community.jpg", alt: "Community gathering", label: "Family" },
-  { kind: "video", src: "/kp2/assets/Choir-video.mp4", alt: "Worship set", label: "Worship", span: "wide" },
+  {
+    kind: "video",
+    src: "/kp2/assets/Choir-video.mp4",
+    alt: "Worship set",
+    label: "Worship",
+    span: "wide",
+  },
   { kind: "image", src: "/kp2/assets/bass-sunday.jpg", alt: "Bring a soul Sunday", label: "BASS" },
 ];
 
@@ -60,7 +83,10 @@ export function LotGallery({
   const isClip = (item: LotClip | InstagramPost): item is LotClip => "kind" in item;
 
   return (
-    <section id="the-lot" className="relative overflow-hidden bg-[#06070a] text-pearl py-16 md:py-24 scroll-mt-[88px]">
+    <section
+      id="the-lot"
+      className="relative overflow-hidden bg-[#06070a] text-pearl py-16 md:py-24 scroll-mt-[88px]"
+    >
       <div className="vibe-mesh absolute inset-0 opacity-80" />
       <div className="relative z-10 mx-auto max-w-7xl px-margin-mobile md:px-margin-desktop">
         <div className="mb-10 md:mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
@@ -161,7 +187,12 @@ export function LotGallery({
           />
           <div className="relative z-10 w-full max-w-4xl overflow-hidden rounded-3xl border border-white/10 bg-black">
             {isClip(active) && active.kind === "video" ? (
-              <video src={active.src} controls autoPlay className="w-full max-h-[80vh] object-contain" />
+              <video
+                src={active.src}
+                controls
+                autoPlay
+                className="w-full max-h-[80vh] object-contain"
+              />
             ) : (
               <img
                 src={isClip(active) ? active.src : active.image}
@@ -173,7 +204,10 @@ export function LotGallery({
         </div>
       ) : null}
 
-      <dialog id="lot-lightbox" className="ui-dialog w-[min(56rem,calc(100vw-2rem))] overflow-hidden rounded-3xl border border-white/10 bg-black p-0">
+      <dialog
+        id="lot-lightbox"
+        className="ui-dialog w-[min(56rem,calc(100vw-2rem))] overflow-hidden rounded-3xl border border-white/10 bg-black p-0"
+      >
         <button
           type="button"
           data-ui="close-dialog"

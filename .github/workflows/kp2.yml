@@ -1,20 +1,10 @@
-name: kp2
+name: deploy-kp2
 
-# Only runs when apps/kp2 or the shared root manifests change, so the main
-# site's team cannot block this team's PRs (and vice versa — see main.yml).
-#
-# Caveat if you make this a required status check in branch protection:
-# a PR touching only apps/main will never trigger this workflow, so the
-# required check stays pending forever. To get both path filtering and
-# required checks, drop the `paths:` filters and gate the expensive steps
-# on a diff check instead, so the job always reports a conclusion.
+# Ships apps/kp2 to Cloudflare on merge to main, only when its files (or the
+# shared root manifests) changed. Quality is gated by ci.yml on the PR; with
+# branch protection requiring the `ci-ok` check, code reaching main has already
+# passed CI.
 on:
-  pull_request:
-    paths:
-      - "apps/kp2/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/kp2.yml"
   push:
     branches: [main]
     paths:
@@ -23,16 +13,29 @@ on:
       - "package-lock.json"
       - ".github/workflows/kp2.yml"
 
+# Least-privilege GITHUB_TOKEN: checkout only. The deploy authenticates to
+# Cloudflare with CLOUDFLARE_API_TOKEN, not GITHUB_TOKEN.
+permissions:
+  contents: read
+
 concurrency:
-  group: kp2-${{ github.ref }}
-  cancel-in-progress: true
+  group: kp2-deploy
+  cancel-in-progress: false
 
 jobs:
-  verify:
+  deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: apps/kp2
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: a94432b07dae8050b83efdec72a492a3
+      # Public, baked into the client bundle at build time. Set as repo
+      # Variables: Settings → Secrets and variables → Actions → Variables.
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_SITE_URL: https://kharis.org/kp2
     steps:
       - uses: actions/checkout@v4
 
@@ -41,18 +44,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      # Root install — npm workspaces resolves both apps from the one lockfile.
       - name: Install
         run: npm ci
         working-directory: .
 
-      - name: Lint
-        run: npx eslint
+      - name: Check deploy config
+        run: |
+          : "${CLOUDFLARE_API_TOKEN:?set the CLOUDFLARE_API_TOKEN repo secret}"
+          : "${NEXT_PUBLIC_SUPABASE_URL:?set the NEXT_PUBLIC_SUPABASE_URL repo variable}"
+          : "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?set the NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY repo variable}"
 
-      - name: Typecheck
-        run: npx tsc --noEmit
-
-      # Builds run without secrets, so they exercise the fallback paths rather
-      # than live Supabase/YouTube data. That is enough to catch build breaks.
-      - name: Build
-        run: npx next build
+      # opennextjs-cloudflare build && deploy. Worker runtime secrets
+      # (YOUTUBE_API_KEY, INSTAGRAM_*) are not touched by a deploy.
+      - name: Deploy to Cloudflare
+        run: npm run deploy

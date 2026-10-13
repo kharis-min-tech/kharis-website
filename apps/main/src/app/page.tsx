@@ -36,9 +36,7 @@ export default async function Home() {
         <div className="home-below-hero">
           <MissionSection />
           <KnowUsStack />
-          {featured ? (
-            <LatestMessages featured={featured} others={others} />
-          ) : null}
+          {featured ? <LatestMessages featured={featured} others={others} /> : null}
           <VisitSection slides={CHARACTER_SLIDES} />
           <BuildHouseSection />
           <TestimoniesSection testimonies={testimonies} />

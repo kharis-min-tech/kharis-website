@@ -23,10 +23,7 @@ export function LocationsClient({ items: branches, full }: Props) {
     const q = query.trim().toLowerCase();
     return branches.filter((b) => {
       return (
-        !q ||
-        [b.name, b.city, b.postcode, b.address].some((v) =>
-          v?.toLowerCase().includes(q),
-        )
+        !q || [b.name, b.city, b.postcode, b.address].some((v) => v?.toLowerCase().includes(q))
       );
     });
   }, [branches, query]);
@@ -50,8 +47,7 @@ export function LocationsClient({ items: branches, full }: Props) {
             near you
           </h1>
           <p className="mx-auto max-w-2xl text-base font-medium leading-relaxed text-[var(--muted)] sm:text-lg">
-            Branches across the UK and beyond, each with a family waiting to
-            welcome you.
+            Branches across the UK and beyond, each with a family waiting to welcome you.
           </p>
 
           <div className="mx-auto max-w-2xl space-y-4 pt-4">
@@ -69,10 +65,7 @@ export function LocationsClient({ items: branches, full }: Props) {
         </div>
       </section>
 
-      <BranchMap
-        branches={full}
-        onSelectBranch={(id) => router.push(`/locations/${id}`)}
-      />
+      <BranchMap branches={full} onSelectBranch={(id) => router.push(`/locations/${id}`)} />
 
       <section className="mx-auto w-full max-w-[1536px] px-5 pb-20 md:px-8">
         <h2 className="mb-8 border-b border-[var(--border)] pb-6 text-2xl font-extrabold">
@@ -96,11 +89,11 @@ export function LocationsClient({ items: branches, full }: Props) {
                 <div>
                   <div className="relative h-52 overflow-hidden bg-black">
                     {branch.heroImage ? (
-                    <img
-                      src={branch.heroImage}
-                      alt={branch.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+                      <img
+                        src={branch.heroImage}
+                        alt={branch.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                     ) : null}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                     <span className="absolute left-3 top-3 rounded-full bg-[#800654] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
@@ -124,16 +117,12 @@ export function LocationsClient({ items: branches, full }: Props) {
                     <div className="divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)]">
                       <div className="flex items-center gap-2 px-3.5 py-3">
                         <Clock className="h-4 w-4 shrink-0 text-[var(--purple)]" />
-                        <span className="text-xs font-bold">
-                          {branch.serviceSummary}
-                        </span>
+                        <span className="text-xs font-bold">{branch.serviceSummary}</span>
                       </div>
                       {branch.midweekSummary && (
                         <div className="flex items-center gap-2 px-3.5 py-3">
                           <CalendarDays className="h-4 w-4 shrink-0 text-[#e8a33d]" />
-                          <span className="text-xs font-bold">
-                            {branch.midweekSummary}
-                          </span>
+                          <span className="text-xs font-bold">{branch.midweekSummary}</span>
                         </div>
                       )}
                     </div>
@@ -141,10 +130,7 @@ export function LocationsClient({ items: branches, full }: Props) {
                 </div>
 
                 <div className="border-t border-[var(--border)] p-6 pt-4">
-                  <Link
-                    href={`/locations/${branch.id}`}
-                    className="btn-secondary w-full !text-xs"
-                  >
+                  <Link href={`/locations/${branch.id}`} className="btn-secondary w-full !text-xs">
                     <span>Explore {branch.city}</span>
                     <ChevronRight className="h-4 w-4" />
                   </Link>

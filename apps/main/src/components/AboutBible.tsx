@@ -42,10 +42,7 @@ const BOOKS: Book[] = [
         body: [p.body],
         verse: p.verse,
         quote: p.quote,
-        image:
-          i % 2 === 0
-            ? "/images/community.jpg"
-            : "/images/young-adults.jpg",
+        image: i % 2 === 0 ? "/images/community.jpg" : "/images/young-adults.jpg",
         imageShape: (i % 2 === 0 ? "round" : "tile") as Page["imageShape"],
       })),
       {
@@ -124,10 +121,7 @@ type Props = {
 /** Mid-screen Mission / Vision / Leadership bible overlay. */
 export function AboutBible({ bookId, onClose, onChangeBook }: Props) {
   const reduce = useReducedMotion();
-  const book = useMemo(
-    () => BOOKS.find((b) => b.id === bookId) ?? null,
-    [bookId],
-  );
+  const book = useMemo(() => BOOKS.find((b) => b.id === bookId) ?? null, [bookId]);
   const [page, setPage] = useState(0);
   const landingPage = useRef<number | null>(null);
 
@@ -146,8 +140,7 @@ export function AboutBible({ bookId, onClose, onChangeBook }: Props) {
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight")
-        setPage((p) => Math.min(p + 1, (book?.pages.length ?? 1) - 1));
+      if (e.key === "ArrowRight") setPage((p) => Math.min(p + 1, (book?.pages.length ?? 1) - 1));
       if (e.key === "ArrowLeft") setPage((p) => Math.max(p - 1, 0));
     };
     window.addEventListener("keydown", onKey);
@@ -243,11 +236,7 @@ export function AboutBible({ bookId, onClose, onChangeBook }: Props) {
                 <div className="about-bible__gutter" aria-hidden />
 
                 <div className="about-bible__top">
-                  <div
-                    className="about-bible__tabs"
-                    role="tablist"
-                    aria-label="About books"
-                  >
+                  <div className="about-bible__tabs" role="tablist" aria-label="About books">
                     {BOOKS.map((b) => (
                       <button
                         key={b.id}
@@ -286,12 +275,8 @@ export function AboutBible({ bookId, onClose, onChangeBook }: Props) {
                       {leaf.body?.slice(0, 1).map((t) => (
                         <p key={t.slice(0, 24)}>{t}</p>
                       ))}
-                      {leaf.verse ? (
-                        <p className="about-bible__verse">{leaf.verse}</p>
-                      ) : null}
-                      {leaf.quote ? (
-                        <blockquote>{leaf.quote}</blockquote>
-                      ) : null}
+                      {leaf.verse ? <p className="about-bible__verse">{leaf.verse}</p> : null}
+                      {leaf.quote ? <blockquote>{leaf.quote}</blockquote> : null}
                     </article>
 
                     <article className="about-bible__page about-bible__page--right">
@@ -314,30 +299,20 @@ export function AboutBible({ bookId, onClose, onChangeBook }: Props) {
                         </p>
                       ))}
                       {!leaf.body?.slice(1).length && leaf.image ? (
-                        <p className="about-bible__hint">
-                          Turn the page to keep reading.
-                        </p>
+                        <p className="about-bible__hint">Turn the page to keep reading.</p>
                       ) : null}
                     </article>
                   </motion.div>
                 </AnimatePresence>
 
                 <div className="about-bible__footer">
-                  <button
-                    type="button"
-                    className="about-bible__nav"
-                    onClick={goPrev}
-                  >
+                  <button type="button" className="about-bible__nav" onClick={goPrev}>
                     ← Prev
                   </button>
                   <p className="about-bible__count">
                     {page + 1} / {book.pages.length}
                   </p>
-                  <button
-                    type="button"
-                    className="about-bible__nav"
-                    onClick={goNext}
-                  >
+                  <button type="button" className="about-bible__nav" onClick={goNext}>
                     Next →
                   </button>
                 </div>

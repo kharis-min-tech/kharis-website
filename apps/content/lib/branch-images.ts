@@ -78,7 +78,10 @@ async function storageRequest(body: Record<string, unknown>) {
     },
     body: JSON.stringify(body),
   });
-  const payload = (await response.json().catch(() => null)) as { error?: string; key?: string } | null;
+  const payload = (await response.json().catch(() => null)) as {
+    error?: string;
+    key?: string;
+  } | null;
   if (!response.ok) {
     throw new Error(payload?.error || "Image storage could not be updated.");
   }

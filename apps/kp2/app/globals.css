@@ -58,6 +58,8 @@
 
 .dark {
   color-scheme: dark;
+  --kp-glow: 0 0 0 1px rgba(210, 187, 255, 0.35), 0 0 22px rgba(157, 78, 255, 0.8);
+  --kp-glow-strong: 0 0 0 1px rgba(210, 187, 255, 0.55), 0 0 30px rgba(157, 78, 255, 0.95);
   --background: #121014;
   --error: #ffb4ab;
   --error-container: #93000a;
@@ -109,52 +111,73 @@
 
 /* Dark-mode remapping of legacy hardcoded utilities so pages match the
    dark mockups without touching every route. */
-.dark .bg-white { background-color: var(--surface-container-low); }
-.dark .bg-black { background-color: var(--surface-container-lowest); }
-.dark .text-black { color: var(--on-surface); }
+.dark .bg-white {
+  background-color: var(--surface-container-low);
+}
+.dark .bg-black {
+  background-color: var(--surface-container-lowest);
+}
+.dark .text-black {
+  color: var(--on-surface);
+}
 .dark .border-black,
 .dark .border-\[\#000000\],
-.dark .border-\[\#000\] { border-color: var(--on-surface); }
+.dark .border-\[\#000\] {
+  border-color: var(--on-surface);
+}
 
 .dark .comic-border,
 .dark .border-heavy,
 .dark .border-heavier,
 .dark .neo-brutal-border,
 .dark .brutalist-border,
-.dark .brutalist-border-thick { border-color: var(--on-surface); }
+.dark .brutalist-border-thick {
+  border-color: var(--on-surface);
+}
 
 .dark .neo-shadow,
 .dark .neo-brutal-shadow,
-.dark .hard-shadow-sm { box-shadow: 4px 4px 0px 0px var(--on-surface); }
-.dark .neo-shadow-sm { box-shadow: 2px 2px 0px 0px var(--on-surface); }
+.dark .hard-shadow-sm,
+.dark .neo-shadow-sm,
 .dark .neo-shadow-lg,
 .dark .neo-brutal-shadow-lg,
-.dark .brutalist-shadow-lg { box-shadow: 8px 8px 0px 0px var(--on-surface); }
+.dark .brutalist-shadow-lg,
 .dark .brutalist-shadow,
 .dark .hard-shadow,
-.dark .neo-shadow-purple { box-shadow: 6px 6px 0px 0px var(--on-surface); }
-.dark .hard-shadow-primary { box-shadow: 4px 4px 0px 0px var(--primary); }
-.dark .neo-shadow-hover:hover,
-.dark .neo-brutal-shadow:hover,
-.dark .btn-hover:hover,
-.dark .hover-press:hover,
-.dark .neo-button-hover:hover,
-.dark .brutalist-shadow-hover:hover,
-.dark .btn-press:active,
-.dark .active-press:active { box-shadow: 2px 2px 0px 0px var(--on-surface); }
-.dark .hover-lift:hover { box-shadow: 6px 6px 0px 0px var(--on-surface); }
-.dark .halftone { background-image: radial-gradient(#fff 10%, transparent 11%); }
-.dark .halftone-overlay { background-image: radial-gradient(rgba(255,255,255,0.12) 2px, transparent 2px); }
+.dark .neo-shadow-purple,
+.dark .hard-shadow-primary,
+.dark .btn-neo,
+.dark .theme-toggle,
+.dark .active-neo-shadow,
+.dark [class*="shadow-[6px_6px_0_0_var(--on-surface)]"],
+.dark [class*="shadow-[4px_4px_0_0_var(--on-surface)]"] {
+  box-shadow: var(--kp-glow);
+}
+.dark a.header-branch-cta.brutalist-shadow,
+.dark a.header-branch-cta.brutalist-shadow:hover,
+.dark a.header-branch-cta.brutalist-shadow:active,
+.dark .theme-toggle:hover,
+.dark .theme-toggle:active {
+  transform: none;
+  box-shadow: var(--kp-glow);
+}
+.dark .halftone {
+  background-image: radial-gradient(#fff 10%, transparent 11%);
+}
+.dark .halftone-overlay {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 2px, transparent 2px);
+}
 .dark .input-focus:focus {
   background-color: var(--surface-container-high);
   box-shadow: 4px 4px 0px 0px var(--secondary-container);
 }
-.dark .custom-scrollbar::-webkit-scrollbar-track { background: var(--surface-container); }
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--surface-container);
+}
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--primary);
   border: 2px solid var(--on-surface);
 }
-
 
 @theme inline {
   --color-background: var(--background);
@@ -278,159 +301,172 @@
 }
 
 .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
-        }
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 48;
+}
 .halftone-bg {
-            background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
-            background-size: 8px 8px;
-        }
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 8px 8px;
+}
 .brutalist-shadow {
-            box-shadow: 6px 6px 0px 0px rgba(27,27,31,1);
-        }
+  box-shadow: 6px 6px 0px 0px rgba(27, 27, 31, 1);
+}
 .brutalist-shadow-hover:hover {
-            box-shadow: 2px 2px 0px 0px rgba(27,27,31,1);
-            transform: translate(4px, 4px);
-        }
+  box-shadow: 2px 2px 0px 0px rgba(27, 27, 31, 1);
+  transform: translate(4px, 4px);
+}
 .comic-border {
-            border: 4px solid #1b1b1f;
-        }
+  border: 4px solid #1b1b1f;
+}
 canvas#shader-canvas-ANIMATION_26 {
-            opacity: 0.4;
-        }
+  opacity: 0.4;
+}
 .hero-panel-gradient {
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
-        }
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
+}
 .halftone-pattern {
-            background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px);
-            background-size: 8px 8px;
-        }
+  background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px);
+  background-size: 8px 8px;
+}
 .neo-shadow {
-            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
-        }
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+}
 .neo-shadow-lg {
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-        }
+  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+}
 .neo-shadow-hover:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
-        }
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+}
 .border-heavy {
-            border: 2px solid #000000;
-        }
+  border: 2px solid #000000;
+}
 .border-heavier {
-            border: 4px solid #000000;
-        }
+  border: 4px solid #000000;
+}
 .neo-brutal-border {
-            border: 2px solid #000000;
-        }
+  border: 2px solid #000000;
+}
 .neo-brutal-shadow {
-            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
-        }
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+}
 .neo-brutal-shadow-lg {
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-        }
+  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+}
 .hover-lift:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
-        }
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+}
 .active-press:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
-        }
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+}
 
 .brutalist-border {
-            border: 2px solid #000000;
-        }
+  border: 2px solid #000000;
+}
 .brutalist-shadow-lg {
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-        }
+  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+}
 .btn-hover:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
-        }
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+}
 .input-focus:focus {
-            outline: none;
-            border-width: 3px;
-            background-color: #faf8ff;
-            box-shadow: 4px 4px 0px 0px #ffde59;
-        }
+  outline: none;
+  border-width: 3px;
+  background-color: #faf8ff;
+  box-shadow: 4px 4px 0px 0px #ffde59;
+}
 .halftone-overlay {
-            background-image: radial-gradient(rgba(0,0,0,0.1) 2px, transparent 2px);
-            background-size: 8px 8px;
-        }
+  background-image: radial-gradient(rgba(0, 0, 0, 0.1) 2px, transparent 2px);
+  background-size: 8px 8px;
+}
 .neo-button-hover:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
-        }
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+}
 .hover-press:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
-        }
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+}
 .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
+  width: 8px;
+}
 .custom-scrollbar::-webkit-scrollbar-track {
-            background: #faf8ff;
-        }
+  background: #faf8ff;
+}
 .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #630ed4;
-            border: 2px solid #000;
-        }
+  background: #630ed4;
+  border: 2px solid #000;
+}
 .neo-shadow-purple {
-            box-shadow: 6px 6px 0px 0px #630ed4;
-        }
+  box-shadow: 6px 6px 0px 0px #630ed4;
+}
 .hover-press:active,
 .btn-press:active {
-            transform: translate(4px, 4px);
-            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
-        }
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
+}
 .skew-hover:hover {
-            transform: skewX(-2deg) scale(1.02);
-        }
+  transform: skewX(-2deg) scale(1.02);
+}
 .hard-shadow {
-            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
-        }
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+}
 .hard-shadow-sm {
-            box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
-        }
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+}
 .hard-shadow-primary {
-            box-shadow: 4px 4px 0px 0px #630ed4;
-        }
+  box-shadow: 4px 4px 0px 0px #630ed4;
+}
 .btn-press:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
-        }
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+}
 .hero-gradient {
-            background: linear-gradient(to bottom, rgba(26, 27, 33, 0.4), rgba(26, 27, 33, 1));
-        }
+  background: linear-gradient(to bottom, rgba(26, 27, 33, 0.4), rgba(26, 27, 33, 1));
+}
 .neo-shadow-sm {
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
-        }
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+}
 .halftone {
-            background-image: radial-gradient(#000 10%, transparent 11%);
-            background-size: 8px 8px;
-            opacity: 0.05;
-        }
+  background-image: radial-gradient(#000 10%, transparent 11%);
+  background-size: 8px 8px;
+  opacity: 0.05;
+}
 .active-neo-shadow {
-            box-shadow: 2px 2px 0px 0px rgba(19,16,22,1);
-            transform: translate(2px, 2px);
-        }
+  box-shadow: 2px 2px 0px 0px rgba(19, 16, 22, 1);
+  transform: translate(2px, 2px);
+}
 .brutalist-border-thick {
-            border: 4px solid #000000;
-        }
+  border: 4px solid #000000;
+}
 
 .dark .halftone-bg,
 .dark .halftone-pattern {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1.5px, transparent 1.5px);
 }
 
 /* Inverted "dark band" tokens should stay dark in dark mode. */
 .dark .bg-on-background,
 .dark .bg-on-surface,
-.dark .bg-inverse-surface { background-color: var(--surface-container-lowest); }
+.dark .bg-inverse-surface {
+  background-color: var(--surface-container-lowest);
+}
 .dark .text-background,
 .dark .text-surface,
-.dark .text-inverse-on-surface { color: var(--on-surface); }
+.dark .text-inverse-on-surface {
+  color: var(--on-surface);
+}
 
 /* Light-colored fills keep dark, legible text in dark mode. */
 .dark .bg-secondary-container,
@@ -440,7 +476,9 @@ canvas#shader-canvas-ANIMATION_26 {
 .dark .bg-secondary-fixed,
 .dark .bg-secondary-fixed *,
 .dark .bg-secondary-fixed-dim,
-.dark .bg-secondary-fixed-dim * { color: var(--on-secondary-fixed); }
+.dark .bg-secondary-fixed-dim * {
+  color: var(--on-secondary-fixed);
+}
 .dark .bg-primary-fixed,
 .dark .bg-primary-fixed *,
 .dark .bg-primary-fixed-dim,
@@ -448,7 +486,9 @@ canvas#shader-canvas-ANIMATION_26 {
 .dark .bg-tertiary-fixed,
 .dark .bg-tertiary-fixed *,
 .dark .bg-tertiary-fixed-dim,
-.dark .bg-tertiary-fixed-dim * { color: var(--on-primary-fixed); }
+.dark .bg-tertiary-fixed-dim * {
+  color: var(--on-primary-fixed);
+}
 
 /* ---------------------------------------------------------------
    Global interaction polish: nothing should feel static on hover.
@@ -560,7 +600,65 @@ div.hard-shadow:hover {
   box-shadow: 2px 2px 0px 0px var(--on-background);
 }
 
-
+/* Dark mode replaces the light offset with a purple glow, including hover. */
+.dark .btn-neo:hover,
+.dark button.brutalist-shadow:hover,
+.dark a.brutalist-shadow:hover,
+.dark button.brutalist-shadow-lg:hover,
+.dark a.brutalist-shadow-lg:hover,
+.dark button.neo-shadow:hover,
+.dark a.neo-shadow:hover,
+.dark button.neo-shadow-sm:hover,
+.dark a.neo-shadow-sm:hover,
+.dark button.neo-shadow-lg:hover,
+.dark a.neo-shadow-lg:hover,
+.dark button.neo-shadow-purple:hover,
+.dark a.neo-shadow-purple:hover,
+.dark button.hard-shadow:hover,
+.dark a.hard-shadow:hover,
+.dark button.hard-shadow-sm:hover,
+.dark a.hard-shadow-sm:hover,
+.dark button.hard-shadow-primary:hover,
+.dark a.hard-shadow-primary:hover,
+.dark [role="button"].neo-shadow:hover,
+.dark [role="button"].brutalist-shadow:hover,
+.dark .btn-neo:active,
+.dark button.brutalist-shadow:active,
+.dark a.brutalist-shadow:active,
+.dark button.brutalist-shadow-lg:active,
+.dark a.brutalist-shadow-lg:active,
+.dark button.neo-shadow:active,
+.dark a.neo-shadow:active,
+.dark button.neo-shadow-sm:active,
+.dark a.neo-shadow-sm:active,
+.dark button.neo-shadow-lg:active,
+.dark a.neo-shadow-lg:active,
+.dark button.neo-shadow-purple:active,
+.dark a.neo-shadow-purple:active,
+.dark button.hard-shadow:active,
+.dark a.hard-shadow:active,
+.dark button.hard-shadow-sm:active,
+.dark a.hard-shadow-sm:active,
+.dark button.hard-shadow-primary:active,
+.dark a.hard-shadow-primary:active,
+.dark [role="button"].neo-shadow:active,
+.dark [role="button"].brutalist-shadow:active,
+.dark div.brutalist-shadow:hover,
+.dark div.neo-shadow:hover,
+.dark div.neo-shadow-lg:hover,
+.dark div.hard-shadow:hover,
+.dark .neo-shadow-hover:hover,
+.dark .neo-brutal-shadow:hover,
+.dark .btn-hover:hover,
+.dark .hover-press:hover,
+.dark .neo-button-hover:hover,
+.dark .brutalist-shadow-hover:hover,
+.dark .hover-lift:hover,
+.dark .btn-press:active,
+.dark .active-press:active,
+.dark .active-neo-shadow {
+  box-shadow: var(--kp-glow-strong);
+}
 /* Filled buttons flip to the accent colour on hover. */
 button.bg-primary:hover,
 a.bg-primary:hover:not(.no-accent-fill),
@@ -617,7 +715,9 @@ html {
   scroll-padding-top: 90px;
 }
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* Keyboard focus ring for links and buttons. */
@@ -628,13 +728,16 @@ button:focus-visible {
 }
 
 /* Media never overflows its container. */
-img, video { max-width: 100%; }
-
-
+img,
+video {
+  max-width: 100%;
+}
 
 /* Card lift for bordered content blocks that already carry a hard shadow. */
 .hover-card {
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
 }
 .hover-card:hover {
   transform: translate(-2px, -2px);
@@ -728,30 +831,47 @@ button.neo-brutal-border:hover {
 .dark .text-gray-800,
 .dark .text-gray-700,
 .dark .text-gray-100,
-.dark .text-gray-200 { color: var(--on-surface); }
+.dark .text-gray-200 {
+  color: var(--on-surface);
+}
 .dark .text-gray-600,
 .dark .text-gray-500,
-.dark .text-gray-400 { color: var(--on-surface-variant); }
+.dark .text-gray-400 {
+  color: var(--on-surface-variant);
+}
 
 /* Purple body text is too dim against near-black; use the lighter tint. */
 .dark .text-primary,
 .dark .text-\[\#7c3aed\],
 .dark .text-\[\#630ed4\],
-.dark .text-\[\#6025c0\] { color: var(--primary-fixed); }
+.dark .text-\[\#6025c0\] {
+  color: var(--primary-fixed);
+}
 .dark .text-\[\#151218\],
-.dark .text-\[\#1b1b1f\] { color: var(--on-surface); }
-.dark .text-on-surface-variant { color: #cfc7d8; }
+.dark .text-\[\#1b1b1f\] {
+  color: var(--on-surface);
+}
+.dark .text-on-surface-variant {
+  color: #cfc7d8;
+}
 
 /* Keep dark accent text readable when it sits on light fixed fills. */
 .dark .bg-secondary-container .text-\[\#7c3aed\],
 .dark .bg-secondary .text-\[\#7c3aed\],
 .dark .bg-\[\#f7be1d\] .text-\[\#7c3aed\],
 .dark .bg-primary-fixed .text-\[\#7c3aed\],
-.dark .bg-primary-fixed-dim .text-\[\#7c3aed\] { color: #4a0fa8; }
+.dark .bg-primary-fixed-dim .text-\[\#7c3aed\] {
+  color: #4a0fa8;
+}
 
 /* Muted overlays over photos need a touch more contrast in dark mode. */
 .dark .hero-panel-gradient {
-  background: linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.55) 50%, transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.94) 0%,
+    rgba(0, 0, 0, 0.55) 50%,
+    transparent 100%
+  );
 }
 
 /* Inverse text tokens used on permanently-dark bands must stay light. */
@@ -760,66 +880,193 @@ button.neo-brutal-border:hover {
 .dark .text-surface-container-low,
 .dark .text-surface-container-lowest,
 .dark .text-surface-bright,
-.dark .text-surface-dim { color: var(--on-surface); }
+.dark .text-surface-dim {
+  color: var(--on-surface);
+}
 
 /* --- Dark-mode text-colour cascade, ordered from broad to specific --- */
 
 /* 1. Dark surfaces (incl. remapped white/black cards) own light text. */
-.dark :is(.bg-white, .bg-black, .bg-surface, .bg-surface-container, .bg-background,
-  .bg-surface-container-lowest,
-  .bg-surface-container-low, .bg-surface-container-high, .bg-on-background, .bg-on-surface, .bg-inverse-surface),
-.dark :is(.bg-white, .bg-black, .bg-surface, .bg-surface-container, .bg-background,
-  .bg-surface-container-lowest,
-  .bg-surface-container-low, .bg-surface-container-high, .bg-on-background, .bg-on-surface, .bg-inverse-surface) * { color: var(--on-surface); }
+.dark
+  :is(
+    .bg-white,
+    .bg-black,
+    .bg-surface,
+    .bg-surface-container,
+    .bg-background,
+    .bg-surface-container-lowest,
+    .bg-surface-container-low,
+    .bg-surface-container-high,
+    .bg-on-background,
+    .bg-on-surface,
+    .bg-inverse-surface
+  ),
+.dark
+  :is(
+    .bg-white,
+    .bg-black,
+    .bg-surface,
+    .bg-surface-container,
+    .bg-background,
+    .bg-surface-container-lowest,
+    .bg-surface-container-low,
+    .bg-surface-container-high,
+    .bg-on-background,
+    .bg-on-surface,
+    .bg-inverse-surface
+  )
+  * {
+  color: var(--on-surface);
+}
 
 /* 2. Light fills (yellow/pale purple) always keep dark ink, even nested
       inside a dark surface. */
-.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
-  .bg-secondary-fixed-dim, .bg-primary-fixed, .bg-primary-fixed-dim,
-  .bg-tertiary-fixed, .bg-tertiary-fixed-dim,
-  .bg-\[\#d2bbff\], .bg-\[\#eaddff\], .bg-\[\#f7be1d\], .bg-\[\#ffde59\], .bg-\[\#ffd400\]),
-.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
-  .bg-secondary-fixed-dim, .bg-primary-fixed, .bg-primary-fixed-dim,
-  .bg-tertiary-fixed, .bg-tertiary-fixed-dim,
-  .bg-\[\#d2bbff\], .bg-\[\#eaddff\], .bg-\[\#f7be1d\], .bg-\[\#ffde59\], .bg-\[\#ffd400\]) * { color: #221b00; }
+.dark
+  :is(
+    .bg-secondary,
+    .bg-secondary-container,
+    .bg-secondary-fixed,
+    .bg-secondary-fixed-dim,
+    .bg-primary-fixed,
+    .bg-primary-fixed-dim,
+    .bg-tertiary-fixed,
+    .bg-tertiary-fixed-dim,
+    .bg-\[\#d2bbff\],
+    .bg-\[\#eaddff\],
+    .bg-\[\#f7be1d\],
+    .bg-\[\#ffde59\],
+    .bg-\[\#ffd400\]
+  ),
+.dark
+  :is(
+    .bg-secondary,
+    .bg-secondary-container,
+    .bg-secondary-fixed,
+    .bg-secondary-fixed-dim,
+    .bg-primary-fixed,
+    .bg-primary-fixed-dim,
+    .bg-tertiary-fixed,
+    .bg-tertiary-fixed-dim,
+    .bg-\[\#d2bbff\],
+    .bg-\[\#eaddff\],
+    .bg-\[\#f7be1d\],
+    .bg-\[\#ffde59\],
+    .bg-\[\#ffd400\]
+  )
+  * {
+  color: #221b00;
+}
 
 /* 3. ...but a dark card nested inside a light fill flips back to light text. */
-.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
-  .bg-secondary-fixed-dim) :is(.bg-white, .bg-black, .bg-surface, .bg-surface-container, .bg-background, .bg-surface-container-lowest, .bg-surface-container-low, .bg-surface-container-high, .bg-on-background, .bg-on-surface, .bg-inverse-surface),
-.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
-  .bg-secondary-fixed-dim) :is(.bg-white, .bg-black, .bg-surface, .bg-surface-container, .bg-background, .bg-surface-container-lowest, .bg-surface-container-low, .bg-surface-container-high, .bg-on-background, .bg-on-surface, .bg-inverse-surface) * { color: var(--on-surface); }
+.dark
+  :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed, .bg-secondary-fixed-dim)
+  :is(
+    .bg-white,
+    .bg-black,
+    .bg-surface,
+    .bg-surface-container,
+    .bg-background,
+    .bg-surface-container-lowest,
+    .bg-surface-container-low,
+    .bg-surface-container-high,
+    .bg-on-background,
+    .bg-on-surface,
+    .bg-inverse-surface
+  ),
+.dark
+  :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed, .bg-secondary-fixed-dim)
+  :is(
+    .bg-white,
+    .bg-black,
+    .bg-surface,
+    .bg-surface-container,
+    .bg-background,
+    .bg-surface-container-lowest,
+    .bg-surface-container-low,
+    .bg-surface-container-high,
+    .bg-on-background,
+    .bg-on-surface,
+    .bg-inverse-surface
+  )
+  * {
+  color: var(--on-surface);
+}
 
 /* 3b. Same flip for dark cards nested inside remapped legacy gray bands. */
-.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+.dark
+  :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
   :is(.bg-black, .bg-background, .bg-on-background, .bg-on-surface, .bg-inverse-surface),
-.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
-  :is(.bg-black, .bg-background, .bg-on-background, .bg-on-surface, .bg-inverse-surface) * { color: var(--on-surface); }
+.dark
+  :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(.bg-black, .bg-background, .bg-on-background, .bg-on-surface, .bg-inverse-surface)
+  * {
+  color: var(--on-surface);
+}
 
 /* 3c. Saturated purple fills nested in a light band keep their own light ink. */
-.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
-  .bg-secondary-fixed-dim, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+.dark
+  :is(
+    .bg-secondary,
+    .bg-secondary-container,
+    .bg-secondary-fixed,
+    .bg-secondary-fixed-dim,
+    .bg-gray-50,
+    .bg-gray-100,
+    .bg-gray-200,
+    .bg-gray-300
+  )
   :is(.bg-primary, .bg-primary-container),
-.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
-  .bg-secondary-fixed-dim, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
-  :is(.bg-primary, .bg-primary-container) * { color: var(--on-primary); }
+.dark
+  :is(
+    .bg-secondary,
+    .bg-secondary-container,
+    .bg-secondary-fixed,
+    .bg-secondary-fixed-dim,
+    .bg-gray-50,
+    .bg-gray-100,
+    .bg-gray-200,
+    .bg-gray-300
+  )
+  :is(.bg-primary, .bg-primary-container)
+  * {
+  color: var(--on-primary);
+}
 
 /* 3d. Testimonial accent ink: hardcoded brand hues are too dark on the dark
        card, so soften them to a calm lilac in dark mode only. */
-.dark .testimonial-accent { color: var(--primary-fixed) !important; }
+.dark .testimonial-accent {
+  color: var(--primary-fixed) !important;
+}
 
 /* 4. Restore semantic colours the * cascade flattened. */
 .dark .text-primary,
 .dark .text-\[\#7c3aed\],
 .dark .text-\[\#630ed4\],
-.dark .text-\[\#6025c0\] { color: var(--primary-fixed) !important; }
+.dark .text-\[\#6025c0\] {
+  color: var(--primary-fixed) !important;
+}
 .dark .text-on-primary,
-.dark .text-on-primary-container { color: #ffffff !important; }
-.dark .text-on-surface-variant { color: #cfc7d8 !important; }
+.dark .text-on-primary-container {
+  color: #ffffff !important;
+}
+.dark .text-on-surface-variant {
+  color: #cfc7d8 !important;
+}
 .dark .text-white,
-.dark .\!text-white { color: #ffffff !important; }
+.dark .\!text-white {
+  color: #ffffff !important;
+}
 
-.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
-  .bg-secondary-fixed-dim, .bg-\[\#f7be1d\], .bg-\[\#ffde59\], .bg-\[\#ffd400\])
+.dark
+  :is(
+    .bg-secondary,
+    .bg-secondary-container,
+    .bg-secondary-fixed,
+    .bg-secondary-fixed-dim,
+    .bg-\[\#f7be1d\],
+    .bg-\[\#ffde59\],
+    .bg-\[\#ffd400\]
+  )
   :is(.text-primary, .text-\[\#7c3aed\], .text-\[\#630ed4\], .text-\[\#6025c0\]) {
   color: #4a0fa8 !important;
 }
@@ -833,7 +1080,9 @@ button.neo-brutal-border:hover {
   background-color: #ece6f0 !important;
   color: #1a1b21 !important;
 }
-.dark .keep-light * { color: #1a1b21 !important; }
+.dark .keep-light * {
+  color: #1a1b21 !important;
+}
 a.keep-light:hover,
 button.keep-light:hover {
   background-color: var(--secondary-container) !important;
@@ -848,53 +1097,108 @@ html.dark .site-logo {
   filter: brightness(0) invert(1);
 }
 
-
-
 /* ---------------------------------------------------------------
    Dark mode: legacy hardcoded light surfaces (footers, bands) and
    the dark ink written for them.
    --------------------------------------------------------------- */
 .dark .bg-gray-50,
-.dark .bg-gray-100 { background-color: var(--surface-container-low); }
-.dark .bg-gray-200 { background-color: var(--surface-container); }
-.dark .bg-gray-300 { background-color: var(--surface-container-high); }
+.dark .bg-gray-100 {
+  background-color: var(--surface-container-low);
+}
+.dark .bg-gray-200 {
+  background-color: var(--surface-container);
+}
+.dark .bg-gray-300 {
+  background-color: var(--surface-container-high);
+}
 
 .dark .border-gray-900,
-.dark .border-gray-800 { border-color: var(--on-surface); }
+.dark .border-gray-800 {
+  border-color: var(--on-surface);
+}
 .dark .border-gray-300,
-.dark .border-gray-200 { border-color: var(--outline-variant); }
+.dark .border-gray-200 {
+  border-color: var(--outline-variant);
+}
 
 /* Dark ink hexes authored for light bands must lighten on dark surfaces. */
 .dark .text-\[\#826200\],
-.dark .text-\[\#3f2e00\] { color: var(--secondary); }
-.dark .text-\[\#3f008e\] { color: var(--primary-fixed); }
+.dark .text-\[\#3f2e00\] {
+  color: var(--secondary);
+}
+.dark .text-\[\#3f008e\] {
+  color: var(--primary-fixed);
+}
 
 /* ...unless they sit on a light fill, where they stay dark. */
-.dark :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed,
-  .bg-secondary-fixed-dim, .bg-primary-fixed, .bg-primary-fixed-dim,
-  .bg-\[\#f7be1d\], .bg-\[\#ffde59\], .bg-\[\#d2bbff\], .bg-\[\#eaddff\])
-  :is(.text-\[\#826200\], .text-\[\#3f2e00\], .text-\[\#3f008e\]) { color: #221b00; }
+.dark
+  :is(
+    .bg-secondary,
+    .bg-secondary-container,
+    .bg-secondary-fixed,
+    .bg-secondary-fixed-dim,
+    .bg-primary-fixed,
+    .bg-primary-fixed-dim,
+    .bg-\[\#f7be1d\],
+    .bg-\[\#ffde59\],
+    .bg-\[\#d2bbff\],
+    .bg-\[\#eaddff\]
+  )
+  :is(.text-\[\#826200\], .text-\[\#3f2e00\], .text-\[\#3f008e\]) {
+  color: #221b00;
+}
 
 /* Remapped light surfaces own light text for everything inside them. */
 .dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300),
-.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) * { color: var(--on-surface); }
-.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
-  :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed, .bg-secondary-fixed-dim,
-      .bg-primary-fixed, .bg-primary-fixed-dim, .bg-\[\#f7be1d\], .bg-\[\#ffde59\],
-      .bg-\[\#d2bbff\], .bg-\[\#eaddff\]),
-.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
-  :is(.bg-secondary, .bg-secondary-container, .bg-secondary-fixed, .bg-secondary-fixed-dim,
-      .bg-primary-fixed, .bg-primary-fixed-dim, .bg-\[\#f7be1d\], .bg-\[\#ffde59\],
-      .bg-\[\#d2bbff\], .bg-\[\#eaddff\]) * { color: #221b00; }
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) * {
+  color: var(--on-surface);
+}
+.dark
+  :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(
+    .bg-secondary,
+    .bg-secondary-container,
+    .bg-secondary-fixed,
+    .bg-secondary-fixed-dim,
+    .bg-primary-fixed,
+    .bg-primary-fixed-dim,
+    .bg-\[\#f7be1d\],
+    .bg-\[\#ffde59\],
+    .bg-\[\#d2bbff\],
+    .bg-\[\#eaddff\]
+  ),
+.dark
+  :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300)
+  :is(
+    .bg-secondary,
+    .bg-secondary-container,
+    .bg-secondary-fixed,
+    .bg-secondary-fixed-dim,
+    .bg-primary-fixed,
+    .bg-primary-fixed-dim,
+    .bg-\[\#f7be1d\],
+    .bg-\[\#ffde59\],
+    .bg-\[\#d2bbff\],
+    .bg-\[\#eaddff\]
+  )
+  * {
+  color: #221b00;
+}
 
 /* Halftone texture layers must never tint the text above them. */
 .dark .halftone-bg.text-gray-200,
-.dark .halftone-bg.text-gray-100 { color: rgba(255,255,255,0.06); }
+.dark .halftone-bg.text-gray-100 {
+  color: rgba(255, 255, 255, 0.06);
+}
 
 /* Brand-ink hexes win over the generic light-surface text rule. */
 .dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) .text-\[\#826200\],
-.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) .text-\[\#3f2e00\] { color: var(--secondary); }
-.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) .text-\[\#3f008e\] { color: var(--primary-fixed); }
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) .text-\[\#3f2e00\] {
+  color: var(--secondary);
+}
+.dark :is(.bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300) .text-\[\#3f008e\] {
+  color: var(--primary-fixed);
+}
 
 /* ============================================================
    Motion layer — scroll reveals, hover life, ambient loops
@@ -935,24 +1239,47 @@ html.dark .site-logo {
   clip-path: polygon(-25% -25%, 125% -25%, 125% 125%, -25% 125%);
 }
 
-
 @keyframes kp-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 @keyframes kp-pop {
-  0% { transform: scale(0.94); opacity: 0; }
-  60% { transform: scale(1.02); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.94);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 @keyframes kp-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-.animate-float { animation: kp-float 5s ease-in-out infinite; }
-.animate-pop { animation: kp-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
-.animate-marquee { animation: kp-marquee 22s linear infinite; }
+.animate-float {
+  animation: kp-float 5s ease-in-out infinite;
+}
+.animate-pop {
+  animation: kp-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-marquee {
+  animation: kp-marquee 22s linear infinite;
+}
 
 /* Images gently scale inside their brutalist frames. */
 .brutalist-border img,
@@ -1065,7 +1392,9 @@ main select:focus {
 
 /* Images pick up a faint halo on hover. */
 main img {
-  transition: filter 0.35s ease, box-shadow 0.35s ease;
+  transition:
+    filter 0.35s ease,
+    box-shadow 0.35s ease;
 }
 main a:hover img,
 main article:hover img {
@@ -1078,7 +1407,9 @@ main article:hover img {
    under the blurb text. */
 header nav > a {
   position: relative;
-  transition: color 0.2s ease, text-shadow 0.25s ease;
+  transition:
+    color 0.2s ease,
+    text-shadow 0.25s ease;
 }
 header nav > a::after {
   content: "";
@@ -1097,7 +1428,9 @@ header nav > a::after {
 header nav > a:hover {
   text-shadow: 0 0 14px color-mix(in oklab, var(--primary) 60%, transparent);
 }
-header nav > a:hover::after { transform: scaleX(1); }
+header nav > a:hover::after {
+  transform: scaleX(1);
+}
 
 footer a {
   text-decoration: none;
@@ -1131,34 +1464,79 @@ a:hover > .material-symbols-outlined {
    squeezed into a narrow column.
    --------------------------------------------------------------- */
 @media (max-width: 1023px) {
-  .text-display-xl { font-size: 60px; line-height: 60px; }
-  .text-display-lg { font-size: 54px; }
-  .text-headline-lg { font-size: 40px; }
-  .px-margin-desktop { padding-left: 32px; padding-right: 32px; }
-  .py-stack-lg { padding-top: 40px; padding-bottom: 40px; }
+  .text-display-xl {
+    font-size: 60px;
+    line-height: 60px;
+  }
+  .text-display-lg {
+    font-size: 54px;
+  }
+  .text-headline-lg {
+    font-size: 40px;
+  }
+  .px-margin-desktop {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .py-stack-lg {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
 }
 
 @media (max-width: 767px) {
-  .text-display-xl { font-size: 42px; line-height: 44px; }
-  .text-display-lg { font-size: 36px; line-height: 1.05; }
-  .text-headline-lg { font-size: 28px; }
-  .text-headline-md { font-size: 22px; }
-  .text-body-lg { font-size: 16px; }
-  .px-margin-desktop { padding-left: 20px; padding-right: 20px; }
-  .py-stack-lg { padding-top: 32px; padding-bottom: 32px; }
-  .gap-gutter { gap: 16px; }
+  .text-display-xl {
+    font-size: 42px;
+    line-height: 44px;
+  }
+  .text-display-lg {
+    font-size: 36px;
+    line-height: 1.05;
+  }
+  .text-headline-lg {
+    font-size: 28px;
+  }
+  .text-headline-md {
+    font-size: 22px;
+  }
+  .text-body-lg {
+    font-size: 16px;
+  }
+  .px-margin-desktop {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .py-stack-lg {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+  .gap-gutter {
+    gap: 16px;
+  }
 }
 
 /* Never let a decorative sticker or shadow create sideways scroll. */
-html, body { max-width: 100%; overflow-x: hidden; }
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
 /* Comfortable tap targets on touch devices. */
 @media (max-width: 767px) {
-  a, button { touch-action: manipulation; }
+  a,
+  button {
+    touch-action: manipulation;
+  }
 }
 
-.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
-.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
 
 dialog.ui-dialog {
   margin: auto;

@@ -14,16 +14,9 @@ import {
   youtubeWatchUrl,
   type MessageVideo,
 } from "@/lib/youtube";
-import {
-  INSTAGRAM_PROFILE_URL,
-  formatInstagramDate,
-  instagramCaption,
-  type InstagramPost,
-} from "@/lib/instagram";
+import { INSTAGRAM_PROFILE_URL, type InstagramPost } from "@/lib/instagram";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { TIKTOK_HANDLE, TIKTOK_URL } from "@/lib/social";
-
-
 
 /* ---------------- brand icons ---------------- */
 
@@ -34,7 +27,6 @@ function InstagramIcon({ className = "" }: { className?: string }) {
     </svg>
   );
 }
-
 
 function YouTubeIcon({ className = "" }: { className?: string }) {
   return (
@@ -47,7 +39,7 @@ function YouTubeIcon({ className = "" }: { className?: string }) {
 function SpotifyIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.6 14.45a.78.78 0 0 1-1.07.26c-2.93-1.79-6.6-2.2-10.94-1.21a.78.78 0 1 1-.35-1.52c4.72-1.08 8.79-.61 12.06 1.39.37.23.49.71.3 1.08Zm1.23-2.98a.97.97 0 0 1-1.34.32c-3.35-2.06-8.46-2.66-12.42-1.46a.97.97 0 1 1-.56-1.86c4.52-1.37 10.15-.7 14 1.66.46.28.6.88.32 1.34Zm.11-3.1c-4.02-2.39-10.65-2.61-14.49-1.44a1.17 1.17 0 1 1-.68-2.24C7.2 5.35 14.52 5.6 19.15 8.35a1.17 1.17 0 0 1-1.2 2.01Z" />
+      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
     </svg>
   );
 }
@@ -130,13 +122,7 @@ const SOCIALS = [
 
 /* ---------------- page ---------------- */
 
-function MediaPage({
-  messages,
-  posts,
-}: {
-  messages: MessageVideo[];
-  posts: InstagramPost[];
-}) {
+function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: InstagramPost[] }) {
   const featured = messages[0];
   const more = messages.slice(1, 4);
   return (
@@ -163,8 +149,8 @@ function MediaPage({
             SOCIALS &amp; MEDIA
           </h1>
           <p className="font-body-lg text-primary-fixed-dim max-w-xl mx-auto mb-stack-md">
-            Everywhere Kharis lives online. Follow the feeds, and tune into messages
-            from our head pastor on YouTube, Spotify and SoundCloud, or listen in the app.
+            Everywhere Kharis lives online. Follow the feeds, and tune into messages from our head
+            pastor on YouTube, Spotify and SoundCloud, or listen in the app.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <a
@@ -187,7 +173,10 @@ function MediaPage({
         <div className="absolute inset-0 halftone-bg pointer-events-none"></div>
 
         {/* Follow us */}
-        <section id="follow" className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28">
+        <section
+          id="follow"
+          className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28"
+        >
           <div className="flex items-center gap-4 mb-stack-md">
             <div className="w-4 h-8 bg-primary"></div>
             <h2 className="font-headline-md text-headline-md uppercase">Follow the movement</h2>
@@ -198,9 +187,7 @@ function MediaPage({
               <a
                 key={label}
                 href={href}
-                {...(external
-                  ? { target: "_blank", rel: "noreferrer noopener" }
-                  : {})}
+                {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
                 className="group bg-surface-container border-2 border-black rounded-none neo-shadow hover-press flex flex-col"
               >
                 <div className={`${band} border-b-2 border-black p-6 flex items-center gap-4`}>
@@ -232,112 +219,27 @@ function MediaPage({
           </div>
         </section>
 
-        {/* Social feed */}
-        <section className="relative z-10 bg-surface-container-low border-y-4 border-on-background py-stack-lg">
-          <div className="container mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-md">
-              <div>
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="w-4 h-8 bg-secondary-container"></div>
-                  <h2 className="font-headline-md text-headline-md uppercase">Latest posts</h2>
-                </div>
-                <p className="font-body-md text-on-surface-variant">
-                  Straight from our Instagram page.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <a
-                  href={INSTAGRAM_PROFILE_URL}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="bg-secondary-container text-on-background font-label-sm px-4 py-2 border-2 border-black neo-shadow hover-press flex items-center gap-2"
-                >
-                  <InstagramIcon className="w-4 h-4" /> INSTAGRAM
-                </a>
-              </div>
-            </div>
-
-            {posts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-              {posts.map((post) => (
-                <a
-                  key={post.id}
-                  href={post.permalink}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="bg-surface border-2 border-black neo-shadow overflow-hidden group flex flex-col"
-                >
-                  <div className="aspect-square overflow-hidden border-b-2 border-black relative">
-                    <img
-                      alt={instagramCaption(post.caption, 80)}
-                      src={post.image}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <span className="absolute top-3 right-3 bg-surface text-on-surface border-2 border-black p-2 flex items-center justify-center">
-                      <InstagramIcon className="w-4 h-4" />
-                    </span>
-                    {post.mediaType === "VIDEO" ? (
-                      <span className="absolute inset-0 flex items-center justify-center">
-                        <span className="bg-secondary-container border-2 border-black p-3 rounded-full neo-shadow">
-                          <span
-                            className="material-symbols-outlined text-3xl leading-none"
-                            style={{ fontVariationSettings: "'FILL' 1" }}
-                          >
-                            play_arrow
-                          </span>
-                        </span>
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="p-5 flex-1 flex flex-col gap-3">
-                    <p className="font-body-md text-on-surface line-clamp-2">
-                      {instagramCaption(post.caption)}
-                    </p>
-                    <span className="font-label-sm text-on-surface-variant mt-auto">
-                      {formatInstagramDate(post.timestamp) || "@kharisphasetwo"}
-                    </span>
-                  </div>
-                </a>
-              ))}
-            </div>
-            ) : (
-              <div className="border-2 border-dashed border-on-background bg-surface p-stack-md md:p-stack-lg text-center">
-                <InstagramIcon className="w-10 h-10 mx-auto mb-4" />
-                <h3 className="font-headline-md text-headline-md uppercase mb-2">
-                  Follow @kharisphasetwo
-                </h3>
-                <p className="font-body-md text-on-surface-variant max-w-xl mx-auto mb-6">
-                  Latest posts from the KP2 Instagram will show up here. Until then,
-                  tap through for reels, Sunday moments and behind the scenes.
-                </p>
-                <a
-                  href={INSTAGRAM_PROFILE_URL}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="inline-flex items-center gap-2 bg-secondary-container text-on-background font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press"
-                >
-                  <InstagramIcon className="w-4 h-4" />
-                  Open Instagram
-                </a>
-              </div>
-            )}
-          </div>
-        </section>
-
         {/* Listen to the pastor */}
-        <section id="listen" className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28">
+        <section
+          id="listen"
+          className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28"
+        >
           <div className="flex items-center gap-4 mb-stack-md">
             <div className="w-4 h-8 bg-primary"></div>
-            <h2 className="font-headline-md text-headline-md uppercase">Messages from our head pastor</h2>
+            <h2 className="font-headline-md text-headline-md uppercase">
+              Messages from our head pastor
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
             <div className="lg:col-span-7 bg-surface border-2 border-black neo-shadow-lg overflow-hidden group">
               <div className="aspect-video relative bg-black">
                 {featured ? (
-                  <YoutubeEmbed id={featured.id} title={featured.title} thumbnail={featured.thumbnail} />
+                  <YoutubeEmbed
+                    id={featured.id}
+                    title={featured.title}
+                    thumbnail={featured.thumbnail}
+                  />
                 ) : (
                   <img
                     alt="Senior Pastor preaching"
@@ -358,8 +260,8 @@ function MediaPage({
               </div>
               <div className="p-6 border-t-2 border-black">
                 <p className="font-body-md text-on-surface-variant mb-6">
-                  Preached by Pastor David Antwi. Watch the full message on YouTube, or
-                  take the audio with you on Spotify and SoundCloud.
+                  Preached by Pastor David Antwi. Watch the full message on YouTube, or take the
+                  audio with you on Spotify and SoundCloud.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Link
@@ -369,7 +271,9 @@ function MediaPage({
                     <span className="material-symbols-outlined">smartphone</span> LISTEN VIA THE APP
                   </Link>
                   <a
-                    href={featured ? youtubeWatchUrl(featured.id) : "https://youtube.com/@davidantwi"}
+                    href={
+                      featured ? youtubeWatchUrl(featured.id) : "https://youtube.com/@davidantwi"
+                    }
                     target="_blank"
                     rel="noreferrer noopener"
                     className="bg-error-container text-on-error-container font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"

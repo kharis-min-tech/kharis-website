@@ -4,11 +4,19 @@ function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
 }
 
-/** Branch photos are remote files from Cloudflare. Local page images are not branch photos. */
+/** Public host for the kharis-images R2 bucket. Override with NEXT_PUBLIC_R2_PUBLIC_URL. */
+function branchImageHost() {
+  return (process.env.NEXT_PUBLIC_R2_PUBLIC_URL || "https://images.kharis.org").replace(/\/$/, "");
+}
+
+/** Branch photos live in Cloudflare. Stored studio URLs are rewritten onto images.kharis.org. */
 export function remoteImage(url: string | null | undefined) {
   const value = clean(url);
-  if (!/^https?:\/\//i.test(value) || /instagram\.com/i.test(value)) return "";
-  return value;
+  if (!value || /instagram\.com/i.test(value)) return "";
+  const key = value.match(/branch-images\/[^\s?#]+/i)?.[0];
+  if (key) return `${branchImageHost()}/${key}`;
+  if (/^https?:\/\//i.test(value)) return value;
+  return "";
 }
 
 export function placeholderDescription(city: string) {
@@ -29,16 +37,19 @@ function mainVenue(branch: BranchData): Venue | undefined {
 /** London’s page shape, with this branch’s name and city. Missing facts stay obviously unfinished. */
 export function presentBranch(branch: BranchData) {
   const venue = mainVenue(branch);
-  const city =
-    clean(venue?.city) ||
-    branch.name.replace(/\s*branch$/i, "").trim() ||
-    "your city";
+  const city = clean(venue?.city) || branch.name.replace(/\s*branch$/i, "").trim() || "your city";
   const storedDescription = clean(branch.short_description) || clean(branch.description);
   const description = storedDescription || placeholderDescription(city);
   const tagline = clean(branch.hero_subtitle) || "Christians boldly holding their Bible.";
   const pastorName = clean(branch.pastor_name);
   const pastorBio = clean(branch.pastor_bio);
-  const address = [venue?.name, venue?.address_line1, venue?.address_line2, venue?.city, venue?.postcode]
+  const address = [
+    venue?.name,
+    venue?.address_line1,
+    venue?.address_line2,
+    venue?.city,
+    venue?.postcode,
+  ]
     .map((part) => clean(part ?? undefined))
     .filter(Boolean)
     .join(", ");
@@ -62,8 +73,7 @@ export function presentBranch(branch: BranchData) {
     pastorKnown: Boolean(pastorName),
     pastorRole: clean(branch.pastor_role) || "Pastor",
     quote:
-      pastorBio ||
-      `We exist to build a home of faith, hope, and love for every soul in ${city}.`,
+      pastorBio || `We exist to build a home of faith, hope, and love for every soul in ${city}.`,
     welcome: [
       `Welcome to ${branch.name}, part of the Kharis Church family.`,
       `${tagline} We love teaching the Word of God, and we long to see believers established in their faith and our city strengthened.`,
@@ -72,7 +82,8 @@ export function presentBranch(branch: BranchData) {
     address: address || "Address coming soon",
     hasAddress: Boolean(address),
     parking: clean(venue?.parking_info) || "Parking details for this branch will be added soon.",
-    transit: clean(venue?.public_transport_info) || "Travel details for this branch will be added soon.",
+    transit:
+      clean(venue?.public_transport_info) || "Travel details for this branch will be added soon.",
     lat: hasCoords ? lat : null,
     lng: hasCoords ? lng : null,
   };

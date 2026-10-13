@@ -21,8 +21,7 @@ export function DepartmentVideoHero() {
     typeof window !== "undefined" &&
     window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-  const dept =
-    DEPARTMENTS.find((d) => d.name === visibleName) ?? DEPARTMENTS[0]!;
+  const dept = DEPARTMENTS.find((d) => d.name === visibleName) ?? DEPARTMENTS[0]!;
   const src = DEPARTMENT_VIDEOS[dept.name];
 
   function select(name: string) {
@@ -65,7 +64,6 @@ export function DepartmentVideoHero() {
             Get busy serving!
           </span>
           <h1
-
             className="font-display-lg mb-4 leading-none text-primary-fixed-dim"
             style={{ fontSize: "clamp(2.5rem, 1.4rem + 5vw, 4rem)" }}
           >
@@ -111,7 +109,8 @@ export function DepartmentVideoHero() {
                     }`}
                     style={{
                       fontSize: "clamp(0.7rem, 0.62rem + 0.4vw, 1rem)",
-                      padding: "clamp(0.5rem, 0.42rem + 0.35vw, 0.8rem) clamp(0.8rem, 0.65rem + 0.5vw, 1.2rem)",
+                      padding:
+                        "clamp(0.5rem, 0.42rem + 0.35vw, 0.8rem) clamp(0.8rem, 0.65rem + 0.5vw, 1.2rem)",
                     }}
                   >
                     {hasVideo && (
@@ -165,10 +164,8 @@ export function DepartmentVideoHero() {
                     aria-label={`Play ${dept.name} video`}
                     onClick={() => videoRef.current?.play()}
                     tabIndex={playing ? -1 : 0}
-                    className={`absolute inset-x-0 top-0 bottom-16 grid place-items-center bg-on-background/45 transition-opacity duration-300 ${
-                      playing
-                        ? "pointer-events-none opacity-0"
-                        : "opacity-100"
+                    className={`absolute inset-x-0 top-0 bottom-16 grid place-items-center bg-black/45 transition-opacity duration-300 ${
+                      playing ? "pointer-events-none opacity-0" : "opacity-100"
                     }`}
                   >
                     <span className="grid h-20 w-20 place-items-center rounded-none border-4 border-black bg-primary text-on-primary shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
@@ -187,7 +184,7 @@ export function DepartmentVideoHero() {
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-on-background/50 to-primary/30" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-black/50 to-primary/30" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
                     <span className="grid h-20 w-20 place-items-center rounded-none border-4 border-surface/40 text-surface/50">
                       <span className="material-symbols-outlined text-4xl" aria-hidden="true">

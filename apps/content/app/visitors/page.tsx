@@ -30,7 +30,9 @@ export default function VisitorsPage() {
       })}
       titleOf={(row) => `${row.first_name} ${row.last_name ?? ""}`.trim()}
       metaOf={(row) => [row.branch, row.email].filter(Boolean).join(" · ")}
-      searchOf={(row) => `${row.first_name} ${row.last_name ?? ""} ${row.email ?? ""} ${row.branch ?? ""} ${row.notes ?? ""}`}
+      searchOf={(row) =>
+        `${row.first_name} ${row.last_name ?? ""} ${row.email ?? ""} ${row.branch ?? ""} ${row.notes ?? ""}`
+      }
       save={(draft, id) =>
         saveVisitor({
           id,

@@ -124,24 +124,18 @@ function withFeaturedFallback(rows: Testimony[]): Testimony[] {
 
 export async function getTestimonies(
   workspace: TestimonyWorkspace,
-  type: TestimonyFeatureType = "featured"
+  type: TestimonyFeatureType = "featured",
 ): Promise<Testimony[]> {
-  const featureColumn =
-    type === "giving"
-      ? "is_featured_giving"
-      : "is_featured";
+  const featureColumn = type === "giving" ? "is_featured_giving" : "is_featured";
 
   const { data, error } = await supabase
     .from("testimonies")
     .select(SAFE_TESTIMONY_FIELDS)
-    .eq("workspace", workspace)
+    .in("workspace", [workspace, "general"])
     .eq(featureColumn, true);
 
   if (error) {
-    console.error(
-      `Failed to load ${workspace} ${type} testimonies:`,
-      error
-    );
+    console.error(`Failed to load ${workspace} ${type} testimonies:`, error);
 
     return type === "featured" ? FALLBACK_FEATURED : [];
   }

@@ -11,7 +11,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { confirmDelete } from "@/lib/confirm";
 
 export type Field =
-  | { key: string; label: string; kind: "text" | "textarea" | "date" | "url" | "time"; placeholder?: string }
+  | {
+      key: string;
+      label: string;
+      kind: "text" | "textarea" | "date" | "url" | "time";
+      placeholder?: string;
+    }
   | { key: string; label: string; kind: "select"; options: { value: string; label: string }[] }
   | { key: string; label: string; kind: "toggle" }
   | { key: string; label: string; kind: "image"; folder: string };
@@ -117,7 +122,12 @@ export function CrudPage<T extends Row>({
         description={description}
         action={<Button onClick={() => setEditing({ draft: blank() })}>New</Button>}
       />
-      <Input value={query} placeholder="Search" onChange={(event) => setQuery(event.target.value)} className="mb-4 max-w-sm" />
+      <Input
+        value={query}
+        placeholder="Search"
+        onChange={(event) => setQuery(event.target.value)}
+        className="mb-4 max-w-sm"
+      />
       {rows === null ? (
         <div className="space-y-3">
           <Skeleton className="h-16" />
@@ -139,11 +149,21 @@ export function CrudPage<T extends Row>({
         <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
           {visible.map((row) => (
             <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
-              <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}>
+              <button
+                type="button"
+                className="min-w-0 flex-1 text-left"
+                onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}
+              >
                 <p className="truncate font-medium">{titleOf(row) || "Untitled"}</p>
-                {metaOf ? <p className="truncate text-sm text-muted-foreground">{metaOf(row)}</p> : null}
+                {metaOf ? (
+                  <p className="truncate text-sm text-muted-foreground">{metaOf(row)}</p>
+                ) : null}
               </button>
-              <Button variant="outline" size="sm" onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}
+              >
                 Edit
               </Button>
               <Button variant="ghost" size="sm" onClick={() => void onDelete(row)}>
@@ -154,14 +174,19 @@ export function CrudPage<T extends Row>({
         </ul>
       )}
       {editing ? (
-        <Panel title={editing.id ? `Edit ${title}` : `New ${title}`} onClose={() => setEditing(null)}>
+        <Panel
+          title={editing.id ? `Edit ${title}` : `New ${title}`}
+          onClose={() => setEditing(null)}
+        >
           <form className="space-y-4" onSubmit={onSave}>
             {fields.map((field) => (
               <FieldControl
                 key={field.key}
                 field={field}
                 value={editing.draft[field.key] ?? ""}
-                onChange={(value) => setEditing({ ...editing, draft: { ...editing.draft, [field.key]: value } })}
+                onChange={(value) =>
+                  setEditing({ ...editing, draft: { ...editing.draft, [field.key]: value } })
+                }
               />
             ))}
             <div className="flex gap-2">
@@ -179,17 +204,32 @@ export function CrudPage<T extends Row>({
   );
 }
 
-function FieldControl({ field, value, onChange }: { field: Field; value: string; onChange: (value: string) => void }) {
+function FieldControl({
+  field,
+  value,
+  onChange,
+}: {
+  field: Field;
+  value: string;
+  onChange: (value: string) => void;
+}) {
   if (field.kind === "toggle") {
     return (
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" className="h-4 w-4 accent-[var(--primary)]" checked={value === "true"} onChange={(event) => onChange(event.target.checked ? "true" : "false")} />
+        <input
+          type="checkbox"
+          className="h-4 w-4 accent-[var(--primary)]"
+          checked={value === "true"}
+          onChange={(event) => onChange(event.target.checked ? "true" : "false")}
+        />
         {field.label}
       </label>
     );
   }
   if (field.kind === "image") {
-    return <ImageDrop label={field.label} folder={field.folder} value={value} onChange={onChange} />;
+    return (
+      <ImageDrop label={field.label} folder={field.folder} value={value} onChange={onChange} />
+    );
   }
   return (
     <div>

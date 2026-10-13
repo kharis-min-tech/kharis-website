@@ -55,7 +55,10 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   href="#latest-message"
                   className="bg-primary text-white font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press group"
                 >
-                  <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  <span
+                    className="material-symbols-outlined"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
                     play_arrow
                   </span>
                   WATCH NOW
@@ -75,7 +78,10 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
         </section>
 
         {featured ? (
-          <section id="latest-message" className="max-w-7xl mx-auto px-margin-desktop py-16 scroll-mt-24">
+          <section
+            id="latest-message"
+            className="max-w-7xl mx-auto px-margin-desktop py-16 scroll-mt-24"
+          >
             <div className="flex items-center gap-4 mb-8">
               <div className="w-4 h-8 bg-primary" />
               <h2 className="font-headline-md text-headline-md uppercase">Latest Message</h2>
@@ -83,7 +89,11 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
               <div className="lg:col-span-8 bg-surface border-2 border-black neo-shadow-lg overflow-hidden">
                 <div className="aspect-video relative bg-black">
-                  <YoutubeEmbed id={featured.id} title={featured.title} thumbnail={featured.thumbnail} />
+                  <YoutubeEmbed
+                    id={featured.id}
+                    title={featured.title}
+                    thumbnail={featured.thumbnail}
+                  />
                 </div>
               </div>
               <div className="lg:col-span-4 bg-surface-container border-2 border-black neo-shadow p-6 flex flex-col">
@@ -116,7 +126,9 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
 
         <section className="max-w-7xl mx-auto px-margin-desktop py-16">
           {rest.length === 0 ? (
-            <p className="font-body-lg text-on-surface-variant">More messages will appear here as they are published.</p>
+            <p className="font-body-lg text-on-surface-variant">
+              More messages will appear here as they are published.
+            </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
               {rest.map((msg) => (
@@ -167,30 +179,66 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                 <span className="inline-block bg-secondary-container text-on-secondary-container border-2 border-black font-label-sm uppercase px-3 py-1 hard-shadow-sm mb-4">
                   Listen Anywhere
                 </span>
-                <h2 className="font-display-lg text-headline-lg leading-tight uppercase">Other Ways To Listen</h2>
+                <h2 className="font-display-lg text-headline-lg leading-tight uppercase">
+                  Other Ways To Listen
+                </h2>
               </div>
               <p className="font-body-lg text-body-md text-on-surface-variant max-w-md">
-                What it takes to sustain the move of God is a text-driven, gospel-saturated, Christ-exalting message. Catch every message on your favourite platform, or in the Kharis app.
+                What it takes to sustain the move of God is a text-driven, gospel-saturated,
+                Christ-exalting message. Catch every message on your favourite platform, or in the
+                Kharis app.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
               {[
-                { label: "Kharis App", copy: "Messages, notes and giving in one place.", cta: "Get the App", href: "/#app-stores", icon: "smartphone" },
-                { label: "Spotify", copy: "Stream the podcast and follow every series.", cta: "Listen on Spotify", href: "https://open.spotify.com/", icon: "podcasts" },
-                { label: "SoundCloud", copy: "Audio archive of past teachings and sessions.", cta: "Play on SoundCloud", href: "https://soundcloud.com/", icon: "graphic_eq" },
-                { label: "YouTube", copy: "Watch full services, clips and live streams.", cta: "Watch on YouTube", href: "https://youtube.com/@davidantwi", icon: "smart_display" },
-              ].map(({ label, copy, cta, href, icon }) => (
+                {
+                  label: "Kharis App",
+                  copy: "Messages, notes and giving in one place.",
+                  cta: "Get the App",
+                  href: "/#app-stores",
+                  icon: "smartphone",
+                  card: "bg-primary text-on-primary",
+                  muted: "!text-primary-fixed",
+                },
+                {
+                  label: "Spotify",
+                  copy: "Stream the podcast and follow every series.",
+                  cta: "Listen on Spotify",
+                  href: "https://open.spotify.com/",
+                  icon: "podcasts",
+                  card: "bg-[#1DB954] text-white",
+                  muted: "text-white/90",
+                },
+                {
+                  label: "SoundCloud",
+                  copy: "Audio archive of past teachings and sessions.",
+                  cta: "Play on SoundCloud",
+                  href: "https://soundcloud.com/",
+                  icon: "graphic_eq",
+                  card: "bg-[#FF5500] text-white",
+                  muted: "text-white/90",
+                },
+                {
+                  label: "YouTube",
+                  copy: "Watch full services, clips and live streams.",
+                  cta: "Watch on YouTube",
+                  href: "https://youtube.com/@davidantwi",
+                  icon: "smart_display",
+                  card: "bg-[#FF0000] text-white",
+                  muted: "text-white/90",
+                },
+              ].map(({ label, copy, cta, href, icon, card, muted }) => (
                 <a
                   key={label}
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-                  className="group bg-primary text-on-primary border-2 border-black rounded-none neo-shadow hover-press flex flex-col p-6 no-accent-fill"
+                  className={`group ${card} border-2 border-black rounded-none neo-shadow hover-press flex flex-col p-6 no-accent-fill`}
                 >
-                  <span className="material-symbols-outlined text-4xl mb-4 !text-primary-fixed">{icon}</span>
-                  <h3 className="font-headline-md text-title-lg uppercase mb-2 text-on-primary">{label}</h3>
-                  <p className="font-body-lg text-body-md !text-primary-fixed flex-1">{copy}</p>
-                  <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase text-on-primary">
+                  <span className={`material-symbols-outlined text-4xl mb-4 ${muted}`}>{icon}</span>
+                  <h3 className="font-headline-md text-title-lg uppercase mb-2">{label}</h3>
+                  <p className={`font-body-lg text-body-md flex-1 ${muted}`}>{copy}</p>
+                  <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase">
                     {cta}
                     <span className="material-symbols-outlined text-base transition-transform group-hover:translate-x-1">
                       arrow_forward

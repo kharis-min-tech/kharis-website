@@ -62,17 +62,11 @@ export function BranchTemplate({
   const view = presentBranch(currentBranch);
 
   const sundayServices = (currentBranch.services ?? [])
-    .filter(
-      (service) =>
-        service.is_active && service.type?.toLowerCase() === "sunday",
-    )
+    .filter((service) => service.is_active && service.type?.toLowerCase() === "sunday")
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
   const midweekServices = (currentBranch.services ?? [])
-    .filter(
-      (service) =>
-        service.is_active && service.type?.toLowerCase() === "midweek",
-    )
+    .filter((service) => service.is_active && service.type?.toLowerCase() === "midweek")
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
   const galleryImages = view.gallery;
@@ -89,9 +83,7 @@ export function BranchTemplate({
       : "";
 
   const [isPlanVisitOpen, setIsPlanVisitOpen] = useState(false);
-  const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(
-    null,
-  );
+  const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
   const [mediaModal, setMediaModal] = useState<{
@@ -120,11 +112,7 @@ export function BranchTemplate({
         <section className="branch-hero relative w-full min-h-[65vh] flex items-center justify-center pt-10 pb-16 px-5 md:px-8 max-w-[1536px] mx-auto">
           <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10 bg-black">
             {view.hero ? (
-              <img
-                src={view.hero}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover"
-              />
+              <img src={view.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
             ) : null}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
           </div>
@@ -176,9 +164,7 @@ export function BranchTemplate({
                           }`}
                         >
                           <span>{b.name}</span>
-                          <span className="text-[10px] opacity-80">
-                            {b.region}
-                          </span>
+                          <span className="text-[10px] opacity-80">{b.region}</span>
                         </button>
                       ))}
                       <div className="mt-1 border-t border-white/10 pt-1.5">
@@ -239,17 +225,14 @@ export function BranchTemplate({
         </section>
 
         {/* SERVICE TIMES & LOCATION BENTO GRID SECTION */}
-        <section
-          id="services"
-          className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
-        >
+        <section id="services" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
               Join Us This Sunday
             </h2>
             <p className="text-base font-medium text-gray-400 max-w-2xl mx-auto">
-              We can&apos;t wait to host you. Choose a service time that works best
-              for you and your family.
+              We can&apos;t wait to host you. Choose a service time that works best for you and your
+              family.
             </p>
           </div>
 
@@ -262,9 +245,7 @@ export function BranchTemplate({
                       <Clock className="w-6 h-6 stroke-[2.5]" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-white!">
-                        Service Times
-                      </h3>
+                      <h3 className="text-2xl font-bold text-white!">Service Times</h3>
                       <p className="text-xs font-semibold text-gray-400">
                         Sunday & Midweek Gathering
                       </p>
@@ -400,9 +381,7 @@ export function BranchTemplate({
 
                 <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
                   <div className="bg-[#15131f]/95 backdrop-blur-md p-4 rounded-2xl max-w-xs pointer-events-auto shadow-lg border border-white/10 text-white">
-                    <h4 className="font-bold text-sm text-white! mb-1">
-                      {currentBranch.name}
-                    </h4>
+                    <h4 className="font-bold text-sm text-white! mb-1">{currentBranch.name}</h4>
                     <p className="font-medium text-xs text-gray-300 mb-3 leading-snug">
                       {view.address}
                     </p>
@@ -420,22 +399,22 @@ export function BranchTemplate({
                   </div>
 
                   {mapEmbedSrc ? (
-                  <div className="flex flex-col gap-2 pointer-events-auto">
-                    <button
-                      onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
-                      className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
-                      aria-label="Zoom In"
-                    >
-                      <Plus className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => setZoomLevel((z) => Math.max(z - 1, 10))}
-                      className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
-                      aria-label="Zoom Out"
-                    >
-                      <Minus className="w-5 h-5" />
-                    </button>
-                  </div>
+                    <div className="flex flex-col gap-2 pointer-events-auto">
+                      <button
+                        onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
+                        className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
+                        aria-label="Zoom In"
+                      >
+                        <Plus className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => setZoomLevel((z) => Math.max(z - 1, 10))}
+                        className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
+                        aria-label="Zoom Out"
+                      >
+                        <Minus className="w-5 h-5" />
+                      </button>
+                    </div>
                   ) : null}
                 </div>
               </div>
@@ -444,33 +423,30 @@ export function BranchTemplate({
         </section>
 
         {/* WELCOME / LEAD PASTOR SECTION */}
-        <section
-          id="pastor"
-          className="py-16 bg-[#15131f] border-y border-white/10"
-        >
+        <section id="pastor" className="py-16 bg-[#15131f] border-y border-white/10">
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
-            <div className={`grid grid-cols-1 gap-10 lg:gap-14 items-center ${view.portrait ? "md:grid-cols-12" : ""}`}>
+            <div
+              className={`grid grid-cols-1 gap-10 lg:gap-14 items-center ${view.portrait ? "md:grid-cols-12" : ""}`}
+            >
               {view.portrait ? (
-              <div className="md:col-span-5 relative">
-                <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl bg-[#800654] text-white shadow-lg sm:flex">
-                  <Sparkles className="h-6 w-6" />
+                <div className="md:col-span-5 relative">
+                  <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl bg-[#800654] text-white shadow-lg sm:flex">
+                    <Sparkles className="h-6 w-6" />
+                  </div>
+                  <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
+                    <img
+                      src={view.portrait}
+                      alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute -bottom-4 -right-4 rounded-2xl border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
+                    <p className="text-xs font-extrabold uppercase tracking-wider text-[#e8a33d]">
+                      {view.pastorRole}
+                    </p>
+                    <p className="text-sm font-bold text-white">{view.pastorName}</p>
+                  </div>
                 </div>
-                <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
-                  <img
-                    src={view.portrait}
-                    alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="absolute -bottom-4 -right-4 rounded-2xl border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
-                  <p className="text-xs font-extrabold uppercase tracking-wider text-[#e8a33d]">
-                    {view.pastorRole}
-                  </p>
-                  <p className="text-sm font-bold text-white">
-                    {view.pastorName}
-                  </p>
-                </div>
-              </div>
               ) : null}
 
               <div className={`${view.portrait ? "md:col-span-7" : ""} space-y-5`}>
@@ -487,10 +463,7 @@ export function BranchTemplate({
 
                 <div className="space-y-4">
                   {view.welcome.map((para, i) => (
-                    <p
-                      key={i}
-                      className="text-base font-medium leading-relaxed text-gray-300"
-                    >
+                    <p key={i} className="text-base font-medium leading-relaxed text-gray-300">
                       {para}
                     </p>
                   ))}
@@ -505,10 +478,7 @@ export function BranchTemplate({
         </section>
 
         {/* FEATURED MESSAGE / VIDEO SECTION */}
-        <section
-          id="watch"
-          className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
-        >
+        <section id="watch" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
           <div className="mb-10 text-center">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#e8a33d] mb-3">
               <span>Watch</span>
@@ -525,11 +495,11 @@ export function BranchTemplate({
               className="group relative block aspect-video w-full cursor-pointer text-left"
             >
               {view.hero ? (
-              <img
-                src={view.hero}
-                alt={`Kharis ${view.city} worship`}
-                className="absolute inset-0 h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
-              />
+                <img
+                  src={view.hero}
+                  alt={`Kharis ${view.city} worship`}
+                  className="absolute inset-0 h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
+                />
               ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
@@ -575,12 +545,8 @@ export function BranchTemplate({
                 <div className="w-12 h-12 rounded-2xl bg-white/5 text-[#e8a33d] flex items-center justify-center">
                   <Car className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-white!">
-                  Parking Information
-                </h3>
-                <p className="text-sm text-gray-300 font-medium leading-relaxed">
-                  {view.parking}
-                </p>
+                <h3 className="text-xl font-bold text-white!">Parking Information</h3>
+                <p className="text-sm text-gray-300 font-medium leading-relaxed">{view.parking}</p>
               </div>
 
               <div className="bg-black/40 p-6 sm:p-8 rounded-3xl border border-white/10 shadow-sm space-y-3">
@@ -588,9 +554,7 @@ export function BranchTemplate({
                   <Train className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold text-white!">Public Transit</h3>
-                <p className="text-sm text-gray-300 font-medium leading-relaxed">
-                  {view.transit}
-                </p>
+                <p className="text-sm text-gray-300 font-medium leading-relaxed">{view.transit}</p>
               </div>
             </div>
           </div>

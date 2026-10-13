@@ -1,0 +1,21 @@
+# Dependencies & build output
+node_modules
+**/.next
+**/.open-next
+**/.wrangler
+**/out
+**/build
+
+# Lockfiles & generated types (do not reformat)
+package-lock.json
+**/next-env.d.ts
+**/cloudflare-env.d.ts
+
+# Static assets
+apps/*/public
+
+# Generated map data (huge, minified; keep as-is, do not reformat)
+apps/main/src/data/*.json
+
+# Session scratch (local only; never source)
+.remember/

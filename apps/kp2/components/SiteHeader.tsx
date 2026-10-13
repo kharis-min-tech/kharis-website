@@ -68,7 +68,7 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest border-b-2 border-on-background shadow-[0_4px_0_0_var(--primary)]">
+    <header className="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest border-b-2 border-on-background before:pointer-events-none before:absolute before:inset-x-0 before:top-full before:-mt-px before:h-[5px] before:bg-primary before:content-['']">
       <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4 h-[72px]">
           {/* Logo */}
@@ -110,24 +110,24 @@ export function SiteHeader() {
                         : "opacity-0 -translate-y-2 scale-[0.98] pointer-events-none"
                     }`}
                   >
-                      <div className="w-64 bg-surface-container-lowest brutalist-border brutalist-shadow p-2">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.to}
-                            href={child.to}
-                            onClick={() => setOpenMenu(null)}
-                            className="block px-4 py-3 transition-colors duration-150 group/item"
-                          >
-                            <span className="relative inline-block font-body-md text-[13px] font-bold uppercase tracking-wide after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-primary after:transition-all after:duration-200 group-hover/item:after:w-full">
-                              {child.label}
-                            </span>
-                            <span className="block font-body-md text-[12px] text-on-surface-variant">
-                              {child.blurb}
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-                     </div>
+                    <div className="w-64 bg-surface-container-lowest brutalist-border brutalist-shadow p-2">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.to}
+                          href={child.to}
+                          onClick={() => setOpenMenu(null)}
+                          className="block px-4 py-3 transition-colors duration-150 group/item"
+                        >
+                          <span className="relative inline-block font-body-md text-[13px] font-bold uppercase tracking-wide after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-primary after:transition-all after:duration-200 group-hover/item:after:w-full">
+                            {child.label}
+                          </span>
+                          <span className="block font-body-md text-[12px] text-on-surface-variant">
+                            {child.blurb}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <Link
@@ -145,7 +145,7 @@ export function SiteHeader() {
           <div className="hidden xl:block shrink-0">
             <Link
               href="/branches"
-              className="group inline-flex items-center gap-2 justify-center bg-primary !text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-6 py-3 brutalist-border brutalist-shadow transition-all duration-200 hover:bg-primary-container hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:translate-x-1 active:translate-y-1"
+              className="header-branch-cta group inline-flex items-center gap-2 justify-center bg-primary !text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-6 py-3 brutalist-border brutalist-shadow transition-all duration-200 hover:bg-primary-container"
             >
               <span className="material-symbols-outlined text-[18px] leading-none transition-transform duration-200 group-hover:scale-110">
                 location_on
@@ -174,48 +174,50 @@ export function SiteHeader() {
         }`}
       >
         <div className="min-h-0 overflow-hidden">
-        <div className={`border-t-2 border-on-background bg-surface-container-lowest px-4 md:px-6 py-6 flex flex-col gap-1 max-h-[calc(100svh-74px)] overflow-y-auto transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "translate-y-0" : "-translate-y-3"}`}>
-          {NAV_ITEMS.flatMap((item) =>
-            item.children
-              ? [
-                  <Link
-                    key={item.label}
-                    href={item.to}
-                    onClick={() => setOpen(false)}
-                    className="font-body-md text-[11px] font-bold uppercase tracking-[0.2em] text-on-surface-variant pt-4 pb-1 transition-colors duration-150 hover:text-primary"
-                  >
-                    {item.label}
-                  </Link>,
-                  ...item.children.map((child) => (
+          <div
+            className={`border-t-2 border-on-background bg-surface-container-lowest px-4 md:px-6 py-6 flex flex-col gap-1 max-h-[calc(100svh-74px)] overflow-y-auto transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "translate-y-0" : "-translate-y-3"}`}
+          >
+            {NAV_ITEMS.flatMap((item) =>
+              item.children
+                ? [
                     <Link
-                      key={child.to}
-                      href={child.to}
+                      key={item.label}
+                      href={item.to}
+                      onClick={() => setOpen(false)}
+                      className="font-body-md text-[11px] font-bold uppercase tracking-[0.2em] text-on-surface-variant pt-4 pb-1 transition-colors duration-150 hover:text-primary"
+                    >
+                      {item.label}
+                    </Link>,
+                    ...item.children.map((child) => (
+                      <Link
+                        key={child.to}
+                        href={child.to}
+                        onClick={() => setOpen(false)}
+                        className="py-3 px-3 font-body-md text-sm font-bold uppercase tracking-wide text-on-background transition-colors duration-150 relative after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
+                      >
+                        {child.label}
+                      </Link>
+                    )),
+                  ]
+                : [
+                    <Link
+                      key={item.to}
+                      href={item.to}
                       onClick={() => setOpen(false)}
                       className="py-3 px-3 font-body-md text-sm font-bold uppercase tracking-wide text-on-background transition-colors duration-150 relative after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
                     >
-                      {child.label}
-                    </Link>
-                  )),
-                ]
-              : [
-                  <Link
-                    key={item.to}
-                    href={item.to}
-                    onClick={() => setOpen(false)}
-                    className="py-3 px-3 font-body-md text-sm font-bold uppercase tracking-wide text-on-background transition-colors duration-150 relative after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-                  >
-                    {item.label}
-                  </Link>,
-                ],
-          )}
-          <Link
-            href="/branches"
-            onClick={() => setOpen(false)}
-            className="mt-4 bg-primary !text-on-primary font-body-md text-sm font-bold uppercase tracking-wide px-6 py-4 brutalist-border brutalist-shadow text-center transition-colors duration-200 hover:bg-primary-container"
-          >
-            Find a Branch
-          </Link>
-        </div>
+                      {item.label}
+                    </Link>,
+                  ],
+            )}
+            <Link
+              href="/branches"
+              onClick={() => setOpen(false)}
+              className="header-branch-cta mt-4 bg-primary !text-on-primary font-body-md text-sm font-bold uppercase tracking-wide px-6 py-4 brutalist-border brutalist-shadow text-center transition-colors duration-200 hover:bg-primary-container"
+            >
+              Find a Branch
+            </Link>
+          </div>
         </div>
       </div>
     </header>

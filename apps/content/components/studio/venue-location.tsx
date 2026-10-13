@@ -36,7 +36,11 @@ export function VenueLocation({
 
   const latitude = Number(venue.latitude);
   const longitude = Number(venue.longitude);
-  const hasPin = Number.isFinite(latitude) && Number.isFinite(longitude) && venue.latitude !== "" && venue.longitude !== "";
+  const hasPin =
+    Number.isFinite(latitude) &&
+    Number.isFinite(longitude) &&
+    venue.latitude !== "" &&
+    venue.longitude !== "";
 
   async function run(params: Record<string, string>) {
     setPending(true);
@@ -57,8 +61,12 @@ export function VenueLocation({
     let next = result;
     if (!result.postcode) {
       try {
-        const [reversed] = await lookup({ lat: String(result.latitude), lng: String(result.longitude) });
-        if (reversed) next = { ...result, postcode: reversed.postcode, city: result.city ?? reversed.city };
+        const [reversed] = await lookup({
+          lat: String(result.latitude),
+          lng: String(result.longitude),
+        });
+        if (reversed)
+          next = { ...result, postcode: reversed.postcode, city: result.city ?? reversed.city };
       } catch {
         // The pin is still useful if the postcode lookup fails.
       }
@@ -91,13 +99,21 @@ export function VenueLocation({
             }
           }}
         />
-        <Button variant="outline" disabled={pending || !query.trim()} onClick={() => void run({ q: query.trim() })}>
+        <Button
+          variant="outline"
+          disabled={pending || !query.trim()}
+          onClick={() => void run({ q: query.trim() })}
+        >
           {pending ? "Searching…" : "Search"}
         </Button>
         <Button
           variant="outline"
           disabled={pending || !venue.address.trim()}
-          onClick={() => void run({ address: [venue.address, venue.postcode, venue.city].filter(Boolean).join(", ") })}
+          onClick={() =>
+            void run({
+              address: [venue.address, venue.postcode, venue.city].filter(Boolean).join(", "),
+            })
+          }
         >
           Look up address
         </Button>

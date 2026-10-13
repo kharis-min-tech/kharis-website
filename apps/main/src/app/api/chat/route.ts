@@ -23,11 +23,7 @@ export type ChatMessageCard = {
 const MAX_MESSAGES = 16;
 const MAX_CONTENT = 2000;
 /** Prefer current Flash; fall back if a model is overloaded or missing. */
-const GEMINI_MODELS = [
-  "gemini-3.6-flash",
-  "gemini-flash-latest",
-  "gemini-3.5-flash",
-] as const;
+const GEMINI_MODELS = ["gemini-3.6-flash", "gemini-flash-latest", "gemini-3.5-flash"] as const;
 const MAX_RETRIES = 2;
 const RETRY_BASE_MS = 450;
 
@@ -46,11 +42,7 @@ function sanitizeMessages(input: unknown): ChatMessage[] {
     if (!raw || typeof raw !== "object") continue;
     const role = (raw as { role?: string }).role;
     const content = String((raw as { content?: unknown }).content ?? "").trim();
-    if (
-      (role === "user" || role === "assistant") &&
-      content &&
-      content.length <= MAX_CONTENT
-    ) {
+    if ((role === "user" || role === "assistant") && content && content.length <= MAX_CONTENT) {
       out.push({ role, content });
     }
     if (out.length >= MAX_MESSAGES) break;
@@ -91,10 +83,7 @@ function extractYoutubeIds(text: string): string[] {
   return ids;
 }
 
-function cardsFromReply(
-  reply: string,
-  catalog: MessageVideo[],
-): ChatMessageCard[] {
+function cardsFromReply(reply: string, catalog: MessageVideo[]): ChatMessageCard[] {
   const byId = new Map(catalog.map((m) => [m.id, m]));
 
   // Primary: [[MESSAGE:video_id]] markers, only for ids in the catalog.
@@ -119,8 +108,7 @@ function cardsFromReply(
       id,
       title: hit?.title || "Pastor David message",
       url: `https://www.youtube.com/watch?v=${id}`,
-      thumbnail:
-        hit?.thumbnail || `https://i.ytimg.com/vi/${id}/mqdefault.jpg`,
+      thumbnail: hit?.thumbnail || `https://i.ytimg.com/vi/${id}/mqdefault.jpg`,
     });
   }
   return cards;
@@ -202,8 +190,7 @@ async function callGemini(opts: {
     data.candidates?.[0]?.content?.parts
       ?.map((p) => p.text || "")
       .join("")
-      .trim() ||
-    "I am here with you. Could you ask that another way?";
+      .trim() || "I am here with you. Could you ask that another way?";
 
   return { ok: true, reply };
 }
@@ -284,8 +271,7 @@ async function streamGemini(opts: {
   }
 
   if (!res.ok) {
-    let data: { error?: { message?: string; status?: string; code?: number } } =
-      {};
+    let data: { error?: { message?: string; status?: string; code?: number } } = {};
     try {
       data = (await res.json()) as typeof data;
     } catch {
@@ -350,10 +336,7 @@ async function streamGemini(opts: {
           };
         }
 
-        const piece =
-          json.candidates?.[0]?.content?.parts
-            ?.map((p) => p.text || "")
-            .join("") || "";
+        const piece = json.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("") || "";
         if (piece) {
           reply += piece;
           opts.onChunk(piece);
@@ -411,9 +394,7 @@ export async function POST(request: Request) {
     return jsonError("Invalid request.", 400);
   }
 
-  const messages = sanitizeMessages(
-    (body as { messages?: unknown })?.messages,
-  );
+  const messages = sanitizeMessages((body as { messages?: unknown })?.messages);
   if (!messages.length || messages[messages.length - 1]?.role !== "user") {
     return jsonError("Please send a message.", 400);
   }
@@ -435,10 +416,7 @@ export async function POST(request: Request) {
     ]);
   } catch (err) {
     console.error("[api/chat] context", err);
-    return jsonError(
-      "Something went wrong. Please try again in a moment.",
-      502,
-    );
+    return jsonError("Something went wrong. Please try again in a moment.", 502);
   }
 
   const systemText = buildGraceSystemPrompt(siteContext);
@@ -511,10 +489,7 @@ export async function POST(request: Request) {
         systemText,
         contents,
         // Skip primary only when it is permanently unavailable (e.g. 404).
-        skipModels:
-          streamResult && !streamResult.retryable
-            ? new Set([primary])
-            : undefined,
+        skipModels: streamResult && !streamResult.retryable ? new Set([primary]) : undefined,
       });
 
       if (!fallback.ok) {

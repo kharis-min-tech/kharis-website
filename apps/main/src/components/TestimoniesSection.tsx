@@ -25,9 +25,7 @@ const photos = [
   },
 ];
 
-export function TestimoniesSection({
-  testimonies,
-}: TestimoniesSectionProps) {
+export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
   const [formOpen, setFormOpen] = useState(false);
 
@@ -35,11 +33,7 @@ export function TestimoniesSection({
   const closeForm = useCallback(() => {
     setFormOpen(false);
     if (window.location.hash === "#share-testimony") {
-      window.history.replaceState(
-        {},
-        "",
-        window.location.pathname + window.location.search,
-      );
+      window.history.replaceState({}, "", window.location.pathname + window.location.search);
     }
   }, []);
 
@@ -74,10 +68,7 @@ export function TestimoniesSection({
   };
 
   return (
-    <section
-      id="testimonies"
-      className="testimony-band px-5 py-8 md:px-8 md:py-10"
-    >
+    <section id="testimonies" className="testimony-band px-5 py-8 md:px-8 md:py-10">
       <div className="mx-auto max-w-7xl">
         <Reveal variant="blur" className="mb-5 max-w-2xl md:mb-6">
           <p className="eyebrow">Stories</p>
@@ -87,10 +78,7 @@ export function TestimoniesSection({
           </p>
         </Reveal>
 
-        <RevealStagger
-          className="grid gap-4 md:grid-cols-3 md:gap-5"
-          stagger={0.12}
-        >
+        <RevealStagger className="grid gap-4 md:grid-cols-3 md:gap-5" stagger={0.12}>
           {photos.map((photo) => (
             <RevealItem key={photo.src} variant="scale" distance={40}>
               <figure className="group relative aspect-[3/4] overflow-hidden rounded-[1.75rem] bg-bg-purple shadow-[var(--shadow-lift)]">
@@ -126,11 +114,7 @@ export function TestimoniesSection({
                 >
                   <span className="testimony-card__wall" aria-hidden />
                   <div className="testimony-card__ornament" aria-hidden>
-                    <svg
-                      className="testimony-card__marks"
-                      viewBox="0 0 72 48"
-                      fill="none"
-                    >
+                    <svg className="testimony-card__marks" viewBox="0 0 72 48" fill="none">
                       <path
                         d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
                         fill="currentColor"

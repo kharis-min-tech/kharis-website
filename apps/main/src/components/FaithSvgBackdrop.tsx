@@ -119,31 +119,36 @@ export function FaithSvgBackdrop() {
         {/* Soft cross mark */}
         <g className="faith-svg__cross">
           <g transform="translate(120 560)">
-            <rect
-              x="22"
-              y="0"
-              width="12"
-              height="70"
-              rx="3"
-              fill="#800654"
-              fillOpacity="0.14"
-            />
-            <rect
-              x="0"
-              y="18"
-              width="56"
-              height="12"
-              rx="3"
-              fill="#800654"
-              fillOpacity="0.14"
-            />
+            <rect x="22" y="0" width="12" height="70" rx="3" fill="#800654" fillOpacity="0.14" />
+            <rect x="0" y="18" width="56" height="12" rx="3" fill="#800654" fillOpacity="0.14" />
           </g>
         </g>
 
         {/* Floating dots */}
-        <circle className="faith-svg__dot faith-svg__dot--1" cx="340" cy="120" r="5" fill="#d4920a" fillOpacity="0.45" />
-        <circle className="faith-svg__dot faith-svg__dot--2" cx="760" cy="700" r="4" fill="#800654" fillOpacity="0.3" />
-        <circle className="faith-svg__dot faith-svg__dot--3" cx="520" cy="80" r="3.5" fill="#c4a0ff" fillOpacity="0.5" />
+        <circle
+          className="faith-svg__dot faith-svg__dot--1"
+          cx="340"
+          cy="120"
+          r="5"
+          fill="#d4920a"
+          fillOpacity="0.45"
+        />
+        <circle
+          className="faith-svg__dot faith-svg__dot--2"
+          cx="760"
+          cy="700"
+          r="4"
+          fill="#800654"
+          fillOpacity="0.3"
+        />
+        <circle
+          className="faith-svg__dot faith-svg__dot--3"
+          cx="520"
+          cy="80"
+          r="3.5"
+          fill="#c4a0ff"
+          fillOpacity="0.5"
+        />
       </svg>
     </div>
   );

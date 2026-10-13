@@ -2,39 +2,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
-import {
-  hasCoords,
-  mapsEmbedUrl,
-  mapsQuery,
-  midweekSummary,
-  sundaySummary,
-  type Branch,
-} from "@/lib/branches";
-import {
-  mapsDirectionsUrl,
-  weeklyServiceToCalendarItem,
-} from "@/lib/calendar";
-import { PlanVisitButton } from "@/components/PlanVisitButton";
-
-function branchVisitItem(branch: Branch) {
-  const service = branch.serviceTimes[0];
-  if (!service) return null;
-  const location = [branch.address, branch.postcode].filter(Boolean).join(", ");
-  return {
-    item: weeklyServiceToCalendarItem({
-      uid: `branch-${branch.slug}-${service.day}`,
-      title: `${service.label} · ${branch.name}`,
-      description: `Join us at ${branch.name}. ${branch.blurb}`,
-      location,
-      day: service.day,
-      time: service.time,
-    }),
-    directions:
-      location && !location.toLowerCase().includes("coming soon")
-        ? mapsDirectionsUrl(location)
-        : undefined,
-  };
-}
+import { hasCoords, midweekSummary, sundaySummary, type Branch } from "@/lib/branches";
 
 function searchText(branch: Branch) {
   return [branch.name, branch.city, branch.region, branch.address, branch.postcode, ...branch.tags]
@@ -42,16 +10,8 @@ function searchText(branch: Branch) {
     .toLowerCase();
 }
 
-function directionsHref(branch: Branch) {
-  const dest = mapsQuery(branch);
-  if (!dest || dest.toLowerCase().includes("coming soon")) return "";
-  return mapsDirectionsUrl(dest);
-}
-
 function BranchesPage({ branches }: { branches: Branch[] }) {
   const regions = ["All", ...Array.from(new Set(branches.map((b) => b.region).filter(Boolean)))];
-  const featured = branches[0];
-  const featuredDirections = featured ? directionsHref(featured) : "";
 
   return (
     <div className="bg-background text-on-surface font-body-md overflow-x-hidden" data-branches>
@@ -66,13 +26,11 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
               Locations
             </div>
             <h1 className="font-display-lg text-headline-lg md:text-display-lg uppercase leading-none">
-              Find a{" "}
-              <span className="text-primary">Kharis Phase 2</span>{" "}
-              branch near you
+              Find a <span className="text-primary">Kharis Phase 2</span> branch near you
             </h1>
             <p className="mx-auto max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
-              {branches.length} {branches.length === 1 ? "branch" : "branches"} across the UK,
-              each with a family waiting to welcome you.
+              {branches.length} {branches.length === 1 ? "branch" : "branches"} across the UK, each
+              with a family waiting to welcome you.
             </p>
 
             <div className="mx-auto max-w-2xl space-y-4 pt-4">
@@ -124,8 +82,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                 role="status"
                 aria-live="polite"
               >
-                Sorted by distance from you.{" "}
-                <span data-closest-line />{" "}
+                Sorted by distance from you. <span data-closest-line />{" "}
                 <button type="button" data-ui="reset-location" className="text-primary">
                   Reset
                 </button>
@@ -153,84 +110,16 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
           </div>
         </section>
 
-        {featured ? (
-          <section
-            id="nearest-branch"
-            data-branch-featured
-            className="mx-auto w-full max-w-[1536px] px-margin-mobile md:px-margin-desktop pb-12 scroll-mt-24"
-          >
-            <div className="brutalist-border brutalist-shadow bg-surface-container-lowest overflow-hidden">
-              <div className="flex items-center justify-between gap-4 border-b-2 border-on-background px-5 py-3">
-                <p
-                  data-branch-featured-city
-                  className="font-body-md text-[13px] font-bold uppercase tracking-wide"
-                >
-                  {featured.city}
-                </p>
-                <a
-                  data-branch-featured-directions
-                  href={featuredDirections || undefined}
-                  hidden={!featuredDirections}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-body-md text-[12px] font-bold uppercase tracking-wide text-primary flex items-center gap-1"
-                >
-                  Get directions
-                  <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                </a>
-              </div>
-              <iframe
-                data-branch-featured-map
-                title={`Map of ${featured.name}`}
-                src={mapsEmbedUrl(featured)}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-[280px] sm:h-[380px] block"
-              />
-              <div className="border-t-2 border-on-background px-5 py-4 flex flex-wrap items-center justify-between gap-3">
-                <p data-branch-featured-address className="font-body-md text-body-md">
-                  {featured.address}
-                  {featured.postcode ? `, ${featured.postcode}` : ""}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {branches.map((branch) => {
-                    const visit = branchVisitItem(branch);
-                    if (!visit?.item) return null;
-                    return (
-                      <div
-                        key={branch.slug}
-                        data-featured-plan={branch.slug}
-                        hidden={branch.slug !== featured.slug}
-                      >
-                        <PlanVisitButton
-                          item={visit.item}
-                          directionsUrl={visit.directions}
-                          className="bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border brutalist-shadow"
-                        >
-                          Plan visit
-                        </PlanVisitButton>
-                      </div>
-                    );
-                  })}
-                  <a
-                    data-branch-featured-link
-                    href={`/branches/${featured.slug}`}
-                    className="bg-secondary text-on-secondary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border brutalist-shadow"
-                  >
-                    View branch
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-        ) : null}
-
         <section className="mx-auto w-full max-w-[1536px] px-margin-mobile md:px-margin-desktop pb-20">
           <h2 className="mb-8 border-b-4 border-on-background pb-6 font-display-lg text-[28px] uppercase">
             Our branches (<span data-branch-count>{branches.length}</span>)
           </h2>
 
-          <div data-branch-empty hidden className="brutalist-border bg-surface-container-lowest p-12 text-center">
+          <div
+            data-branch-empty
+            hidden
+            className="brutalist-border bg-surface-container-lowest p-12 text-center"
+          >
             <h3 className="font-display-lg text-[24px] uppercase mb-2">
               No branches matched your search
             </h3>
@@ -249,9 +138,6 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
             {branches.map((branch, index) => {
               const midweek = midweekSummary(branch);
               const coords = hasCoords(branch);
-              const mapSrc = mapsEmbedUrl(branch);
-              const directions = directionsHref(branch);
-              const addressLine = [branch.address, branch.postcode].filter(Boolean).join(", ");
               return (
                 <article
                   key={branch.slug}
@@ -261,16 +147,10 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                   data-lng={coords ? String(branch.lng) : ""}
                   data-region={branch.region}
                   data-search={searchText(branch)}
-                  data-map-src={mapSrc}
                   data-name={branch.name}
                   data-city={branch.city}
-                  data-address={addressLine}
-                  data-directions={directions}
-                  data-href={`/branches/${branch.slug}`}
                   data-index={String(index)}
-                  className={`group flex flex-col justify-between overflow-hidden brutalist-border brutalist-shadow bg-surface-container-lowest transition-colors ${
-                    branch.slug === featured?.slug ? "ring-4 ring-primary" : ""
-                  }`}
+                  className="group flex flex-col justify-between overflow-hidden brutalist-border brutalist-shadow bg-surface-container-lowest transition-colors"
                 >
                   <button
                     type="button"
@@ -335,7 +215,9 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                           <span className="material-symbols-outlined shrink-0 text-[18px] text-primary">
                             event
                           </span>
-                          <span className="min-w-0 font-body-md text-[12px] font-bold">{midweek}</span>
+                          <span className="min-w-0 font-body-md text-[12px] font-bold">
+                            {midweek}
+                          </span>
                         </div>
                       ) : null}
                     </div>

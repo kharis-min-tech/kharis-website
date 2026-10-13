@@ -21,25 +21,16 @@ export function UnsureBranchCta() {
 
           <div className="unsure-panel__content">
             <p className="unsure-panel__eyebrow">Still deciding?</p>
-            <h2 className="unsure-panel__title">
-              Can&apos;t decide which branch to come to?
-            </h2>
+            <h2 className="unsure-panel__title">Can&apos;t decide which branch to come to?</h2>
             <p className="unsure-panel__copy">
-              You don&apos;t have to figure it out alone. Reach out and we&apos;ll
-              help you find a Kharis family near you, or guide you to your first
-              Sunday.
+              You don&apos;t have to figure it out alone. Reach out and we&apos;ll help you find a
+              Kharis family near you, or guide you to your first Sunday.
             </p>
             <div className="unsure-panel__actions">
-              <Link
-                href="/contact"
-                className="unsure-panel__btn unsure-panel__btn--solid"
-              >
+              <Link href="/contact" className="unsure-panel__btn unsure-panel__btn--solid">
                 Contact Us
               </Link>
-              <Link
-                href="/locations"
-                className="unsure-panel__btn unsure-panel__btn--ghost"
-              >
+              <Link href="/locations" className="unsure-panel__btn unsure-panel__btn--ghost">
                 Find a Branch
               </Link>
             </div>

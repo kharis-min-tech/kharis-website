@@ -21,11 +21,7 @@ import {
   weeklyServiceToCalendarItem,
 } from "@/lib/calendar";
 import type { ChurchEvent } from "@/lib/events";
-import {
-  displayMessageTitle,
-  formatMessageDate,
-  type MessageVideo,
-} from "@/lib/youtube";
+import { displayMessageTitle, formatMessageDate, type MessageVideo } from "@/lib/youtube";
 
 const GALLERY_FALLBACKS = [
   "/kp2/assets/worship.jpg",
@@ -252,9 +248,7 @@ function BranchPage({
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") setGalleryIndex(null);
       if (event.key === "ArrowRight") {
-        setGalleryIndex((current) =>
-          current === null ? 0 : (current + 1) % gallery.length,
-        );
+        setGalleryIndex((current) => (current === null ? 0 : (current + 1) % gallery.length));
       }
       if (event.key === "ArrowLeft") {
         setGalleryIndex((current) =>
@@ -285,9 +279,7 @@ function BranchPage({
     const message = String(data.get("message") || contactMessage).trim();
     const subject = encodeURIComponent(`Message for ${branch.name}`);
     const phoneLine = phone ? `\nPhone: ${phone}` : "";
-    const body = encodeURIComponent(
-      `From: ${name}\nEmail: ${email}${phoneLine}\n\n${message}`,
-    );
+    const body = encodeURIComponent(`From: ${name}\nEmail: ${email}${phoneLine}\n\n${message}`);
     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
   }
 
@@ -374,8 +366,7 @@ function BranchPage({
             </div>
 
             <h1 className="mb-5 font-display-lg text-[1.85rem] uppercase leading-[1.05] sm:mb-6 sm:text-5xl md:text-6xl">
-              Welcome to{" "}
-              <span className="block text-secondary-container">{branch.name}</span>
+              Welcome to <span className="block text-secondary-container">{branch.name}</span>
             </h1>
 
             <p className="mb-8 max-w-2xl px-1 font-body-lg text-[0.95rem] leading-relaxed text-white/85 sm:mb-10 sm:text-lg">
@@ -460,14 +451,17 @@ function BranchPage({
         ) : null}
 
         {/* Join us this Sunday */}
-        <section id="services" className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto">
+        <section
+          id="services"
+          className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto"
+        >
           <div className="text-center mb-12">
             <h2 className="font-display-lg text-headline-lg uppercase leading-none mb-4">
               Join us this Sunday
             </h2>
             <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
-              We can&apos;t wait to host you. Choose a service time that works best
-              for you and your family.
+              We can&apos;t wait to host you. Choose a service time that works best for you and your
+              family.
             </p>
           </div>
 
@@ -662,7 +656,10 @@ function BranchPage({
         </section>
 
         {/* Watch */}
-        <section id="watch" className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto">
+        <section
+          id="watch"
+          className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto"
+        >
           <div className="mb-10 text-center">
             <div className="inline-flex items-center gap-1.5 border-2 border-on-background/20 bg-secondary-container text-on-secondary-container px-3.5 py-1 font-body-md text-[12px] font-bold uppercase mb-3">
               Watch
@@ -771,9 +768,7 @@ function BranchPage({
                 <h3 className="font-display-lg text-[22px] uppercase leading-tight">
                   {event.title}
                 </h3>
-                <p className="font-body-md text-[13px] text-on-surface-variant">
-                  {event.location}
-                </p>
+                <p className="font-body-md text-[13px] text-on-surface-variant">{event.location}</p>
                 <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2">
                   {event.blurb}
                 </p>
@@ -814,8 +809,8 @@ function BranchPage({
                 Contact this branch
               </h2>
               <p className="font-body-md text-body-md text-on-surface-variant mb-6 max-w-md">
-                Questions about {branch.city}, parking, or your first Sunday? Send a note
-                and the team will get back to you.
+                Questions about {branch.city}, parking, or your first Sunday? Send a note and the
+                team will get back to you.
               </p>
               <ul className="border-2 border-on-background bg-surface-container-lowest brutalist-shadow divide-y-2 divide-on-background/15">
                 {usablePhone(branch.phone) ? (
@@ -831,7 +826,9 @@ function BranchPage({
                         <span className="block font-body-md text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
                           Phone
                         </span>
-                        <span className="block font-body-md text-[16px]">{usablePhone(branch.phone)}</span>
+                        <span className="block font-body-md text-[16px]">
+                          {usablePhone(branch.phone)}
+                        </span>
                       </span>
                     </a>
                   </li>
@@ -849,7 +846,9 @@ function BranchPage({
                         <span className="block font-body-md text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
                           Email
                         </span>
-                        <span className="block truncate font-body-md text-[16px]">{branch.email}</span>
+                        <span className="block truncate font-body-md text-[16px]">
+                          {branch.email}
+                        </span>
                       </span>
                     </a>
                   </li>
@@ -1001,7 +1000,9 @@ function BranchPage({
                     </span>
                   </div>
                   <div className="p-5">
-                    <p className="font-display-lg text-[24px] uppercase leading-tight">{item.city}</p>
+                    <p className="font-display-lg text-[24px] uppercase leading-tight">
+                      {item.city}
+                    </p>
                     <p className="font-body-md text-[13px] text-on-surface-variant mb-3">
                       {item.address}
                     </p>

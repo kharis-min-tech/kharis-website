@@ -5,11 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import {
-  CATEGORY_ICON,
-  EVENT_CATEGORIES,
-  type ChurchEvent,
-} from "@/lib/events";
+import { CATEGORY_ICON, EVENT_CATEGORIES, type ChurchEvent } from "@/lib/events";
 import { eventToCalendarItem, mapsSearchUrl } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
@@ -139,10 +135,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
   const [query, setQuery] = useState("");
 
   const sorted = useMemo(
-    () =>
-      [...events].sort(
-        (a, b) => new Date(a.starts).getTime() - new Date(b.starts).getTime(),
-      ),
+    () => [...events].sort((a, b) => new Date(a.starts).getTime() - new Date(b.starts).getTime()),
     [events],
   );
 
@@ -155,14 +148,10 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return sorted.filter((e) => {
-      const matchesCategory =
-        activeCategory === "All" || e.category === activeCategory;
+      const matchesCategory = activeCategory === "All" || e.category === activeCategory;
       const matchesQuery =
         !q ||
-        [e.title, e.blurb, e.location, e.category, e.dayLabel]
-          .join(" ")
-          .toLowerCase()
-          .includes(q);
+        [e.title, e.blurb, e.location, e.category, e.dayLabel].join(" ").toLowerCase().includes(q);
       return matchesCategory && matchesQuery;
     });
   }, [sorted, activeCategory, query]);
@@ -171,7 +160,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
 
-      <main className="mt-20">
+      <main className="pt-[74px]">
         {/* HERO */}
         <section className="relative bg-on-background text-surface py-stack-lg min-h-[60vh] flex flex-col justify-center overflow-hidden border-b-4 border-primary">
           <img
@@ -187,9 +176,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-surface mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
                 Experience the Culture
               </span>
-              <h1 className="font-display-lg text-display-lg mb-4 text-surface-bright">
-                EVENTS
-              </h1>
+              <h1 className="font-display-lg text-display-lg mb-4 text-surface-bright">EVENTS</h1>
               <p className="font-headline-md text-headline-md text-primary-fixed-dim uppercase italic max-w-2xl mb-stack-md">
                 Don&apos;t miss a moment of the movement.
               </p>
@@ -199,54 +186,54 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
 
         {/* NEXT UP + COUNTDOWN */}
         {featured ? (
-        <section className="bg-surface-container-low h-screen pt-stack-lg pb-stack-lg border-b-4   border-on-background overflow-hidden">
-          <div className="container mx-auto px-margin-mobile md:px-margin-desktop h-full">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch h-full">
-              <div className="lg:col-span-7 relative border-2 border-on-background neo-shadow-lg overflow-hidden group">
-                <img
-                  src={featured.image || WORSHIP}
-                  alt={`${featured.title} at Kharis Phase 2`}
-                  className="w-full h-full min-h-[320px] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <span className="absolute top-4 left-4 bg-primary text-on-primary font-label-md px-4 py-2 border-2 border-on-background uppercase neo-shadow">
-                  Next Up
-                </span>
-              </div>
-
-              <div className="lg:col-span-5 flex flex-col gap-stack-md justify-center bg-surface border-2 border-on-background neo-shadow-lg p-stack-md overflow-y-auto">
-                <div>
-                  <span className="font-label-sm uppercase tracking-widest text-outline">
-                    {featured.dayLabel} · {featured.timeLabel}
+          <section className="bg-surface-container-low h-screen pt-stack-lg pb-stack-lg border-b-4   border-on-background overflow-hidden">
+            <div className="container mx-auto px-margin-mobile md:px-margin-desktop h-full">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch h-full">
+                <div className="lg:col-span-7 relative border-2 border-on-background neo-shadow-lg overflow-hidden group">
+                  <img
+                    src={featured.image || WORSHIP}
+                    alt={`${featured.title} at Kharis Phase 2`}
+                    className="w-full h-full min-h-[320px] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span className="absolute top-4 left-4 bg-primary text-on-primary font-label-md px-4 py-2 border-2 border-on-background uppercase neo-shadow">
+                    Next Up
                   </span>
-                  <h2 className="font-headline-lg text-headline-lg uppercase leading-tight text-on-background mt-2">
-                    {featured.title}
-                  </h2>
                 </div>
-                <p className="font-body-lg text-body-lg text-on-surface-variant">
-                  {featured.blurb}
-                </p>
-                <CountdownBlock target={featured.starts} />
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <PlanVisitButton
-                    item={eventToCalendarItem(featured)}
-                    directionsUrl={mapsSearchUrl(featured.location)}
-                    className="flex-1 bg-primary-container text-on-primary-container font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
-                  >
-                    {featured.cta}
-                  </PlanVisitButton>
-                  <Link
-                    href="/messages"
-                    className="flex-1 bg-surface text-on-background font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
-                  >
-                    Watch Online
-                  </Link>
+
+                <div className="lg:col-span-5 flex flex-col gap-stack-md justify-center bg-surface border-2 border-on-background neo-shadow-lg p-stack-md overflow-y-auto">
+                  <div>
+                    <span className="font-label-sm uppercase tracking-widest text-outline">
+                      {featured.dayLabel} · {featured.timeLabel}
+                    </span>
+                    <h2 className="font-headline-lg text-headline-lg uppercase leading-tight text-on-background mt-2">
+                      {featured.title}
+                    </h2>
+                  </div>
+                  <p className="font-body-lg text-body-lg text-on-surface-variant">
+                    {featured.blurb}
+                  </p>
+                  <CountdownBlock target={featured.starts} />
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <PlanVisitButton
+                      item={eventToCalendarItem(featured)}
+                      directionsUrl={mapsSearchUrl(featured.location)}
+                      className="flex-1 bg-primary-container text-on-primary-container font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
+                    >
+                      {featured.cta}
+                    </PlanVisitButton>
+                    <Link
+                      href="/messages"
+                      className="flex-1 bg-surface text-on-background font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
+                    >
+                      Watch Online
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
         ) : null}
 
         {/* SPECIAL SERVICES */}
@@ -254,10 +241,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="mb-stack-lg">
               <h3 className="font-headline-lg text-headline-lg uppercase text-on-background">
-                Our Special{" "}
-                <span className="text-primary underline decoration-4">
-                  Events
-                </span>
+                Our Special <span className="text-primary underline decoration-4">Events</span>
               </h3>
               <p className="font-label-md text-outline uppercase tracking-widest">
                 The moments we mark out through the year
@@ -286,9 +270,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                     <h4 className="font-headline-md text-headline-md uppercase text-on-background">
                       {slot.title}
                     </h4>
-                    <p className="font-body-md text-on-surface-variant">
-                      {slot.note}
-                    </p>
+                    <p className="font-body-md text-on-surface-variant">{slot.note}</p>
                   </div>
                 </div>
               ))}
@@ -305,12 +287,10 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-stack-md gap-gutter">
               <div>
                 <h3 className="font-headline-lg text-headline-lg uppercase text-on-background">
-                  The{" "}
-                  <span className="text-primary underline decoration-4">Calendar</span>
+                  The <span className="text-primary underline decoration-4">Calendar</span>
                 </h3>
                 <p className="font-label-md text-outline uppercase tracking-widest">
-                  {filtered.length} gathering{filtered.length === 1 ? "" : "s"}{" "}
-                  in the diary
+                  {filtered.length} gathering{filtered.length === 1 ? "" : "s"} in the diary
                 </p>
               </div>
 
@@ -358,15 +338,13 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
               </div>
             ) : (
               <div className="border-2 border-dashed border-on-background bg-surface p-stack-lg text-center">
-                <span className="material-symbols-outlined text-5xl text-outline">
-                  event_busy
-                </span>
+                <span className="material-symbols-outlined text-5xl text-outline">event_busy</span>
                 <h4 className="font-headline-md text-headline-md uppercase mt-4 text-on-background">
                   Nothing matches that yet
                 </h4>
                 <p className="font-body-md text-on-surface-variant mt-2">
-                  Try another category or clear your search — there&apos;s always
-                  something happening.
+                  Try another category or clear your search — there&apos;s always something
+                  happening.
                 </p>
                 <button
                   type="button"
@@ -410,18 +388,14 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 <span className="material-symbols-outlined text-4xl text-primary-fixed-dim group-hover:text-primary transition-colors">
                   {item.icon}
                 </span>
-                <h4 className="font-headline-md text-headline-md uppercase">
-                  {item.title}
-                </h4>
+                <h4 className="font-headline-md text-headline-md uppercase">{item.title}</h4>
                 <p className="font-body-md opacity-90">{item.copy}</p>
                 <Link
                   href={item.to}
                   className="mt-auto pt-2 font-label-md uppercase tracking-widest inline-flex items-center gap-2 hover:text-primary transition-colors"
                 >
                   {item.cta}
-                  <span className="material-symbols-outlined">
-                    arrow_forward
-                  </span>
+                  <span className="material-symbols-outlined">arrow_forward</span>
                 </Link>
               </div>
             ))}

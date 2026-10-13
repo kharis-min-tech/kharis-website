@@ -5,8 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Report an Incident | Kharis Ministries",
-  description:
-    "Report a safeguarding or governance concern to Kharis Ministries securely.",
+  description: "Report a safeguarding or governance concern to Kharis Ministries securely.",
 };
 
 export default function IncidentPage() {

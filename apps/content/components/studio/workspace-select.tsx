@@ -15,7 +15,12 @@ export function WorkspaceSelect({
   id?: string;
 }) {
   return (
-    <Select id={id} value={value} onChange={(event) => onChange(event.target.value)} aria-label="Workspace">
+    <Select
+      id={id}
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      aria-label="Workspace"
+    >
       {allowAll ? <option value="all">All workspaces</option> : null}
       {WORKSPACES.map((workspace) => (
         <option key={workspace.id} value={workspace.id}>

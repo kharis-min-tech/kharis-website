@@ -209,14 +209,8 @@ export function Hero() {
     };
 
     const armTimers = (el: HTMLVideoElement) => {
-      const remainingMs = Math.max(
-        0,
-        (el.duration - el.currentTime - NEAR_END_S) * 1000,
-      );
-      const delay = Math.min(
-        ROTATE_MS,
-        Number.isFinite(remainingMs) ? remainingMs : ROTATE_MS,
-      );
+      const remainingMs = Math.max(0, (el.duration - el.currentTime - NEAR_END_S) * 1000);
+      const delay = Math.min(ROTATE_MS, Number.isFinite(remainingMs) ? remainingMs : ROTATE_MS);
       scheduleRotate(advance, delay);
     };
 
@@ -363,8 +357,7 @@ export function Hero() {
           </p>
           <h1 className="welcome-draw headline text-[clamp(2rem,7vw,4.2rem)] sm:whitespace-nowrap">
             <span className="welcome-draw__fill">
-              Welcome to{" "}
-              <span className="kharis-brand font-extrabold">Kharis</span>
+              Welcome to <span className="kharis-brand font-extrabold">Kharis</span>
             </span>
             <span
               className="welcome-draw__ghost headline text-[clamp(2rem,7vw,4.2rem)] sm:whitespace-nowrap"
