@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { KHARIS_APP } from "@/lib/kharis-app";
 
 const LISTEN_STEPS = [
   {
@@ -38,7 +39,12 @@ export function VisionSection() {
           </p>
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <a href="https://kharis.org/" className="btn-primary">
+            <a
+              href={KHARIS_APP.iosUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
               Download the app
               <Icon name="arrow" className="h-3.5 w-3.5" />
             </a>
@@ -46,9 +52,7 @@ export function VisionSection() {
               Watch messages
             </a>
           </div>
-          <p className="mt-3 text-xs font-medium text-muted/70">
-            Available on iPhone &amp; Android
-          </p>
+          <p className="mt-3 text-xs font-medium text-muted">Available on iPhone &amp; Android</p>
         </Reveal>
 
         <Reveal variant="up" delay={0.08} className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
@@ -79,7 +83,12 @@ export function VisionSection() {
         </Reveal>
 
         <div className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-4">
-          <a href="https://kharis.org/" className="vision-store vision-store--apple">
+          <a
+            href={KHARIS_APP.iosUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="vision-store vision-store--apple"
+          >
             <span className="vision-store__icon" aria-hidden>
               <Icon name="apple" className="h-6 w-6" />
             </span>
@@ -88,7 +97,12 @@ export function VisionSection() {
               <span>Download for iPhone</span>
             </span>
           </a>
-          <a href="https://kharis.org/" className="vision-store vision-store--android">
+          <a
+            href={KHARIS_APP.androidUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="vision-store vision-store--android"
+          >
             <span className="vision-store__icon" aria-hidden>
               <Icon name="android" className="h-6 w-6" />
             </span>

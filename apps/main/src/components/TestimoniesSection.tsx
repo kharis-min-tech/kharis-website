@@ -14,14 +14,17 @@ const photos = [
   {
     src: "/images/testimony-1.jpg",
     alt: "Sunday service testimony moment",
+    position: "object-top",
   },
   {
-    src: "/images/testimony-2.jpg",
-    alt: "Joy in the house of the Lord",
+    src: "/images/testimony-stage-1.jpg",
+    alt: "A sister sharing her testimony on stage",
+    position: "object-[12%_top]",
   },
   {
-    src: "/images/testimony-3.jpg",
-    alt: "Kharis family worshipping together",
+    src: "/images/testimony-stage-2.jpg",
+    alt: "Giving glory to God in testimony",
+    position: "object-[86%_top]",
   },
 ];
 
@@ -86,7 +89,7 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  className="object-cover object-top transition duration-700 group-hover:scale-[1.03]"
+                  className={`object-cover ${photo.position} transition duration-700 group-hover:scale-[1.03]`}
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
