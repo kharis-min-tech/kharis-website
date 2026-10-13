@@ -3,4 +3,4 @@
 #   git config blame.ignoreRevsFile .git-blame-ignore-revs
 #
 # Add the full SHA of the one-time Prettier reformat commit below once it lands:
-# <prettier-reformat-commit-sha>
+437803b185b1f2ca10bdf6a39244dcf966a64a11
