@@ -1,14 +1,10 @@
-name: main-site
+name: deploy-main
 
-# Only runs when apps/main or the shared root manifests change — see the
-# matching caveat in kp2.yml before making this a required status check.
+# Ships apps/main to Cloudflare on merge to main, only when its files (or the
+# shared root manifests) changed. Quality (incl. the tsc ratchet) is gated by
+# ci.yml on the PR; with branch protection requiring the `ci-ok` check, code
+# reaching main has already passed CI.
 on:
-  pull_request:
-    paths:
-      - "apps/main/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/main.yml"
   push:
     branches: [main]
     paths:
@@ -18,79 +14,11 @@ on:
       - ".github/workflows/main.yml"
 
 concurrency:
-  group: main-site-${{ github.ref }}
-  # Cancel superseded PR runs; never cancel an in-flight deploy on main.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: main-deploy
+  cancel-in-progress: false
 
 jobs:
-  verify:
-    runs-on: ubuntu-latest
-    env:
-      # apps/main has pre-existing type errors, 59 of them from two different
-      # interfaces both named BranchData (@/lib/branches vs @/data/branchesData).
-      # Until those are reconciled the gate is a ratchet: errors may fall, never
-      # rise. Lower this number as they are fixed; at 0, replace the ratchet and
-      # the compile gate below with a plain `npx next build --turbopack`.
-      # Held at 70, what a local `npm ci` + tsc reports. The first CI run
-      # reported 67 and that 3-error gap is unexplained (ruled out locally:
-      # dependency drift, .next/types, next-env.d.ts). 70 is conservative so
-      # the gate cannot fail spuriously; the step prints the full list, so once
-      # two runs agree on a number, tighten this to it.
-      TSC_BASELINE: 70
-    defaults:
-      run:
-        working-directory: apps/main
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      # Root install — npm workspaces resolves both apps from the one lockfile.
-      - name: Install
-        run: npm ci
-        working-directory: .
-
-      - name: Lint
-        run: npx eslint
-
-      # Full build gate. This replaces an earlier compile-phase assertion that
-      # only grepped for "Compiled successfully" — a string Next prints BEFORE
-      # "Collecting page data", so it went green while the build actually died
-      # just after it (a module-scope Supabase client throwing without env
-      # vars, then a duplicate-React prerender crash). Running the real build
-      # is the only honest gate.
-      #
-      # It passes without secrets because lib/supabase.ts falls back to a
-      # placeholder, so data fetches fail and degrade rather than throw. That
-      # means this gate proves the build works, not that live data loads.
-      - name: Build
-        run: npx next build --turbopack
-
-      - name: Typecheck ratchet
-        shell: bash
-        run: |
-          npx tsc --noEmit > "$RUNNER_TEMP/tsc.log" 2>&1 || true
-          count=$(grep -c "error TS" "$RUNNER_TEMP/tsc.log" || true)
-          echo "::group::tsc output ($count errors)"
-          cat "$RUNNER_TEMP/tsc.log"
-          echo "::endgroup::"
-          echo "tsc errors: $count (baseline $TSC_BASELINE)"
-          if [ "$count" -gt "$TSC_BASELINE" ]; then
-            echo "::error::Type errors rose from $TSC_BASELINE to $count."
-            exit 1
-          fi
-          if [ "$count" -lt "$TSC_BASELINE" ]; then
-            echo "::notice::Down to $count — lower TSC_BASELINE in this workflow to lock it in."
-          fi
-
-  # Deploy only on merge to main, after verify (incl. the tsc ratchet) passes.
-  # Path-filtered, so a push that doesn't touch apps/main never reaches here.
   deploy:
-    needs: verify
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     defaults:
       run:

@@ -1,20 +1,10 @@
-name: kp2
+name: deploy-kp2
 
-# Only runs when apps/kp2 or the shared root manifests change, so the main
-# site's team cannot block this team's PRs (and vice versa — see main.yml).
-#
-# Caveat if you make this a required status check in branch protection:
-# a PR touching only apps/main will never trigger this workflow, so the
-# required check stays pending forever. To get both path filtering and
-# required checks, drop the `paths:` filters and gate the expensive steps
-# on a diff check instead, so the job always reports a conclusion.
+# Ships apps/kp2 to Cloudflare on merge to main, only when its files (or the
+# shared root manifests) changed. Quality is gated by ci.yml on the PR; with
+# branch protection requiring the `ci-ok` check, code reaching main has already
+# passed CI.
 on:
-  pull_request:
-    paths:
-      - "apps/kp2/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/kp2.yml"
   push:
     branches: [main]
     paths:
@@ -24,46 +14,11 @@ on:
       - ".github/workflows/kp2.yml"
 
 concurrency:
-  group: kp2-${{ github.ref }}
-  # Cancel superseded PR runs; never cancel an in-flight deploy on main.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: kp2-deploy
+  cancel-in-progress: false
 
 jobs:
-  verify:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/kp2
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      # Root install — npm workspaces resolves both apps from the one lockfile.
-      - name: Install
-        run: npm ci
-        working-directory: .
-
-      - name: Lint
-        run: npx eslint
-
-      - name: Typecheck
-        run: npx tsc --noEmit
-
-      # Builds run without secrets, so they exercise the fallback paths rather
-      # than live Supabase/YouTube data. That is enough to catch build breaks.
-      - name: Build
-        run: npx next build
-
-  # Deploy only on merge to main, after verify passes. Path-filtered, so a push
-  # that doesn't touch apps/kp2 never reaches here — kp2 is not redeployed for
-  # unrelated changes.
   deploy:
-    needs: verify
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     defaults:
       run:

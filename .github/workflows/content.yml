@@ -1,14 +1,10 @@
-name: content
+name: deploy-content
 
-# Only runs when apps/content or the shared root manifests change.
-# See the required-check caveat in kp2.yml before making this required.
+# Ships apps/content to Cloudflare on merge to main, only when its files (or the
+# shared root manifests) changed — so unrelated merges don't redeploy it.
+# Quality is gated by ci.yml on the PR; with branch protection requiring the
+# `ci-ok` check, code reaching main has already passed CI.
 on:
-  pull_request:
-    paths:
-      - "apps/content/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/content.yml"
   push:
     branches: [main]
     paths:
@@ -18,46 +14,11 @@ on:
       - ".github/workflows/content.yml"
 
 concurrency:
-  group: content-${{ github.ref }}
-  # Cancel superseded PR runs; never cancel an in-flight deploy on main.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: content-deploy
+  cancel-in-progress: false
 
 jobs:
-  verify:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/content
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      # Root install — npm workspaces resolves every app from the one lockfile.
-      - name: Install
-        run: npm ci
-        working-directory: .
-
-      - name: Lint
-        run: npx eslint
-
-      - name: Typecheck
-        run: npx tsc --noEmit
-
-      # Builds without secrets. Data calls happen in the browser after sign-in,
-      # so the build does not need Supabase or Google keys.
-      - name: Build
-        run: npx next build
-
-  # Deploy only on merge to main, and only after verify passes. Because this
-  # workflow is path-filtered, a push that doesn't touch apps/content never gets
-  # here — so content is not redeployed for unrelated changes.
   deploy:
-    needs: verify
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     defaults:
       run:
