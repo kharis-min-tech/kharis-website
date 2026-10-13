@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { FormEvent, useCallback, useEffect, useId, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, ExternalLink, Volume2, VolumeX, X } from "lucide-react";
+import { FormEvent, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Icon } from "@/components/Icon";
@@ -13,7 +13,9 @@ import {
   lifeModalVideoId,
   lifeModalVideoKind,
   type LifeModalSlug,
-  youtubeEmbedSrc,
+  youtubeBackgroundSrc,
+  youtubePosterSrc,
+  youtubeWatchUrl,
 } from "@/lib/life-videos";
 
 type Slide =
@@ -28,7 +30,8 @@ type Props = {
 };
 
 const SLIDE_MS = 5200;
-const VIDEO_SLIDE_MS = 9000;
+const VIDEO_SLIDE_MS = 12000;
+const YT_REVEAL_DELAY_MS = 3500;
 
 function buildSlides(category: LifeCategory, blurb: string): Slide[] {
   const slides: Slide[] = [{ kind: "video", title: category.title, blurb }];
@@ -61,6 +64,146 @@ function buildSlides(category: LifeCategory, blurb: string): Slide[] {
   return slides;
 }
 
+function postToPlayer(frame: HTMLIFrameElement | null, message: Record<string, unknown>) {
+  frame?.contentWindow?.postMessage(JSON.stringify(message), "*");
+}
+
+function LifeSlideVideo({
+  videoId,
+  kind,
+  title,
+  onSoundChange,
+}: {
+  videoId: string;
+  kind: "youtube" | "file";
+  title: string;
+  onSoundChange: (soundOn: boolean) => void;
+}) {
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const isFile = kind === "file";
+  const poster = isFile ? videoId.replace(/\.mp4$/, "-poster.jpg") : youtubePosterSrc(videoId);
+
+  useEffect(() => {
+    if (isFile) return;
+    let revealTimer: number | undefined;
+    const onMessage = (e: MessageEvent) => {
+      if (!e.origin.includes("youtube")) return;
+      let data: { event?: string; info?: unknown } | null = null;
+      try {
+        data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+      } catch {
+        return;
+      }
+      const info = data?.info as { playerState?: number } | number | undefined;
+      const state = typeof info === "number" ? info : (info?.playerState ?? undefined);
+      if (state !== 1 || revealTimer !== undefined) return;
+      postToPlayer(frameRef.current, {
+        event: "command",
+        func: "unloadModule",
+        args: ["captions"],
+      });
+      // YouTube flashes its own playback controls for the first few seconds.
+      revealTimer = window.setTimeout(() => setPlaying(true), YT_REVEAL_DELAY_MS);
+    };
+    window.addEventListener("message", onMessage);
+    return () => {
+      window.removeEventListener("message", onMessage);
+      window.clearTimeout(revealTimer);
+    };
+  }, [isFile]);
+
+  const toggleSound = () => {
+    const nextMuted = !muted;
+    setMuted(nextMuted);
+    onSoundChange(!nextMuted);
+    if (isFile) {
+      const el = videoRef.current;
+      if (el) {
+        el.muted = nextMuted;
+        void el.play().catch(() => undefined);
+      }
+      return;
+    }
+    postToPlayer(frameRef.current, {
+      event: "command",
+      func: nextMuted ? "mute" : "unMute",
+      args: [],
+    });
+    if (!nextMuted) {
+      postToPlayer(frameRef.current, {
+        event: "command",
+        func: "setVolume",
+        args: [80],
+      });
+    }
+  };
+
+  return (
+    <div className={`life-modal__clip${playing ? " is-playing" : ""}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="life-modal__poster" src={poster} alt="" aria-hidden />
+      {isFile ? (
+        <video
+          ref={videoRef}
+          className="life-modal__video"
+          src={videoId}
+          poster={poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          onPlaying={() => setPlaying(true)}
+        />
+      ) : (
+        <iframe
+          ref={frameRef}
+          className="life-modal__video life-modal__video--yt"
+          src={youtubeBackgroundSrc(videoId, window.location.origin)}
+          title={`${title} | Kharis Life`}
+          allow="autoplay; encrypted-media; picture-in-picture"
+          tabIndex={-1}
+          onLoad={() =>
+            postToPlayer(frameRef.current, {
+              event: "listening",
+              id: 1,
+              channel: "widget",
+            })
+          }
+        />
+      )}
+      <div className="life-modal__clip-bar">
+        <button
+          type="button"
+          className="life-modal__clip-btn life-modal__clip-btn--icon"
+          onClick={toggleSound}
+          aria-pressed={!muted}
+          aria-label={muted ? "Turn sound on" : "Turn sound off"}
+        >
+          {muted ? (
+            <VolumeX className="h-4 w-4" aria-hidden />
+          ) : (
+            <Volume2 className="h-4 w-4" aria-hidden />
+          )}
+        </button>
+        {isFile ? null : (
+          <a
+            className="life-modal__clip-btn"
+            href={youtubeWatchUrl(videoId)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Watch full message
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function LifeDetailModal({
   category,
   baptismVideoId,
@@ -72,6 +215,7 @@ export function LifeDetailModal({
   const [mounted, setMounted] = useState(false);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
@@ -86,8 +230,14 @@ export function LifeDetailModal({
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") setSlide((s) => s - 1);
-      if (e.key === "ArrowRight") setSlide((s) => s + 1);
+      if (e.key === "ArrowLeft") {
+        setSoundOn(false);
+        setSlide((s) => s - 1);
+      }
+      if (e.key === "ArrowRight") {
+        setSoundOn(false);
+        setSlide((s) => s + 1);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -101,6 +251,7 @@ export function LifeDetailModal({
     setError("");
     setSlide(0);
     setPaused(false);
+    setSoundOn(false);
   }, [category?.slug]);
 
   const slug = category?.slug as LifeModalSlug | undefined;
@@ -119,19 +270,20 @@ export function LifeDetailModal({
     (next: number) => {
       if (!total) return;
       setPaused(true);
+      setSoundOn(false);
       setSlide(((next % total) + total) % total);
     },
     [total],
   );
 
   useEffect(() => {
-    if (!category || !total || reduce || paused || showFollowup) return;
+    if (!category || !total || reduce || paused || soundOn || showFollowup) return;
     const delay = current?.kind === "video" ? VIDEO_SLIDE_MS : SLIDE_MS;
     const id = window.setTimeout(() => {
       setSlide((s) => (s + 1) % total);
     }, delay);
     return () => window.clearTimeout(id);
-  }, [category, current?.kind, paused, reduce, showFollowup, slide, total]);
+  }, [category, current?.kind, paused, reduce, showFollowup, slide, soundOn, total]);
 
   useEffect(() => {
     if (!paused || reduce) return;
@@ -247,27 +399,12 @@ export function LifeDetailModal({
                 >
                   {current.kind === "video" ? (
                     <>
-                      <div className="life-modal__clip">
-                        {videoKind === "file" ? (
-                          <video
-                            className="life-modal__video"
-                            src={videoId}
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            poster="/videos/hero-a-poster.jpg"
-                          />
-                        ) : (
-                          <iframe
-                            src={youtubeEmbedSrc(videoId, { autoplay: true })}
-                            title={`${category.title} | Kharis Life`}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                            className="life-modal__video"
-                          />
-                        )}
-                      </div>
+                      <LifeSlideVideo
+                        videoId={videoId}
+                        kind={videoKind}
+                        title={category.title}
+                        onSoundChange={setSoundOn}
+                      />
                       <div className="life-modal__slide-copy">
                         <h2 id={titleId} className="life-modal__title">
                           <LifeIcon name={category.icon} className="life-modal__ico" />

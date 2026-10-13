@@ -1,36 +1,92 @@
-/** Homepage hero: self-hosted muted dual-clip crossfade loop (no YouTube UI). */
+/** Homepage hero: two rows of media cards drifting right (swiperjs.com style); each row's centre card is in colour. */
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { HeroHeadline } from "./HeroHeadline";
+import "./hero-slider.css";
 
-type HeroClip = {
-  id: string;
+type HeroSlide = {
+  type: "video" | "image";
   src: string;
+  /** Required for videos (shown only until the clip starts playing). */
+  poster?: string;
+  alt?: string;
 };
 
-const HERO_CLIPS: HeroClip[] = [
+/**
+ * Add, remove or reorder hero media here.
+ * Videos live in /public/videos, photos in /public/images/hero.
+ * Videos always go on the top row. Photos alternate top, bottom, top… in list order,
+ * so each photo appears on one row only.
+ */
+const HERO_SLIDES: HeroSlide[] = [
+  { type: "video", src: "/videos/hero-a.mp4?v=2", poster: "/videos/hero-a-poster.jpg" },
   {
-    id: "servant",
-    src: "/videos/hero-a.mp4?v=2",
+    type: "image",
+    src: "/images/hero/sunday-service-stage.jpg",
+    alt: "Pastor raising his Bible on stage at Kharis Sunday Service",
   },
   {
-    id: "preach",
-    src: "/videos/hero-b.mp4?v=2",
+    type: "image",
+    src: "/images/hero/worship-altar.jpg",
+    alt: "The congregation worshipping at the altar during a Kharis service",
+  },
+  {
+    type: "image",
+    src: "/images/hero/easter-bibles-raised.jpg",
+    alt: "The congregation raising their Bibles at the Easter service",
+  },
+  {
+    type: "image",
+    src: "/images/hero/prayer-fasting-preaching.jpg",
+    alt: "Preaching with an open Bible at the Prayer and Fasting service",
+  },
+  { type: "video", src: "/videos/hero-b.mp4?v=2", poster: "/videos/hero-b-poster.jpg" },
+  {
+    type: "image",
+    src: "/images/hero/impartation-celebration.jpg",
+    alt: "Pastor David celebrating with the congregation at the Impartation Service",
+  },
+  {
+    type: "image",
+    src: "/images/hero/outreach-street.jpg",
+    alt: "Kharis outreach team sharing the gospel on the street",
+  },
+  {
+    type: "image",
+    src: "/images/hero/easter-pastor-david.jpg",
+    alt: "Pastor David preaching at the Easter Saturday service",
+  },
+  {
+    type: "image",
+    src: "/images/hero/sunday-bible-raised.jpg",
+    alt: "A worshipper raising her Bible at a Sunday service",
+  },
+  {
+    type: "image",
+    src: "/images/hero/outreach-community.jpg",
+    alt: "Kharis community outreach day in a local playground",
   },
 ];
 
-const HERO_POSTER = "/videos/hero-poster.jpg?v=2";
+/** Seconds for one card to drift past the centre, per row (lower = faster). */
+const ROW_SECONDS_PER_CARD = [6, 7.5] as const;
 const FALLBACK_REVEAL_MS = 1500;
-/** Snappy slideshow crossfade — matches CSS opacity transition. */
-const CROSSFADE_MS = 300;
-const READY_WAIT_MS = 700;
-/** Prefer timed rotation (~10s) for a snappier feel; still fade near natural end. */
-const ROTATE_MS = 10_000;
-const NEAR_END_S = 0.65;
 
-type Slot = 0 | 1;
+/** Videos only run on the top row; the lower row is photos only so a clip never shows as a still. */
+const TOP_ROW: HeroSlide[] = [];
+const LOWER_ROW: HeroSlide[] = [];
+let photoCount = 0;
+HERO_SLIDES.forEach((slide) => {
+  const lower = slide.type === "image" && photoCount++ % 2 === 1;
+  (lower ? LOWER_ROW : TOP_ROW).push(slide);
+});
+const ROWS = [TOP_ROW, LOWER_ROW];
+const TOP_TRACK = TOP_ROW.concat(TOP_ROW);
 
+const mod = (n: number, m: number) => ((n % m) + m) % m;
 function prepVideo(el: HTMLVideoElement) {
   el.muted = true;
   el.defaultMuted = true;
@@ -38,42 +94,28 @@ function prepVideo(el: HTMLVideoElement) {
   el.playsInline = true;
   el.setAttribute("playsinline", "");
   el.setAttribute("webkit-playsinline", "");
-  el.volume = 0;
 }
 
-function clipMatches(el: HTMLVideoElement, url: string) {
-  const attr = el.getAttribute("src") || "";
-  const current = el.currentSrc || "";
-  const path = url.split("?")[0];
-  return (
-    attr === url ||
-    attr.endsWith(url) ||
-    current.endsWith(url) ||
-    attr.includes(path) ||
-    current.includes(path)
-  );
-}
-
-function assignClip(el: HTMLVideoElement, url: string) {
-  if (clipMatches(el, url)) return;
-  el.src = url;
-  el.load();
+/** Plays every video card that is on screen; off-screen clips pause. */
+function syncVideos(track: HTMLElement, visible: Set<number>, allowPlay: boolean) {
+  Array.from(track.children).forEach((card, i) => {
+    const video = card.querySelector("video");
+    if (!video) return;
+    if (allowPlay && visible.has(i)) {
+      prepVideo(video);
+      void video.play().catch(() => {});
+    } else if (!video.paused) {
+      video.pause();
+    }
+  });
 }
 
 export function Hero() {
-  const aRef = useRef<HTMLVideoElement>(null);
-  const bRef = useRef<HTMLVideoElement>(null);
-  const activeSlot = useRef<Slot>(0);
-  const clipIndex = useRef(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const wallRef = useRef<HTMLDivElement>(null);
+  const trackRefs = useRef<(HTMLDivElement | null)[]>([]);
   const revealed = useRef(false);
-  const transitioning = useRef(false);
-  const fadeGen = useRef(0);
-  const rotateTimer = useRef<number | null>(null);
-  const fadeTimer = useRef<number | null>(null);
-  const [active, setActive] = useState<Slot>(0);
-  const [visible, setVisible] = useState(false);
-
-  const refs = useCallback(() => [aRef.current, bRef.current] as const, []);
+  const [spots, setSpots] = useState<[number, number]>([0, 0]);
 
   const revealSite = useCallback(() => {
     if (revealed.current) return;
@@ -81,308 +123,278 @@ export function Hero() {
     document.documentElement.classList.add("hero-ready");
   }, []);
 
-  const markVisible = useCallback(() => {
-    setVisible(true);
-    revealSite();
-  }, [revealSite]);
-
-  const clearRotate = useCallback(() => {
-    if (rotateTimer.current != null) {
-      window.clearTimeout(rotateTimer.current);
-      rotateTimer.current = null;
-    }
-  }, []);
-
-  const scheduleRotate = useCallback(
-    (fn: () => void, ms: number) => {
-      clearRotate();
-      rotateTimer.current = window.setTimeout(fn, ms);
-    },
-    [clearRotate],
-  );
-
-  const tryPlay = useCallback(async (el: HTMLVideoElement) => {
-    prepVideo(el);
-    try {
-      await el.play();
-      return true;
-    } catch {
-      return el.readyState >= 2;
-    }
-  }, []);
-
-  const crossfadeTo = useCallback(
-    async (nextClip: number) => {
-      const videos = refs();
-      const from = activeSlot.current;
-      const to: Slot = from === 0 ? 1 : 0;
-      const outgoing = videos[from];
-      const incoming = videos[to];
-      if (!outgoing || !incoming) return;
-
-      const gen = ++fadeGen.current;
-      transitioning.current = true;
-      clearRotate();
-      if (fadeTimer.current != null) {
-        window.clearTimeout(fadeTimer.current);
-        fadeTimer.current = null;
-      }
-
-      const idx = ((nextClip % HERO_CLIPS.length) + HERO_CLIPS.length) % HERO_CLIPS.length;
-      clipIndex.current = idx;
-
-      const clip = HERO_CLIPS[idx]!;
-      assignClip(incoming, clip.src);
-
-      const waitReady = () =>
-        new Promise<void>((resolve) => {
-          // canplay (readyState >= 2) is enough to start a snappy fade
-          if (incoming.readyState >= 2) {
-            resolve();
-            return;
-          }
-          const done = () => {
-            incoming.removeEventListener("loadeddata", done);
-            incoming.removeEventListener("canplay", done);
-            incoming.removeEventListener("canplaythrough", done);
-            resolve();
-          };
-          incoming.addEventListener("loadeddata", done);
-          incoming.addEventListener("canplay", done);
-          incoming.addEventListener("canplaythrough", done);
-          window.setTimeout(done, READY_WAIT_MS);
-        });
-
-      await waitReady();
-      if (gen !== fadeGen.current) return;
-
-      try {
-        incoming.currentTime = 0;
-      } catch {
-        /* ignore seek errors before ready */
-      }
-      prepVideo(incoming);
-      // Must flip before play() so the incoming clip's "play" event arms the rotate timer.
-      activeSlot.current = to;
-      await tryPlay(incoming);
-      if (gen !== fadeGen.current) return;
-
-      setActive(to);
-      markVisible();
-
-      fadeTimer.current = window.setTimeout(() => {
-        if (gen !== fadeGen.current) return;
-        outgoing.pause();
-        transitioning.current = false;
-        // Keep the alternate clip warm in the hidden slot
-        const other = HERO_CLIPS[(idx + 1) % HERO_CLIPS.length]!;
-        assignClip(outgoing, other.src);
-      }, CROSSFADE_MS);
-    },
-    [clearRotate, markVisible, refs, tryPlay],
-  );
-
-  const advance = useCallback(() => {
-    void crossfadeTo(clipIndex.current + 1);
-  }, [crossfadeTo]);
-
   useEffect(() => {
-    const a = aRef.current;
-    const b = bRef.current;
-    if (!a || !b) return;
-
-    prepVideo(a);
-    prepVideo(b);
-
-    const onPlaying = () => markVisible();
-    const onLoaded = () => {
-      if (a.videoWidth > 0) setVisible(true);
-      void tryPlay(a).then((ok) => {
-        if (ok) markVisible();
-        else if (a.readyState >= 2) markVisible();
-        else revealSite();
-      });
-    };
-    const onError = () => {
-      console.error("[Hero] video failed to load", a.error);
-      revealSite();
-    };
-
-    const armTimers = (el: HTMLVideoElement) => {
-      const remainingMs = Math.max(0, (el.duration - el.currentTime - NEAR_END_S) * 1000);
-      const delay = Math.min(ROTATE_MS, Number.isFinite(remainingMs) ? remainingMs : ROTATE_MS);
-      scheduleRotate(advance, delay);
-    };
-
-    const onTimeUpdate = (e: Event) => {
-      const el = e.target as HTMLVideoElement;
-      if (el !== refs()[activeSlot.current]) return;
-      if (transitioning.current) return;
-      if (!Number.isFinite(el.duration) || el.duration <= 0) return;
-      if (el.duration - el.currentTime <= NEAR_END_S) {
-        advance();
-      }
-    };
-
-    const onPlay = (e: Event) => {
-      const el = e.target as HTMLVideoElement;
-      if (el !== refs()[activeSlot.current]) return;
-      armTimers(el);
-    };
-
-    const onEnded = (e: Event) => {
-      const el = e.target as HTMLVideoElement;
-      if (el !== refs()[activeSlot.current]) return;
-      advance();
-    };
-
-    a.addEventListener("playing", onPlaying);
-    a.addEventListener("canplay", onLoaded);
-    a.addEventListener("canplaythrough", onLoaded);
-    a.addEventListener("loadeddata", onLoaded);
-    a.addEventListener("loadedmetadata", onLoaded);
-    a.addEventListener("error", onError);
-
-    for (const el of [a, b]) {
-      el.addEventListener("timeupdate", onTimeUpdate);
-      el.addEventListener("play", onPlay);
-      el.addEventListener("ended", onEnded);
-    }
-
-    // Play the first clip immediately. Start the second only after the first is on screen.
-    clipIndex.current = 0;
-    activeSlot.current = 0;
-    a.src = HERO_CLIPS[0]!.src;
-    a.preload = "auto";
-    a.load();
-    b.preload = "none";
-    const warmSecond = () => {
-      if (b.getAttribute("src")) return;
-      b.src = HERO_CLIPS[1]!.src;
-      b.preload = "auto";
-      b.load();
-    };
-    a.addEventListener("playing", warmSecond, { once: true });
-    const warmTimer = window.setTimeout(warmSecond, 4000);
-    void tryPlay(a);
-
-    const fallback = window.setTimeout(() => revealSite(), FALLBACK_REVEAL_MS);
-
+    const fallback = window.setTimeout(revealSite, FALLBACK_REVEAL_MS);
     return () => {
-      a.removeEventListener("playing", onPlaying);
-      a.removeEventListener("canplay", onLoaded);
-      a.removeEventListener("canplaythrough", onLoaded);
-      a.removeEventListener("loadeddata", onLoaded);
-      a.removeEventListener("loadedmetadata", onLoaded);
-      a.removeEventListener("error", onError);
-      for (const el of [a, b]) {
-        el.removeEventListener("timeupdate", onTimeUpdate);
-        el.removeEventListener("play", onPlay);
-        el.removeEventListener("ended", onEnded);
-      }
-      clearRotate();
-      if (fadeTimer.current != null) window.clearTimeout(fadeTimer.current);
       window.clearTimeout(fallback);
-      window.clearTimeout(warmTimer);
-      a.removeEventListener("playing", warmSecond);
       document.documentElement.classList.remove("hero-ready");
     };
-  }, [advance, clearRotate, markVisible, refs, revealSite, scheduleRotate, tryPlay]);
-
-  const videoProps = {
-    muted: true,
-    playsInline: true,
-    controls: false,
-    controlsList: "nodownload nofullscreen noremoteplayback noplaybackrate",
-    disablePictureInPicture: true,
-    tabIndex: -1,
-    "aria-hidden": true as const,
-    // Inline cover sizing beats Tailwind `video { max-width:100%; height:auto }` even if CSS order races.
-    style: {
-      position: "absolute" as const,
-      inset: 0,
-      width: "100%",
-      height: "100%",
-      maxWidth: "none",
-      maxHeight: "none",
-      objectFit: "cover" as const,
-      objectPosition: "center center",
-    },
-  };
+  }, [revealSite]);
 
   useEffect(() => {
-    // Chromium rejects <link rel="preload" as="video">; clips warm via <video preload="auto">.
-    if (document.querySelector(`link[rel="preload"][href="${HERO_POSTER}"]`)) return;
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "image";
-    link.href = HERO_POSTER;
-    document.head.appendChild(link);
-    return () => link.remove();
-  }, []);
+    const wall = wallRef.current;
+    const section = sectionRef.current;
+    const tracks = trackRefs.current;
+    if (!wall || !section || tracks.length < ROWS.length || tracks.some((t) => !t)) return;
+
+    const rows = ROWS.map(() => ({
+      init: 0,
+      auto: 0,
+      setWidth: 1,
+      step: 1,
+      lefts: [] as number[],
+      widths: [] as number[],
+      t: 0,
+      spot: -1,
+    }));
+    let shared = 0;
+    let drag: { startX: number; base: number; id: number } | null = null;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reduced = motionQuery.matches;
+    let inView = true;
+    let raf = 0;
+    let last = 0;
+    let visibleKey = "";
+    let visibleVideos = new Set<number>();
+
+    const measure = () => {
+      const prevStep = rows[0]!.step;
+      rows.forEach((row, r) => {
+        const cards = Array.from(tracks[r]!.children) as HTMLElement[];
+        const half = cards.length / 2;
+        row.setWidth = Math.max(1, cards[half]!.offsetLeft - cards[0]!.offsetLeft);
+        row.step = Math.max(1, cards[1]!.offsetLeft - cards[0]!.offsetLeft);
+        row.lefts = cards.map((c) => c.offsetLeft);
+        row.widths = cards.map((c) => c.offsetWidth);
+      });
+      const vc = wall.clientWidth / 2;
+      const top = rows[0]!;
+      top.init = vc - (top.lefts[0]! + top.widths[0]! / 2) + top.setWidth;
+      rows[1]!.init = top.init + top.step / 2;
+      if (prevStep > 1) {
+        const ratio = top.step / prevStep;
+        shared *= ratio;
+        rows.forEach((row) => (row.auto *= ratio));
+      }
+    };
+
+    const playVideos = () => syncVideos(tracks[0]!, visibleVideos, inView && !reduced);
+
+    const apply = () => {
+      const width = wall.clientWidth;
+      const vc = width / 2;
+      let spotsChanged = false;
+
+      rows.forEach((row, r) => {
+        row.t = mod(row.init + row.auto + shared, row.setWidth) - row.setWidth;
+        tracks[r]!.style.transform = `translate3d(${row.t.toFixed(2)}px,0,0)`;
+        let best = 0;
+        let bestDist = Infinity;
+        row.lefts.forEach((left, i) => {
+          const d = Math.abs(left + row.widths[i]! / 2 + row.t - vc);
+          if (d < bestDist) {
+            bestDist = d;
+            best = i;
+          }
+        });
+        if (best !== row.spot) {
+          row.spot = best;
+          spotsChanged = true;
+        }
+      });
+      if (spotsChanged) setSpots([rows[0]!.spot, rows[1]!.spot]);
+
+      const top = rows[0]!;
+      const visible: number[] = [];
+      TOP_TRACK.forEach((slide, i) => {
+        if (slide.type !== "video") return;
+        const left = top.lefts[i]! + top.t;
+        if (left < width && left + top.widths[i]! > 0) visible.push(i);
+      });
+      const key = visible.join(",");
+      if (key !== visibleKey) {
+        visibleKey = key;
+        visibleVideos = new Set(visible);
+        playVideos();
+      }
+    };
+
+    const needsFrames = () => inView && (!reduced || drag !== null);
+
+    const frame = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (!reduced && !drag) {
+        rows.forEach((row, r) => {
+          row.auto += (row.step / ROW_SECONDS_PER_CARD[r]!) * dt;
+        });
+      }
+      apply();
+      raf = needsFrames() ? requestAnimationFrame(frame) : 0;
+    };
+
+    const ensureRunning = () => {
+      if (raf || !needsFrames()) return;
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.button !== 0) return;
+      drag = { startX: e.clientX, base: shared, id: e.pointerId };
+      wall.setPointerCapture(e.pointerId);
+      wall.classList.add("is-dragging");
+      ensureRunning();
+    };
+    const onPointerMove = (e: PointerEvent) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      shared = drag.base + (e.clientX - drag.startX);
+    };
+    const onPointerUp = (e: PointerEvent) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      drag = null;
+      wall.classList.remove("is-dragging");
+      if (wall.hasPointerCapture(e.pointerId)) wall.releasePointerCapture(e.pointerId);
+    };
+
+    wall.addEventListener("pointerdown", onPointerDown);
+    wall.addEventListener("pointermove", onPointerMove);
+    wall.addEventListener("pointerup", onPointerUp);
+    wall.addEventListener("pointercancel", onPointerUp);
+
+    const resizeObserver = new ResizeObserver(() => {
+      measure();
+      apply();
+    });
+    resizeObserver.observe(wall);
+
+    const onMotion = () => {
+      reduced = motionQuery.matches;
+      playVideos();
+      ensureRunning();
+    };
+    motionQuery.addEventListener("change", onMotion);
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = Boolean(entry?.isIntersecting);
+        playVideos();
+        ensureRunning();
+      },
+      { threshold: 0.1 },
+    );
+    io.observe(section);
+
+    measure();
+    apply();
+    revealSite();
+    ensureRunning();
+
+    return () => {
+      cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      io.disconnect();
+      motionQuery.removeEventListener("change", onMotion);
+      wall.removeEventListener("pointerdown", onPointerDown);
+      wall.removeEventListener("pointermove", onPointerMove);
+      wall.removeEventListener("pointerup", onPointerUp);
+      wall.removeEventListener("pointercancel", onPointerUp);
+    };
+  }, [revealSite]);
 
   return (
-    <section id="top" className="hero-shell">
-      <div className="hero-video-frame" aria-hidden>
-        <video
-          ref={aRef}
-          className={`hero-local-video hero-local-video--a${visible && active === 0 ? " is-active" : ""}${visible ? " is-ready" : ""}`}
-          poster={HERO_POSTER}
-          autoPlay
-          preload="auto"
-          {...videoProps}
-        />
-        <video
-          ref={bRef}
-          className={`hero-local-video hero-local-video--b${visible && active === 1 ? " is-active" : ""}`}
-          preload="none"
-          {...videoProps}
-        />
+    <section id="top" ref={sectionRef} className="hero-shell">
+      <div ref={wallRef} className="hero-wall">
+        {ROWS.map((row, r) => (
+          <div key={r} className="hero-wall__row">
+            <div
+              ref={(el) => {
+                trackRefs.current[r] = el;
+              }}
+              className="hero-wall__track"
+            >
+              {row.concat(row).map((slide, i) => {
+                const duplicate = i >= row.length;
+                const isSpot = i === spots[r];
+                return (
+                  <div
+                    key={`${r}-${i}`}
+                    className={`hero-wall__card${isSpot ? " is-spot" : ""}`}
+                    aria-hidden={duplicate || undefined}
+                  >
+                    {slide.type === "video" ? (
+                      <video
+                        ref={(el) => {
+                          if (el) prepVideo(el);
+                        }}
+                        src={slide.src}
+                        poster={slide.poster}
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        controls={false}
+                        disablePictureInPicture
+                        tabIndex={-1}
+                        aria-hidden
+                      />
+                    ) : (
+                      <Image
+                        src={slide.src}
+                        alt={duplicate ? "" : (slide.alt ?? "")}
+                        fill
+                        sizes="(max-width: 640px) 80vw, 46vw"
+                        quality={95}
+                        loading="eager"
+                        draggable={false}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div className="hero-video-mask" aria-hidden />
+      <div className="hero-wall__shade" aria-hidden />
 
       <div
-        className="pointer-events-none absolute inset-0 z-[3]"
+        className="hero-copy"
         style={{
-          background:
-            "linear-gradient(180deg, rgba(8,4,18,0.18) 0%, rgba(8,4,18,0.02) 32%, rgba(8,4,18,0.06) 58%, rgba(8,4,18,0.38) 100%)",
+          position: "absolute",
+          inset: 0,
+          zIndex: 10,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "4.5rem 1.25rem 2rem",
+          textAlign: "center",
+          pointerEvents: "none",
         }}
-      />
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-5 pb-8 pt-28 md:px-10 md:pb-12 md:pt-32">
-        <div className="pointer-events-auto mx-auto max-w-7xl">
-          <p className="mb-3 text-[0.72rem] font-extrabold uppercase tracking-[0.2em] text-white/80">
-            Kharis Church
-          </p>
-          <h1 className="welcome-draw headline text-[clamp(2rem,7vw,4.2rem)] sm:whitespace-nowrap">
-            <span className="welcome-draw__fill">
-              Welcome to <span className="kharis-brand font-extrabold">Kharis</span>
-            </span>
-            <span
-              className="welcome-draw__ghost headline text-[clamp(2rem,7vw,4.2rem)] sm:whitespace-nowrap"
-              aria-hidden
-            >
-              Welcome to <span className="kharis-brand">Kharis</span>
-            </span>
-            <span
-              className="welcome-draw__run headline text-[clamp(2rem,7vw,4.2rem)] sm:whitespace-nowrap"
-              aria-hidden
-            >
-              Welcome to <span className="kharis-brand">Kharis</span>
-            </span>
-          </h1>
-          <p className="mt-4 max-w-md text-base font-semibold text-white/90 md:text-lg">
-            Changing the world with a touch of His grace.
-          </p>
-          <div className="mt-7 flex flex-wrap items-center gap-3">
-            <Link href="/locations" className="btn-primary">
-              Find a Branch
-            </Link>
-            <a href="#messages" className="btn-ghost">
-              Watch Messages
-            </a>
-          </div>
+      >
+        <p className="hero-copy__eyebrow">Kharis Church</p>
+        <h1 className="sr-only">Welcome to Kharis</h1>
+        <HeroHeadline />
+        <p className="hero-copy__tagline">Changing the world with a touch of His grace.</p>
+        <div
+          className="hero-copy__ctas"
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "0.75rem",
+            marginTop: "1.75rem",
+            pointerEvents: "auto",
+          }}
+        >
+          <Link href="/locations" className="btn-primary">
+            Find a Branch
+          </Link>
+          <a href="#messages" className="btn-ghost">
+            Watch Messages
+          </a>
         </div>
       </div>
     </section>
