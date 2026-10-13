@@ -88,9 +88,6 @@ type BranchRow = {
   services: ServiceRow[] | null;
 };
 
-const DEFAULT_PARKING = "Parking details for this branch will be added soon.";
-const DEFAULT_TRANSIT = "Travel details for this branch will be added soon.";
-
 function placeholderDescription(city: string) {
   return `A thriving congregation serving ${city}. Experience uplifting worship, relevant biblical teaching, and deep kingdom connections.`;
 }
