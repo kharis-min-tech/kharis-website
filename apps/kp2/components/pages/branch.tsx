@@ -210,7 +210,7 @@ function BranchPage({
                 {branchDropdownOpen ? (
                   <div className="absolute left-1/2 top-full z-50 mt-2 max-h-[70vh] w-64 -translate-x-1/2 overflow-auto bg-surface-container-lowest text-on-surface brutalist-border brutalist-shadow p-2">
                     <div className="mb-1 border-b-2 border-on-background/15 px-3 py-1.5 font-body-md text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">
-                      Switch KP2 campus
+                      Switch KP2 branch
                     </div>
                     {branches.map((item) => (
                       <button
@@ -664,7 +664,7 @@ function BranchPage({
           <div className="grid lg:grid-cols-2 gap-8 items-start">
             <div>
               <h2 className="font-display-lg text-headline-lg uppercase leading-none mb-4">
-                Contact this campus
+                Contact this branch
               </h2>
               <p className="font-body-md text-body-md text-on-surface-variant mb-6 max-w-md">
                 Questions about {branch.city}, parking, or your first Sunday? Send a note

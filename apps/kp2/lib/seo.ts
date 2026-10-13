@@ -10,6 +10,7 @@ export const SITE_DESCRIPTION =
 export const SOCIAL_LINKS = [
   "https://www.instagram.com/kharisphasetwo/",
   "https://www.youtube.com/@davidantwi",
+  "https://www.tiktok.com/@kharisphasetwo_",
 ] as const;
 
 export const STATIC_PATHS = [
@@ -19,6 +20,7 @@ export const STATIC_PATHS = [
   "/life",
   "/fellowships",
   "/departments",
+  "/gallery",
   "/events",
   "/messages",
   "/media",

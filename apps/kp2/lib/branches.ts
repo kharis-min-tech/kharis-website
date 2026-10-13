@@ -141,7 +141,7 @@ function pastorDisplay(name?: string | null, role?: string | null) {
   return { pastor: name.trim(), pastorRole: alreadyTitled ? "" : label };
 }
 
-/** KP2 site: Phase 2 campuses, or rows explicitly tagged kp2. Never dump the main Kharis network. */
+/** KP2 site: Phase 2 branches, or rows explicitly tagged kp2. Never dump the main Kharis network. */
 export function isKp2Location(row: {
   workspace?: string | null;
   group?: string | null;
@@ -178,7 +178,7 @@ function venueLooksLike(venue: VenueRow, hint: string) {
     .includes(hint);
 }
 
-/** Prefer a venue that actually belongs to this campus; never pin Barking to Sutton Coldfield. */
+/** Prefer a venue that actually belongs to this branch; never pin Barking to Sutton Coldfield. */
 function pickMainVenue(
   row: BranchRow,
   venues: VenueRow[],
@@ -268,7 +268,7 @@ function toBranch(row: BranchRow): Branch {
   }));
 
   const blurb =
-    row.short_description || row.description || `${row.name} — a Kharis Phase 2 campus.`;
+    row.short_description || row.description || `${row.name} — a Kharis Phase 2 branch.`;
 
   return {
     slug: row.slug,

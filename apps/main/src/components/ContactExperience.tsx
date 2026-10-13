@@ -430,7 +430,7 @@ export function ContactExperience({ locations }: Props) {
                 <li>
                   <MapPin className="h-4 w-4" aria-hidden />
                   <div>
-                    <strong>Main campus</strong>
+                    <strong>Main KP2 branch</strong>
                     <span>
                       {HQ ? getBranchAddress(HQ) : "Address Unavailiable"}
                     </span>
@@ -597,7 +597,7 @@ export function ContactExperience({ locations }: Props) {
         <div className="contact-vibe__veil" />
         <div className="contact-vibe__inner">
           <Reveal variant="left">
-            <h2>Follow the vibe</h2>
+            <h2>Follow the movement</h2>
           </Reveal>
           <Reveal variant="right" className="contact-vibe__links">
             {SOCIALS.map((social) => (

@@ -20,6 +20,8 @@ import {
   instagramCaption,
   type InstagramPost,
 } from "@/lib/instagram";
+import { TikTokIcon } from "@/components/TikTokIcon";
+import { TIKTOK_HANDLE, TIKTOK_URL } from "@/lib/social";
 
 
 
@@ -98,9 +100,18 @@ const SOCIALS = [
     band: "bg-error-container text-on-error-container",
   },
   {
+    label: "TikTok",
+    handle: TIKTOK_HANDLE,
+    copy: "Short clips, house moments and word in motion.",
+    href: TIKTOK_URL,
+    cta: "FOLLOW",
+    Icon: TikTokIcon,
+    band: "bg-on-background text-surface",
+  },
+  {
     label: "Spotify",
     handle: "Davidantwi",
-    copy: "Every sermon as a podcast — press play on your commute.",
+    copy: "Every sermon as a podcast. Press play on your commute.",
     href: "https://open.spotify.com/",
     cta: "LISTEN",
     Icon: SpotifyIcon,
@@ -153,7 +164,7 @@ function MediaPage({
           </h1>
           <p className="font-body-lg text-primary-fixed-dim max-w-xl mx-auto mb-stack-md">
             Everywhere Kharis lives online. Follow the feeds, and tune into messages
-            from our head pastor on YouTube, Spotify and SoundCloud — or listen in the app.
+            from our head pastor on YouTube, Spotify and SoundCloud, or listen in the app.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <a

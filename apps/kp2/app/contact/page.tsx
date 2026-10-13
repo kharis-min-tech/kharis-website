@@ -7,7 +7,7 @@ export const revalidate = 60;
 export const metadata = pageMeta({
   title: "Contact",
   description:
-    "Get in touch with Kharis Phase 2 — send a message, find a campus, or connect with the team.",
+    "Get in touch with Kharis Phase 2. Send a message, find a branch, or connect with the team.",
   path: "/contact",
 });
 

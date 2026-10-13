@@ -18,20 +18,20 @@ const OTHERS = DEPARTMENTS.filter((d) => !d.featured);
 const WHY_SERVE = [
   {
     icon: "favorite",
-    title: "We serve because we've been served",
-    text: "Jesus did not come to be served, but to serve. Serving is worship — a response to the grace we have already received.",
+    title: "Get busy serving",
+    text: "Jesus came to serve. We serve because we have been served. Get busy serving.",
     ref: "Matthew 20:28",
   },
   {
     icon: "diversity_3",
-    title: "We belong to something bigger",
-    text: "Every gift is a piece of the body working together. When you serve, you find where you fit and become family.",
+    title: "Find your place",
+    text: "Every gift belongs in the body. Take your place and become family.",
     ref: "1 Corinthians 12:12-27",
   },
   {
     icon: "volunteer_activism",
-    title: "We work as unto the Lord",
-    text: "Whatever you do, work at it with all your heart, as working for the Lord. Faithfulness in serving is how we honour Him.",
+    title: "Work as unto the Lord",
+    text: "Work with all your heart, as working for the Lord. We are passionate about God and His word.",
     ref: "Colossians 3:23-24",
   },
 ];
@@ -105,7 +105,7 @@ function DepartmentsPage() {
                 Start here
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase">
-                Our Vibrant Departments
+                Our Departments
               </h2>
             </div>
           </div>
@@ -163,7 +163,7 @@ function DepartmentsPage() {
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase">Explore Every Department</h2>
               <p className="mx-auto mt-3 max-w-xl text-sm text-on-surface-variant">
-                Search or browse the full list. Pick whatever stirs you — there&apos;s a place for your gift.
+                Search or browse. There is a place for your gift. Get busy serving.
               </p>
             </div>
 
@@ -175,7 +175,7 @@ function DepartmentsPage() {
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search by name or role — try 'prayer', 'sound' or 'kids'..."
+                  placeholder="Search by name or role. Try prayer, sound or media."
                   className="input-focus w-full rounded-none border border-on-background/10 bg-surface-container-lowest px-11 py-3.5 text-sm font-medium text-on-surface placeholder:text-on-surface-variant"
                 />
               </label>
@@ -208,7 +208,7 @@ function DepartmentsPage() {
                 <span className="material-symbols-outlined mb-3 text-4xl text-on-surface-variant" aria-hidden="true">search_off</span>
                 <p className="font-headline-md text-headline-md mb-2">No teams found</p>
                 <p className="text-sm text-on-surface-variant">
-                  Try a different search, or chat to a pastor — we&apos;ll find your fit.
+                  Try a different search, or talk to a pastor. We will find your fit.
                 </p>
               </div>
             )}
@@ -228,7 +228,7 @@ function DepartmentsPage() {
                 Why We Serve
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm text-surface-container-low">
-                Serving is worship. We respond to grace, take our place in the body, and grow as we minister to the total person.
+                Serving is worship. Respond to grace. Take your place. Get busy serving.
               </p>
             </div>
 

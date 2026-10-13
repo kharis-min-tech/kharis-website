@@ -7,7 +7,7 @@ export const revalidate = 1800;
 export const metadata = pageMeta({
   title: "Messages",
   description:
-    "Watch the latest teachings from Pastor David Antwi — Sunday messages, Just Men, and the Kharis Phase 2 archive on YouTube.",
+    "Watch the latest teachings from Pastor David Antwi. Sunday messages, Just Men, and the Kharis Phase 2 archive on YouTube.",
   path: "/messages",
 });
 

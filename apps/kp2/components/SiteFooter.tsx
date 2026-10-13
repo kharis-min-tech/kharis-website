@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { TikTokIcon } from "@/components/TikTokIcon";
+import { TIKTOK_URL } from "@/lib/social";
 const eaLogoLight = "/kp2/assets/ea-logo-light.png";
 const eaLogoDark = "/kp2/assets/ea-logo-dark.png";
 
@@ -35,6 +37,7 @@ const COLUMNS: FooterColumn[] = [
     links: [
       { label: "Find a Branch", to: "/branches" },
       { label: "Life", to: "/life" },
+      { label: "Gallery", to: "/gallery" },
       { label: "Events", to: "/events" },
       { label: "Messages", to: "/messages" },
     ],
@@ -87,6 +90,15 @@ export function SiteFooter() {
               aria-label="Instagram"
             >
               <span className="material-symbols-outlined">photo_camera</span>
+            </a>
+            <a
+              className="w-11 h-11 bg-background comic-border flex items-center justify-center text-on-background brutalist-shadow hover:-translate-y-1 transition-transform"
+              href={TIKTOK_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="TikTok"
+            >
+              <TikTokIcon className="w-5 h-5" />
             </a>
           </div>
         </div>
