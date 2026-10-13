@@ -34,7 +34,11 @@ async function restGet(
   });
 }
 
-export async function supabaseSelect<T>(table: string, query: string): Promise<T[]> {
+export async function supabaseSelect<T>(
+  table: string,
+  query: string,
+  revalidate: number | false = 60,
+): Promise<T[]> {
   if (!supabaseUrl || !supabaseKey) {
     console.error("Supabase env vars are missing.");
     return [];
@@ -53,10 +57,9 @@ export async function supabaseSelect<T>(table: string, query: string): Promise<T
     let status: number;
 
     try {
-      const res = await fetch(url, {
-        headers,
-        next: { revalidate: 60 },
-      });
+      const res = await fetch(url, revalidate === false
+        ? { headers, cache: "no-store" }
+        : { headers, next: { revalidate } });
       ok = res.ok;
       status = res.status;
       body = await res.text();
