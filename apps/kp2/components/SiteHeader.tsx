@@ -145,7 +145,7 @@ export function SiteHeader() {
           <div className="hidden xl:block shrink-0">
             <Link
               href="/branches"
-              className="group inline-flex items-center gap-2 justify-center bg-primary !text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-6 py-3 brutalist-border brutalist-shadow transition-all duration-200 hover:bg-primary-container hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:translate-x-1 active:translate-y-1"
+              className="header-branch-cta group inline-flex items-center gap-2 justify-center bg-primary !text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-6 py-3 brutalist-border brutalist-shadow transition-all duration-200 hover:bg-primary-container"
             >
               <span className="material-symbols-outlined text-[18px] leading-none transition-transform duration-200 group-hover:scale-110">
                 location_on
@@ -213,7 +213,7 @@ export function SiteHeader() {
             <Link
               href="/branches"
               onClick={() => setOpen(false)}
-              className="mt-4 bg-primary !text-on-primary font-body-md text-sm font-bold uppercase tracking-wide px-6 py-4 brutalist-border brutalist-shadow text-center transition-colors duration-200 hover:bg-primary-container"
+              className="header-branch-cta mt-4 bg-primary !text-on-primary font-body-md text-sm font-bold uppercase tracking-wide px-6 py-4 brutalist-border brutalist-shadow text-center transition-colors duration-200 hover:bg-primary-container"
             >
               Find a Branch
             </Link>
