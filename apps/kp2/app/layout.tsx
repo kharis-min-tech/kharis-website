@@ -192,7 +192,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={organizationJsonLd()} />
         <ScrollReveal />
         {children}
-        <script src="/kp2/ui-boot.js?v=7" defer></script>
+        <script src="/kp2/ui-boot.js?v=8" defer></script>
       </body>
     </html>
   );

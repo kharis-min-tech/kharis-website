@@ -94,7 +94,7 @@ function DepartmentsPage() {
   return (
     <div className="font-body-md text-body-md overflow-x-hidden">
       <SiteHeader />
-      <main className="pt-20">
+      <main className="pt-[74px]">
         {/* Hero */}
         <DepartmentVideoHero />
 

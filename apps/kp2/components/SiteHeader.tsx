@@ -68,7 +68,7 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest border-b-2 border-on-background shadow-[0_4px_0_0_var(--primary)]">
+    <header className="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest border-b-2 border-on-background before:pointer-events-none before:absolute before:inset-x-0 before:top-full before:-mt-px before:h-[5px] before:bg-primary before:content-['']">
       <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4 h-[72px]">
           {/* Logo */}

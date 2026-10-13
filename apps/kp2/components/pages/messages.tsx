@@ -191,50 +191,22 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
               {[
-                {
-                  label: "Kharis App",
-                  copy: "Messages, notes and giving in one place.",
-                  cta: "Get the App",
-                  href: "/#app-stores",
-                  icon: "smartphone",
-                },
-                {
-                  label: "Spotify",
-                  copy: "Stream the podcast and follow every series.",
-                  cta: "Listen on Spotify",
-                  href: "https://open.spotify.com/",
-                  icon: "podcasts",
-                },
-                {
-                  label: "SoundCloud",
-                  copy: "Audio archive of past teachings and sessions.",
-                  cta: "Play on SoundCloud",
-                  href: "https://soundcloud.com/",
-                  icon: "graphic_eq",
-                },
-                {
-                  label: "YouTube",
-                  copy: "Watch full services, clips and live streams.",
-                  cta: "Watch on YouTube",
-                  href: "https://youtube.com/@davidantwi",
-                  icon: "smart_display",
-                },
-              ].map(({ label, copy, cta, href, icon }) => (
+                { label: "Kharis App", copy: "Messages, notes and giving in one place.", cta: "Get the App", href: "/#app-stores", icon: "smartphone", card: "bg-primary text-on-primary", muted: "!text-primary-fixed" },
+                { label: "Spotify", copy: "Stream the podcast and follow every series.", cta: "Listen on Spotify", href: "https://open.spotify.com/", icon: "podcasts", card: "bg-[#1DB954] text-white", muted: "text-white/90" },
+                { label: "SoundCloud", copy: "Audio archive of past teachings and sessions.", cta: "Play on SoundCloud", href: "https://soundcloud.com/", icon: "graphic_eq", card: "bg-[#FF5500] text-white", muted: "text-white/90" },
+                { label: "YouTube", copy: "Watch full services, clips and live streams.", cta: "Watch on YouTube", href: "https://youtube.com/@davidantwi", icon: "smart_display", card: "bg-[#FF0000] text-white", muted: "text-white/90" },
+              ].map(({ label, copy, cta, href, icon, card, muted }) => (
                 <a
                   key={label}
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-                  className="group bg-primary text-on-primary border-2 border-black rounded-none neo-shadow hover-press flex flex-col p-6 no-accent-fill"
+                  className={`group ${card} border-2 border-black rounded-none neo-shadow hover-press flex flex-col p-6 no-accent-fill`}
                 >
-                  <span className="material-symbols-outlined text-4xl mb-4 !text-primary-fixed">
-                    {icon}
-                  </span>
-                  <h3 className="font-headline-md text-title-lg uppercase mb-2 text-on-primary">
-                    {label}
-                  </h3>
-                  <p className="font-body-lg text-body-md !text-primary-fixed flex-1">{copy}</p>
-                  <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase text-on-primary">
+                  <span className={`material-symbols-outlined text-4xl mb-4 ${muted}`}>{icon}</span>
+                  <h3 className="font-headline-md text-title-lg uppercase mb-2">{label}</h3>
+                  <p className={`font-body-lg text-body-md flex-1 ${muted}`}>{copy}</p>
+                  <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase">
                     {cta}
                     <span className="material-symbols-outlined text-base transition-transform group-hover:translate-x-1">
                       arrow_forward
