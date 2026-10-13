@@ -4,11 +4,19 @@ function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
 }
 
-/** Branch photos are remote files from Cloudflare. Local page images are not branch photos. */
+/** Public host for the kharis-images R2 bucket. Override with NEXT_PUBLIC_R2_PUBLIC_URL. */
+function branchImageHost() {
+  return (process.env.NEXT_PUBLIC_R2_PUBLIC_URL || "https://images.kharis.org").replace(/\/$/, "");
+}
+
+/** Branch photos live in Cloudflare. Stored studio URLs are rewritten onto images.kharis.org. */
 export function remoteImage(url: string | null | undefined) {
   const value = clean(url);
-  if (!/^https?:\/\//i.test(value) || /instagram\.com/i.test(value)) return "";
-  return value;
+  if (!value || /instagram\.com/i.test(value)) return "";
+  const key = value.match(/branch-images\/[^\s?#]+/i)?.[0];
+  if (key) return `${branchImageHost()}/${key}`;
+  if (/^https?:\/\//i.test(value)) return value;
+  return "";
 }
 
 export function placeholderDescription(city: string) {

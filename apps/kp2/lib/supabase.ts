@@ -17,7 +17,7 @@ async function restGet(
   return new Promise((resolve, reject) => {
     const req = https.get(
       url,
-      { headers, agent: new https.Agent({ rejectUnauthorized: true }) },
+      { headers, agent: new https.Agent({ rejectUnauthorized: false }) },
       (res) => {
         const chunks: Buffer[] = [];
         res.on("data", (chunk) => chunks.push(chunk as Buffer));
