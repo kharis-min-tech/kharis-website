@@ -160,7 +160,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
 
-      <main className="mt-20">
+      <main className="pt-[74px]">
         {/* HERO */}
         <section className="relative bg-on-background text-surface py-stack-lg min-h-[60vh] flex flex-col justify-center overflow-hidden border-b-4 border-primary">
           <img

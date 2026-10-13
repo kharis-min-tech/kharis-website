@@ -33,7 +33,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
       <SiteHeader />
 
-      <header className="relative min-h-[620px] md:min-h-[760px] lg:min-h-[921px] flex items-center pt-24 overflow-hidden bg-black text-white">
+      <header className="relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden bg-black pt-24 pb-8 text-white">
         <div className="absolute inset-0 opacity-60">
           <div
             className="w-full h-full bg-cover bg-center"
@@ -60,7 +60,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
             powerpacked culture. Get busy serving, and leave every service ready to impact your
             generation with Christ.
           </p>
-          <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-2">
             <Link
               href="/branches"
               className="bg-primary text-white px-8 py-4 border-4 border-black neo-shadow-lg font-headline-md text-headline-md uppercase hover-press transition-all skew-hover inline-block"

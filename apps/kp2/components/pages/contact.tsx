@@ -29,8 +29,8 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container">
       <SiteHeader />
-      <main className="pt-20">
-        <section className="relative box-border flex min-h-[calc(100svh-5rem)] h-auto lg:h-[calc(100dvh-5rem)] lg:max-h-[calc(100dvh-5rem)] items-center overflow-hidden border-b-4 border-primary bg-on-background px-margin-mobile py-8 text-background md:px-margin-desktop md:py-10">
+      <main className="pt-[74px]">
+        <section className="relative box-border flex min-h-[calc(100svh-74px)] h-auto lg:h-[calc(100dvh-74px)] lg:max-h-[calc(100dvh-74px)] items-center overflow-hidden border-b-4 border-primary bg-on-background px-margin-mobile py-8 text-background md:px-margin-desktop md:py-10">
           <div className="halftone-bg pointer-events-none absolute inset-0 opacity-25"></div>
           <div className="absolute top-0 right-0 h-full w-2/3 bg-gradient-to-l from-primary/25 to-transparent"></div>
           <div className="relative z-10 grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-gutter">

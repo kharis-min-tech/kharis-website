@@ -39,7 +39,7 @@ function GalleryPage() {
   return (
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
-      <main className="pt-20">
+      <main className="pt-[74px]">
         <header className="relative min-h-[420px] md:min-h-[520px] flex items-end bg-on-background text-white overflow-hidden border-b-4 border-primary">
           <img
             src="/kp2/assets/events-hero-worship.jpg"

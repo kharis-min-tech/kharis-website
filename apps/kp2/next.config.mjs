@@ -35,6 +35,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "content.kharis.org",
       },
+      {
+        protocol: "https",
+        hostname: "images.kharis.org",
+      },
     ],
   },
   async headers() {
