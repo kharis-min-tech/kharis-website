@@ -13,17 +13,16 @@ const LEAD = "We are";
  * shade from the purple / pink / gold family, light enough to read on the dark wall.
  */
 const PHRASES = [
+  { text: "Jesus Believers", anim: "wipe", color: "#f6d27a" },
   { text: "Christ Centric", anim: "fade-up", color: "#e58fc4" },
   { text: "Biblical", anim: "tracking", color: "#f0b44c" },
   { text: "Spirit Filled", anim: "words", color: "#b18cff" },
   { text: "Revival Seeking", anim: "wipe", color: "#ff9f7a" },
-  { text: "The Saints", anim: "blur-in", color: "#ee8fd0" },
+  { text: "Sound Believers", anim: "blur-in", color: "#ee8fd0" },
   { text: "God\u2019s Elect", anim: "fade-up", color: "#e8a33d" },
   { text: "Disciples", anim: "tracking", color: "#b98cff" },
   { text: "Hungry for God", anim: "words", color: "#ffc98a" },
-  { text: "Jesus Believers", anim: "wipe", color: "#e070b5" },
-  { text: "Chosen by God", anim: "blur-in", color: "#f6d27a" },
-  { text: "Jesus Lovers", anim: "words", color: "#ff8fb1" },
+  { text: "Jesus Lovers", anim: "blur-in", color: "#ff8fb1" },
 ] as const;
 
 const START_DELAY_MS = 500;

@@ -14,6 +14,8 @@ type Card = {
   icon: "book" | "location" | "groups" | "heart" | "home";
   size: "portrait" | "normal" | "tall";
   position?: string;
+  /** "contain" shows the whole photo over a blurred copy of itself, so wide group shots aren't cropped. */
+  fit?: "contain";
 };
 
 const cards: Card[] = [
@@ -56,7 +58,7 @@ const cards: Card[] = [
     info: "Take your next step with Jesus. Start with baptism at Kharis Life.",
     icon: "heart",
     size: "normal",
-    position: "object-[center_30%]",
+    fit: "contain",
   },
   {
     title: "Get Involved",
@@ -66,7 +68,7 @@ const cards: Card[] = [
     info: "Join a team and grow with the Kharis family.",
     icon: "home",
     size: "tall",
-    position: "object-[center_30%]",
+    position: "object-[center_14%] sm:object-[center_24%] lg:object-[center_14%]",
   },
 ];
 
@@ -130,12 +132,23 @@ export function KnowUsStack() {
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   className={`know-card group relative block overflow-hidden rounded-[1.75rem] shadow-[var(--shadow-lift)] ${layout.height}`}
                 >
+                  {card.fit === "contain" ? (
+                    <Image
+                      src={card.image}
+                      alt=""
+                      aria-hidden
+                      fill
+                      unoptimized={card.image.startsWith("/images/")}
+                      className="scale-110 object-cover blur-2xl brightness-75"
+                      sizes={layout.sizes}
+                    />
+                  ) : null}
                   <Image
                     src={card.image}
                     alt={card.title}
                     fill
                     unoptimized={card.image.startsWith("/images/")}
-                    className={`object-cover transition duration-700 group-hover:scale-[1.03] ${card.position ?? "object-center"}`}
+                    className={`${card.fit === "contain" ? "object-contain" : "object-cover"} transition duration-700 group-hover:scale-[1.03] ${card.position ?? "object-center"}`}
                     sizes={layout.sizes}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
