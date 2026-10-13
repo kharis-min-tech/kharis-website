@@ -3,6 +3,23 @@ import https from "https";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
+type TlsWithSystemStore = {
+  getCACertificates?: (type: "default" | "system") => string[];
+};
+
+/** Validates certificates, including authorities installed in the OS trust store. */
+async function tlsAgent() {
+  try {
+    const store = (await import(/* webpackIgnore: true */ "tls")) as TlsWithSystemStore;
+    const load = store.getCACertificates?.bind(store);
+    const ca = load ? load("default").concat(load("system")) : [];
+    if (ca.length > 0) return new https.Agent({ ca, rejectUnauthorized: true });
+  } catch {
+    // Keep certificate checks on with Node's bundled authorities.
+  }
+  return new https.Agent({ rejectUnauthorized: true });
+}
+
 function isCertError(error: unknown) {
   const code =
     (error as { cause?: { code?: string }; code?: string } | null)?.cause?.code ??
@@ -14,27 +31,28 @@ async function restGet(
   url: string,
   headers: Record<string, string>,
 ): Promise<{ ok: boolean; status: number; body: string }> {
+  const agent = await tlsAgent();
   return new Promise((resolve, reject) => {
-    const req = https.get(
-      url,
-      { headers, agent: new https.Agent({ rejectUnauthorized: true }) },
-      (res) => {
-        const chunks: Buffer[] = [];
-        res.on("data", (chunk) => chunks.push(chunk as Buffer));
-        res.on("end", () => {
-          resolve({
-            ok: (res.statusCode ?? 500) >= 200 && (res.statusCode ?? 500) < 300,
-            status: res.statusCode ?? 500,
-            body: Buffer.concat(chunks).toString("utf8"),
-          });
+    const req = https.get(url, { headers, agent }, (res) => {
+      const chunks: Buffer[] = [];
+      res.on("data", (chunk) => chunks.push(chunk as Buffer));
+      res.on("end", () => {
+        resolve({
+          ok: (res.statusCode ?? 500) >= 200 && (res.statusCode ?? 500) < 300,
+          status: res.statusCode ?? 500,
+          body: Buffer.concat(chunks).toString("utf8"),
         });
-      },
-    );
+      });
+    });
     req.on("error", reject);
   });
 }
 
-export async function supabaseSelect<T>(table: string, query: string): Promise<T[]> {
+export async function supabaseSelect<T>(
+  table: string,
+  query: string,
+  revalidate: number | false = 60,
+): Promise<T[]> {
   if (!supabaseUrl || !supabaseKey) {
     console.error("Supabase env vars are missing.");
     return [];
@@ -53,10 +71,10 @@ export async function supabaseSelect<T>(table: string, query: string): Promise<T
     let status: number;
 
     try {
-      const res = await fetch(url, {
-        headers,
-        next: { revalidate: 60 },
-      });
+      const res = await fetch(
+        url,
+        revalidate === false ? { headers, cache: "no-store" } : { headers, next: { revalidate } },
+      );
       ok = res.ok;
       status = res.status;
       body = await res.text();

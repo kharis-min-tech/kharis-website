@@ -1,4 +1,5 @@
 import type { Testimonial } from "@/components/TestimonialCarousel";
+import { publicAsset } from "@/lib/public-asset";
 import { SITE_WORKSPACES } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
@@ -120,7 +121,9 @@ export async function getGivingTestimonials(): Promise<GivingTestimony[]> {
       return {
         name: displayName(row),
         role: row.category || row.branch_name || "Member",
-        image: row.image_url || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]!,
+        image: row.image_url
+          ? publicAsset(row.image_url)
+          : FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]!,
         quote: quote.startsWith('"') ? quote : `"${quote}"`,
       } satisfies GivingTestimony;
     })

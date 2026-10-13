@@ -131,7 +131,7 @@ export async function getTestimonies(
   const { data, error } = await supabase
     .from("testimonies")
     .select(SAFE_TESTIMONY_FIELDS)
-    .eq("workspace", workspace)
+    .in("workspace", [workspace, "general"])
     .eq(featureColumn, true);
 
   if (error) {

@@ -12,6 +12,7 @@
   "observability": {
     "enabled": true,
   },
+  "vars": {},
   // Cutover switch — uncomment to take kharis.org/kp2* live on Cloudflare.
   // Until then `wrangler deploy` only publishes to *.workers.dev and
   // leaves the current production host untouched.

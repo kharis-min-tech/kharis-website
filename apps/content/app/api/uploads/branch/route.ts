@@ -6,7 +6,12 @@ import {
   isBranchImageCategory,
   isBranchImageContentType,
 } from "@/lib/branch-image-paths";
-import { ensureBranchImageFolder, deleteUnusedBranchImages, storeBranchImage } from "@/lib/r2";
+import {
+  branchImagePublicUrl,
+  ensureBranchImageFolder,
+  deleteUnusedBranchImages,
+  storeBranchImage,
+} from "@/lib/r2";
 import { branchImageKeyFromUrl } from "@/lib/branch-image-paths";
 import { studioUserFromRequest } from "@/lib/studio-auth";
 
@@ -186,7 +191,7 @@ async function storeUploadedBranchImage(
     if (!stored) {
       return NextResponse.json({ error: "Image storage is not configured." }, { status: 503 });
     }
-    const publicUrl = stored.publicUrl ?? `${new URL(request.url).origin}/api/media/${stored.key}`;
+    const publicUrl = branchImagePublicUrl(stored.key, new URL(request.url).origin);
     return NextResponse.json({ key: stored.key, publicUrl, contentType: file.type });
   } catch {
     return NextResponse.json(
