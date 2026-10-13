@@ -88,10 +88,10 @@ export async function POST(request: Request) {
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-    if (!supabaseUrl || !serviceRoleKey) {
-      console.error("Missing Supabase server environment variables");
+    if (!supabaseUrl || !publishableKey) {
+      console.error("Missing Supabase environment variables");
       return NextResponse.json({ error: "Server configuration error." }, { status: 500 });
     }
 
@@ -113,8 +113,8 @@ export async function POST(request: Request) {
     });
 
     const headers = {
-      apikey: serviceRoleKey,
-      Authorization: `Bearer ${serviceRoleKey}`,
+      apikey: publishableKey,
+      Authorization: `Bearer ${publishableKey}`,
       Accept: "application/json",
       "Content-Type": "application/json",
       Prefer: "return=representation",
