@@ -32,18 +32,18 @@ declare global {
 }
 
 const MAP_STYLES = [
-  { elementType: "geometry", stylers: [{ color: "#f6eef3" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#5a3a4e" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#f6eef3" }] },
+  { elementType: "geometry", stylers: [{ color: "#f1eef6" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#483a5a" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#f1eef6" }] },
   { featureType: "poi", stylers: [{ visibility: "off" }] },
   { featureType: "transit", stylers: [{ visibility: "off" }] },
   { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
   { featureType: "road", elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-  { featureType: "water", stylers: [{ color: "#e4d0dc" }] },
+  { featureType: "water", stylers: [{ color: "#d9d0e4" }] },
   {
     featureType: "administrative",
     elementType: "geometry.stroke",
-    stylers: [{ color: "#d7bccb" }],
+    stylers: [{ color: "#c8bcd7" }],
   },
 ];
 
@@ -145,7 +145,7 @@ export function BranchMap({ branches, active, onSelect }: Props) {
     if (info && marker) {
       info.close();
       const address = active.address
-        ? `<p style="margin:4px 0 0;font-size:13px;color:#5a3a4e">${active.address}</p>`
+        ? `<p style="margin:4px 0 0;font-size:13px;color:#483a5a">${active.address}</p>`
         : "";
       (info as unknown as { setContent: (html: string) => void }).setContent(
         `<div style="font-family:inherit;padding:2px 4px"><strong>${active.name}</strong>${address}</div>`,

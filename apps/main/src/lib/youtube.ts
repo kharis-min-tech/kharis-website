@@ -455,7 +455,7 @@ export async function findPastorMessage(
 
 export async function fetchLatestMessages(limit = 5): Promise<MessageVideo[]> {
   // Homepage still prefers Acts for featured warmth
-  const all = await fetchPastorMessages(Math.max(limit * 3, 25));
+  const all = await fetchPastorMessages(Math.max(limit * 3, 25)).catch(() => [] as MessageVideo[]);
   const acts = all.filter((m) => m.title.toLowerCase().includes("acts"));
   const rest = all.filter((m) => !m.title.toLowerCase().includes("acts"));
   const ordered = [...acts, ...rest];

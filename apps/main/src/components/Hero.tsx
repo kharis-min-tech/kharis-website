@@ -40,8 +40,8 @@ const HERO_SLIDES: HeroSlide[] = [
   },
   {
     type: "image",
-    src: "/images/hero/prayer-fasting-preaching.jpg",
-    alt: "Preaching with an open Bible at the Prayer and Fasting service",
+    src: "/images/hero/preaching-open-bible.jpg",
+    alt: "Preaching with arms outstretched and an open Bible in hand",
   },
   { type: "video", src: "/videos/hero-b.mp4?v=2", poster: "/videos/hero-b-poster.jpg" },
   {
@@ -332,7 +332,7 @@ export function Hero() {
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="none"
                         controls={false}
                         disablePictureInPicture
                         tabIndex={-1}

@@ -38,7 +38,7 @@ export function VisionSection() {
             and play.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <div className="btn-pair mt-7">
             <a
               href={KHARIS_APP.iosUrl}
               target="_blank"

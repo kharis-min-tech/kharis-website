@@ -11,7 +11,7 @@ type Props = {
 };
 
 export function BranchCarousel({ slides }: Props) {
-  const list = Array.isArray(slides) ? slides : [];
+  const list = useMemo(() => (Array.isArray(slides) ? slides : []), [slides]);
   const n = list.length;
 
   // Triple the reel so the loop never “ends”
@@ -23,6 +23,8 @@ export function BranchCarousel({ slides }: Props) {
   // Start in the middle copy
   const [index, setIndex] = useState(n);
   const [animate, setAnimate] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [hovering, setHovering] = useState(false);
 
   // Keep middle-band index if slides length changes
   useEffect(() => {
@@ -67,16 +69,28 @@ export function BranchCarousel({ slides }: Props) {
     }
   }, [animate]);
 
+  // Reduced motion: start paused.
   useEffect(() => {
-    if (n < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setPaused(true);
+  }, []);
+
+  useEffect(() => {
+    if (n < 2 || paused || hovering) return;
     const id = window.setInterval(() => go(index + 1), INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [n, index, go]);
+  }, [n, index, go, paused, hovering]);
 
   if (!n) return null;
 
   return (
-    <div className="apple-carousel" id="who-we-are-carousel">
+    <div
+      className="apple-carousel"
+      id="who-we-are-carousel"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      onFocus={() => setHovering(true)}
+      onBlur={() => setHovering(false)}
+    >
       <div className="apple-carousel__viewport">
         <div
           className="apple-carousel__track"
@@ -94,6 +108,8 @@ export function BranchCarousel({ slides }: Props) {
                 onClick={() => go(i)}
                 role="group"
                 aria-roledescription="slide"
+                // Only the middle copy of the reel is read out.
+                aria-hidden={i < n || i >= n * 2 || undefined}
                 aria-label={`${slide.title}: ${slide.subtitle}`}
               >
                 <Image
@@ -116,7 +132,7 @@ export function BranchCarousel({ slides }: Props) {
                     className="h-7 w-7 object-contain drop-shadow md:h-8 md:w-8"
                   />
                   <span className="font-[family-name:var(--font-display)] text-sm font-extrabold tracking-tight text-white drop-shadow md:text-base">
-                    kharis
+                    Kharis
                   </span>
                 </div>
 
@@ -133,6 +149,23 @@ export function BranchCarousel({ slides }: Props) {
       </div>
 
       <div className="apple-carousel__controls">
+        <button
+          type="button"
+          className="apple-carousel__pause"
+          aria-label={paused ? "Play slideshow" : "Pause slideshow"}
+          aria-pressed={paused}
+          onClick={() => setPaused((v) => !v)}
+        >
+          {paused ? (
+            <svg viewBox="0 0 12 12" aria-hidden className="h-3 w-3">
+              <path d="M2.5 1.2v9.6L10.5 6z" fill="currentColor" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 12 12" aria-hidden className="h-3 w-3">
+              <path d="M2 1.5h3v9H2zM7 1.5h3v9H7z" fill="currentColor" />
+            </svg>
+          )}
+        </button>
         <div className="apple-carousel__dots" role="tablist" aria-label="Who we are">
           {list.map((slide, i) => (
             <button

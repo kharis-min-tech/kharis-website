@@ -28,7 +28,7 @@ const BOOKS: Book[] = [
   {
     id: "mission",
     label: "Our Mission",
-    color: "#800654",
+    color: "#630ed4",
     pages: [
       {
         title: ABOUT.mission.title,
@@ -56,7 +56,7 @@ const BOOKS: Book[] = [
   {
     id: "vision",
     label: "Our Vision",
-    color: "#650445",
+    color: "#4c08a8",
     pages: [
       {
         title: ABOUT.vision.title,
@@ -81,7 +81,7 @@ const BOOKS: Book[] = [
   {
     id: "leadership",
     label: "Our Leadership",
-    color: "#4a0a36",
+    color: "#260a4a",
     pages: [
       {
         title: ABOUT.leadership.title,

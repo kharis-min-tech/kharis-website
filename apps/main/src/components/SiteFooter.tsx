@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Reveal } from "@/components/Reveal";
+import { KP2_URL } from "@/lib/kp2";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
 type Props = {
@@ -60,9 +61,9 @@ export function SiteFooter({ tone }: Props) {
               <h5 className={`site-footer__heading ${heading}`}>Get Involved</h5>
               <ul className={`site-footer__links ${muted}`}>
                 <li>
-                  <a href="https://kharis.org/" className={linkHover}>
+                  <Link href="/contact" className={linkHover}>
                     Become a member
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Link href="/life/baptism" className={linkHover}>
@@ -95,7 +96,7 @@ export function SiteFooter({ tone }: Props) {
                   </Link>
                 </li>
                 <li>
-                  <a href="https://kharis.org/" className={linkHover}>
+                  <a href={KP2_URL} className={linkHover}>
                     KP2
                   </a>
                 </li>

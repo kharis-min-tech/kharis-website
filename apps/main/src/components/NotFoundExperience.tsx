@@ -115,14 +115,14 @@ export function NotFoundExperience() {
               d="M0 290 C120 250 200 300 320 270 C440 240 520 300 640 275 L640 360 L0 360 Z"
               fill="url(#nfHillNear)"
             />
-            <ellipse cx="320" cy="300" rx="210" ry="28" fill="rgba(128,6,84,0.08)" />
+            <ellipse cx="320" cy="300" rx="210" ry="28" fill="rgba(99, 14, 212,0.08)" />
           </g>
 
           <g className="not-found__layer not-found__twinkle" style={{ ["--nd" as string]: 28 }}>
             <circle cx="90" cy="70" r="3.5" fill="#d4920a" />
-            <circle cx="520" cy="55" r="2.5" fill="#800654" />
+            <circle cx="520" cy="55" r="2.5" fill="#630ed4" />
             <circle cx="570" cy="120" r="3" fill="#d4920a" opacity="0.7" />
-            <circle cx="70" cy="140" r="2" fill="#800654" opacity="0.6" />
+            <circle cx="70" cy="140" r="2" fill="#630ed4" opacity="0.6" />
             <path
               d="M160 100 l4 10 10 1 -8 7 3 10 -9-6 -9 6 3-10 -8-7 10-1 z"
               fill="#d4920a"
@@ -130,7 +130,7 @@ export function NotFoundExperience() {
             />
             <path
               d="M480 150 l3 8 8 1 -6 5 2 8 -7-5 -7 5 2-8 -6-5 8-1 z"
-              fill="#800654"
+              fill="#630ed4"
               opacity="0.7"
             />
           </g>
@@ -143,7 +143,7 @@ export function NotFoundExperience() {
               height="132"
               rx="22"
               fill="#fff"
-              stroke="rgba(128,6,84,0.14)"
+              stroke="rgba(99, 14, 212,0.14)"
               strokeWidth="3"
             />
             <rect x="210" y="100" width="220" height="108" rx="16" fill="url(#nfCard)" />
@@ -154,28 +154,28 @@ export function NotFoundExperience() {
               fontFamily="var(--font-display), system-ui, sans-serif"
               fontSize="78"
               fontWeight="800"
-              fill="#800654"
+              fill="#630ed4"
               letterSpacing="-4"
             >
               404
             </text>
-            <rect x="308" y="220" width="24" height="70" rx="6" fill="#650445" />
-            <rect x="286" y="284" width="68" height="14" rx="7" fill="#800654" opacity="0.35" />
+            <rect x="308" y="220" width="24" height="70" rx="6" fill="#4c08a8" />
+            <rect x="286" y="284" width="68" height="14" rx="7" fill="#630ed4" opacity="0.35" />
           </g>
 
           <g className="not-found__layer not-found__figure" style={{ ["--nd" as string]: 44 }}>
-            <ellipse cx="140" cy="278" rx="28" ry="8" fill="rgba(18,4,14,0.12)" />
-            <circle cx="140" cy="208" r="22" fill="#f7eef4" stroke="#800654" strokeWidth="3" />
-            <path d="M140 230 v48" stroke="#800654" strokeWidth="5" strokeLinecap="round" />
+            <ellipse cx="140" cy="278" rx="28" ry="8" fill="rgba(10, 4, 18,0.12)" />
+            <circle cx="140" cy="208" r="22" fill="#f2eef7" stroke="#630ed4" strokeWidth="3" />
+            <path d="M140 230 v48" stroke="#630ed4" strokeWidth="5" strokeLinecap="round" />
             <path
               d="M140 250 l-22 18 M140 250 l22 18"
-              stroke="#800654"
+              stroke="#630ed4"
               strokeWidth="5"
               strokeLinecap="round"
             />
             <path
               d="M140 278 l-14 28 M140 278 l14 28"
-              stroke="#800654"
+              stroke="#630ed4"
               strokeWidth="5"
               strokeLinecap="round"
             />
@@ -199,7 +199,7 @@ export function NotFoundExperience() {
             />
             <path
               d="M488 236 h40 M508 220 v40"
-              stroke="#800654"
+              stroke="#630ed4"
               strokeWidth="2"
               strokeLinecap="round"
               transform="rotate(-12 508 240)"
@@ -210,7 +210,7 @@ export function NotFoundExperience() {
               cy="240"
               r="8"
               fill="none"
-              stroke="#800654"
+              stroke="#630ed4"
               strokeWidth="2"
               transform="rotate(-12 508 240)"
             />
@@ -218,16 +218,16 @@ export function NotFoundExperience() {
 
           <defs>
             <linearGradient id="nfHillFar" x1="0" y1="180" x2="0" y2="360">
-              <stop stopColor="#f7eef4" />
-              <stop offset="1" stopColor="#e8d5e4" />
+              <stop stopColor="#f2eef7" />
+              <stop offset="1" stopColor="#ddd5e8" />
             </linearGradient>
             <linearGradient id="nfHillNear" x1="0" y1="250" x2="0" y2="360">
-              <stop stopColor="#800654" stopOpacity="0.18" />
-              <stop offset="1" stopColor="#800654" stopOpacity="0.06" />
+              <stop stopColor="#630ed4" stopOpacity="0.18" />
+              <stop offset="1" stopColor="#630ed4" stopOpacity="0.06" />
             </linearGradient>
             <linearGradient id="nfCard" x1="210" y1="100" x2="430" y2="208">
               <stop stopColor="#fff" />
-              <stop offset="1" stopColor="#faf6f9" />
+              <stop offset="1" stopColor="#f8f6fa" />
             </linearGradient>
           </defs>
         </svg>

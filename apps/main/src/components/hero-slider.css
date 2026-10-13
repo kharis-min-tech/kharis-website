@@ -1,4 +1,7 @@
-/* Homepage hero media wall (two drifting rows). Scoped to .hero-shell so no other section is affected. */
+/*
+ * Homepage hero media wall (two drifting rows). Scoped to .hero-shell so no other section is affected.
+ * The centre card of each row steps forward in full colour; the rest sit back in dark greyscale.
+ */
 
 .hero-shell {
   --wall-top: 4.5rem;
@@ -54,12 +57,14 @@
   height: 100%;
   width: 80vw;
   overflow: hidden;
-  border-radius: 0.9rem;
   background: #140c22;
-  filter: grayscale(1) brightness(0.5);
+  filter: grayscale(1) brightness(0.46) contrast(1.08);
+  transform: scale(0.975);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
   transition:
-    filter 0.8s cubic-bezier(0.33, 0, 0.2, 1),
-    box-shadow 0.8s ease;
+    filter 0.9s cubic-bezier(0.33, 0, 0.2, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.9s ease;
 }
 
 @media (min-width: 640px) {
@@ -69,15 +74,24 @@
   }
 }
 
-@media (min-width: 768px) {
-  .hero-wall__card {
-    border-radius: 1.15rem;
-  }
+.hero-wall__card.is-spot {
+  z-index: 2;
+  filter: none;
+  transform: scale(1.035);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 12px 24px rgba(0, 0, 0, 0.45),
+    0 44px 90px rgba(0, 0, 0, 0.6);
 }
 
-.hero-wall__card.is-spot {
-  filter: none;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+@media (min-width: 768px) {
+  .hero-wall__card {
+    transform: scale(0.965);
+  }
+
+  .hero-wall__card.is-spot {
+    transform: scale(1.05);
+  }
 }
 
 /* Tailwind preflight pins <video> to max-width:100%/height:auto : force full cover. */
@@ -104,25 +118,22 @@
   pointer-events: none;
   background:
     radial-gradient(
-      ellipse 58% 42% at 50% 54%,
-      rgba(8, 4, 18, 0.62) 0%,
-      rgba(8, 4, 18, 0.38) 45%,
-      rgba(8, 4, 18, 0) 100%
+      ellipse 46% 30% at 50% 53%,
+      rgba(10, 4, 24, 0.6) 0%,
+      rgba(10, 4, 24, 0.32) 55%,
+      rgba(10, 4, 24, 0) 100%
     ),
-    linear-gradient(0deg, rgba(8, 4, 18, 0.6) 0%, rgba(8, 4, 18, 0.2) 22%, rgba(8, 4, 18, 0) 40%),
-    linear-gradient(180deg, rgba(8, 4, 18, 0.45) 0%, rgba(8, 4, 18, 0) 14%);
+    linear-gradient(0deg, rgba(10, 4, 24, 0.5) 0%, rgba(10, 4, 24, 0) 26%);
 }
 
-/* Centred copy layer: eyebrow, animated headline, tagline, CTAs. */
+/* Centred copy layer: eyebrow, animated headline, tagline, CTAs. "Kharis" takes the campaign yellow. */
 .hero-shell.hero-shell {
-  --hero-purple: #650445;
+  --hero-purple: var(--yellow);
+  background: #150934;
 }
 
-/* Same deep purple as "Get to Know Kharis"; a soft light halo keeps it legible on the dark wall. */
 .hero-shell .hero-headline .kharis-brand {
-  text-shadow:
-    0 0 1px rgba(255, 255, 255, 0.55),
-    0 0 18px rgba(255, 255, 255, 0.35);
+  --c: var(--yellow);
 }
 
 .hero-copy {
@@ -144,8 +155,9 @@
   font-weight: 800;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  opacity: 0.85;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.6),
+    0 4px 18px rgba(0, 0, 0, 0.55);
 }
 
 .hero-headline {
@@ -160,9 +172,7 @@
   line-height: 1.1;
   color: #fff;
   white-space: nowrap;
-  text-shadow:
-    0 2px 22px rgba(0, 0, 0, 0.45),
-    0 1px 3px rgba(0, 0, 0, 0.35);
+  --c: #fff;
 }
 
 .hero-shell .hero-copy__tagline {
@@ -171,7 +181,9 @@
   font-size: clamp(1rem, 1.6vw, 1.2rem);
   font-weight: 600;
   opacity: 0.92;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.6),
+    0 4px 18px rgba(0, 0, 0, 0.55);
 }
 
 .hero-copy__ctas {
@@ -183,10 +195,60 @@
   pointer-events: auto;
 }
 
+/* Same width for both, and a darker shadow since they sit on photos */
+.hero-shell .hero-copy__ctas :is(.btn-primary, .btn-ghost) {
+  min-width: 11.75rem;
+  box-shadow:
+    0 2px 0 var(--edge),
+    0 10px 22px rgba(0, 0, 0, 0.4);
+}
+
+.hero-shell .hero-copy__ctas :is(.btn-primary, .btn-ghost):is(:hover, :focus-visible) {
+  box-shadow:
+    0 2px 0 var(--edge),
+    0 16px 30px rgba(0, 0, 0, 0.5);
+}
+
+.hero-shell .hero-copy__ctas .btn-ghost {
+  --edge: var(--lilac-edge);
+  min-height: 3rem;
+  padding: 0.75rem 1.5rem;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  color: #1c1c1f;
+  white-space: nowrap;
+  backdrop-filter: none;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.hero-shell .hero-copy__ctas .btn-ghost:is(:hover, :focus-visible) {
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 767px) {
+  .hero-shell .hero-copy__ctas {
+    width: 100%;
+  }
+
+  .hero-shell .hero-copy__ctas :is(.btn-primary, .btn-ghost) {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 0.625rem;
+  }
+}
+
 .hero-shell .hero-lead {
   margin-bottom: 0.15rem;
   opacity: 0.92;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
+  text-shadow:
+    0 0.035em 0 #8f82bd,
+    0 0.07em 0 #43337c,
+    0 0.12em 0.12em rgba(0, 0, 0, 0.55),
+    0 0.4em 0.7em rgba(0, 0, 0, 0.45);
   animation: hero-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
   transition:
     opacity 0.55s ease,
@@ -216,43 +278,25 @@
   text-align: left;
 }
 
-/* 3D lettering: stepped extrusion in a darker shade of the letter colour, then a cast shadow and glow. */
+/* Lettering: a shallow edge in a darker shade of the letter colour, then a cast shadow. */
+.hero-shell :is(.hero-headline, .hero-depth, .hero-3d, .kharis-brand) {
+  text-shadow:
+    0 0.01em 0 color-mix(in srgb, var(--c) 78%, #1b0a45),
+    0 0.02em 0 color-mix(in srgb, var(--c) 60%, #1b0a45),
+    0 0.03em 0 color-mix(in srgb, var(--c) 44%, #1b0a45),
+    0 0.04em 0 color-mix(in srgb, var(--c) 30%, #1b0a45),
+    0 0.06em 0.04em rgba(0, 0, 0, 0.5),
+    0 0.16em 0.28em rgba(0, 0, 0, 0.45),
+    0 0.34em 0.7em rgba(0, 0, 0, 0.4);
+}
+
 .hero-shell .hero-3d,
 .hero-shell .hero-depth {
   position: relative;
-  text-shadow:
-    0 0.012em 0 color-mix(in srgb, var(--c) 74%, #1a0612),
-    0 0.024em 0 color-mix(in srgb, var(--c) 64%, #1a0612),
-    0 0.036em 0 color-mix(in srgb, var(--c) 54%, #1a0612),
-    0 0.048em 0 color-mix(in srgb, var(--c) 45%, #1a0612),
-    0 0.06em 0 color-mix(in srgb, var(--c) 37%, #1a0612),
-    0 0.075em 0.02em rgba(0, 0, 0, 0.5),
-    0 0.14em 0.2em rgba(0, 0, 0, 0.5),
-    0 0 0.55em color-mix(in srgb, var(--c) 40%, transparent);
 }
 
 .hero-shell .hero-depth {
-  --c: #e9dcf0;
-}
-
-/* Glossy highlight across the top half of each letter. */
-.hero-shell .hero-3d::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  white-space: nowrap;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(255, 255, 255, 0.18) 45%,
-    rgba(255, 255, 255, 0) 58%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none;
-  pointer-events: none;
+  --c: #fff;
 }
 
 .hero-type__caret {

@@ -29,7 +29,7 @@ const KIDS_GROUPS = [
     icon: Users,
     image:
       "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=85",
-    color: "#f7eef4",
+    color: "#f2eef7",
   },
   {
     title: "Transition",

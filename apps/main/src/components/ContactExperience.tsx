@@ -30,10 +30,6 @@ function getPrimaryVenue(branch: ContactLocation) {
   return branch.venues?.[0] ?? null;
 }
 
-function getBranchCity(branch: ContactLocation) {
-  return getPrimaryVenue(branch)?.city ?? "";
-}
-
 function getBranchAddress(branch: ContactLocation) {
   const venue = getPrimaryVenue(branch);
 

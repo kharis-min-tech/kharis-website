@@ -8,16 +8,10 @@ export function UnsureBranchCta() {
     <section className="unsure-band px-5 py-10 md:px-8 md:py-12">
       <Reveal variant="up" distance={36} className="mx-auto max-w-7xl">
         <div className="unsure-panel">
-          <div className="unsure-panel__shapes" aria-hidden>
-            <span className="unsure-shape unsure-shape--orb-a" />
-            <span className="unsure-shape unsure-shape--orb-b" />
-            <span className="unsure-shape unsure-shape--orb-c" />
-            <span className="unsure-shape unsure-shape--ring" />
-            <span className="unsure-shape unsure-shape--blob" />
-            <span className="unsure-shape unsure-shape--dot-a" />
-            <span className="unsure-shape unsure-shape--dot-b" />
-            <span className="unsure-shape unsure-shape--arc" />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/kharis-logo.png" alt="" aria-hidden className="unsure-panel__dove" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/kharis-globe.svg" alt="" aria-hidden className="unsure-panel__map" />
 
           <div className="unsure-panel__content">
             <p className="unsure-panel__eyebrow">Still deciding?</p>
@@ -26,7 +20,7 @@ export function UnsureBranchCta() {
               You don&apos;t have to figure it out alone. Reach out and we&apos;ll help you find a
               Kharis family near you, or guide you to your first Sunday.
             </p>
-            <div className="unsure-panel__actions">
+            <div className="unsure-panel__actions btn-pair">
               <Link href="/contact" className="unsure-panel__btn unsure-panel__btn--solid">
                 Contact Us
               </Link>
