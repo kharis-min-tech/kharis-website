@@ -115,8 +115,7 @@ function cardsFromReply(reply: string, catalog: MessageVideo[]): ChatMessageCard
 }
 
 type GeminiResult =
-  | { ok: true; reply: string }
-  | { ok: false; status: number; error: string; retryable: boolean };
+  { ok: true; reply: string } | { ok: false; status: number; error: string; retryable: boolean };
 
 function geminiBody(systemText: string, contents: ReturnType<typeof toGeminiContents>) {
   return JSON.stringify({
@@ -238,8 +237,7 @@ async function generateWithFallback(opts: {
 }
 
 type StreamChunkResult =
-  | { ok: true; reply: string }
-  | { ok: false; status: number; error: string; retryable: boolean };
+  { ok: true; reply: string } | { ok: false; status: number; error: string; retryable: boolean };
 
 /**
  * Stream from Gemini (SSE) and forward text deltas via onChunk.
