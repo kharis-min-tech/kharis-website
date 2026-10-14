@@ -23,11 +23,11 @@ import { ABOUT } from "@/lib/about-content";
 import "./about-cards.css";
 
 /** Placeholder photos — swap these paths to change the card backgrounds. */
-const MISSION_PHOTO = "/images/about-mission-outreach.jpg";
-const VISION_PHOTO = "/images/about-vision-team.jpg";
+const MISSION_PHOTO = "/images/about-mission-outreach-3200.jpg";
+const VISION_PHOTO = "/images/about-vision-team-2048.jpg";
 /** Leadership photos used here only; other pages keep the shared ABOUT.leadership images. */
 const LEADER_PHOTOS: Record<string, string> = {
-  david: "/images/about-leadership-david.jpg",
+  david: "/images/about-leadership-david-2048.jpg",
 };
 
 const MISSION = {
