@@ -80,18 +80,11 @@ function CategoryRow({
         {EVENT_CATEGORIES.map((cat, i) => {
           const selected = cat.id === activeId;
           const upcoming = cat.status === "upcoming";
-          const groupStart = i === 0 || EVENT_CATEGORIES[i - 1]!.status !== cat.status;
+          const groupStart = i > 0 && EVENT_CATEGORIES[i - 1]!.status !== cat.status;
 
           return (
             <Fragment key={cat.id}>
-              {groupStart && (
-                <span
-                  className={`events-cats__group${i > 0 ? " events-cats__group--divided" : ""}`}
-                  aria-hidden
-                >
-                  {upcoming ? "Weekly" : "Past events"}
-                </span>
-              )}
+              {groupStart && <span className="events-cats__divider" aria-hidden />}
               <button
                 ref={(el) => {
                   refs.current[i] = el;
@@ -102,7 +95,7 @@ function CategoryRow({
                 aria-selected={selected}
                 aria-controls={panelId}
                 tabIndex={selected ? 0 : -1}
-                className={`events-cat${selected ? " is-selected" : ""}${upcoming ? " events-cat--weekly" : ""}`}
+                className={`events-cat${selected ? " is-selected" : ""}`}
                 onClick={() => select(i, false)}
                 onKeyDown={(e) => onKeyDown(e, i)}
               >

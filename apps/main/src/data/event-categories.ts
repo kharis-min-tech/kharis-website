@@ -280,47 +280,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     ],
   },
   {
-    id: "camps",
-    label: "Camps",
-    status: "past",
-    hero: {
-      poster: "/images/about-vision-team-2048.jpg",
-      posterAlt: "Large group of church members posing together outdoors",
-      headline: "Camps",
-      subtext: "Time away to grow in faith and friendship.",
-    },
-    tiles: [
-      {
-        src: "/images/young-adults.jpg",
-        alt: "Young adults seated together in a session",
-        eyebrow: "Together",
-        title: "Word, worship and friendship",
-        description: "Days spent learning, praying and laughing together.",
-      },
-      {
-        src: "/images/branch-slide-3.jpg",
-        alt: "Members taking notes during a teaching session",
-        eyebrow: "Sessions",
-        title: "Notebooks open, hearts ready",
-        description: "Teaching sessions that went deeper than a Sunday allows.",
-      },
-    ],
-    split: {
-      left: { src: "/images/about-hero-bench-3200.jpg", alt: "Members sitting together outdoors" },
-      right: { src: "/images/hero/outreach-community.jpg", alt: "Members gathered outdoors in a park" },
-      eyebrow: "Camps",
-      headline: "Away from the noise",
-    },
-    gallery: [
-      { src: "/images/about-vision-team-2048.jpg", alt: "Group photo outdoors" },
-      { src: "/images/young-adults.jpg", alt: "Young adults in a session" },
-      { src: "/images/branch-slide-3.jpg", alt: "Members taking notes" },
-      { src: "/images/about-hero-bench-3200.jpg", alt: "Members sitting together outdoors" },
-      { src: "/images/hero/outreach-community.jpg", alt: "Members gathered in a park" },
-      { src: "/images/love-greeting.jpg", alt: "Members greeting each other" },
-    ],
-  },
-  {
     id: "family-fun-day",
     label: "Family Fun Day",
     status: "past",
@@ -404,7 +363,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   },
   {
     id: "let-the-bible-speak",
-    label: "Let the Bible Speak",
+    label: "Let the Bible Speak Conference",
     status: "past",
     hero: {
       poster: "/images/biblical-open-bible.jpg",
