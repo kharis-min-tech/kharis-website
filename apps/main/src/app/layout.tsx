@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { FloatingThemeToggle } from "@/components/FloatingThemeToggle";
 import { ScrollToTopOnLoad } from "@/components/ScrollToTopOnLoad";
+import { SiteChat } from "@/components/SiteChat";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
@@ -49,6 +50,7 @@ export default function RootLayout({
           <ScrollToTopOnLoad />
           {children}
           <FloatingThemeToggle />
+          <SiteChat />
         </ThemeProvider>
       </body>
     </html>

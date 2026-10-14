@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { ChatIcon } from "@/components/ChatIcon";
 import { ChatMarkdown } from "@/components/ChatMarkdown";
 import { Icon } from "@/components/Icon";
 import { contactHandoffUrl, replyOffersContact, saveGraceHandoff } from "@/lib/grace-handoff";
@@ -135,17 +136,6 @@ function TypingDots() {
   );
 }
 
-function ChatIcon({ size = 22 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden>
-      <path
-        d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v6A2.5 2.5 0 0 1 16.5 15H11l-3.8 3.2c-.5.4-1.2.1-1.2-.5V15H7.5A2.5 2.5 0 0 1 5 12.5v-6Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
 function MessageCards({ cards }: { cards: MessageCard[] }) {
   if (!cards.length) return null;
   return (
@@ -211,11 +201,21 @@ function AppDownloadButtons() {
   );
 }
 
-export function LifeChatbot() {
-  const [open, setOpen] = useState(false);
-  const [launcherReady, setLauncherReady] = useState(false);
+/**
+ * Grace chat: launcher button + popup panel.
+ * `nudge` keeps the Life page's delayed "Need any help?" prompt; elsewhere the launcher shows at once.
+ */
+export function LifeChatbot({
+  nudge = true,
+  startOpen = false,
+}: {
+  nudge?: boolean;
+  startOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(startOpen);
+  const [launcherReady, setLauncherReady] = useState(!nudge || startOpen);
   const [nudgeOpen, setNudgeOpen] = useState(false);
-  const [nudgeDismissed, setNudgeDismissed] = useState(false);
+  const [nudgeDismissed, setNudgeDismissed] = useState(!nudge || startOpen);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   /** True once the first streamed token has been appended (hides typing dots). */
@@ -232,18 +232,52 @@ export function LifeChatbot() {
   ]);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  const fabRef = useRef<HTMLButtonElement>(null);
   const openRef = useRef(open);
   const messagesRef = useRef(messages);
   openRef.current = open;
   messagesRef.current = messages;
 
   useEffect(() => {
+    if (!nudge) {
+      setLauncherReady(true);
+      setNudgeOpen(false);
+      setNudgeDismissed(true);
+      return;
+    }
+    if (nudgeDismissed) return;
     const t = window.setTimeout(() => {
       setLauncherReady(true);
       setNudgeOpen(true);
     }, HELP_DELAY_MS);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [nudge, nudgeDismissed]);
+
+  const closeChat = () => {
+    setOpen(false);
+    window.requestAnimationFrame(() => fabRef.current?.focus());
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const t = window.setTimeout(() => {
+      const target = panelRef.current?.querySelector<HTMLElement>(
+        ".life-chat__option:not(:disabled), #life-chat-input:not(:disabled), .life-chat__x",
+      );
+      target?.focus();
+    }, 60);
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      window.requestAnimationFrame(() => fabRef.current?.focus());
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      window.clearTimeout(t);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -259,7 +293,8 @@ export function LifeChatbot() {
   }, [open, composerOpen]);
 
   useEffect(() => {
-    if (!open) return;
+    // Only the phone sheet covers the page; the desktop popup leaves it scrollable.
+    if (!open || !window.matchMedia("(max-width: 639px)").matches) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
@@ -529,13 +564,14 @@ export function LifeChatbot() {
 
       {showFab ? (
         <button
+          ref={fabRef}
           type="button"
           className={`life-chat__fab${open ? " is-open" : ""}`}
           aria-expanded={open}
           aria-controls="life-chat-panel"
           aria-label={open ? "Close chat" : "Open chat with Grace"}
           onClick={() => {
-            if (open) setOpen(false);
+            if (open) closeChat();
             else openChat();
           }}
         >
@@ -558,15 +594,18 @@ export function LifeChatbot() {
 
       <div
         className={`life-chat__scrim${open ? " is-open" : ""}`}
-        onClick={() => setOpen(false)}
-        aria-hidden={!open}
+        onClick={closeChat}
+        aria-hidden
       />
 
       <aside
+        ref={panelRef}
         id="life-chat-panel"
         className={`life-chat${open ? " is-open" : ""}`}
+        role="dialog"
         aria-label="Chat with Grace"
         aria-hidden={!open}
+        inert={!open}
       >
         <header className="life-chat__head">
           <div className="life-chat__brand">
@@ -583,7 +622,7 @@ export function LifeChatbot() {
             type="button"
             className="life-chat__x"
             aria-label="Close chat"
-            onClick={() => setOpen(false)}
+            onClick={closeChat}
           >
             ×
           </button>

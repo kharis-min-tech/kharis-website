@@ -9808,21 +9808,29 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   color: var(--muted);
 }
 
-/* Life chatbot — right slide panel (K) */
+/* Grace chat — launcher bottom-right on every page, popup panel (sheet on phones).
+   Sits under the header (z 50) and modals so it never covers them. */
+.life-chat {
+  --chat-edge: max(1.15rem, env(safe-area-inset-right, 0px));
+  --chat-foot: max(1.15rem, env(safe-area-inset-bottom, 0px));
+}
+
 .life-chat__fab {
   position: fixed;
-  right: 1.15rem;
-  bottom: 1.15rem;
-  z-index: 72;
-  width: 60px;
-  height: 60px;
+  right: max(1.15rem, env(safe-area-inset-right, 0px));
+  bottom: max(1.15rem, env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  width: 56px;
+  height: 56px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 0;
   display: grid;
   place-items: center;
   color: #fff;
   background: #630ed4;
-  box-shadow: 0 12px 30px rgba(99, 14, 212, 0.35);
+  box-shadow:
+    0 2px 0 #3d0591,
+    0 12px 28px rgba(99, 14, 212, 0.32);
   cursor: pointer;
   transition:
     transform 200ms ease,
@@ -9831,8 +9839,15 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .life-chat__fab:hover {
-  transform: scale(1.06);
-  box-shadow: 0 16px 36px rgba(99, 14, 212, 0.42);
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 0 #3d0591,
+    0 16px 34px rgba(99, 14, 212, 0.4);
+}
+
+.life-chat__fab:focus-visible {
+  outline: 3px solid #ffde59;
+  outline-offset: 3px;
 }
 
 .life-chat__badge {
@@ -9848,15 +9863,15 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 
 .life-chat__nudge {
   position: fixed;
-  right: 1.15rem;
-  bottom: 1.15rem;
-  z-index: 72;
+  right: max(1.15rem, env(safe-area-inset-right, 0px));
+  bottom: max(1.15rem, env(safe-area-inset-bottom, 0px));
+  z-index: 45;
   display: flex;
   gap: 0.7rem;
   align-items: flex-start;
   width: min(20.5rem, calc(100vw - 2rem));
   padding: 0.85rem 0.9rem;
-  border-radius: 16px;
+  border-radius: 0;
   background: #fff;
   border: 1px solid #ebe6ee;
   box-shadow: 0 16px 40px rgba(20, 10, 24, 0.18);
@@ -9912,7 +9927,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 
 .life-chat__nudge-yes,
 .life-chat__nudge-no {
-  border-radius: 999px;
+  border-radius: 0;
   padding: 0.45rem 0.8rem;
   font-size: 0.78rem;
   font-weight: 750;
@@ -9955,18 +9970,27 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 
 .life-chat {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  right: var(--chat-edge);
+  bottom: calc(var(--chat-foot) + 56px + 0.75rem);
   z-index: 71;
-  width: min(400px, 100vw);
+  width: min(380px, calc(100vw - 2rem));
+  height: min(560px, calc(100dvh - 7.5rem));
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(99, 14, 212, 0.14);
+  border-radius: 0;
   background: #f7f5f8;
-  box-shadow: -12px 0 40px rgba(20, 10, 24, 0.18);
-  transform: translateX(104%);
+  box-shadow: 0 24px 60px rgba(20, 10, 24, 0.22);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transform-origin: bottom right;
   pointer-events: none;
-  transition: transform 220ms ease;
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease,
+    visibility 0s linear 220ms;
   font-family:
     system-ui,
     -apple-system,
@@ -9978,8 +10002,40 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .life-chat.is-open {
-  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
   pointer-events: auto;
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease,
+    visibility 0s linear 0s;
+}
+
+/* Desktop popup leaves the page usable, so no dimming behind it. */
+@media (min-width: 640px) {
+  .life-chat__scrim {
+    display: none;
+  }
+}
+
+/* Phones: full-screen sheet with its own close button; the launcher hides underneath. */
+@media (max-width: 639px) {
+  .life-chat {
+    inset: 0;
+    z-index: 90;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    transform: translateY(24px);
+  }
+
+  .life-chat__fab.is-open {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 .life-chat__head {
@@ -10051,7 +10107,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   cursor: pointer;
   width: 2.1rem;
   height: 2.1rem;
-  border-radius: 999px;
+  border-radius: 0;
   transition: background 200ms ease;
 }
 
@@ -10559,14 +10615,10 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 @media (max-width: 480px) {
-  .life-chat {
-    width: 100vw;
-  }
-
   .life-chat__fab,
   .life-chat__nudge {
-    right: 1rem;
-    bottom: 1rem;
+    right: max(1rem, env(safe-area-inset-right, 0px));
+    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   }
 
   .life-chat__bubble {
@@ -10587,8 +10639,9 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 html[data-theme="dark"] .life-chat {
+  border-color: rgba(255, 255, 255, 0.1);
   background: #151018;
-  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
 }
 
 html[data-theme="dark"] .life-chat__head,
