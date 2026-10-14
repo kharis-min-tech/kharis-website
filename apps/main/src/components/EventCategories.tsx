@@ -1,7 +1,6 @@
 "use client";
 
 import Image, { getImageProps } from "next/image";
-import Link from "next/link";
 import {
   Fragment,
   useEffect,
@@ -18,8 +17,6 @@ import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Clock,
-  MapPin,
   Pause,
   Play,
   X,
@@ -32,7 +29,7 @@ import {
   type EventTile,
 } from "@/data/event-categories";
 import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
-import { BranchSelect, useStoredBranch } from "./BranchSelect";
+import { useStoredBranch } from "./BranchSelect";
 import "./event-categories.css";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -483,69 +480,6 @@ function EventHero({ category, visit }: { category: EventCategory; visit: Servic
   );
 }
 
-function BranchStrip({
-  category,
-  branch,
-  branches,
-  visit,
-}: {
-  category: EventCategory;
-  branch: ServiceBranch | null;
-  branches: ServiceBranch[];
-  visit: ServiceVisit | null;
-}) {
-  if (!branch) {
-    return (
-      <div className="events-branch">
-        <Link href="/locations" className="events-branch__link">
-          Find your nearest service
-          <ArrowUpRight aria-hidden className="h-4 w-4" />
-        </Link>
-      </div>
-    );
-  }
-
-  return (
-    <div className="events-branch">
-      <BranchSelect label="Your branch" branch={branch} branches={branches} />
-
-      {visit ? (
-        <>
-          <p className="events-branch__fact">
-            <Clock aria-hidden className="events-branch__ico" />
-            <span>
-              Every {visit.day} · {visit.times.join(" & ")}
-            </span>
-          </p>
-          <p className="events-branch__fact">
-            <MapPin aria-hidden className="events-branch__ico" />
-            <span>
-              <strong>{visit.venue}</strong>
-              {visit.address ? <span className="events-branch__address">{visit.address}</span> : null}
-            </span>
-          </p>
-        </>
-      ) : (
-        <p className="events-branch__fact">
-          {branch.name} doesn’t list a {category.service === "midweek" ? "midweek" : "Sunday"} service
-          yet.
-        </p>
-      )}
-
-      <div className="events-branch__links">
-        <Link href={branch.href} className="events-branch__link">
-          {branch.name} branch
-          <ArrowUpRight aria-hidden className="h-4 w-4" />
-        </Link>
-        <Link href="/locations" className="events-branch__link">
-          Find your nearest service
-          <ArrowUpRight aria-hidden className="h-4 w-4" />
-        </Link>
-      </div>
-    </div>
-  );
-}
-
 function EventTiles({ tiles }: { tiles: EventTile[] }) {
   return (
     <div className="events-tiles">
@@ -619,9 +553,6 @@ function EventStory({ category, branches }: { category: EventCategory; branches:
   return (
     <>
       <EventHero category={category} visit={visit} />
-      {upcoming ? (
-        <BranchStrip category={category} branch={branch} branches={branches} visit={visit} />
-      ) : null}
       <EventTiles tiles={category.tiles} />
       <EventSplitPanel split={category.split} onExplore={() => setGalleryOpen(true)} />
 
