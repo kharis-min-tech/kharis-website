@@ -1,0 +1,346 @@
+/* "What Kharis means" cards — Greek words painted in on first view. */
+
+.kgw {
+  --kgw-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --kgw-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kgw-card.about-ety__card {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  border-left-color: transparent;
+}
+
+/* Card wash + purple rule, painted rather than faded. */
+.kgw-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg-purple);
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 250% 100%;
+  mask-size: 250% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 0% 0;
+  mask-position: 0% 0;
+}
+
+.kgw-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -4px;
+  width: 4px;
+  background: var(--purple);
+  transform-origin: 50% 0;
+}
+
+.kgw-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.kgw-letter,
+.kgw-word {
+  display: inline-block;
+}
+
+/* Greek word stack: swash (behind) → real text → painted SVG duplicate (front). */
+.kgw-greek {
+  position: relative;
+}
+
+.kgw-greek__text {
+  position: relative;
+  z-index: 1;
+}
+
+.kgw-greek__base {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: baseline;
+}
+
+.kgw-swash,
+.kgw-paint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.kgw-swash {
+  z-index: 0;
+}
+
+.kgw-paint {
+  z-index: 2;
+}
+
+.kgw-swash__stroke {
+  fill: none;
+  stroke: var(--purple);
+  stroke-linecap: round;
+  opacity: 0.26;
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 0;
+}
+
+html[data-theme="dark"] .kgw-swash__stroke {
+  opacity: 0.42;
+}
+
+.kgw-paint text {
+  font: inherit;
+  letter-spacing: inherit;
+  font-kerning: normal;
+}
+
+.kgw-paint__outline {
+  fill: none;
+  stroke: var(--purple);
+  stroke-width: 1.1px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 5em 5em;
+  stroke-dashoffset: 0;
+}
+
+.kgw-paint__fill {
+  fill: var(--fg);
+}
+
+/* ---------- waiting (before the cards scroll into view) ---------- */
+
+.kgw.is-waiting .kgw-card::before {
+  transform: scaleY(0);
+}
+
+.kgw.is-waiting .kgw-card::after {
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+}
+
+.kgw.is-waiting .kgw-letter,
+.kgw.is-waiting .kgw-word,
+.kgw.is-waiting .kgw-greek__text,
+.kgw.is-waiting .kgw-swash {
+  opacity: 0;
+}
+
+/* ---------- painting sequence (per card, offset by --kgw-d) ---------- */
+
+.kgw.is-painting .kgw-card::before {
+  animation: kgw-rule 0.6s var(--kgw-ease) var(--kgw-d) both;
+}
+
+.kgw.is-painting .kgw-card::after {
+  animation: kgw-wash 0.8s var(--kgw-ease) calc(var(--kgw-d) + 0.08s) both;
+}
+
+/* 1. Greek outline traced by a pen moving left → right. */
+.kgw.is-painting .kgw-paint__outline {
+  animation:
+    kgw-trace 1.45s var(--kgw-ease) calc(var(--kgw-d) + 0.35s) both,
+    kgw-outline-settle 0.5s ease calc(var(--kgw-d) + 1.75s) both;
+}
+
+.kgw.is-painting .kgw-wipe {
+  transform: translateX(0);
+}
+
+.kgw.is-painting .kgw-wipe--pen {
+  animation: kgw-sweep 1.15s cubic-bezier(0.45, 0.05, 0.4, 1) calc(var(--kgw-d) + 0.3s) both;
+}
+
+/* 2. Brush swash painted under the word. */
+.kgw.is-painting .kgw-swash__stroke {
+  animation: kgw-swash 0.85s cubic-bezier(0.55, 0.1, 0.3, 1) calc(var(--kgw-d) + 0.8s) both;
+}
+
+/* 3. Ink brushed in with a bristle edge, wet purple drying to the text colour. */
+.kgw.is-painting .kgw-wipe--ink {
+  animation: kgw-sweep 1.05s cubic-bezier(0.5, 0.05, 0.35, 1) calc(var(--kgw-d) + 0.85s) both;
+}
+
+.kgw.is-painting .kgw-paint__fill {
+  animation: kgw-dry 0.9s ease calc(var(--kgw-d) + 1.25s) both;
+}
+
+/* 4. Hand over to the crisp live text. */
+.kgw.is-painting .kgw-card--svg .kgw-greek__text {
+  animation: kgw-appear 0.25s linear calc(var(--kgw-d) + 2.1s) both;
+}
+
+.kgw.is-painting .kgw-paint {
+  animation: kgw-vanish 0.3s linear calc(var(--kgw-d) + 2.35s) both;
+}
+
+/* Fallback when the SVG copy is unavailable (e.g. the word wraps). */
+.kgw.is-painting .kgw-card:not(.kgw-card--svg) .kgw-greek__text {
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 250% 100%;
+  mask-size: 250% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: kgw-text-wipe 1.2s var(--kgw-ease) calc(var(--kgw-d) + 0.5s) both;
+}
+
+/* 5. Then the eyebrow and caption. */
+.kgw.is-painting .kgw-letter {
+  animation: kgw-rise 0.55s var(--kgw-out) calc(var(--kgw-d) + 1.6s + var(--i) * 0.045s) both;
+}
+
+.kgw.is-painting .kgw-word {
+  animation: kgw-rise 0.6s var(--kgw-out) calc(var(--kgw-d) + 1.85s + var(--i) * 0.07s) both;
+}
+
+@keyframes kgw-rule {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes kgw-wash {
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+  to {
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+}
+
+@keyframes kgw-trace {
+  from {
+    stroke-dashoffset: 5em;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes kgw-outline-settle {
+  to {
+    stroke-opacity: 0.35;
+  }
+}
+
+@keyframes kgw-sweep {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--kgw-travel));
+  }
+}
+
+@keyframes kgw-swash {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0.5;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes kgw-dry {
+  from {
+    fill: var(--purple);
+  }
+  to {
+    fill: var(--fg);
+  }
+}
+
+@keyframes kgw-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes kgw-vanish {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes kgw-text-wipe {
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+  to {
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+}
+
+@keyframes kgw-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.55em);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* ---------- finished / reduced motion: resting state, no animation ---------- */
+
+.kgw.is-done .kgw-card *,
+.kgw.is-done .kgw-card::before,
+.kgw.is-done .kgw-card::after,
+.kgw.is-static .kgw-card *,
+.kgw.is-static .kgw-card::before,
+.kgw.is-static .kgw-card::after {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kgw .kgw-card *,
+  .kgw .kgw-card::before,
+  .kgw .kgw-card::after {
+    animation: none !important;
+    transform: none !important;
+    -webkit-mask-position: 0% 0 !important;
+    mask-position: 0% 0 !important;
+  }
+
+  .kgw .kgw-letter,
+  .kgw .kgw-word,
+  .kgw .kgw-greek__text,
+  .kgw .kgw-swash {
+    opacity: 1 !important;
+  }
+
+  .kgw .kgw-paint {
+    display: none;
+  }
+}

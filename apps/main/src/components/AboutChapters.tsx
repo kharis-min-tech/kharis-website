@@ -41,7 +41,7 @@ export function isAboutChapterId(v: string | null): v is AboutChapterId {
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-function AboutSvgWallpaper({
+export function AboutSvgWallpaper({
   variant = "stage",
   tone = "mission",
 }: {
@@ -435,7 +435,7 @@ function VisionPanel({ reduce }: { reduce: boolean }) {
   );
 }
 
-function LeadershipPanel({ reduce }: { reduce: boolean }) {
+export function LeadershipPanel({ reduce }: { reduce: boolean }) {
   const { leadership } = ABOUT;
 
   return (

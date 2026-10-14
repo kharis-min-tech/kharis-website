@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
+import { Reveal } from "@/components/Reveal";
+import { KharisGreekWords } from "@/components/KharisGreekWords";
 import { FaithSvgBackdrop } from "@/components/FaithSvgBackdrop";
-import { AboutChapters, isAboutChapterId, type AboutChapterId } from "@/components/AboutChapters";
+import { isAboutChapterId, type AboutChapterId } from "@/components/AboutChapters";
+import { AboutStoryCards } from "@/components/AboutStoryCards";
 import { ABOUT } from "@/lib/about-content";
 
 /** About hub: Mission, Vision, and Leadership on one page. */
@@ -26,12 +28,13 @@ export function AboutExperience() {
       <header className="about-hero">
         <div className="about-hero__media" aria-hidden>
           <Image
-            src="/images/vision-campaign.jpg"
+            src="/images/about-hero-bench-2x.jpg"
             alt=""
             fill
             priority
-            className="object-cover object-center"
-            sizes="100vw"
+            quality={95}
+            className="about-hero__img"
+            sizes="(max-width: 759px) 108vh, 100vw"
           />
           <div className="about-hero__veil" />
         </div>
@@ -43,24 +46,13 @@ export function AboutExperience() {
       </header>
 
       <section className="about-ety" aria-label="What Kharis means">
-        <RevealStagger className="about-ety__grid" stagger={0.12}>
-          <RevealItem className="about-ety__card">
-            <p className="about-ety__label">{ABOUT.brandWord}</p>
-            <p className="about-ety__greek">{ABOUT.greek.word}</p>
-            <p className="about-ety__meaning">{ABOUT.greek.meaning}</p>
-          </RevealItem>
-          <RevealItem className="about-ety__card">
-            <p className="about-ety__label">{ABOUT.ministriesWord}</p>
-            <p className="about-ety__greek">{ABOUT.ministriesGreek.word}</p>
-            <p className="about-ety__meaning">{ABOUT.ministriesGreek.meaning}</p>
-          </RevealItem>
-        </RevealStagger>
+        <KharisGreekWords />
         <Reveal delay={0.15}>
           <p className="about-ety__blurb">{ABOUT.aboutBlurb}</p>
         </Reveal>
       </section>
 
-      <AboutChapters initialId={chapterId} />
+      <AboutStoryCards initialId={chapterId} />
 
       <section id="faith" className="about-faith-band">
         <FaithSvgBackdrop />

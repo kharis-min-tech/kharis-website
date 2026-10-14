@@ -1,0 +1,460 @@
+/* About — Apple-style story cards (Mission / How we do it / Vision) + leadership block. */
+
+.about-cards {
+  --ac-pad: clamp(1rem, 4vw, 3rem);
+  --ac-max: 76rem;
+  --ac-gap: clamp(1rem, 2vw, 1.5rem);
+  /* Square corners, matching the homepage cards (see BRAND.md). */
+  --ac-radius: 0;
+  --ac-head-a: var(--purple-edge, #3d0591);
+  --ac-head-b: var(--purple, #630ed4);
+  --ac-soft-a: #7a45c0;
+  --ac-soft-b: #885ac4;
+  --ac-card-bg: #ffffff;
+  --ac-ink: #1c1c1f;
+  --ac-ink-soft: #3a3a40;
+  --ac-shadow: 0 0 0 1px rgba(99, 14, 212, 0.07), 0 18px 44px rgba(22, 8, 40, 0.09);
+  --ac-shadow-hover: 0 0 0 1px rgba(99, 14, 212, 0.1), 0 26px 56px rgba(22, 8, 40, 0.14);
+  --ac-accent: #630ed4;
+  --ac-tile: #f2eef7;
+  position: relative;
+  padding: 0 0 clamp(2.5rem, 6vw, 4rem);
+  background: #fff;
+}
+
+html[data-theme="dark"] .about-cards {
+  --ac-head-a: #f3ecff;
+  --ac-head-b: #cbb4e8;
+  --ac-soft-a: #a986dd;
+  --ac-soft-b: #8a5ac8;
+  --ac-card-bg: var(--card-bg, #1a1222);
+  --ac-ink: var(--fg);
+  --ac-ink-soft: var(--fg-soft);
+  --ac-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 24px 60px rgba(0, 0, 0, 0.35);
+  --ac-shadow-hover: 0 0 0 1px rgba(255, 255, 255, 0.11), 0 28px 64px rgba(0, 0, 0, 0.5);
+  --ac-accent: #c4a2f2;
+  --ac-tile: rgba(196, 162, 242, 0.12);
+  background: var(--bg);
+}
+
+/* Roomier "Who we are becoming" banner in this section only. */
+.about-cards .about-stage__banner {
+  min-height: clamp(7.75rem, 16vw, 10.5rem);
+}
+
+.about-cards .about-stage__banner-inner {
+  padding: clamp(1.75rem, 3.2vw, 2rem) clamp(1.75rem, 6vw, 4.5rem);
+}
+
+.about-cards__inner {
+  max-width: calc(var(--ac-max) + 2 * var(--ac-pad));
+  margin-inline: auto;
+  padding: clamp(2rem, 5vw, 3.25rem) var(--ac-pad) 0;
+}
+
+/* Two-tone brand gradient: deep purple → purple, then a lighter purple continuation. */
+.about-cards__heading {
+  margin: 0 0 clamp(1.35rem, 3vw, 2rem);
+  max-width: 52rem;
+  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.022em;
+}
+
+.about-cards__heading,
+.about-cards__heading span {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.about-cards__heading {
+  background-image: linear-gradient(90deg, var(--ac-head-a), var(--ac-head-b) 22rem);
+}
+
+.about-cards__heading span {
+  background-image: linear-gradient(90deg, var(--ac-soft-a), var(--ac-soft-b));
+}
+
+/* ---- Sideways scroller (no scrollbar, no buttons) ---- */
+
+.about-cards__track {
+  --ac-edge: max(var(--ac-pad), calc((100% - var(--ac-max)) / 2));
+  display: flex;
+  gap: var(--ac-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem var(--ac-edge) 1.75rem;
+  scroll-padding-inline: var(--ac-edge);
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@media (max-width: 899px) {
+  .about-cards__track {
+    cursor: grab;
+  }
+}
+
+/* Chrome snaps small wheel/trackpad scrolls back to the start, so desktop scrolls freely
+   (drag release and arrow keys settle on a card in JS); touch gets native snapping. */
+@media (pointer: coarse) {
+  .about-cards__track {
+    scroll-snap-type: x mandatory;
+  }
+}
+
+.about-cards__track::-webkit-scrollbar {
+  display: none;
+}
+
+.about-cards__track:focus-visible {
+  outline: 3px solid var(--ac-accent);
+  outline-offset: -3px;
+  border-radius: var(--ac-radius);
+}
+
+.about-cards__track.is-dragging {
+  scroll-snap-type: none;
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* ---- Card base ---- */
+
+.about-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 0 0 min(86vw, 34rem);
+  flex-direction: column;
+  min-height: clamp(34rem, 46vw, 40rem);
+  overflow: hidden;
+  border-radius: var(--ac-radius);
+  padding: clamp(1.75rem, 3.2vw, 2.75rem);
+  scroll-snap-align: start;
+  scroll-margin-top: 6rem;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Row height matches the approved three-card row, which the taller Vision card used to set. */
+.about-cards__track .about-card {
+  min-height: 49.5rem;
+}
+
+/* Desktop: two cards fill the content width (same as the original 2-column grid). */
+@media (min-width: 900px) {
+  .about-card {
+    flex-basis: calc((100% - var(--ac-gap)) / 2);
+  }
+
+  .about-cards__track .about-card {
+    min-height: clamp(34rem, 46.75vw, 42.1rem);
+  }
+}
+
+@media (hover: hover) {
+  .about-card:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.about-card__eyebrow {
+  margin: 0 0 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.about-card__title {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(1.75rem, 2.8vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.about-card__body {
+  margin: 1.1rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.3vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* ---- Photo cards (text over image) ---- */
+
+.about-card--photo {
+  color: #fff;
+  background: #120a1e;
+}
+
+.about-card__img {
+  z-index: -2;
+  object-fit: cover;
+  pointer-events: none;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-card__img--vision {
+  object-position: 60% 40%;
+}
+
+@media (hover: hover) {
+  .about-card--photo:hover .about-card__img {
+    transform: scale(1.035);
+  }
+}
+
+.about-card__veil {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 6, 22, 0.9) 0%,
+    rgba(12, 6, 22, 0.74) 40%,
+    rgba(12, 6, 22, 0.18) 72%,
+    rgba(12, 6, 22, 0.3) 100%
+  );
+}
+
+/* Mission: photo fills the lower card so the faces sit below the text. */
+.about-card--mission {
+  background: #140b22;
+}
+
+.about-card__media {
+  position: absolute;
+  inset: 40% 0 0 0;
+  z-index: -2;
+}
+
+.about-card__veil--mission {
+  background: linear-gradient(
+    180deg,
+    #1f1036 0%,
+    #140b22 43%,
+    rgba(20, 11, 34, 0.55) 47%,
+    rgba(20, 11, 34, 0) 52%,
+    rgba(20, 11, 34, 0) 88%,
+    rgba(20, 11, 34, 0.3) 100%
+  );
+}
+
+.about-card__img--mission {
+  object-position: 50% 20%;
+}
+
+@media (max-width: 899px) {
+  .about-card__media {
+    inset: 46% 0 0 0;
+  }
+
+  .about-card__veil--mission {
+    background: linear-gradient(
+      180deg,
+      #1f1036 0%,
+      #140b22 46%,
+      rgba(20, 11, 34, 0.55) 50%,
+      rgba(20, 11, 34, 0) 55%,
+      rgba(20, 11, 34, 0) 88%,
+      rgba(20, 11, 34, 0.3) 100%
+    );
+  }
+
+  .about-card__img--mission {
+    object-position: 30% 20%;
+  }
+}
+
+.about-card__veil--heavy {
+  background: linear-gradient(
+    180deg,
+    rgba(12, 6, 22, 0.9) 0%,
+    rgba(12, 6, 22, 0.78) 50%,
+    rgba(12, 6, 22, 0.62) 100%
+  );
+}
+
+.about-card--photo .about-card__eyebrow {
+  color: #ffde59;
+}
+
+.about-card--photo .about-card__title {
+  color: #fff;
+}
+
+.about-card--photo .about-card__body {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ---- Vision: full-width photo card under the row ---- */
+
+.about-cards__wide {
+  max-width: calc(var(--ac-max) + 2 * var(--ac-pad));
+  margin-inline: auto;
+  padding: 0 var(--ac-pad);
+}
+
+.about-card--vision {
+  min-height: 0;
+  padding: clamp(1.75rem, 4vw, 3.25rem);
+}
+
+.about-card__title--wide {
+  max-width: none;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .about-card__title--wide {
+    font-size: clamp(1.4rem, 3.1vw, 2.3rem);
+    white-space: nowrap;
+  }
+}
+
+.about-card__intro {
+  margin: 1rem 0 0;
+  font-size: clamp(1.05rem, 1.3vw, 1.15rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.about-card__points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1rem;
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 900px) {
+  .about-card__points {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem 1.75rem;
+  }
+}
+
+.about-card__points li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: #fff;
+}
+
+.about-card__point-icon {
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  color: #ffde59;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
+
+/* ---- White card (How we do it) ---- */
+
+.about-card--plain {
+  background: var(--ac-card-bg);
+  color: var(--ac-ink);
+  box-shadow: var(--ac-shadow);
+}
+
+@media (hover: hover) {
+  .about-card--plain:hover {
+    box-shadow: var(--ac-shadow-hover);
+  }
+}
+
+.about-card--plain .about-card__eyebrow {
+  color: var(--ac-accent);
+}
+
+.about-card--plain .about-card__title {
+  color: var(--ac-ink);
+}
+
+.about-card__pillars {
+  display: grid;
+  gap: 1.1rem;
+  margin: auto 0 0;
+  padding: 1.75rem 0 0;
+  list-style: none;
+}
+
+.about-card__pillar {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.about-card__pillar + .about-card__pillar {
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+.about-card__pillar-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--ac-radius);
+  background: var(--ac-tile);
+  color: var(--ac-accent);
+}
+
+.about-card__pillar-icon svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.about-card__pillar-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: clamp(1rem, 1.15vw, 1.05rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--ac-ink-soft);
+}
+
+.about-card__pillar-text strong {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: var(--ac-ink);
+}
+
+.about-card__pillar-text em {
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--orange-ink);
+}
+
+/* ---- Leadership block (original design, below the cards) ---- */
+
+.about-cards__lead {
+  margin-top: clamp(1rem, 3vw, 2rem);
+  scroll-margin-top: 5.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-card,
+  .about-card__img {
+    transition: none;
+  }
+}

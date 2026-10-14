@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MessageHoverTile } from "@/components/MessageHoverTile";
@@ -10,6 +10,7 @@ import { MessagesDeviceCluster } from "@/components/MessagesDeviceCluster";
 import { MessagesFaq } from "@/components/MessagesFaq";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { LISTEN_PLATFORMS } from "@/lib/listen-platforms";
+import { MESSAGE_TOPICS, matchesTopic, messageYear, messageYears } from "@/lib/message-filters";
 import { buildMessageShelves } from "@/lib/message-shelves";
 import type { MessageVideo } from "@/lib/youtube";
 
@@ -179,6 +180,40 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
     return buildMessageShelves(rest);
   }, [messages, topRow]);
 
+  const [topic, setTopic] = useState("all");
+  const [year, setYear] = useState<number | "all">("all");
+  const years = useMemo(() => messageYears(messages), [messages]);
+  const filtering = topic !== "all" || year !== "all";
+
+  const filtered = useMemo(() => {
+    if (!filtering) return [];
+    return messages.filter(
+      (m) =>
+        (topic === "all" || matchesTopic(m, topic)) && (year === "all" || messageYear(m) === year),
+    );
+  }, [messages, topic, year, filtering]);
+
+  const filteredRows = useMemo(() => {
+    const rows: MessageVideo[][] = [];
+    for (let i = 0; i < filtered.length; i += 4) rows.push(filtered.slice(i, i + 4));
+    return rows;
+  }, [filtered]);
+
+  const topicLabel = MESSAGE_TOPICS.find((t) => t.id === topic)?.label;
+  const filterHeading = [topicLabel ?? "All messages", year === "all" ? null : String(year)]
+    .filter(Boolean)
+    .join(" · ");
+
+  const clearFilters = () => {
+    setTopic("all");
+    setYear("all");
+  };
+
+  useEffect(() => {
+    // Results change the page height; keep the scroll-in animations below lined up.
+    ScrollTrigger.refresh();
+  }, [topic, year]);
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, []);
@@ -322,22 +357,95 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         </div>
       </section>
 
-      {shelves.map((shelf) => (
-        <section key={shelf.id} className="msg-shelf" aria-label={shelf.title}>
-          <div className="msg-shelf__head">
-            <h2>{shelf.title}</h2>
+      <section className="msg-filter" aria-label="Filter messages">
+        <div className="msg-filter__inner">
+          <div className="msg-filter__group">
+            <p className="msg-filter__label" id="msg-filter-topic">
+              Topic
+            </p>
+            <div className="msg-filter__chips" role="group" aria-labelledby="msg-filter-topic">
+              {[{ id: "all", label: "All" }, ...MESSAGE_TOPICS].map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className="msg-filter__chip"
+                  aria-pressed={topic === t.id}
+                  onClick={() => setTopic(t.id)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="msg-shelf__rows">
-            {shelf.rows.map((row, ri) => (
-              <div key={`${shelf.id}-r${ri}`} className="msg-row msg-row--wide">
-                {row.map((msg) => (
-                  <MessageHoverTile key={msg.id} message={msg} className="msg-tile--wide" />
-                ))}
-              </div>
-            ))}
+          <div className="msg-filter__group">
+            <p className="msg-filter__label" id="msg-filter-year">
+              Year
+            </p>
+            <div className="msg-filter__chips" role="group" aria-labelledby="msg-filter-year">
+              {(["all", ...years] as const).map((y) => (
+                <button
+                  key={y}
+                  type="button"
+                  className="msg-filter__chip"
+                  aria-pressed={year === y}
+                  onClick={() => setYear(y)}
+                >
+                  {y === "all" ? "All years" : y}
+                </button>
+              ))}
+            </div>
           </div>
+        </div>
+      </section>
+
+      {filtering ? (
+        <section className="msg-shelf msg-filter-results" aria-label="Filtered messages">
+          <div className="msg-shelf__head msg-filter-results__head">
+            <h2>{filterHeading}</h2>
+            <p className="msg-filter-results__count" aria-live="polite">
+              {filtered.length === 1 ? "1 message" : `${filtered.length} messages`}
+            </p>
+            <button type="button" className="msg-filter-results__clear" onClick={clearFilters}>
+              Clear filters
+            </button>
+          </div>
+          {filtered.length ? (
+            <div className="msg-shelf__rows">
+              {filteredRows.map((row, ri) => (
+                <div key={`filtered-r${ri}`} className="msg-row msg-row--wide">
+                  {row.map((msg) => (
+                    <MessageHoverTile key={msg.id} message={msg} className="msg-tile--wide" />
+                  ))}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="msg-filter-results__empty">
+              <p>No messages match that yet. Try another topic or year.</p>
+              <button type="button" className="msg-filter__chip" onClick={clearFilters}>
+                Show all messages
+              </button>
+            </div>
+          )}
         </section>
-      ))}
+      ) : (
+        shelves.map((shelf) => (
+          <section key={shelf.id} className="msg-shelf" aria-label={shelf.title}>
+            <div className="msg-shelf__head">
+              <h2>{shelf.title}</h2>
+            </div>
+            <div className="msg-shelf__rows">
+              {shelf.rows.map((row, ri) => (
+                <div key={`${shelf.id}-r${ri}`} className="msg-row msg-row--wide">
+                  {row.map((msg) => (
+                    <MessageHoverTile key={msg.id} message={msg} className="msg-tile--wide" />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </section>
+        ))
+      )}
 
       <section id="listen" className="msg-listen" aria-label="Listen platforms">
         <p className="msg-listen__eyebrow">Catch every message</p>
