@@ -89,7 +89,7 @@ The cards are now white with a purple bar on the left. When they scroll into vie
 
 ### "Who we are becoming" banner
 
-The banner is brighter, with warm gold glows in the corners and a gold line underneath.
+The banner now uses the same deep purple as the Mission, Vision and "Their story" panels, with a soft brand-purple glow and a gold line underneath, so the page reads as one colour family.
 
 | Before | After |
 | --- | --- |
@@ -106,7 +106,7 @@ Before, Mission, Vision and Leadership sat behind tabs, so only one showed at a 
 
 ### Vision
 
-Before, the vision points showed one at a time with Previous / Next buttons. Now one full-width dark-purple card shows all eight points with icons, and a church family photo fades in underneath with a soft curved edge.
+Before, the vision points showed one at a time with Previous / Next buttons. Now one full-width dark-purple card with a soft purple glow shows all eight points with icons, and a full-resolution church family photo fades in underneath with a soft curved edge.
 
 | Before | After |
 | --- | --- |
@@ -115,7 +115,7 @@ Before, the vision points showed one at a time with Previous / Next buttons. Now
 
 ### Leadership
 
-Pastors David and Awo are now in two cards side by side (Pastor David has a new photo). Their shared story sits in a dark-purple panel below, with an "Explore Kharis Life" button. The old layout had a lot of empty space at the bottom, and that's gone.
+Pastors David and Awo are now in two cards side by side (Pastor David has a new, full-resolution photo). Their shared story sits in a dark-purple panel below, with an "Explore Kharis Life" button. The old layout had a lot of empty space at the bottom, and that's gone.
 
 | Before | After |
 | --- | --- |
@@ -202,8 +202,10 @@ On top of `main` at `2941f79`:
 | `4c4f7b5` | Site: consistent 200ms button transitions, smooth logo and page crossfade |
 | `9b76bff` | About: redesigned Statement of Faith (bordered cards, hover/tap reveal) |
 | `aedfe13` | Chat: round launcher, pop-in, and bounce nudge for long scrolling |
+| `34146fb` | About: "Who we are becoming" banner in the dark panel purple with a soft purple wash |
+| `1a016fb` | About: full-resolution Vision, Mission and Pastor David photos; richer Vision gradient |
 
-These update notes are added in separate docs commits on the same branch.
+These update notes live in `docs/updates/2026-10-14-about-messages/` and were added in docs commits on the same branch (part of the refresh rode along in `1a016fb`).
 
 ## How to test
 
