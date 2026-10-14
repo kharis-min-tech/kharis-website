@@ -14,10 +14,10 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1149.0",
     "@aws-sdk/s3-request-presigner": "^3.1149.0",
-    "@opennextjs/cloudflare": "^1.20.8",
-    "@supabase/supabase-js": "^2.115.0",
+    "@opennextjs/cloudflare": "^1.20.10",
+    "@supabase/supabase-js": "^2.117.3",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.31.0",
+    "lucide-react": "^1.55.0",
     "next": "16.4.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
