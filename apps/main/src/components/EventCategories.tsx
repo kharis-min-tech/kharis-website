@@ -17,6 +17,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Clock, MapPin, Navigation, Pause, Play } from "lucide-react";
 import { EVENT_CATEGORIES, type EventCategory, type EventSlide } from "@/data/event-categories";
 import type { ServiceBranch } from "@/lib/service-branches";
+import "./event-categories.css";
 
 const SLIDE_MS = 5000;
 const DEFAULT_BRANCH = "london";
@@ -106,13 +107,12 @@ function CategoryRow({
               aria-selected={selected}
               aria-controls={panelId}
               tabIndex={selected ? 0 : -1}
-              className={`events-cat events-cat--${cat.status}${selected ? " is-selected" : ""}`}
+              className={`events-cat${selected ? " is-selected" : ""}`}
               onClick={() => select(i, false)}
               onKeyDown={(e) => onKeyDown(e, i)}
             >
               <span className="events-cat__circle">
-                <Icon aria-hidden strokeWidth={1.4} className="events-cat__icon" />
-                {cat.status === "upcoming" ? <span className="events-cat__dot" aria-hidden /> : null}
+                <Icon aria-hidden strokeWidth={1.25} className="events-cat__icon" />
               </span>
               <span className="events-cat__label">{cat.label}</span>
               <span className="events-cat__status">
