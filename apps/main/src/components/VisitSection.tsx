@@ -13,10 +13,6 @@ export function VisitSection({ slides = [] }: Props) {
 
   return (
     <section id="who-we-are" className="visit-band">
-      {/* Soft diagonal seam from Latest Messages into this section */}
-      <div className="visit-band__seam" aria-hidden />
-      <div className="visit-band__seam visit-band__seam--soft" aria-hidden />
-
       <div className="relative z-10 mx-auto max-w-7xl px-5 pt-10 md:px-8 md:pt-12">
         <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
           <p className="eyebrow">This is Kharis</p>
