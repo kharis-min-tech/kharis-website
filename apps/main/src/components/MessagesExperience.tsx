@@ -5,6 +5,20 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronDown,
+  Compass,
+  Cross,
+  Flame,
+  Flower,
+  HandHeart,
+  Heart,
+  LayoutGrid,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { MessageHoverTile } from "@/components/MessageHoverTile";
 import { MessagesDeviceCluster } from "@/components/MessagesDeviceCluster";
 import { MessagesFaq } from "@/components/MessagesFaq";
@@ -15,6 +29,18 @@ import { buildMessageShelves } from "@/lib/message-shelves";
 import type { MessageVideo } from "@/lib/youtube";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const TOPIC_ICONS: Record<string, LucideIcon> = {
+  all: LayoutGrid,
+  jesus: Cross,
+  bible: BookOpen,
+  prayer: HandHeart,
+  love: Heart,
+  purpose: Compass,
+  acts: Flame,
+  "just-men": Users,
+  fragrance: Flower,
+};
 
 /** Original Teachings wall posters (same five sermons). mqdefault is 16:9 so no YouTube letterbox bars. */
 const ORIGINAL_WALL_POSTERS: MessageVideo[] = [
@@ -183,6 +209,10 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
   const [topic, setTopic] = useState("all");
   const [year, setYear] = useState<number | "all">("all");
   const years = useMemo(() => messageYears(messages), [messages]);
+  const topics = useMemo(
+    () => MESSAGE_TOPICS.filter((t) => messages.some((m) => matchesTopic(m, t.id))),
+    [messages],
+  );
   const filtering = topic !== "all" || year !== "all";
 
   const filtered = useMemo(() => {
@@ -359,12 +389,10 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
 
       <section className="msg-filter" aria-label="Filter messages">
         <div className="msg-filter__inner">
-          <div className="msg-filter__group">
-            <p className="msg-filter__label" id="msg-filter-topic">
-              Topic
-            </p>
-            <div className="msg-filter__chips" role="group" aria-labelledby="msg-filter-topic">
-              {[{ id: "all", label: "All" }, ...MESSAGE_TOPICS].map((t) => (
+          <div className="msg-filter__topics" role="group" aria-label="Filter by topic">
+            {[{ id: "all", label: "All" }, ...topics].map((t) => {
+              const Icon = TOPIC_ICONS[t.id] ?? LayoutGrid;
+              return (
                 <button
                   key={t.id}
                   type="button"
@@ -372,29 +400,28 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
                   aria-pressed={topic === t.id}
                   onClick={() => setTopic(t.id)}
                 >
+                  <Icon className="msg-filter__icon" strokeWidth={1.9} aria-hidden />
                   {t.label}
                 </button>
-              ))}
-            </div>
+              );
+            })}
           </div>
-          <div className="msg-filter__group">
-            <p className="msg-filter__label" id="msg-filter-year">
-              Year
-            </p>
-            <div className="msg-filter__chips" role="group" aria-labelledby="msg-filter-year">
-              {(["all", ...years] as const).map((y) => (
-                <button
-                  key={y}
-                  type="button"
-                  className="msg-filter__chip"
-                  aria-pressed={year === y}
-                  onClick={() => setYear(y)}
-                >
-                  {y === "all" ? "All years" : y}
-                </button>
+          <label className="msg-filter__year" data-active={year !== "all" || undefined}>
+            <CalendarDays className="msg-filter__icon" strokeWidth={1.9} aria-hidden />
+            <select
+              aria-label="Filter by year"
+              value={year}
+              onChange={(e) => setYear(e.target.value === "all" ? "all" : Number(e.target.value))}
+            >
+              <option value="all">Year</option>
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
               ))}
-            </div>
-          </div>
+            </select>
+            <ChevronDown className="msg-filter__caret" strokeWidth={2} aria-hidden />
+          </label>
         </div>
       </section>
 
@@ -406,7 +433,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
               {filtered.length === 1 ? "1 message" : `${filtered.length} messages`}
             </p>
             <button type="button" className="msg-filter-results__clear" onClick={clearFilters}>
-              Clear filters
+              Clear
             </button>
           </div>
           {filtered.length ? (

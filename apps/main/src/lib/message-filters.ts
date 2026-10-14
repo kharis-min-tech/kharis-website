@@ -6,32 +6,23 @@ export type MessageTopic = {
   match: RegExp;
 };
 
-/** Topics are matched against message titles (YouTube gives no tags we can rely on). */
+/**
+ * Topics are matched against message titles (YouTube gives no tags we can rely on).
+ * Kept to the topics and series with the most messages so the filter fits on one row.
+ */
 export const MESSAGE_TOPICS: MessageTopic[] = [
-  { id: "faith", label: "Faith", match: /\bfaith\b|\bbeliev/ },
-  { id: "bible", label: "Bible", match: /\bbible\b|\bword\b|\bscripture|\blogos\b|\bgospel\b/ },
-  { id: "love", label: "Love", match: /\blov(e|es|ed|ing)\b|\brelationship|\bheart\b/ },
   {
     id: "jesus",
     label: "Jesus",
     match: /\bjesus\b|\bchrist\b|\bcross\b|\bresurrection\b|virgin birth|\bemmanuel\b/,
   },
-  {
-    id: "holy-spirit",
-    label: "Holy Spirit",
-    match: /holy spirit|\bspirit\b|\brevival\b|\bsupernatural\b|\bimpartation\b|\bawakening\b/,
-  },
-  { id: "prayer-fasting", label: "Prayer & Fasting", match: /\bpray|\bfast/ },
-  {
-    id: "hope",
-    label: "Hope",
-    match: /\bhope\b|\bpromise|\bstorm\b|\bsuffer|\banxiety\b|\bforsaken\b|\bcrisis\b/,
-  },
+  { id: "bible", label: "Bible", match: /\bbible\b|\bword\b|\bscripture|\blogos\b|\bgospel\b/ },
+  { id: "prayer", label: "Prayer", match: /\bpray|\bfast/ },
+  { id: "love", label: "Love", match: /\blov(e|es|ed|ing)\b|\brelationship|\bheart\b/ },
   { id: "purpose", label: "Purpose", match: /\bpurpose\b|\bassignment\b|\bmission|\bcalling\b/ },
-  { id: "church", label: "Church", match: /\bchurch\b|\bleaders\b|\bserv(e|ing)\b/ },
+  { id: "acts", label: "Acts", match: /\bacts\b/ },
   { id: "just-men", label: "Just Men", match: /just men/ },
-  { id: "fragrance", label: "The Fragrance", match: /\bfragrance\b/ },
-  { id: "acts", label: "Book of Acts", match: /\bacts\b/ },
+  { id: "fragrance", label: "Fragrance", match: /\bfragrance\b/ },
 ];
 
 export function matchesTopic(message: MessageVideo, topicId: string) {
