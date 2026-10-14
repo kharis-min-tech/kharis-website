@@ -18,7 +18,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--bg-purple);
+  background: var(--about-card, #fff);
   -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
   mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
   -webkit-mask-size: 250% 100%;
@@ -32,11 +32,11 @@
 .kgw-card::before {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: -1px;
+  bottom: -1px;
   left: -4px;
   width: 4px;
-  background: var(--purple);
+  background: var(--about-purple, #630ed4);
   transform-origin: 50% 0;
 }
 
@@ -93,15 +93,15 @@
 
 .kgw-swash__stroke {
   fill: none;
-  stroke: var(--purple);
+  stroke: var(--about-yellow, #ffde59);
   stroke-linecap: round;
-  opacity: 0.26;
+  opacity: 0.85;
   stroke-dasharray: 1 2;
   stroke-dashoffset: 0;
 }
 
 html[data-theme="dark"] .kgw-swash__stroke {
-  opacity: 0.42;
+  opacity: 0.55;
 }
 
 .kgw-paint text {
@@ -112,7 +112,7 @@ html[data-theme="dark"] .kgw-swash__stroke {
 
 .kgw-paint__outline {
   fill: none;
-  stroke: var(--purple);
+  stroke: var(--about-purple, #630ed4);
   stroke-width: 1.1px;
   stroke-linejoin: round;
   stroke-linecap: round;
@@ -266,7 +266,7 @@ html[data-theme="dark"] .kgw-swash__stroke {
 
 @keyframes kgw-dry {
   from {
-    fill: var(--purple);
+    fill: var(--about-purple, #630ed4);
   }
   to {
     fill: var(--fg);
