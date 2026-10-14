@@ -28,7 +28,7 @@ export function AboutExperience() {
       <header className="about-hero">
         <div className="about-hero__media" aria-hidden>
           <Image
-            src="/images/about-hero-bench-2x.jpg"
+            src="/images/about-hero-bench-3200.jpg"
             alt=""
             fill
             priority
