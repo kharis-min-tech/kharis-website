@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Fragment,
-  useCallback,
   useEffect,
   useId,
   useRef,
@@ -12,14 +11,31 @@ import {
   useSyncExternalStore,
   type KeyboardEvent,
   type PointerEvent,
+  type ReactNode,
 } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Clock, MapPin, Navigation, Pause, Play } from "lucide-react";
-import { EVENT_CATEGORIES, type EventCategory, type EventSlide } from "@/data/event-categories";
-import type { ServiceBranch } from "@/lib/service-branches";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  LayoutGrid,
+  MapPin,
+  Pause,
+  Play,
+  X,
+} from "lucide-react";
+import {
+  EVENT_CATEGORIES,
+  type EventCategory,
+  type EventPhoto,
+  type EventSplit,
+  type EventTile,
+} from "@/data/event-categories";
+import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
 import "./event-categories.css";
 
-const SLIDE_MS = 5000;
 const DEFAULT_BRANCH = "london";
 const BRANCH_KEY = "kharis-service-branch";
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -126,23 +142,353 @@ function CategoryRow({
   );
 }
 
-function ServiceVisitPanel({
-  category,
-  branches,
+const FOCUSABLE = 'button:not([disabled]), [href], video[controls], select, [tabindex]:not([tabindex="-1"])';
+
+function StoryModal({
+  label,
+  onClose,
+  onEscape,
+  wide = false,
+  children,
 }: {
-  category: EventCategory;
-  branches: ServiceBranch[];
+  label: string;
+  onClose: () => void;
+  onEscape?: () => void;
+  wide?: boolean;
+  children: ReactNode;
 }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const escapeRef = useRef(onEscape ?? onClose);
+
+  useEffect(() => {
+    escapeRef.current = onEscape ?? onClose;
+  }, [onEscape, onClose]);
+
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    const panel = panelRef.current;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusables = () => Array.from(panel?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []);
+    focusables()[0]?.focus();
+
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        escapeRef.current();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const list = focusables();
+      const first = list[0];
+      const last = list[list.length - 1];
+      if (!first || !last) return;
+      if (e.shiftKey && (document.activeElement === first || !panel?.contains(document.activeElement))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+      opener?.focus();
+    };
+  }, []);
+
+  return createPortal(
+    <div className="events-modal">
+      <button type="button" className="events-modal__scrim" aria-hidden tabIndex={-1} onClick={onClose} />
+      <div
+        ref={panelRef}
+        className={`events-modal__panel${wide ? " events-modal__panel--wide" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+      >
+        <button type="button" className="events-modal__close" aria-label="Close" onClick={onClose}>
+          <X aria-hidden className="h-5 w-5" />
+        </button>
+        {children}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+function GalleryModal({
+  title,
+  photos,
+  onClose,
+}: {
+  title: string;
+  photos: EventPhoto[];
+  onClose: () => void;
+}) {
+  const [index, setIndex] = useState<number | null>(null);
+  const swipe = useRef<number | null>(null);
+  const count = photos.length;
+  const photo = index === null ? null : photos[index];
+
+  const step = (delta: number) =>
+    setIndex((i) => (i === null ? i : (i + delta + count) % count));
+
+  useEffect(() => {
+    if (index === null) return;
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "ArrowRight") setIndex((i) => (i === null ? i : (i + 1) % count));
+      if (e.key === "ArrowLeft") setIndex((i) => (i === null ? i : (i - 1 + count) % count));
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [index, count]);
+
+  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
+    swipe.current = e.clientX;
+  };
+
+  const onPointerUp = (e: PointerEvent<HTMLDivElement>) => {
+    if (swipe.current === null) return;
+    const dx = e.clientX - swipe.current;
+    swipe.current = null;
+    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+  };
+
+  return (
+    <StoryModal
+      label={`${title} photos`}
+      wide
+      onClose={onClose}
+      onEscape={() => (index === null ? onClose() : setIndex(null))}
+    >
+      <div className="events-modal__head">
+        <p className="events-modal__eyebrow">Gallery</p>
+        <h2 className="events-modal__title">{title}</h2>
+      </div>
+
+      {photo && index !== null ? (
+        <div className="events-viewer">
+          <div
+            className="events-viewer__stage"
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerCancel={() => (swipe.current = null)}
+          >
+            <Image
+              key={photo.src}
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              quality={95}
+              draggable={false}
+              sizes="(max-width: 900px) 100vw, 72rem"
+              className="object-contain"
+            />
+          </div>
+          <div className="events-viewer__bar">
+            <button type="button" className="events-viewer__back" onClick={() => setIndex(null)}>
+              <LayoutGrid aria-hidden className="h-4 w-4" />
+              All photos
+            </button>
+            <p className="events-viewer__count" aria-live="polite">
+              {index + 1} / {count}
+            </p>
+            <div className="events-viewer__arrows">
+              <button type="button" className="events-round" aria-label="Previous photo" onClick={() => step(-1)}>
+                <ChevronLeft aria-hidden className="h-5 w-5" />
+              </button>
+              <button type="button" className="events-round" aria-label="Next photo" onClick={() => step(1)}>
+                <ChevronRight aria-hidden className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <ul className="events-gallery-grid">
+          {photos.map((p, i) => (
+            <li key={`${p.src}-${i}`}>
+              <button
+                type="button"
+                className="events-gallery-grid__item"
+                aria-label={`Open photo ${i + 1} of ${count}: ${p.alt}`}
+                onClick={() => setIndex(i)}
+              >
+                <Image
+                  src={p.src}
+                  alt=""
+                  fill
+                  quality={95}
+                  sizes="(max-width: 640px) 50vw, 24rem"
+                  className="object-cover"
+                  style={p.position ? { objectPosition: p.position } : undefined}
+                />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </StoryModal>
+  );
+}
+
+function VideoModal({ title, src, poster, onClose }: { title: string; src: string; poster: string; onClose: () => void }) {
+  return (
+    <StoryModal label={`${title} video`} wide onClose={onClose}>
+      <div className="events-modal__head">
+        <p className="events-modal__eyebrow">Watch</p>
+        <h2 className="events-modal__title">{title}</h2>
+      </div>
+      <video className="events-modal__video" src={src} poster={poster} controls autoPlay playsInline />
+    </StoryModal>
+  );
+}
+
+function useStoredBranch(branches: ServiceBranch[]) {
   const stored = useSyncExternalStore(subscribeBranch, readBranch, () => null);
-  const branch =
+  return (
     branches.find((b) => b.slug === stored) ??
     branches.find((b) => b.slug === DEFAULT_BRANCH) ??
-    branches[0];
+    branches[0] ??
+    null
+  );
+}
 
+function EventHero({
+  category,
+  visit,
+  onWatch,
+  onExplore,
+}: {
+  category: EventCategory;
+  visit: ServiceVisit | null;
+  onWatch: () => void;
+  onExplore: () => void;
+}) {
+  const reduce = useReducedMotion();
+  const rootRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [userPlay, setUserPlay] = useState<boolean | null>(null);
+  const [inView, setInView] = useState(false);
+  const { hero } = category;
+  const playing = userPlay ?? !reduce;
+  const upcoming = category.status === "upcoming";
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(([entry]) => setInView(Boolean(entry?.isIntersecting)), {
+      threshold: 0.2,
+    });
+    io.observe(root);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (playing && inView) video.play().catch(() => {});
+    else video.pause();
+  }, [playing, inView]);
+
+  const eyebrow = upcoming
+    ? visit
+      ? `Every ${visit.day} · ${visit.times.join(" & ")}`
+      : "Upcoming"
+    : "Past event · Coming back soon";
+
+  return (
+    <section ref={rootRef} className="events-hero" aria-label={hero.headline}>
+      {hero.video ? (
+        <video
+          ref={videoRef}
+          className="events-hero__media"
+          src={hero.video}
+          poster={hero.poster}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden
+        />
+      ) : (
+        <div className={`events-hero__media${reduce ? "" : " events-hero__media--zoom"}`}>
+          <Image
+            src={hero.poster}
+            alt={hero.posterAlt}
+            fill
+            quality={95}
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+      )}
+      <span className="events-hero__veil" aria-hidden />
+
+      <div className="events-hero__copy">
+        <p className="events-hero__eyebrow">{eyebrow}</p>
+        <h2 className="events-hero__headline">{hero.headline}</h2>
+        <p className="events-hero__sub">{hero.subtext}</p>
+        <div className="events-hero__ctas">
+          {hero.video ? (
+            <button type="button" className="events-cta k-cta" onClick={onWatch}>
+              Watch now
+              <Play aria-hidden className="h-3.5 w-3.5" fill="currentColor" strokeWidth={0} />
+            </button>
+          ) : null}
+          {upcoming ? (
+            visit?.mapsUrl ? (
+              <a href={visit.mapsUrl} target="_blank" rel="noopener noreferrer" className="events-cta k-cta">
+                Get directions
+              </a>
+            ) : (
+              <Link href="/locations" className="events-cta k-cta">
+                Find your nearest service
+              </Link>
+            )
+          ) : (
+            <button type="button" className="events-cta k-cta" onClick={onExplore}>
+              Explore
+            </button>
+          )}
+        </div>
+      </div>
+
+      {hero.video ? (
+        <button
+          type="button"
+          className="events-round events-hero__toggle"
+          aria-label={playing ? "Pause background video" : "Play background video"}
+          onClick={() => setUserPlay(!playing)}
+        >
+          {playing ? (
+            <Pause aria-hidden className="h-4 w-4" fill="currentColor" strokeWidth={0} />
+          ) : (
+            <Play aria-hidden className="h-4 w-4" fill="currentColor" strokeWidth={0} />
+          )}
+        </button>
+      ) : null}
+    </section>
+  );
+}
+
+function BranchStrip({
+  category,
+  branch,
+  branches,
+  visit,
+}: {
+  category: EventCategory;
+  branch: ServiceBranch | null;
+  branches: ServiceBranch[];
+  visit: ServiceVisit | null;
+}) {
   if (!branch) {
     return (
-      <div className="events-visit">
-        <Link href="/locations" className="events-visit__cta k-cta">
+      <div className="events-branch">
+        <Link href="/locations" className="events-branch__link">
           Find your nearest service
           <ArrowUpRight aria-hidden className="h-4 w-4" />
         </Link>
@@ -150,13 +496,12 @@ function ServiceVisitPanel({
     );
   }
 
-  const visit = category.service === "midweek" ? branch.midweek : branch.sunday;
   const kharis = branches.filter((b) => b.group === "kharis");
   const kp2 = branches.filter((b) => b.group === "kp2");
 
   return (
-    <div className="events-visit">
-      <label className="events-visit__branch">
+    <div className="events-branch">
+      <label className="events-branch__pick">
         <span>Your branch</span>
         <select value={branch.slug} onChange={(e) => saveBranch(e.target.value)}>
           <optgroup label="Kharis Church">
@@ -180,234 +525,131 @@ function ServiceVisitPanel({
 
       {visit ? (
         <>
-          <p className="events-visit__line">
-            <Clock aria-hidden className="events-visit__ico" />
+          <p className="events-branch__fact">
+            <Clock aria-hidden className="events-branch__ico" />
             <span>
               Every {visit.day} · {visit.times.join(" & ")}
             </span>
           </p>
-          <p className="events-visit__line">
-            <MapPin aria-hidden className="events-visit__ico" />
+          <p className="events-branch__fact">
+            <MapPin aria-hidden className="events-branch__ico" />
             <span>
               <strong>{visit.venue}</strong>
-              {visit.address ? <span>{visit.address}</span> : null}
+              {visit.address ? <span className="events-branch__address">{visit.address}</span> : null}
             </span>
           </p>
-          <div className="events-visit__ctas">
-            {visit.mapsUrl ? (
-              <a
-                href={visit.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="events-visit__cta k-cta"
-              >
-                <Navigation aria-hidden className="h-4 w-4" />
-                Get directions
-              </a>
-            ) : null}
-            <Link href={branch.href} className="events-visit__cta events-visit__cta--ghost k-cta">
-              {branch.name} branch
-              <ArrowUpRight aria-hidden className="h-4 w-4" />
-            </Link>
-          </div>
         </>
       ) : (
-        <p className="events-visit__line">
-          <span>
-            {branch.name} doesn’t list a {category.service === "midweek" ? "midweek" : "Sunday"}{" "}
-            service yet.
-          </span>
+        <p className="events-branch__fact">
+          {branch.name} doesn’t list a {category.service === "midweek" ? "midweek" : "Sunday"} service
+          yet.
         </p>
       )}
 
-      <Link href="/locations" className="events-visit__more">
-        Find your nearest service
-        <ArrowUpRight aria-hidden className="h-3.5 w-3.5" />
-      </Link>
+      <div className="events-branch__links">
+        <Link href={branch.href} className="events-branch__link">
+          {branch.name} branch
+          <ArrowUpRight aria-hidden className="h-4 w-4" />
+        </Link>
+        <Link href="/locations" className="events-branch__link">
+          Find your nearest service
+          <ArrowUpRight aria-hidden className="h-4 w-4" />
+        </Link>
+      </div>
     </div>
   );
 }
 
-function Gallery({ slides, label }: { slides: EventSlide[]; label: string }) {
-  const reduce = useReducedMotion();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const settling = useRef<number | null>(null);
-  const drag = useRef<{ x: number; left: number; start: number } | null>(null);
-  const [index, setIndex] = useState(0);
-  const [userPlay, setUserPlay] = useState<boolean | null>(null);
-  const [inView, setInView] = useState(false);
-  const count = slides.length;
-
-  const playing = userPlay ?? !reduce;
-  const running = playing && inView && count > 1;
-
-  const settle = useCallback(() => {
-    if (settling.current) window.clearTimeout(settling.current);
-    settling.current = null;
-    trackRef.current?.classList.remove("is-dragging");
-  }, []);
-
-  const goTo = useCallback(
-    (next: number) => {
-      const track = trackRef.current;
-      const slide = track?.children[next] as HTMLElement | undefined;
-      if (!track || !slide) return;
-      setIndex(next);
-      if (settling.current) window.clearTimeout(settling.current);
-      settling.current = window.setTimeout(settle, 900);
-      const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0;
-      track.scrollTo({ left: slide.offsetLeft - pad, behavior: reduce ? "auto" : "smooth" });
-    },
-    [reduce, settle],
+function EventTiles({ tiles }: { tiles: EventTile[] }) {
+  return (
+    <div className="events-tiles">
+      {tiles.map((tile) => (
+        <figure key={tile.src} className="events-tile">
+          <Image
+            src={tile.src}
+            alt={tile.alt}
+            fill
+            quality={95}
+            sizes="(max-width: 760px) 100vw, 50vw"
+            className="object-cover"
+            style={tile.position ? { objectPosition: tile.position } : undefined}
+          />
+          <span className="events-tile__veil" aria-hidden />
+          <figcaption className="events-tile__copy">
+            <span className="events-tile__eyebrow">{tile.eyebrow}</span>
+            <span className="events-tile__title">{tile.title}</span>
+            <span className="events-tile__desc">{tile.description}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
   );
+}
 
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const io = new IntersectionObserver(([entry]) => setInView(Boolean(entry?.isIntersecting)), {
-      threshold: 0.35,
-    });
-    io.observe(root);
-    return () => io.disconnect();
-  }, []);
+function EventSplitPanel({ split, onExplore }: { split: EventSplit; onExplore: () => void }) {
+  return (
+    <section className="events-split" aria-label={split.headline}>
+      {[split.left, split.right].map((photo) => (
+        <div key={photo.src} className="events-split__half">
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            quality={95}
+            sizes="50vw"
+            className="object-cover"
+            style={photo.position ? { objectPosition: photo.position } : undefined}
+          />
+        </div>
+      ))}
+      <span className="events-split__veil" aria-hidden />
+      <div className="events-split__copy">
+        <p className="events-split__eyebrow">{split.eyebrow}</p>
+        <h3 className="events-split__headline">{split.headline}</h3>
+        <button type="button" className="events-cta k-cta" onClick={onExplore}>
+          Explore
+        </button>
+      </div>
+    </section>
+  );
+}
 
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const onEnd = () => {
-      if (settling.current) settle();
-    };
-    track.addEventListener("scrollend", onEnd);
-    return () => {
-      track.removeEventListener("scrollend", onEnd);
-      if (settling.current) window.clearTimeout(settling.current);
-    };
-  }, [settle]);
-
-  const onScroll = () => {
-    const track = trackRef.current;
-    if (!track || settling.current) return;
-    const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0;
-    let best = 0;
-    let bestDistance = Infinity;
-    Array.from(track.children).forEach((el, i) => {
-      const distance = Math.abs((el as HTMLElement).offsetLeft - pad - track.scrollLeft);
-      if (distance < bestDistance) {
-        best = i;
-        bestDistance = distance;
-      }
-    });
-    setIndex(best);
-  };
-
-  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
-    const track = trackRef.current;
-    if (!track || e.pointerType !== "mouse" || e.button !== 0) return;
-    drag.current = { x: e.clientX, left: track.scrollLeft, start: index };
-    track.classList.add("is-dragging");
-    track.setPointerCapture(e.pointerId);
-  };
-
-  const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
-    const track = trackRef.current;
-    if (!track || !drag.current) return;
-    track.scrollLeft = drag.current.left - (e.clientX - drag.current.x);
-  };
-
-  const onPointerUp = (e: PointerEvent<HTMLDivElement>) => {
-    if (!drag.current) return;
-    const dx = e.clientX - drag.current.x;
-    const step = dx < -40 ? 1 : dx > 40 ? -1 : 0;
-    const target = Math.min(count - 1, Math.max(0, drag.current.start + step));
-    drag.current = null;
-    goTo(target);
-  };
+function EventStory({ category, branches }: { category: EventCategory; branches: ServiceBranch[] }) {
+  const branch = useStoredBranch(branches);
+  const [modal, setModal] = useState<"video" | "gallery" | null>(null);
+  const upcoming = category.status === "upcoming";
+  const visit = upcoming && branch
+    ? category.service === "midweek"
+      ? branch.midweek
+      : branch.sunday
+    : null;
 
   return (
-    <div
-      ref={rootRef}
-      className="events-gallery"
-      role="group"
-      aria-roledescription="carousel"
-      aria-label={`${label} photos`}
-    >
-      <div
-        ref={trackRef}
-        className="events-gallery__track"
-        tabIndex={0}
-        aria-label={`${label} photos, use arrow keys to scroll`}
-        onScroll={onScroll}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-      >
-        {slides.map((slide, i) => (
-          <figure
-            key={slide.src}
-            className={`events-gallery__slide${i === index ? " is-active" : ""}`}
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${i + 1} of ${count}`}
-          >
-            <Image
-              src={slide.src}
-              alt={slide.alt}
-              fill
-              quality={95}
-              draggable={false}
-              sizes="(max-width: 768px) 90vw, 1100px"
-              className="object-cover"
-              style={slide.position ? { objectPosition: slide.position } : undefined}
-            />
-            <span className="events-gallery__scrim" aria-hidden />
-            <figcaption className="events-gallery__headline">{slide.headline}</figcaption>
-          </figure>
-        ))}
-      </div>
-
-      {count > 1 ? (
-        <div className="events-gallery__controls">
-          <div className="events-gallery__dots" role="group" aria-label="Choose a photo">
-            {slides.map((slide, i) => (
-              <button
-                key={slide.src}
-                type="button"
-                className={`events-gallery__dot${i === index ? " is-active" : ""}`}
-                aria-label={`Show photo ${i + 1} of ${count}`}
-                aria-current={i === index ? "true" : undefined}
-                onClick={() => goTo(i)}
-              >
-                {i === index ? (
-                  <span
-                    key={`${index}-${reduce && !playing ? "still" : "run"}`}
-                    className={`events-gallery__fill${reduce && !playing ? " is-still" : ""}`}
-                    style={{
-                      animationDuration: `${SLIDE_MS}ms`,
-                      animationPlayState: running ? "running" : "paused",
-                    }}
-                    onAnimationEnd={() => goTo((index + 1) % count)}
-                  />
-                ) : null}
-              </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="events-gallery__toggle"
-            aria-label={playing ? "Pause slideshow" : "Play slideshow"}
-            onClick={() => setUserPlay(!playing)}
-          >
-            {playing ? (
-              <Pause aria-hidden className="h-4 w-4" fill="currentColor" strokeWidth={0} />
-            ) : (
-              <Play aria-hidden className="h-4 w-4" fill="currentColor" strokeWidth={0} />
-            )}
-          </button>
-        </div>
+    <>
+      <EventHero
+        category={category}
+        visit={visit}
+        onWatch={() => setModal("video")}
+        onExplore={() => setModal("gallery")}
+      />
+      {upcoming ? (
+        <BranchStrip category={category} branch={branch} branches={branches} visit={visit} />
       ) : null}
-    </div>
+      <EventTiles tiles={category.tiles} />
+      <EventSplitPanel split={category.split} onExplore={() => setModal("gallery")} />
+
+      {modal === "video" && category.hero.video ? (
+        <VideoModal
+          title={category.label}
+          src={category.hero.video}
+          poster={category.hero.poster}
+          onClose={() => setModal(null)}
+        />
+      ) : null}
+      {modal === "gallery" ? (
+        <GalleryModal title={category.label} photos={category.gallery} onClose={() => setModal(null)} />
+      ) : null}
+    </>
   );
 }
 
@@ -420,7 +662,6 @@ export function EventCategories({ branches }: Props) {
   const panelId = useId();
   const [activeId, setActiveId] = useState(EVENT_CATEGORIES[0]!.id);
   const active = EVENT_CATEGORIES.find((c) => c.id === activeId) ?? EVENT_CATEGORIES[0]!;
-  const upcoming = active.status === "upcoming";
 
   return (
     <section className="events-cats" aria-label="Browse Kharis events">
@@ -428,41 +669,21 @@ export function EventCategories({ branches }: Props) {
 
       <div
         id={panelId}
-        className="events-show"
+        className="events-story"
         role="tabpanel"
         aria-labelledby={`events-cat-${active.id}`}
       >
-        <motion.div
-          key={active.id}
-          initial={reduce ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease }}
-        >
-          <div className={`events-show__head${upcoming ? " is-upcoming" : ""}`}>
-            <div className="events-show__intro">
-              <p className={`events-show__eyebrow events-show__eyebrow--${active.status}`}>
-                {upcoming ? "Upcoming" : "Past event"}
-              </p>
-              <h2 className="events-show__title">{active.label}</h2>
-              <p className="events-show__summary">{active.summary}</p>
-              {upcoming ? null : (
-                <p className="events-show__soon">
-                  Coming back soon. No dates yet.{" "}
-                  <button
-                    type="button"
-                    className="events-show__switch"
-                    onClick={() => setActiveId(EVENT_CATEGORIES[0]!.id)}
-                  >
-                    Join us this Sunday
-                  </button>
-                </p>
-              )}
-            </div>
-            {upcoming ? <ServiceVisitPanel category={active} branches={branches} /> : null}
-          </div>
-
-          <Gallery key={active.id} slides={active.slides} label={active.label} />
-        </motion.div>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={active.id}
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={reduce ? undefined : { opacity: 0 }}
+            transition={{ duration: 0.3, ease }}
+          >
+            <EventStory category={active} branches={branches} />
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

@@ -7106,201 +7106,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   border: 1px solid rgba(255, 255, 255, 0.28);
 }
 
-.events-happen {
-  padding: clamp(2rem, 4vw, 2.75rem) 0 0;
-  background: #fff;
-  scroll-margin-top: 5.5rem;
-}
-
-.events-happen__wrap {
-  width: min(72rem, 100%);
-  margin-inline: auto;
-  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
-}
-
-.events-happen__title {
-  margin: 0 0 1rem;
-  font-size: clamp(1.7rem, 3.6vw, 2.35rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--fg);
-}
-
-.events-happen__months {
-  display: flex;
-  flex-direction: column;
-  gap: 2.25rem;
-}
-
-.events-happen__month {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.events-happen__month-title {
-  margin: 0;
-  padding-bottom: 0.55rem;
-  border-bottom: 1px solid var(--line);
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--purple);
-}
-
-.events-happen__empty {
-  margin: 0;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--fg-soft);
-}
-
-.events-happen__grid {
-  display: grid;
-  gap: 1.35rem 1.15rem;
-}
-
 @media (min-width: 760px) {
-  .events-happen__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.events-happen__card {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  text-align: left;
-  padding: 0.55rem;
-  margin: 0;
-  border: 1.5px solid transparent;
-  border-radius: 0;
-  background: transparent;
-  cursor: pointer;
-  transition:
-    background 0.22s ease,
-    border-color 0.22s ease,
-    box-shadow 0.22s ease;
-}
-
-.events-happen__more {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.85rem;
-  margin: 1.5rem auto 0;
-  padding: 0 1.5rem;
-  border: 1px solid rgba(99, 14, 212, 0.35);
-  border-bottom: 3px solid rgba(76, 8, 168, 0.55);
-  background: #fff;
-  color: #630ed4;
-  font: inherit;
-  font-size: 0.88rem;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.events-happen__more:hover {
-  background: #f2eef7;
-}
-
-html[data-theme="dark"] .events-happen__more {
-  border-color: rgba(196, 164, 247, 0.45);
-  border-bottom-color: rgba(196, 164, 247, 0.7);
-  background: transparent;
-  color: #e4d6fc;
-}
-
-.events-happen__card:hover,
-.events-happen__card:focus-visible {
-  background: #f4f4f5;
-  border-color: #e4e4e7;
-  outline: none;
-}
-
-.events-happen__media {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  border-radius: 0;
-  overflow: hidden;
-  background: var(--bg-purple);
-}
-
-.events-happen__date-badge {
-  position: absolute;
-  top: 0.65rem;
-  left: 0.65rem;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 3.1rem;
-  padding: 0.45rem 0.55rem 0.5rem;
-  border-radius: 0;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 8px 22px rgba(10, 4, 18, 0.14);
-  line-height: 1;
-}
-
-.events-happen__date-month {
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--purple-fill);
-}
-
-.events-happen__date-day {
-  margin-top: 0.2rem;
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #1c1c1f;
-}
-
-.events-happen__copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.38rem;
-  padding: 0.9rem 0.35rem 0.55rem;
-}
-
-.events-happen__copy h3 {
-  margin: 0;
-  font-size: 1.12rem;
-  font-weight: 800;
-  color: var(--fg);
-}
-
-.events-happen__city {
-  margin: 0 0 0.2rem;
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--fg-soft);
-}
-
-.events-happen__copy p {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.45rem;
-  margin: 0;
-  font-size: 0.88rem;
-  font-weight: 600;
-  line-height: 1.45;
-  color: var(--fg-soft);
-}
-
-.events-happen__when span {
-  white-space: normal;
-}
-
-.events-happen__ico {
-  width: 0.95rem;
-  height: 0.95rem;
-  margin-top: 0.12rem;
-  flex-shrink: 0;
-  color: #9a9aa3;
 }
 
 /* Event detail modal */
@@ -11860,10 +11666,6 @@ html[data-theme="dark"] .events-feature {
   background: var(--bg-soft);
 }
 
-html[data-theme="dark"] .events-happen {
-  background: var(--bg);
-}
-
 html[data-theme="dark"] .event-card,
 html[data-theme="dark"] .life-card,
 html[data-theme="dark"] .life-textcard,
@@ -13465,12 +13267,6 @@ html[data-theme="dark"] .events-feature__btn--ghost {
   border-color: rgba(255, 255, 255, 0.55);
 }
 
-html[data-theme="dark"] .events-happen__card:hover,
-html[data-theme="dark"] .events-happen__card:focus-visible {
-  background: var(--card-bg);
-  border-color: var(--line);
-}
-
 html[data-theme="dark"] .life-cta--quiet {
   color: #1c1c1f;
   background-color: #e8a33d;
@@ -13580,8 +13376,7 @@ html[data-theme="dark"] .site-page {
 html[data-theme="dark"] .give-why__card,
 html[data-theme="dark"] .give-way:not(.give-way--featured),
 html[data-theme="dark"] .give-panel,
-html[data-theme="dark"] .contact-hub,
-html[data-theme="dark"] .events-happen__card {
+html[data-theme="dark"] .contact-hub {
   background-color: #15131f;
   color: #f1eef5;
 }

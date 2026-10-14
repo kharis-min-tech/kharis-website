@@ -1,0 +1,208 @@
+/* Events: "Don't miss the next one" square tiles */
+.events-next {
+  padding: clamp(2.5rem, 5vw, 4rem) 0 0;
+  background: #fff;
+  scroll-margin-top: 5.5rem;
+}
+
+.events-next__wrap {
+  padding-inline: clamp(0.75rem, 2.5vw, 2.5rem);
+}
+
+.events-next__eyebrow {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.events-next .events-next__title {
+  margin: 0 0 clamp(1rem, 2.4vw, 1.5rem);
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.events-next__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.events-next__title.is-armed .events-next__word > span {
+  opacity: 0;
+}
+
+.events-next__title.is-typed .events-next__word > span {
+  opacity: 1;
+  transition: opacity 1ms linear;
+}
+
+.events-next__grid {
+  display: grid;
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 560px) {
+  .events-next__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .events-next__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.events-next__tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: #140b22;
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.events-next__tile img {
+  transition: transform calc(var(--dur-fast) * 3) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .events-next__tile:hover img {
+    transform: scale(1.04);
+  }
+}
+
+.events-next__tile:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+
+.events-next__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 4, 14, 0) 38%, rgba(8, 4, 14, 0.82) 100%);
+}
+
+.events-next__date {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 3.1rem;
+  padding: 0.45rem 0.55rem 0.5rem;
+  background: #fff;
+  color: #1c1c1f;
+  line-height: 1;
+}
+
+.events-next__date-month {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.events-next__date-day {
+  margin-top: 0.2rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.events-next__copy {
+  position: absolute;
+  left: clamp(1rem, 1.8vw, 1.35rem);
+  right: clamp(1rem, 1.8vw, 1.35rem);
+  bottom: clamp(1rem, 1.8vw, 1.35rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.events-next__name {
+  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.events-next__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.events-next__ico {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+}
+
+.events-next__empty {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+}
+
+.events-next__more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.85rem;
+  margin: 1.5rem auto 0;
+  padding: 0 1.5rem;
+  border: 1px solid #1c1c1f;
+  border-radius: 0;
+  background: transparent;
+  color: #1c1c1f;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.events-next__more:hover {
+  background: #1c1c1f;
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .events-next__title .events-next__word > span {
+    opacity: 1;
+  }
+}
+
+html[data-theme="dark"] .events-next {
+  background: var(--bg);
+}
+
+html[data-theme="dark"] .events-next__more {
+  border-color: #fff;
+  color: #fff;
+}
+
+html[data-theme="dark"] .events-next__more:hover {
+  background: #fff;
+  color: #140b22;
+}
