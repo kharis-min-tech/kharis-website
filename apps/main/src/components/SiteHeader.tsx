@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Icon } from "@/components/Icon";
+import { KP2_URL } from "@/lib/kp2";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
 const aboutChildren = [
@@ -21,7 +22,7 @@ type NavLink = {
 const links: NavLink[] = [
   { label: "About", href: "/about", children: aboutChildren },
   { label: "Locations", href: "/locations" },
-  { label: "KP2" },
+  { label: "KP2", href: KP2_URL },
   { label: "Events", href: "/events" },
   { label: "Messages", href: "/messages" },
   { label: "Life", href: "/life" },
@@ -80,7 +81,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
         : scrolled || open;
 
   const linkTone = (active: boolean) =>
-    `text-[13px] font-semibold tracking-wide transition ${
+    `cursor-pointer text-[13px] font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
       onDark || (forceDark && !open)
         ? active
           ? "text-white"
@@ -136,7 +137,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
                       className={`absolute left-1/2 top-full z-50 min-w-[13.5rem] -translate-x-1/2 pt-3`}
                     >
                       <div
-                        className={`overflow-hidden rounded-xl border py-2 shadow-lg ${
+                        className={`overflow-hidden border py-2 shadow-lg ${
                           onDark || forceDark
                             ? "border-white/10 bg-[#120816]/96 text-white backdrop-blur-xl"
                             : "border-line bg-white text-fg"
@@ -200,25 +201,22 @@ export function SiteHeader({ tone = "auto" }: Props) {
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/locations"
-            className={`hidden items-center gap-2 rounded-full px-5 py-2.5 text-[0.8rem] font-extrabold transition sm:inline-flex ${
+            className={`hidden items-center gap-2 px-5 py-3 text-[0.8rem] font-bold shadow-[0_2px_0_var(--edge),0_8px_18px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_0_var(--edge),0_14px_24px_rgba(0,0,0,0.3)] focus-visible:-translate-y-0.5 active:translate-y-px sm:inline-flex ${
               siteDark
-                ? "bg-orange text-[#1c1c1f] hover:bg-[#f2b254]"
+                ? "bg-orange text-[#1c1c1f] [--edge:#a8660f] hover:bg-[#f2b254]"
                 : onDark || (forceDark && !open)
-                  ? "bg-white text-fg hover:bg-white/95"
-                  : "btn-primary !px-5 !py-2.5 !text-[0.8rem]"
+                  ? "bg-white text-fg [--edge:#a596d3]"
+                  : "bg-purple text-white [--edge:#3d0591]"
             }`}
           >
             Find a Branch
-            {(onDark || (forceDark && !open)) && (
-              <span className="grid h-6 w-6 place-items-center rounded-full bg-orange text-white">
-                <Icon name="arrow" className="h-3 w-3" />
-              </span>
-            )}
+            <Icon name="arrow" className="h-3.5 w-3.5" />
           </Link>
           <button
             type="button"
             aria-label="Menu"
-            className={`grid h-10 w-10 place-items-center rounded-full border lg:hidden ${
+            aria-expanded={open}
+            className={`grid h-10 w-10 cursor-pointer place-items-center border lg:hidden ${
               onDark || (forceDark && !open) ? "border-white/35 text-white" : "border-line text-fg"
             }`}
             onClick={() => setOpen((v) => !v)}
@@ -301,7 +299,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
           })}
           <Link
             href="/locations"
-            className="btn-primary mt-2 w-full"
+            className="mt-2 flex w-full items-center justify-center bg-purple px-5 py-3.5 text-sm font-extrabold text-white"
             onClick={() => setOpen(false)}
           >
             Find a Branch

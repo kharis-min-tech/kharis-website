@@ -233,7 +233,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
       },
     ],
     next: "departments",
-    cta: { label: "Bring the family", href: "/#near-you" },
+    cta: { label: "Bring the family", href: "/locations" },
   },
   {
     slug: "departments",

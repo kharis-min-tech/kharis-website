@@ -14,7 +14,7 @@ import {
 } from "@/lib/grace-handoff";
 
 const SUBJECTS = [
-  { value: "General", label: "General Inquiry" },
+  { value: "General", label: "General enquiry" },
   { value: "Sunday visit", label: "Sunday visit" },
   { value: "Prayer", label: "Prayer" },
   { value: "Giving", label: "Giving" },
@@ -28,10 +28,6 @@ type Props = {
 
 function getPrimaryVenue(branch: ContactLocation) {
   return branch.venues?.[0] ?? null;
-}
-
-function getBranchCity(branch: ContactLocation) {
-  return getPrimaryVenue(branch)?.city ?? "";
 }
 
 function getBranchAddress(branch: ContactLocation) {
@@ -263,8 +259,8 @@ export function ContactExperience({ locations }: Props) {
           <Reveal variant="blur" className="contact-hero__copy" amount={0.05}>
             <h1>Contact us</h1>
             <p>
-              We are here for you. Whether you have a question, a prayer request, or just want to
-              say hi.
+              We are here for you, whether you have a question, a prayer request, or would simply
+              like to say hello.
             </p>
             <div className="contact-hero__bars" aria-hidden>
               <span className="contact-hero__bar contact-hero__bar--gold" />
@@ -314,7 +310,7 @@ export function ContactExperience({ locations }: Props) {
                     <input
                       required
                       autoComplete="name"
-                      placeholder="John Doe"
+                      placeholder="Your full name"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                     />
@@ -374,7 +370,7 @@ export function ContactExperience({ locations }: Props) {
                 </label>
                 {error ? <p className="contact-error">{error}</p> : null}
                 <button type="submit" className="contact-submit" disabled={busy}>
-                  {busy ? "Sending…" : "Send it!"}
+                  {busy ? "Sending…" : "Send message"}
                 </button>
               </form>
             )}
@@ -387,8 +383,8 @@ export function ContactExperience({ locations }: Props) {
                 <li>
                   <MapPin className="h-4 w-4" aria-hidden />
                   <div>
-                    <strong>Main KP2 branch</strong>
-                    <span>{HQ ? getBranchAddress(HQ) : "Address Unavailiable"}</span>
+                    <strong>Main campus</strong>
+                    <span>{HQ ? getBranchAddress(HQ) : "Address unavailable"}</span>
                   </div>
                 </li>
                 <li>
@@ -529,7 +525,7 @@ export function ContactExperience({ locations }: Props) {
         <div className="contact-vibe__veil" />
         <div className="contact-vibe__inner">
           <Reveal variant="left">
-            <h2>Follow the movement</h2>
+            <h2>Stay connected with the Kharis family</h2>
           </Reveal>
           <Reveal variant="right" className="contact-vibe__links">
             {SOCIALS.map((social) => (
