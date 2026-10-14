@@ -100,7 +100,7 @@ export function BranchMediaModal({
                   href="https://www.youtube.com/@kharischurch"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#630ed4] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2a035c]"
+                  className="k-cta inline-flex items-center gap-2 rounded-full bg-[#630ed4] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2a035c]"
                 >
                   <span>Watch on YouTube</span>
                   <ExternalLink className="h-4 w-4" />

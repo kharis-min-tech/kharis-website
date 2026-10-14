@@ -81,7 +81,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
         : scrolled || open;
 
   const linkTone = (active: boolean) =>
-    `cursor-pointer text-[13px] font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
+    `k-motion cursor-pointer text-[13px] font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
       onDark || (forceDark && !open)
         ? active
           ? "text-white"
@@ -96,6 +96,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
 
   return (
     <header
+      data-smooth-nav
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-400 ${
         solid
           ? forceDark
@@ -149,7 +150,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
                             <Link
                               key={child.href}
                               href={child.href}
-                              className={`block px-4 py-2.5 text-[13px] font-semibold transition ${
+                              className={`k-motion block px-4 py-2.5 text-[13px] font-semibold transition ${
                                 onDark || forceDark
                                   ? active
                                     ? "bg-white/10 text-white"
@@ -201,7 +202,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/locations"
-            className={`hidden items-center gap-2 px-5 py-3 text-[0.8rem] font-bold shadow-[0_2px_0_var(--edge),0_8px_18px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_0_var(--edge),0_14px_24px_rgba(0,0,0,0.3)] focus-visible:-translate-y-0.5 active:translate-y-px sm:inline-flex ${
+            className={`k-cta hidden items-center gap-2 px-5 py-3 text-[0.8rem] font-bold shadow-[0_2px_0_var(--edge),0_8px_18px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_0_var(--edge),0_14px_24px_rgba(0,0,0,0.3)] focus-visible:-translate-y-0.5 active:translate-y-px sm:inline-flex ${
               siteDark
                 ? "bg-orange text-[#1c1c1f] [--edge:#a8660f] hover:bg-[#f2b254]"
                 : onDark || (forceDark && !open)
@@ -299,7 +300,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
           })}
           <Link
             href="/locations"
-            className="mt-2 flex w-full items-center justify-center bg-purple px-5 py-3.5 text-sm font-extrabold text-white"
+            className="k-cta mt-2 flex w-full items-center justify-center bg-purple px-5 py-3.5 text-sm font-extrabold text-white"
             onClick={() => setOpen(false)}
           >
             Find a Branch

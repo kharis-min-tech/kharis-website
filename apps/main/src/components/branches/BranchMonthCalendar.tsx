@@ -227,7 +227,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
 
               <button
                 onClick={() => onRsvp(entry.title)}
-                className="flex-shrink-0 rounded-xl bg-white/10 px-5 py-2.5 text-xs font-bold text-white! transition-colors hover:bg-[#d4920a] cursor-pointer"
+                className="k-cta flex-shrink-0 rounded-xl bg-white/10 px-5 py-2.5 text-xs font-bold text-white! transition-colors hover:bg-[#d4920a] cursor-pointer"
               >
                 I&apos;m Coming
               </button>

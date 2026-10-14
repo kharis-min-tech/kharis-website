@@ -299,7 +299,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
               <div className="relative">
                 <button
                   onClick={() => setPickerOpen((o) => !o)}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  className="k-cta inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-white/10 transition-colors cursor-pointer"
                   aria-haspopup="listbox"
                   aria-expanded={pickerOpen}
                 >
@@ -370,7 +370,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
               <button
                 onClick={locateMe}
                 disabled={locating}
-                className="inline-flex items-center gap-2 rounded-full bg-[#e8a33d] px-5 py-2.5 text-xs font-extrabold text-[#110b1a] shadow-lg shadow-[#e8a33d]/25 hover:bg-[#f2b254] transition-colors disabled:opacity-60 cursor-pointer"
+                className="k-cta inline-flex items-center gap-2 rounded-full bg-[#e8a33d] px-5 py-2.5 text-xs font-extrabold text-[#110b1a] shadow-lg shadow-[#e8a33d]/25 hover:bg-[#f2b254] transition-colors disabled:opacity-60 cursor-pointer"
               >
                 {locating ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

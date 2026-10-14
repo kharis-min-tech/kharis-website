@@ -124,7 +124,7 @@ export function BranchTemplate({
               <div className="relative">
                 <button
                   onClick={() => setBranchDropdownOpen(!branchDropdownOpen)}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#630ed4] border border-[#630ed4] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#2a035c] cursor-pointer"
+                  className="k-cta inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#630ed4] border border-[#630ed4] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#2a035c] cursor-pointer"
                 >
                   <span>Switch branch</span>
                   <ChevronDown
@@ -193,7 +193,7 @@ export function BranchTemplate({
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <button
                 onClick={() => setIsPlanVisitOpen(true)}
-                className="bg-[#630ed4] hover:bg-[#2a035c] text-white! font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-[#630ed4]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="k-cta bg-[#630ed4] hover:bg-[#2a035c] text-white! font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-[#630ed4]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Plan Your Visit</span>
                 <ArrowRight className="w-4 h-4" />
@@ -201,7 +201,7 @@ export function BranchTemplate({
 
               <a
                 href="#events"
-                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md"
+                className="k-cta bg-white/10 hover:bg-white/20 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md"
               >
                 <Calendar className="w-4 h-4 text-[#e8a33d]" />
                 <span>Upcoming Events</span>
@@ -209,7 +209,7 @@ export function BranchTemplate({
 
               <a
                 href="/give"
-                className="bg-transparent hover:bg-white/10 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="k-cta bg-transparent hover:bg-white/10 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Heart className="w-4 h-4 text-[#e8a33d] fill-current" />
                 <span>Give</span>

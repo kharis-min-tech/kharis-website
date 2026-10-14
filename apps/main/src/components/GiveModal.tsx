@@ -162,7 +162,7 @@ export default function GiveModal({ isOpen, onClose }: GiveModalProps) {
               {/* Submit CTA */}
               <button
                 type="submit"
-                className="w-full py-4 rounded-2xl bg-[#d4920a] hover:bg-[#b87a08] text-white font-extrabold text-base shadow-lg shadow-[#d4920a]/30 transition-all flex items-center justify-center gap-2"
+                className="k-cta w-full py-4 rounded-2xl bg-[#d4920a] hover:bg-[#b87a08] text-white font-extrabold text-base shadow-lg shadow-[#d4920a]/30 transition-all flex items-center justify-center gap-2"
               >
                 <Heart className="w-5 h-5 fill-white" />
                 <span>Give ${amount || "0"} Now</span>

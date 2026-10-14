@@ -204,7 +204,7 @@ export default function PlanVisitModal({
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full py-4 rounded-2xl bg-[#630ed4] hover:bg-[#2a035c] text-white font-extrabold text-base shadow-lg shadow-[#630ed4]/30 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
+                className="k-cta w-full py-4 rounded-2xl bg-[#630ed4] hover:bg-[#2a035c] text-white font-extrabold text-base shadow-lg shadow-[#630ed4]/30 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
               >
                 <span>{busy ? "Sending…" : "Confirm my visit"}</span>
                 <ChevronRight className="w-5 h-5" />
