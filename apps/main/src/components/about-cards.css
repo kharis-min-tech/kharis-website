@@ -37,9 +37,19 @@ html[data-theme="dark"] .about-cards {
   background: var(--bg);
 }
 
-/* Roomier "Who we are becoming" banner in this section only. */
+/* Roomier "Who we are becoming" banner in this section only: the header CTA purple (#630ed4)
+   with soft yellow glows kept to the corners, away from the centred white title. */
 .about-cards .about-stage__banner {
   min-height: clamp(7.75rem, 16vw, 10.5rem);
+  background-color: #630ed4;
+  --glow-a: clamp(4.5rem, 18vw, 17rem);
+  --glow-b: clamp(3.25rem, 13vw, 12rem);
+  background-image:
+    radial-gradient(circle at 100% 0%, rgba(255, 222, 89, 0.9) 0, rgba(255, 222, 89, 0.45) calc(var(--glow-a) * 0.42), rgba(255, 222, 89, 0) var(--glow-a)),
+    radial-gradient(circle at 0% 100%, rgba(255, 222, 89, 0.7) 0, rgba(255, 222, 89, 0.28) calc(var(--glow-b) * 0.4), rgba(255, 222, 89, 0) var(--glow-b)),
+    radial-gradient(ellipse 55% 90% at 50% 0%, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 70%),
+    repeating-linear-gradient(118deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 36px);
+  box-shadow: inset 0 -4px 0 #ffde59;
 }
 
 .about-cards .about-stage__banner-inner {
@@ -205,10 +215,6 @@ html[data-theme="dark"] .about-cards {
   transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.about-card__img--vision {
-  object-position: 60% 40%;
-}
-
 @media (hover: hover) {
   .about-card--photo:hover .about-card__img {
     transform: scale(1.035);
@@ -277,15 +283,6 @@ html[data-theme="dark"] .about-cards {
   }
 }
 
-.about-card__veil--heavy {
-  background: linear-gradient(
-    180deg,
-    rgba(12, 6, 22, 0.9) 0%,
-    rgba(12, 6, 22, 0.78) 50%,
-    rgba(12, 6, 22, 0.62) 100%
-  );
-}
-
 .about-card--photo .about-card__eyebrow {
   color: #ffde59;
 }
@@ -298,7 +295,7 @@ html[data-theme="dark"] .about-cards {
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* ---- Vision: full-width photo card under the row ---- */
+/* ---- Vision: full-width card under the row — clean photo on top, text on solid purple ---- */
 
 .about-cards__wide {
   max-width: calc(var(--ac-max) + 2 * var(--ac-pad));
@@ -307,8 +304,57 @@ html[data-theme="dark"] .about-cards {
 }
 
 .about-card--vision {
+  --ac-vision-bg: var(--purple-edge, #3d0591);
   min-height: 0;
-  padding: clamp(1.75rem, 4vw, 3.25rem);
+  padding: 0;
+  background: var(--ac-vision-bg);
+}
+
+.about-card__vision-copy {
+  padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.5rem, 4vw, 3.25rem) clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* Photo below the text. Its top edge melts into the purple through a row of soft, uneven
+   "bubbles" (radial masks) over a short base fade, giving a cloud-like edge, not a straight line.
+   --fade stays within the trees/building above the heads so faces are untouched. */
+.about-card__vision-photo {
+  --fade: 12%;
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--ac-vision-bg);
+}
+
+.about-card__img--vision {
+  object-position: 50% 0%;
+  -webkit-mask-image:
+    radial-gradient(ellipse 9% calc(var(--fade) * 0.62) at 4% calc(var(--fade) * 0.72), #000 45%, transparent 100%),
+    radial-gradient(ellipse 12% calc(var(--fade) * 0.75) at 17% calc(var(--fade) * 0.62), #000 45%, transparent 100%),
+    radial-gradient(ellipse 8% calc(var(--fade) * 0.55) at 30% calc(var(--fade) * 0.85), #000 45%, transparent 100%),
+    radial-gradient(ellipse 13% calc(var(--fade) * 0.8) at 42% calc(var(--fade) * 0.58), #000 45%, transparent 100%),
+    radial-gradient(ellipse 9% calc(var(--fade) * 0.6) at 56% calc(var(--fade) * 0.8), #000 45%, transparent 100%),
+    radial-gradient(ellipse 12% calc(var(--fade) * 0.72) at 68% calc(var(--fade) * 0.6), #000 45%, transparent 100%),
+    radial-gradient(ellipse 8% calc(var(--fade) * 0.55) at 80% calc(var(--fade) * 0.88), #000 45%, transparent 100%),
+    radial-gradient(ellipse 11% calc(var(--fade) * 0.7) at 93% calc(var(--fade) * 0.64), #000 45%, transparent 100%),
+    linear-gradient(180deg, transparent calc(var(--fade) * 0.85), #000 calc(var(--fade) * 1.3));
+  mask-image:
+    radial-gradient(ellipse 9% calc(var(--fade) * 0.62) at 4% calc(var(--fade) * 0.72), #000 45%, transparent 100%),
+    radial-gradient(ellipse 12% calc(var(--fade) * 0.75) at 17% calc(var(--fade) * 0.62), #000 45%, transparent 100%),
+    radial-gradient(ellipse 8% calc(var(--fade) * 0.55) at 30% calc(var(--fade) * 0.85), #000 45%, transparent 100%),
+    radial-gradient(ellipse 13% calc(var(--fade) * 0.8) at 42% calc(var(--fade) * 0.58), #000 45%, transparent 100%),
+    radial-gradient(ellipse 9% calc(var(--fade) * 0.6) at 56% calc(var(--fade) * 0.8), #000 45%, transparent 100%),
+    radial-gradient(ellipse 12% calc(var(--fade) * 0.72) at 68% calc(var(--fade) * 0.6), #000 45%, transparent 100%),
+    radial-gradient(ellipse 8% calc(var(--fade) * 0.55) at 80% calc(var(--fade) * 0.88), #000 45%, transparent 100%),
+    radial-gradient(ellipse 11% calc(var(--fade) * 0.7) at 93% calc(var(--fade) * 0.64), #000 45%, transparent 100%),
+    linear-gradient(180deg, transparent calc(var(--fade) * 0.85), #000 calc(var(--fade) * 1.3));
+}
+
+@media (min-width: 700px) {
+  .about-card__vision-photo {
+    --fade: 16%;
+    aspect-ratio: 2 / 1;
+  }
 }
 
 .about-card__title--wide {
@@ -361,7 +407,6 @@ html[data-theme="dark"] .about-cards {
   width: 1.9rem;
   height: 1.9rem;
   color: #ffde59;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
 }
 
 /* ---- White card (How we do it) ---- */
@@ -445,16 +490,179 @@ html[data-theme="dark"] .about-cards {
   color: var(--orange-ink);
 }
 
-/* ---- Leadership block (original design, below the cards) ---- */
+/* ---- Leadership: two pastor profiles side by side, then their shared story ---- */
 
-.about-cards__lead {
-  margin-top: clamp(1rem, 3vw, 2rem);
+.about-lead2 {
+  margin-top: clamp(3rem, 7vw, 5rem);
   scroll-margin-top: 5.5rem;
+}
+
+.about-lead2__inner {
+  max-width: calc(var(--ac-max) + 2 * var(--ac-pad));
+  margin-inline: auto;
+  padding: 0 var(--ac-pad);
+}
+
+.about-lead2__eyebrow {
+  margin: 0 0 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ac-accent);
+}
+
+.about-lead2__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ac-gap);
+}
+
+@media (min-width: 700px) {
+  .about-lead2__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.about-lead2__grid > * {
+  height: 100%;
+}
+
+.about-lead2__card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--ac-radius);
+  background: var(--ac-card-bg);
+  box-shadow: var(--ac-shadow);
+  transition: box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-lead2__photo {
+  position: relative;
+  flex: none;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-bottom: 4px solid #ffde59;
+  background: var(--ac-tile);
+}
+
+.about-lead2__img {
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-lead2__img--david {
+  object-position: 50% 20%;
+}
+
+.about-lead2__img--awo {
+  object-position: 45% 12%;
+}
+
+@media (hover: hover) {
+  .about-lead2__card:hover {
+    box-shadow: var(--ac-shadow-hover);
+  }
+
+  .about-lead2__card:hover .about-lead2__img {
+    transform: scale(1.03);
+  }
+}
+
+/* Wide screens: photo beside the text inside each column, so the small source photos stay sharp. */
+@media (min-width: 1100px) {
+  .about-lead2__card {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+  }
+
+  .about-lead2__photo {
+    aspect-ratio: auto;
+    min-height: 26rem;
+    border-bottom: 0;
+    border-right: 4px solid #ffde59;
+  }
+}
+
+.about-lead2__copy {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.4rem, 2.6vw, 2.1rem);
+}
+
+.about-lead2__role {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ac-accent);
+}
+
+.about-lead2__name {
+  margin: 0.45rem 0 0;
+  font-size: clamp(1.45rem, 2vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ac-ink);
+}
+
+.about-lead2__focus {
+  margin: 0.8rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--ac-ink);
+}
+
+.about-lead2__blurb {
+  margin: 0.65rem 0 0;
+  font-size: clamp(0.98rem, 1.1vw, 1.04rem);
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--ac-ink-soft);
+}
+
+.about-lead2__story {
+  display: grid;
+  gap: 1rem;
+  margin-top: var(--ac-gap);
+  padding: clamp(1.75rem, 4vw, 3rem);
+  border-radius: var(--ac-radius);
+  background: var(--purple-edge, #3d0591);
+  color: #fff;
+}
+
+.about-lead2__kicker {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffde59;
+}
+
+.about-lead2__story-body {
+  margin: 0;
+  max-width: 62rem;
+  font-size: clamp(1.02rem, 1.25vw, 1.12rem);
+  font-weight: 500;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.about-lead2__cta {
+  justify-self: start;
+  margin-top: 0.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .about-card,
-  .about-card__img {
+  .about-card__img,
+  .about-lead2__img {
     transition: none;
   }
 }

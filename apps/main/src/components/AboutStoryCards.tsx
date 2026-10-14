@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { useReducedMotion } from "framer-motion";
 import {
   BookOpen,
   Cross,
@@ -18,17 +18,17 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import {
-  AboutSvgWallpaper,
-  LeadershipPanel,
-  type AboutChapterId,
-} from "@/components/AboutChapters";
+import type { AboutChapterId } from "@/components/AboutChapters";
 import { ABOUT } from "@/lib/about-content";
 import "./about-cards.css";
 
 /** Placeholder photos — swap these paths to change the card backgrounds. */
 const MISSION_PHOTO = "/images/about-mission-outreach.jpg";
 const VISION_PHOTO = "/images/about-vision-team.jpg";
+/** Leadership photos used here only; other pages keep the shared ABOUT.leadership images. */
+const LEADER_PHOTOS: Record<string, string> = {
+  david: "/images/about-leadership-david.jpg",
+};
 
 const MISSION = {
   eyebrow: "Our Mission",
@@ -171,9 +171,8 @@ function useDragScroll() {
   return ref;
 }
 
-/** About: original banner, a swipeable row of Apple-style cards, then the leadership block. */
+/** About: original banner, a swipeable row of Apple-style cards, Vision, then leadership. */
 export function AboutStoryCards({ initialId }: { initialId?: AboutChapterId | null }) {
-  const reduce = useReducedMotion();
   const trackRef = useDragScroll();
 
   useEffect(() => {
@@ -192,7 +191,6 @@ export function AboutStoryCards({ initialId }: { initialId?: AboutChapterId | nu
   return (
     <section className="about-cards" aria-label="Mission, vision and leadership">
       <header className="about-stage__banner">
-        <AboutSvgWallpaper variant="stage" />
         <div className="about-stage__banner-inner">
           <h2 className="about-stage__title">Who we are becoming</h2>
         </div>
@@ -256,35 +254,85 @@ export function AboutStoryCards({ initialId }: { initialId?: AboutChapterId | nu
       <div className="about-cards__wide">
         <Reveal>
           <article id="vision" className="about-card about-card--photo about-card--vision">
-            <Image
-              src={VISION_PHOTO}
-              alt="Kharis church family in yellow Saved by Grace t-shirts celebrating outside the church"
-              fill
-              quality={95}
-              className="about-card__img about-card__img--vision"
-              sizes="100vw"
-            />
-            <span className="about-card__veil about-card__veil--heavy" aria-hidden />
-            <p className="about-card__eyebrow">{VISION.eyebrow}</p>
-            <h4 className="about-card__title about-card__title--wide">{VISION.title}</h4>
-            <p className="about-card__intro">{VISION.intro}</p>
-            <ul className="about-card__points">
-              {VISION.points.map(({ text, icon: Icon }) => (
-                <li key={text}>
-                  <Icon className="about-card__point-icon" strokeWidth={1.9} aria-hidden />
-                  <span>{text}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="about-card__vision-copy">
+              <p className="about-card__eyebrow">{VISION.eyebrow}</p>
+              <h4 className="about-card__title about-card__title--wide">{VISION.title}</h4>
+              <p className="about-card__intro">{VISION.intro}</p>
+              <ul className="about-card__points">
+                {VISION.points.map(({ text, icon: Icon }) => (
+                  <li key={text}>
+                    <Icon className="about-card__point-icon" strokeWidth={1.9} aria-hidden />
+                    <span>{text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="about-card__vision-photo">
+              <Image
+                src={VISION_PHOTO}
+                alt="Kharis church family in yellow Saved by Grace t-shirts celebrating outside the church"
+                fill
+                quality={95}
+                className="about-card__img about-card__img--vision"
+                sizes="(max-width: 1279px) 100vw, 1216px"
+              />
+            </div>
           </article>
         </Reveal>
       </div>
 
-      <div id="leadership" className="about-stage__canvas about-cards__lead">
-        <div className="about-stage__panel">
-          <LeadershipPanel reduce={!!reduce} />
-        </div>
-      </div>
+      <AboutLeadership />
     </section>
+  );
+}
+
+/** Leadership: the two founding pastors side by side, then their shared story. */
+function AboutLeadership() {
+  const { leadership } = ABOUT;
+
+  return (
+    <div id="leadership" className="about-lead2">
+      <div className="about-lead2__inner">
+        <Reveal>
+          <p className="about-lead2__eyebrow">Our Leadership</p>
+          <h3 className="about-cards__heading about-lead2__title">{leadership.title}</h3>
+        </Reveal>
+
+        <div className="about-lead2__grid">
+          {leadership.pastors.map((pastor, i) => (
+            <Reveal key={pastor.id} delay={i * 0.08}>
+              <article className="about-lead2__card">
+                <div className="about-lead2__photo">
+                  <Image
+                    src={LEADER_PHOTOS[pastor.id] ?? pastor.image}
+                    alt={pastor.name}
+                    fill
+                    quality={95}
+                    className={`about-lead2__img about-lead2__img--${pastor.id}`}
+                    sizes="(max-width: 699px) 140vw, (max-width: 1099px) 70vw, 640px"
+                  />
+                </div>
+                <div className="about-lead2__copy">
+                  <p className="about-lead2__role">{pastor.role}</p>
+                  <h4 className="about-lead2__name">{pastor.name}</h4>
+                  <p className="about-lead2__focus">{pastor.focus}</p>
+                  <p className="about-lead2__blurb">{pastor.blurb}</p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal>
+          <div className="about-lead2__story">
+            <p className="about-lead2__kicker">Their story</p>
+            <p className="about-lead2__story-body">{leadership.body}</p>
+            <Link href="/life" className="btn-secondary about-lead2__cta">
+              Explore Kharis Life
+            </Link>
+          </div>
+        </Reveal>
+      </div>
+    </div>
   );
 }
