@@ -13,6 +13,17 @@ import { serverFetch } from "@/lib/server-fetch";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://placeholder.supabase.co";
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "placeholder-key";
 
+// Without credentials, answer straight away with an error the client won't retry. Left to hit the
+// placeholder host, each query retried for ~8s before giving up, on every page that reads from here.
+const configured = Boolean(
+  process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+);
+const notConfiguredFetch: typeof fetch = async () =>
+  new Response(JSON.stringify({ message: "Supabase is not configured", code: "not_configured" }), {
+    status: 400,
+    headers: { "content-type": "application/json" },
+  });
+
 export const supabase = createClient(supabaseUrl, supabaseKey, {
-  global: { fetch: serverFetch },
+  global: { fetch: configured ? serverFetch : notConfiguredFetch },
 });

@@ -67,9 +67,9 @@ function AboutSvgWallpaper({
       >
         <defs>
           <linearGradient id={`${id}-fade`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#c45a9a" />
-            <stop offset="45%" stopColor="#a8327a" />
-            <stop offset="100%" stopColor="#8e2068" />
+            <stop offset="0%" stopColor="#885ac4" />
+            <stop offset="45%" stopColor="#6532a8" />
+            <stop offset="100%" stopColor="#50208e" />
           </linearGradient>
           <pattern
             id={`${id}-lines`}
@@ -93,17 +93,17 @@ function AboutSvgWallpaper({
 
   const fades =
     tone === "vision"
-      ? (["#faf5f8", "#f0e2eb", "#e4c9da"] as const)
+      ? (["#f7f5fa", "#e8e2f0", "#d5c9e4"] as const)
       : tone === "leadership"
         ? (["#e07a28", "#c45a12", "#8a3a0c"] as const)
-        : (["#9a1870", "#800654", "#4a0a36"] as const);
+        : (["#50189a", "#630ed4", "#260a4a"] as const);
   const glow =
     tone === "vision"
-      ? "rgba(128, 6, 84, 0.08)"
+      ? "rgba(99, 14, 212, 0.08)"
       : tone === "leadership"
         ? "rgba(255,255,255,0.18)"
         : "rgba(253,127,32,0.16)";
-  const dot = tone === "vision" ? "rgba(128, 6, 84, 0.12)" : "rgba(255,255,255,0.14)";
+  const dot = tone === "vision" ? "rgba(99, 14, 212, 0.12)" : "rgba(255,255,255,0.14)";
   const wash = tone === "vision" ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.08)";
 
   return (
@@ -133,7 +133,7 @@ function AboutSvgWallpaper({
       />
       <path
         d="M740 30c40 0 70 28 70 68s-30 68-70 68c-18 0-34-6-47-16 22 8 48 4 64-14 16-18 14-46-4-62-12-10-28-14-44-12 8-20 28-32 51-32z"
-        fill={tone === "vision" ? "rgba(128, 6, 84, 0.06)" : "rgba(255,255,255,0.07)"}
+        fill={tone === "vision" ? "rgba(99, 14, 212, 0.06)" : "rgba(255,255,255,0.07)"}
       />
     </svg>
   );
@@ -342,14 +342,14 @@ function MissionPanel({ reduce }: { reduce: boolean }) {
 }
 
 const VISION_THEMES = [
-  "#800654",
-  "#5c0440",
-  "#3d0a2e",
-  "#9a1870",
-  "#650445",
-  "#4a0a36",
-  "#2a051c",
-  "#7a1054",
+  "#630ed4",
+  "#2a045c",
+  "#200a3d",
+  "#50189a",
+  "#4c08a8",
+  "#260a4a",
+  "#15052a",
+  "#3e107a",
 ] as const;
 
 function VisionPanel({ reduce }: { reduce: boolean }) {

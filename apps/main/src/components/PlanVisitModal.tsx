@@ -95,7 +95,7 @@ export default function PlanVisitModal({
         >
           <div className="flex items-center justify-between pb-4 border-b border-[#2e2942]">
             <div className="flex items-center gap-2.5">
-              <div className="p-2.5 rounded-xl bg-[#800654] text-white shadow-md shadow-[#800654]/30">
+              <div className="p-2.5 rounded-xl bg-[#630ed4] text-white shadow-md shadow-[#630ed4]/30">
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
@@ -117,7 +117,7 @@ export default function PlanVisitModal({
 
           {isSubmitted ? (
             <div className="py-12 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-[#800654]/20 text-[#e8a33d] mx-auto flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-[#630ed4]/20 text-[#e8a33d] mx-auto flex items-center justify-center">
                 <Check className="w-8 h-8 stroke-[3]" />
               </div>
               <h4 className="text-2xl font-extrabold text-[#f3f0f8]">
@@ -139,7 +139,7 @@ export default function PlanVisitModal({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Sarah Jenkins"
-                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#800654]"
+                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
                 />
               </div>
 
@@ -153,7 +153,7 @@ export default function PlanVisitModal({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="e.g. sarah@example.com"
-                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#800654]"
+                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
                 />
               </div>
 
@@ -166,7 +166,7 @@ export default function PlanVisitModal({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+44 7000 000000"
-                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#800654]"
+                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
                 />
               </div>
 
@@ -177,7 +177,7 @@ export default function PlanVisitModal({
                 <select
                   value={eventLabel || date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#800654]"
+                  className="w-full px-4 py-3 rounded-2xl border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
                 >
                   {eventLabel ? <option value={eventLabel}>{eventLabel}</option> : null}
                   <option value="Next Sunday">Next Sunday service</option>
@@ -192,7 +192,7 @@ export default function PlanVisitModal({
                   id="kids"
                   checked={children}
                   onChange={(e) => setChildren(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#800654] focus:ring-[#800654] bg-[#15131f] border-[#2e2942]"
+                  className="w-4 h-4 rounded text-[#630ed4] focus:ring-[#630ed4] bg-[#15131f] border-[#2e2942]"
                 />
                 <label htmlFor="kids" className="text-xs font-bold text-[#f3f0f8] cursor-pointer">
                   I will be bringing children (ages 0-12) for Kharis Kids
@@ -204,7 +204,7 @@ export default function PlanVisitModal({
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full py-4 rounded-2xl bg-[#800654] hover:bg-[#5c033c] text-white font-extrabold text-base shadow-lg shadow-[#800654]/30 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
+                className="w-full py-4 rounded-2xl bg-[#630ed4] hover:bg-[#2a035c] text-white font-extrabold text-base shadow-lg shadow-[#630ed4]/30 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
               >
                 <span>{busy ? "Sending…" : "Confirm my visit"}</span>
                 <ChevronRight className="w-5 h-5" />
