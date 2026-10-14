@@ -3,8 +3,6 @@
 /* About palette, matched to the hero's yellow and the "Who we are becoming" banner purple. */
 .about-page {
   --about-purple: #630ed4;
-  /* Only as the dark end of a gradient, never as a flat panel colour. */
-  --about-purple-deep: #4c08a8;
   --about-yellow: #ffde59;
   /* Every dark panel: the Mission card's original dark purple. */
   --about-dark: #140b22;
