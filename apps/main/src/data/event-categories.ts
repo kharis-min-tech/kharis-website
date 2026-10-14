@@ -1,8 +1,5 @@
-import type { LucideIcon } from "lucide-react";
-import { BookOpen, Church, FerrisWheel, Heart, Megaphone, MicVocal, Tent } from "lucide-react";
-
 /**
- * Event categories on /events: the icon row and the story shown under it.
+ * Event categories on /events: the tab row and the story shown under it.
  *
  * Each story has four parts. Photos live in /public/images, videos in /public/videos.
  *
@@ -54,7 +51,6 @@ export type EventSplit = {
 export type EventCategory = {
   id: string;
   label: string;
-  icon: LucideIcon;
   status: EventCategoryStatus;
   /** Which branch service an upcoming category maps to. */
   service?: "sunday" | "midweek";
@@ -68,7 +64,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "sunday-service",
     label: "Sunday Service",
-    icon: Church,
     status: "upcoming",
     service: "sunday",
     hero: {
@@ -125,7 +120,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "midweek",
     label: "Midweek Service",
-    icon: Church,
     status: "upcoming",
     service: "midweek",
     hero: {
@@ -168,7 +162,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "singles-ball",
     label: "Singles Ball",
-    icon: Heart,
     status: "past",
     hero: {
       // video: "/videos/singles-ball.mp4",
@@ -247,7 +240,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "praise-night",
     label: "Praise Night",
-    icon: MicVocal,
     status: "past",
     hero: {
       poster: "/images/joyful-worship.jpg",
@@ -290,7 +282,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "camps",
     label: "Camps",
-    icon: Tent,
     status: "past",
     hero: {
       poster: "/images/about-vision-team-2048.jpg",
@@ -332,7 +323,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "family-fun-day",
     label: "Family Fun Day",
-    icon: FerrisWheel,
     status: "past",
     hero: {
       poster: "/images/about-hero-bench-3200.jpg",
@@ -374,7 +364,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "jesus-campaign",
     label: "Jesus Campaign",
-    icon: Megaphone,
     status: "past",
     hero: {
       poster: "/images/about-mission-outreach-3200.jpg",
@@ -416,7 +405,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "let-the-bible-speak",
     label: "Let the Bible Speak Conference",
-    icon: BookOpen,
     status: "past",
     hero: {
       poster: "/images/biblical-open-bible.jpg",

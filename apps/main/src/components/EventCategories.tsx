@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Fragment,
   useEffect,
   useId,
   useRef,
@@ -75,16 +74,14 @@ function CategoryRow({
   };
 
   return (
-    <div className="events-cats__row" role="tablist" aria-label="Kharis events">
-      {EVENT_CATEGORIES.map((cat, i) => {
-        const Icon = cat.icon;
-        const selected = cat.id === activeId;
-        const groupStart = i > 0 && EVENT_CATEGORIES[i - 1]!.status !== cat.status;
+    <div className="events-cats__nav">
+      <div className="events-cats__row" role="tablist" aria-label="Kharis events">
+        {EVENT_CATEGORIES.map((cat, i) => {
+          const selected = cat.id === activeId;
 
-        return (
-          <Fragment key={cat.id}>
-            {groupStart ? <span className="events-cats__divider" aria-hidden /> : null}
+          return (
             <button
+              key={cat.id}
               ref={(el) => {
                 refs.current[i] = el;
               }}
@@ -98,17 +95,11 @@ function CategoryRow({
               onClick={() => select(i, false)}
               onKeyDown={(e) => onKeyDown(e, i)}
             >
-              <span className="events-cat__circle">
-                <Icon aria-hidden strokeWidth={1.25} className="events-cat__icon" />
-              </span>
-              <span className="events-cat__label">{cat.label}</span>
-              <span className="events-cat__status">
-                {cat.status === "upcoming" ? "Upcoming" : "Past event"}
-              </span>
+              {cat.label}
             </button>
-          </Fragment>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default async function EventsPage() {
 
   return (
     <main className="bg-bg text-fg">
-      <SiteHeader tone="light" />
+      <SiteHeader />
 
       <EventsExperience branches={branches} />
 

@@ -27,23 +27,23 @@
   gap: 0.4rem 0.75rem;
 }
 
+/* Same eyebrow + section title as the homepage sections. */
 .events-next__eyebrow {
-  margin: 0 0 0.4rem;
-  font-size: 0.78rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: #630ed4;
 }
 
 .events-next .events-next__title {
   margin: 0 0 clamp(1rem, 2.4vw, 1.5rem);
   font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: clamp(2rem, 5vw, 3.75rem);
+  font-size: clamp(1.85rem, 4.2vw, 3.15rem);
   font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--fg);
 }
 
@@ -255,6 +255,10 @@
 
 html[data-theme="dark"] .events-next {
   background: var(--bg);
+}
+
+html[data-theme="dark"] .events-next__eyebrow {
+  color: #a98be6;
 }
 
 html[data-theme="dark"] .events-next__tile:focus-visible {
