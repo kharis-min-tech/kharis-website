@@ -1,14 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import {
   BookOpen,
   Cross,
   Crown,
   Flame,
   Gift,
-  Minus,
   Plus,
   ShieldCheck,
   Sunrise,
@@ -22,22 +21,59 @@ import "./about-faith.css";
 /** Placeholder header photo — swap this path for the final image. */
 const FAITH_PHOTO = "/images/biblical-open-bible.jpg";
 
-/** Suggested references for each statement; confirm with the pastoral team before launch. */
-const EXTRAS: Record<string, { icon: LucideIcon; verse: string }> = {
-  "God the Father": { icon: Crown, verse: "Genesis 1:1 · Psalm 90:2" },
-  "Jesus Christ": { icon: Cross, verse: "John 1:14 · 1 Corinthians 15:3–4" },
-  "The Holy Spirit": { icon: Flame, verse: "John 16:8 · Acts 1:8" },
-  "The Bible": { icon: BookOpen, verse: "2 Timothy 3:16" },
-  Humanity: { icon: Users, verse: "Genesis 1:27 · Romans 3:23" },
-  Salvation: { icon: Gift, verse: "Ephesians 2:8–9 · John 1:12" },
-  "Eternal security": { icon: ShieldCheck, verse: "John 10:28–29" },
-  "Life after death": { icon: Sunrise, verse: "John 5:28–29 · Hebrews 9:27" },
+const ICONS: Record<string, LucideIcon> = {
+  "God the Father": Crown,
+  "Jesus Christ": Cross,
+  "The Holy Spirit": Flame,
+  "The Bible": BookOpen,
+  Humanity: Users,
+  Salvation: Gift,
+  "Eternal security": ShieldCheck,
+  "Life after death": Sunrise,
 };
 
-/** Statement of Faith: bordered cards that reveal each statement on hover, focus or tap. */
+/** Statement of Faith: compact title cards whose border grows to show the full statement. */
 export function AboutFaith() {
   const [open, setOpen] = useState<number | null>(null);
+  const [hinting, setHinting] = useState(false);
+  const gridRef = useRef<HTMLUListElement>(null);
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid || typeof IntersectionObserver === "undefined") return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        io.disconnect();
+        setHinting(true);
+        timer = setTimeout(() => setHinting(false), 2200);
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(grid);
+    return () => {
+      io.disconnect();
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (open === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(null);
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (!gridRef.current?.contains(e.target as Node)) setOpen(null);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+  }, [open]);
 
   return (
     <section id="faith" className="about-sof" aria-labelledby={`${uid}-title`}>
@@ -55,44 +91,54 @@ export function AboutFaith() {
           </header>
         </Reveal>
 
-        <ul className="about-sof__grid">
+        <ul ref={gridRef} className={`about-sof__grid${hinting ? " is-hinting" : ""}`}>
           {ABOUT.faith.map((item, i) => {
-            const extra = EXTRAS[item.title];
-            const Icon = extra?.icon ?? BookOpen;
+            const Icon = ICONS[item.title] ?? BookOpen;
             const isOpen = open === i;
             const bodyId = `${uid}-faith-${i}`;
-            const num = String(i + 1).padStart(2, "0");
             return (
-              <li key={item.title} className={`about-sof__item${isOpen ? " is-open" : ""}`}>
+              <li
+                key={item.title}
+                className={`about-sof__item${isOpen ? " is-open" : ""}`}
+                style={{ "--i": i } as CSSProperties}
+              >
                 <button
                   type="button"
                   className="about-sof__toggle"
                   aria-expanded={isOpen}
                   aria-controls={bodyId}
                   onClick={() => setOpen(isOpen ? null : i)}
+                  onFocus={(e) => {
+                    if (e.currentTarget.matches(":focus-visible")) setOpen(i);
+                  }}
+                  onBlur={(e) => {
+                    if (!e.currentTarget.parentElement?.contains(e.relatedTarget as Node)) {
+                      setOpen((cur) => (cur === i ? null : cur));
+                    }
+                  }}
                 >
                   <span className="about-sof__top">
-                    <span className="about-sof__num">{num}</span>
+                    <span className="about-sof__num">{String(i + 1).padStart(2, "0")}</span>
                     <span className="about-sof__more" aria-hidden>
-                      {isOpen ? <Minus /> : <Plus />}
+                      <Plus />
                     </span>
                   </span>
-                  <span className="about-sof__icon" aria-hidden>
-                    <Icon strokeWidth={1.75} />
+                  <span className="about-sof__heading">
+                    <span className="about-sof__icon" aria-hidden>
+                      <Icon strokeWidth={1.75} />
+                    </span>
+                    <span className="about-sof__name">{item.title}</span>
                   </span>
-                  <span className="about-sof__name">{item.title}</span>
-                  <span className="about-sof__preview" aria-hidden>
-                    {item.body}
+                  <span className="about-sof__cue" aria-hidden>
+                    <span className="about-sof__cue-inner">
+                      <span className="about-sof__cue-hover">Read statement</span>
+                      <span className="about-sof__cue-touch">Tap to read</span>
+                    </span>
                   </span>
                 </button>
                 <div id={bodyId} className="about-sof__body">
                   <div className="about-sof__body-inner">
-                    <p className="about-sof__body-head" aria-hidden>
-                      <span className="about-sof__num">{num}</span>
-                      <span className="about-sof__name">{item.title}</span>
-                    </p>
                     <p className="about-sof__text">{item.body}</p>
-                    {extra ? <p className="about-sof__verse">{extra.verse}</p> : null}
                   </div>
                 </div>
               </li>

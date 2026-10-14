@@ -3,7 +3,8 @@
 .about-sof {
   --sof-pad: clamp(1rem, 4vw, 3rem);
   --sof-max: 76rem;
-  --sof-gap: clamp(0.75rem, 1.4vw, 1rem);
+  --sof-gap: clamp(0.6rem, 1.1vw, 0.85rem);
+  --sof-card-pad: clamp(1rem, 1.5vw, 1.3rem);
   --sof-dark: var(--about-dark, #140b22);
   --sof-purple: var(--about-purple, #630ed4);
   --sof-yellow: var(--about-yellow, #ffde59);
@@ -85,11 +86,12 @@ html[data-theme="dark"] .about-sof {
   color: #fff;
 }
 
-/* ---- Card grid ---- */
+/* ---- Title cards: the border grows to reveal the statement ---- */
 
 .about-sof__grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  align-items: start;
   gap: var(--sof-gap);
   margin: var(--sof-gap) 0 0;
   padding: 0;
@@ -109,23 +111,27 @@ html[data-theme="dark"] .about-sof {
 }
 
 .about-sof__item {
+  --sof-dur: 0.26s;
   position: relative;
-  display: grid;
+  z-index: 1;
   border: 1px solid var(--sof-line);
   background: var(--sof-card);
   color: var(--sof-ink);
   transition:
-    background-color 0.4s var(--sof-ease),
-    border-color 0.4s var(--sof-ease);
+    background-color var(--sof-dur) var(--sof-ease),
+    border-color var(--sof-dur) var(--sof-ease),
+    box-shadow var(--sof-dur) var(--sof-ease),
+    transform var(--sof-dur) var(--sof-ease),
+    z-index 0s linear var(--sof-dur);
 }
 
 .about-sof__toggle {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 0.7rem;
   width: 100%;
-  padding: clamp(1.35rem, 2vw, 1.75rem);
+  padding: var(--sof-card-pad);
   border: 0;
   background: none;
   color: inherit;
@@ -151,191 +157,301 @@ html[data-theme="dark"] .about-sof {
   font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--sof-accent);
-}
-
-.about-sof__icon {
-  display: block;
-  color: var(--sof-accent);
-}
-
-.about-sof__icon svg {
-  display: block;
-  width: 1.9rem;
-  height: 1.9rem;
-}
-
-.about-sof__name {
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: clamp(1.2rem, 1.6vw, 1.4rem);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-}
-
-.about-sof__preview {
-  display: -webkit-box;
-  overflow: hidden;
-  margin-top: -0.4rem;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  min-height: calc(3 * 1.55em);
-  font-size: 0.95rem;
-  font-weight: 500;
-  line-height: 1.55;
-  color: #3a3a40;
-}
-
-html[data-theme="dark"] .about-sof__preview {
-  color: var(--fg-soft);
+  transition: color var(--sof-dur) var(--sof-ease);
 }
 
 .about-sof__more {
   display: grid;
   place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border: 1px solid var(--sof-line);
   color: var(--sof-accent);
+  transition:
+    color var(--sof-dur) var(--sof-ease),
+    border-color var(--sof-dur) var(--sof-ease),
+    background-color var(--sof-dur) var(--sof-ease);
 }
 
 .about-sof__more svg {
   width: 1rem;
   height: 1rem;
+  transition: transform var(--sof-dur) var(--sof-ease);
+}
+
+.about-sof__heading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.about-sof__icon {
+  display: block;
+  flex: none;
+  color: var(--sof-accent);
+  transition: color var(--sof-dur) var(--sof-ease);
+}
+
+.about-sof__icon svg {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.about-sof__name {
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+/* Collapses when the card opens so the statement sits right under the title. */
+.about-sof__cue {
+  display: grid;
+  grid-template-rows: 1fr;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sof-accent);
+  transition:
+    grid-template-rows var(--sof-dur) var(--sof-ease),
+    margin var(--sof-dur) var(--sof-ease),
+    opacity var(--sof-dur) var(--sof-ease);
+}
+
+.about-sof__cue-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.about-sof__cue-inner::after {
+  content: "";
+  width: 1rem;
+  height: 1.5px;
+  background: currentColor;
+  transition: width var(--sof-dur) var(--sof-ease);
+}
+
+.about-sof__cue-touch {
+  display: none;
+}
+
+@media (hover: none) {
+  .about-sof__cue-hover {
+    display: none;
+  }
+
+  .about-sof__cue-touch {
+    display: inline;
+  }
+}
+
+.about-sof__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  color: #fff;
+  transition:
+    grid-template-rows var(--sof-dur) var(--sof-ease),
+    visibility 0s linear var(--sof-dur);
 }
 
 .about-sof__body-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.about-sof__body-head {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .about-sof__text {
   margin: 0;
-  font-size: 0.98rem;
+  padding: 0 var(--sof-card-pad) var(--sof-card-pad);
+  font-size: 0.95rem;
   font-weight: 500;
   line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.about-sof__verse {
-  margin: 0;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+/* Open: one rule set shared by tap/keyboard (.is-open) and mouse hover. */
+.about-sof__item.is-open {
+  z-index: 5;
+  border-color: var(--sof-purple);
+  background: var(--sof-dark);
+  color: #fff;
+  transition:
+    background-color var(--sof-dur) var(--sof-ease),
+    border-color var(--sof-dur) var(--sof-ease),
+    box-shadow var(--sof-dur) var(--sof-ease),
+    transform var(--sof-dur) var(--sof-ease),
+    z-index 0s;
+}
+
+.about-sof__item.is-open .about-sof__num,
+.about-sof__item.is-open .about-sof__icon,
+.about-sof__item.is-open .about-sof__more {
   color: var(--sof-yellow);
 }
 
-/* ---- Tablet / desktop: the statement fades in over the card ---- */
+.about-sof__item.is-open .about-sof__more {
+  border-color: rgba(255, 255, 255, 0.28);
+}
 
-@media (min-width: 700px) {
-  .about-sof__toggle,
-  .about-sof__body {
-    grid-area: 1 / 1;
-  }
+.about-sof__item.is-open .about-sof__more svg {
+  transform: rotate(45deg);
+}
 
-  .about-sof__toggle {
-    min-height: 16rem;
-  }
+.about-sof__item.is-open .about-sof__cue {
+  grid-template-rows: 0fr;
+  margin-top: -0.7rem;
+  opacity: 0;
+}
 
-  .about-sof__toggle > .about-sof__icon {
-    margin-top: auto;
-  }
+.about-sof__item.is-open .about-sof__body {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows var(--sof-dur) var(--sof-ease),
+    visibility 0s;
+}
 
-  .about-sof__toggle > * {
-    transition:
-      opacity 0.3s var(--sof-ease),
-      transform 0.45s var(--sof-ease);
-  }
-
-  .about-sof__body {
-    padding: clamp(1.35rem, 2vw, 1.75rem);
+@media (hover: hover) and (min-width: 700px) {
+  .about-sof__item:hover {
+    z-index: 5;
+    border-color: var(--sof-purple);
+    background: var(--sof-dark);
     color: #fff;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(0.75rem);
-    pointer-events: none;
+    transform: translateY(-3px);
     transition:
-      opacity 0.35s var(--sof-ease),
-      transform 0.5s var(--sof-ease),
-      visibility 0s linear 0.5s;
+      background-color var(--sof-dur) var(--sof-ease),
+      border-color var(--sof-dur) var(--sof-ease),
+      box-shadow var(--sof-dur) var(--sof-ease),
+      transform var(--sof-dur) var(--sof-ease),
+      z-index 0s;
   }
 
-  .about-sof__body-head .about-sof__num {
+  .about-sof__item:hover .about-sof__num,
+  .about-sof__item:hover .about-sof__icon,
+  .about-sof__item:hover .about-sof__more {
     color: var(--sof-yellow);
   }
 
-  .about-sof__item.is-open,
-  .about-sof__item:has(.about-sof__toggle:focus-visible) {
-    border-color: var(--sof-purple);
-    background: var(--sof-dark);
+  .about-sof__item:hover .about-sof__more {
+    border-color: rgba(255, 255, 255, 0.28);
   }
 
-  .about-sof__item.is-open .about-sof__toggle > *,
-  .about-sof__item:has(.about-sof__toggle:focus-visible) .about-sof__toggle > * {
+  .about-sof__item:hover .about-sof__more svg {
+    transform: rotate(45deg);
+  }
+
+  .about-sof__item:hover .about-sof__cue {
+    grid-template-rows: 0fr;
+    margin-top: -0.7rem;
     opacity: 0;
-    transform: translateY(-0.5rem);
-  }
-
-  .about-sof__item.is-open .about-sof__body,
-  .about-sof__item:has(.about-sof__toggle:focus-visible) .about-sof__body {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-    transition:
-      opacity 0.4s var(--sof-ease) 0.08s,
-      transform 0.5s var(--sof-ease) 0.08s,
-      visibility 0s;
-  }
-}
-
-@media (min-width: 700px) and (hover: hover) {
-  .about-sof__item:hover {
-    border-color: var(--sof-purple);
-    background: var(--sof-dark);
-  }
-
-  .about-sof__item:hover .about-sof__toggle > * {
-    opacity: 0;
-    transform: translateY(-0.5rem);
   }
 
   .about-sof__item:hover .about-sof__body {
-    opacity: 1;
+    grid-template-rows: 1fr;
     visibility: visible;
-    transform: none;
     transition:
-      opacity 0.4s var(--sof-ease) 0.08s,
-      transform 0.5s var(--sof-ease) 0.08s,
+      grid-template-rows var(--sof-dur) var(--sof-ease),
       visibility 0s;
   }
 }
 
-/* ---- Phone: a list of rows that open in place ---- */
+/* Tablet / desktop: the statement drops out of the card's bottom edge over the row below, so the grid never shifts. */
+@media (min-width: 700px) {
+  .about-sof__body {
+    position: absolute;
+    top: 100%;
+    left: -1px;
+    right: -1px;
+    border: 1px solid transparent;
+    border-top: 0;
+    background: var(--sof-dark);
+    transition:
+      grid-template-rows var(--sof-dur) var(--sof-ease),
+      border-color var(--sof-dur) var(--sof-ease),
+      visibility 0s linear var(--sof-dur);
+  }
+
+  .about-sof__item.is-open,
+  .about-sof__item:hover {
+    box-shadow: 0 12px 28px -14px rgba(20, 11, 34, 0.55);
+  }
+
+  .about-sof__item.is-open .about-sof__body,
+  .about-sof__item:hover .about-sof__body {
+    border-color: var(--sof-purple);
+    box-shadow: 0 26px 44px -20px rgba(20, 11, 34, 0.6);
+  }
+
+}
+
+/* The last row grows in place instead: nothing sits below it but the footer, and the page wrapper would clip an overlay. */
+@media (min-width: 700px) and (max-width: 1099px) {
+  .about-sof__item:nth-child(n + 7) .about-sof__body {
+    position: static;
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 1100px) {
+  .about-sof__item:nth-child(n + 5) .about-sof__body {
+    position: static;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .about-sof {
+    transition: padding-bottom 0.26s var(--sof-ease);
+  }
+
+  .about-sof:has(.about-sof__item:nth-child(-n + 4):is(:hover, .is-open)) {
+    padding-bottom: calc(clamp(3rem, 7vw, 5rem) + 6rem);
+  }
+}
+
+/* One-time hint when the grid first scrolls into view: the + buttons pulse in turn. */
+.about-sof__grid.is-hinting .about-sof__more {
+  animation: sof-hint 0.9s var(--sof-ease) calc(var(--i, 0) * 110ms) both;
+}
+
+@keyframes sof-hint {
+  0%,
+  100% {
+    transform: none;
+  }
+
+  45% {
+    transform: scale(1.18);
+    border-color: var(--sof-purple);
+    background-color: var(--sof-purple);
+    color: #fff;
+  }
+}
+
+/* ---- Phone: rows that open in place ---- */
 
 @media (max-width: 699px) {
   .about-sof__toggle {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
     align-items: center;
-    gap: 0.9rem;
-    padding: 1.05rem 1.1rem;
+    gap: 0.75rem;
+    padding: 0.95rem 1rem;
   }
 
-  .about-sof__top {
+  .about-sof__top,
+  .about-sof__heading {
     display: contents;
   }
 
   .about-sof__num,
-  .about-sof__name,
+  .about-sof__icon,
   .about-sof__more {
     grid-row: 1;
   }
@@ -344,80 +460,43 @@ html[data-theme="dark"] .about-sof__preview {
     grid-column: 1;
   }
 
-  .about-sof__name {
+  .about-sof__icon {
     grid-column: 2;
   }
 
-  .about-sof__more {
-    grid-column: 3;
-  }
-
-  .about-sof__icon,
-  .about-sof__preview {
-    display: none;
+  .about-sof__icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   .about-sof__name {
+    grid-row: 1;
+    grid-column: 3;
     font-size: 1.1rem;
   }
 
-  .about-sof__body {
-    display: grid;
-    grid-template-rows: 0fr;
-    visibility: hidden;
-    color: #fff;
-    transition:
-      grid-template-rows 0.45s var(--sof-ease),
-      visibility 0s linear 0.45s;
+  .about-sof__more {
+    grid-column: 4;
   }
 
-  .about-sof__body-inner {
-    min-height: 0;
-    overflow: hidden;
-    padding: 0 1.1rem;
-  }
-
-  .about-sof__body-head {
+  .about-sof__cue {
     display: none;
   }
 
-  .about-sof__item.is-open {
-    border-color: var(--sof-purple);
-    background: var(--sof-dark);
-    color: #fff;
-  }
-
-  .about-sof__item.is-open .about-sof__num,
-  .about-sof__item.is-open .about-sof__more {
-    color: var(--sof-yellow);
-  }
-
-  .about-sof__item.is-open .about-sof__more {
-    border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  .about-sof__item.is-open .about-sof__body {
-    grid-template-rows: 1fr;
-    visibility: visible;
-    transition:
-      grid-template-rows 0.45s var(--sof-ease),
-      visibility 0s;
-  }
-
-  .about-sof__item.is-open .about-sof__body-inner {
-    padding-bottom: 1.25rem;
+  .about-sof__text {
+    padding: 0 1rem 1.1rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .about-sof__item,
-  .about-sof__toggle > *,
+  .about-sof__item *,
   .about-sof__body {
     transition: none !important;
+    animation: none !important;
   }
 
-  .about-sof__toggle > *,
-  .about-sof__body {
-    transform: none !important;
+  .about-sof__item:hover {
+    transform: none;
   }
 }
