@@ -6,6 +6,8 @@
   /* Only as the dark end of a gradient, never as a flat panel colour. */
   --about-purple-deep: #4c08a8;
   --about-yellow: #ffde59;
+  /* Every dark panel: the Mission card's original dark purple. */
+  --about-dark: #140b22;
   --about-card: #ffffff;
   --about-ink: #1c1c1f;
   /* Purple as text on light cards; purple text fails contrast on dark, so yellow takes over. */
@@ -33,10 +35,11 @@ html[data-theme="dark"] .about-page {
   --ac-card-bg: var(--about-card);
   --ac-ink: var(--about-ink);
   --ac-ink-soft: #3a3a40;
-  --ac-shadow: 0 0 0 1px var(--about-line), 0 18px 44px rgba(22, 8, 40, 0.08);
-  --ac-shadow-hover: 0 0 0 1px var(--about-purple), 0 26px 56px rgba(22, 8, 40, 0.13);
+  --ac-shadow: 0 0 0 1px rgba(99, 14, 212, 0.07), 0 18px 44px rgba(22, 8, 40, 0.09);
+  --ac-shadow-hover: 0 0 0 1px rgba(99, 14, 212, 0.1), 0 26px 56px rgba(22, 8, 40, 0.14);
   --ac-accent: var(--about-accent);
-  --ac-panel: var(--about-purple);
+  --ac-tile: #f2eef7;
+  --ac-panel: var(--about-dark);
   position: relative;
   padding: 0 0 clamp(2.5rem, 6vw, 4rem);
   background: #fff;
@@ -46,9 +49,15 @@ html[data-theme="dark"] .about-cards {
   --ac-head-a: var(--about-yellow);
   --ac-head-b: var(--about-ink);
   --ac-ink-soft: var(--fg-soft);
-  --ac-shadow: 0 0 0 1px var(--about-line), 0 24px 60px rgba(0, 0, 0, 0.35);
-  --ac-shadow-hover: 0 0 0 1px var(--about-purple), 0 28px 64px rgba(0, 0, 0, 0.5);
+  --ac-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 24px 60px rgba(0, 0, 0, 0.35);
+  --ac-shadow-hover: 0 0 0 1px rgba(255, 255, 255, 0.11), 0 28px 64px rgba(0, 0, 0, 0.5);
+  --ac-tile: rgba(196, 162, 242, 0.12);
   background: var(--bg);
+}
+
+/* "How we do it" keeps its original dark-mode accent. */
+html[data-theme="dark"] .about-card--plain {
+  --ac-accent: #c4a2f2;
 }
 
 /* Roomier "Who we are becoming" banner in this section only: the header CTA purple (#630ed4)
@@ -211,7 +220,7 @@ html[data-theme="dark"] .about-cards {
 
 .about-card--photo {
   color: #fff;
-  background: var(--ac-panel);
+  background: #120a1e;
 }
 
 .about-card__img {
@@ -233,16 +242,16 @@ html[data-theme="dark"] .about-cards {
   z-index: -1;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--ac-panel) 90%, transparent) 0%,
-    color-mix(in srgb, var(--ac-panel) 74%, transparent) 40%,
-    color-mix(in srgb, var(--ac-panel) 18%, transparent) 72%,
-    color-mix(in srgb, var(--ac-panel) 30%, transparent) 100%
+    rgba(12, 6, 22, 0.9) 0%,
+    rgba(12, 6, 22, 0.74) 40%,
+    rgba(12, 6, 22, 0.18) 72%,
+    rgba(12, 6, 22, 0.3) 100%
   );
 }
 
 /* Mission: photo fills the lower card so the faces sit below the text. */
 .about-card--mission {
-  background: var(--ac-panel);
+  background: #140b22;
 }
 
 .about-card__media {
@@ -252,15 +261,14 @@ html[data-theme="dark"] .about-cards {
 }
 
 .about-card__veil--mission {
-  --veil-solid: 43%;
   background: linear-gradient(
     180deg,
-    var(--ac-panel) 0%,
-    var(--ac-panel) var(--veil-solid),
-    color-mix(in srgb, var(--ac-panel) 55%, transparent) calc(var(--veil-solid) + 4%),
-    transparent calc(var(--veil-solid) + 9%),
-    transparent 88%,
-    color-mix(in srgb, var(--about-purple-deep) 30%, transparent) 100%
+    #1f1036 0%,
+    #140b22 43%,
+    rgba(20, 11, 34, 0.55) 47%,
+    rgba(20, 11, 34, 0) 52%,
+    rgba(20, 11, 34, 0) 88%,
+    rgba(20, 11, 34, 0.3) 100%
   );
 }
 
@@ -274,7 +282,15 @@ html[data-theme="dark"] .about-cards {
   }
 
   .about-card__veil--mission {
-    --veil-solid: 46%;
+    background: linear-gradient(
+      180deg,
+      #1f1036 0%,
+      #140b22 46%,
+      rgba(20, 11, 34, 0.55) 50%,
+      rgba(20, 11, 34, 0) 55%,
+      rgba(20, 11, 34, 0) 88%,
+      rgba(20, 11, 34, 0.3) 100%
+    );
   }
 
   .about-card__img--mission {
@@ -454,8 +470,8 @@ html[data-theme="dark"] .about-cards {
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 0.85rem;
-  background: var(--about-purple);
-  color: var(--about-yellow);
+  background: var(--ac-tile);
+  color: var(--ac-accent);
 }
 
 .about-card__pillar-icon svg {
@@ -484,7 +500,7 @@ html[data-theme="dark"] .about-cards {
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--ac-accent);
+  color: var(--orange-ink);
 }
 
 /* ---- Leadership: two pastor profiles side by side, then their shared story ---- */
@@ -542,7 +558,7 @@ html[data-theme="dark"] .about-cards {
   aspect-ratio: 1 / 1;
   overflow: hidden;
   border-bottom: 4px solid var(--about-yellow);
-  background: var(--about-purple);
+  background: var(--ac-tile);
 }
 
 .about-lead2__img {
