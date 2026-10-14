@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import {
   Fragment,
@@ -10,7 +10,6 @@ import {
   useState,
   type CSSProperties,
   type KeyboardEvent,
-  type PointerEvent,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
@@ -20,7 +19,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
-  LayoutGrid,
   MapPin,
   Pause,
   Play,
@@ -111,26 +109,29 @@ function CategoryRow({
 }
 
 const FOCUSABLE = 'button:not([disabled]), [href], video[controls], select, [tabindex]:not([tabindex="-1"])';
+const galleryEase = [0.2, 0.8, 0.2, 1] as const;
+const GALLERY_IMAGE = { fill: true, quality: 95, sizes: "100vw" } as const;
+/** Fill the stage edge to edge when the photo's shape is within ~10% of it. */
+const COVER_TOLERANCE = 0.1;
+const SWIPE_DISTANCE = 60;
+const SWIPE_VELOCITY = 400;
 
 function StoryModal({
   label,
   onClose,
-  onEscape,
-  wide = false,
   children,
 }: {
   label: string;
   onClose: () => void;
-  onEscape?: () => void;
-  wide?: boolean;
   children: ReactNode;
 }) {
+  const reduce = useReducedMotion();
   const panelRef = useRef<HTMLDivElement>(null);
-  const escapeRef = useRef(onEscape ?? onClose);
+  const closeRef = useRef(onClose);
 
   useEffect(() => {
-    escapeRef.current = onEscape ?? onClose;
-  }, [onEscape, onClose]);
+    closeRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null;
@@ -138,12 +139,12 @@ function StoryModal({
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const focusables = () => Array.from(panel?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []);
-    focusables()[0]?.focus();
+    panel?.focus();
 
     const onKey = (e: globalThis.KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        escapeRef.current();
+        closeRef.current();
         return;
       }
       if (e.key !== "Tab") return;
@@ -151,7 +152,8 @@ function StoryModal({
       const first = list[0];
       const last = list[list.length - 1];
       if (!first || !last) return;
-      if (e.shiftKey && (document.activeElement === first || !panel?.contains(document.activeElement))) {
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || active === panel || !panel?.contains(active))) {
         e.preventDefault();
         last.focus();
       } else if (!e.shiftKey && document.activeElement === last) {
@@ -168,21 +170,31 @@ function StoryModal({
   }, []);
 
   return createPortal(
-    <div className="events-modal">
-      <button type="button" className="events-modal__scrim" aria-hidden tabIndex={-1} onClick={onClose} />
-      <div
-        ref={panelRef}
-        className={`events-modal__panel${wide ? " events-modal__panel--wide" : ""}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label={label}
+    <motion.div
+      ref={panelRef}
+      className="events-gallery"
+      role="dialog"
+      aria-modal="true"
+      aria-label={label}
+      tabIndex={-1}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: reduce ? 0.15 : 0.28, ease: galleryEase }}
+    >
+      <button type="button" className="events-gallery__close" aria-label="Close gallery" onClick={onClose}>
+        <X aria-hidden className="h-5 w-5" />
+      </button>
+      <motion.div
+        className="events-gallery__body"
+        initial={reduce ? false : { opacity: 0, y: 18, scale: 0.985 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={reduce ? undefined : { opacity: 0, y: 18, scale: 0.985 }}
+        transition={{ duration: 0.28, ease: galleryEase }}
       >
-        <button type="button" className="events-modal__close" aria-label="Close" onClick={onClose}>
-          <X aria-hidden className="h-5 w-5" />
-        </button>
         {children}
-      </div>
-    </div>,
+      </motion.div>
+    </motion.div>,
     document.body,
   );
 }
@@ -196,107 +208,191 @@ function GalleryModal({
   photos: EventPhoto[];
   onClose: () => void;
 }) {
-  const [index, setIndex] = useState<number | null>(null);
-  const swipe = useRef<number | null>(null);
+  const reduce = useReducedMotion();
   const count = photos.length;
-  const photo = index === null ? null : photos[index];
+  const [[index, direction], setSlide] = useState<[number, number]>([0, 0]);
+  const [stageRatio, setStageRatio] = useState<number | null>(null);
+  const [ratios, setRatios] = useState<Record<string, number>>({});
+  const stageRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const stripPlaced = useRef(false);
+  const photo = photos[index]!;
 
-  const step = (delta: number) =>
-    setIndex((i) => (i === null ? i : (i + delta + count) % count));
+  const step = (delta: number) => setSlide(([i]) => [(i + delta + count) % count, delta]);
 
   useEffect(() => {
-    if (index === null) return;
+    if (count < 2) return;
     const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === "ArrowRight") setIndex((i) => (i === null ? i : (i + 1) % count));
-      if (e.key === "ArrowLeft") setIndex((i) => (i === null ? i : (i - 1 + count) % count));
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      e.preventDefault();
+      const delta = e.key === "ArrowRight" ? 1 : -1;
+      setSlide(([i]) => [(i + delta + count) % count, delta]);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [index, count]);
+  }, [count]);
 
-  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
-    swipe.current = e.clientX;
-  };
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry!.contentRect;
+      if (width && height) setStageRatio(width / height);
+    });
+    ro.observe(stage);
+    return () => ro.disconnect();
+  }, []);
 
-  const onPointerUp = (e: PointerEvent<HTMLDivElement>) => {
-    if (swipe.current === null) return;
-    const dx = e.clientX - swipe.current;
-    swipe.current = null;
-    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+  useEffect(() => {
+    if (count < 2) return;
+    for (const i of new Set([(index + 1) % count, (index - 1 + count) % count])) {
+      const { props } = getImageProps({ ...GALLERY_IMAGE, src: photos[i]!.src, alt: "" });
+      const img = new window.Image();
+      if (props.sizes) img.sizes = props.sizes;
+      if (props.srcSet) img.srcset = props.srcSet;
+      img.src = props.src;
+    }
+  }, [index, count, photos]);
+
+  useEffect(() => {
+    const strip = stripRef.current;
+    const thumb = strip?.children[index] as HTMLElement | undefined;
+    if (!strip || !thumb) return;
+    strip.scrollTo({
+      left: thumb.offsetLeft - (strip.clientWidth - thumb.offsetWidth) / 2,
+      behavior: reduce || !stripPlaced.current ? "auto" : "smooth",
+    });
+    stripPlaced.current = true;
+  }, [index, reduce]);
+
+  const ratio = ratios[photo.src];
+  const cover = Boolean(ratio && stageRatio && Math.abs(Math.log(ratio / stageRatio)) < COVER_TOLERANCE);
+  const offset = reduce ? 0 : 28;
+  const slide = {
+    enter: (d: number) => ({ x: `${d * offset}%`, opacity: 0 }),
+    center: { x: "0%", opacity: 1 },
+    exit: (d: number) => ({ x: `${d * -offset}%`, opacity: 0 }),
   };
 
   return (
-    <StoryModal
-      label={`${title} photos`}
-      wide
-      onClose={onClose}
-      onEscape={() => (index === null ? onClose() : setIndex(null))}
-    >
-      <div className="events-modal__head">
-        <p className="events-modal__eyebrow">Gallery</p>
-        <h2 className="events-modal__title">{title}</h2>
+    <StoryModal label={`${title} photos`} onClose={onClose}>
+      <div className="events-gallery__ambient" aria-hidden>
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={photo.src}
+            className="events-gallery__ambient-layer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduce ? 0 : 0.6 }}
+          >
+            <Image {...GALLERY_IMAGE} src={photo.src} alt="" className="object-cover" />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {photo && index !== null ? (
-        <div className="events-viewer">
-          <div
-            className="events-viewer__stage"
-            onPointerDown={onPointerDown}
-            onPointerUp={onPointerUp}
-            onPointerCancel={() => (swipe.current = null)}
+      <div className="events-gallery__top">
+        <div>
+          <p className="events-gallery__eyebrow">Gallery</p>
+          <h2 className="events-gallery__title">{title}</h2>
+        </div>
+        <p className="events-gallery__count">
+          <span aria-hidden>
+            {index + 1} / {count}
+          </span>
+          <span className="sr-only" aria-live="polite">
+            Photo {index + 1} of {count}: {photo.alt}
+          </span>
+        </p>
+      </div>
+
+      <div ref={stageRef} className="events-gallery__stage">
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.div
+            key={index}
+            className="events-gallery__slide"
+            custom={direction}
+            variants={slide}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { duration: 0.35, ease: galleryEase },
+              opacity: { duration: reduce ? 0.15 : 0.3, ease: "easeOut" },
+            }}
+            drag={count > 1 ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.7}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -SWIPE_DISTANCE || info.velocity.x < -SWIPE_VELOCITY) step(1);
+              else if (info.offset.x > SWIPE_DISTANCE || info.velocity.x > SWIPE_VELOCITY) step(-1);
+            }}
           >
             <Image
-              key={photo.src}
+              {...GALLERY_IMAGE}
               src={photo.src}
               alt={photo.alt}
-              fill
-              quality={95}
+              priority
               draggable={false}
-              sizes="(max-width: 900px) 100vw, 72rem"
-              className="object-contain"
+              className={cover ? "object-cover" : "object-contain"}
+              style={cover && photo.position ? { objectPosition: photo.position } : undefined}
+              onLoad={(e) => {
+                const { naturalWidth: w, naturalHeight: h } = e.currentTarget;
+                if (w && h) setRatios((r) => (r[photo.src] ? r : { ...r, [photo.src]: w / h }));
+              }}
             />
-          </div>
-          <div className="events-viewer__bar">
-            <button type="button" className="events-viewer__back" onClick={() => setIndex(null)}>
-              <LayoutGrid aria-hidden className="h-4 w-4" />
-              All photos
+          </motion.div>
+        </AnimatePresence>
+
+        {count > 1 ? (
+          <>
+            <button
+              type="button"
+              className="events-gallery__arrow events-gallery__arrow--prev"
+              aria-label="Previous photo"
+              onClick={() => step(-1)}
+            >
+              <ChevronLeft aria-hidden className="h-5 w-5" />
             </button>
-            <p className="events-viewer__count" aria-live="polite">
-              {index + 1} / {count}
-            </p>
-            <div className="events-viewer__arrows">
-              <button type="button" className="events-round" aria-label="Previous photo" onClick={() => step(-1)}>
-                <ChevronLeft aria-hidden className="h-5 w-5" />
-              </button>
-              <button type="button" className="events-round" aria-label="Next photo" onClick={() => step(1)}>
-                <ChevronRight aria-hidden className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
+            <button
+              type="button"
+              className="events-gallery__arrow events-gallery__arrow--next"
+              aria-label="Next photo"
+              onClick={() => step(1)}
+            >
+              <ChevronRight aria-hidden className="h-5 w-5" />
+            </button>
+          </>
+        ) : null}
+      </div>
+
+      {count > 1 ? (
+        <div ref={stripRef} className="events-gallery__strip" role="group" aria-label="All photos">
+          {photos.map((p, i) => (
+            <button
+              key={`${p.src}-${i}`}
+              type="button"
+              className={`events-gallery__thumb${i === index ? " is-active" : ""}`}
+              aria-label={`Show photo ${i + 1} of ${count}`}
+              aria-current={i === index ? "true" : undefined}
+              onClick={() => {
+                if (i !== index) setSlide([i, Math.sign(i - index)]);
+              }}
+            >
+              <Image
+                src={p.src}
+                alt=""
+                fill
+                quality={75}
+                sizes="96px"
+                className="object-cover"
+                style={p.position ? { objectPosition: p.position } : undefined}
+              />
+            </button>
+          ))}
         </div>
       ) : (
-        <ul className="events-gallery-grid">
-          {photos.map((p, i) => (
-            <li key={`${p.src}-${i}`}>
-              <button
-                type="button"
-                className="events-gallery-grid__item"
-                aria-label={`Open photo ${i + 1} of ${count}: ${p.alt}`}
-                onClick={() => setIndex(i)}
-              >
-                <Image
-                  src={p.src}
-                  alt=""
-                  fill
-                  quality={95}
-                  sizes="(max-width: 640px) 50vw, 24rem"
-                  className="object-cover"
-                  style={p.position ? { objectPosition: p.position } : undefined}
-                />
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="events-gallery__strip" aria-hidden />
       )}
     </StoryModal>
   );
@@ -529,9 +625,16 @@ function EventStory({ category, branches }: { category: EventCategory; branches:
       <EventTiles tiles={category.tiles} />
       <EventSplitPanel split={category.split} onExplore={() => setGalleryOpen(true)} />
 
-      {galleryOpen ? (
-        <GalleryModal title={category.label} photos={category.gallery} onClose={() => setGalleryOpen(false)} />
-      ) : null}
+      <AnimatePresence>
+        {galleryOpen ? (
+          <GalleryModal
+            key="gallery"
+            title={category.label}
+            photos={category.gallery}
+            onClose={() => setGalleryOpen(false)}
+          />
+        ) : null}
+      </AnimatePresence>
     </>
   );
 }
