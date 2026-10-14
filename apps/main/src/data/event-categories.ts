@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { BookOpen, Church, FerrisWheel, Heart, Megaphone, MicVocal, MoonStar, Tent } from "lucide-react";
+import { BookOpen, Church, FerrisWheel, Heart, Megaphone, MicVocal, Tent } from "lucide-react";
 
 /**
  * Event categories on /events: the icon row and the slideshow under it.
@@ -64,7 +64,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "midweek",
     label: "Midweek Service",
-    icon: MoonStar,
+    icon: Church,
     status: "upcoming",
     service: "midweek",
     summary: "A midweek evening of the Word and prayer to carry you through the week.",

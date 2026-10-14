@@ -12,12 +12,12 @@ import {
   formatEventCardTime,
   formatEventDateNum,
   formatEventMonthShort,
-  groupEventsByMonth,
   type ChurchEvent,
 } from "@/lib/events-content";
 import type { ServiceBranch } from "@/lib/service-branches";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+const PAGE_SIZE = 6;
 
 function happeningEvents(events: ChurchEvent[], from = new Date()) {
   const stamp = from.toISOString().slice(0, 10);
@@ -59,50 +59,23 @@ function EventCard({
       </div>
       <div className="events-happen__copy">
         <h3>{event.title}</h3>
-        <p className="events-happen__city">{event.city}</p>
+        {event.city ? <p className="events-happen__city">{event.city}</p> : null}
         <p className="events-happen__when">
           <Calendar aria-hidden className="events-happen__ico" />
           <span>{formatEventCardDate(event.date)}</span>
         </p>
         <p>
           <Clock aria-hidden className="events-happen__ico" />
-          {formatEventCardTime(event.time, event.timezone)}
+          {formatEventCardTime(event.time)}
         </p>
-        <p>
-          <MapPin aria-hidden className="events-happen__ico" />
-          {event.location}
-        </p>
+        {event.location ? (
+          <p>
+            <MapPin aria-hidden className="events-happen__ico" />
+            {event.location}
+          </p>
+        ) : null}
       </div>
     </motion.button>
-  );
-}
-
-function EventMonthSection({
-  label,
-  events,
-  reduce,
-  onOpen,
-}: {
-  label: string;
-  events: ChurchEvent[];
-  reduce: boolean | null;
-  onOpen: (event: ChurchEvent) => void;
-}) {
-  return (
-    <section className="events-happen__month" aria-label={label}>
-      <h3 className="events-happen__month-title">{label}</h3>
-      <div className="events-happen__grid">
-        {events.map((event, i) => (
-          <EventCard
-            key={`${event.id}-${event.date}`}
-            event={event}
-            reduce={reduce}
-            delay={Math.min(i * 0.06, 0.24)}
-            onOpen={onOpen}
-          />
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -115,7 +88,10 @@ export function EventsExperience({ events, branches }: Props) {
   const reduce = useReducedMotion();
   const [selected, setSelected] = useState<ChurchEvent | null>(null);
 
-  const byMonth = useMemo(() => groupEventsByMonth(happeningEvents(events)), [events]);
+  const [visible, setVisible] = useState(PAGE_SIZE);
+
+  const upcoming = useMemo(() => happeningEvents(events), [events]);
+  const shown = upcoming.slice(0, visible);
 
   return (
     <div className="events-page">
@@ -170,22 +146,33 @@ export function EventsExperience({ events, branches }: Props) {
         <div className="events-happen__wrap">
           <h2 className="events-happen__title">Happening at our church</h2>
 
-          {byMonth.length === 0 ? (
+          {upcoming.length === 0 ? (
             <p className="events-happen__empty">
               No gatherings listed right now. Check back soon.
             </p>
           ) : (
-            <div className="events-happen__months">
-              {byMonth.map((group) => (
-                <EventMonthSection
-                  key={group.key}
-                  label={group.label}
-                  events={group.events}
-                  reduce={reduce}
-                  onOpen={setSelected}
-                />
-              ))}
-            </div>
+            <>
+              <div className="events-happen__grid">
+                {shown.map((event, i) => (
+                  <EventCard
+                    key={`${event.id}-${event.date}`}
+                    event={event}
+                    reduce={reduce}
+                    delay={Math.min((i % PAGE_SIZE) * 0.06, 0.24)}
+                    onOpen={setSelected}
+                  />
+                ))}
+              </div>
+              {visible < upcoming.length ? (
+                <button
+                  type="button"
+                  className="events-happen__more k-cta"
+                  onClick={() => setVisible((n) => n + PAGE_SIZE)}
+                >
+                  Show more dates
+                </button>
+              ) : null}
+            </>
           )}
         </div>
       </section>
