@@ -26,8 +26,6 @@ html[data-theme="dark"] .about-page {
   --ac-gap: clamp(1rem, 2vw, 1.5rem);
   /* Square corners, matching the homepage cards (see BRAND.md). */
   --ac-radius: 0;
-  /* The Mission / How we do it slider keeps rounded corners. */
-  --ac-slider-radius: 1.75rem;
   --ac-head-a: var(--about-purple);
   --ac-head-b: var(--about-ink);
   --ac-card-bg: var(--about-card);
@@ -160,7 +158,7 @@ html[data-theme="dark"] .about-cards .about-stage__title {
 .about-cards__track:focus-visible {
   outline: 3px solid var(--ac-accent);
   outline-offset: -3px;
-  border-radius: 1.25rem;
+  border-radius: var(--ac-radius);
 }
 
 .about-cards__track.is-dragging {
@@ -186,11 +184,6 @@ html[data-theme="dark"] .about-cards .about-stage__title {
   transition:
     transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Rounded cards in the slider row only; the Vision card below stays square. */
-.about-cards__track .about-card {
-  border-radius: var(--ac-slider-radius);
 }
 
 /* Row height matches the approved three-card row, which the taller Vision card used to set. */
@@ -500,7 +493,7 @@ html[data-theme="dark"] .about-cards .about-stage__title {
   place-items: center;
   width: 2.75rem;
   height: 2.75rem;
-  border-radius: 0.85rem;
+  border-radius: var(--ac-radius);
   background: var(--ac-tile);
   color: var(--ac-accent);
 }
