@@ -6,7 +6,7 @@
 
 **Branch:** `feature/about-messages-testimonies` · **Date:** 14 October 2026 · **App:** `apps/main` (kharis.org)
 
-The About page has been rebuilt. The old Mission / Vision / Leadership tabs are gone; everything now sits on one scrolling page with a sharper hero photo, Greek word cards that paint themselves in, a dark-purple Mission card next to "How we do it", a full-width Vision card, a two-column Leadership section and a new card-based Statement of Faith. "Grace", the AI chat assistant that used to live only on the Life page, now opens from a round button on every page, and the button gently bounces with a "Need help?" bubble if someone keeps scrolling. Buttons across the site now share one smooth 200ms transition, and header and footer links crossfade between pages instead of snapping. On the homepage, the testimony quote carousel has been removed. The Messages page has a new topic and year filter, and YouTube Shorts no longer appear in the shelves. **Messages is still a work in progress** and will change again before it is final.
+The About page has been rebuilt. The old Mission / Vision / Leadership tabs are gone; everything now sits on one scrolling page with a sharper hero photo, Greek word cards that paint themselves in, a dark-purple Mission card next to "How we do it", a full-width Vision card, a two-column Leadership section and a Statement of Faith made of title cards that expand to the full text. "Grace", the AI chat assistant that used to live only on the Life page, now opens from a round button on every page, and the button gently bounces with a "Need help?" bubble if someone keeps scrolling. Buttons across the site now share one smooth 200ms transition, and header and footer links crossfade between pages instead of snapping. On the homepage, the testimony quote carousel has been removed. The Messages page has a new topic and year filter, and YouTube Shorts no longer appear in the shelves. **Messages is still a work in progress** and will change again before it is final.
 
 "Before" screenshots are from the current live site (<https://kharis-main.itadmin-a94.workers.dev/>). "After" screenshots are from this branch running locally. Desktop shots are 1440px wide; mobile shots are 390px wide.
 
@@ -93,7 +93,7 @@ The cards are now white with a purple bar on the left. When they scroll into vie
 
 ### "Who we are becoming" banner
 
-The banner now uses the same deep purple as the Mission, Vision and "Their story" panels, with a soft brand-purple glow and a gold line underneath, so the page reads as one colour family.
+The banner is now light and misty, echoing the soft edges of the hero photo, with the title in purple and a short gold line underneath. It gives the page a calm pause before the darker Mission and Vision cards.
 
 | Before | After |
 | --- | --- |
@@ -101,7 +101,7 @@ The banner now uses the same deep purple as the Mission, Vision and "Their story
 
 ### Mission and "How we do it"
 
-Before, Mission, Vision and Leadership sat behind tabs, so only one showed at a time, and the four ways we fulfil the mission each needed a click. Now there are no tabs. A dark-purple photo card shows the mission statement, and next to it a "How we do it" card lists all four ways with their Bible references. Both cards have rounded corners. On phones they form a swipeable row.
+Before, Mission, Vision and Leadership sat behind tabs, so only one showed at a time, and the four ways we fulfil the mission each needed a click. Now there are no tabs. A dark-purple photo card (full-resolution outreach photo) shows the mission statement, and next to it a "How we do it" card lists all four ways with their Bible references. Both cards have rounded corners. On phones they form a swipeable row.
 
 | Before | After |
 | --- | --- |
@@ -110,7 +110,7 @@ Before, Mission, Vision and Leadership sat behind tabs, so only one showed at a 
 
 ### Vision
 
-Before, the vision points showed one at a time with Previous / Next buttons. Now one full-width dark-purple card with a soft purple glow shows all eight points with icons, and a full-resolution church family photo fades in underneath with a soft curved edge.
+Before, the vision points showed one at a time with Previous / Next buttons. Now one full-width dark-purple card with a richer purple glow shows all eight points with icons, and the church family photo, now at full resolution, fades in underneath with a soft curved edge.
 
 | Before | After |
 | --- | --- |
@@ -128,16 +128,16 @@ Pastors David and Awo are now in two cards side by side (Pastor David has a new,
 
 ### Statement of Faith
 
-Before, the eight statements were a plain list that opened one at a time. Now they sit under a photo header as a grid of square bordered cards, each with an icon, its number, the title and a short preview. On desktop, hovering a card turns it dark and shows the full statement with Bible references. On phones the cards are a list, and tapping one opens it.
+Before, the eight statements were a plain list that opened one at a time. Now they sit under a photo header as compact title cards in a four-column grid. Each closed card shows just its number, an icon, the title and a "Read statement" cue. Hovering, tabbing to or tapping a card expands its border into a dark-purple panel with the full statement. On phones the cards stack as a list and open with a tap ("Tap to read").
 
-> **Placeholders:** the Bible references on each card are suggestions and are **pending pastoral review**. The header photo (an open Bible) is a **placeholder** to be swapped for the final image.
+> The open-Bible header photo is still a placeholder to be swapped for the final image.
 
-| Before | After |
+| Before | After (cards closed) |
 | --- | --- |
 | ![Statement of Faith before](https://github.com/kharis-min-tech/kharis-website/blob/feature/about-messages-testimonies/docs/updates/2026-10-14-about-messages/about-faith-before.jpg?raw=true) | ![Statement of Faith after](https://github.com/kharis-min-tech/kharis-website/blob/feature/about-messages-testimonies/docs/updates/2026-10-14-about-messages/about-faith-after.jpg?raw=true) |
 | <img src="https://github.com/kharis-min-tech/kharis-website/blob/feature/about-messages-testimonies/docs/updates/2026-10-14-about-messages/about-faith-before-mobile.jpg?raw=true" alt="Statement of Faith before, mobile" width="300"> | <img src="https://github.com/kharis-min-tech/kharis-website/blob/feature/about-messages-testimonies/docs/updates/2026-10-14-about-messages/about-faith-after-mobile.jpg?raw=true" alt="Statement of Faith after, mobile" width="300"> |
 
-| After: hovering a card (desktop) | After: tapping a card (phone) |
+| After: a card open on hover (desktop) | After: a card open after a tap (phone) |
 | --- | --- |
 | ![Statement of Faith, card hovered](https://github.com/kharis-min-tech/kharis-website/blob/feature/about-messages-testimonies/docs/updates/2026-10-14-about-messages/about-faith-hover-after.jpg?raw=true) | <img src="https://github.com/kharis-min-tech/kharis-website/blob/feature/about-messages-testimonies/docs/updates/2026-10-14-about-messages/about-faith-tap-after-mobile.jpg?raw=true" alt="Statement of Faith, card tapped on mobile" width="300"> |
 
@@ -206,16 +206,20 @@ On top of `main` at `2941f79`:
 | `4c4f7b5` | Site: consistent 200ms button transitions, smooth logo and page crossfade |
 | `9b76bff` | About: redesigned Statement of Faith (bordered cards, hover/tap reveal) |
 | `aedfe13` | Chat: round launcher, pop-in, and bounce nudge for long scrolling |
-| `34146fb` | About: "Who we are becoming" banner in the dark panel purple with a soft purple wash |
+| `34146fb` | About: "Who we are becoming" banner in the dark panel purple (superseded by `8c4d234`) |
 | `1a016fb` | About: full-resolution Vision, Mission and Pastor David photos; richer Vision gradient |
+| `8c4d234` | About: light, misty "Who we are becoming" banner echoing the hero |
+| `0ff9330` | About: Statement of Faith title cards that expand to the full text |
 
-These update notes live in `docs/updates/2026-10-14-about-messages/` and were added in docs commits on the same branch (part of the refresh rode along in `1a016fb`).
+`f4f95a7` tried a full-width photo-and-list Statement of Faith and was reverted in `128b427`, so it has no net effect. `d67a792` (new Events hero) is on this branch too but isn't covered by these notes.
+
+These update notes live in `docs/updates/2026-10-14-about-messages/` and were added in docs commits on the same branch (part of one refresh rode along in `1a016fb`).
 
 ## How to test
 
 1. `npm install`, then `npm run dev:main` and open <http://localhost:3000>.
 2. **About** (`/about`): scroll the whole page. Check that the Greek words paint in, the Mission cards swipe on a phone-sized window, and `/about#vision`, `/about#leadership` and `/about#faith` jump to the right place.
-3. **Statement of Faith:** on desktop, hover each card to read the full statement. On a phone-sized window, tap a card to open it and tap again to close it.
+3. **Statement of Faith:** on desktop, hover a card (or Tab to it) and check it expands to the full statement. On a phone-sized window, tap a card to open it and tap again to close it.
 4. **Chat:** on any page, click the round purple button in the bottom-right corner, pick an option and send a message. Press Esc to close it, then move to another page and reopen it; the conversation should still be there. In a fresh tab, scroll down a long page without opening the chat and the button should bounce with "Need help?". Replies need `GEMINI_API_KEY` in `apps/main/.env.local`.
 5. **Navigation:** from any page, click the Kharis logo or a header link; the page should crossfade rather than snap. Hover a few buttons and check they all ease the same way.
 6. **Homepage:** the Testimonies section should show only the photos and the "Share Your Testimony" button.
@@ -223,4 +227,4 @@ These update notes live in `docs/updates/2026-10-14-about-messages/` and were ad
 
 ## Deploying
 
-Merging to `main` triggers the `deploy-main` workflow, which ships to Cloudflare. To deploy by hand, run `npm run deploy:main`. Before the chat can answer on the live site, make sure the `GEMINI_API_KEY` secret is set on the Cloudflare worker. Before launch, the Statement of Faith references need pastoral sign-off and its header photo needs replacing.
+Merging to `main` triggers the `deploy-main` workflow, which ships to Cloudflare. To deploy by hand, run `npm run deploy:main`. Before the chat can answer on the live site, make sure the `GEMINI_API_KEY` secret is set on the Cloudflare worker. Before launch, the Statement of Faith header photo needs replacing.
