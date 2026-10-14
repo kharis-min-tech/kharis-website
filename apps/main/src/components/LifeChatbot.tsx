@@ -208,9 +208,14 @@ function AppDownloadButtons() {
 export function LifeChatbot({
   nudge = true,
   startOpen = false,
+  fabClassName = "",
+  onOpen,
 }: {
   nudge?: boolean;
   startOpen?: boolean;
+  /** Extra launcher classes, e.g. the site-wide bounce cue. */
+  fabClassName?: string;
+  onOpen?: () => void;
 }) {
   const [open, setOpen] = useState(startOpen);
   const [launcherReady, setLauncherReady] = useState(!nudge || startOpen);
@@ -307,6 +312,7 @@ export function LifeChatbot({
     setUnread(false);
     setNudgeOpen(false);
     setNudgeDismissed(true);
+    onOpen?.();
   };
 
   const goToContact = () => {
@@ -566,7 +572,7 @@ export function LifeChatbot({
         <button
           ref={fabRef}
           type="button"
-          className={`life-chat__fab${open ? " is-open" : ""}`}
+          className={`life-chat__fab${open ? " is-open" : ""} ${fabClassName}`.trim()}
           aria-expanded={open}
           aria-controls="life-chat-panel"
           aria-label={open ? "Close chat" : "Open chat with Grace"}
