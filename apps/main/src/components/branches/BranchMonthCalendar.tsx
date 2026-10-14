@@ -140,7 +140,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
   return (
     <section id="events" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
       <div className="mb-10 text-center">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 text-[#e8a33d] text-xs font-bold mb-3 border border-white/10">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-white/10 text-[#e8a33d] text-xs font-bold mb-3 border border-white/10">
           <span>What&apos;s Happening</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
@@ -148,7 +148,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
         </h2>
       </div>
 
-      <div className="rounded-[2rem] border border-white/10 bg-[#15131f] p-5 sm:p-8">
+      <div className="border border-white/10 bg-[#15131f] p-5 sm:p-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h3 className="text-2xl sm:text-3xl font-extrabold text-white! tracking-tight">
             {monthLabel}
@@ -157,14 +157,14 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
             <button
               onClick={() => setOffset((o) => o - 1)}
               aria-label="Previous month"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white! transition-colors hover:border-[#e8a33d] hover:text-[#e8a33d] cursor-pointer"
+              className="flex h-9 w-9 items-center justify-center border border-white/15 text-white! transition-colors hover:border-[#e8a33d] hover:text-[#e8a33d] cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
               onClick={() => setOffset((o) => o + 1)}
               aria-label="Next month"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white! transition-colors hover:border-[#e8a33d] hover:text-[#e8a33d] cursor-pointer"
+              className="flex h-9 w-9 items-center justify-center border border-white/15 text-white! transition-colors hover:border-[#e8a33d] hover:text-[#e8a33d] cursor-pointer"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -179,7 +179,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
           className="space-y-3"
         >
           {entries.length === 0 && (
-            <p className="rounded-2xl border border-white/10 bg-black/30 p-6 text-sm font-medium text-gray-400">
+            <p className="border border-white/10 bg-black/30 p-6 text-sm font-medium text-gray-400">
               Nothing scheduled this month yet — check back soon.
             </p>
           )}
@@ -187,10 +187,10 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
           {entries.map((entry) => (
             <div
               key={entry.key}
-              className="group flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/30 p-4 transition-colors hover:border-[#e8a33d]/40 hover:bg-black/50 sm:flex-row sm:items-center"
+              className="group flex flex-col gap-4 border border-white/10 bg-black/30 p-4 transition-colors hover:border-[#e8a33d]/40 hover:bg-black/50 sm:flex-row sm:items-center"
             >
               <div className="flex w-full items-center gap-4 sm:w-40">
-                <div className="flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-[#630ed4] text-white!">
+                <div className="flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center bg-[#630ed4] text-white!">
                   <span className="text-xl font-extrabold leading-none">{entry.day}</span>
                   <span className="text-[10px] font-bold uppercase tracking-wider opacity-80">
                     {viewDate.toLocaleDateString("en-GB", { month: "short" })}
@@ -206,7 +206,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
                   <h4 className="text-base font-bold text-white! transition-colors group-hover:text-[#e8a33d]">
                     {entry.title}
                   </h4>
-                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#e8a33d]">
+                  <span className="bg-white/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#e8a33d]">
                     {entry.category}
                   </span>
                 </div>
@@ -227,7 +227,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
 
               <button
                 onClick={() => onRsvp(entry.title)}
-                className="k-cta flex-shrink-0 rounded-xl bg-white/10 px-5 py-2.5 text-xs font-bold text-white! transition-colors hover:bg-[#d4920a] cursor-pointer"
+                className="k-cta flex-shrink-0 bg-white/10 px-5 py-2.5 text-xs font-bold text-white! transition-colors hover:bg-[#d4920a] cursor-pointer"
               >
                 I&apos;m Coming
               </button>

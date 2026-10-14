@@ -279,7 +279,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
   return (
     <section className="relative px-5 md:px-8 pb-20 -mt-6">
       <div className="max-w-[1536px] mx-auto">
-        <div className="relative rounded-[2rem] overflow-hidden border border-[#22103a] bg-[#0b0612] shadow-2xl shadow-[#630ed4]/20">
+        <div className="relative overflow-hidden border border-[#22103a] bg-[#0b0612] shadow-2xl shadow-[#630ed4]/20">
           <div className="absolute -top-32 -left-24 w-96 h-96 bg-[#630ed4]/25 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-32 -right-24 w-96 h-96 bg-[#d4920a]/15 rounded-full blur-3xl pointer-events-none" />
 
@@ -299,7 +299,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
               <div className="relative">
                 <button
                   onClick={() => setPickerOpen((o) => !o)}
-                  className="k-cta inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  className="k-cta inline-flex items-center gap-2 border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-white/10 transition-colors cursor-pointer"
                   aria-haspopup="listbox"
                   aria-expanded={pickerOpen}
                 >
@@ -317,7 +317,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                     <div className="fixed inset-0 z-20" onClick={() => setPickerOpen(false)} />
                     <ul
                       role="listbox"
-                      className="absolute z-30 mt-2 right-0 w-60 rounded-2xl border border-[#e8a33d]/25 bg-[#110b1a]/98 backdrop-blur-md p-2 shadow-2xl"
+                      className="absolute z-30 mt-2 right-0 w-60 border border-[#e8a33d]/25 bg-[#110b1a]/98 backdrop-blur-md p-2 shadow-2xl"
                     >
                       {VIEWS.map((v) => {
                         const count = source.filter((b) => {
@@ -344,7 +344,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                                 setViewId(v.id);
                                 setPickerOpen(false);
                               }}
-                              className={`w-full flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition-colors cursor-pointer ${
+                              className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 text-xs font-bold transition-colors cursor-pointer ${
                                 v.id === viewId
                                   ? "bg-[#e8a33d] text-[#110b1a]"
                                   : "text-white/80 hover:bg-white/10"
@@ -370,7 +370,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
               <button
                 onClick={locateMe}
                 disabled={locating}
-                className="k-cta inline-flex items-center gap-2 rounded-full bg-[#e8a33d] px-5 py-2.5 text-xs font-extrabold text-[#110b1a] shadow-lg shadow-[#e8a33d]/25 hover:bg-[#f2b254] transition-colors disabled:opacity-60 cursor-pointer"
+                className="k-cta inline-flex items-center gap-2 bg-[#e8a33d] px-5 py-2.5 text-xs font-extrabold text-[#110b1a] shadow-lg shadow-[#e8a33d]/25 hover:bg-[#f2b254] transition-colors disabled:opacity-60 cursor-pointer"
               >
                 {locating ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -385,11 +385,11 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
           {(geoError || nearestBranch) && (
             <div className="relative z-10 mx-6 md:mx-10 mt-3">
               {geoError ? (
-                <p className="text-xs font-semibold text-[#f2b254] bg-[#e8a33d]/10 border border-[#e8a33d]/25 rounded-xl px-4 py-2.5">
+                <p className="text-xs font-semibold text-[#f2b254] bg-[#e8a33d]/10 border border-[#e8a33d]/25 px-4 py-2.5">
                   {geoError}
                 </p>
               ) : nearestBranch ? (
-                <div className="flex flex-wrap items-center justify-between gap-3 bg-[#630ed4]/25 border border-[#e8a33d]/30 rounded-xl px-4 py-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 bg-[#630ed4]/25 border border-[#e8a33d]/30 px-4 py-3">
                   <p className="text-sm font-bold text-white flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-[#e8a33d]" />
                     Your nearest branch is{" "}
@@ -564,7 +564,6 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
                       y={b.slotY - 13}
                       width={122}
                       height={26}
-                      rx={13}
                       fill={active ? "#e8a33d" : "#110b1a"}
                       fillOpacity={active ? 1 : 0.72}
                       stroke={active ? "#e8a33d" : "#e8a33d"}
@@ -586,7 +585,7 @@ export function BranchMap({ onSelectBranch, branches: branchesProp }: BranchMapP
             </svg>
 
             {hoveredBranch && (
-              <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-10 bg-[#110b1a]/95 backdrop-blur-md border border-[#e8a33d]/30 rounded-2xl px-5 py-4 shadow-2xl min-w-[220px]">
+              <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-10 bg-[#110b1a]/95 backdrop-blur-md border border-[#e8a33d]/30 px-5 py-4 shadow-2xl min-w-[220px]">
                 <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#e8a33d]">
                   {hoveredBranch.region}
                 </p>
