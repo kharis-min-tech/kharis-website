@@ -58,16 +58,45 @@ html[data-theme="dark"] .about-card--plain {
   --ac-accent: #c4a2f2;
 }
 
-/* Roomier "Who we are becoming" banner in this section only: the dark panel purple with soft
-   blurred washes of brand purple (a mesh-gradient feel) and one thin yellow line. */
+/* Roomier "Who we are becoming" banner in this section only: a light, misty echo of the hero —
+   the same bench photo pre-blurred (about-banner-mist.jpg) under a pale lavender wash. */
 .about-cards .about-stage__banner {
   min-height: clamp(7.75rem, 16vw, 10.5rem);
-  background-color: var(--about-dark);
+  background-color: #f3eefa;
   background-image:
-    radial-gradient(ellipse 48% 120% at 50% 0%, rgba(99, 14, 212, 0.62), rgba(99, 14, 212, 0) 72%),
-    radial-gradient(ellipse 38% 150% at 0% 100%, rgba(99, 14, 212, 0.4), rgba(99, 14, 212, 0) 70%),
-    radial-gradient(ellipse 34% 140% at 100% 100%, rgba(76, 8, 168, 0.5), rgba(76, 8, 168, 0) 70%);
-  box-shadow: inset 0 -3px 0 var(--about-yellow);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0.7) 100%),
+    linear-gradient(90deg, rgba(243, 238, 250, 0.9) 0%, rgba(236, 228, 248, 0.74) 50%, rgba(243, 238, 250, 0.9) 100%),
+    url("/images/about-banner-mist.jpg");
+  background-size: cover;
+  background-position: center 62%;
+}
+
+.about-cards .about-stage__title {
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: #4c08a8;
+}
+
+/* Short yellow stroke under the title, echoing the hero's yellow "kharis". */
+.about-cards .about-stage__title::after {
+  content: "";
+  display: block;
+  width: 2.75rem;
+  height: 3px;
+  margin: 0.85rem auto 0;
+  background: var(--about-yellow);
+}
+
+html[data-theme="dark"] .about-cards .about-stage__banner {
+  background-color: #1a1029;
+  background-image:
+    linear-gradient(180deg, rgba(20, 11, 34, 0.35) 0%, rgba(20, 11, 34, 0) 45%, rgba(20, 11, 34, 0.55) 100%),
+    linear-gradient(90deg, rgba(20, 11, 34, 0.82) 0%, rgba(33, 18, 58, 0.7) 50%, rgba(20, 11, 34, 0.82) 100%),
+    url("/images/about-banner-mist.jpg");
+}
+
+html[data-theme="dark"] .about-cards .about-stage__title {
+  color: #efe8fb;
 }
 
 .about-cards .about-stage__banner-inner {
