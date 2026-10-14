@@ -6,12 +6,12 @@ import { BookOpen, Church, FerrisWheel, Heart, Megaphone, MicVocal, Tent } from 
  *
  * Each story has four parts. Photos live in /public/images, videos in /public/videos.
  *
- *  hero     Full-width banner. `video` is optional: without it the poster photo is shown
- *           with a slow zoom and the "Watch now" button is hidden. `poster` is the still
- *           shown while the video loads (and for visitors who prefer reduced motion).
+ *  hero     Full-width banner with no buttons. `video` is optional and only Sunday Service
+ *           and Singles Ball use one; without it the poster photo is shown with a slow
+ *           zoom. `poster` is also the still shown while the video loads.
  *  tiles    Exactly two large photos side by side, each with a short caption.
  *  split    Two photos joined edge to edge to look like one wide image, with a big
- *           headline and an "Explore" button that opens `gallery`.
+ *           headline and the section's only button, "Explore", which opens `gallery`.
  *  gallery  Any number of photos for the Explore lightbox (6–12 works well).
  *
  * Keep every `alt` describing what is actually in the new photo. Upcoming categories
@@ -116,16 +116,15 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     status: "upcoming",
     service: "midweek",
     hero: {
-      video: "/videos/hero-b.mp4?v=2",
-      poster: "/videos/hero-b-poster.jpg",
-      posterAlt: "Pastor preaching on stage in front of a blue screen",
+      poster: "/images/hero/preaching-open-bible.jpg",
+      posterAlt: "Pastor preaching from an open Bible with scripture on the screen",
       headline: "Midweek Service",
       subtext: "The Word and prayer, right in the middle of your week.",
     },
     tiles: [
       {
-        src: "/images/hero/preaching-open-bible.jpg",
-        alt: "Pastor preaching from an open Bible with scripture on the screen",
+        src: "/videos/hero-b-poster.jpg",
+        alt: "Pastor preaching on stage in front of a blue screen",
         eyebrow: "The Word",
         title: "Teaching for everyday life",
         description: "An evening in Scripture to steady you for the rest of the week.",
@@ -238,7 +237,6 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     icon: MicVocal,
     status: "past",
     hero: {
-      video: "/videos/hero-a.mp4?v=2",
       poster: "/images/joyful-worship.jpg",
       posterAlt: "Congregation worshipping with hands raised",
       headline: "Praise Night",

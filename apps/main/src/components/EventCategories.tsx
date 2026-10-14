@@ -304,29 +304,7 @@ function GalleryModal({
   );
 }
 
-function VideoModal({ title, src, poster, onClose }: { title: string; src: string; poster: string; onClose: () => void }) {
-  return (
-    <StoryModal label={`${title} video`} wide onClose={onClose}>
-      <div className="events-modal__head">
-        <p className="events-modal__eyebrow">Watch</p>
-        <h2 className="events-modal__title">{title}</h2>
-      </div>
-      <video className="events-modal__video" src={src} poster={poster} controls autoPlay playsInline />
-    </StoryModal>
-  );
-}
-
-function EventHero({
-  category,
-  visit,
-  onWatch,
-  onExplore,
-}: {
-  category: EventCategory;
-  visit: ServiceVisit | null;
-  onWatch: () => void;
-  onExplore: () => void;
-}) {
+function EventHero({ category, visit }: { category: EventCategory; visit: ServiceVisit | null }) {
   const reduce = useReducedMotion();
   const rootRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -391,29 +369,6 @@ function EventHero({
         <p className="events-hero__eyebrow">{eyebrow}</p>
         <h2 className="events-hero__headline">{hero.headline}</h2>
         <p className="events-hero__sub">{hero.subtext}</p>
-        <div className="events-hero__ctas">
-          {hero.video ? (
-            <button type="button" className="events-cta k-cta" onClick={onWatch}>
-              Watch now
-              <Play aria-hidden className="h-3.5 w-3.5" fill="currentColor" strokeWidth={0} />
-            </button>
-          ) : null}
-          {upcoming ? (
-            visit?.mapsUrl ? (
-              <a href={visit.mapsUrl} target="_blank" rel="noopener noreferrer" className="events-cta k-cta">
-                Get directions
-              </a>
-            ) : (
-              <Link href="/locations" className="events-cta k-cta">
-                Find your nearest service
-              </Link>
-            )
-          ) : (
-            <button type="button" className="events-cta k-cta" onClick={onExplore}>
-              Explore
-            </button>
-          )}
-        </div>
       </div>
 
       {hero.video ? (
@@ -543,8 +498,9 @@ function EventSplitPanel({ split, onExplore }: { split: EventSplit; onExplore: (
       <div className="events-split__copy">
         <p className="events-split__eyebrow">{split.eyebrow}</p>
         <h3 className="events-split__headline">{split.headline}</h3>
-        <button type="button" className="events-cta k-cta" onClick={onExplore}>
+        <button type="button" className="events-explore k-cta" onClick={onExplore}>
           Explore
+          <ArrowUpRight aria-hidden className="h-4 w-4" />
         </button>
       </div>
     </section>
@@ -553,7 +509,7 @@ function EventSplitPanel({ split, onExplore }: { split: EventSplit; onExplore: (
 
 function EventStory({ category, branches }: { category: EventCategory; branches: ServiceBranch[] }) {
   const branch = useStoredBranch(branches);
-  const [modal, setModal] = useState<"video" | "gallery" | null>(null);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const upcoming = category.status === "upcoming";
   const visit = upcoming && branch
     ? category.service === "midweek"
@@ -563,28 +519,15 @@ function EventStory({ category, branches }: { category: EventCategory; branches:
 
   return (
     <>
-      <EventHero
-        category={category}
-        visit={visit}
-        onWatch={() => setModal("video")}
-        onExplore={() => setModal("gallery")}
-      />
+      <EventHero category={category} visit={visit} />
       {upcoming ? (
         <BranchStrip category={category} branch={branch} branches={branches} visit={visit} />
       ) : null}
       <EventTiles tiles={category.tiles} />
-      <EventSplitPanel split={category.split} onExplore={() => setModal("gallery")} />
+      <EventSplitPanel split={category.split} onExplore={() => setGalleryOpen(true)} />
 
-      {modal === "video" && category.hero.video ? (
-        <VideoModal
-          title={category.label}
-          src={category.hero.video}
-          poster={category.hero.poster}
-          onClose={() => setModal(null)}
-        />
-      ) : null}
-      {modal === "gallery" ? (
-        <GalleryModal title={category.label} photos={category.gallery} onClose={() => setModal(null)} />
+      {galleryOpen ? (
+        <GalleryModal title={category.label} photos={category.gallery} onClose={() => setGalleryOpen(false)} />
       ) : null}
     </>
   );
