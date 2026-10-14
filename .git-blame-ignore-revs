@@ -4,3 +4,5 @@
 #
 # Add the full SHA of the one-time Prettier reformat commit below once it lands:
 437803b185b1f2ca10bdf6a39244dcf966a64a11
+# Prettier reformat of 4 files inherited unformatted from main (PR #31)
+942ba800986ab6cec3bc53f4c1598f657f07c645
