@@ -1,8 +1,8 @@
-# Update: new About page, Grace chat on every page, smoother navigation, Messages filters (in progress)
+# Update: new About page, Grace AI chat on every page, Events (in progress) and Messages (in progress)
 
 **Branch:** `feature/about-messages-testimonies` · **Date:** 14 October 2026 · **App:** `apps/main` (kharis.org)
 
-The About page has been rebuilt. The old Mission / Vision / Leadership tabs are gone; everything now sits on one scrolling page with a sharper hero photo, Greek word cards that paint themselves in, a dark-purple Mission card next to "How we do it", a full-width Vision card, a two-column Leadership section and a Statement of Faith made of title cards that expand to the full text. "Grace", the AI chat assistant that used to live only on the Life page, now opens from a round button on every page, and the button gently bounces with a "Need help?" bubble if someone keeps scrolling. Buttons across the site now share one smooth 200ms transition, and header and footer links crossfade between pages instead of snapping. On the homepage, the testimony quote carousel has been removed. The Messages page has a new topic and year filter, and YouTube Shorts no longer appear in the shelves. **Messages is still a work in progress** and will change again before it is final.
+The About page has been rebuilt. The old Mission / Vision / Leadership tabs are gone; everything now sits on one scrolling page with a sharper hero photo, Greek word cards that paint themselves in, a dark-purple Mission card next to "How we do it", a full-width Vision card, a two-column Leadership section and a Statement of Faith made of title cards that expand to the full text. "Grace", the AI chat assistant that used to live only on the Life page, now opens from a round button on every page, and the button gently bounces with a "Need help?" bubble if someone keeps scrolling. Buttons across the site now share one smooth 200ms transition, and header and footer links crossfade between pages instead of snapping. On the homepage, the testimony quote carousel has been removed. The Messages page has a new topic and year filter, and YouTube Shorts no longer appear in the shelves. The Events page has a new banquet hero photo, a row of event icons with a photo slideshow for each event, and directions to your nearest Sunday or Midweek service. **Messages and Events are both still works in progress** and will change again before they are final.
 
 "Before" screenshots are from the current live site (<https://kharis-main.itadmin-a94.workers.dev/>). "After" screenshots are from this branch running locally. Desktop shots are 1440px wide; mobile shots are 390px wide.
 
@@ -14,7 +14,8 @@ The About page has been rebuilt. The old Mission / Vision / Leadership tabs are 
 4. [Buttons and navigation](#4-buttons-and-navigation)
 5. [Homepage testimonies](#5-homepage-testimonies)
 6. [🚧 Messages (in progress)](#6--messages-in-progress-not-final)
-7. [Commits](#commits) · [How to test](#how-to-test) · [Deploying](#deploying)
+7. [🚧 Events page (in progress)](#7--events-page--work-in-progress-not-final)
+8. [Commits](#commits) · [How to test](#how-to-test) · [Deploying](#deploying)
 
 ---
 
@@ -56,7 +57,7 @@ Before, the chat assistant was **only on the Life page**. Now a round purple but
 
 **Gentle nudge.** If someone scrolls a long way (about two and a half screens) or browses for a while without opening the chat, the button bounces and shows a short "Need help?" bubble. This happens at most three times per visit, with a pause between nudges, and stops as soon as the chat has been opened.
 
-> **Note:** chat replies need the `GEMINI_API_KEY` secret set on the Cloudflare worker for the live site. Without it the chat window still opens, but Grace can't answer.
+> **Note:** Grace's replies need a working `GEMINI_API_KEY` with available Gemini quota. Locally the key goes in `apps/main/.env.local`; on the live site it must be set as a secret on the Cloudflare worker. Without a key, or once the quota runs out, the chat window still opens, but Grace can't reply.
 
 | Before | Round launcher | Bounce nudge while scrolling |
 | --- | --- | --- |
@@ -184,6 +185,69 @@ The "From the family" quote cards and their arrow buttons are gone, so the secti
 
 ---
 
+## 7. 🚧 Events page — work in progress, not final
+
+> **In progress:** the Events page is still being worked on. These screenshots show where it stands today, and the design will change.
+
+- **New hero photo:** a full-resolution banquet photo replaces the hands-raised worship photo.
+- **Icon row:** in place of the old search box and Filters button, there's now a row of round event icons. **Sunday Service** and **Midweek Service** are marked "Upcoming". Six past events (Singles Ball, Praise Night, Camps, Family Fun Day, Jesus Campaign, Let the Bible Speak Conference) are marked "Past event" and say "Coming back soon".
+- **Apple-style slideshow:** picking an icon shows a short description and a full-width photo slideshow with captions, progress dots and a play/pause button.
+- **Directions for services:** for Sunday and Midweek, a "Your branch" picker shows that branch's day, time and address, with **Get directions** and branch-page buttons. All of it comes from the branch data, so it stays in sync with the Locations pages.
+- **"Happening at our church":** shows six upcoming dates with a **Show more dates** button, instead of every date at once. Times now read "9:00 AM" instead of "08:00 Europe/London", and the misleading month heading is gone.
+- **Placeholders:** the slideshow photos are placeholders to be replaced with the final images.
+- **Known data issue:** the "Test location" text on the event cards comes from the events database, not the website code. It needs fixing in the events data.
+
+**At a glance**
+
+| Before (live) | After (work in progress) |
+| --- | --- |
+| ![Events page before](./events-full-before-overview.jpg) | ![Events page after](./events-full-after-overview.jpg) |
+
+**Hero**
+
+| Before | After |
+| --- | --- |
+| ![Events hero before](./events-hero-before.jpg) | ![Events hero after](./events-hero-after.jpg) |
+
+**Icon row and slideshow** (before: search box and Filters button)
+
+| Before | After: Sunday Service selected |
+| --- | --- |
+| ![Events search area before](./events-browse-before.jpg) | ![Events icon row and Sunday slideshow](./events-cats-after.jpg) |
+
+**A past event selected** (after)
+
+![Singles Ball selected: Coming back soon, with its slideshow](./events-past-after.jpg)
+
+**"Happening at our church"**
+
+| Before | After |
+| --- | --- |
+| ![Happening at our church before](./events-happen-before.jpg) | ![Happening at our church after](./events-happen-after.jpg) |
+
+**On a phone (390px)**
+
+| Icon row, branch picker and slideshow | Full page: top | Full page: middle | Full page: bottom |
+| --- | --- | --- | --- |
+| <img src="./events-cats-after-mobile.jpg" alt="Events on mobile: icons, branch picker, slideshow" width="220"> | <img src="./events-full-after-mobile-1.jpg" alt="Events on mobile, top" width="200"> | <img src="./events-full-after-mobile-2.jpg" alt="Events on mobile, middle" width="200"> | <img src="./events-full-after-mobile-3.jpg" alt="Events on mobile, bottom" width="200"> |
+
+<details>
+<summary>Full size (desktop), before and after</summary>
+
+**Before**
+
+![Old Events page, part 1](./events-full-before-1.jpg)
+![Old Events page, part 2](./events-full-before-2.jpg)
+
+**After (work in progress)**
+
+![New Events page, part 1](./events-full-after-1.jpg)
+![New Events page, part 2](./events-full-after-2.jpg)
+
+</details>
+
+---
+
 ## Commits
 
 On top of `main` at `2941f79`:
@@ -206,8 +270,12 @@ On top of `main` at `2941f79`:
 | `1a016fb` | About: full-resolution Vision, Mission and Pastor David photos; richer Vision gradient |
 | `8c4d234` | About: light, misty "Who we are becoming" banner echoing the hero |
 | `0ff9330` | About: Statement of Faith title cards that expand to the full text |
+| `d67a792` | Events: new hero background (banquet), full resolution *(in progress)* |
+| `133e131` | Events: icon category row, Apple-style slideshow, Sunday/Midweek directions with branch picker *(in progress)* |
+| `fdce6a7` | Events: fix slideshow/info overlap, thinner and larger mono icons *(in progress)* |
+| `5cea1d3` | Events: shared Sunday/Midweek icon, six-card "Happening at our church" with Show more, "9:00 AM" times, month heading removed *(in progress)* |
 
-`f4f95a7` tried a full-width photo-and-list Statement of Faith and was reverted in `128b427`, so it has no net effect. `d67a792` (new Events hero) is on this branch too but isn't covered by these notes.
+`f4f95a7` tried a full-width photo-and-list Statement of Faith and was reverted in `128b427`, so it has no net effect.
 
 These update notes live in `docs/updates/2026-10-14-about-messages/` and were added in docs commits on the same branch (part of one refresh rode along in `1a016fb`).
 
@@ -220,7 +288,8 @@ These update notes live in `docs/updates/2026-10-14-about-messages/` and were ad
 5. **Navigation:** from any page, click the Kharis logo or a header link; the page should crossfade rather than snap. Hover a few buttons and check they all ease the same way.
 6. **Homepage:** the Testimonies section should show only the photos and the "Share Your Testimony" button.
 7. **Messages** (`/messages`, in progress): try a topic and a year, then press Clear.
+8. **Events** (`/events`, in progress): click through the icons, play and pause a slideshow, pick a different branch under Sunday Service and check Get directions opens the right address, then press "Show more dates".
 
 ## Deploying
 
-Merging to `main` triggers the `deploy-main` workflow, which ships to Cloudflare. To deploy by hand, run `npm run deploy:main`. Before the chat can answer on the live site, make sure the `GEMINI_API_KEY` secret is set on the Cloudflare worker. Before launch, the Statement of Faith header photo needs replacing.
+Merging to `main` triggers the `deploy-main` workflow, which ships to Cloudflare. To deploy by hand, run `npm run deploy:main`. Before the chat can answer on the live site, make sure the `GEMINI_API_KEY` secret is set on the Cloudflare worker. Before launch, the Statement of Faith header photo and the Events slideshow photos need replacing, and "Test location" needs fixing in the events database.
