@@ -145,14 +145,14 @@ export function EventsExperience({ events }: Props) {
 
           <div className="events-feature__banner">
             <Image
-              src="/images/events/hero-worship.jpg"
-              alt="Congregation worshipping together"
+              src="/images/events-hero-banquet.jpg"
+              alt="Banquet table set with red roses and candles beneath chandeliers"
               fill
               priority
-              className="object-cover object-center"
+              quality={95}
+              className="events-feature__photo object-cover"
               sizes="100vw"
             />
-            <span className="events-feature__halftone" aria-hidden />
             <span className="events-feature__veil" aria-hidden />
 
             <div className="events-feature__brand">

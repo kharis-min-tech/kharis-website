@@ -6973,14 +6973,8 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   background: #0f071a;
 }
 
-.events-feature__halftone {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background-image: radial-gradient(rgba(10, 4, 18, 0.42) 1.15px, transparent 1.2px);
-  background-size: 5px 5px;
-  mix-blend-mode: multiply;
+.events-feature__photo {
+  object-position: 47% 14%;
 }
 
 .events-feature__veil {
@@ -6988,13 +6982,28 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   inset: 0;
   z-index: 1;
   background:
+    radial-gradient(ellipse 42% 40% at 50% 47%, rgba(10, 4, 18, 0.6), rgba(10, 4, 18, 0) 100%),
     linear-gradient(
       180deg,
-      rgba(10, 4, 18, 0.18) 0%,
-      rgba(10, 4, 18, 0.28) 42%,
-      rgba(10, 4, 18, 0.82) 100%
+      rgba(10, 4, 18, 0.22) 0%,
+      rgba(10, 4, 18, 0.32) 42%,
+      rgba(10, 4, 18, 0.84) 100%
     ),
     radial-gradient(ellipse 70% 55% at 50% 40%, rgba(99, 14, 212, 0.22), transparent 62%);
+}
+
+@media (max-width: 640px) {
+  .events-feature__veil {
+    background:
+      radial-gradient(ellipse 62% 34% at 50% 44%, rgba(10, 4, 18, 0.6), rgba(10, 4, 18, 0) 100%),
+      linear-gradient(
+        180deg,
+        rgba(10, 4, 18, 0.3) 0%,
+        rgba(10, 4, 18, 0.5) 45%,
+        rgba(10, 4, 18, 0.88) 100%
+      ),
+      radial-gradient(ellipse 70% 55% at 50% 40%, rgba(99, 14, 212, 0.22), transparent 62%);
+  }
 }
 
 .events-feature__brand {
