@@ -16,9 +16,16 @@ export type ServiceBranch = {
   name: string;
   group: "kharis" | "kp2";
   href: string;
+  country: string | null;
   sunday: ServiceVisit | null;
   midweek: ServiceVisit | null;
 };
+
+function staticCountry(slug: string) {
+  const b = BRANCHES_DATA[slug];
+  if (!b) return null;
+  return b.region === "International" ? (b.fullAddress.split(", ").at(-1) ?? null) : "United Kingdom";
+}
 
 function formatTime(time: string) {
   const [h, m = "00"] = time.split(":");
@@ -63,6 +70,7 @@ function fromSupabase(branch: BranchData): ServiceBranch {
     name: branch.name.replace(/ Branch$/i, ""),
     group: branch.slug.startsWith("kp2-") ? "kp2" : "kharis",
     href: `/locations/${branch.slug}`,
+    country: branch.venues.find((v) => v.country)?.country ?? staticCountry(branch.slug),
     sunday: visitFrom(ofType("sunday"), branch.venues),
     midweek: visitFrom(ofType("midweek"), branch.venues),
   };
@@ -79,6 +87,7 @@ function fromStatic(): ServiceBranch[] {
       name: b.city,
       group: "kharis" as const,
       href: `/locations/${b.slug}`,
+      country: staticCountry(b.slug),
       sunday: b.serviceTimes.length
         ? { ...base, day: "Sunday", times: b.serviceTimes.map((t) => `${t.time} ${t.ampm}`) }
         : null,

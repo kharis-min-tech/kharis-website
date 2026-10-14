@@ -8,7 +8,6 @@ import {
   useId,
   useRef,
   useState,
-  useSyncExternalStore,
   type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
@@ -34,39 +33,10 @@ import {
   type EventTile,
 } from "@/data/event-categories";
 import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
+import { BranchSelect, useStoredBranch } from "./BranchSelect";
 import "./event-categories.css";
 
-const DEFAULT_BRANCH = "london";
-const BRANCH_KEY = "kharis-service-branch";
 const ease = [0.22, 1, 0.36, 1] as const;
-
-const branchListeners = new Set<() => void>();
-
-function subscribeBranch(listener: () => void) {
-  branchListeners.add(listener);
-  window.addEventListener("storage", listener);
-  return () => {
-    branchListeners.delete(listener);
-    window.removeEventListener("storage", listener);
-  };
-}
-
-function readBranch() {
-  try {
-    return localStorage.getItem(BRANCH_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function saveBranch(slug: string) {
-  try {
-    localStorage.setItem(BRANCH_KEY, slug);
-  } catch {
-    /* private mode: the choice just won't persist */
-  }
-  branchListeners.forEach((listener) => listener());
-}
 
 function CategoryRow({
   activeId,
@@ -346,16 +316,6 @@ function VideoModal({ title, src, poster, onClose }: { title: string; src: strin
   );
 }
 
-function useStoredBranch(branches: ServiceBranch[]) {
-  const stored = useSyncExternalStore(subscribeBranch, readBranch, () => null);
-  return (
-    branches.find((b) => b.slug === stored) ??
-    branches.find((b) => b.slug === DEFAULT_BRANCH) ??
-    branches[0] ??
-    null
-  );
-}
-
 function EventHero({
   category,
   visit,
@@ -496,32 +456,9 @@ function BranchStrip({
     );
   }
 
-  const kharis = branches.filter((b) => b.group === "kharis");
-  const kp2 = branches.filter((b) => b.group === "kp2");
-
   return (
     <div className="events-branch">
-      <label className="events-branch__pick">
-        <span>Your branch</span>
-        <select value={branch.slug} onChange={(e) => saveBranch(e.target.value)}>
-          <optgroup label="Kharis Church">
-            {kharis.map((b) => (
-              <option key={b.slug} value={b.slug}>
-                {b.name}
-              </option>
-            ))}
-          </optgroup>
-          {kp2.length ? (
-            <optgroup label="KP2">
-              {kp2.map((b) => (
-                <option key={b.slug} value={b.slug}>
-                  {b.name}
-                </option>
-              ))}
-            </optgroup>
-          ) : null}
-        </select>
-      </label>
+      <BranchSelect label="Your branch" branch={branch} branches={branches} />
 
       {visit ? (
         <>
