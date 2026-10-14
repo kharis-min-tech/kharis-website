@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Calendar, Clock, ExternalLink, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { Calendar, Clock, MapPin } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { EventCategories } from "@/components/EventCategories";
 import { EventDetailModal } from "@/components/EventDetailModal";
 import {
   formatEventCardDate,
@@ -14,6 +15,7 @@ import {
   groupEventsByMonth,
   type ChurchEvent,
 } from "@/lib/events-content";
+import type { ServiceBranch } from "@/lib/service-branches";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -92,7 +94,7 @@ function EventMonthSection({
       <div className="events-happen__grid">
         {events.map((event, i) => (
           <EventCard
-            key={event.id}
+            key={`${event.id}-${event.date}`}
             event={event}
             reduce={reduce}
             delay={Math.min(i * 0.06, 0.24)}
@@ -106,36 +108,14 @@ function EventMonthSection({
 
 type Props = {
   events: ChurchEvent[];
+  branches: ServiceBranch[];
 };
 
-export function EventsExperience({ events }: Props) {
+export function EventsExperience({ events, branches }: Props) {
   const reduce = useReducedMotion();
   const [selected, setSelected] = useState<ChurchEvent | null>(null);
-  const [query, setQuery] = useState("");
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [kind, setKind] = useState<"all" | "Sunday Service" | "Thursday Service">("all");
-  const [place, setPlace] = useState<"all" | string>("all");
 
-  const upcoming = useMemo(() => happeningEvents(events), [events]);
-
-  const venues = useMemo(() => [...new Set(events.map((e) => e.location))], [events]);
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return upcoming.filter((e) => {
-      if (kind !== "all" && e.title !== kind) return false;
-      if (place !== "all" && e.location !== place) return false;
-      if (!q) return true;
-      return (
-        e.title.toLowerCase().includes(q) ||
-        e.city.toLowerCase().includes(q) ||
-        e.location.toLowerCase().includes(q) ||
-        e.address.toLowerCase().includes(q)
-      );
-    });
-  }, [upcoming, query, kind, place]);
-
-  const filteredByMonth = useMemo(() => groupEventsByMonth(filtered), [filtered]);
+  const byMonth = useMemo(() => groupEventsByMonth(happeningEvents(events)), [events]);
 
   return (
     <div className="events-page">
@@ -184,72 +164,19 @@ export function EventsExperience({ events }: Props) {
         </div>
       </section>
 
-      <section className="events-browse events-browse--inline" aria-label="Search events">
-        <div className="events-browse__wrap">
-          <div className="events-browse__tools">
-            <label className="events-browse__search">
-              <Search aria-hidden className="events-browse__search-ico" />
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search"
-                aria-label="Search events"
-              />
-            </label>
-            <button
-              type="button"
-              className={`events-browse__filters${filtersOpen ? " is-open" : ""}`}
-              onClick={() => setFiltersOpen((v) => !v)}
-              aria-expanded={filtersOpen}
-            >
-              <SlidersHorizontal aria-hidden className="h-4 w-4" />
-              Filters
-            </button>
-          </div>
-
-          <Link href="/locations" className="events-browse__near">
-            Find events near you
-            <ExternalLink aria-hidden className="h-3.5 w-3.5" />
-          </Link>
-
-          {filtersOpen ? (
-            <div className="events-browse__panel">
-              <label>
-                Gathering
-                <select value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>
-                  <option value="all">All gatherings</option>
-                  <option value="Sunday Service">Sunday Service</option>
-                  <option value="Thursday Service">Thursday Service</option>
-                </select>
-              </label>
-              <label>
-                Venue
-                <select value={place} onChange={(e) => setPlace(e.target.value)}>
-                  <option value="all">All venues</option>
-                  {venues.map((v) => (
-                    <option key={v} value={v}>
-                      {v}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          ) : null}
-        </div>
-      </section>
+      <EventCategories branches={branches} />
 
       <section className="events-happen" aria-label="Happening at our church">
         <div className="events-happen__wrap">
           <h2 className="events-happen__title">Happening at our church</h2>
 
-          {filtered.length === 0 ? (
+          {byMonth.length === 0 ? (
             <p className="events-happen__empty">
-              No gatherings match that search. Try another word or clear filters.
+              No gatherings listed right now. Check back soon.
             </p>
           ) : (
             <div className="events-happen__months">
-              {filteredByMonth.map((group) => (
+              {byMonth.map((group) => (
                 <EventMonthSection
                   key={group.key}
                   label={group.label}

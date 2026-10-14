@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getUpcomingEvents } from "@/lib/events";
 import { localImage } from "@/lib/local-image";
+import { listServiceBranches } from "@/lib/service-branches";
 import type { ChurchEvent } from "@/lib/events-content";
 
 export const metadata: Metadata = {
@@ -12,7 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default async function EventsPage() {
-  const events = await getUpcomingEvents("kharis");
+  const [events, branches] = await Promise.all([
+    getUpcomingEvents("kharis"),
+    listServiceBranches(),
+  ]);
 
   const displayEvents: ChurchEvent[] = events.map((event) => {
     const occurrence = event.occurrence_date;
@@ -46,7 +50,7 @@ export default async function EventsPage() {
     <main className="bg-bg text-fg">
       <SiteHeader tone="light" />
 
-      <EventsExperience events={displayEvents} />
+      <EventsExperience events={displayEvents} branches={branches} />
 
       <SiteFooter />
     </main>
