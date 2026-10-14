@@ -58,3 +58,35 @@ jobs:
       # (GOOGLE_MAPS_API_KEY, the R2 binding, etc.) are not touched by a deploy.
       - name: Deploy to Cloudflare
         run: npm run deploy
+
+      # Post-deploy smoke test. A green `wrangler deploy` only means the worker
+      # uploaded, not that it runs: the Next 16.4.0 bump deployed "successfully"
+      # yet threw Error 1101 (loadManifest preview-props.json) on every request.
+      # content studio may gate routes behind auth, so a 4xx is a warning (the
+      # worker ran), while a 5xx / unreachable / exception page fails the job.
+      - name: Smoke test (post-deploy health check)
+        run: |
+          URL="https://kharis-content.itadmin-a94.workers.dev/"
+          echo "Health-checking $URL"
+          code=000
+          for i in $(seq 1 6); do
+            code=$(curl -s -o body.out -w '%{http_code}' --max-time 25 "$URL" || echo 000)
+            echo "attempt $i: HTTP $code"
+            case "$code" in
+              5*|000) sleep 10 ;;   # erroring/unreachable — wait for propagation, retry
+              *) break ;;
+            esac
+          done
+          case "$code" in
+            5*|000)
+              echo "::error::$URL never returned a non-5xx status (last: $code)"
+              head -c 2000 body.out || true; exit 1 ;;
+          esac
+          if grep -qiE 'loadManifest|Worker threw exception|Error 1101' body.out; then
+            echo "::error::$URL returned HTTP $code but the body is a runtime-error page"
+            head -c 2000 body.out; exit 1
+          fi
+          case "$code" in
+            2*|3*) echo "OK: $URL is live (HTTP $code)" ;;
+            4*) echo "::warning::$URL returned HTTP $code — worker ran but refused the request; check auth/routing" ;;
+          esac
