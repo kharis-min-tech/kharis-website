@@ -404,7 +404,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   },
   {
     id: "let-the-bible-speak",
-    label: "Let the Bible Speak Conference",
+    label: "Let the Bible Speak",
     status: "past",
     hero: {
       poster: "/images/biblical-open-bible.jpg",

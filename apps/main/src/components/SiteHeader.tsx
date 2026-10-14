@@ -20,6 +20,7 @@ type NavLink = {
 };
 
 const links: NavLink[] = [
+  { label: "Home", href: "/" },
   { label: "About", href: "/about", children: aboutChildren },
   { label: "Locations", href: "/locations" },
   { label: "KP2", href: KP2_URL },

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  Fragment,
   useEffect,
   useId,
   useRef,
@@ -78,25 +79,37 @@ function CategoryRow({
       <div className="events-cats__row" role="tablist" aria-label="Kharis events">
         {EVENT_CATEGORIES.map((cat, i) => {
           const selected = cat.id === activeId;
+          const upcoming = cat.status === "upcoming";
+          const groupStart = i === 0 || EVENT_CATEGORIES[i - 1]!.status !== cat.status;
 
           return (
-            <button
-              key={cat.id}
-              ref={(el) => {
-                refs.current[i] = el;
-              }}
-              type="button"
-              role="tab"
-              id={`events-cat-${cat.id}`}
-              aria-selected={selected}
-              aria-controls={panelId}
-              tabIndex={selected ? 0 : -1}
-              className={`events-cat${selected ? " is-selected" : ""}`}
-              onClick={() => select(i, false)}
-              onKeyDown={(e) => onKeyDown(e, i)}
-            >
-              {cat.label}
-            </button>
+            <Fragment key={cat.id}>
+              {groupStart && (
+                <span
+                  className={`events-cats__group${i > 0 ? " events-cats__group--divided" : ""}`}
+                  aria-hidden
+                >
+                  {upcoming ? "Weekly" : "Past events"}
+                </span>
+              )}
+              <button
+                ref={(el) => {
+                  refs.current[i] = el;
+                }}
+                type="button"
+                role="tab"
+                id={`events-cat-${cat.id}`}
+                aria-selected={selected}
+                aria-controls={panelId}
+                tabIndex={selected ? 0 : -1}
+                className={`events-cat${selected ? " is-selected" : ""}${upcoming ? " events-cat--weekly" : ""}`}
+                onClick={() => select(i, false)}
+                onKeyDown={(e) => onKeyDown(e, i)}
+              >
+                {cat.label}
+                <span className="sr-only">{upcoming ? " (weekly service)" : " (past event)"}</span>
+              </button>
+            </Fragment>
           );
         })}
       </div>
