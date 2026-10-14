@@ -321,11 +321,11 @@ html[data-theme="dark"] .about-cards {
   padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.5rem, 4vw, 3.25rem) clamp(0.5rem, 1.5vw, 1rem);
 }
 
-/* Photo below the text. Its top edge melts into the purple through a row of soft, uneven
-   "bubbles" (radial masks) over a short base fade, giving a cloud-like edge, not a straight line.
-   --fade stays within the trees/building above the heads so faces are untouched. */
+/* Photo below the text. Its top edge melts into the purple along one shallow arc: a wide
+   ellipse mask from the bottom with an eased feather, so there is no straight line or blobs.
+   --solid is where the photo becomes fully opaque; the feather stays above the faces. */
 .about-card__vision-photo {
-  --fade: 12%;
+  --solid: 78%;
   position: relative;
   isolation: isolate;
   aspect-ratio: 4 / 3;
@@ -335,31 +335,29 @@ html[data-theme="dark"] .about-cards {
 
 .about-card__img--vision {
   object-position: 50% 0%;
-  -webkit-mask-image:
-    radial-gradient(ellipse 9% calc(var(--fade) * 0.62) at 4% calc(var(--fade) * 0.72), #000 45%, transparent 100%),
-    radial-gradient(ellipse 12% calc(var(--fade) * 0.75) at 17% calc(var(--fade) * 0.62), #000 45%, transparent 100%),
-    radial-gradient(ellipse 8% calc(var(--fade) * 0.55) at 30% calc(var(--fade) * 0.85), #000 45%, transparent 100%),
-    radial-gradient(ellipse 13% calc(var(--fade) * 0.8) at 42% calc(var(--fade) * 0.58), #000 45%, transparent 100%),
-    radial-gradient(ellipse 9% calc(var(--fade) * 0.6) at 56% calc(var(--fade) * 0.8), #000 45%, transparent 100%),
-    radial-gradient(ellipse 12% calc(var(--fade) * 0.72) at 68% calc(var(--fade) * 0.6), #000 45%, transparent 100%),
-    radial-gradient(ellipse 8% calc(var(--fade) * 0.55) at 80% calc(var(--fade) * 0.88), #000 45%, transparent 100%),
-    radial-gradient(ellipse 11% calc(var(--fade) * 0.7) at 93% calc(var(--fade) * 0.64), #000 45%, transparent 100%),
-    linear-gradient(180deg, transparent calc(var(--fade) * 0.85), #000 calc(var(--fade) * 1.3));
-  mask-image:
-    radial-gradient(ellipse 9% calc(var(--fade) * 0.62) at 4% calc(var(--fade) * 0.72), #000 45%, transparent 100%),
-    radial-gradient(ellipse 12% calc(var(--fade) * 0.75) at 17% calc(var(--fade) * 0.62), #000 45%, transparent 100%),
-    radial-gradient(ellipse 8% calc(var(--fade) * 0.55) at 30% calc(var(--fade) * 0.85), #000 45%, transparent 100%),
-    radial-gradient(ellipse 13% calc(var(--fade) * 0.8) at 42% calc(var(--fade) * 0.58), #000 45%, transparent 100%),
-    radial-gradient(ellipse 9% calc(var(--fade) * 0.6) at 56% calc(var(--fade) * 0.8), #000 45%, transparent 100%),
-    radial-gradient(ellipse 12% calc(var(--fade) * 0.72) at 68% calc(var(--fade) * 0.6), #000 45%, transparent 100%),
-    radial-gradient(ellipse 8% calc(var(--fade) * 0.55) at 80% calc(var(--fade) * 0.88), #000 45%, transparent 100%),
-    radial-gradient(ellipse 11% calc(var(--fade) * 0.7) at 93% calc(var(--fade) * 0.64), #000 45%, transparent 100%),
-    linear-gradient(180deg, transparent calc(var(--fade) * 0.85), #000 calc(var(--fade) * 1.3));
+  -webkit-mask-image: radial-gradient(
+      ellipse 150% 100% at 50% 100%,
+      #000 var(--solid),
+      rgba(0, 0, 0, 0.92) calc(var(--solid) + (100% - var(--solid)) * 0.2),
+      rgba(0, 0, 0, 0.7) calc(var(--solid) + (100% - var(--solid)) * 0.45),
+      rgba(0, 0, 0, 0.38) calc(var(--solid) + (100% - var(--solid)) * 0.7),
+      rgba(0, 0, 0, 0.12) calc(var(--solid) + (100% - var(--solid)) * 0.88),
+      transparent 100%
+    );
+  mask-image: radial-gradient(
+      ellipse 150% 100% at 50% 100%,
+      #000 var(--solid),
+      rgba(0, 0, 0, 0.92) calc(var(--solid) + (100% - var(--solid)) * 0.2),
+      rgba(0, 0, 0, 0.7) calc(var(--solid) + (100% - var(--solid)) * 0.45),
+      rgba(0, 0, 0, 0.38) calc(var(--solid) + (100% - var(--solid)) * 0.7),
+      rgba(0, 0, 0, 0.12) calc(var(--solid) + (100% - var(--solid)) * 0.88),
+      transparent 100%
+    );
 }
 
 @media (min-width: 700px) {
   .about-card__vision-photo {
-    --fade: 16%;
+    --solid: 76%;
     aspect-ratio: 2 / 1;
   }
 }
