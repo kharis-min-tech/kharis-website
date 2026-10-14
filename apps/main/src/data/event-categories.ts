@@ -78,8 +78,9 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     },
     tiles: [
       {
-        src: "/images/events/hero-worship.jpg",
-        alt: "Congregation worshipping with hands raised towards the stage",
+        src: "/images/events/sunday-worship-hands.jpg",
+        alt: "Woman worshipping with both hands raised during a Sunday service",
+        position: "82% center",
         eyebrow: "Worship",
         title: "Hearts lifted high",
         description: "We open every Sunday giving God the praise He deserves.",
