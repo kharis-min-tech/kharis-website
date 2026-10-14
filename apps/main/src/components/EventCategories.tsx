@@ -8,6 +8,7 @@ import {
   useId,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
@@ -489,8 +490,13 @@ function EventSplitPanel({ split, onExplore }: { split: EventSplit; onExplore: (
             fill
             quality={95}
             sizes="50vw"
-            className="object-cover"
-            style={photo.position ? { objectPosition: photo.position } : undefined}
+            className="object-cover events-split__photo"
+            style={
+              {
+                "--pos": photo.position ?? "50% 50%",
+                "--pos-m": photo.mobilePosition ?? photo.position ?? "50% 50%",
+              } as CSSProperties
+            }
           />
         </div>
       ))}

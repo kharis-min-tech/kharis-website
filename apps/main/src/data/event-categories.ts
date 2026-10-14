@@ -26,6 +26,8 @@ export type EventPhoto = {
   alt: string;
   /** CSS object-position, for photos whose subject is off-centre. */
   position?: string;
+  /** Optional object-position for phones, where split halves are tall and narrow. */
+  mobilePosition?: string;
 };
 
 export type EventHero = {
@@ -94,10 +96,20 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       },
     ],
     split: {
-      left: { src: "/images/worship.jpg", alt: "Worshippers with hands raised in the hall" },
-      right: { src: "/images/pastor-stage.jpg", alt: "Pastor preaching on stage" },
-      eyebrow: "Life at Kharis",
-      headline: "One church. One family.",
+      left: {
+        src: "/images/events/sunday-pastor-open-bible.jpg",
+        alt: "Pastor David holding up an open Bible on stage",
+        position: "100% center",
+        mobilePosition: "54% center",
+      },
+      right: {
+        src: "/images/events/sunday-pastor-bible-raised.jpg",
+        alt: "Pastor David lifting a red Bible during the service",
+        position: "30% center",
+        mobilePosition: "50% center",
+      },
+      eyebrow: "Preaching at Kharis",
+      headline: "Built on the Word.",
     },
     gallery: [
       { src: "/images/branch-slide-1.jpg", alt: "Congregation standing in worship" },

@@ -469,6 +469,16 @@
   z-index: -2;
 }
 
+.events-split__photo {
+  object-position: var(--pos-m);
+}
+
+@media (min-width: 760px) {
+  .events-split__photo {
+    object-position: var(--pos);
+  }
+}
+
 .events-split__veil {
   z-index: -1;
   background: linear-gradient(180deg, rgba(8, 4, 14, 0) 35%, rgba(8, 4, 14, 0.7) 100%);
