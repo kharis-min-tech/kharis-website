@@ -1,18 +1,12 @@
-/* About — Statement of Faith: square bordered cards that reveal each statement. */
+/* About — Statement of Faith: header band, then a full-bleed photo + beliefs split. */
 
 .about-sof {
   --sof-pad: clamp(1rem, 4vw, 3rem);
   --sof-max: 76rem;
   --sof-gap: clamp(0.75rem, 1.4vw, 1rem);
   --sof-dark: var(--about-dark, #140b22);
-  --sof-purple: var(--about-purple, #630ed4);
   --sof-yellow: var(--about-yellow, #ffde59);
-  --sof-card: var(--about-card, #fff);
-  --sof-ink: var(--about-ink, #1c1c1f);
-  --sof-accent: var(--about-accent, #630ed4);
-  --sof-line: var(--about-line, rgba(99, 14, 212, 0.18));
-  --sof-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  padding: clamp(1rem, 3vw, 2rem) 0 clamp(3rem, 7vw, 5rem);
+  padding: clamp(1rem, 3vw, 2rem) 0 0;
   background: #fff;
   scroll-margin-top: 5.5rem;
 }
@@ -78,346 +72,96 @@ html[data-theme="dark"] .about-sof {
   color: #fff !important;
 }
 
-.about-sof__lead {
-  margin: 0.75rem 0 0;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #fff;
-}
+/* ---- Full-bleed split: photo left, beliefs right ---- */
 
-/* ---- Card grid ---- */
-
-.about-sof__grid {
+.about-sof__split {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--sof-gap);
-  margin: var(--sof-gap) 0 0;
-  padding: 0;
+  margin-top: var(--sof-gap);
+  background: var(--sof-dark);
+}
+
+.about-sof__photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  max-height: 60vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.about-sof__photo-img {
+  object-fit: cover;
+  object-position: 78% 75%;
+}
+
+.about-sof__list {
+  margin: 0;
+  padding: clamp(1.5rem, 5vw, 2.5rem) var(--sof-pad) clamp(2rem, 5vw, 3rem);
   list-style: none;
+  color: #fff;
+  background-color: var(--sof-dark);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(99, 14, 212, 0.42), rgba(99, 14, 212, 0) 72%),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgba(99, 14, 212, 0.2), rgba(99, 14, 212, 0) 72%),
+    linear-gradient(180deg, var(--sof-dark) 0%, #2a0f4f 100%);
+  column-gap: clamp(1.75rem, 3vw, 2.75rem);
 }
 
 @media (min-width: 700px) {
-  .about-sof__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .about-sof__list {
+    columns: 2;
   }
 }
 
-@media (min-width: 1100px) {
-  .about-sof__grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+@media (min-width: 900px) {
+  .about-sof__split {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+
+  .about-sof__photo {
+    aspect-ratio: auto;
+    max-height: none;
+    min-height: 100%;
+  }
+
+  .about-sof__list {
+    padding: clamp(2.25rem, 4vw, 3.5rem) clamp(1.75rem, 4vw, 3.5rem);
   }
 }
 
-.about-sof__item {
-  position: relative;
-  display: grid;
-  border: 1px solid var(--sof-line);
-  background: var(--sof-card);
-  color: var(--sof-ink);
-  transition:
-    background-color 0.4s var(--sof-ease),
-    border-color 0.4s var(--sof-ease);
+@media (min-width: 1280px) {
+  .about-sof__list {
+    columns: 3;
+  }
 }
 
-.about-sof__toggle {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-  width: 100%;
-  padding: clamp(1.35rem, 2vw, 1.75rem);
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.about-sof__toggle:focus-visible {
-  outline: 3px solid var(--sof-yellow);
-  outline-offset: -6px;
-}
-
-.about-sof__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
+.about-sof__belief {
+  padding: 1rem 0 1.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  break-inside: avoid;
 }
 
 .about-sof__num {
-  font-size: 0.82rem;
+  display: block;
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--sof-accent);
-}
-
-.about-sof__icon {
-  display: block;
-  color: var(--sof-accent);
-}
-
-.about-sof__icon svg {
-  display: block;
-  width: 1.9rem;
-  height: 1.9rem;
+  letter-spacing: 0.1em;
+  color: var(--sof-yellow);
 }
 
 .about-sof__name {
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: clamp(1.2rem, 1.6vw, 1.4rem);
+  margin: 0.4rem 0 0.45rem;
+  font-size: clamp(1.1rem, 1.3vw, 1.22rem);
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.25;
   letter-spacing: -0.015em;
-}
-
-.about-sof__preview {
-  display: -webkit-box;
-  overflow: hidden;
-  margin-top: -0.4rem;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  min-height: calc(3 * 1.55em);
-  font-size: 0.95rem;
-  font-weight: 500;
-  line-height: 1.55;
-  color: #3a3a40;
-}
-
-html[data-theme="dark"] .about-sof__preview {
-  color: var(--fg-soft);
-}
-
-.about-sof__more {
-  display: grid;
-  place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  border: 1px solid var(--sof-line);
-  color: var(--sof-accent);
-}
-
-.about-sof__more svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-.about-sof__body-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.about-sof__body-head {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin: 0;
+  color: #fff !important;
 }
 
 .about-sof__text {
   margin: 0;
-  font-size: 0.98rem;
+  font-size: 0.97rem;
   font-weight: 500;
   line-height: 1.6;
-}
-
-.about-sof__verse {
-  margin: 0;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--sof-yellow);
-}
-
-/* ---- Tablet / desktop: the statement fades in over the card ---- */
-
-@media (min-width: 700px) {
-  .about-sof__toggle,
-  .about-sof__body {
-    grid-area: 1 / 1;
-  }
-
-  .about-sof__toggle {
-    min-height: 16rem;
-  }
-
-  .about-sof__toggle > .about-sof__icon {
-    margin-top: auto;
-  }
-
-  .about-sof__toggle > * {
-    transition:
-      opacity 0.3s var(--sof-ease),
-      transform 0.45s var(--sof-ease);
-  }
-
-  .about-sof__body {
-    padding: clamp(1.35rem, 2vw, 1.75rem);
-    color: #fff;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(0.75rem);
-    pointer-events: none;
-    transition:
-      opacity 0.35s var(--sof-ease),
-      transform 0.5s var(--sof-ease),
-      visibility 0s linear 0.5s;
-  }
-
-  .about-sof__body-head .about-sof__num {
-    color: var(--sof-yellow);
-  }
-
-  .about-sof__item.is-open,
-  .about-sof__item:has(.about-sof__toggle:focus-visible) {
-    border-color: var(--sof-purple);
-    background: var(--sof-dark);
-  }
-
-  .about-sof__item.is-open .about-sof__toggle > *,
-  .about-sof__item:has(.about-sof__toggle:focus-visible) .about-sof__toggle > * {
-    opacity: 0;
-    transform: translateY(-0.5rem);
-  }
-
-  .about-sof__item.is-open .about-sof__body,
-  .about-sof__item:has(.about-sof__toggle:focus-visible) .about-sof__body {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-    transition:
-      opacity 0.4s var(--sof-ease) 0.08s,
-      transform 0.5s var(--sof-ease) 0.08s,
-      visibility 0s;
-  }
-}
-
-@media (min-width: 700px) and (hover: hover) {
-  .about-sof__item:hover {
-    border-color: var(--sof-purple);
-    background: var(--sof-dark);
-  }
-
-  .about-sof__item:hover .about-sof__toggle > * {
-    opacity: 0;
-    transform: translateY(-0.5rem);
-  }
-
-  .about-sof__item:hover .about-sof__body {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-    transition:
-      opacity 0.4s var(--sof-ease) 0.08s,
-      transform 0.5s var(--sof-ease) 0.08s,
-      visibility 0s;
-  }
-}
-
-/* ---- Phone: a list of rows that open in place ---- */
-
-@media (max-width: 699px) {
-  .about-sof__toggle {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.9rem;
-    padding: 1.05rem 1.1rem;
-  }
-
-  .about-sof__top {
-    display: contents;
-  }
-
-  .about-sof__num,
-  .about-sof__name,
-  .about-sof__more {
-    grid-row: 1;
-  }
-
-  .about-sof__num {
-    grid-column: 1;
-  }
-
-  .about-sof__name {
-    grid-column: 2;
-  }
-
-  .about-sof__more {
-    grid-column: 3;
-  }
-
-  .about-sof__icon,
-  .about-sof__preview {
-    display: none;
-  }
-
-  .about-sof__name {
-    font-size: 1.1rem;
-  }
-
-  .about-sof__body {
-    display: grid;
-    grid-template-rows: 0fr;
-    visibility: hidden;
-    color: #fff;
-    transition:
-      grid-template-rows 0.45s var(--sof-ease),
-      visibility 0s linear 0.45s;
-  }
-
-  .about-sof__body-inner {
-    min-height: 0;
-    overflow: hidden;
-    padding: 0 1.1rem;
-  }
-
-  .about-sof__body-head {
-    display: none;
-  }
-
-  .about-sof__item.is-open {
-    border-color: var(--sof-purple);
-    background: var(--sof-dark);
-    color: #fff;
-  }
-
-  .about-sof__item.is-open .about-sof__num,
-  .about-sof__item.is-open .about-sof__more {
-    color: var(--sof-yellow);
-  }
-
-  .about-sof__item.is-open .about-sof__more {
-    border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  .about-sof__item.is-open .about-sof__body {
-    grid-template-rows: 1fr;
-    visibility: visible;
-    transition:
-      grid-template-rows 0.45s var(--sof-ease),
-      visibility 0s;
-  }
-
-  .about-sof__item.is-open .about-sof__body-inner {
-    padding-bottom: 1.25rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .about-sof__item,
-  .about-sof__toggle > *,
-  .about-sof__body {
-    transition: none !important;
-  }
-
-  .about-sof__toggle > *,
-  .about-sof__body {
-    transform: none !important;
-  }
+  color: rgba(255, 255, 255, 0.88);
 }
