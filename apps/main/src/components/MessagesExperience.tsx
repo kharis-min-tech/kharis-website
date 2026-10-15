@@ -5,15 +5,16 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  Anchor,
   BookOpen,
-  CalendarDays,
-  ChevronDown,
   Compass,
   Cross,
+  Flame,
+  Flower,
+  HandHeart,
+  Heart,
   LayoutGrid,
   Search,
-  Sunrise,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import { Icon } from "@/components/Icon";
@@ -24,13 +25,7 @@ import { MessagesHero } from "@/components/MessagesHero";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { KHARIS_APP } from "@/lib/kharis-app";
 import { LISTEN_PLATFORMS } from "@/lib/listen-platforms";
-import {
-  MESSAGE_TOPICS,
-  matchesQuery,
-  matchesTopic,
-  messageYear,
-  messageYears,
-} from "@/lib/message-filters";
+import { MESSAGE_TOPICS, matchesQuery, matchesTopic } from "@/lib/message-filters";
 import { buildMessageShelves } from "@/lib/message-shelves";
 import type { MessageVideo } from "@/lib/youtube";
 import "./messages-hub.css";
@@ -40,10 +35,13 @@ gsap.registerPlugin(ScrollTrigger);
 const TOPIC_ICONS: Record<string, LucideIcon> = {
   all: LayoutGrid,
   jesus: Cross,
-  faith: Anchor,
-  doctrine: BookOpen,
-  salvation: Sunrise,
+  bible: BookOpen,
+  prayer: HandHeart,
+  love: Heart,
   purpose: Compass,
+  acts: Flame,
+  "just-men": Users,
+  fragrance: Flower,
 };
 
 /** Original Teachings wall posters (same five sermons). mqdefault is 16:9 so no YouTube letterbox bars. */
@@ -243,25 +241,20 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
   }, [messages, topRow]);
 
   const [topic, setTopic] = useState("all");
-  const [year, setYear] = useState<number | "all">("all");
   const [query, setQuery] = useState("");
   const search = useDeferredValue(query.trim());
-  const years = useMemo(() => messageYears(messages), [messages]);
   const topics = useMemo(
     () => MESSAGE_TOPICS.filter((t) => messages.some((m) => matchesTopic(m, t.id))),
     [messages],
   );
-  const filtering = topic !== "all" || year !== "all" || search !== "";
+  const filtering = topic !== "all" || search !== "";
 
   const filtered = useMemo(() => {
     if (!filtering) return [];
     return messages.filter(
-      (m) =>
-        (topic === "all" || matchesTopic(m, topic)) &&
-        (year === "all" || messageYear(m) === year) &&
-        matchesQuery(m, search),
+      (m) => (topic === "all" || matchesTopic(m, topic)) && matchesQuery(m, search),
     );
-  }, [messages, topic, year, search, filtering]);
+  }, [messages, topic, search, filtering]);
 
   const filteredRows = useMemo(() => {
     const rows: MessageVideo[][] = [];
@@ -273,21 +266,19 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
   const filterHeading = [
     search ? `“${search}”` : null,
     topicLabel ?? (search ? null : "All messages"),
-    year === "all" ? null : String(year),
   ]
     .filter(Boolean)
     .join(" · ");
 
   const clearFilters = () => {
     setTopic("all");
-    setYear("all");
     setQuery("");
   };
 
   useEffect(() => {
     // Results change the page height; keep the scroll-in animations below lined up.
     ScrollTrigger.refresh();
-  }, [topic, year, search]);
+  }, [topic, search]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -436,22 +427,6 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
               enterKeyHint="search"
               autoComplete="off"
             />
-          </label>
-          <label className="msg-filter__year" data-active={year !== "all" || undefined}>
-            <CalendarDays className="msg-filter__icon" strokeWidth={1.9} aria-hidden />
-            <select
-              aria-label="Filter by year"
-              value={year}
-              onChange={(e) => setYear(e.target.value === "all" ? "all" : Number(e.target.value))}
-            >
-              <option value="all">Year</option>
-              {years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="msg-filter__caret" strokeWidth={2} aria-hidden />
           </label>
         </div>
       </section>

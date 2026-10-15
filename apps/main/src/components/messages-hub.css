@@ -244,27 +244,30 @@ html[data-theme="light"] .msg-filter__search input::placeholder {
   color: var(--muted);
 }
 
-/* Below desktop: search + year share the first row, topic chips wrap underneath so none is cut off. */
-@media (max-width: 1023px) {
-  .msg-filter .msg-filter__inner {
-    flex-wrap: wrap;
-    row-gap: 0.6rem;
-    padding-inline: var(--msg-gutter);
-  }
+/* Chips never scroll out of sight: short of room, search drops to its own line and the chips wrap. */
+.msg-filter .msg-filter__inner {
+  flex-wrap: wrap;
+  row-gap: 0.6rem;
+}
 
+.msg-filter__inner .msg-filter__topics {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.msg-filter__inner .msg-filter__search {
+  margin-left: auto;
+}
+
+/* Below desktop: search gets the first row, topic chips wrap underneath. */
+@media (max-width: 1023px) {
   .msg-filter__inner .msg-filter__topics {
     order: 1;
     flex: 1 1 100%;
-    flex-wrap: wrap;
-    overflow: visible;
-    padding-left: 0.1rem;
-    -webkit-mask-image: none;
-    mask-image: none;
   }
 
   .msg-filter__inner .msg-filter__search {
-    order: -1;
-    flex: 1 1 auto;
+    flex: 1 1 100%;
   }
 }
 

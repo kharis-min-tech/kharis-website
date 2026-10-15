@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Play, X } from "lucide-react";
 import type { MessageVideo } from "@/lib/youtube";
 
@@ -12,17 +12,19 @@ const PREVIEW = {
   title: "A Living Witness For Jesus",
 };
 
-const IN_VIEW_DELAY_MS = 3500;
-const HOVER_DELAY_MS = 2000;
-/** Lets the hidden player start buffering before it is due on screen. */
-const PRELOAD_DELAY_MS = 300;
 /**
  * Even with controls=0, YouTube flashes its centre previous / pause / next overlay for about
- * 3s whenever playback starts or resumes. Stay on the poster until it has fully faded.
+ * 3s whenever playback starts or resumes. Keep the poster up until it has fully faded.
  */
 const PLAY_SETTLE_MS = 4500;
-/** Matches the crossfade in messages-hub.css; we only pause once the preview is invisible. */
+/** Matches the crossfade in messages-hub.css; we only pause once the video is invisible. */
 const FADE_MS = 600;
+/** Playback per visit before the hero settles back on the poster wall. */
+const PREVIEW_PLAY_MS = 20000;
+/** Scrolling back to the hero waits this long before the video returns. */
+const RETURN_DELAY_MS = 2000;
+/** Autoplay is sometimes ignored (notably on phones), so keep asking while the video should run. */
+const PLAY_RETRY_MS = 3000;
 const MIN_VISIBLE_RATIO = 0.35;
 
 const YT_ORIGIN = "https://www.youtube-nocookie.com";
@@ -79,23 +81,26 @@ export function MessagesHero({ wall, messages }: Props) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const watchBtnRef = useRef<HTMLButtonElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const hoverTimer = useRef<number | null>(null);
   const settleTimer = useRef<number | null>(null);
   const pauseTimer = useRef<number | null>(null);
   const playingRef = useRef(false);
+  const wantPlay = useRef(false);
+  const hasPlayed = useRef(false);
+  const playedMs = useRef(0);
   const currentTime = useRef(PREVIEW.start);
 
   const [allowed, setAllowed] = useState(false);
   const [inView, setInView] = useState(true);
-  const [mounted, setMounted] = useState(false);
-  const [want, setWant] = useState(false);
+  /** off: poster wall. warming: playing behind the poster. on: video shows once settled. */
+  const [phase, setPhase] = useState<"off" | "warming" | "on">("off");
+  const [playing, setPlaying] = useState(false);
   const [settled, setSettled] = useState(false);
-  /** The player stopped on its own (pause, buffering, end): drop the preview with no fade. */
+  /** The player stopped on its own (pause, buffering, end): drop the video with no fade. */
   const [cut, setCut] = useState(false);
   const [watchStart, setWatchStart] = useState<number | null>(null);
 
   const watching = watchStart !== null;
-  const showPreview = want && settled && inView && !watching;
+  const showPreview = allowed && phase === "on" && settled && inView && !watching;
   const title =
     messages
       .find((m) => m.id === PREVIEW.id)
@@ -114,13 +119,17 @@ export function MessagesHero({ wall, messages }: Props) {
     command("playVideo");
   }, [command]);
 
-  /** Pausing makes YouTube show its play overlay, so wait until the crossfade has hidden the preview. */
-  const pauseWhenHidden = useCallback(() => {
-    if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
-    pauseTimer.current = window.setTimeout(() => command("pauseVideo"), FADE_MS + 50);
-  }, [command]);
+  /** Pausing makes YouTube show its play overlay, so only pause once the video is already hidden. */
+  const pauseLater = useCallback(
+    (ms: number) => {
+      if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
+      pauseTimer.current = window.setTimeout(() => command("pauseVideo"), ms);
+    },
+    [command],
+  );
 
   useEffect(() => {
+    // Reduced motion and data saver never load the player at all.
     setAllowed(previewAllowed());
     return () => {
       if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
@@ -138,23 +147,58 @@ export function MessagesHero({ wall, messages }: Props) {
     return () => io.disconnect();
   }, []);
 
-  // In view: preload quietly, then swap in after the delay. Out of view: pause, back to the poster.
   useEffect(() => {
-    if (!inView) {
-      setWant(false);
-      setWatchStart(null);
-      pauseWhenHidden();
+    if (!inView) setWatchStart(null);
+  }, [inView]);
+
+  // Each visit to the hero plays the video once: straight away on load, after a short pause
+  // when scrolling back. The player starts behind the poster so YouTube's overlay clears meanwhile.
+  useEffect(() => {
+    if (!allowed) return;
+    if (!inView || watching) {
+      wantPlay.current = false;
+      setPhase("off");
+      pauseLater(FADE_MS + 50);
       return;
     }
-    if (!allowed || watching) return;
+    wantPlay.current = true;
+    playedMs.current = 0;
     resume();
-    const preload = window.setTimeout(() => setMounted(true), PRELOAD_DELAY_MS);
-    const reveal = window.setTimeout(() => setWant(true), IN_VIEW_DELAY_MS);
+    if (!hasPlayed.current) {
+      hasPlayed.current = true;
+      setPhase("on");
+      return;
+    }
+    setPhase("warming");
+    const id = window.setTimeout(() => setPhase("on"), RETURN_DELAY_MS);
+    return () => window.clearTimeout(id);
+  }, [inView, allowed, watching, resume, pauseLater]);
+
+  // After PREVIEW_PLAY_MS of actual playback in this visit, fade back to the poster and pause.
+  useEffect(() => {
+    if (phase !== "on" || !playing) return;
+    const started = performance.now();
+    const id = window.setTimeout(
+      () => {
+        wantPlay.current = false;
+        setPhase("off");
+        pauseLater(FADE_MS + 50);
+      },
+      Math.max(0, PREVIEW_PLAY_MS - playedMs.current),
+    );
     return () => {
-      window.clearTimeout(preload);
-      window.clearTimeout(reveal);
+      window.clearTimeout(id);
+      playedMs.current += performance.now() - started;
     };
-  }, [inView, allowed, watching, resume, pauseWhenHidden]);
+  }, [phase, playing, pauseLater]);
+
+  useEffect(() => {
+    if (!allowed) return;
+    const id = window.setInterval(() => {
+      if (wantPlay.current && !playingRef.current) command("playVideo");
+    }, PLAY_RETRY_MS);
+    return () => window.clearInterval(id);
+  }, [allowed, command]);
 
   // Follow the hidden player's state through the YouTube iframe API messages.
   useEffect(() => {
@@ -166,6 +210,7 @@ export function MessagesHero({ wall, messages }: Props) {
       } catch {
         return;
       }
+      if (data.event === "onReady" && wantPlay.current) command("playVideo");
       let state: number | undefined;
       if (data.event === "onStateChange" && typeof data.info === "number") state = data.info;
       if (data.event === "infoDelivery" && data.info && typeof data.info === "object") {
@@ -174,11 +219,12 @@ export function MessagesHero({ wall, messages }: Props) {
         if (typeof info.currentTime === "number") currentTime.current = info.currentTime;
       }
       if (state === undefined) return;
-      const playing = state === 1;
-      if (playing === playingRef.current) return;
-      playingRef.current = playing;
+      const isPlaying = state === 1;
+      if (isPlaying === playingRef.current) return;
+      playingRef.current = isPlaying;
+      setPlaying(isPlaying);
       if (settleTimer.current) window.clearTimeout(settleTimer.current);
-      if (!playing) {
+      if (!isPlaying) {
         setSettled(false);
         setCut(true);
         return;
@@ -197,12 +243,6 @@ export function MessagesHero({ wall, messages }: Props) {
     };
   }, [command]);
 
-  useEffect(() => {
-    return () => {
-      if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    };
-  }, []);
-
   const onFrameLoad = () => {
     const win = frameRef.current?.contentWindow;
     if (!win) return;
@@ -216,26 +256,7 @@ export function MessagesHero({ wall, messages }: Props) {
     );
   };
 
-  const onPointerEnter = (e: PointerEvent) => {
-    if (e.pointerType !== "mouse" || !allowed || watching) return;
-    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    hoverTimer.current = window.setTimeout(() => {
-      setMounted(true);
-      setWant(true);
-      resume();
-    }, HOVER_DELAY_MS);
-  };
-
-  const onPointerLeave = () => {
-    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-  };
-
-  const openPlayer = () => {
-    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    setWatchStart(showPreview ? Math.floor(currentTime.current) : 0);
-    setWant(false);
-    pauseWhenHidden();
-  };
+  const openPlayer = () => setWatchStart(showPreview ? Math.floor(currentTime.current) : 0);
 
   const closePlayer = useCallback(() => setWatchStart(null), []);
 
@@ -265,8 +286,6 @@ export function MessagesHero({ wall, messages }: Props) {
       data-preview={showPreview || undefined}
       data-preview-cut={cut || undefined}
       data-watching={watching || undefined}
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
     >
       <div className="msg-hub__wall" aria-hidden>
         {wall.map((msg, i) => (
@@ -285,7 +304,7 @@ export function MessagesHero({ wall, messages }: Props) {
       </div>
 
       <div className="msg-hero-preview" aria-hidden inert>
-        {mounted && (
+        {allowed && (
           <iframe
             ref={frameRef}
             src={previewSrc()}
