@@ -1,5 +1,7 @@
 "use client";
 
+import "./governance.css";
+
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { ContentIcon } from "@/components/ContentIcon";
 import { GOVERNANCE } from "@/lib/about-content";

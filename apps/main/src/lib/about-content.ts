@@ -126,7 +126,7 @@ export const ABOUT = {
         id: "david",
         name: "Pastor David Antwi",
         role: "Founder & Lead Pastor",
-        image: "/images/leadership/pastor-david.jpg",
+        image: "/images/leadership/pastor-david-sunday.jpg",
         focus: "Teaching the Word and establishing believers in their faith",
         blurb:
           "Pastor David co-founded Kharis in 2003. He leads with a deep love for Scripture, teaching and serving so people encounter God in a living way and grow as disciples of Christ.",
@@ -135,7 +135,7 @@ export const ABOUT = {
         id: "awo",
         name: "Pastor Awo Antwi",
         role: "Co-founder & Pastor",
-        image: "/images/leadership/pastor-awo.jpg",
+        image: "/images/leadership/pastor-awo-sunday.jpg",
         focus: "People, family, and raising the next generation",
         blurb:
           "Pastor Awo co-founded Kharis with Pastor David and helped establish Kharis Phase 2 for students and young people. She serves with care, strength and a heart for the church family.",

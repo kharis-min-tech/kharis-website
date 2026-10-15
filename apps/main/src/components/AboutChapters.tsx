@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useState, type CSSProperties } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ContentIcon } from "@/components/ContentIcon";
 import { ABOUT } from "@/lib/about-content";
 
@@ -41,104 +41,6 @@ export function isAboutChapterId(v: string | null): v is AboutChapterId {
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-function AboutSvgWallpaper({
-  variant = "stage",
-  tone = "mission",
-}: {
-  variant?: "stage" | "panel";
-  tone?: "mission" | "vision" | "leadership";
-}) {
-  const id =
-    variant === "stage"
-      ? "aboutWallA"
-      : tone === "vision"
-        ? "aboutWallVision"
-        : tone === "leadership"
-          ? "aboutWallLead"
-          : "aboutWallMission";
-
-  if (variant === "stage") {
-    return (
-      <svg
-        className="about-wall about-wall--stage"
-        viewBox="0 0 1200 220"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden
-      >
-        <defs>
-          <linearGradient id={`${id}-fade`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#885ac4" />
-            <stop offset="45%" stopColor="#6532a8" />
-            <stop offset="100%" stopColor="#50208e" />
-          </linearGradient>
-          <pattern
-            id={`${id}-lines`}
-            width="40"
-            height="40"
-            patternUnits="userSpaceOnUse"
-            patternTransform="rotate(28)"
-          >
-            <path d="M0 20 H40" stroke="rgba(255,255,255,0.16)" strokeWidth="1.2" />
-          </pattern>
-        </defs>
-        <rect width="1200" height="220" fill={`url(#${id}-fade)`} />
-        <rect width="1200" height="220" fill={`url(#${id}-lines)`} />
-        <circle cx="90" cy="180" r="70" fill="rgba(255,255,255,0.12)" />
-        <circle cx="1120" cy="30" r="95" fill="rgba(253,127,32,0.18)" />
-        <path d="M420 0 L520 110 L420 220 L320 110 Z" fill="rgba(255,255,255,0.08)" />
-        <path d="M780 0 L860 90 L780 180 L700 90 Z" fill="rgba(255,255,255,0.06)" />
-      </svg>
-    );
-  }
-
-  const fades =
-    tone === "vision"
-      ? (["#f7f5fa", "#e8e2f0", "#d5c9e4"] as const)
-      : tone === "leadership"
-        ? (["#e07a28", "#c45a12", "#8a3a0c"] as const)
-        : (["#50189a", "#630ed4", "#260a4a"] as const);
-  const glow =
-    tone === "vision"
-      ? "rgba(99, 14, 212, 0.08)"
-      : tone === "leadership"
-        ? "rgba(255,255,255,0.18)"
-        : "rgba(253,127,32,0.16)";
-  const dot = tone === "vision" ? "rgba(99, 14, 212, 0.12)" : "rgba(255,255,255,0.14)";
-  const wash = tone === "vision" ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.08)";
-
-  return (
-    <svg
-      className={`about-wall about-wall--panel about-wall--${tone}`}
-      viewBox="0 0 1200 280"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden
-    >
-      <defs>
-        <pattern id={`${id}-dots`} width="28" height="28" patternUnits="userSpaceOnUse">
-          <circle cx="3" cy="3" r="1.4" fill={dot} />
-        </pattern>
-        <linearGradient id={`${id}-fade`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={fades[0]} />
-          <stop offset="55%" stopColor={fades[1]} />
-          <stop offset="100%" stopColor={fades[2]} />
-        </linearGradient>
-      </defs>
-      <rect width="1200" height="280" fill={`url(#${id}-fade)`} />
-      <rect width="1200" height="280" fill={`url(#${id}-dots)`} />
-      <circle cx="160" cy="40" r="90" fill={glow} />
-      <circle cx="1080" cy="220" r="120" fill={wash} />
-      <path
-        d="M0 210 C220 150 380 250 600 190 C820 130 980 230 1200 170 L1200 280 L0 280 Z"
-        fill={tone === "vision" ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.06)"}
-      />
-      <path
-        d="M740 30c40 0 70 28 70 68s-30 68-70 68c-18 0-34-6-47-16 22 8 48 4 64-14 16-18 14-46-4-62-12-10-28-14-44-12 8-20 28-32 51-32z"
-        fill={tone === "vision" ? "rgba(99, 14, 212, 0.06)" : "rgba(255,255,255,0.07)"}
-      />
-    </svg>
-  );
-}
-
 function PanelHero({
   eyebrow,
   title,
@@ -150,21 +52,50 @@ function PanelHero({
   reduce: boolean;
   tone: "mission" | "vision" | "leadership";
 }) {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start end", "end start"] });
+  const photoY = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
+  const headlineY = useTransform(scrollYProgress, [0, 1], [16, -16]);
+  const words = title.split(" ");
+  const phrases = Array.from({ length: Math.ceil(words.length / 3) }, (_, i) =>
+    words.slice(i * 3, i * 3 + 3).join(" "),
+  );
   return (
-    <div className={`about-panel__hero about-panel__hero--wall about-panel__hero--${tone}`}>
+    <div
+      ref={heroRef}
+      className={`about-panel__hero about-panel__hero--wall about-panel__hero--${tone}`}
+    >
       <motion.div
         className="about-panel__hero-media"
+        style={reduce ? undefined : { y: photoY }}
         aria-hidden
         initial={reduce ? false : { opacity: 0.7 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-      >
-        <AboutSvgWallpaper variant="panel" tone={tone} />
-      </motion.div>
-      <div className="about-panel__hero-copy">
+      ></motion.div>
+      <motion.div className="about-panel__hero-copy" style={reduce ? undefined : { y: headlineY }}>
         <p className="about-panel__eyebrow">{eyebrow}</p>
-        <h3>{title}</h3>
-      </div>
+        <motion.h3
+          aria-label={title}
+          initial={reduce ? false : "hidden"}
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.09 } } }}
+        >
+          {phrases.map((phrase, i) => (
+            <span className="about-headline-window" key={`${phrase}-${i}`} aria-hidden="true">
+              <motion.span
+                className="about-headline-phrase"
+                variants={{ hidden: { y: "105%", opacity: 0 }, visible: { y: "0%", opacity: 1 } }}
+                transition={{ duration: 0.65, ease }}
+              >
+                {phrase}
+                {i < phrases.length - 1 ? " " : ""}
+              </motion.span>
+            </span>
+          ))}
+        </motion.h3>
+      </motion.div>
     </div>
   );
 }
@@ -201,9 +132,16 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
       <span id="leadership" className="about-stage__hash" />
 
       <header className="about-stage__banner">
-        <AboutSvgWallpaper variant="stage" />
         <div className="about-stage__banner-inner">
-          <h2 className="about-stage__title">Who we are becoming</h2>
+          <motion.h2
+            className="about-stage__title"
+            initial={false}
+            whileInView={reduce ? undefined : { x: [28, 0], opacity: [0.4, 1] }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, ease }}
+          >
+            Who we are<span aria-hidden="true">.</span>
+          </motion.h2>
         </div>
       </header>
 
@@ -217,6 +155,23 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
                 type="button"
                 role="tab"
                 aria-selected={on}
+                tabIndex={on ? 0 : -1}
+                onKeyDown={(event) => {
+                  const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
+                  if (!keys.includes(event.key)) return;
+                  event.preventDefault();
+                  const current = PICKERS.findIndex((item) => item.id === active);
+                  const next =
+                    event.key === "Home"
+                      ? 0
+                      : event.key === "End"
+                        ? PICKERS.length - 1
+                        : (current + (event.key === "ArrowRight" ? 1 : -1) + PICKERS.length) %
+                          PICKERS.length;
+                  const id = PICKERS[next].id;
+                  select(id);
+                  document.getElementById(`about-tab-${id}`)?.focus();
+                }}
                 aria-controls={`about-panel-${p.id}`}
                 id={`about-tab-${p.id}`}
                 className={`about-jump__link${on ? " is-active" : ""}`}
@@ -224,6 +179,9 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
                 whileHover={reduce ? undefined : { y: -3 }}
                 whileTap={reduce ? undefined : { scale: 0.98 }}
               >
+                <span className="about-jump__chapter-number" aria-hidden="true">
+                  {String(PICKERS.indexOf(p) + 1).padStart(2, "0")}
+                </span>
                 <span className="about-jump__icon">
                   <ContentIcon name={p.icon} className="h-6 w-6" />
                 </span>
@@ -243,9 +201,9 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
             role="tabpanel"
             aria-labelledby={`about-tab-${active}`}
             className="about-stage__panel"
-            initial={reduce ? false : { opacity: 0, y: 28, filter: "blur(8px)" }}
+            initial={reduce ? false : { opacity: 0, y: 28, filter: "blur(0px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={reduce ? undefined : { opacity: 0, y: -18, filter: "blur(6px)" }}
+            exit={reduce ? undefined : { opacity: 0, y: -18, filter: "blur(0px)" }}
             transition={{ duration: 0.45, ease }}
           >
             {active === "mission" ? <MissionPanel reduce={!!reduce} /> : null}
@@ -261,7 +219,6 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
 function MissionPanel({ reduce }: { reduce: boolean }) {
   const { mission } = ABOUT;
   const [pillar, setPillar] = useState(0);
-  const [deep, setDeep] = useState(false);
   const active = mission.how[pillar]!;
 
   return (
@@ -275,37 +232,15 @@ function MissionPanel({ reduce }: { reduce: boolean }) {
 
       <div className="about-panel__body">
         <p className="about-panel__lead">{mission.lead}</p>
-        <button
-          type="button"
-          className="about-panel__more"
-          aria-expanded={deep}
-          onClick={() => setDeep((v) => !v)}
-        >
-          {deep ? "Show less" : "Continue reading"}
-        </button>
-        <AnimatePresence initial={false}>
-          {deep ? (
-            <motion.p
-              className="about-panel__deep"
-              initial={reduce ? false : { opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={reduce ? undefined : { opacity: 0, height: 0 }}
-            >
-              {mission.deepen}
-            </motion.p>
-          ) : null}
-        </AnimatePresence>
-
         <div className="about-panel__split">
-          <div className="about-panel__pillars" role="list">
+          <div className="about-panel__pillars" role="group" aria-label="How we fulfil our mission">
             {mission.how.map((item, i) => (
               <motion.button
                 key={item.title}
                 type="button"
-                role="listitem"
                 className={`about-panel__pillar${i === pillar ? " is-active" : ""}`}
+                aria-pressed={i === pillar}
                 onClick={() => setPillar(i)}
-                onMouseEnter={() => setPillar(i)}
                 whileHover={reduce ? undefined : { x: 4 }}
               >
                 <span className="about-panel__pillar-icon">
@@ -319,116 +254,62 @@ function MissionPanel({ reduce }: { reduce: boolean }) {
             ))}
           </div>
 
-          <AnimatePresence mode="wait">
-            <motion.article
-              key={active.title}
-              className="about-panel__focus"
-              initial={reduce ? false : { opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={reduce ? undefined : { opacity: 0, x: -16 }}
-              transition={{ duration: 0.32, ease }}
-            >
-              <p className="about-panel__focus-kicker">How we fulfil it</p>
-              <h4>{active.title}</h4>
-              <p>{active.body}</p>
-              <p className="about-panel__verse">{active.verse}</p>
-              <blockquote>{active.quote}</blockquote>
-            </motion.article>
-          </AnimatePresence>
+          <motion.article
+            key={active.title}
+            className="about-panel__focus"
+            initial={reduce ? false : { opacity: 0.65 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.18, ease }}
+          >
+            <p className="about-panel__focus-kicker">How we fulfil it</p>
+            <h4>{active.title}</h4>
+            <p>{active.body}</p>
+            <p className="about-panel__verse">{active.verse}</p>
+            <blockquote>{active.quote}</blockquote>
+          </motion.article>
         </div>
       </div>
     </div>
   );
 }
 
-const VISION_THEMES = [
-  "#630ed4",
-  "#2a045c",
-  "#200a3d",
-  "#50189a",
-  "#4c08a8",
-  "#260a4a",
-  "#15052a",
-  "#3e107a",
-] as const;
-
 function VisionPanel({ reduce }: { reduce: boolean }) {
   const { vision } = ABOUT;
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const point = vision.points[index]!;
-  const themeBg = VISION_THEMES[index % VISION_THEMES.length]!;
-  const total = vision.points.length;
-
-  const goTo = (next: number) => {
-    setPaused(true);
-    setIndex(((next % total) + total) % total);
-  };
-
-  useEffect(() => {
-    if (reduce || paused) return;
-    const id = window.setTimeout(() => {
-      setIndex((i) => (i + 1) % total);
-    }, 5200);
-    return () => window.clearTimeout(id);
-  }, [index, paused, reduce, total]);
-
-  /* Resume auto-cycle a few seconds after manual pause so controls stay primary. */
-  useEffect(() => {
-    if (!paused || reduce) return;
-    const id = window.setTimeout(() => setPaused(false), 10000);
-    return () => window.clearTimeout(id);
-  }, [paused, index, reduce]);
-
+  const themes = [
+    { icon: "cross", text: "Christ-centred, purpose-driven and disciple-making" },
+    { icon: "sparkles", text: "Full of life, large and spiritually deep" },
+    { icon: "flame", text: "Naturally supernatural, glorifying God" },
+    { icon: "radio", text: "Proclamation and worship to the nations" },
+    { icon: "gift", text: "Ordinary people, extraordinary lives" },
+    { icon: "house", text: "A caring family, refuge and belonging" },
+    { icon: "users", text: "Strong, effective small groups" },
+    { icon: "plane", text: "Missionaries sent, every member equipped" },
+  ];
   return (
-    <div className="about-panel about-panel--vision">
-      <PanelHero reduce={!!reduce} tone="vision" eyebrow="Our Vision" title={vision.lead} />
-
-      <div className="about-panel__body">
-        <p className="about-panel__kicker">{vision.intro}</p>
-
-        <div
-          className="about-panel__vision-shell"
-          aria-label="The Kharis we see"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-        >
-          <div
-            className="about-panel__vision-stage about-panel__vision-stage--compact"
-            style={{ ["--vision-bg" as string]: themeBg } as CSSProperties}
-          >
-            <button
-              type="button"
-              className="about-panel__vision-side about-panel__vision-side--prev"
-              onClick={() => goTo(index - 1)}
-              aria-label="Previous vision point"
+    <div className="about-panel about-panel--vision about-vision-themes">
+      <PanelHero reduce={reduce} tone="vision" eyebrow="Our Vision" title={vision.lead} />
+      <div className="about-panel__body about-vision-themes__content">
+        <p className="about-vision-themes__intro">{vision.intro}</p>
+        <div className="about-vision-themes__grid">
+          {themes.map((theme, index) => (
+            <motion.details
+              key={theme.text}
+              className="about-vision-theme"
+              initial={reduce ? false : { opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.45, delay: (index % 4) * 0.07, ease }}
             >
-              Previous
-            </button>
-
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={index}
-                className="about-panel__vision-text"
-                aria-live="polite"
-                initial={reduce ? false : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0, y: -8 }}
-                transition={{ duration: 0.32, ease }}
-              >
-                {point}
-              </motion.p>
-            </AnimatePresence>
-
-            <button
-              type="button"
-              className="about-panel__vision-side about-panel__vision-side--next"
-              onClick={() => goTo(index + 1)}
-              aria-label="Next vision point"
-            >
-              Next
-            </button>
-          </div>
+              <summary>
+                <ContentIcon name={theme.icon} className="h-9 w-9" />
+                <span>{theme.text}</span>
+                <span className="about-vision-theme__toggle" aria-hidden="true">
+                  +
+                </span>
+              </summary>
+              <p>{vision.points[index]}</p>
+            </motion.details>
+          ))}
         </div>
       </div>
     </div>
@@ -453,8 +334,10 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
             <motion.article
               key={pastor.id}
               className="about-lead__profile"
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={reduce ? false : { opacity: 0, y: 40, clipPath: "inset(12% 0 0 0)" }}
+              whileInView={{ opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)" }}
+              viewport={{ once: true, amount: 0.2 }}
+              whileHover={reduce ? undefined : { y: -5 }}
               transition={{ delay: 0.08 + i * 0.1, duration: 0.45, ease }}
             >
               <div className="about-lead__profile-photo">
@@ -462,9 +345,7 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
                   src={pastor.image}
                   alt={pastor.name}
                   fill
-                  className={`object-cover ${
-                    pastor.id === "david" ? "object-[center_12%]" : "object-[center_18%]"
-                  }`}
+                  className="object-cover object-[center_40%]"
                   sizes="(max-width: 860px) 100vw, 40vw"
                 />
               </div>
@@ -486,12 +367,6 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
         viewport={{ once: true, amount: 0.35 }}
         transition={{ duration: 0.55, ease }}
       >
-        <motion.span
-          className="about-lead__story-glow"
-          aria-hidden
-          animate={reduce ? undefined : { opacity: [0.45, 0.8, 0.45], scale: [1, 1.08, 1] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-        />
         <motion.p
           className="about-lead__story-kicker"
           initial={reduce ? false : { opacity: 0, x: -10 }}
@@ -501,15 +376,27 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
         >
           Their story
         </motion.p>
-        <motion.p
-          className="about-lead__story-body"
-          initial={reduce ? false : { opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.16, duration: 0.45 }}
-        >
-          {leadership.body}
-        </motion.p>
+        <div className="about-lead__story-body">
+          {(() => {
+            const sentences = leadership.body.split(/(?<=[.!?])\s+(?=[A-Z])/);
+            return [sentences.slice(0, 3), sentences.slice(3, 5), sentences.slice(5)]
+              .filter((group) => group.length > 0)
+              .map((group, index) => (
+                <motion.div
+                  key={index}
+                  className="about-lead__story-beat"
+                  initial={reduce ? false : { y: 18, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ duration: 0.5, delay: index * 0.1, ease }}
+                  whileHover={reduce ? undefined : { y: -4 }}
+                >
+                  <h4>{["Founded in 2003", "The Word at the centre", "A life together"][index]}</h4>
+                  <p>{group.join(" ")}</p>
+                </motion.div>
+              ));
+          })()}
+        </div>
         <motion.div
           className="about-lead__story-action"
           initial={reduce ? false : { opacity: 0, y: 10 }}
