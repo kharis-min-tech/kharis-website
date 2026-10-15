@@ -24,7 +24,8 @@ export function ScrollToTopOnLoad() {
       const timers = [0, 250, 900, 1800].map((ms) =>
         window.setTimeout(() => {
           if (expected >= 0 && Math.abs(window.scrollY - expected) > 4) return;
-          section.scrollIntoView({ behavior: "auto", block: "start" });
+          // "instant" overrides the page's smooth scrolling, so the check above reads the final position.
+          section.scrollIntoView({ behavior: "instant", block: "start" });
           expected = window.scrollY;
         }, ms),
       );

@@ -142,7 +142,7 @@ export function SiteFooter({ tone }: Props) {
                   </svg>
                 </a>
                 <a
-                  href="https://www.facebook.com/kharischurch"
+                  href="https://www.facebook.com/KharisMinistries"
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Facebook"

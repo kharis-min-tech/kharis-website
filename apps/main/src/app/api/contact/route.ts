@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { cleanText, LIMITS, resolveBranch, type BranchRow } from "@/lib/contact-submission";
 import { isGraceTicketId } from "@/lib/grace-handoff";
 
 const TOPICS = new Set([
@@ -39,20 +40,17 @@ export async function POST(request: Request) {
   }
 
   const data = body as Record<string, unknown>;
-  const nameParts = String(data.name ?? "")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-  let first = String(data.first ?? "").trim();
-  let last = String(data.last ?? "").trim();
+  const nameParts = cleanText(data.name, LIMITS.name).split(/\s+/).filter(Boolean);
+  let first = cleanText(data.first, LIMITS.name);
+  let last = cleanText(data.last, LIMITS.name);
   if (!first && nameParts[0]) first = nameParts[0];
   if (!last && nameParts.length === 1) last = nameParts[0] ?? "";
   if (!last && nameParts.length > 1) last = nameParts.slice(1).join(" ");
-  const email = String(data.email ?? "").trim();
-  const phone = String(data.phone ?? "").trim();
-  const topic = String(data.topic ?? "General").trim();
-  const branch = String(data.branch ?? "").trim();
-  let message = String(data.message ?? "").trim();
+  const email = cleanText(data.email, LIMITS.email);
+  const phone = cleanText(data.phone, LIMITS.phone);
+  const topic = cleanText(data.topic ?? "General", 40);
+  const branch = cleanText(data.branch, LIMITS.branch);
+  let message = cleanText(data.message, LIMITS.message);
   const chatTicket = sanitizeTicket(data.chatTicket);
   const chatTranscript = sanitizeTranscript(data.chatTranscript);
 
@@ -102,6 +100,10 @@ export async function POST(request: Request) {
     },
   });
 
+  // File the message under the branch in the directory, and in the KP2 inbox for KP2 branches.
+  const { data: branchRows } = await supabase.from("branches").select("id, name, workspace");
+  const filed = resolveBranch((branchRows ?? []) as BranchRow[], data.branchId, branch);
+
   const { data: row, error } = await supabase
     .from("contact_messages")
     .insert({
@@ -110,9 +112,10 @@ export async function POST(request: Request) {
       email,
       phone: phone || null,
       topic,
-      branch: branch || null,
+      branch_id: filed.branch_id,
+      branch_name: filed.branch_name,
       message,
-      workspace: "kharis",
+      workspace: filed.workspace,
       status: "new",
     })
     .select("id")
@@ -135,7 +138,7 @@ export async function POST(request: Request) {
       email,
       phone,
       topic,
-      branch,
+      branch: filed.branch_name,
       messageLength: message.length,
     },
   });
