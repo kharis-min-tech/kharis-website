@@ -117,7 +117,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
               return (
                 <div
                   key={link.label}
-                  className="relative"
+                  className="relative flex"
                   ref={aboutRef}
                   onMouseEnter={() => setAboutOpen(true)}
                   onMouseLeave={() => setAboutOpen(false)}
