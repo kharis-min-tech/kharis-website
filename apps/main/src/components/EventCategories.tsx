@@ -385,6 +385,7 @@ function EventCard({
             src={media.poster}
             alt={media.alt}
             fill
+            loading="eager"
             quality={95}
             sizes={full || wide ? "100vw" : "(max-width: 759px) 100vw, 50vw"}
             className="object-cover"
@@ -440,6 +441,7 @@ function EventSplitPanel({
             src={photo.src}
             alt={photo.alt}
             fill
+            loading="eager"
             quality={95}
             sizes="50vw"
             className="object-cover events-split__photo"
