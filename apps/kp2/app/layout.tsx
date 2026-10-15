@@ -145,8 +145,8 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
   },
   icons: {
-    icon: "/kp2/favicon.png",
-    apple: "/kp2/favicon.png",
+    icon: "/kp2/favicon-dove.png",
+    apple: "/kp2/favicon-dove.png",
   },
   robots: {
     index: true,

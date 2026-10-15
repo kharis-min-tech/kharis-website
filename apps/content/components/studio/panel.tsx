@@ -28,7 +28,7 @@ export function Panel({
         aria-label="Close editor"
         onClick={onClose}
       />
-      <div className="relative z-10 flex h-full w-full max-w-2xl flex-col border-l border-border bg-card shadow-xl">
+      <div className="relative z-10 flex h-full w-full max-w-2xl flex-col border-l border-border bg-card shadow-[0_28px_60px_rgba(99,14,212,0.16)]">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <h2 className="font-heading text-lg font-semibold">{title}</h2>
           <Button variant="ghost" size="icon" aria-label="Close" onClick={onClose}>

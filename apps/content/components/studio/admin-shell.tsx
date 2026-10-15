@@ -109,7 +109,7 @@ export function AdminShell({ email, children }: { email: string; children: React
           </div>
           <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4" aria-label="Studio">
             <div>
-              <p className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="px-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-gold">
                 Workspaces
               </p>
               <ul className="mt-2 space-y-1">
@@ -118,8 +118,9 @@ export function AdminShell({ email, children }: { email: string; children: React
                     <Link
                       href={`/workspace/${item.id}`}
                       className={cn(
-                        "block rounded-md px-2 py-1.5 text-sm hover:bg-accent",
-                        workspace === item.id && "bg-accent font-medium",
+                        "block rounded-lg px-3 py-2 text-sm font-semibold hover:bg-accent",
+                        workspace === item.id &&
+                          "bg-primary font-extrabold text-primary-foreground",
                       )}
                       aria-current={workspace === item.id ? "page" : undefined}
                     >
@@ -131,7 +132,7 @@ export function AdminShell({ email, children }: { email: string; children: React
             </div>
             {current ? (
               <div>
-                <p className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="px-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-gold">
                   {current.name}
                 </p>
                 <ul className="mt-2 space-y-1">
@@ -143,15 +144,22 @@ export function AdminShell({ email, children }: { email: string; children: React
                         <Link
                           href={hrefWithWorkspace(item.href, workspace)}
                           className={cn(
-                            "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent",
-                            active && "bg-primary/15 font-medium text-primary",
+                            "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold hover:bg-accent",
+                            active && "bg-primary font-extrabold text-primary-foreground",
                           )}
                           aria-current={active ? "page" : undefined}
                         >
                           <Icon className="h-4 w-4" />
                           <span className="flex-1">{item.label}</span>
                           {item.href === "/messages" && unread ? (
-                            <span className="rounded-md bg-primary px-1.5 text-xs text-primary-foreground">
+                            <span
+                              className={cn(
+                                "rounded-full px-1.5 text-xs",
+                                active
+                                  ? "bg-white text-primary"
+                                  : "bg-primary text-primary-foreground",
+                              )}
+                            >
                               {unread}
                             </span>
                           ) : null}
