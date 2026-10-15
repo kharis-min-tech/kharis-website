@@ -16,6 +16,7 @@ import type {
   VisitorRow,
 } from "@/lib/types";
 import type { WorkspaceId } from "@/lib/workspaces";
+import { visitorPayload, type VisitorDraft } from "@/lib/visitors";
 
 const EVENT_SITES = new Set<EventSite>(["kharis", "kp2", "app", "general"]);
 
@@ -191,18 +192,8 @@ export async function listVisitors() {
   return (data ?? []) as VisitorRow[];
 }
 
-export async function saveVisitor(row: Omit<VisitorRow, "id"> & { id?: string }) {
-  if (!row.first_name.trim()) throw new Error("A visitor needs a first name.");
-  const payload = {
-    first_name: row.first_name.trim(),
-    last_name: row.last_name?.trim() || null,
-    email: row.email?.trim() || null,
-    phone: row.phone?.trim() || null,
-    branch: row.branch?.trim() || null,
-    notes: row.notes?.trim() || null,
-    ...(row.id ? { id: row.id } : {}),
-  };
-  const { error } = await getSupabase().from("visitors").upsert(payload);
+export async function saveVisitor(draft: VisitorDraft, id?: string) {
+  const { error } = await getSupabase().from("visitors").upsert(visitorPayload(draft, id));
   fail(error);
 }
 
