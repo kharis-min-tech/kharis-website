@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { motion } from "framer-motion";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
@@ -24,7 +24,7 @@ const cards: Card[] = [
     title: "About Us",
     label: "Who we are",
     href: "/about",
-    image: "/images/community.jpg",
+    image: "https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg",
     info: "Our mandate is to bring Christ to people everywhere.",
     cta: "Read our story",
     size: "portrait",
@@ -34,7 +34,7 @@ const cards: Card[] = [
     title: "Locations",
     label: "Visit Sunday",
     href: "/locations",
-    image: "/images/locations-worship-team.jpg",
+    image: "https://images.kharis.org/site-images/main/2fd55a6761cfb656/locations-worship-team.jpg",
     info: "Find a Kharis branch near you this Sunday.",
     cta: "Find your branch",
     size: "normal",
@@ -44,7 +44,7 @@ const cards: Card[] = [
     title: "Young Adults",
     label: "KP2",
     href: KP2_URL,
-    image: "/images/young-adults.jpg",
+    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
     info: "Next generation faith, community and purpose.",
     cta: "Visit KP2",
     size: "normal",
@@ -54,7 +54,7 @@ const cards: Card[] = [
     title: "Become a Believer",
     label: "Next step",
     href: "/life/baptism",
-    image: "/images/become-a-believer.jpg",
+    image: "https://images.kharis.org/site-images/main/395410464d9beb6d/become-a-believer.jpg",
     info: "Take your next step with Jesus. Start with baptism at Kharis Life.",
     cta: "Take the step",
     size: "normal",
@@ -64,7 +64,7 @@ const cards: Card[] = [
     title: "Get Involved",
     label: "Serve with us",
     href: "/life/departments",
-    image: "/images/get-involved-sax.jpg",
+    image: "https://images.kharis.org/site-images/main/de005ef42ce5304e/get-involved-sax.jpg",
     info: "Join a team and grow with the Kharis family.",
     cta: "Join a team",
     size: "tall",

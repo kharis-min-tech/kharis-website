@@ -16,7 +16,6 @@ export function LocationBranchView({ branch }: Props) {
 
   return (
     <BranchTemplate
-      slug={branch.slug}
       branchData={branch}
       onNavigateBranch={goToBranch}
       onNavigateDirectory={() => router.push("/locations")}

@@ -826,3 +826,16 @@ html[data-theme="dark"] .events-branch__pick select {
 html[data-theme="dark"] .events-branch__pick select:focus-visible {
   outline-color: #fff;
 }
+
+.events-card__video {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.events-card__video.is-playing {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .events-card__video {
+    transition: none;
+  }
+}

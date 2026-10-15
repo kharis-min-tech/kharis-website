@@ -10,8 +10,9 @@ import { eventToCalendarItem, mapsSearchUrl } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 
-const HERO_WORSHIP = "/kp2/assets/events-hero-worship.jpg";
-const WORSHIP = "/kp2/assets/worship.jpg";
+const HERO_WORSHIP =
+  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/events-hero-worship.jpg";
+const WORSHIP = "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg";
 
 const SPECIAL_SERVICES = [
   {
@@ -19,21 +20,21 @@ const SPECIAL_SERVICES = [
     time: "Monthly · Sunday",
     title: "Bring A Soul Sunday",
     note: "We fill the room with friends, family and first-timers — a high-energy Sunday built for souls.",
-    image: "/kp2/assets/bass-sunday.jpg",
+    image: "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
   },
   {
     day: "Sports Day",
     time: "Summer",
     title: "Sports Day",
     note: "Track, football and full-blown team rivalry — the church family outdoors for a day of games.",
-    image: "/kp2/assets/sports-day.jpg",
+    image: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
   },
   {
     day: "Praise Night",
     time: "Seasonal",
     title: "Praise Night",
     note: "A night handed over to worship — live praise, testimony and the Word until the room shifts.",
-    image: "/kp2/assets/praise-night.jpg",
+    image: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
   },
 ];
 

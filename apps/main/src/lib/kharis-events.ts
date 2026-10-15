@@ -4,8 +4,10 @@ import { EVENTS as FALLBACK_EVENTS, type ChurchEvent } from "@/lib/events-conten
 const KHARIS_EVENTS_API = "https://kharis.org/wp-json/wp/v2/ajde_events";
 const SERVICE_TITLES = new Set(["Sunday Service", "Thursday Service"]);
 
-const SUNDAY_IMAGE = "/images/events/sunday-service.jpg";
-const THURSDAY_IMAGE = "/images/events/thursday-service.jpg";
+const SUNDAY_IMAGE =
+  "https://images.kharis.org/site-images/main/d6b67a1d5d3003b0/events/sunday-service.jpg";
+const THURSDAY_IMAGE =
+  "https://images.kharis.org/site-images/main/dd56ea86ee00aa8d/events/thursday-service.jpg";
 
 const LOCATION_BY_SLUG: Record<string, { location: string; address: string; city: string }> = {
   "event_location-kensington-town-hall": {

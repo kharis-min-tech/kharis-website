@@ -1,8 +1,10 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
-import React, { useEffect } from "react";
+import React from "react";
 import { X, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+import { useDialog } from "@/lib/use-dialog";
 
 interface BranchMediaModalProps {
   type: "image" | "video" | null;
@@ -19,19 +21,7 @@ export function BranchMediaModal({
   city = "",
   onClose,
 }: BranchMediaModalProps) {
-  useEffect(() => {
-    if (!type) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [type, onClose]);
+  const dialogRef = useDialog(Boolean(type), onClose);
 
   return (
     <AnimatePresence>
@@ -53,6 +43,11 @@ export function BranchMediaModal({
 
           {/* Panel */}
           <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={type === "image" ? `Photo from ${city}` : `Video from ${city}`}
+            tabIndex={-1}
             initial={{ opacity: 0, scale: 0.94, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}

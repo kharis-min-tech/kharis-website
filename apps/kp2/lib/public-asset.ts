@@ -1,6 +1,12 @@
-/** `public/` is served under basePath, so `/assets/x` is `/kp2/assets/x`. */
+import siteImages from "./site-image-urls.json";
+
+/** Migrated pictures use Cloudflare; other public assets keep the KP2 base path. */
 export function publicAsset(url: string): string {
-  if (/^https?:\/\//i.test(url) || url.startsWith("/kp2/")) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+  const path = url.split(/[?#]/)[0].replace(/^\/kp2(?=\/)/, "");
+  const migrated = (siteImages as Record<string, string>)[path];
+  if (migrated) return migrated + url.slice(url.split(/[?#]/)[0].length);
+  if (url.startsWith("/kp2/")) return url;
   const file = url.match(/\/assets\/([^?#]+)/i);
   if (file && !/assets\/design\//i.test(url)) return `/kp2/assets/${file[1]}`;
   if (url.startsWith("/")) return `/kp2${url}`;

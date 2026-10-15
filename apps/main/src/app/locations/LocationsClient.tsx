@@ -2,10 +2,10 @@
 /* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useSmoothRouter } from "@/lib/use-smooth-router";
 import { useMemo, useState } from "react";
-import type { BranchData, BranchItem } from "@/lib/branches";
-import BranchMap from "@/components/branches/BranchMap";
+import type { BranchItem } from "@/lib/branches";
+import BranchMap, { type GlobeBranch } from "@/components/branches/BranchMap";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { UnsureBranchCta } from "@/components/UnsureBranchCta";
@@ -13,7 +13,7 @@ import { kp2BranchUrl } from "@/lib/kp2";
 
 interface Props {
   items: BranchItem[];
-  full: BranchData[];
+  full: GlobeBranch[];
 }
 
 type Origin = { lat: number; lng: number };
@@ -41,7 +41,7 @@ function listCountries(countries: string[]) {
 }
 
 export function LocationsClient({ items, full }: Props) {
-  const router = useRouter();
+  const router = useSmoothRouter();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [origin, setOrigin] = useState<Origin | null>(null);
@@ -99,7 +99,7 @@ export function LocationsClient({ items, full }: Props) {
   const groups = useMemo(() => {
     if (origin) {
       const sorted = [...shown].sort((a, b) => (a.miles ?? Infinity) - (b.miles ?? Infinity));
-      return [{ title: "Nearest to you", rows: sorted }];
+      return sorted.length ? [{ title: "Nearest to you", rows: sorted }] : [];
     }
     return [...countries, KP2]
       .map((title) => ({
@@ -140,10 +140,16 @@ export function LocationsClient({ items, full }: Props) {
       <section className="locations-hero">
         <div className="locations-hero__intro">
           <p className="locations-hero__eyebrow">Locations</p>
-          <h1 className="locations-hero__title">Find your Kharis family</h1>
+          <h1 className="locations-hero__title">Many branches. One family.</h1>
           <p className="locations-hero__lead">
-            {items.length} branches across {listCountries(countries)}. Every one of them meets this
-            Sunday.
+            {items.length ? (
+              <>
+                Find your Kharis family across {listCountries(countries)}. Every branch meets this
+                Sunday.
+              </>
+            ) : (
+              "Our branch directory is temporarily unavailable. You can still explore the globe or contact us to find your Kharis family."
+            )}
           </p>
 
           <form
@@ -179,6 +185,9 @@ export function LocationsClient({ items, full }: Props) {
 
         <BranchMap
           bare
+          country={filter === "all" || filter === KP2 ? "world" : filter}
+          onCountryChange={(country) => setFilter(country === "world" ? "all" : country)}
+          origin={origin}
           branches={full}
           onSelectBranch={(id) => {
             const branch = items.find((b) => b.id === id);
@@ -191,13 +200,13 @@ export function LocationsClient({ items, full }: Props) {
       <figure className="locations-sunday">
         <div className="locations-sunday__photos">
           <img
-            src="/images/locations/london-sunday-laughter.jpg"
+            src="https://images.kharis.org/site-images/main/8687dacfd8faa5e2/locations/london-sunday-laughter.jpg"
             alt="Three women in the congregation laughing together during the service"
             loading="lazy"
             decoding="async"
           />
           <img
-            src="/images/locations/london-sunday-prayer.jpg"
+            src="https://images.kharis.org/site-images/main/894014bef2ca905c/locations/london-sunday-prayer.jpg"
             alt="A row of people standing side by side in prayer, hands open"
             loading="lazy"
             decoding="async"
@@ -223,25 +232,29 @@ export function LocationsClient({ items, full }: Props) {
               aria-pressed={filter === f.id}
               onClick={() => setFilter(f.id)}
             >
-              {f.label} <span>{f.count}</span>
+              {f.label}
             </button>
           ))}
         </div>
 
         {groups.length === 0 ? (
           <div className="locations-empty">
-            <h3>No branch matches “{query.trim()}”</h3>
+            <h3>
+              {items.length
+                ? `No branch matches “${query.trim()}”`
+                : "We couldn't load the branch directory"}
+            </h3>
             <p>
-              Try a nearby town or the first half of your postcode, or{" "}
+              {items.length
+                ? "Try a nearby town or the first half of your postcode, or "
+                : "Please try again shortly, or "}
               <Link href="/contact">message us</Link> and we&apos;ll point you to the closest one.
             </p>
           </div>
         ) : (
           groups.map((group) => (
             <div key={group.title} className="locations-group">
-              <h3 className="locations-group__title">
-                {group.title} <span>{group.rows.length}</span>
-              </h3>
+              <h3 className="locations-group__title">{group.title}</h3>
               <ul className="locations-grid">
                 {group.rows.map(({ branch, miles }) => (
                   <BranchCard
@@ -288,7 +301,10 @@ function BranchCard({
           <img src={branch.photo} alt="" loading="lazy" decoding="async" />
         ) : (
           <span className="branch-card__fallback">
-            <img src="/images/kharis-logo.png" alt="" />
+            <img
+              src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
+              alt=""
+            />
             <span>{branch.place}</span>
           </span>
         )}

@@ -19,10 +19,15 @@ export const LOT_CLIPS: LotClip[] = [
     label: "The floor is shaking",
     span: "tall",
   },
-  { kind: "image", src: "/kp2/assets/K-dancers-img.jpg", alt: "KP2 dancers", label: "K-Dancers" },
   {
     kind: "image",
-    src: "/kp2/assets/praise-night.jpg",
+    src: "https://images.kharis.org/site-images/kp2/8440a4a63e4ae020/K-dancers-img.jpg",
+    alt: "KP2 dancers",
+    label: "K-Dancers",
+  },
+  {
+    kind: "image",
+    src: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
     alt: "Praise night",
     label: "Praise night",
     span: "wide",
@@ -30,15 +35,35 @@ export const LOT_CLIPS: LotClip[] = [
   { kind: "video", src: "/kp2/assets/crowd.mp4", alt: "The room in full voice", label: "The room" },
   {
     kind: "image",
-    src: "/kp2/assets/young-adults.jpg",
+    src: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg",
     alt: "Young adults together",
     label: "The lot",
   },
-  { kind: "image", src: "/kp2/assets/sports-day.jpg", alt: "Sports day", label: "Sports day" },
+  {
+    kind: "image",
+    src: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
+    alt: "Sports day",
+    label: "Sports day",
+  },
   { kind: "video", src: "/kp2/assets/choir2.mp4", alt: "Choir in worship", label: "Choir" },
-  { kind: "image", src: "/kp2/assets/Spoken-word.jpg", alt: "Spoken word", label: "Spoken word" },
-  { kind: "image", src: "/kp2/assets/K-music-img.jpg", alt: "KP2 music", label: "K-Music" },
-  { kind: "image", src: "/kp2/assets/community.jpg", alt: "Community gathering", label: "Family" },
+  {
+    kind: "image",
+    src: "https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/Spoken-word.jpg",
+    alt: "Spoken word",
+    label: "Spoken word",
+  },
+  {
+    kind: "image",
+    src: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/K-music-img.jpg",
+    alt: "KP2 music",
+    label: "K-Music",
+  },
+  {
+    kind: "image",
+    src: "https://images.kharis.org/site-images/kp2/ca1bcf57dbf80629/community.jpg",
+    alt: "Community gathering",
+    label: "Family",
+  },
   {
     kind: "video",
     src: "/kp2/assets/Choir-video.mp4",
@@ -46,7 +71,12 @@ export const LOT_CLIPS: LotClip[] = [
     label: "Worship",
     span: "wide",
   },
-  { kind: "image", src: "/kp2/assets/bass-sunday.jpg", alt: "Bring a soul Sunday", label: "BASS" },
+  {
+    kind: "image",
+    src: "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
+    alt: "Bring a soul Sunday",
+    label: "BASS",
+  },
 ];
 
 function spanClass(span?: LotClip["span"]) {

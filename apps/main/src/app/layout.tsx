@@ -9,6 +9,7 @@ import { SiteIntro } from "@/components/SiteIntro";
 import { SITE_INTRO_BOOTSTRAP } from "@/lib/site-intro";
 import "./globals.css";
 import "./motion.css";
+import "./mobile.css";
 
 /* Clean Vive / Apple-like type (not bubble Quicksand) */
 const sans = Plus_Jakarta_Sans({
@@ -19,6 +20,7 @@ const sans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://kharis.org"),
   title: "Kharis Church",
   description: "Changing the world with a touch of His grace. Find a Kharis branch near you.",
   other: {
@@ -47,6 +49,7 @@ export default function RootLayout({
         </noscript>
         <meta name="color-scheme" content="light" />
         <link rel="preconnect" href="https://cqgyiqxhpxwasogpdghx.supabase.co" />
+        <link rel="preconnect" href="https://images.kharis.org" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('kharis-site-theme');var d=t==='dark'?'dark':'light';document.documentElement.dataset.theme=d;document.documentElement.style.colorScheme=d;}catch(e){document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light';}})();`,

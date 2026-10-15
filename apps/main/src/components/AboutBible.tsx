@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ABOUT } from "@/lib/about-content";
@@ -33,7 +33,7 @@ const BOOKS: Book[] = [
       {
         title: ABOUT.mission.title,
         body: [ABOUT.mission.lead, ABOUT.mission.deepen],
-        image: "/images/serve-with-us.jpg",
+        image: "https://images.kharis.org/site-images/main/8440a4a63e4ae020/serve-with-us.jpg",
         imageShape: "arch",
         imageAlt: "Serving together",
       },
@@ -42,13 +42,16 @@ const BOOKS: Book[] = [
         body: [p.body],
         verse: p.verse,
         quote: p.quote,
-        image: i % 2 === 0 ? "/images/community.jpg" : "/images/young-adults.jpg",
+        image:
+          i % 2 === 0
+            ? "https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg"
+            : "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
         imageShape: (i % 2 === 0 ? "round" : "tile") as Page["imageShape"],
       })),
       {
         title: "Our Mandate",
         body: ABOUT.mission.mandate.map((m) => `${m.ref}: ${m.text}`),
-        image: "/images/mandate.png",
+        image: "https://images.kharis.org/site-images/main/c3bfa8102ef6e326/mandate.png",
         imageShape: "wide",
       },
     ],
@@ -61,7 +64,7 @@ const BOOKS: Book[] = [
       {
         title: ABOUT.vision.title,
         body: [ABOUT.vision.lead, ABOUT.vision.intro],
-        image: "/images/vision-campaign.jpg",
+        image: "https://images.kharis.org/site-images/main/91479ba234a71277/vision-campaign.jpg",
         imageShape: "wide",
         imageAlt: "Kharis vision",
       },
@@ -70,10 +73,10 @@ const BOOKS: Book[] = [
         body: pair,
         image:
           i % 3 === 0
-            ? "/images/worship.jpg"
+            ? "https://images.kharis.org/site-images/main/9b547f88f3b4d297/worship.jpg"
             : i % 3 === 1
-              ? "/images/build-house.jpg"
-              : "/images/young-adults.jpg",
+              ? "https://images.kharis.org/site-images/main/13d810aec7f7b02a/build-house.jpg"
+              : "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
         imageShape: (i % 2 === 0 ? "arch" : "round") as Page["imageShape"],
       })),
     ],
@@ -88,7 +91,7 @@ const BOOKS: Book[] = [
         body: [
           "Pastor David and Awo founded Kharis in 2003, a multifaceted ministry headquartered in London, United Kingdom, with several branches worldwide.",
         ],
-        image: "/images/community.jpg",
+        image: "https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg",
         imageShape: "arch",
         imageAlt: "Pastors David and Awo Antwi",
       },
@@ -99,7 +102,7 @@ const BOOKS: Book[] = [
           "Their love for the Word of God is evident in how they lead, teach, and serve. Their greatest desire is to see believers established in their faith, local churches strengthened, and ultimately, for revival to sweep through the nations.",
           "They have been married for over 20 years and are blessed with two wonderful children.",
         ],
-        image: "/images/young-adults.jpg",
+        image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
         imageShape: "round",
       },
     ],

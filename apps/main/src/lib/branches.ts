@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   branchDisplayName,
   directionsUrl,
@@ -194,7 +195,8 @@ async function galleriesByBranch() {
 // GET ALL BRANCH DATA FROM SUPABASE
 // ======================================================
 
-export async function listBranchData(): Promise<BranchData[]> {
+// Share one directory read across cards, map and metadata within a server render.
+export const listBranchData = cache(async (): Promise<BranchData[]> => {
   const [{ data, error }, galleries] = await Promise.all([
     supabase
       .from("branches")
@@ -230,7 +232,7 @@ export async function listBranchData(): Promise<BranchData[]> {
   }));
 
   return branches as BranchData[];
-}
+});
 
 // ======================================================
 // TURN SUPABASE BRANCH INTO LOCATION CARD DATA
@@ -242,7 +244,8 @@ const titleCase = (value: string) => value.charAt(0).toUpperCase() + value.slice
 
 // Our own photos for branches the studio has no photo for yet. Only add a branch here with photos taken there.
 const SITE_PHOTOS: Record<string, string> = {
-  london: "/images/locations/london-sunday-smiles.jpg",
+  london:
+    "https://images.kharis.org/site-images/main/60262eef48c53cc5/locations/london-sunday-smiles.jpg",
 };
 
 export function toBranchItem(

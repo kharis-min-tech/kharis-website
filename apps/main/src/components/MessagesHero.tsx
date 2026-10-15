@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import { Play, X } from "lucide-react";
 import type { MessageVideo } from "@/lib/youtube";

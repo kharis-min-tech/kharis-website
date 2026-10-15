@@ -343,9 +343,12 @@ function StatementOfFaith() {
   );
 }
 
-const PASTORS_TOGETHER = "/kp2/assets/leadership-pastors-together.jpg";
-const PASTOR_DAVID = "/kp2/assets/leadership-pastor-david.jpg";
-const PASTOR_AWO = "/kp2/assets/leadership-pastor-awo.jpg";
+const PASTORS_TOGETHER =
+  "https://images.kharis.org/site-images/kp2/9804bc45d0e21f85/leadership-pastors-together.jpg";
+const PASTOR_DAVID =
+  "https://images.kharis.org/site-images/kp2/64154a5197622b53/leadership-pastor-david.jpg";
+const PASTOR_AWO =
+  "https://images.kharis.org/site-images/kp2/4db8231b19f778f9/leadership-pastor-awo.jpg";
 
 function OurLeadership() {
   return (

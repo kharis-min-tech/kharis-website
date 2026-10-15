@@ -1,0 +1,37 @@
+/* Phone controls keep comfortable hit areas without changing desktop layouts. */
+@media (max-width: 767px) {
+  :where(button, summary, [role="tab"], [role="menuitemradio"]) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  :where(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]),
+    select,
+    textarea
+  ) {
+    font-size: 16px !important;
+  }
+  :where(input, select, textarea) {
+    max-width: 100%;
+  }
+  :where(main, section, form, fieldset) {
+    min-width: 0;
+  }
+  .location-globe__toolbar {
+    align-items: center;
+  }
+  .branch-intro__actions {
+    align-items: stretch;
+  }
+  .branch-intro__actions > * {
+    min-height: 48px;
+  }
+  .branch-page #contact .grid {
+    min-width: 0;
+  }
+}
+@media (max-width: 359px) {
+  .branch-intro__actions {
+    flex-direction: column;
+  }
+}

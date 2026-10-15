@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
@@ -26,7 +26,7 @@ export function AboutExperience() {
       <header className="about-hero">
         <div className="about-hero__media" aria-hidden>
           <Image
-            src="/images/about-outreach-hero.jpg"
+            src="https://images.kharis.org/site-images/main/e01fad6602636193/about-outreach-hero.jpg"
             alt=""
             fill
             priority

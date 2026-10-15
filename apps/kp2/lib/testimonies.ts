@@ -27,9 +27,9 @@ const SAFE_FIELDS =
   "name,branch_name,category,short_description,description,image_url,is_anonymous,workspace,is_featured,is_featured_giving";
 
 const FALLBACK_IMAGES = [
-  "/kp2/assets/testimony-1.jpg",
-  "/kp2/assets/testimony-2.jpg",
-  "/kp2/assets/testimony-3.jpg",
+  "https://images.kharis.org/site-images/kp2/e72bc6cd2499f16c/testimony-1.jpg",
+  "https://images.kharis.org/site-images/kp2/15638c2668f428de/testimony-2.jpg",
+  "https://images.kharis.org/site-images/kp2/ec76da04c71300ad/testimony-3.jpg",
 ];
 
 const HOME_STYLES: Pick<Testimonial, "color" | "pattern" | "patternSize">[] = [

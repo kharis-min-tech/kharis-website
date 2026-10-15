@@ -417,7 +417,8 @@
   bottom: clamp(1rem, 3vw, 2rem);
   width: clamp(3.5rem, 8vw, 5.5rem);
   aspect-ratio: 1;
-  background: url("/images/kharis-logo.png") center / contain no-repeat;
+  background: url("https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png")
+    center / contain no-repeat;
   opacity: 0.06;
   pointer-events: none;
 }

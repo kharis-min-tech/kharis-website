@@ -36,7 +36,8 @@ export const LIFE_KGROUP_EMAIL = "kgroup@kharis.org";
 export const LIFE_BAPTISM_IMAGE =
   "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=1200&q=80";
 
-export const LIFE_SERVE_IMAGE = "/images/serve-with-us.jpg";
+export const LIFE_SERVE_IMAGE =
+  "https://images.kharis.org/site-images/main/8440a4a63e4ae020/serve-with-us.jpg";
 
 export const LIFE_HERO = {
   eyebrow: "Community first",
@@ -45,7 +46,7 @@ export const LIFE_HERO = {
   sticky: "Join the family. We’re better together.",
   banner: "A one-another life. Belong here",
   quoteSource: "David Antwi",
-  image: "/images/branch-slide-4.jpg",
+  image: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
   imageAlt: "The Kharis congregation gathered in a full hall during Sunday service",
 } as const;
 
@@ -74,7 +75,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     badge: "Small groups",
     href: "/life/k-group",
     card: "Small home fellowships where we discuss the Word, pray, and care for one another, growing larger and smaller at the same time.",
-    image: "/images/branch-slide-1.jpg",
+    image: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     imageAlt: "A full Kharis hall gathered for the Word",
     tone: "gold",
     layout: "photo",
@@ -137,7 +138,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     badge: "Prayer",
     href: "/life/fasting",
     card: "We abstain from food to signal dependence on God, fasting joined with prayer, as a church family seeking His purpose.",
-    image: "/images/pastor-stage.jpg",
+    image: "https://images.kharis.org/site-images/main/ffbe5aca25d25b8c/pastor-stage.jpg",
     imageAlt: "Seeking God together in worship",
     tone: "gold",
     layout: "text",
@@ -172,7 +173,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     badge: "Family",
     href: "/life/marriage",
     card: "We celebrate marriage because God created it: preparation, counselling, and a victorious Christian home.",
-    image: "/images/testimony-2.jpg",
+    image: "https://images.kharis.org/site-images/main/15638c2668f428de/testimony-2.jpg",
     imageAlt: "Joy in the Kharis family",
     tone: "cream",
     layout: "text",
@@ -211,7 +212,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     badge: "Kids",
     href: "/life/children",
     card: "Fun, vibrant, and full of life. We partner with parents to help children discover who God is through Bible teaching, worship, and friendship.",
-    image: "/images/young-adults.jpg",
+    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
     imageAlt: "Young people growing up in the Kharis family",
     tone: "gold",
     layout: "blend",

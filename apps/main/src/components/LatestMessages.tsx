@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useState } from "react";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import type { MessageVideo } from "@/lib/youtube";
@@ -91,7 +91,7 @@ export function LatestMessages({ featured, others }: Props) {
             delayChildren={0.12}
           >
             {others.slice(0, 4).map((msg) => (
-              <RevealItem key={msg.id} variant="right" distance={32}>
+              <RevealItem key={msg.id} variant="up" distance={24}>
                 <a
                   href={`https://www.youtube.com/watch?v=${msg.id}`}
                   target="_blank"
