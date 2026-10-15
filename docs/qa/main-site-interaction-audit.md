@@ -44,3 +44,5 @@ Scope: main Kharis site only. KP2 was excluded from this final pass at the user'
 - Before release, verify real contact delivery and giving hand-offs in the deployment environment, and obtain the required peer review and automated PR checks. No production deployment or merge was performed.
 
 Local build tooling uses installed Next.js 15.5.27 while the manifests pin 16.3.8. A clean dependency install and CI build against the pinned version remain a release validation step.
+
+GitHub also reports an existing high-severity default-branch Dependabot alert for the glob CLI's -c/--cmd handling: https://github.com/kharis-min-tech/kharis-website/security/dependabot/11. GitHub lists 10.5.0 as the first patched version. Dependency remediation remains a release follow-up and was not included in the main-site interaction changes.
