@@ -67,13 +67,16 @@ function PanelHero({
     >
       <motion.div
         className="about-panel__hero-media"
-        style={reduce ? undefined : { y: photoY }}
+        style={reduce || tone === "leadership" ? undefined : { y: photoY }}
         aria-hidden
         initial={reduce ? false : { opacity: 0.7 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       ></motion.div>
-      <motion.div className="about-panel__hero-copy" style={reduce ? undefined : { y: headlineY }}>
+      <motion.div
+        className="about-panel__hero-copy"
+        style={reduce || tone === "leadership" ? undefined : { y: headlineY }}
+      >
         <p className="about-panel__eyebrow">{eyebrow}</p>
         <motion.h3
           aria-label={title}
