@@ -492,8 +492,8 @@ export function LifeChatbot() {
     !showTopics &&
     Boolean(
       lastAssistant &&
-      (hasContactMarker(lastAssistant.content) ||
-        replyOffersContact(stripGraceMarkers(lastAssistant.content))),
+        (hasContactMarker(lastAssistant.content) ||
+          replyOffersContact(stripGraceMarkers(lastAssistant.content))),
     );
 
   return (

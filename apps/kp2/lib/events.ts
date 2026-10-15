@@ -3,7 +3,12 @@ import { SITE_WORKSPACE, SITE_WORKSPACES } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
 export type EventCategory =
-  "Weekly" | "Conference" | "Worship" | "Fellowship" | "Outreach" | "Social";
+  | "Weekly"
+  | "Conference"
+  | "Worship"
+  | "Fellowship"
+  | "Outreach"
+  | "Social";
 
 /** Raw `events.category` from the shared database (architecture v5). */
 export type DbEventCategory = "service" | "fellowship" | "conference" | "camp" | "general";
