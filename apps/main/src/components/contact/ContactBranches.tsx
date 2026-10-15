@@ -204,12 +204,13 @@ export function ContactBranches({ branches, activeId, onSelect, onWrite }: Props
     );
   }
 
-  const regions: { id: Region; label: string; count: number }[] = [
+  const allRegions: { id: Region; label: string; count: number }[] = [
     { id: "all", label: "All", count: branches.length },
     { id: "uk", label: "UK", count: ukCount },
     { id: "abroad", label: abroad, count: branches.length - ukCount },
     { id: "kp2", label: "KP2", count: branches.filter(isKp2Branch).length },
-  ].filter((r) => r.count > 0 || r.id === "all");
+  ];
+  const regions = allRegions.filter((r) => r.count > 0 || r.id === "all");
 
   return (
     <section id="branches" className="hello-branches" aria-labelledby="hello-branches-title">
