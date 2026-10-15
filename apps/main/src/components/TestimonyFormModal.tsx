@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import "./testimony-modal.css";
 
 const CATEGORIES = [
   "Deliverance",
@@ -294,13 +295,7 @@ export function TestimonyFormModal({ open, onClose }: Props) {
                   </fieldset>
 
                   {submitError && (
-                    <p
-                      role="alert"
-                      style={{
-                        color: "#b42318",
-                        marginTop: "12px",
-                      }}
-                    >
+                    <p role="alert" className="testimony-modal__error">
                       {submitError}
                     </p>
                   )}

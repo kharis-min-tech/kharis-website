@@ -1,0 +1,126 @@
+/* Testimony form modal — error message + dark theme (base styles live in globals.css) */
+.testimony-modal__error {
+  margin-top: 12px;
+  color: #b42318;
+}
+
+html[data-theme="dark"] .testimony-modal__panel {
+  color-scheme: dark;
+  background: #15131f;
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] .testimony-modal__toolbar {
+  background: #110d19;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="dark"] .testimony-modal__toolbar-label {
+  color: #c4a5ff;
+}
+
+html[data-theme="dark"] .testimony-modal__toolbar-title {
+  color: #fff;
+}
+
+html[data-theme="dark"] .testimony-modal__close {
+  background: #221c30;
+  border-color: #8b7fa3;
+  color: #fff;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .testimony-modal__close:hover,
+html[data-theme="dark"] .testimony-modal__close:focus-visible {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #1c1c1f;
+}
+
+html[data-theme="dark"] .testimony-modal__body {
+  background:
+    radial-gradient(ellipse 70% 50% at 100% 0%, rgba(138, 90, 200, 0.14), transparent 55%), #15131f;
+}
+
+html[data-theme="dark"] .testimony-modal__field span,
+html[data-theme="dark"] .testimony-modal__choice legend,
+html[data-theme="dark"] .testimony-modal__cats legend {
+  color: #f3f0f7;
+}
+
+html[data-theme="dark"] .testimony-modal__field em,
+html[data-theme="dark"] .testimony-modal__cats legend em,
+html[data-theme="dark"] .testimony-modal__choice legend em {
+  color: #f2b254;
+}
+
+html[data-theme="dark"] .testimony-modal__field input,
+html[data-theme="dark"] .testimony-modal__field textarea {
+  background: #1d1829;
+  border-color: #8b7fa3;
+  color: #fff;
+  caret-color: #fff;
+}
+
+html[data-theme="dark"] .testimony-modal__field input::placeholder,
+html[data-theme="dark"] .testimony-modal__field textarea::placeholder {
+  color: #bdb4cc;
+  opacity: 1;
+}
+
+html[data-theme="dark"] .testimony-modal__field input:focus,
+html[data-theme="dark"] .testimony-modal__field textarea:focus {
+  border-color: #c4a5ff;
+  box-shadow: 0 0 0 3px rgba(196, 165, 255, 0.28);
+}
+
+html[data-theme="dark"] .testimony-modal__field input:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  box-shadow: 0 0 0 100px #1d1829 inset;
+}
+
+html[data-theme="dark"] .testimony-modal__radios label span,
+html[data-theme="dark"] .testimony-modal__chips label span {
+  background: #1d1829;
+  border-color: #8b7fa3;
+  color: #f3f0f7;
+}
+
+html[data-theme="dark"] .testimony-modal__radios label:hover span,
+html[data-theme="dark"] .testimony-modal__chips label:hover span {
+  background: #271f3a;
+  border-color: #c4a5ff;
+  color: #fff;
+}
+
+html[data-theme="dark"] .testimony-modal__radios label:has(input:checked) span,
+html[data-theme="dark"] .testimony-modal__chips label:has(input:checked) span {
+  background: #630ed4;
+  border-color: #c4a5ff;
+  color: #fff;
+  box-shadow: 0 0 0 1px #c4a5ff;
+}
+
+html[data-theme="dark"] .testimony-modal__radios label:has(input:focus-visible) span,
+html[data-theme="dark"] .testimony-modal__chips label:has(input:focus-visible) span {
+  outline: 2px solid #f2b254;
+  outline-offset: 2px;
+}
+
+html[data-theme="dark"] .testimony-modal__error {
+  color: #ffb4ab;
+}
+
+html[data-theme="dark"] .testimony-modal__thanks-kicker {
+  color: #f2b254;
+}
+
+html[data-theme="dark"] .testimony-modal__thanks h3 {
+  color: #d9c4ff;
+}
+
+html[data-theme="dark"] .testimony-modal__thanks p {
+  color: #d0cad8;
+}
