@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ContactBranches } from "@/components/contact/ContactBranches";
 import { ContactHero } from "@/components/contact/ContactHero";
 import { ContactLetter } from "@/components/contact/ContactLetter";
-import type { ContactLocation } from "@/lib/contact-branches";
+import { kharisFirst, type ContactLocation } from "@/lib/contact-branches";
 import "./contact/contact-page.css";
 
 /** Official channels, as linked from kharis.org and the church's Instagram bio. */
@@ -34,7 +34,7 @@ type Props = {
 };
 
 export function ContactExperience({ locations }: Props) {
-  const branches = locations;
+  const branches = useMemo(() => kharisFirst(locations), [locations]);
   const hq = branches.find((b) => b.name === "London") ?? branches[0] ?? null;
 
   const [activeId, setActiveId] = useState<string | null>(hq?.id ?? null);
