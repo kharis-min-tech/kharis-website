@@ -90,6 +90,16 @@ export function BranchMap({
   }, []);
   const selected = country === undefined ? selection : country;
   const destination = destinations.find((d) => d.id === selected) ?? destinations[0];
+  const [cameraCountry, setCameraCountry] = useState(destination.id);
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(
+      () => setCameraCountry(destination.id),
+      reduced || destination.id === "world" ? 0 : 950,
+    );
+    return () => window.clearTimeout(timer);
+  }, [destination.id]);
+  const cameraDestination = destinations.find((d) => d.id === cameraCountry) ?? destinations[0];
   const hitPins = useRef<{ x: number; y: number; slug: string; name: string }[]>([]);
   const worldAngle = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -111,8 +121,10 @@ export function BranchMap({
     let height = 0;
     let settled = false;
     const target =
-      destination.id === "world" ? { ...(origin ?? initialCenter), zoom: 1 } : { ...destination };
-    if (destination.id === "world") target.lng += worldAngle.current;
+      cameraDestination.id === "world"
+        ? { ...(origin ?? initialCenter), zoom: 1 }
+        : { ...cameraDestination };
+    if (cameraDestination.id === "world") target.lng += worldAngle.current;
     const project = (x: number, y: number, z: number) => {
       const c = camera.current;
       const longitude = c.lng * rad;
@@ -139,7 +151,7 @@ export function BranchMap({
       const delta = ((target.lng - c.lng + 540) % 360) - 180;
       settled =
         Math.abs(delta) + Math.abs(c.lat - target.lat) + Math.abs(c.zoom - target.zoom) < 0.02;
-      if (destination.id === "world" && settled && !paused && !motion.matches) {
+      if (cameraDestination.id === "world" && settled && !paused && !motion.matches) {
         target.lng += elapsed * 3;
         worldAngle.current += elapsed * 3;
         c.lng = target.lng;
@@ -183,7 +195,7 @@ export function BranchMap({
           string,
           string
         >
-      )[destination.id];
+      )[cameraDestination.id];
       const outlines = countryOutlines as Record<string, number[][][]>;
       ctx.strokeStyle = "#ffde59";
       ctx.lineWidth = 1.5;
@@ -222,7 +234,7 @@ export function BranchMap({
         ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
         ctx.fill();
       }
-      if (!motion.matches && (!settled || (destination.id === "world" && !paused)))
+      if (!motion.matches && (!settled || (cameraDestination.id === "world" && !paused)))
         frame = requestAnimationFrame(draw);
     };
     const start = () => {
@@ -254,7 +266,7 @@ export function BranchMap({
       document.removeEventListener("visibilitychange", start);
       motion.removeEventListener("change", start);
     };
-  }, [destination, pins, paused, origin, initialCenter, land]);
+  }, [cameraDestination, pins, paused, origin, initialCenter, land]);
 
   return (
     <section
@@ -313,15 +325,40 @@ export function BranchMap({
             }
           }}
         />
-        <div className="location-globe__welcome" key={destination.id} role="status">
+        <div
+          className={`location-globe__welcome${destination.id !== "world" ? " location-globe__welcome--journey" : ""}`}
+          key={destination.id}
+          role="status"
+        >
           <p>{destination.id === "world" ? "One global family" : "Your family is here"}</p>
-          <h2>
-            {destination.id === "world"
-              ? "A world of welcome"
-              : `Welcome to ${destination.id === "United Kingdom" ? "the United Kingdom" : destination.label}`}
+          <h2
+            aria-label={
+              destination.id === "world"
+                ? "A world of welcome"
+                : `Welcome to ${destination.id === "United Kingdom" ? "the United Kingdom" : destination.label}`
+            }
+          >
+            {destination.id === "world" ? (
+              "A world of welcome"
+            ) : (
+              <>
+                <span className="location-globe__word-mask" aria-hidden="true">
+                  <span className="location-globe__word location-globe__word--intro">
+                    Welcome to
+                  </span>
+                </span>{" "}
+                <span className="location-globe__word-mask" aria-hidden="true">
+                  <span className="location-globe__word location-globe__word--country">
+                    {destination.id === "United Kingdom" ? "the United Kingdom" : destination.label}
+                  </span>
+                </span>
+              </>
+            )}
           </h2>
-          <span>
-            {visible.length} {visible.length === 1 ? "branch" : "branches"}. A place for you.
+          <span className="location-globe__detail">
+            {branches.length
+              ? `${visible.length} ${visible.length === 1 ? "branch" : "branches"}. A place for you.`
+              : "Explore our global family. Branch details are temporarily unavailable."}
           </span>
         </div>
       </div>

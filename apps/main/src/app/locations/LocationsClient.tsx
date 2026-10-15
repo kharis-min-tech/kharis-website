@@ -99,7 +99,7 @@ export function LocationsClient({ items, full }: Props) {
   const groups = useMemo(() => {
     if (origin) {
       const sorted = [...shown].sort((a, b) => (a.miles ?? Infinity) - (b.miles ?? Infinity));
-      return [{ title: "Nearest to you", rows: sorted }];
+      return sorted.length ? [{ title: "Nearest to you", rows: sorted }] : [];
     }
     return [...countries, KP2]
       .map((title) => ({
@@ -142,8 +142,14 @@ export function LocationsClient({ items, full }: Props) {
           <p className="locations-hero__eyebrow">Locations</p>
           <h1 className="locations-hero__title">Find your Kharis family</h1>
           <p className="locations-hero__lead">
-            {items.length} branches across {listCountries(countries)}. Every one of them meets this
-            Sunday.
+            {items.length ? (
+              <>
+                {items.length} branches across {listCountries(countries)}. Every one of them meets
+                this Sunday.
+              </>
+            ) : (
+              "Our branch directory is temporarily unavailable. You can still explore the globe or contact us to find your Kharis family."
+            )}
           </p>
 
           <form
@@ -233,9 +239,15 @@ export function LocationsClient({ items, full }: Props) {
 
         {groups.length === 0 ? (
           <div className="locations-empty">
-            <h3>No branch matches “{query.trim()}”</h3>
+            <h3>
+              {items.length
+                ? `No branch matches “${query.trim()}”`
+                : "We couldn't load the branch directory"}
+            </h3>
             <p>
-              Try a nearby town or the first half of your postcode, or{" "}
+              {items.length
+                ? "Try a nearby town or the first half of your postcode, or "
+                : "Please try again shortly, or "}
               <Link href="/contact">message us</Link> and we&apos;ll point you to the closest one.
             </p>
           </div>

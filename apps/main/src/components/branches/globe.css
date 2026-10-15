@@ -110,3 +110,67 @@
     animation: none;
   }
 }
+
+.location-globe__welcome--journey {
+  animation: globe-arrival-settle 2.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.location-globe__welcome--journey > p {
+  animation: globe-word-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+.location-globe__word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.location-globe__welcome h2 .location-globe__word {
+  display: inline-block;
+  font: inherit;
+  animation: globe-word-reveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.location-globe__welcome h2 .location-globe__word--intro {
+  animation-delay: 0.12s;
+}
+.location-globe__welcome h2 .location-globe__word--country {
+  color: #ffde59;
+  animation-delay: 0.38s;
+}
+.location-globe__welcome--journey .location-globe__detail {
+  display: block;
+  animation: globe-word-reveal 0.8s ease 1.9s both;
+}
+@keyframes globe-word-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+@keyframes globe-arrival-settle {
+  0%,
+  35% {
+    transform: translateY(-80px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .location-globe__welcome--journey,
+  .location-globe__welcome--journey > p,
+  .location-globe__welcome h2 .location-globe__word,
+  .location-globe__welcome--journey .location-globe__detail {
+    animation: none;
+  }
+}
+
+.location-globe__welcome h2 .location-globe__word-mask {
+  font: inherit;
+  color: inherit;
+}
