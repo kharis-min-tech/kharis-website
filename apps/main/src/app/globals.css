@@ -12386,58 +12386,7 @@ html.hero-ready .home-below-hero {
   padding-bottom: 0.75rem;
 }
 
-/* Messages year filters */
-.msg-hub__years {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.45rem;
-  margin-top: 1rem;
-  max-width: 36rem;
-  margin-inline: auto;
-}
-
-.msg-hub__year {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.88);
-  border-radius: 0;
-  padding: 0.42rem 0.9rem;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.msg-hub__year:hover {
-  border-color: rgba(232, 163, 61, 0.55);
-  color: #fff;
-}
-
-.msg-hub__year.is-on {
-  background: var(--orange);
-  border-color: var(--orange);
-  color: #1c1c1f;
-}
-
-html[data-theme="light"] .msg-hub__year {
-  border-color: var(--line);
-  background: rgba(255, 255, 255, 0.82);
-  color: var(--fg-soft);
-}
-
-html[data-theme="light"] .msg-hub__year.is-on {
-  background: var(--purple-fill);
-  border-color: var(--purple);
-  color: #fff;
-}
-
-/* Messages filter: one compact row of icon topic buttons + a year dropdown */
+/* Messages filter: one compact row of icon topic buttons + search */
 .msg-filter {
   padding: 0.5rem 0 0.75rem;
 }
@@ -12466,8 +12415,7 @@ html[data-theme="light"] .msg-hub__year.is-on {
   display: none;
 }
 
-.msg-filter__chip,
-.msg-filter__year {
+.msg-filter__chip {
   display: inline-flex;
   flex: none;
   align-items: center;
@@ -12495,58 +12443,22 @@ html[data-theme="light"] .msg-hub__year.is-on {
   height: 1rem;
 }
 
-.msg-filter__chip:hover,
-.msg-filter__year:hover {
+.msg-filter__chip:hover {
   border-color: rgba(255, 255, 255, 0.5);
   color: #fff;
 }
 
 .msg-filter__chip:focus-visible,
-.msg-filter__year:focus-within,
 .msg-filter-results__clear:focus-visible {
   outline: 2px solid var(--yellow);
   outline-offset: 2px;
 }
 
-.msg-filter__chip[aria-pressed="true"],
-.msg-filter__year[data-active] {
+.msg-filter__chip[aria-pressed="true"] {
   border-color: #630ed4;
   background: #630ed4;
   color: #fff;
   box-shadow: 0 2px 0 #3d0591;
-}
-
-/* Native select (keyboard + phone pickers) styled to match the chips. */
-.msg-filter__year {
-  position: relative;
-  padding-right: 0.55rem;
-}
-
-.msg-filter__year select {
-  appearance: none;
-  min-width: 3.4rem;
-  padding: 0 1.15rem 0 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.msg-filter__year select:focus {
-  outline: none;
-}
-
-.msg-filter__year option {
-  color: #1c1c1f;
-}
-
-.msg-filter__caret {
-  position: absolute;
-  right: 0.55rem;
-  width: 0.85rem;
-  height: 0.85rem;
-  pointer-events: none;
 }
 
 .msg-filter-results__head {
@@ -12591,21 +12503,18 @@ html[data-theme="light"] .msg-filter-results__count {
   color: var(--muted);
 }
 
-html[data-theme="light"] .msg-filter__chip,
-html[data-theme="light"] .msg-filter__year {
+html[data-theme="light"] .msg-filter__chip {
   border-color: rgba(99, 14, 212, 0.2);
   background: #fff;
   color: var(--fg-soft);
 }
 
-html[data-theme="light"] .msg-filter__chip:hover,
-html[data-theme="light"] .msg-filter__year:hover {
+html[data-theme="light"] .msg-filter__chip:hover {
   border-color: #630ed4;
   color: #630ed4;
 }
 
-html[data-theme="light"] .msg-filter__chip[aria-pressed="true"],
-html[data-theme="light"] .msg-filter__year[data-active] {
+html[data-theme="light"] .msg-filter__chip[aria-pressed="true"] {
   border-color: #630ed4;
   background: #630ed4;
   color: #fff;
@@ -12617,20 +12526,6 @@ html[data-theme="light"] .msg-filter-results__clear {
 
 html[data-theme="light"] .msg-filter-results__empty {
   color: var(--fg-soft);
-}
-
-/* Phones: topics swipe edge to edge, the year dropdown stays pinned on the right. */
-@media (max-width: 767px) {
-  .msg-filter__inner {
-    padding-right: var(--msg-gutter);
-    padding-left: 0;
-  }
-
-  .msg-filter__topics {
-    padding-left: var(--msg-gutter);
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 1.5rem), transparent);
-    mask-image: linear-gradient(90deg, #000 calc(100% - 1.5rem), transparent);
-  }
 }
 
 /* Dark mode: refined contrast sitewide */
@@ -13074,15 +12969,6 @@ html[data-theme="dark"] .about-chapter__card blockquote {
 
   .msg-hub__title {
     font-size: clamp(1.85rem, 8vw, 2.6rem);
-  }
-
-  .msg-hub__years {
-    gap: 0.35rem;
-  }
-
-  .msg-hub__year {
-    padding: 0.38rem 0.72rem;
-    font-size: 0.68rem;
   }
 }
 

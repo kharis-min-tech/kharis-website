@@ -16,39 +16,38 @@
 }
 
 :is(
-    .k-cta,
-    .btn-primary,
-    .btn-secondary,
-    .btn-ghost,
-    .btn-give,
-    .btn-testimony,
-    .life-cta,
-    .give-cta,
-    .give-card__cta,
-    .give-copy__btn,
-    .give-amounts__chip,
-    .contact-submit,
-    .contact-vibe__btn,
-    .msg-btn,
-    .msg-filter__chip,
-    .msg-filter__year,
-    .msg-filter-results__clear,
-    .unsure-panel__btn,
-    .apple-slide__cta,
-    .events-feature__btn,
-    .not-found__cta,
-    .about-lead__story-cta,
-    .about-bible__tab,
-    .gov-incident__cta,
-    .life-chat__fab,
-    .life-chat__send,
-    .life-modal__clip-btn,
-    .floating-theme-toggle,
-    .theme-toggle
-  ) {
+  .k-cta,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-give,
+  .btn-testimony,
+  .life-cta,
+  .give-cta,
+  .give-card__cta,
+  .give-copy__btn,
+  .give-amounts__chip,
+  .contact-submit,
+  .contact-vibe__btn,
+  .msg-btn,
+  .msg-filter__chip,
+  .msg-filter-results__clear,
+  .unsure-panel__btn,
+  .apple-slide__cta,
+  .events-feature__btn,
+  .not-found__cta,
+  .about-lead__story-cta,
+  .about-bible__tab,
+  .gov-incident__cta,
+  .life-chat__fab,
+  .life-chat__send,
+  .life-modal__clip-btn,
+  .floating-theme-toggle,
+  .theme-toggle
+) {
   transition-property:
-    color, background-color, border-color, outline-color, text-decoration-color, fill,
-    stroke, box-shadow, transform, translate, scale, opacity, filter !important;
+    color, background-color, border-color, outline-color, text-decoration-color, fill, stroke,
+    box-shadow, transform, translate, scale, opacity, filter !important;
   transition-duration: var(--dur-fast) !important;
   transition-timing-function: var(--ease-out) !important;
   transition-delay: 0s !important;
@@ -79,7 +78,6 @@
     .contact-vibe__btn,
     .msg-btn,
     .msg-filter__chip,
-    .msg-filter__year,
     .unsure-panel__btn,
     .apple-slide__cta,
     .events-feature__btn,
@@ -98,33 +96,41 @@
 
 /* Default focus ring; zero specificity so buttons with their own ring keep it. */
 :where(
-    .k-cta,
-    .btn-primary,
-    .btn-secondary,
-    .btn-give,
-    .btn-testimony,
-    .life-cta,
-    .give-cta,
-    .give-card__cta,
-    .give-copy__btn,
-    .give-amounts__chip,
-    .contact-submit,
-    .msg-btn,
-    .unsure-panel__btn,
-    .events-feature__btn,
-    .not-found__cta,
-    .about-bible__tab,
-    .life-chat__send,
-    .floating-theme-toggle,
-    .theme-toggle
-  ):focus-visible {
+  .k-cta,
+  .btn-primary,
+  .btn-secondary,
+  .btn-give,
+  .btn-testimony,
+  .life-cta,
+  .give-cta,
+  .give-card__cta,
+  .give-copy__btn,
+  .give-amounts__chip,
+  .contact-submit,
+  .msg-btn,
+  .unsure-panel__btn,
+  .events-feature__btn,
+  .not-found__cta,
+  .about-bible__tab,
+  .life-chat__send,
+  .floating-theme-toggle,
+  .theme-toggle
+):focus-visible {
   outline: 2px solid var(--focus-ring-color);
   outline-offset: 3px;
 }
 
 /* On photos / dark bands a purple ring disappears. */
 :where(.hero-shell, .about-lead, .gov-incident, .apple-slide, [data-theme="dark"])
-  :where(.btn-primary, .btn-ghost, .btn-secondary, .k-cta, .about-lead__story-cta, .gov-incident__cta, .apple-slide__cta):focus-visible {
+  :where(
+    .btn-primary,
+    .btn-ghost,
+    .btn-secondary,
+    .k-cta,
+    .about-lead__story-cta,
+    .gov-incident__cta,
+    .apple-slide__cta
+  ):focus-visible {
   outline: 2px solid var(--yellow, #ffde59);
   outline-offset: 3px;
 }
