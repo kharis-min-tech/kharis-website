@@ -5,18 +5,15 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
+  Anchor,
   BookOpen,
   CalendarDays,
   ChevronDown,
   Compass,
   Cross,
-  Flame,
-  Flower,
-  HandHeart,
-  Heart,
   LayoutGrid,
   Search,
-  Users,
+  Sunrise,
   type LucideIcon,
 } from "lucide-react";
 import { Icon } from "@/components/Icon";
@@ -43,13 +40,10 @@ gsap.registerPlugin(ScrollTrigger);
 const TOPIC_ICONS: Record<string, LucideIcon> = {
   all: LayoutGrid,
   jesus: Cross,
-  bible: BookOpen,
-  prayer: HandHeart,
-  love: Heart,
+  faith: Anchor,
+  doctrine: BookOpen,
+  salvation: Sunrise,
   purpose: Compass,
-  acts: Flame,
-  "just-men": Users,
-  fragrance: Flower,
 };
 
 /** Original Teachings wall posters (same five sermons). mqdefault is 16:9 so no YouTube letterbox bars. */

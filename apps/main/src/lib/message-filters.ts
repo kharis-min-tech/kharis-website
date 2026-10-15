@@ -7,22 +7,39 @@ export type MessageTopic = {
 };
 
 /**
- * Topics are matched against message titles (YouTube gives no tags we can rely on).
- * Kept to the topics and series with the most messages so the filter fits on one row.
+ * Teaching themes matched against message titles (YouTube gives no tags we can rely on).
+ * Series (Just Men, Fragrance, Let the Bible Speak…) already have their own shelves,
+ * so none of these labels repeat a shelf heading. Themes with no messages are hidden.
  */
 export const MESSAGE_TOPICS: MessageTopic[] = [
   {
     id: "jesus",
     label: "Jesus",
-    match: /\bjesus\b|\bchrist\b|\bcross\b|\bresurrection\b|virgin birth|\bemmanuel\b/,
+    match: /\bjesus\b|\bchrist\b|\bcross\b|\blogos\b|\bresurrection\b|virgin birth|\bemmanuel\b/,
   },
-  { id: "bible", label: "Bible", match: /\bbible\b|\bword\b|\bscripture|\blogos\b|\bgospel\b/ },
-  { id: "prayer", label: "Prayer", match: /\bpray|\bfast/ },
-  { id: "love", label: "Love", match: /\blov(e|es|ed|ing)\b|\brelationship|\bheart\b/ },
-  { id: "purpose", label: "Purpose", match: /\bpurpose\b|\bassignment\b|\bmission|\bcalling\b/ },
-  { id: "acts", label: "Acts", match: /\bacts\b/ },
-  { id: "just-men", label: "Just Men", match: /just men/ },
-  { id: "fragrance", label: "Fragrance", match: /\bfragrance\b/ },
+  {
+    id: "faith",
+    label: "Faith",
+    match: /\bfaith|\bbeliev|\btrust\b|\bstorm\b|\bfear\b|\bforsaken\b|\bovercom|\bsatisfied\b/,
+  },
+  {
+    id: "doctrine",
+    label: "Doctrine",
+    match:
+      /\bdoctrine|\blogos\b|\bsin\b|\bbaptism\b|\brepentance\b|\bapologetics\b|\beternally\b|virgin birth|\btrinity\b|\bscripture|bible live/,
+  },
+  {
+    id: "salvation",
+    label: "Salvation",
+    match:
+      /\bsav(e|ed|es|ing|iou?r)\b|\bsalvation\b|\bgrace\b|\bmercy\b|\brepent|\bbaptism\b|\bcross\b|\bredeem|\bforgiv/,
+  },
+  {
+    id: "purpose",
+    label: "Purpose",
+    match:
+      /\bpurpose\b|\bassignment\b|\bmission|\bcalling\b|\bministry\b|\bmentorship\b|\bevangeli|church planting/,
+  },
 ];
 
 export function matchesTopic(message: MessageVideo, topicId: string) {

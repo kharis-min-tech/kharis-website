@@ -25,7 +25,12 @@
     visibility 0s;
 }
 
-/* 16:9 player scaled to cover the hero; a little extra scale trims YouTube's edge chrome. */
+/* The player stalled or paused on its own: hide at once so YouTube's overlay never fades through. */
+.msg-hub__hero[data-preview-cut] .msg-hero-preview {
+  transition: none;
+}
+
+/* 16:9 player scaled to cover the hero; the extra 20% pushes YouTube's title bar and edge chrome out of view. */
 .msg-hero-preview__frame {
   position: absolute;
   top: 50%;
@@ -33,7 +38,7 @@
   width: max(100cqw, calc(100cqh * 16 / 9));
   height: max(100cqh, calc(100cqw * 9 / 16));
   border: 0;
-  transform: translate(-50%, -50%) scale(1.12);
+  transform: translate(-50%, -50%) scale(1.2);
   filter: grayscale(1) contrast(1.12) brightness(0.92);
   pointer-events: none;
 }
@@ -239,20 +244,27 @@ html[data-theme="light"] .msg-filter__search input::placeholder {
   color: var(--muted);
 }
 
-/* Phones: search gets its own full-width row above the swipeable topics. */
-@media (max-width: 767px) {
-  .msg-filter__inner {
+/* Below desktop: search + year share the first row, topic chips wrap underneath so none is cut off. */
+@media (max-width: 1023px) {
+  .msg-filter .msg-filter__inner {
     flex-wrap: wrap;
+    row-gap: 0.6rem;
+    padding-inline: var(--msg-gutter);
   }
 
   .msg-filter__inner .msg-filter__topics {
-    flex: 1 1 0;
+    order: 1;
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    overflow: visible;
+    padding-left: 0.1rem;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
-  .msg-filter__search {
+  .msg-filter__inner .msg-filter__search {
     order: -1;
-    flex: 1 1 100%;
-    margin-left: var(--msg-gutter);
+    flex: 1 1 auto;
   }
 }
 
