@@ -1,5 +1,7 @@
 "use client";
 
+import { Menu } from "lucide-react";
+import { MobileNavigation } from "@/components/MobileNavigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -82,7 +84,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
         : scrolled || open;
 
   const linkTone = (active: boolean) =>
-    `k-motion cursor-pointer text-[13px] font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
+    `k-motion inline-flex h-10 cursor-pointer items-center text-[13px] leading-none font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
       onDark || (forceDark && !open)
         ? active
           ? "text-white"
@@ -97,6 +99,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
 
   return (
     <header
+      data-site-header
       data-smooth-nav
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-400 ${
         solid
@@ -117,14 +120,20 @@ export function SiteHeader({ tone = "auto" }: Props) {
               return (
                 <div
                   key={link.label}
-                  className="relative flex"
+                  className="relative flex items-center"
                   ref={aboutRef}
                   onMouseEnter={() => setAboutOpen(true)}
                   onMouseLeave={() => setAboutOpen(false)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape") {
+                      setAboutOpen(false);
+                      aboutRef.current?.querySelector("a")?.focus();
+                    }
+                  }}
                 >
                   <Link
                     href={link.href || "/about"}
-                    className={`${linkTone(aboutActive)} inline-flex items-center gap-1`}
+                    className={`${linkTone(aboutActive)} gap-1`}
                     aria-expanded={aboutOpen}
                     aria-haspopup="true"
                     onClick={() => setAboutOpen(false)}
@@ -183,8 +192,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
 
             const active =
               link.href === pathname ||
-              (link.href === "/give" && pathname === "/give") ||
-              (link.href === "/life" && pathname.startsWith("/life"));
+              (link.href && link.href !== "/" && pathname.startsWith(`${link.href}/`));
             const className = linkTone(Boolean(active));
             if (!link.href) {
               return (
@@ -201,7 +209,12 @@ export function SiteHeader({ tone = "auto" }: Props) {
               );
             }
             return (
-              <Link key={link.label} href={link.href} className={className}>
+              <Link
+                key={link.label}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={className}
+              >
                 {link.label}
               </Link>
             );
@@ -224,98 +237,26 @@ export function SiteHeader({ tone = "auto" }: Props) {
           </Link>
           <button
             type="button"
-            aria-label="Menu"
+            aria-label="Open menu"
+            aria-controls={open ? "mobile-navigation" : undefined}
             aria-expanded={open}
-            className={`grid h-10 w-10 cursor-pointer place-items-center border lg:hidden ${
+            className={`mobile-menu-toggle cursor-pointer border lg:hidden ${
               onDark || (forceDark && !open) ? "border-white/35 text-white" : "border-line text-fg"
             }`}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? "×" : "☰"}
+            <span>Menu</span>
+            <Menu size={18} strokeWidth={1.6} aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      {open && (
-        <div
-          className={`border-t px-5 py-4 lg:hidden ${
-            forceDark ? "border-white/10 bg-[#0a0612] text-white" : "border-line bg-white"
-          }`}
-        >
-          {links.map((link) => {
-            if (link.children) {
-              return (
-                <div key={link.label} className="py-2">
-                  <p
-                    className={`mb-1 text-xs font-bold uppercase tracking-[0.14em] ${
-                      forceDark ? "text-white/55" : "text-muted"
-                    }`}
-                  >
-                    {link.label}
-                  </p>
-                  {link.children.map((child) => (
-                    <Link
-                      key={child.href}
-                      href={child.href}
-                      onClick={() => setOpen(false)}
-                      className={`block py-2.5 pl-2 text-sm font-semibold ${
-                        forceDark ? "text-white" : "text-fg"
-                      }`}
-                    >
-                      {child.label}
-                    </Link>
-                  ))}
-                </div>
-              );
-            }
-            if (!link.href) {
-              return (
-                <span
-                  key={link.label}
-                  className={`block py-3 text-sm font-semibold cursor-default ${
-                    forceDark ? "text-white/80" : "text-fg"
-                  }`}
-                >
-                  {link.label}
-                </span>
-              );
-            }
-            if (link.href.startsWith("http")) {
-              return (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className={`block py-3 text-sm font-semibold ${
-                    forceDark ? "text-white" : "text-fg"
-                  }`}
-                >
-                  {link.label}
-                </a>
-              );
-            }
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className={`block py-3 text-sm font-semibold ${
-                  forceDark ? "text-white" : "text-fg"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-          <Link
-            href="/locations"
-            className="k-cta mt-2 flex w-full items-center justify-center bg-purple px-5 py-3.5 text-sm font-extrabold text-white"
-            onClick={() => setOpen(false)}
-          >
-            Find a Branch
-          </Link>
-        </div>
-      )}
+      <MobileNavigation
+        open={open}
+        onClose={() => setOpen(false)}
+        pathname={pathname}
+        dark={forceDark}
+      />
     </header>
   );
 }
