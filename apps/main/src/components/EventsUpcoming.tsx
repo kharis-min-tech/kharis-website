@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowUpRight, Calendar, MapPin, Search } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { EVENT_FILTERS, type EventFilter } from "@/data/event-categories";
 import { formatEventDateNum, formatEventMonthShort } from "@/lib/events-content";
 import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { BranchSelect, useStoredBranch } from "./BranchSelect";
 import "./events-next.css";
 
@@ -235,7 +236,7 @@ type Props = FilterProps & {
 };
 
 export function EventsUpcoming({ branches, ...filters }: Props) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const branch = useStoredBranch(branches);
   const now = useSyncExternalStore(noSubscribe, londonNow, () => null);
 
@@ -331,10 +332,10 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
             <motion.li
               key={tile.key}
               className={DIMMED[filters.filter]?.includes(String(tile.key)) ? "is-dim" : undefined}
-              initial={reduce ? false : { opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: i * 0.06, duration: 0.4, ease }}
+              transition={reduce ? { duration: 0 } : { delay: i * 0.06, duration: 0.4, ease }}
             >
               {tile}
             </motion.li>

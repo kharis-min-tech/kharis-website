@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import type { EventCategory, EventMedia, EventPhoto, EventSplit } from "@/data/event-categories";
 import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { useStoredBranch } from "./BranchSelect";
 import "./event-categories.css";
 
@@ -338,7 +339,7 @@ function EventCard({
   wide: boolean;
   onExplore: () => void;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [userPlay, setUserPlay] = useState<boolean | null>(null);
