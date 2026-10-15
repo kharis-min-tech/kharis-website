@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { ArrowUpRight, Calendar, MapPin } from "lucide-react";
+import { ArrowUpRight, Calendar, MapPin, Search } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { EVENT_FILTERS, type EventFilter } from "@/data/event-categories";
 import { formatEventDateNum, formatEventMonthShort } from "@/lib/events-content";
 import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
 import { BranchSelect, useStoredBranch } from "./BranchSelect";
@@ -181,7 +182,59 @@ function ServiceTile({ name, photo, position, date, visit, branch, missing }: Se
   );
 }
 
-export function EventsUpcoming({ branches }: { branches: ServiceBranch[] }) {
+type FilterProps = {
+  filter: EventFilter;
+  query: string;
+  resultCount: number;
+  onFilter: (filter: EventFilter) => void;
+  onQuery: (query: string) => void;
+};
+
+function EventFilters({ filter, query, resultCount, onFilter, onQuery }: FilterProps) {
+  return (
+    <div className="events-filter">
+      <div className="events-filter__chips" role="group" aria-label="Show events">
+        {EVENT_FILTERS.map((f) => (
+          <button
+            key={f.id}
+            type="button"
+            className={`events-filter__chip${f.id === filter ? " is-active" : ""}`}
+            aria-pressed={f.id === filter}
+            onClick={() => onFilter(f.id)}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+      <label className="events-filter__search">
+        <Search aria-hidden className="events-filter__search-ico" />
+        <span className="sr-only">Search events</span>
+        <input
+          type="search"
+          value={query}
+          placeholder="Search events"
+          autoComplete="off"
+          onChange={(e) => onQuery(e.target.value)}
+        />
+      </label>
+      <p className="sr-only" aria-live="polite">
+        {resultCount === 1 ? "1 event shown" : `${resultCount} events shown`}
+      </p>
+    </div>
+  );
+}
+
+/** Upcoming squares that don't belong to the chosen service fade back. */
+const DIMMED: Partial<Record<EventFilter, string[]>> = {
+  sunday: ["midweek"],
+  midweek: ["this-sunday", "next-sunday"],
+};
+
+type Props = FilterProps & {
+  branches: ServiceBranch[];
+};
+
+export function EventsUpcoming({ branches, ...filters }: Props) {
   const reduce = useReducedMotion();
   const branch = useStoredBranch(branches);
   const now = useSyncExternalStore(noSubscribe, londonNow, () => null);
@@ -277,6 +330,7 @@ export function EventsUpcoming({ branches }: { branches: ServiceBranch[] }) {
           {tiles.map((tile, i) => (
             <motion.li
               key={tile.key}
+              className={DIMMED[filters.filter]?.includes(String(tile.key)) ? "is-dim" : undefined}
               initial={reduce ? false : { opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
@@ -286,6 +340,8 @@ export function EventsUpcoming({ branches }: { branches: ServiceBranch[] }) {
             </motion.li>
           ))}
         </ul>
+
+        <EventFilters {...filters} />
       </div>
     </section>
   );

@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { EventCategories } from "@/components/EventCategories";
 import { EventsUpcoming } from "@/components/EventsUpcoming";
+import { EVENT_CATEGORIES, matchesEvent, type EventFilter } from "@/data/event-categories";
 import type { ServiceBranch } from "@/lib/service-branches";
 
 type Props = {
@@ -12,6 +14,17 @@ type Props = {
 };
 
 export function EventsExperience({ branches }: Props) {
+  const [filter, setFilter] = useState<EventFilter>("all");
+  const [query, setQuery] = useState("");
+  const visibleIds = useMemo(
+    () => new Set(EVENT_CATEGORIES.filter((c) => matchesEvent(c, filter, query)).map((c) => c.id)),
+    [filter, query],
+  );
+  const clear = () => {
+    setFilter("all");
+    setQuery("");
+  };
+
   return (
     <div className="events-page">
       <header className="events-top">
@@ -40,9 +53,21 @@ export function EventsExperience({ branches }: Props) {
         </div>
       </header>
 
-      <EventCategories branches={branches} />
+      <EventsUpcoming
+        branches={branches}
+        filter={filter}
+        query={query}
+        resultCount={visibleIds.size}
+        onFilter={setFilter}
+        onQuery={setQuery}
+      />
 
-      <EventsUpcoming branches={branches} />
+      <EventCategories
+        branches={branches}
+        categories={EVENT_CATEGORIES}
+        visibleIds={visibleIds}
+        onClear={clear}
+      />
     </div>
   );
 }

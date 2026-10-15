@@ -1,16 +1,7 @@
 "use client";
 
 import Image, { getImageProps } from "next/image";
-import {
-  Fragment,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type CSSProperties,
-  type KeyboardEvent,
-  type ReactNode,
-} from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
@@ -21,89 +12,10 @@ import {
   Play,
   X,
 } from "lucide-react";
-import {
-  EVENT_CATEGORIES,
-  type EventCategory,
-  type EventPhoto,
-  type EventSplit,
-  type EventTile,
-} from "@/data/event-categories";
+import type { EventCategory, EventPhoto, EventSplit, EventTile } from "@/data/event-categories";
 import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
 import { useStoredBranch } from "./BranchSelect";
 import "./event-categories.css";
-
-const ease = [0.22, 1, 0.36, 1] as const;
-
-function CategoryRow({
-  activeId,
-  panelId,
-  onSelect,
-}: {
-  activeId: string;
-  panelId: string;
-  onSelect: (id: string) => void;
-}) {
-  const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const count = EVENT_CATEGORIES.length;
-
-  const select = (index: number, focus: boolean) => {
-    const button = refs.current[index];
-    if (focus) button?.focus();
-    button?.scrollIntoView({ block: "nearest", inline: "nearest" });
-    onSelect(EVENT_CATEGORIES[index]!.id);
-  };
-
-  const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
-    const next =
-      e.key === "ArrowRight"
-        ? (index + 1) % count
-        : e.key === "ArrowLeft"
-          ? (index - 1 + count) % count
-          : e.key === "Home"
-            ? 0
-            : e.key === "End"
-              ? count - 1
-              : -1;
-    if (next < 0) return;
-    e.preventDefault();
-    select(next, true);
-  };
-
-  return (
-    <div className="events-cats__nav">
-      <div className="events-cats__row" role="tablist" aria-label="Kharis events">
-        {EVENT_CATEGORIES.map((cat, i) => {
-          const selected = cat.id === activeId;
-          const upcoming = cat.status === "upcoming";
-          const groupStart = i > 0 && EVENT_CATEGORIES[i - 1]!.status !== cat.status;
-
-          return (
-            <Fragment key={cat.id}>
-              {groupStart && <span className="events-cats__divider" aria-hidden />}
-              <button
-                ref={(el) => {
-                  refs.current[i] = el;
-                }}
-                type="button"
-                role="tab"
-                id={`events-cat-${cat.id}`}
-                aria-selected={selected}
-                aria-controls={panelId}
-                tabIndex={selected ? 0 : -1}
-                className={`events-cat${selected ? " is-selected" : ""}`}
-                onClick={() => select(i, false)}
-                onKeyDown={(e) => onKeyDown(e, i)}
-              >
-                {cat.label}
-                <span className="sr-only">{upcoming ? " (weekly service)" : " (past event)"}</span>
-              </button>
-            </Fragment>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 const FOCUSABLE = 'button:not([disabled]), [href], video[controls], select, [tabindex]:not([tabindex="-1"])';
 const galleryEase = [0.2, 0.8, 0.2, 1] as const;
@@ -395,9 +307,17 @@ function GalleryModal({
   );
 }
 
-function EventHero({ category, visit }: { category: EventCategory; visit: ServiceVisit | null }) {
+function EventHero({
+  category,
+  visit,
+  titleId,
+}: {
+  category: EventCategory;
+  visit: ServiceVisit | null;
+  titleId: string;
+}) {
   const reduce = useReducedMotion();
-  const rootRef = useRef<HTMLElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [userPlay, setUserPlay] = useState<boolean | null>(null);
   const [inView, setInView] = useState(false);
@@ -429,7 +349,7 @@ function EventHero({ category, visit }: { category: EventCategory; visit: Servic
     : "Past event · Coming back soon";
 
   return (
-    <section ref={rootRef} className="events-hero" aria-label={hero.headline}>
+    <div ref={rootRef} className="events-hero">
       {hero.video ? (
         <video
           ref={videoRef}
@@ -458,7 +378,9 @@ function EventHero({ category, visit }: { category: EventCategory; visit: Servic
 
       <div className="events-hero__copy">
         <p className="events-hero__eyebrow">{eyebrow}</p>
-        <h2 className="events-hero__headline">{hero.headline}</h2>
+        <h2 id={titleId} className="events-hero__headline">
+          {hero.headline}
+        </h2>
         <p className="events-hero__sub">{hero.subtext}</p>
       </div>
 
@@ -476,7 +398,7 @@ function EventHero({ category, visit }: { category: EventCategory; visit: Servic
           )}
         </button>
       ) : null}
-    </section>
+    </div>
   );
 }
 
@@ -506,9 +428,17 @@ function EventTiles({ tiles }: { tiles: EventTile[] }) {
   );
 }
 
-function EventSplitPanel({ split, onExplore }: { split: EventSplit; onExplore: () => void }) {
+function EventSplitPanel({
+  split,
+  label,
+  onExplore,
+}: {
+  split: EventSplit;
+  label: string;
+  onExplore: () => void;
+}) {
   return (
-    <section className="events-split" aria-label={split.headline}>
+    <div className="events-split">
       {[split.left, split.right].map((photo) => (
         <div key={photo.src} className="events-split__half">
           <Image
@@ -533,28 +463,49 @@ function EventSplitPanel({ split, onExplore }: { split: EventSplit; onExplore: (
         <h3 className="events-split__headline">{split.headline}</h3>
         <button type="button" className="events-explore k-cta" onClick={onExplore}>
           Explore
+          <span className="sr-only"> photos from {label}</span>
           <ArrowUpRight aria-hidden className="h-4 w-4" />
         </button>
       </div>
-    </section>
+    </div>
   );
 }
 
-function EventStory({ category, branches }: { category: EventCategory; branches: ServiceBranch[] }) {
+function EventBlock({
+  category,
+  branches,
+  hidden,
+}: {
+  category: EventCategory;
+  branches: ServiceBranch[];
+  hidden: boolean;
+}) {
   const branch = useStoredBranch(branches);
   const [galleryOpen, setGalleryOpen] = useState(false);
-  const upcoming = category.status === "upcoming";
-  const visit = upcoming && branch
-    ? category.service === "midweek"
-      ? branch.midweek
-      : branch.sunday
-    : null;
+  const titleId = `${category.id}-title`;
+  const visit =
+    category.status === "upcoming" && branch
+      ? category.service === "midweek"
+        ? branch.midweek
+        : branch.sunday
+      : null;
+  const openGallery = () => setGalleryOpen(true);
 
   return (
-    <>
-      <EventHero category={category} visit={visit} />
+    <article id={category.id} className="events-block" aria-labelledby={titleId} hidden={hidden}>
+      <EventHero category={category} visit={visit} titleId={titleId} />
       <EventTiles tiles={category.tiles} />
-      <EventSplitPanel split={category.split} onExplore={() => setGalleryOpen(true)} />
+      {category.split ? (
+        <EventSplitPanel split={category.split} label={category.label} onExplore={openGallery} />
+      ) : (
+        <div className="events-block__more">
+          <button type="button" className="events-explore k-cta" onClick={openGallery}>
+            See more photos
+            <span className="sr-only"> from {category.label}</span>
+            <ArrowUpRight aria-hidden className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       <AnimatePresence>
         {galleryOpen ? (
@@ -566,42 +517,42 @@ function EventStory({ category, branches }: { category: EventCategory; branches:
           />
         ) : null}
       </AnimatePresence>
-    </>
+    </article>
   );
 }
 
 type Props = {
   branches: ServiceBranch[];
+  categories: EventCategory[];
+  visibleIds: ReadonlySet<string>;
+  onClear: () => void;
 };
 
-export function EventCategories({ branches }: Props) {
-  const reduce = useReducedMotion();
-  const panelId = useId();
-  const [activeId, setActiveId] = useState(EVENT_CATEGORIES[0]!.id);
-  const active = EVENT_CATEGORIES.find((c) => c.id === activeId) ?? EVENT_CATEGORIES[0]!;
+/** Every event stacked in order; ones outside the current filter stay mounted but hidden. */
+export function EventCategories({ branches, categories, visibleIds, onClear }: Props) {
+  const firstPast = categories.find((c) => c.status === "past" && visibleIds.has(c.id));
 
   return (
-    <section className="events-cats" aria-label="Browse Kharis events">
-      <CategoryRow activeId={active.id} panelId={panelId} onSelect={setActiveId} />
+    <section className="events-stack" aria-label="Kharis events">
+      {categories.map((category) => (
+        <Fragment key={category.id}>
+          {category === firstPast ? (
+            <div className="events-stack__group">
+              <h2 className="events-stack__group-title">Past events</h2>
+            </div>
+          ) : null}
+          <EventBlock category={category} branches={branches} hidden={!visibleIds.has(category.id)} />
+        </Fragment>
+      ))}
 
-      <div
-        id={panelId}
-        className="events-story"
-        role="tabpanel"
-        aria-labelledby={`events-cat-${active.id}`}
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={active.id}
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={reduce ? undefined : { opacity: 0 }}
-            transition={{ duration: 0.3, ease }}
-          >
-            <EventStory category={active} branches={branches} />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      {visibleIds.size === 0 ? (
+        <div className="events-stack__empty" role="status">
+          <p>No events match</p>
+          <button type="button" className="events-stack__clear" onClick={onClear}>
+            Clear
+          </button>
+        </div>
+      ) : null}
     </section>
   );
 }
