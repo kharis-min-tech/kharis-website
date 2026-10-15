@@ -185,6 +185,13 @@ export function isKp2Branch(branch: Pick<ContactLocation, "name" | "workspace">)
   return /^KP2\b/i.test(branch.name.trim());
 }
 
+/** Main Kharis branches first, then KP2, each group keeping the studio's order. */
+export function kharisFirst<T extends Pick<ContactLocation, "name" | "workspace">>(
+  branches: T[],
+): T[] {
+  return [...branches].sort((a, b) => Number(isKp2Branch(a)) - Number(isKp2Branch(b)));
+}
+
 /** Branch names as the public sees them. Fixes a misspelling still in the directory. */
 export function branchDisplayName(name: string): string {
   return name.replace(/^Chelmesford\b/, "Chelmsford");
