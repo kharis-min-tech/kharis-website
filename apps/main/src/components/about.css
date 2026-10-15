@@ -256,12 +256,22 @@
   padding: 0 clamp(1.25rem, 5vw, 5rem) 2rem;
 }
 .about-page .about-jump__link {
-  min-height: 6rem;
+  min-height: 10rem;
   position: relative;
-  padding: 1.1rem 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-content: start;
+  align-items: start;
+  gap: 0.9rem;
+  padding: 1.25rem clamp(0.9rem, 2vw, 1.75rem);
+  border: 0;
+  border-bottom: 2px solid var(--line);
+  box-shadow: none;
 }
 .about-page .about-jump__link.is-active {
   background: transparent;
+  border-bottom-color: var(--purple);
+  box-shadow: none;
 }
 .about-page .about-jump__icon {
   display: none;
@@ -334,6 +344,11 @@
   }
   .about-page .about-jump__hint {
     display: none;
+  }
+  .about-page .about-jump__link {
+    min-height: 8rem;
+    grid-template-rows: auto 1fr;
+    padding: 1rem 0.65rem;
   }
   .about-page .about-jump__label {
     font-size: 1rem;
