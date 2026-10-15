@@ -107,7 +107,8 @@ export type ContactMessage = {
   email: string;
   phone: string | null;
   topic: string;
-  branch: string | null;
+  branch_id: string | null;
+  branch_name: string | null;
   message: string;
   workspace: string;
   status: ContactStatus;

@@ -118,7 +118,7 @@ export function clearGraceHandoff() {
 }
 
 export function contactHandoffUrl(ticketId: string): string {
-  return `/contact?chatTicket=${encodeURIComponent(ticketId)}`;
+  return `/contact?chatTicket=${encodeURIComponent(ticketId)}#write`;
 }
 
 /** True when a reply is steering the user toward the contact form. */

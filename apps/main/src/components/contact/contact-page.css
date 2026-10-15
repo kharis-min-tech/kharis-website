@@ -1,0 +1,1387 @@
+/*
+ * Contact page. Shares the homepage hero's language: a dark ink field, greyscale photographs with one
+ * in colour, campaign-yellow lettering with a raised edge, square buttons. Scoped to .hello-*.
+ */
+
+.hello-page {
+  --ink: #150934;
+  --rule: rgba(28, 28, 31, 0.14);
+  --paper-shadow:
+    1px 1px 1px rgba(76, 8, 168, 0.03), 2px 3px 4px rgba(76, 8, 168, 0.04),
+    4px 8px 12px rgba(76, 8, 168, 0.05), 8px 16px 26px rgba(76, 8, 168, 0.06),
+    14px 30px 52px rgba(76, 8, 168, 0.07), 22px 52px 96px rgba(76, 8, 168, 0.06);
+  --alert: #b42318;
+  overflow-x: clip;
+}
+
+/* Anchors and focused fields clear the fixed header. */
+.hello-page :is(section[id], .hello-field, textarea) {
+  scroll-margin-top: 6rem;
+}
+
+/* —— Shared type —— */
+.hello-eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+.hello-h2 {
+  margin: 0.8rem 0 0;
+  max-width: 18ch;
+  font-size: clamp(2.1rem, 4.6vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+}
+
+/* The key words sit slightly raised off the page, a light-surface echo of the hero lettering. */
+.hello-h2 em {
+  font-style: normal;
+  white-space: nowrap;
+  color: var(--purple);
+  text-shadow:
+    0 0.03em 0 #c9b6ef,
+    0 0.06em 0 #e2d6f8,
+    0 0.16em 0.3em rgba(99, 14, 212, 0.14);
+}
+
+/* —— Hero —— */
+.hello-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-height: max(680px, min(100svh, 940px));
+  padding: 6.5rem 1.25rem 4rem;
+  overflow: hidden;
+  background: var(--ink);
+  color: #fff;
+}
+
+.hello-hero__photos {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hello-hero__photo {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+  background: #140c22;
+  filter: grayscale(1) brightness(0.46) contrast(1.08);
+  transform: scale(0.975);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  animation: hello-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    filter 0.9s cubic-bezier(0.33, 0, 0.2, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.9s ease;
+}
+
+.hello-hero__photo img {
+  object-fit: cover;
+}
+
+.hello-hero__photo.is-spot {
+  z-index: 2;
+  filter: none;
+  transform: scale(1.035);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 12px 24px rgba(0, 0, 0, 0.45),
+    0 44px 90px rgba(0, 0, 0, 0.6);
+}
+
+.hello-hero__photo figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 0.45rem 0.75rem;
+  background: var(--ink);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.3s;
+}
+
+.hello-hero__photo.is-spot figcaption {
+  opacity: 1;
+}
+
+/* Desktop: four photographs frame the words at different depths, two bleeding off the edges. */
+.hello-hero__photo--a {
+  --drift: -110px;
+  left: -1.5%;
+  top: 12%;
+  width: 26vw;
+  aspect-ratio: 4 / 5;
+  animation-delay: 0.1s;
+  animation-duration: 0.9s;
+}
+
+.hello-hero__photo--b {
+  --drift: -55px;
+  right: -1%;
+  top: 10%;
+  width: 30vw;
+  aspect-ratio: 4 / 3;
+  animation-delay: 0.28s;
+  animation-duration: 1.15s;
+}
+
+.hello-hero__photo--c {
+  --drift: -150px;
+  left: 7%;
+  bottom: 4%;
+  width: 25vw;
+  aspect-ratio: 4 / 3;
+  animation-delay: 0.42s;
+  animation-duration: 1s;
+}
+
+.hello-hero__photo--d {
+  --drift: -80px;
+  right: 6%;
+  bottom: 3%;
+  width: 18vw;
+  aspect-ratio: 3 / 4;
+  animation-delay: 0.18s;
+  animation-duration: 1.25s;
+}
+
+.hello-hero__photo--a img {
+  object-position: 55% center;
+}
+
+/* This photo bleeds off the left edge, so its caption sits on the inner side. */
+.hello-hero__photo--a figcaption {
+  left: auto;
+  right: 0;
+}
+
+.hello-hero__photo--d img {
+  object-position: 58% center;
+}
+
+.hello-hero__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 42% 40% at 50% 52%,
+      rgba(10, 4, 24, 0.72) 0%,
+      rgba(10, 4, 24, 0.4) 55%,
+      rgba(10, 4, 24, 0) 100%
+    ),
+    linear-gradient(0deg, rgba(10, 4, 24, 0.45) 0%, rgba(10, 4, 24, 0) 24%);
+}
+
+.hello-hero__copy {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 38rem;
+  text-align: center;
+}
+
+.hello-hero__eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  animation: hello-fade 0.6s ease-out both;
+}
+
+.hello-hero__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  color: #fff;
+}
+
+.hello-hero__lead {
+  font-size: clamp(1.15rem, 2.6vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-shadow:
+    0 0.035em 0 #8f82bd,
+    0 0.07em 0 #43337c,
+    0 0.12em 0.12em rgba(0, 0, 0, 0.55),
+    0 0.4em 0.7em rgba(0, 0, 0, 0.45);
+  animation: hello-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+/* Same lettering as "Kharis" in the homepage hero: a shallow edge in a darker yellow, then a cast shadow. */
+.hello-hero__brand {
+  --c: var(--yellow);
+  margin-top: 0.1rem;
+  font-size: clamp(2.7rem, 7.8vw, 5.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--yellow);
+  white-space: nowrap;
+  text-shadow:
+    0 0.01em 0 color-mix(in srgb, var(--c) 78%, #1b0a45),
+    0 0.02em 0 color-mix(in srgb, var(--c) 60%, #1b0a45),
+    0 0.03em 0 color-mix(in srgb, var(--c) 44%, #1b0a45),
+    0 0.04em 0 color-mix(in srgb, var(--c) 30%, #1b0a45),
+    0 0.06em 0.04em rgba(0, 0, 0, 0.5),
+    0 0.16em 0.28em rgba(0, 0, 0, 0.45),
+    0 0.34em 0.7em rgba(0, 0, 0, 0.4);
+  animation: hello-wipe 1.05s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
+}
+
+.hello-hero__intro {
+  margin: 1.4rem 0 0;
+  max-width: 33rem;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.6),
+    0 4px 18px rgba(0, 0, 0, 0.55);
+  animation: hello-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+}
+
+.hello-hero__ctas {
+  margin-top: 2rem;
+  animation: hello-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
+}
+
+.hello-hero__ctas :is(.btn-primary, .btn-secondary) {
+  min-width: 11.75rem;
+  box-shadow:
+    0 2px 0 var(--edge),
+    0 10px 22px rgba(0, 0, 0, 0.4);
+}
+
+/* Phones and tablets: the words first, then the photographs as an overlapping strip. */
+@media (max-width: 1023px) {
+  .hello-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 2.75rem;
+    min-height: 0;
+    padding: 7rem 1.25rem 3.5rem;
+  }
+
+  .hello-hero__photos {
+    position: relative;
+    order: 2;
+    width: 100%;
+    max-width: 48rem;
+    height: clamp(20rem, 82vw, 32rem);
+  }
+
+  .hello-hero__shade {
+    display: none;
+  }
+
+  .hello-hero__photo--a {
+    left: 0;
+    top: 0;
+    width: 44%;
+  }
+
+  .hello-hero__photo--b {
+    right: 0;
+    top: 6%;
+    width: 60%;
+  }
+
+  .hello-hero__photo--c {
+    left: 18%;
+    bottom: 0;
+    width: 52%;
+  }
+
+  .hello-hero__photo--d {
+    right: 2%;
+    bottom: 3%;
+    width: 27%;
+  }
+}
+
+@media (max-width: 479px) {
+  .hello-hero__ctas {
+    width: 100%;
+  }
+}
+
+/* Photographs drift upward at different speeds as the page scrolls. */
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 1024px) {
+    .hello-hero__photo {
+      animation:
+        hello-card-in 1s cubic-bezier(0.22, 1, 0.36, 1) both,
+        hello-drift linear both;
+      animation-timeline: auto, scroll(root);
+      animation-range:
+        normal,
+        0 100vh;
+    }
+
+    .hello-hero__photo--a {
+      animation-delay: 0.1s, 0s;
+      animation-duration: 0.9s, auto;
+    }
+
+    .hello-hero__photo--b {
+      animation-delay: 0.28s, 0s;
+      animation-duration: 1.15s, auto;
+    }
+
+    .hello-hero__photo--c {
+      animation-delay: 0.42s, 0s;
+      animation-duration: 1s, auto;
+    }
+
+    .hello-hero__photo--d {
+      animation-delay: 0.18s, 0s;
+      animation-duration: 1.25s, auto;
+    }
+  }
+}
+
+/* —— Write to us —— */
+.hello-write {
+  background: var(--bg-purple);
+  padding: clamp(4rem, 8vw, 7rem) 1.25rem clamp(4.5rem, 9vw, 8rem);
+}
+
+.hello-write__inner {
+  display: grid;
+  gap: 3rem;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .hello-write,
+  .hello-branches {
+    padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hello-write__inner {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(3rem, 5vw, 5.5rem);
+    align-items: start;
+  }
+}
+
+.hello-write__sub {
+  margin: 1rem 0 0;
+  max-width: 34rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--fg-soft);
+}
+
+.hello-paper {
+  position: relative;
+  margin-top: 2.25rem;
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+  background: #fff;
+  box-shadow: var(--paper-shadow);
+}
+
+/* The dove sits faintly in the corner, like a letterhead. */
+.hello-paper::after {
+  content: "";
+  position: absolute;
+  right: clamp(1rem, 3vw, 2.25rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  width: clamp(3.5rem, 8vw, 5.5rem);
+  aspect-ratio: 1;
+  background: url("/images/kharis-logo.png") center / contain no-repeat;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.hello-letter {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1.08rem, 1.8vw, 1.35rem);
+  font-weight: 600;
+  line-height: 2.15;
+  color: var(--fg);
+}
+
+.hello-letter__ticket {
+  margin: 0 0 1.25rem;
+  padding: 0.6rem 0.9rem;
+  background: var(--bg-purple);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--fg-soft);
+}
+
+.hello-letter__ticket strong {
+  color: var(--purple-deep);
+  letter-spacing: 0.04em;
+}
+
+.hello-letter__greeting {
+  margin: 0 0 0.5rem;
+  font-weight: 800;
+}
+
+.hello-letter__line {
+  margin: 0;
+}
+
+.hello-letter__optional {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* A field and the punctuation after it never split across lines. */
+.hello-tie {
+  white-space: nowrap;
+}
+
+.hello-letter__stop {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* Fill-in-the-blank fields that sit inside the sentence. */
+.hello-field {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 0.15em;
+  border: 0;
+  border-bottom: 2px solid rgba(99, 14, 212, 0.35);
+  border-radius: 0;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--purple-deep);
+  outline: none;
+}
+
+.hello-field::placeholder {
+  font-weight: 600;
+  color: rgba(28, 28, 31, 0.38);
+}
+
+.hello-field--name {
+  width: 10ch;
+}
+
+.hello-field--email {
+  width: 15ch;
+}
+
+.hello-field--phone {
+  width: 11ch;
+}
+
+@supports (field-sizing: content) {
+  .hello-field:is(input) {
+    field-sizing: content;
+    width: auto;
+    min-width: 8ch;
+  }
+}
+
+/* A highlighter stroke shows where you are typing. Instant, so typing never waits on it. */
+.hello-field:focus-visible {
+  border-bottom-color: var(--purple);
+  background: rgba(255, 222, 89, 0.45);
+}
+
+.hello-field[aria-invalid="true"] {
+  border-bottom-color: var(--alert);
+  background: rgba(180, 35, 24, 0.06);
+}
+
+.hello-field--select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 1.15em;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23630ed4' stroke-width='1.8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.15em center;
+  background-size: 0.6em auto;
+}
+
+.hello-field--select:focus-visible {
+  background-color: rgba(255, 222, 89, 0.45);
+}
+
+/* The message area is ruled like notepaper. */
+.hello-letter__message {
+  display: block;
+  margin-top: 1.25rem;
+}
+
+.hello-letter__message textarea {
+  --line: 1.85em;
+  display: block;
+  width: 100%;
+  min-height: calc(var(--line) * 4);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: repeating-linear-gradient(
+    transparent 0 calc(var(--line) - 1px),
+    rgba(99, 14, 212, 0.16) calc(var(--line) - 1px) var(--line)
+  );
+  background-attachment: local;
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: var(--line);
+  color: var(--fg);
+  resize: vertical;
+  outline: none;
+}
+
+.hello-letter__message textarea::placeholder {
+  color: rgba(28, 28, 31, 0.4);
+}
+
+.hello-letter__message textarea:focus-visible {
+  background-image: repeating-linear-gradient(
+    transparent 0 calc(var(--line) - 2px),
+    rgba(99, 14, 212, 0.4) calc(var(--line) - 2px) var(--line)
+  );
+}
+
+.hello-letter__message textarea[aria-invalid="true"] {
+  background-image: repeating-linear-gradient(
+    transparent 0 calc(var(--line) - 2px),
+    rgba(180, 35, 24, 0.45) calc(var(--line) - 2px) var(--line)
+  );
+}
+
+/* Your first name appears as the sign-off while you type. */
+.hello-letter__sign {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 1rem 0 0;
+  line-height: 1.4;
+}
+
+.hello-letter__sign > span:first-child {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.hello-letter__signature {
+  min-width: 5ch;
+  margin-top: 0.2rem;
+  padding: 0 0.2em 0.05em;
+  border-bottom: 3px solid var(--yellow);
+  font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--purple);
+  transform: rotate(-2.5deg);
+  transform-origin: right bottom;
+  animation: hello-card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hello-letter__errors {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--alert);
+}
+
+.hello-letter__send {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.hello-letter__send .btn-primary {
+  min-width: 12.5rem;
+}
+
+.hello-letter__send .btn-primary:disabled {
+  cursor: progress;
+  opacity: 0.75;
+  transform: none;
+}
+
+.hello-letter__send p {
+  flex: 1 1 16rem;
+  margin: 0;
+  max-width: 24rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.hello-thanks {
+  position: relative;
+  z-index: 1;
+  padding: 1rem 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--fg-soft);
+  outline: none;
+}
+
+.hello-thanks p {
+  margin: 0.5rem 0 0;
+  max-width: 34rem;
+}
+
+.hello-thanks__dove {
+  display: block;
+  width: 4.25rem;
+  margin-bottom: 1rem;
+  filter: brightness(0);
+  animation: hello-dove 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hello-thanks .hello-thanks__title {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+}
+
+.hello-thanks__ticket {
+  font-size: 0.92rem;
+}
+
+.hello-link {
+  margin-top: 1.25rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: var(--purple-deep);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+
+/* Aside: a photograph, then what happens after you send. */
+@media (min-width: 1024px) {
+  .hello-write__aside {
+    padding-top: 7.5rem;
+  }
+}
+
+.hello-write__photo {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 16 / 10;
+  box-shadow: var(--paper-shadow);
+}
+
+.hello-write__photo img {
+  object-fit: cover;
+  object-position: 38% center;
+}
+
+@media (min-width: 1024px) {
+  .hello-write__photo {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+.hello-write__photo figcaption {
+  position: absolute;
+  left: -0.75rem;
+  bottom: 1.25rem;
+  padding: 0.5rem 0.85rem;
+  background: var(--ink);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.hello-steps {
+  display: grid;
+  gap: 1.75rem;
+  margin: 2.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hello-steps li {
+  position: relative;
+  padding-left: 4.5rem;
+}
+
+.hello-steps__num {
+  position: absolute;
+  left: 0;
+  top: -0.4rem;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(99, 14, 212, 0.5);
+}
+
+.hello-steps h3 {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.hello-steps p {
+  margin: 0.35rem 0 0;
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--fg-soft);
+}
+
+@supports (animation-timeline: view()) {
+  .hello-steps li {
+    animation: hello-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 5% entry 55%;
+  }
+
+  .hello-steps li:nth-child(2) {
+    animation-range: entry 15% entry 70%;
+  }
+
+  .hello-steps li:nth-child(3) {
+    animation-range: entry 25% entry 85%;
+  }
+}
+
+/* —— Branches —— */
+.hello-branches {
+  background: var(--bg);
+  padding: clamp(4rem, 8vw, 6.5rem) 1.25rem clamp(3rem, 6vw, 4.5rem);
+}
+
+.hello-branches__inner {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.hello-branches__head {
+  display: grid;
+  gap: 2rem;
+}
+
+.hello-branches__sub {
+  margin: 1rem 0 0;
+  max-width: 32rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--fg-soft);
+}
+
+.hello-branches__sub a {
+  color: var(--purple-deep);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.hello-branches__tools {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .hello-branches__tools {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+.hello-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: min(100%, 17rem);
+  padding: 0.55rem 0;
+  border-bottom: 2px solid var(--fg);
+  color: var(--muted);
+}
+
+.hello-search:focus-within {
+  border-bottom-color: var(--purple);
+  color: var(--purple);
+}
+
+.hello-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+  outline: none;
+}
+
+.hello-regions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-self: flex-start;
+  box-shadow: inset 0 0 0 1.5px rgba(99, 14, 212, 0.35);
+}
+
+.hello-regions button {
+  padding: 0.65rem 1rem;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--purple-deep);
+  cursor: pointer;
+}
+
+@media (max-width: 479px) {
+  .hello-regions button {
+    padding-inline: 0.7rem;
+  }
+}
+
+.hello-regions button span {
+  margin-left: 0.2rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+
+.hello-regions button[aria-pressed="true"] {
+  background: var(--purple);
+  color: #fff;
+}
+
+.hello-regions button:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+.hello-branches__grid {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .hello-branches__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 3.5rem;
+    align-items: start;
+  }
+}
+
+/* The branch list reads like an index: big town names, a rule between each. */
+.hello-index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.hello-index > li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.hello-index__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "city time"
+    "where time";
+  gap: 0.1rem 1rem;
+  width: 100%;
+  padding: 1rem 0.85rem;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.hello-index__row:hover {
+  background: var(--bg-purple);
+}
+
+.hello-index__row:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: -2px;
+}
+
+.hello-index__city {
+  grid-area: city;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hello-index__where {
+  grid-area: where;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.hello-index__time {
+  grid-area: time;
+  align-self: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--purple-deep);
+}
+
+@media (max-width: 559px) {
+  .hello-index__row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "city"
+      "where"
+      "time";
+  }
+
+  .hello-index__time {
+    align-self: start;
+    margin-top: 0.3rem;
+  }
+}
+
+.hello-index__time abbr {
+  text-decoration: none;
+}
+
+.hello-index > li.is-on .hello-index__row {
+  background: var(--ink);
+  color: #fff;
+}
+
+.hello-index > li.is-on .hello-index__where {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.hello-index > li.is-on .hello-index__time {
+  color: var(--yellow);
+}
+
+.hello-index__detail {
+  padding: 0 0 1.25rem;
+}
+
+.hello-index__empty {
+  padding: 1.5rem 0.85rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--fg-soft);
+}
+
+.hello-index__empty a {
+  color: var(--purple-deep);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.hello-branches__panel {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .hello-index__detail {
+    display: none;
+  }
+
+  .hello-branches__panel {
+    position: sticky;
+    top: 6rem;
+    display: block;
+  }
+}
+
+.hello-branches__pick {
+  margin: 0;
+  padding: 2rem;
+  border: 1px solid var(--rule);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.hello-detail {
+  border: 1px solid var(--rule);
+  background: var(--bg);
+}
+
+.hello-detail__map {
+  aspect-ratio: 16 / 10;
+  background: var(--bg-purple);
+}
+
+.hello-detail__map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  animation: hello-fade 0.6s ease-out both;
+}
+
+.hello-detail__body {
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.hello-detail__name {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.hello-detail__name span {
+  color: var(--purple);
+}
+
+.hello-detail__address {
+  display: flex;
+  flex-direction: column;
+  margin: 0.75rem 0 0;
+  font-size: 0.98rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--fg-soft);
+}
+
+.hello-detail__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 1rem 1.5rem;
+  margin: 1.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+
+.hello-detail__facts dt {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hello-detail__facts dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.hello-detail__facts a {
+  color: var(--purple-deep);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* The KP2 prefix reads as a label, so KP2 branches are easy to pick out of the list. */
+.hello-kp2 {
+  display: inline-block;
+  margin-right: 0.1em;
+  padding: 0.12em 0.32em 0.08em;
+  background: var(--yellow);
+  font-size: 0.62em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  vertical-align: 0.18em;
+  color: #1c1c1f;
+}
+
+.hello-detail__kp2 {
+  margin: 1.25rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+}
+
+.hello-detail__kp2 a {
+  color: var(--purple-deep);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+html[data-theme="dark"] .hello-detail__kp2 a {
+  color: #d9c8f7;
+}
+
+.hello-detail__actions {
+  margin-top: 1.75rem;
+}
+
+/* —— Closing band —— */
+.hello-close {
+  padding: clamp(1.5rem, 4vw, 3rem) 1.25rem clamp(3rem, 6vw, 4.5rem);
+}
+
+@media (min-width: 768px) {
+  .hello-close {
+    padding-inline: 2rem;
+  }
+}
+
+.hello-close__panel {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.hello-close__links {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 44rem;
+  margin-top: 1.75rem;
+}
+
+@media (min-width: 640px) {
+  .hello-close__links {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+}
+
+.hello-close__press {
+  margin: 1.5rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.hello-close__press a {
+  color: var(--yellow);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* —— Motion —— */
+@keyframes hello-card-in {
+  from {
+    opacity: 0;
+    scale: 0.95;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes hello-drift {
+  to {
+    translate: 0 var(--drift, -60px);
+  }
+}
+
+@keyframes hello-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hello-rise {
+  from {
+    opacity: 0;
+    translate: 0 0.6em;
+    scale: 0.97;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes hello-wipe {
+  from {
+    opacity: 0.4;
+    clip-path: inset(0 100% 0 0);
+    translate: -0.2em 0;
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    translate: 0 0;
+  }
+}
+
+@keyframes hello-dove {
+  from {
+    opacity: 0;
+    transform: translateY(18px) rotate(-10deg) scale(0.95);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-6px) rotate(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hello-page *,
+  .hello-page *::before,
+  .hello-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* —— Site dark theme —— */
+html[data-theme="dark"] .hello-page {
+  --rule: rgba(255, 255, 255, 0.12);
+  --paper-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25), 0 10px 24px rgba(0, 0, 0, 0.3), 0 30px 70px rgba(0, 0, 0, 0.35);
+  --alert: #ff8a7a;
+}
+
+html[data-theme="dark"] .hello-write {
+  background: var(--bg-soft);
+}
+
+html[data-theme="dark"] .hello-paper {
+  background: var(--card-bg);
+}
+
+html[data-theme="dark"] .hello-thanks__dove {
+  filter: none;
+}
+
+html[data-theme="dark"] .hello-paper::after {
+  filter: invert(1);
+  opacity: 0.08;
+}
+
+html[data-theme="dark"] .hello-field {
+  color: #d9c8f7;
+  border-bottom-color: rgba(185, 160, 235, 0.45);
+}
+
+html[data-theme="dark"] .hello-field::placeholder,
+html[data-theme="dark"] .hello-letter__message textarea::placeholder {
+  color: rgba(241, 238, 245, 0.4);
+}
+
+html[data-theme="dark"] .hello-field:focus-visible {
+  background: rgba(255, 222, 89, 0.18);
+}
+
+html[data-theme="dark"] .hello-field--select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23d9c8f7' stroke-width='1.8'/%3E%3C/svg%3E");
+}
+
+html[data-theme="dark"] .hello-letter__message textarea {
+  background-image: repeating-linear-gradient(
+    transparent 0 calc(var(--line) - 1px),
+    rgba(185, 160, 235, 0.2) calc(var(--line) - 1px) var(--line)
+  );
+}
+
+html[data-theme="dark"] .hello-letter__message textarea:focus-visible {
+  background-image: repeating-linear-gradient(
+    transparent 0 calc(var(--line) - 2px),
+    rgba(185, 160, 235, 0.5) calc(var(--line) - 2px) var(--line)
+  );
+}
+
+html[data-theme="dark"] .hello-field--select option {
+  background: var(--card-bg);
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .hello-h2 em {
+  text-shadow:
+    0 0.03em 0 #3c2466,
+    0 0.06em 0 #2a1748,
+    0 0.16em 0.3em rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] .hello-steps__num {
+  -webkit-text-stroke-color: rgba(185, 160, 235, 0.5);
+}
+
+html[data-theme="dark"] :is(.hello-field, .hello-index__time, .hello-regions button) {
+  color: #d9c8f7;
+}
+
+html[data-theme="dark"] .hello-regions button[aria-pressed="true"] {
+  background: var(--purple-fill);
+  color: #fff;
+}
+
+html[data-theme="dark"] .hello-index > li.is-on .hello-index__row {
+  background: var(--purple-fill);
+}
+
+html[data-theme="dark"]
+  :is(.hello-detail__facts a, .hello-link, .hello-branches__sub a, .hello-index__empty a) {
+  color: #d9c8f7;
+}
