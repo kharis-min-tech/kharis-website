@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -21,10 +21,14 @@ const primary = [
   { label: "Give", href: "/give" },
   { label: "Contact", href: "/contact" },
 ];
-const secondary = [
+const aboutPages = [
+  { label: "About Kharis", href: "/about" },
+  { label: "Our mission", href: "/about#mission" },
+  { label: "Our vision", href: "/about#vision" },
+  { label: "Our leadership", href: "/about#leadership" },
   { label: "Governance", href: "/governance" },
-  { label: "KP2", href: KP2_URL },
 ];
+const secondary = [{ label: "KP2", href: KP2_URL }];
 
 export function MobileNavigation({
   open,
@@ -38,6 +42,10 @@ export function MobileNavigation({
   dark: boolean;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  useEffect(() => {
+    if (!open) setAboutOpen(false);
+  }, [open]);
   const ref = useDialog(open, onClose);
   const reduce = usePrefersReducedMotion();
   useEffect(() => setMounted(true), []);
@@ -107,13 +115,48 @@ export function MobileNavigation({
                     delay: reduce ? 0 : 0.06 + index * 0.025,
                   }}
                 >
-                  <Link
-                    href={item.href}
-                    aria-current={current(item.href) ? "page" : undefined}
-                    onClick={onClose}
-                  >
-                    <span>{item.label}</span>
-                  </Link>
+                  {item.href === "/about" ? (
+                    <>
+                      <button
+                        type="button"
+                        className="mobile-nav__parent"
+                        aria-expanded={aboutOpen}
+                        aria-controls="mobile-about-pages"
+                        onClick={() => setAboutOpen((value) => !value)}
+                      >
+                        <span>{item.label}</span>
+                        <ChevronDown size={20} aria-hidden="true" />
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {aboutOpen && (
+                          <motion.div
+                            id="mobile-about-pages"
+                            className="mobile-nav__submenu"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: reduce ? 0 : 0.25 }}
+                          >
+                            <nav aria-label="About Kharis pages">
+                              {aboutPages.map((page) => (
+                                <Link key={page.href} href={page.href} onClick={onClose}>
+                                  {page.label}
+                                </Link>
+                              ))}
+                            </nav>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      aria-current={current(item.href) ? "page" : undefined}
+                      onClick={onClose}
+                    >
+                      <span>{item.label}</span>
+                    </Link>
+                  )}
                 </motion.div>
               ))}
             </nav>
