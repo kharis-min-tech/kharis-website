@@ -8,7 +8,7 @@ import { getContactLocations } from "@/lib/contactLocations";
 export const metadata: Metadata = {
   title: "Contact | Kharis Church",
   description:
-    "Find a Kharis branch on the map, get directions, or send a message about a Sunday visit, prayer, giving, or pastoral care.",
+    "Write to Kharis about a first visit, prayer, pastoral care or baptism, and find service times, directions and a map for every Kharis branch.",
 };
 
 export default async function ContactPage() {

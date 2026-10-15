@@ -53,7 +53,7 @@ export function MessageInbox() {
     if (!rows) return [];
     if (!needle) return rows;
     return rows.filter((row) =>
-      `${row.first_name} ${row.last_name} ${row.email} ${row.topic} ${row.branch ?? ""} ${row.message}`
+      `${row.first_name} ${row.last_name} ${row.email} ${row.topic} ${row.branch_name ?? ""} ${row.message}`
         .toLowerCase()
         .includes(needle),
     );
@@ -172,7 +172,7 @@ export function MessageInbox() {
                     <p className="text-sm text-muted-foreground">
                       {row.email}
                       {row.phone ? ` · ${row.phone}` : ""}
-                      {row.branch ? ` · ${row.branch}` : ""}
+                      {row.branch_name ? ` · ${row.branch_name}` : ""}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {row.status !== "read" ? (

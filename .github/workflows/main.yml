@@ -36,6 +36,8 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       NEXT_PUBLIC_SITE_URL: https://kharis.org
+      # Where KP2 links go. Until kharis.org/kp2 serves the new KP2 app, point at its preview.
+      NEXT_PUBLIC_KP2_URL: ${{ vars.NEXT_PUBLIC_KP2_URL || 'https://kharis-kp2.itadmin-a94.workers.dev/kp2' }}
       # Optional: the contact map renders only when this is set (repo Variable).
       NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ vars.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
     steps:

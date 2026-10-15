@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
+import { EvangelicalAllianceMark } from "@/components/EvangelicalAllianceMark";
+import "./evangelical-alliance.css";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Reveal } from "@/components/Reveal";
 import { KP2_URL } from "@/lib/kp2";
@@ -144,7 +145,7 @@ export function SiteFooter({ tone }: Props) {
                   </svg>
                 </a>
                 <a
-                  href="https://www.facebook.com/kharischurch"
+                  href="https://www.facebook.com/KharisMinistries"
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Facebook"
@@ -192,13 +193,7 @@ export function SiteFooter({ tone }: Props) {
             <p className={`site-footer__legal ${dark ? "text-white/60" : "text-muted"}`}>
               2026 Kharis Ministries | All Rights Reserved | Charity Number 1139291
             </p>
-            <Image
-              src="/images/ea-logo-evangelical-alliance.png"
-              alt="Evangelical Alliance"
-              width={180}
-              height={48}
-              className={`site-footer__ea-logo ${dark ? "" : "site-footer__ea-logo--on-light"}`}
-            />
+            <EvangelicalAllianceMark />
           </div>
         </div>
       </Reveal>

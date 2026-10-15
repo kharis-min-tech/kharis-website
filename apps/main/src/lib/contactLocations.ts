@@ -1,25 +1,7 @@
 import { supabase } from "@/lib/supabase";
+import type { ContactLocation } from "@/lib/contact-branches";
 
-export interface ContactVenue {
-  id: string;
-  name: string | null;
-  address_line1: string | null;
-  address_line2: string | null;
-  city: string | null;
-  postcode: string | null;
-  country: string | null;
-}
-
-export interface ContactLocation {
-  id: string;
-  slug: string;
-  name: string;
-  contact_email: string | null;
-  contact_phone: string | null;
-  pastor_name: string | null;
-  pastor_role: "pastor" | "lead" | null;
-  venues: ContactVenue[];
-}
+export type { ContactLocation, ContactService, ContactVenue } from "@/lib/contact-branches";
 
 export async function getContactLocations(): Promise<ContactLocation[]> {
   const { data, error } = await supabase
@@ -33,6 +15,7 @@ export async function getContactLocations(): Promise<ContactLocation[]> {
       contact_phone,
       pastor_name,
       pastor_role,
+      workspace,
       venues (
         id,
         name,
@@ -40,7 +23,19 @@ export async function getContactLocations(): Promise<ContactLocation[]> {
         address_line2,
         city,
         postcode,
-        country
+        country,
+        latitude,
+        longitude
+      ),
+      services (
+        id,
+        name,
+        type,
+        day,
+        start_time,
+        venue_id,
+        sort_order,
+        is_active
       )
     `,
     )
@@ -52,5 +47,9 @@ export async function getContactLocations(): Promise<ContactLocation[]> {
     return [];
   }
 
-  return data ?? [];
+  return (data ?? []).map((branch) => ({
+    ...branch,
+    venues: branch.venues ?? [],
+    services: branch.services ?? [],
+  }));
 }

@@ -438,7 +438,7 @@
 }
 
 .about-page .about-panel__hero--leadership .about-panel__hero-media {
-  background-image: url("/images/about-pastors-sunday.jpg");
+  background-image: url("/images/about-pastors-portrait.jpg");
 }
 .about-page .about-panel__focus {
   border-left: 0;
@@ -472,7 +472,7 @@
   background-size: cover;
 }
 .about-page .about-panel__hero--leadership .about-panel__hero-media {
-  background-position: center 30%;
+  background-position: center top;
 }
 
 .about-page .about-hero__brand,
@@ -938,4 +938,24 @@
 }
 .about-page .about-lead__story-body p {
   max-width: none;
+}
+
+.about-page .about-lead__profile:nth-child(2) .about-lead__profile-photo img {
+  object-position: center top;
+}
+@media (max-width: 759px) {
+  .about-page .about-panel__hero--leadership {
+    min-height: 18rem;
+  }
+}
+
+@media (min-width: 760px) {
+  .about-page .about-panel__hero--leadership .about-panel__hero-copy {
+    align-self: start;
+    max-width: 45%;
+    padding: clamp(1.5rem, 3vw, 3rem);
+  }
+  .about-page .about-panel__hero--leadership .about-panel__hero-copy h3 {
+    font-size: clamp(2rem, 2.6vw, 3rem);
+  }
 }
