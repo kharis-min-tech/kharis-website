@@ -1,0 +1,20 @@
+/* The EA logo artwork has white lettering, so it needs a dark backdrop to be legible. */
+img.site-footer__ea-logo {
+  background: transparent;
+  padding: 0;
+  opacity: 1;
+  filter: none;
+}
+
+img.site-footer__ea-logo.site-footer__ea-logo--on-light {
+  background: #140b22;
+  padding: 0.45rem 0.7rem;
+  height: 2.9rem;
+}
+
+html[data-theme="dark"] img.site-footer__ea-logo,
+.site-footer--dark img.site-footer__ea-logo {
+  background: transparent;
+  padding: 0;
+  height: 2.5rem;
+}
