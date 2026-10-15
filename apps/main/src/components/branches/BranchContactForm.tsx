@@ -16,14 +16,14 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
   const [error, setError] = useState("");
 
   const inputClass =
-    "w-full rounded-xl border border-white/12 bg-black/40 px-4 py-3 text-sm font-medium text-white placeholder:text-gray-500 outline-none transition-colors focus:border-[#e8a33d]";
+    "w-full border border-white/12 bg-black/40 px-4 py-3 text-sm font-medium text-white placeholder:text-gray-500 outline-none transition-colors focus:border-[#e8a33d]";
   const labelClass = "mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-400";
 
   return (
     <section id="contact" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
         <div className="lg:col-span-5 flex flex-col justify-center">
-          <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[var(--orange-ink)]">
+          <div className="inline-flex w-fit items-center gap-1.5 border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[var(--orange-ink)]">
             <span>Say Hello</span>
           </div>
           <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold text-white">
@@ -35,7 +35,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
           </p>
 
           <div className="mt-8 space-y-3">
-            <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-[#15131f] px-4 py-3.5 text-sm font-semibold text-white">
+            <div className="flex items-start gap-3 border border-white/10 bg-[#15131f] px-4 py-3.5 text-sm font-semibold text-white">
               <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#e8a33d]" />
               {branch.fullAddress}
             </div>
@@ -80,7 +80,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
                 setBusy(false);
               }
             }}
-            className="rounded-[2rem] border border-white/10 bg-[#15131f] p-6 sm:p-9"
+            className="border border-white/10 bg-[#15131f] p-6 sm:p-9"
           >
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
@@ -152,7 +152,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
               <button
                 type="submit"
                 disabled={busy}
-                className="inline-flex items-center gap-2 rounded-2xl bg-[#630ed4] px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-[#630ed4]/25 transition-all hover:-translate-y-0.5 hover:bg-[#2a035c] cursor-pointer disabled:opacity-60"
+                className="k-cta inline-flex items-center gap-2 bg-[#630ed4] px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-[#630ed4]/25 transition-all hover:-translate-y-0.5 hover:bg-[#2a035c] cursor-pointer disabled:opacity-60"
               >
                 {sent ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />}
                 <span>{busy ? "Sending…" : sent ? "Message Sent" : "Send Message"}</span>

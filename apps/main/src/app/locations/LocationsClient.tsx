@@ -36,7 +36,7 @@ export function LocationsClient({ items: branches, full }: Props) {
       <section className="relative overflow-hidden px-5 pt-16 pb-14 md:px-8">
         <div className="pointer-events-none absolute -top-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#630ed4]/20 blur-3xl" />
         <div className="relative z-10 mx-auto max-w-[1536px] space-y-6 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-1.5 text-xs font-bold text-[var(--purple)]">
+          <div className="inline-flex items-center gap-2 border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-1.5 text-xs font-bold text-[var(--purple)]">
             <Compass className="h-4 w-4 text-[#d4920a]" />
             <span>Live from the Kharis directory</span>
           </div>
@@ -59,7 +59,7 @@ export function LocationsClient({ items: branches, full }: Props) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search by city, postcode or branch name..."
-                className="w-full rounded-2xl border border-[var(--border)] bg-[var(--input-bg)] py-4 pl-12 pr-4 text-sm font-bold shadow-xl outline-none focus:ring-2 focus:ring-[var(--purple)]"
+                className="w-full border border-[var(--border)] bg-[var(--input-bg)] py-4 pl-12 pr-4 text-sm font-bold shadow-xl outline-none focus:ring-2 focus:ring-[var(--purple)]"
               />
             </div>
           </div>
@@ -74,7 +74,7 @@ export function LocationsClient({ items: branches, full }: Props) {
         </h2>
 
         {filtered.length === 0 ? (
-          <div className="rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] p-12 text-center">
+          <div className="border border-[var(--border)] bg-[var(--card-bg)] p-12 text-center">
             <h3 className="text-xl font-bold">No branches matched your search</h3>
             <p className="mt-2 text-sm font-medium text-[var(--muted)]">
               Try another city or postcode.
@@ -85,7 +85,7 @@ export function LocationsClient({ items: branches, full }: Props) {
             {filtered.map((branch) => (
               <div
                 key={branch.id}
-                className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] shadow-sm transition-all duration-300 hover:shadow-xl"
+                className="group flex flex-col justify-between overflow-hidden border border-[var(--border)] bg-[var(--card-bg)] shadow-sm transition-all duration-300 hover:shadow-xl"
               >
                 <div>
                   <div className="relative h-52 overflow-hidden bg-black">
@@ -97,7 +97,7 @@ export function LocationsClient({ items: branches, full }: Props) {
                       />
                     ) : null}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <span className="absolute left-3 top-3 rounded-full bg-[#630ed4] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                    <span className="absolute left-3 top-3 bg-[#630ed4] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
                       {branch.region}
                     </span>
                     <div className="absolute bottom-3 left-3 right-3 text-white">
@@ -115,7 +115,7 @@ export function LocationsClient({ items: branches, full }: Props) {
                     <p className="line-clamp-2 text-xs font-medium leading-relaxed text-[var(--muted)]">
                       {branch.description}
                     </p>
-                    <div className="divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)]">
+                    <div className="divide-y divide-[var(--border)] overflow-hidden border border-[var(--border)] bg-[var(--surface-muted)]">
                       <div className="flex items-center gap-2 px-3.5 py-3">
                         <Clock className="h-4 w-4 shrink-0 text-[var(--purple)]" />
                         <span className="text-xs font-bold">{branch.serviceSummary}</span>

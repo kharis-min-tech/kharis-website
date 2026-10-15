@@ -57,13 +57,13 @@ export function BranchMediaModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ type: "spring", stiffness: 300, damping: 28 }}
-            className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#0d0710] shadow-2xl"
+            className="relative z-10 w-full max-w-5xl overflow-hidden border border-white/10 bg-[#0d0710] shadow-2xl"
           >
             {/* Close */}
             <button
               type="button"
               onClick={onClose}
-              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white transition-colors hover:bg-white/10 cursor-pointer"
+              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center border border-white/10 bg-black/60 text-white transition-colors hover:bg-white/10 cursor-pointer"
               aria-label="Close"
             >
               <X className="h-5 w-5" />
@@ -74,7 +74,7 @@ export function BranchMediaModal({
                 <img
                   src={imageSrc}
                   alt={`Kharis ${city} gathering`}
-                  className="max-h-[78vh] w-full rounded-3xl object-contain"
+                  className="max-h-[78vh] w-full object-contain"
                 />
               </div>
             )}
@@ -100,7 +100,7 @@ export function BranchMediaModal({
                   href="https://www.youtube.com/@kharischurch"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#630ed4] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2a035c]"
+                  className="k-cta inline-flex items-center gap-2 bg-[#630ed4] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2a035c]"
                 >
                   <span>Watch on YouTube</span>
                   <ExternalLink className="h-4 w-4" />

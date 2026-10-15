@@ -7,7 +7,7 @@ export default function BranchMissing() {
       <p className="text-[var(--muted)]">That branch isn&apos;t in the directory yet.</p>
       <Link
         href="/locations"
-        className="rounded-full bg-[var(--purple)] px-5 py-2.5 text-sm font-semibold text-white"
+        className="bg-[var(--purple)] px-5 py-2.5 text-sm font-semibold text-white"
       >
         Browse all locations
       </Link>
