@@ -10,8 +10,8 @@ import { serverFetch } from "@/lib/server-fetch";
 // identical when the real values are set; without them, queries fail and the
 // existing `if (error) return []` handlers in lib/branches.ts degrade the page
 // rather than breaking the build.
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://placeholder.supabase.co";
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "placeholder-key";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "placeholder-key";
 
 // Without credentials, answer straight away with an error the client won't retry. Left to hit the
 // placeholder host, each query retried for ~8s before giving up, on every page that reads from here.
