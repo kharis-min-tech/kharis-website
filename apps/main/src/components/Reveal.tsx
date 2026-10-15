@@ -93,10 +93,7 @@ export function Reveal({
   const variants = makeVariants(variant, dist);
   const MotionTag = as === "section" ? motion.section : motion.div;
 
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
-
+  // Same markup either way so hydration matches; reduced motion only makes the reveal instant.
   return (
     <MotionTag
       className={className}
@@ -104,7 +101,7 @@ export function Reveal({
       initial="hidden"
       whileInView="shown"
       viewport={{ once, amount, margin: "0px 0px -8% 0px" }}
-      transition={{ duration, delay, ease }}
+      transition={reduce ? { duration: 0 } : { duration, delay, ease }}
     >
       {children}
     </MotionTag>
@@ -136,10 +133,6 @@ export function RevealStagger({
 }: StaggerProps) {
   const reduce = useReducedMotion();
 
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
     <motion.div
       className={className}
@@ -147,10 +140,7 @@ export function RevealStagger({
       initial="hidden"
       whileInView="shown"
       viewport={{ once, amount, margin: "0px 0px -6% 0px" }}
-      transition={{
-        staggerChildren: stagger,
-        delayChildren,
-      }}
+      transition={reduce ? { duration: 0 } : { staggerChildren: stagger, delayChildren }}
     >
       {children}
     </motion.div>
@@ -172,12 +162,12 @@ export function RevealItem({
   const reduce = useReducedMotion();
   const variants = makeVariants(variant, distance);
 
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
-    <motion.div className={className} variants={variants} transition={{ duration: 0.9, ease }}>
+    <motion.div
+      className={className}
+      variants={variants}
+      transition={reduce ? { duration: 0 } : { duration: 0.9, ease }}
+    >
       {children}
     </motion.div>
   );

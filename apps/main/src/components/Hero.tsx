@@ -134,7 +134,8 @@ export function Hero() {
   useEffect(() => {
     const wall = wallRef.current;
     const section = sectionRef.current;
-    const tracks = trackRefs.current;
+    // Keep a snapshot because React clears the refs before the animation effect stops.
+    const tracks = [...trackRefs.current];
     if (!wall || !section || tracks.length < ROWS.length || tracks.some((t) => !t)) return;
 
     const rows = ROWS.map(() => ({

@@ -1,0 +1,1119 @@
+/*
+ * Give page. Same language as the homepage hero: deep purple field, photos in greyscale
+ * with one stepped forward in colour, lettering with a shallow edge and a cast shadow,
+ * square buttons. Yellow is the giving colour, so it carries every give action here.
+ */
+
+.gv {
+  --gv-ink: #150934;
+  --gv-surface: #fff;
+  --gv-edge: #b9a6e6;
+  /* One light source, top left; shadows tinted toward the page's purple. */
+  --gv-lift:
+    0 1px 1px rgba(40, 14, 92, 0.05), 0 2px 3px rgba(40, 14, 92, 0.05),
+    0 6px 10px -2px rgba(40, 14, 92, 0.07), 0 14px 22px -6px rgba(40, 14, 92, 0.09),
+    0 30px 44px -12px rgba(40, 14, 92, 0.12), 0 56px 80px -24px rgba(40, 14, 92, 0.14);
+  --gv-lift-dark:
+    0 1px 1px rgba(5, 1, 14, 0.3), 0 3px 4px rgba(5, 1, 14, 0.28),
+    0 8px 14px -2px rgba(5, 1, 14, 0.3), 0 18px 28px -6px rgba(5, 1, 14, 0.34),
+    0 36px 56px -12px rgba(5, 1, 14, 0.4), 0 64px 96px -24px rgba(5, 1, 14, 0.46);
+  background: var(--bg);
+  color: var(--fg);
+  overflow-x: clip;
+}
+
+.gv-yellow {
+  --c: var(--yellow);
+  color: var(--yellow);
+  -webkit-text-fill-color: var(--yellow);
+}
+
+/* Lettering on dark: a shallow edge in a darker shade of the letter colour, then a cast shadow. */
+.gv-3d,
+.gv-build h2 {
+  --c: #fff;
+  text-shadow:
+    0 0.01em 0 color-mix(in srgb, var(--c) 78%, #1b0a45),
+    0 0.02em 0 color-mix(in srgb, var(--c) 60%, #1b0a45),
+    0 0.03em 0 color-mix(in srgb, var(--c) 44%, #1b0a45),
+    0 0.04em 0 color-mix(in srgb, var(--c) 30%, #1b0a45),
+    0 0.06em 0.04em rgba(0, 0, 0, 0.5),
+    0 0.16em 0.28em rgba(0, 0, 0, 0.45),
+    0 0.34em 0.7em rgba(0, 0, 0, 0.4);
+}
+
+.gv-3d.gv-yellow,
+.gv-build h2 .gv-yellow {
+  --c: var(--yellow);
+}
+
+.gv-eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* Hero */
+.gv-hero {
+  position: relative;
+  padding: calc(4.5rem + clamp(2.75rem, 7vw, 5rem)) 1.25rem 0;
+  background-color: var(--gv-ink);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+  color: #fff;
+  text-align: center;
+}
+
+.gv-hero__copy {
+  position: relative;
+  z-index: 4;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.gv .gv-hero__title {
+  margin: 1rem 0 0;
+  font-size: clamp(3rem, 10vw, 7.25rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: #fff;
+}
+
+.gv-rise {
+  display: inline-block;
+  animation: gv-rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gv-hero__verse {
+  margin: 1.5rem auto 0;
+  max-width: 30rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.gv-hero__verse cite {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+
+.gv-hero__lede {
+  margin: 1.4rem auto 0;
+  max-width: 33rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  text-wrap: pretty;
+}
+
+.gv-hero__ctas {
+  margin-top: 2rem;
+}
+
+.gv-hero__ctas :is(.btn-give, .btn-secondary) {
+  min-width: 13rem;
+  box-shadow:
+    0 2px 0 var(--edge),
+    0 10px 22px rgba(0, 0, 0, 0.4);
+}
+
+/* Three photos at different depths; the centre one is in colour and sits over the seam. */
+.gv-hero__stack {
+  position: relative;
+  z-index: 3;
+  width: min(74rem, 100%);
+  height: clamp(15rem, 36vw, 31rem);
+  margin: clamp(2.75rem, 6vw, 4.5rem) auto calc(-1 * clamp(5rem, 13vw, 10rem));
+}
+
+.gv-hero__photo {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+  background: #241448;
+}
+
+.gv-hero__photo img {
+  object-fit: cover;
+}
+
+.gv-hero__photo--left,
+.gv-hero__photo--right {
+  top: 9%;
+  width: 34%;
+  aspect-ratio: 4 / 3;
+  filter: grayscale(1) brightness(0.5) contrast(1.08);
+  box-shadow: var(--gv-lift-dark);
+  animation: gv-photo-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) 380ms both;
+}
+
+.gv-hero__photo--left {
+  left: 3%;
+  rotate: -3deg;
+}
+
+.gv-hero__photo--right {
+  right: 3%;
+  rotate: 3deg;
+  animation-delay: 480ms;
+}
+
+.gv-hero__photo--centre {
+  left: 50%;
+  top: 0;
+  z-index: 2;
+  width: 46%;
+  aspect-ratio: 16 / 10.5;
+  translate: -50% 0;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    var(--gv-lift-dark);
+  animation: gv-photo-in 950ms cubic-bezier(0.22, 1, 0.36, 1) 220ms both;
+}
+
+.gv-hero__photo--centre img {
+  object-position: 50% 25%;
+}
+
+@media (max-width: 767px) {
+  .gv-hero__stack {
+    height: clamp(13rem, 64vw, 17rem);
+  }
+
+  .gv-hero__photo--left,
+  .gv-hero__photo--right {
+    top: 14%;
+    width: 50%;
+  }
+
+  .gv-hero__photo--left {
+    left: -16%;
+  }
+
+  .gv-hero__photo--right {
+    right: -16%;
+  }
+
+  .gv-hero__photo--centre {
+    width: 80%;
+  }
+}
+
+/* Section heads */
+.gv-head {
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.gv-kicker {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+/* On light grounds the lettering keeps the buttons' idea: a thin lilac edge underneath. */
+.gv .gv-head h2 {
+  margin: 0.75rem 0 0;
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  text-shadow:
+    0 0.03em 0 var(--gv-edge),
+    0 0.07em 0.06em rgba(40, 14, 92, 0.1);
+}
+
+.gv-head > p:not(.gv-kicker) {
+  margin: 1rem auto 0;
+  max-width: 34rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--fg-soft);
+}
+
+/* Ways to give */
+.gv-desk {
+  position: relative;
+  z-index: 1;
+  scroll-margin-top: 4.5rem;
+  padding: calc(clamp(5rem, 13vw, 10rem) + clamp(3rem, 6vw, 4.5rem)) 1.25rem
+    clamp(4.5rem, 9vw, 7rem);
+  background: var(--bg-soft);
+}
+
+.gv-desk__body {
+  display: grid;
+  grid-template-columns: minmax(15rem, 19rem) 1fr;
+  max-width: 68rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+}
+
+.gv-tabs {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1.5rem;
+}
+
+.gv-tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 1.15rem 1.25rem;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  text-align: left;
+  cursor: pointer;
+}
+
+.gv-tab:hover {
+  background: rgba(99, 14, 212, 0.05);
+}
+
+.gv-tab:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: -2px;
+}
+
+/* The chosen way shares the panel's surface, like a folder tab. */
+.gv-tab[aria-selected="true"] {
+  z-index: 3;
+  background: var(--gv-surface);
+}
+
+.gv-tab__num {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--purple);
+  box-shadow: inset 0 0 0 1.5px rgba(99, 14, 212, 0.3);
+}
+
+.gv-tab[aria-selected="true"] .gv-tab__num {
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 2px 0 var(--purple-edge);
+}
+
+.gv-tab__text {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.gv-tab__label {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.gv-tab__hint {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.gv-panel {
+  position: relative;
+  z-index: 2;
+  min-height: 27rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--gv-surface);
+  box-shadow: var(--gv-lift);
+}
+
+.gv-panel:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 3px;
+}
+
+.gv .gv-panel h3 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+}
+
+.gv-panel__lede {
+  margin: 0.75rem 0 0;
+  max-width: 34rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--fg-soft);
+}
+
+.gv-panel__lede strong {
+  font-weight: 800;
+  color: var(--fg);
+}
+
+.gv-panel__action {
+  margin-top: 1.75rem;
+}
+
+.gv-panel__note {
+  margin: 0.9rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.gv .gv-btn-off {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gv .gv-btn-off:is(:hover, :focus-visible) {
+  transform: none;
+}
+
+.gv-select {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 26rem;
+  margin-top: 1.75rem;
+}
+
+.gv-select span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.gv-select select {
+  width: 100%;
+  height: 3.25rem;
+  padding: 0 2.75rem 0 1rem;
+  border: 0;
+  border-radius: 0;
+  background-color: var(--gv-surface);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23630ed4' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  box-shadow: inset 0 0 0 1.5px rgba(99, 14, 212, 0.35);
+  color: var(--fg);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  appearance: none;
+  cursor: pointer;
+}
+
+.gv-select select:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+/* Bank details: ruled rows, each value with its own copy button. */
+.gv-rows {
+  margin: 1.5rem 0 0;
+}
+
+.gv-row {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.gv-row:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.gv-row dt {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.gv-row dd {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+  color: var(--fg);
+}
+
+.gv-row__hint {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.gv-row__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.25rem;
+  padding: 0 0.8rem;
+  border: 0;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px rgba(99, 14, 212, 0.3);
+  color: var(--purple-deep);
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.gv-row__copy svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.gv-row__copy:hover {
+  box-shadow: inset 0 0 0 1.5px var(--purple);
+}
+
+.gv-row__copy:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+.gv-row__copy.is-done {
+  background: var(--purple);
+  box-shadow: 0 2px 0 var(--purple-edge);
+  color: #fff;
+}
+
+/* Text giving: amount chips beside a phone showing the message being sent. */
+.gv-text {
+  display: grid;
+  grid-template-columns: 1fr 15rem;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.gv-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.gv-amounts__chip {
+  min-width: 4rem;
+  height: 3rem;
+  border: 0;
+  background: var(--gv-surface);
+  box-shadow: inset 0 0 0 1.5px rgba(99, 14, 212, 0.3);
+  color: var(--fg);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.gv-amounts__chip:hover {
+  box-shadow: inset 0 0 0 1.5px var(--purple);
+}
+
+.gv-amounts__chip:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+.gv-amounts__chip.is-on {
+  background: var(--purple);
+  box-shadow: 0 2px 0 var(--purple-edge);
+  color: #fff;
+}
+
+/* A phone in the hand: black frame, side buttons, a Messages thread with the gift in it. */
+.gv-phone {
+  position: relative;
+  width: 15rem;
+  aspect-ratio: 9 / 19;
+  justify-self: center;
+  padding: 0.45rem;
+  border-radius: 2.6rem;
+  background: #0d0a12;
+  box-shadow:
+    inset 0 0 0 1.5px #3a3542,
+    inset 0 0 0 3px #0d0a12,
+    var(--gv-lift);
+}
+
+/* Side buttons: action and volume on the left, power on the right. */
+.gv-phone::before,
+.gv-phone::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  background: #2a2630;
+}
+
+.gv-phone::before {
+  left: -3px;
+  top: 22%;
+  height: 3.6rem;
+  border-radius: 2px 0 0 2px;
+  box-shadow: 0 -2.4rem 0 -0.05rem #2a2630;
+}
+
+.gv-phone::after {
+  right: -3px;
+  top: 28%;
+  height: 4.5rem;
+  border-radius: 0 2px 2px 0;
+}
+
+.gv-phone__screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 2.2rem;
+  background: #fff;
+  color: #1c1c1f;
+}
+
+.gv-phone__status {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0.55rem 1.1rem 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.gv-phone__island {
+  width: 4.6rem;
+  height: 1.3rem;
+  border-radius: 999px;
+  background: #0d0a12;
+}
+
+.gv-phone__icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.2rem;
+}
+
+.gv-phone__icons svg {
+  width: 0.8rem;
+  height: 0.8rem;
+  stroke-width: 2.5;
+}
+
+.gv-phone__head {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  padding: 0.6rem 0 0.6rem;
+  border-bottom: 1px solid #ece9f1;
+  background: #f7f6f9;
+}
+
+.gv-phone__back {
+  position: absolute;
+  left: 0.5rem;
+  top: 1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--purple);
+}
+
+.gv-phone__avatar {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: #b7b2bf;
+  color: #fff;
+}
+
+.gv-phone__avatar svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.gv-phone__name {
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+.gv-phone__thread {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 0.75rem 0.7rem 0.4rem;
+}
+
+.gv-phone__meta {
+  margin: 0;
+  font-size: 0.58rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  color: #8a8592;
+}
+
+.gv-phone__bubble {
+  align-self: flex-end;
+  margin: auto 0 0;
+  padding: 0.45rem 0.75rem;
+  border-radius: 1.1rem 1.1rem 0.3rem 1.1rem;
+  background: var(--yellow);
+  color: #1c1c1f;
+  font-size: 0.85rem;
+  font-weight: 800;
+  transform-origin: bottom right;
+  animation: gv-bubble 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gv-phone__receipt {
+  align-self: flex-end;
+  margin: 0.25rem 0.2rem 0 0;
+  font-size: 0.56rem;
+  font-weight: 700;
+  color: #8a8592;
+}
+
+.gv-phone__compose {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.6rem 1.4rem;
+}
+
+.gv-phone__plus {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #ece9f1;
+  color: #6b6673;
+}
+
+.gv-phone__plus svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.gv-phone__field {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  height: 1.7rem;
+  padding: 0 0.2rem 0 0.7rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px #dcd8e2;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #a6a1ad;
+}
+
+.gv-phone__send {
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: var(--purple);
+  color: #fff;
+}
+
+.gv-phone__send svg {
+  width: 0.8rem;
+  height: 0.8rem;
+  stroke-width: 3;
+}
+
+.gv-phone__home {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 50%;
+  width: 5.5rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: #1c1c1f;
+  translate: -50% 0;
+}
+
+/* Ghana: bank and Mobile Money side by side. */
+.gv-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  margin-top: 1.5rem;
+}
+
+.gv-split .gv-rows {
+  margin-top: 0.75rem;
+}
+
+.gv-split .gv-row {
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "label copy"
+    "value copy";
+  row-gap: 0.2rem;
+}
+
+.gv-split .gv-row dt {
+  grid-area: label;
+}
+
+.gv-split .gv-row dd {
+  grid-area: value;
+}
+
+.gv-split .gv-row__copy {
+  grid-area: copy;
+}
+
+.gv-split__label {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--fg);
+}
+
+.gv-dial {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--purple);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.gv-dial svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (max-width: 899px) {
+  .gv-desk__body {
+    grid-template-columns: 1fr;
+  }
+
+  .gv-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0 0 0.75rem;
+  }
+
+  .gv-tab {
+    padding: 0.85rem;
+    background: var(--gv-surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .gv-tab[aria-selected="true"] {
+    box-shadow: inset 0 0 0 2px var(--purple);
+  }
+
+  .gv-tab__hint {
+    display: none;
+  }
+
+  .gv-tab__num {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .gv-panel {
+    min-height: 0;
+  }
+
+  .gv-text {
+    grid-template-columns: 1fr;
+  }
+
+  .gv-phone {
+    display: none;
+  }
+
+  .gv-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 559px) {
+  .gv-row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label copy"
+      "value copy";
+    row-gap: 0.2rem;
+  }
+
+  .gv-row dt {
+    grid-area: label;
+  }
+
+  .gv-row dd {
+    grid-area: value;
+  }
+
+  .gv-row__copy {
+    grid-area: copy;
+  }
+
+  .gv-panel__action .btn-give {
+    width: 100%;
+  }
+}
+
+/* Spurgeon's Centre */
+.gv-build {
+  scroll-margin-top: 4.5rem;
+  padding: clamp(4.5rem, 9vw, 7.5rem) 1.25rem;
+  background-color: var(--gv-ink);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+  color: #fff;
+}
+
+.gv-build__inner {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+/* The drawing sits on a block of campaign yellow, set off toward the light. */
+.gv-build__art {
+  position: relative;
+  aspect-ratio: 4 / 3.4;
+}
+
+.gv-build__art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--yellow);
+  translate: 1rem 1rem;
+}
+
+.gv-build__art img {
+  object-fit: cover;
+  box-shadow: var(--gv-lift-dark);
+}
+
+.gv-build__copy .gv-eyebrow {
+  color: var(--yellow);
+}
+
+.gv .gv-build h2 {
+  margin: 0.9rem 0 0;
+  font-size: clamp(2.6rem, 5.6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: #fff;
+}
+
+.gv-build__copy > p:not(.gv-eyebrow) {
+  margin: 1.25rem 0 2rem;
+  max-width: 30rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.gv-build .btn-pair :is(.btn-give, .btn-secondary) {
+  box-shadow:
+    0 2px 0 var(--edge),
+    0 10px 22px rgba(0, 0, 0, 0.4);
+}
+
+.gv-build__more {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.gv-build__more:is(:hover, :focus-visible) {
+  color: var(--yellow);
+}
+
+@media (max-width: 899px) {
+  .gv-build__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .gv-build__art {
+    margin-right: 1rem;
+  }
+}
+
+/* Motion */
+@keyframes gv-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.3em) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes gv-photo-in {
+  from {
+    opacity: 0;
+    scale: 0.95;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes gv-bubble {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes gv-spread-left {
+  to {
+    transform: translateX(-7%) rotate(-3deg);
+  }
+}
+
+@keyframes gv-spread-right {
+  to {
+    transform: translateX(7%) rotate(3deg);
+  }
+}
+
+/* As the hero scrolls away, the outer photos part. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .gv-hero__photo--left {
+      animation:
+        gv-photo-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) 380ms both,
+        gv-spread-left linear both;
+      animation-timeline: auto, scroll(root);
+      animation-range:
+        normal,
+        0 80vh;
+    }
+
+    .gv-hero__photo--right {
+      animation:
+        gv-photo-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) 480ms both,
+        gv-spread-right linear both;
+      animation-timeline: auto, scroll(root);
+      animation-range:
+        normal,
+        0 80vh;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-rise,
+  .gv-hero__photo,
+  .gv-phone__bubble {
+    animation: none;
+  }
+}
+
+/* Dark theme */
+html[data-theme="dark"] .gv {
+  --gv-surface: var(--card-bg);
+  --gv-edge: #3d2668;
+  --gv-lift: var(--gv-lift-dark);
+}
+
+html[data-theme="dark"] .gv .gv-head h2 {
+  text-shadow:
+    0 0.03em 0 var(--gv-edge),
+    0 0.07em 0.06em rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .gv :is(.gv-kicker, .gv-tab__num, .gv-dial) {
+  color: #b48fe5;
+}
+
+html[data-theme="dark"] .gv .gv-tab[aria-selected="true"] .gv-tab__num {
+  color: #fff;
+}
+
+html[data-theme="dark"] .gv .gv-row__copy {
+  color: #d9c6f5;
+  box-shadow: inset 0 0 0 1.5px rgba(180, 143, 229, 0.45);
+}
+
+html[data-theme="dark"] .gv .gv-row__copy.is-done {
+  color: #fff;
+}
+
+html[data-theme="dark"] .gv .gv-select select {
+  box-shadow: inset 0 0 0 1.5px rgba(180, 143, 229, 0.45);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23b48fe5' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+html[data-theme="dark"] .gv .gv-tab:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="dark"] .gv .gv-tab[aria-selected="true"] {
+  background: var(--gv-surface);
+}
