@@ -341,7 +341,7 @@ export async function listMessages(filters: {
   const search = filters.search?.trim().toLowerCase();
   if (!search) return rows;
   return rows.filter((row) =>
-    `${row.first_name} ${row.last_name} ${row.email} ${row.topic} ${row.branch ?? ""} ${row.message}`
+    `${row.first_name} ${row.last_name} ${row.email} ${row.topic} ${row.branch_name ?? ""} ${row.message}`
       .toLowerCase()
       .includes(search),
   );
