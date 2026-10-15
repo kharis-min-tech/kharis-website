@@ -4,8 +4,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import type { BranchData, BranchItem } from "@/lib/branches";
-import BranchMap from "@/components/branches/BranchMap";
+import type { BranchItem } from "@/lib/branches";
+import BranchMap, { type GlobeBranch } from "@/components/branches/BranchMap";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { UnsureBranchCta } from "@/components/UnsureBranchCta";
@@ -13,7 +13,7 @@ import { kp2BranchUrl } from "@/lib/kp2";
 
 interface Props {
   items: BranchItem[];
-  full: BranchData[];
+  full: GlobeBranch[];
 }
 
 type Origin = { lat: number; lng: number };
@@ -179,6 +179,9 @@ export function LocationsClient({ items, full }: Props) {
 
         <BranchMap
           bare
+          country={filter === "all" || filter === KP2 ? "world" : filter}
+          onCountryChange={(country) => setFilter(country === "world" ? "all" : country)}
+          origin={origin}
           branches={full}
           onSelectBranch={(id) => {
             const branch = items.find((b) => b.id === id);

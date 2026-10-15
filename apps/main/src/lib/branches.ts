@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   branchDisplayName,
   directionsUrl,
@@ -194,7 +195,8 @@ async function galleriesByBranch() {
 // GET ALL BRANCH DATA FROM SUPABASE
 // ======================================================
 
-export async function listBranchData(): Promise<BranchData[]> {
+// Share one directory read across cards, map and metadata within a server render.
+export const listBranchData = cache(async (): Promise<BranchData[]> => {
   const [{ data, error }, galleries] = await Promise.all([
     supabase
       .from("branches")
@@ -230,7 +232,7 @@ export async function listBranchData(): Promise<BranchData[]> {
   }));
 
   return branches as BranchData[];
-}
+});
 
 // ======================================================
 // TURN SUPABASE BRANCH INTO LOCATION CARD DATA

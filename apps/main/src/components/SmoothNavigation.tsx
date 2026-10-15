@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 /** Longest we hold the old page on screen while the next route loads. */
-const MAX_WAIT_MS = 1200;
+const MAX_WAIT_MS = 500;
 
 type ViewTransitionDocument = Document & {
   startViewTransition?: (update: () => Promise<void> | void) => unknown;
@@ -13,7 +13,7 @@ type ViewTransitionDocument = Document & {
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
- * Links inside a `[data-smooth-nav]` container (header, footer) crossfade to the
+ * Internal links crossfade to the
  * next page with the View Transitions API instead of snapping. Clicking a link
  * to the page you are already on (e.g. the logo on the homepage) glides to the top.
  * Browsers without the API, or with reduced motion, navigate normally.
@@ -43,7 +43,7 @@ export function SmoothNavigation() {
         return;
       }
       const link = (e.target as Element | null)?.closest?.("a[href]");
-      if (!(link instanceof HTMLAnchorElement) || !link.closest("[data-smooth-nav]")) return;
+      if (!(link instanceof HTMLAnchorElement) || link.closest("[data-no-smooth-nav]")) return;
       if ((link.target && link.target !== "_self") || link.hasAttribute("download")) return;
 
       const url = new URL(link.href, window.location.href);
@@ -61,6 +61,7 @@ export function SmoothNavigation() {
       if (!doc.startViewTransition || reducedMotion() || finish.current) return;
 
       e.preventDefault();
+      e.stopPropagation();
       const href = `${url.pathname}${url.search}${url.hash}`;
       doc.startViewTransition(
         () =>
@@ -78,9 +79,16 @@ export function SmoothNavigation() {
       );
     };
 
+    const warmed = new Set<string>();
     const warm = (e: Event) => {
       const link = (e.target as Element | null)?.closest?.("[data-smooth-nav] a[href^='/']");
-      if (link instanceof HTMLAnchorElement) router.prefetch(link.pathname);
+      if (!(link instanceof HTMLAnchorElement)) return;
+      if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData)
+        return;
+      const href = `${link.pathname}${link.search}`;
+      if (warmed.has(href)) return;
+      warmed.add(href);
+      router.prefetch(href);
     };
 
     document.addEventListener("click", onClick, true);

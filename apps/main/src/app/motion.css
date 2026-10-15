@@ -151,3 +151,59 @@
     animation: none !important;
   }
 }
+
+/* Give long directory lists a stable placeholder until they approach the viewport. */
+.locations-group {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+::view-transition-old(root) {
+  pointer-events: none;
+}
+::view-transition-new(root) {
+  animation-name: page-arrive;
+}
+@keyframes page-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.route-loading {
+  min-height: 70vh;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+  background: var(--page-bg, #fff);
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8rem;
+}
+.route-loading__bar {
+  width: 10rem;
+  height: 3px;
+  background: var(--purple, #630ed4);
+  transform-origin: left;
+  animation: route-loading-pulse 1s ease-in-out infinite alternate;
+}
+@keyframes route-loading-pulse {
+  from {
+    transform: scaleX(0.25);
+    opacity: 0.4;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-loading__bar {
+    animation: none;
+  }
+}

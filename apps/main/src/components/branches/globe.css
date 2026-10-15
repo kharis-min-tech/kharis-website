@@ -1,0 +1,112 @@
+.location-globe {
+  color: #fff;
+  background: #0c0814;
+  border: 1px solid #b99ad833;
+  overflow: hidden;
+  min-width: 0;
+}
+.location-globe__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.location-globe__toolbar label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #d8c6ed;
+}
+.location-globe__toolbar select {
+  background: #241634;
+  color: white;
+  border: 1px solid #a98ac366;
+  padding: 0.65rem;
+  font: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.location-globe__toolbar button {
+  font-size: 0.7rem;
+  color: #d8c6ed;
+  padding: 0.6rem;
+  border: 1px solid #a98ac344;
+}
+.location-globe__scene {
+  position: relative;
+  height: clamp(340px, 42vw, 560px);
+  overflow: hidden;
+}
+.location-globe canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.location-globe__welcome {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 3rem 1.5rem 1.5rem;
+  background: linear-gradient(transparent, #0c0814 90%);
+  pointer-events: none;
+  animation: globe-welcome 0.7s ease both;
+}
+.location-globe__welcome p {
+  color: #ffde59;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.65rem;
+}
+.location-globe__welcome h2 {
+  color: #fff;
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  line-height: 1.15;
+  margin: 0.5rem 0;
+}
+.location-globe__welcome span {
+  font-size: 0.8rem;
+  color: #d8c6ed;
+}
+.location-globe__branches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1.5rem 1.5rem;
+}
+.location-globe__branches button {
+  border: 1px solid #b99ad844;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.7rem;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.location-globe__branches button:hover {
+  background: #49236a;
+  border-color: #ffde59;
+}
+.location-globe :is(button, select):focus-visible {
+  outline: 2px solid #ffde59;
+  outline-offset: 3px;
+}
+@keyframes globe-welcome {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .location-globe__welcome {
+    animation: none;
+  }
+}
