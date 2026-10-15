@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, type ReactNode } from "react";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 type Props = {
   children: ReactNode;
@@ -21,7 +22,7 @@ export function Parallax({
   scaleTo = 1,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -30,17 +31,12 @@ export function Parallax({
   const y = useTransform(scrollYProgress, [0, 1], [-speed, speed]);
   const scale = useTransform(scrollYProgress, [0, 1], [scaleFrom, scaleTo]);
 
-  if (reduce) {
-    return (
-      <div ref={ref} className={className}>
-        {children}
-      </div>
-    );
-  }
-
   return (
     <div ref={ref} className={`overflow-hidden ${className}`}>
-      <motion.div style={{ y, scale }} className="h-full w-full will-change-transform">
+      <motion.div
+        style={reduce ? undefined : { y, scale }}
+        className="h-full w-full will-change-transform"
+      >
         {children}
       </motion.div>
     </div>

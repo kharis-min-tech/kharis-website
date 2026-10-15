@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { BuildHouseSection } from "@/components/BuildHouseSection";
 import { Hero } from "@/components/Hero";
-import { HomeSiteSkeleton } from "@/components/HomeSiteSkeleton";
 import { KnowUsStack } from "@/components/KnowUsStack";
 import { LatestMessages } from "@/components/LatestMessages";
 import { MissionSection } from "@/components/MissionSection";
@@ -29,7 +28,6 @@ async function HomeTestimonies() {
 export default function Home() {
   return (
     <main className="home-page bg-bg text-fg">
-      <HomeSiteSkeleton />
       <div className="home-page-shell">
         <SiteHeader />
         <Hero />

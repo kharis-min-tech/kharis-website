@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { FloatingThemeToggle } from "@/components/FloatingThemeToggle";
-import { ScrollToTopOnLoad } from "@/components/ScrollToTopOnLoad";
+import { ScrollRestoration } from "@/components/ScrollRestoration";
 import { SiteChat } from "@/components/SiteChat";
 import { SmoothNavigation } from "@/components/SmoothNavigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { SiteIntro } from "@/components/SiteIntro";
+import { SITE_INTRO_BOOTSTRAP } from "@/lib/site-intro";
 import "./globals.css";
 import "./motion.css";
 
@@ -37,8 +39,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={sans.variable} suppressHydrationWarning>
+    <html lang="en" className={sans.variable} data-site-intro="pending" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: SITE_INTRO_BOOTSTRAP }} />
+        <noscript>
+          <style>{`.site-intro{display:none!important}html[data-site-intro]{overflow:auto!important}`}</style>
+        </noscript>
         <meta name="color-scheme" content="light" />
         <link rel="preconnect" href="https://cqgyiqxhpxwasogpdghx.supabase.co" />
         <script
@@ -49,11 +55,14 @@ export default function RootLayout({
       </head>
       <body className={`${sans.className} antialiased`}>
         <ThemeProvider>
-          <ScrollToTopOnLoad />
+          <ScrollRestoration />
           <SmoothNavigation />
-          {children}
-          <FloatingThemeToggle />
-          <SiteChat />
+          <SiteIntro />
+          <div id="site-content">
+            {children}
+            <FloatingThemeToggle />
+            <SiteChat />
+          </div>
         </ThemeProvider>
       </body>
     </html>

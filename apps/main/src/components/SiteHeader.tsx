@@ -82,7 +82,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
         : scrolled || open;
 
   const linkTone = (active: boolean) =>
-    `k-motion cursor-pointer text-[13px] font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
+    `k-motion inline-flex h-10 cursor-pointer items-center text-[13px] leading-none font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
       onDark || (forceDark && !open)
         ? active
           ? "text-white"
@@ -117,14 +117,14 @@ export function SiteHeader({ tone = "auto" }: Props) {
               return (
                 <div
                   key={link.label}
-                  className="relative"
+                  className="relative flex items-center"
                   ref={aboutRef}
                   onMouseEnter={() => setAboutOpen(true)}
                   onMouseLeave={() => setAboutOpen(false)}
                 >
                   <button
                     type="button"
-                    className={`${linkTone(aboutActive)} inline-flex items-center gap-1`}
+                    className={`${linkTone(aboutActive)} gap-1`}
                     aria-expanded={aboutOpen}
                     aria-haspopup="true"
                     onClick={() => setAboutOpen((v) => !v)}
