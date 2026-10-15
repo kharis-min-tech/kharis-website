@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 /** Longest we hold the old page on screen while the next route loads. */
-const MAX_WAIT_MS = 500;
+const MAX_WAIT_MS = 350;
 
 type ViewTransitionDocument = Document & {
   startViewTransition?: (update: () => Promise<void> | void) => {
@@ -16,10 +16,10 @@ type ViewTransitionDocument = Document & {
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
- * Internal links crossfade to the
- * next page with the View Transitions API instead of snapping. Clicking a link
- * to the page you are already on (e.g. the logo on the homepage) glides to the top.
+ * Internal links crossfade to the next page with the View Transitions API.
+ * Clicking a link to the page you are already on glides to the top.
  * Browsers without the API, or with reduced motion, navigate normally.
+ * Rapid back-and-forth clicks cancel the previous transition cleanly.
  */
 export function SmoothNavigation() {
   const router = useRouter();
@@ -56,15 +56,16 @@ export function SmoothNavigation() {
             router.push(href);
           }),
       );
-      // A second click can skip an earlier snapshot. That is a normal navigation outcome.
       void transition.ready.catch(() => {});
       void transition.finished.catch(() => {});
     };
+
     const onRequest = (event: Event) => {
       const request = event as CustomEvent<string>;
       request.preventDefault();
       navigate(request.detail);
     };
+
     const onClick = (e: MouseEvent) => {
       if (
         e.defaultPrevented ||
@@ -97,16 +98,24 @@ export function SmoothNavigation() {
     };
 
     const warmed = new Set<string>();
-    const warm = (e: Event) => {
-      const link = (e.target as Element | null)?.closest?.("[data-smooth-nav] a[href^='/']");
-      if (!(link instanceof HTMLAnchorElement)) return;
+    const warmHref = (href: string) => {
+      if (warmed.has(href)) return;
       if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData)
         return;
-      const href = `${link.pathname}${link.search}`;
-      if (warmed.has(href)) return;
       warmed.add(href);
       router.prefetch(href);
     };
+
+    const warm = (e: Event) => {
+      const link = (e.target as Element | null)?.closest?.("a[href^='/']");
+      if (!(link instanceof HTMLAnchorElement)) return;
+      warmHref(`${link.pathname}${link.search}`);
+    };
+
+    // Prefetch every internal header/footer link so first clicks feel instant.
+    document.querySelectorAll("[data-smooth-nav] a[href^='/']").forEach((el) => {
+      if (el instanceof HTMLAnchorElement) warmHref(`${el.pathname}${el.search}`);
+    });
 
     window.addEventListener("kharis:navigate", onRequest);
     document.addEventListener("click", onClick, true);
