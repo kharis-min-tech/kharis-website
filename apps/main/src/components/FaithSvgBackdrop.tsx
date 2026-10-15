@@ -11,12 +11,12 @@ export function FaithSvgBackdrop() {
       >
         <defs>
           <linearGradient id="faithGradA" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#800654" stopOpacity="0.18" />
+            <stop offset="0%" stopColor="#630ed4" stopOpacity="0.18" />
             <stop offset="100%" stopColor="#d4920a" stopOpacity="0.12" />
           </linearGradient>
           <linearGradient id="faithGradB" x1="100%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#c4a0ff" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#800654" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#630ed4" stopOpacity="0.08" />
           </linearGradient>
           <radialGradient id="faithOrb" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#d4920a" stopOpacity="0.28" />
@@ -54,7 +54,7 @@ export function FaithSvgBackdrop() {
           className="faith-svg__draw faith-svg__draw--slow"
           d="M80 520 C280 380, 420 640, 640 480"
           fill="none"
-          stroke="#800654"
+          stroke="#630ed4"
           strokeOpacity="0.22"
           strokeWidth="2.5"
           strokeLinecap="round"
@@ -76,15 +76,15 @@ export function FaithSvgBackdrop() {
               d="M0 18 C18 6, 40 6, 58 18 L58 78 C40 68, 18 68, 0 78 Z"
               fill="#fff"
               fillOpacity="0.75"
-              stroke="#800654"
+              stroke="#630ed4"
               strokeOpacity="0.35"
               strokeWidth="2"
             />
             <path
               d="M58 18 C76 6, 98 6, 116 18 L116 78 C98 68, 76 68, 58 78 Z"
-              fill="#f7eef4"
+              fill="#f2eef7"
               fillOpacity="0.9"
-              stroke="#800654"
+              stroke="#630ed4"
               strokeOpacity="0.35"
               strokeWidth="2"
             />
@@ -100,7 +100,7 @@ export function FaithSvgBackdrop() {
             <path
               d="M14 36 H44 M14 46 H40 M14 56 H42"
               fill="none"
-              stroke="#800654"
+              stroke="#630ed4"
               strokeOpacity="0.25"
               strokeWidth="1.5"
               strokeLinecap="round"
@@ -108,7 +108,7 @@ export function FaithSvgBackdrop() {
             <path
               d="M72 36 H102 M76 46 H102 M74 56 H100"
               fill="none"
-              stroke="#800654"
+              stroke="#630ed4"
               strokeOpacity="0.25"
               strokeWidth="1.5"
               strokeLinecap="round"
@@ -119,8 +119,8 @@ export function FaithSvgBackdrop() {
         {/* Soft cross mark */}
         <g className="faith-svg__cross">
           <g transform="translate(120 560)">
-            <rect x="22" y="0" width="12" height="70" rx="3" fill="#800654" fillOpacity="0.14" />
-            <rect x="0" y="18" width="56" height="12" rx="3" fill="#800654" fillOpacity="0.14" />
+            <rect x="22" y="0" width="12" height="70" rx="3" fill="#630ed4" fillOpacity="0.14" />
+            <rect x="0" y="18" width="56" height="12" rx="3" fill="#630ed4" fillOpacity="0.14" />
           </g>
         </g>
 
@@ -138,7 +138,7 @@ export function FaithSvgBackdrop() {
           cx="760"
           cy="700"
           r="4"
-          fill="#800654"
+          fill="#630ed4"
           fillOpacity="0.3"
         />
         <circle

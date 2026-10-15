@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
+import { KP2_URL } from "@/lib/kp2";
 
 type Card = {
   title: string;
@@ -11,9 +12,11 @@ type Card = {
   href: string;
   image: string;
   info: string;
-  icon: "book" | "location" | "groups" | "heart" | "home";
+  cta: string;
   size: "portrait" | "normal" | "tall";
   position?: string;
+  /** "contain" shows the whole photo over a blurred copy of itself, so wide group shots aren't cropped. */
+  fit?: "contain";
 };
 
 const cards: Card[] = [
@@ -23,7 +26,7 @@ const cards: Card[] = [
     href: "/about",
     image: "/images/community.jpg",
     info: "Our mandate is to bring Christ to people everywhere.",
-    icon: "book",
+    cta: "Read our story",
     size: "portrait",
     position: "object-left object-top",
   },
@@ -31,20 +34,19 @@ const cards: Card[] = [
     title: "Locations",
     label: "Visit Sunday",
     href: "/locations",
-    image:
-      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=900&q=80",
+    image: "/images/locations-worship-team.jpg",
     info: "Find a Kharis branch near you this Sunday.",
-    icon: "location",
+    cta: "Find your branch",
     size: "normal",
-    position: "object-center",
+    position: "object-[center_30%]",
   },
   {
     title: "Young Adults",
     label: "KP2",
-    href: "https://kharis.org/kp2/",
+    href: KP2_URL,
     image: "/images/young-adults.jpg",
     info: "Next generation faith, community and purpose.",
-    icon: "groups",
+    cta: "Visit KP2",
     size: "normal",
     position: "object-[center_28%]",
   },
@@ -52,22 +54,21 @@ const cards: Card[] = [
     title: "Become a Believer",
     label: "Next step",
     href: "/life/baptism",
-    image:
-      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=900&q=80",
+    image: "/images/become-a-believer.jpg",
     info: "Take your next step with Jesus. Start with baptism at Kharis Life.",
-    icon: "heart",
+    cta: "Take the step",
     size: "normal",
-    position: "object-center",
+    fit: "contain",
   },
   {
     title: "Get Involved",
     label: "Serve with us",
     href: "/life/departments",
-    image: "/images/serve-with-us.jpg",
+    image: "/images/get-involved-sax.jpg",
     info: "Join a team and grow with the Kharis family.",
-    icon: "home",
+    cta: "Join a team",
     size: "tall",
-    position: "object-top",
+    position: "object-[center_14%] sm:object-[center_24%] lg:object-[center_14%]",
   },
 ];
 
@@ -98,12 +99,11 @@ export function KnowUsStack() {
   return (
     <section id="know" className="bg-bg-soft px-5 pb-5 pt-8 md:px-8 md:pb-5 md:pt-10">
       <div className="mx-auto max-w-7xl">
-        <Reveal variant="blur" className="mb-5 max-w-2xl md:mb-6">
+        <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
           <p className="eyebrow">Family</p>
           <h2 className="section-title mt-2">
             Get to Know <span className="kharis-word">Kharis</span>
           </h2>
-          <p className="mt-4 text-lg text-fg-soft">Everything you need, one tap away.</p>
         </Reveal>
 
         <RevealStagger
@@ -124,22 +124,30 @@ export function KnowUsStack() {
                   href={card.href}
                   whileHover={{ y: -6 }}
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  className={`know-card group relative block overflow-hidden rounded-[1.75rem] shadow-[var(--shadow-lift)] ${layout.height}`}
+                  className={`know-card group relative block overflow-hidden ${layout.height}`}
                 >
+                  {card.fit === "contain" ? (
+                    <Image
+                      src={card.image}
+                      alt=""
+                      aria-hidden
+                      fill
+                      unoptimized={card.image.startsWith("/images/")}
+                      className="scale-110 object-cover blur-2xl brightness-75"
+                      sizes={layout.sizes}
+                    />
+                  ) : null}
                   <Image
                     src={card.image}
                     alt={card.title}
                     fill
                     unoptimized={card.image.startsWith("/images/")}
-                    className={`object-cover transition duration-700 group-hover:scale-[1.03] ${card.position ?? "object-center"}`}
+                    className={`${card.fit === "contain" ? "object-contain" : "object-cover"} transition duration-700 group-hover:scale-[1.03] ${card.position ?? "object-center"}`}
                     sizes={layout.sizes}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
 
-                  <div className="absolute inset-x-0 bottom-0 p-6 md:p-7">
-                    <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm">
-                      <Icon name={card.icon} className="h-4 w-4" />
-                    </div>
+                  <div className="absolute inset-x-0 bottom-0 p-6 text-center md:p-7">
                     <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/90 drop-shadow">
                       {card.label}
                     </p>
@@ -149,8 +157,8 @@ export function KnowUsStack() {
                     <p className="mt-3 max-h-20 text-sm leading-relaxed text-white opacity-95 drop-shadow transition-all duration-500 group-hover:max-h-28 group-hover:opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-28 md:group-hover:opacity-100">
                       {card.info}
                     </p>
-                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-orange drop-shadow">
-                      Explore <Icon name="arrow" className="h-3.5 w-3.5" />
+                    <span className="know-card__cta">
+                      {card.cta} <Icon name="arrow" className="h-3.5 w-3.5" />
                     </span>
                   </div>
                 </motion.a>

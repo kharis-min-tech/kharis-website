@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 import React, { useEffect } from "react";
 import { X, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -99,7 +100,7 @@ export function BranchMediaModal({
                   href="https://www.youtube.com/@kharischurch"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#800654] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#5c033c]"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#630ed4] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2a035c]"
                 >
                   <span>Watch on YouTube</span>
                   <ExternalLink className="h-4 w-4" />

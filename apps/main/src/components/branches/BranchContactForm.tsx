@@ -23,13 +23,13 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
     <section id="contact" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
         <div className="lg:col-span-5 flex flex-col justify-center">
-          <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#e8a33d]">
+          <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[var(--orange-ink)]">
             <span>Say Hello</span>
           </div>
           <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold text-white">
             Contact {branch.city}
           </h2>
-          <p className="mt-4 max-w-md text-sm font-medium leading-relaxed text-gray-300">
+          <p className="mt-4 max-w-md text-sm font-medium leading-relaxed text-[var(--fg-soft)]">
             Have a question, a prayer request, or want to know more before you visit? Our{" "}
             {branch.city} team would love to hear from you.
           </p>
@@ -152,7 +152,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
               <button
                 type="submit"
                 disabled={busy}
-                className="inline-flex items-center gap-2 rounded-2xl bg-[#800654] px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-[#800654]/25 transition-all hover:-translate-y-0.5 hover:bg-[#5c033c] cursor-pointer disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-2xl bg-[#630ed4] px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-[#630ed4]/25 transition-all hover:-translate-y-0.5 hover:bg-[#2a035c] cursor-pointer disabled:opacity-60"
               >
                 {sent ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />}
                 <span>{busy ? "Sending…" : sent ? "Message Sent" : "Send Message"}</span>

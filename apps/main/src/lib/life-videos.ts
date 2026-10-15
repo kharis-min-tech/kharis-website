@@ -34,7 +34,7 @@ export const LIFE_MODAL_VIDEOS: Record<LifeModalSlug, LifeModalVideo> = {
   marriage: {
     videoId: "XdCNUHBdzh4",
     blurb:
-      "We celebrate marriage because God created it — preparation, counselling, and a victorious Christian home.",
+      "We celebrate marriage because God created it: preparation, counselling, and a victorious Christian home.",
   },
   departments: {
     videoId: "/videos/hero-a.mp4",
@@ -67,4 +67,36 @@ export function youtubeEmbedSrc(id: string, opts?: { autoplay?: boolean }) {
     params.set("mute", "1");
   }
   return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
+}
+
+/**
+ * Muted, chrome-free looping embed for slideshow backgrounds.
+ * `enablejsapi` lets the slide toggle sound and detect playback via postMessage.
+ */
+export function youtubeBackgroundSrc(id: string, origin?: string) {
+  const params = new URLSearchParams({
+    autoplay: "1",
+    mute: "1",
+    controls: "0",
+    modestbranding: "1",
+    rel: "0",
+    playsinline: "1",
+    iv_load_policy: "3",
+    cc_load_policy: "0",
+    disablekb: "1",
+    fs: "0",
+    loop: "1",
+    playlist: id,
+    enablejsapi: "1",
+  });
+  if (origin) params.set("origin", origin);
+  return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
+}
+
+export function youtubePosterSrc(id: string) {
+  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+}
+
+export function youtubeWatchUrl(id: string) {
+  return `https://www.youtube.com/watch?v=${id}`;
 }

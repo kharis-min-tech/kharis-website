@@ -190,7 +190,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
               className="group flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/30 p-4 transition-colors hover:border-[#e8a33d]/40 hover:bg-black/50 sm:flex-row sm:items-center"
             >
               <div className="flex w-full items-center gap-4 sm:w-40">
-                <div className="flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-[#800654] text-white!">
+                <div className="flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-[#630ed4] text-white!">
                   <span className="text-xl font-extrabold leading-none">{entry.day}</span>
                   <span className="text-[10px] font-bold uppercase tracking-wider opacity-80">
                     {viewDate.toLocaleDateString("en-GB", { month: "short" })}
