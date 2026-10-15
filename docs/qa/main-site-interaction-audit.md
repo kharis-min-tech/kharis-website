@@ -56,4 +56,4 @@ GitHub also reports an existing high-severity default-branch Dependabot alert fo
 - Fixed off-screen message-card reveals briefly widening the 320px homepage by changing their entrance to a vertical reveal.
 - Verified contact form controls render at 16px on phones. Viewport overrides were reset after testing.
 - Main production build passes on Next.js 16.3.8; 98 tests, lint and TypeScript pass.
-- Mobile About navigation now visibly expands with a rotating chevron and an indented submenu for the overview, mission, vision, leadership and governance. Verified that selecting Our vision closes the menu, restores page scrolling and activates the Vision chapter.
+- Mobile About navigation uses a chevron and two simple centred sub-links, About us and Governance, matching the existing desktop hierarchy. The submenu has no side rule or tinted container.

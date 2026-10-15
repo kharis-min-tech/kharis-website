@@ -13,7 +13,7 @@ import "./mobile-navigation.css";
 
 const primary = [
   { label: "Home", href: "/" },
-  { label: "About us", href: "/about" },
+  { label: "About", href: "/about" },
   { label: "Locations", href: "/locations" },
   { label: "Events", href: "/events" },
   { label: "Messages", href: "/messages" },
@@ -22,10 +22,7 @@ const primary = [
   { label: "Contact", href: "/contact" },
 ];
 const aboutPages = [
-  { label: "About Kharis", href: "/about" },
-  { label: "Our mission", href: "/about#mission" },
-  { label: "Our vision", href: "/about#vision" },
-  { label: "Our leadership", href: "/about#leadership" },
+  { label: "About us", href: "/about" },
   { label: "Governance", href: "/governance" },
 ];
 const secondary = [{ label: "KP2", href: KP2_URL }];

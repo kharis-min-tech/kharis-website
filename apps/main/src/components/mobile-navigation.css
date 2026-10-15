@@ -173,20 +173,16 @@
 .mobile-nav__submenu nav {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  width: min(100%, 260px);
-  margin: 0.5rem auto 1rem;
-  padding: 0.5rem 1rem;
-  border-left: 2px solid var(--menu-accent);
-  background: color-mix(in srgb, var(--menu-accent) 5%, var(--menu-bg));
-  text-align: left;
+  align-items: center;
+  margin: 0.1rem auto 0.6rem;
+  text-align: center;
 }
 .mobile-nav__submenu a {
   display: flex;
   align-items: center;
   min-height: 44px;
   padding: 0.4rem 0.5rem;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: var(--menu-muted);
 }
 .mobile-nav__submenu a:hover {
