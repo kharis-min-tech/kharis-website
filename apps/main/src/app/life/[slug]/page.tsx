@@ -11,7 +11,8 @@ export function generateStaticParams() {
   return LIFE_SLUGS.map((slug) => ({ slug }));
 }
 
-export const dynamicParams = false;
+// Not `dynamicParams = false`: without an incremental cache on Workers the prerendered pages aren't
+// found, and false turned every /life/<slug> into a 404. Unknown slugs still 404 via notFound().
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

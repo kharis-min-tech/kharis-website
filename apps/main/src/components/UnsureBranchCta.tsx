@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 
-export function UnsureBranchCta() {
+type Props = {
+  /** Off on the Locations page, where the branches are already listed. */
+  showFindBranch?: boolean;
+};
+
+export function UnsureBranchCta({ showFindBranch = true }: Props) {
   return (
     <section className="unsure-band px-5 py-10 md:px-8 md:py-12">
       <Reveal variant="up" distance={36} className="mx-auto max-w-7xl">
@@ -24,9 +29,11 @@ export function UnsureBranchCta() {
               <Link href="/contact" className="unsure-panel__btn unsure-panel__btn--solid">
                 Contact Us
               </Link>
-              <Link href="/locations" className="unsure-panel__btn unsure-panel__btn--ghost">
-                Find a Branch
-              </Link>
+              {showFindBranch ? (
+                <Link href="/locations" className="unsure-panel__btn unsure-panel__btn--ghost">
+                  Find a Branch
+                </Link>
+              ) : null}
             </div>
           </div>
         </div>
