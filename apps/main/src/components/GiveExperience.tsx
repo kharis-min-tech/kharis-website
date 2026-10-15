@@ -1,52 +1,43 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import {
+  ArrowRight,
+  ArrowUp,
+  ArrowUpRight,
+  BatteryFull,
   Check,
+  ChevronLeft,
   Copy,
-  CreditCard,
-  Heart,
-  HeartHandshake,
-  Landmark,
-  Smartphone,
-  UsersRound,
-  X,
-  type LucideIcon,
+  Phone,
+  Plus,
+  SignalHigh,
+  UserRound,
+  Wifi,
 } from "lucide-react";
-import { Icon } from "@/components/Icon";
-import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
-import { BANK, BANK_ACCRA, MOMO, ONLINE_BRANCHES, ONLINE_GIVE_URL, TEXT_GIVE } from "@/lib/giving";
+import { BANK, BANK_ACCRA, MOMO, TEXT_GIVE, type GivingBranch } from "@/lib/giving";
+import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
+import "./give.css";
 
 const TEXT_AMOUNTS = [5, 10, 15, 20] as const;
+const BRANCH_KEY = "kharis-give-branch";
 
-type Flow = "online" | "monthly" | "app" | "bank";
-
-const WHY = [
-  {
-    title: "Worship & Obedience",
-    text: "We give because God gave first. Our offerings are a response to His grace and a step of faith.",
-    Glyph: HeartHandshake,
-    tone: "lilac",
-    well: "purple" as const,
-  },
-  {
-    title: "Care for People",
-    text: "Generosity meets real needs in our community, from food support to mentorship and crisis relief.",
-    Glyph: Heart,
-    tone: "gold",
-    well: "gold" as const,
-  },
-  {
-    title: "Build Community",
-    text: "Every gift helps create spaces where people can belong, grow, and discover their purpose.",
-    Glyph: UsersRound,
-    tone: "cream",
-    well: "purple" as const,
-  },
+const WAYS = [
+  { id: "online", label: "Online", hint: "By card, through your branch" },
+  { id: "bank", label: "Bank transfer", hint: "One-off or monthly, from the UK" },
+  { id: "text", label: "Text", hint: `UK mobiles, up to £${TEXT_GIVE.maxPounds}` },
+  { id: "ghana", label: "From Ghana", hint: "CalBank and Mobile Money" },
 ] as const;
 
-function CopyRow({ label, value }: { label: string; value: string }) {
+type Way = (typeof WAYS)[number]["id"];
+
+/** Short name for the give button: "Kharis Church London" reads as "London". */
+function shortName(branch: GivingBranch) {
+  return branch.name.replace(/^Kharis Church /, "").replace(/^Kharis Phase 2 /, "KP2 ");
+}
+
+function CopyRow({ label, value, hint }: { label: string; value: string; hint?: string }) {
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
@@ -60,392 +51,417 @@ function CopyRow({ label, value }: { label: string; value: string }) {
   };
 
   return (
-    <div className="give-copy">
-      <div>
-        <p className="give-copy__label">{label}</p>
-        <p className="give-copy__value">{value}</p>
-      </div>
-      <button type="button" className="give-copy__btn" onClick={copy}>
-        {copied ? (
-          <Check className="h-4 w-4" aria-hidden />
-        ) : (
-          <Copy className="h-4 w-4" aria-hidden />
-        )}
-        {copied ? "Copied" : "Copy"}
+    <div className="gv-row">
+      <dt>{label}</dt>
+      <dd>
+        {value}
+        {hint ? <span className="gv-row__hint">{hint}</span> : null}
+      </dd>
+      <button
+        type="button"
+        className={`gv-row__copy${copied ? " is-done" : ""}`}
+        onClick={copy}
+        aria-label={copied ? `${label} copied` : `Copy ${label.toLowerCase()}`}
+      >
+        {copied ? <Check aria-hidden /> : <Copy aria-hidden />}
+        <span aria-hidden>{copied ? "Copied" : "Copy"}</span>
       </button>
     </div>
   );
 }
 
-function IconWell({
-  Glyph,
-  tone = "purple",
-  children,
-}: {
-  Glyph?: LucideIcon;
-  tone?: "purple" | "gold" | "light";
-  children?: ReactNode;
-}) {
+function OnlinePanel({ branches, onGhana }: { branches: GivingBranch[]; onGhana: () => void }) {
+  const [picked, setPicked] = useState("");
+  const branch = branches.find((b) => b.name === picked);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(BRANCH_KEY);
+      if (saved && branches.some((b) => b.name === saved)) setPicked(saved);
+    } catch {
+      // Storage can be blocked; the picker simply starts empty.
+    }
+  }, [branches]);
+
+  const choose = (name: string) => {
+    setPicked(name);
+    try {
+      window.localStorage.setItem(BRANCH_KEY, name);
+    } catch {
+      // Not remembering the branch is fine.
+    }
+  };
+
   return (
-    <span className={`give-icon-well give-icon-well--${tone}`} aria-hidden>
-      {Glyph ? <Glyph strokeWidth={1.55} /> : children}
-    </span>
+    <>
+      <h3>Give to your branch online</h3>
+      <p className="gv-panel__lede">
+        Pick your branch and you&apos;ll go straight to its secure giving page on Tithe.ly, where
+        you can give by card once or every month.
+      </p>
+      <label className="gv-select">
+        <span>Your branch</span>
+        <select value={picked} onChange={(e) => choose(e.target.value)}>
+          <option value="" disabled>
+            Choose a branch
+          </option>
+          {branches.map((b) => (
+            <option key={b.name} value={b.name}>
+              {b.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <div className="gv-panel__action">
+        {!branch ? (
+          <span className="btn-give gv-btn-off" aria-disabled>
+            Choose your branch first
+          </span>
+        ) : branch.kind === "online" ? (
+          <a href={branch.url} target="_blank" rel="noopener noreferrer" className="btn-give">
+            Give to {shortName(branch)}
+            <ArrowUpRight aria-hidden className="h-4 w-4" />
+          </a>
+        ) : branch.kind === "ghana" ? (
+          <>
+            <button type="button" className="btn-give" onClick={onGhana}>
+              Show the Ghana details
+              <ArrowRight aria-hidden className="h-4 w-4" />
+            </button>
+            <p className="gv-panel__note">Accra gives by CalBank transfer or Mobile Money.</p>
+          </>
+        ) : (
+          <a
+            href={SPURGEONS_CENTRE.giveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-give"
+          >
+            Give to Spurgeon&apos;s Centre
+            <ArrowUpRight aria-hidden className="h-4 w-4" />
+          </a>
+        )}
+      </div>
+    </>
   );
 }
 
-export function GiveExperience() {
-  const reduce = useReducedMotion();
-  const [flow, setFlow] = useState<Flow | null>("bank");
-  const [fromBuilding, setFromBuilding] = useState(false);
+function BankPanel() {
+  return (
+    <>
+      <h3>Bank transfer</h3>
+      <p className="gv-panel__lede">
+        Use these details in your banking app. To give every month, set them up as a standing order.
+      </p>
+      <dl className="gv-rows">
+        <CopyRow label="Account name" value={BANK.accountName} />
+        <CopyRow label="Account number" value={BANK.accountNumber} />
+        <CopyRow label="Sort code" value={BANK.sortCode} />
+        <CopyRow label="IBAN" value={BANK.iban} />
+        <CopyRow label="SWIFT / BIC" value={BANK.swift} />
+      </dl>
+    </>
+  );
+}
+
+function TextPanel() {
   const [amount, setAmount] = useState<(typeof TEXT_AMOUNTS)[number]>(10);
-  const [branch, setBranch] = useState<(typeof ONLINE_BRANCHES)[number]>(ONLINE_BRANCHES[0]!);
-
-  const smsHref = useMemo(() => {
-    const body = encodeURIComponent(`${TEXT_GIVE.keyword} ${amount}`);
-    return `sms:${TEXT_GIVE.number}?&body=${body}`;
-  }, [amount]);
-
-  const onlineHref = useMemo(() => {
-    const q = encodeURIComponent(branch);
-    return `${ONLINE_GIVE_URL}?branch=${q}`;
-  }, [branch]);
-
-  const openFlow = (next: Flow, building = false) => {
-    setFromBuilding(building);
-    setFlow(next);
-    window.setTimeout(() => {
-      document.getElementById("give-flow")?.scrollIntoView({
-        behavior: reduce ? "auto" : "smooth",
-        block: "center",
-      });
-    }, 120);
-  };
-
-  useEffect(() => {
-    const applyHash = () => {
-      if (window.location.hash !== "#building") return;
-      setFromBuilding(true);
-      setFlow("bank");
-      window.setTimeout(() => {
-        document.getElementById("give-flow")?.scrollIntoView({
-          behavior: reduce ? "auto" : "smooth",
-          block: "start",
-        });
-      }, 60);
-    };
-    applyHash();
-    window.addEventListener("hashchange", applyHash);
-    return () => window.removeEventListener("hashchange", applyHash);
-  }, [reduce]);
-
-  const panelEase: [number, number, number, number] = [0.16, 1, 0.3, 1];
+  const message = `${TEXT_GIVE.keyword} ${amount}`;
+  const smsHref = `sms:${TEXT_GIVE.number}?&body=${encodeURIComponent(message)}`;
 
   return (
-    <div className="give-page">
-      <header className="give-hero">
-        <div
-          className="give-hero__media"
-          style={{ backgroundImage: "url(/images/build-house.jpg)" }}
-        />
-        <div className="give-hero__veil" />
-        <div className="give-hero__dots" aria-hidden />
-        <Reveal variant="blur" className="give-hero__copy">
-          <p className="give-hero__badge">Impact through grace</p>
-          <h1>
-            <span>Your generosity</span>
-            <span className="give-hero__gold">powers the mission</span>
+    <div className="gv-text">
+      <div>
+        <h3>Text to give</h3>
+        <p className="gv-panel__lede">
+          Text <strong>{TEXT_GIVE.keyword}</strong> and the amount to{" "}
+          <strong>{TEXT_GIVE.number}</strong>. It&apos;s added to your next phone bill or taken from
+          your pay‑as‑you‑go balance.
+        </p>
+        <div className="gv-amounts" role="radiogroup" aria-label="Amount to give">
+          {TEXT_AMOUNTS.map((n) => (
+            <button
+              key={n}
+              type="button"
+              role="radio"
+              aria-checked={amount === n}
+              className={`gv-amounts__chip${amount === n ? " is-on" : ""}`}
+              onClick={() => setAmount(n)}
+            >
+              £{n}
+            </button>
+          ))}
+        </div>
+        <div className="gv-panel__action">
+          <a href={smsHref} className="btn-give">
+            Text {message} to {TEXT_GIVE.number}
+          </a>
+        </div>
+        <p className="gv-panel__note">UK mobiles only. Up to £{TEXT_GIVE.maxPounds} per text.</p>
+      </div>
+
+      <div className="gv-phone" aria-hidden>
+        <div className="gv-phone__screen">
+          <div className="gv-phone__status">
+            <span>10:42</span>
+            <span className="gv-phone__island" />
+            <span className="gv-phone__icons">
+              <SignalHigh />
+              <Wifi />
+              <BatteryFull />
+            </span>
+          </div>
+          <div className="gv-phone__head">
+            <ChevronLeft className="gv-phone__back" />
+            <span className="gv-phone__avatar">
+              <UserRound />
+            </span>
+            <span className="gv-phone__name">{TEXT_GIVE.number}</span>
+          </div>
+          <div className="gv-phone__thread">
+            <p className="gv-phone__meta">
+              Text Message
+              <br />
+              Today 10:42
+            </p>
+            <p key={amount} className="gv-phone__bubble">
+              {message}
+            </p>
+            <p className="gv-phone__receipt">Delivered</p>
+          </div>
+          <div className="gv-phone__compose">
+            <span className="gv-phone__plus">
+              <Plus />
+            </span>
+            <span className="gv-phone__field">
+              Text Message
+              <span className="gv-phone__send">
+                <ArrowUp />
+              </span>
+            </span>
+          </div>
+          <span className="gv-phone__home" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GhanaPanel() {
+  return (
+    <>
+      <h3>Giving from Ghana</h3>
+      <p className="gv-panel__lede">
+        Kharis Accra gives through CalBank or Mobile Money. Both go to the church in Ghana.
+      </p>
+      <div className="gv-split">
+        <div>
+          <p className="gv-split__label">CalBank transfer</p>
+          <dl className="gv-rows">
+            <CopyRow label="Account name" value={BANK_ACCRA.accountName} />
+            <CopyRow label="Account number" value={BANK_ACCRA.accountNumber} />
+            <CopyRow label="Bank" value={BANK_ACCRA.bank} />
+            <CopyRow
+              label="SWIFT / BIC"
+              value={BANK_ACCRA.swift}
+              hint={`or ${BANK_ACCRA.swiftLong} if your bank asks for 11 characters`}
+            />
+          </dl>
+        </div>
+        <div>
+          <p className="gv-split__label">Mobile Money</p>
+          <dl className="gv-rows">
+            <CopyRow label="Account name" value={MOMO.accountName} />
+            <CopyRow label="USSD code" value={MOMO.ussd} />
+          </dl>
+          <a href={`tel:${MOMO.ussd.replace(/#/g, "%23")}`} className="gv-dial">
+            <Phone aria-hidden />
+            Dial {MOMO.ussd}
+          </a>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
+  const [way, setWay] = useState<Way>("online");
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const deskRef = useRef<HTMLElement>(null);
+
+  const showWay = (next: Way, focus = false) => {
+    setWay(next);
+    if (focus) tabRefs.current[WAYS.findIndex((w) => w.id === next)]?.focus();
+  };
+
+  const onTabKey = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const steps: Record<string, number> = {
+      ArrowDown: 1,
+      ArrowRight: 1,
+      ArrowUp: -1,
+      ArrowLeft: -1,
+    };
+    let next: number | null = null;
+    if (e.key in steps) next = (index + steps[e.key]! + WAYS.length) % WAYS.length;
+    if (e.key === "Home") next = 0;
+    if (e.key === "End") next = WAYS.length - 1;
+    if (next === null) return;
+    e.preventDefault();
+    showWay(WAYS[next]!.id, true);
+  };
+
+  const showGhana = () => {
+    showWay("ghana");
+    deskRef.current?.scrollIntoView({ block: "start" });
+  };
+
+  return (
+    <div className="gv">
+      <header className="gv-hero">
+        <div className="gv-hero__copy">
+          <p className="gv-eyebrow">Giving at Kharis</p>
+          <h1 className="gv-hero__title">
+            <span className="gv-rise gv-3d" style={{ animationDelay: "120ms" }}>
+              Sow
+            </span>{" "}
+            <span className="gv-rise gv-3d gv-yellow" style={{ animationDelay: "320ms" }}>
+              bountifully.
+            </span>
           </h1>
-          <p>
-            Giving at Kharis fuels worship, discipleship, and care for people. Kharis Phase 2 is our
-            students and young people&apos;s expression of the same mission: raising the next
-            generation to know God and serve their generation.
+          <p className="gv-hero__verse">
+            &ldquo;He who sows bountifully will also reap bountifully.&rdquo;
+            <cite>2 Corinthians 9:6</cite>
           </p>
-        </Reveal>
+          <p className="gv-hero__lede">
+            Tithes and offerings are part of our worship. Give online through your branch, by bank
+            transfer or by text, wherever you are.
+          </p>
+          <div className="btn-pair gv-hero__ctas">
+            <a href="#ways" className="btn-give">
+              Give to your branch
+            </a>
+            <a href="#building" className="btn-secondary">
+              Build Spurgeon&apos;s Centre
+            </a>
+          </div>
+        </div>
+
+        <div className="gv-hero__stack" aria-hidden>
+          <figure className="gv-hero__photo gv-hero__photo--left">
+            <Image src="/images/give/thanksgiving-hands-raised.jpg" alt="" fill sizes="34vw" />
+          </figure>
+          <figure className="gv-hero__photo gv-hero__photo--right">
+            <Image src="/images/give/thanksgiving-hall.jpg" alt="" fill sizes="34vw" />
+          </figure>
+          <figure className="gv-hero__photo gv-hero__photo--centre">
+            <Image
+              src="/images/give/thanksgiving-heart-hands.jpg"
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 767px) 86vw, 46vw"
+            />
+          </figure>
+        </div>
       </header>
 
-      <section id="ways" className="give-methods" aria-labelledby="ways-to-give">
-        <Reveal className="give-methods__intro">
-          <h2 id="ways-to-give" className="give-methods__title">
-            Ways to give
-          </h2>
-          <p>
-            Choose the method that is most convenient for you. All transactions are securely
-            handled.
-          </p>
-          <p className="give-methods__note">
-            Every gift, large or small, is an act of worship. Thank you for partnering with Kharis
-            as we change the world with a touch of His grace.
-          </p>
-        </Reveal>
+      <section id="ways" ref={deskRef} className="gv-desk" aria-labelledby="ways-title">
+        <div className="gv-head">
+          <p className="gv-kicker">Four ways to give</p>
+          <h2 id="ways-title">Pick what suits you</h2>
+        </div>
 
-        <RevealStagger className="give-methods__grid" stagger={0.08}>
-          <RevealItem className="give-way give-way--featured" variant="up">
-            <span className="give-way__badge">Recommended</span>
-            <IconWell Glyph={Landmark} tone="light" />
-            <h3>Bank transfer</h3>
-            <p>
-              Direct deposits for tithes, offerings, or structured monthly transfers. Clear details
-              for the UK and Ghana.
-            </p>
-            <button
-              type="button"
-              className="give-cta give-cta--on-dark"
-              onClick={() => openFlow("bank")}
-            >
-              View details
-            </button>
-          </RevealItem>
-
-          <RevealItem className="give-way" variant="up">
-            <IconWell Glyph={CreditCard} />
-            <h3>Online portal</h3>
-            <p>Choose your branch and continue to the secure Kharis giving page.</p>
-            <label className="give-branch-select">
-              <span>Branch</span>
-              <select
-                value={branch}
-                onChange={(e) => setBranch(e.target.value as (typeof ONLINE_BRANCHES)[number])}
+        <div className="gv-desk__body">
+          <div className="gv-tabs" role="tablist" aria-label="Ways to give">
+            {WAYS.map((w, i) => (
+              <button
+                key={w.id}
+                ref={(el) => {
+                  tabRefs.current[i] = el;
+                }}
+                type="button"
+                role="tab"
+                id={`way-${w.id}`}
+                aria-selected={way === w.id}
+                aria-controls="way-panel"
+                tabIndex={way === w.id ? 0 : -1}
+                className="gv-tab"
+                onClick={() => showWay(w.id)}
+                onKeyDown={(e) => onTabKey(e, i)}
               >
-                {ONLINE_BRANCHES.map((b) => (
-                  <option key={b} value={b}>
-                    {b}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <a href={onlineHref} target="_blank" rel="noreferrer" className="give-cta">
-              Continue to give
-            </a>
-          </RevealItem>
+                <span className="gv-tab__num">{String(i + 1).padStart(2, "0")}</span>
+                <span className="gv-tab__text">
+                  <span className="gv-tab__label">{w.label}</span>
+                  <span className="gv-tab__hint">{w.hint}</span>
+                </span>
+              </button>
+            ))}
+          </div>
 
-          <RevealItem className="give-way" variant="up">
-            <IconWell Glyph={Smartphone} />
-            <h3>Mobile app</h3>
-            <p>
-              Download the Kharis Hub app. Manage recurring giving and track your history easily.
-            </p>
-            <button
-              type="button"
-              className="give-cta give-cta--quiet"
-              onClick={() => openFlow("app")}
-            >
-              Get the app
-            </button>
-          </RevealItem>
-        </RevealStagger>
-
-        <div id="give-flow" className="give-flow">
-          <span id="building" className="give-flow__anchor" aria-hidden />
-          <AnimatePresence mode="wait">
-            {flow ? (
-              <motion.div
-                key={flow}
-                className="give-panel"
-                initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(8px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={reduce ? undefined : { opacity: 0, y: -16, filter: "blur(6px)" }}
-                transition={{ duration: 0.42, ease: panelEase }}
-              >
-                <div className="give-panel__top">
-                  <p className="eyebrow">
-                    {flow === "online" && "Online portal"}
-                    {flow === "monthly" && "Monthly giving"}
-                    {flow === "app" && "Kharis Hub"}
-                    {flow === "bank" && "Bank transfer"}
-                  </p>
-                  <button
-                    type="button"
-                    className="give-panel__close"
-                    onClick={() => setFlow(null)}
-                    aria-label="Close"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-
-                {flow === "online" || flow === "monthly" ? (
-                  <div className="give-panel__body give-panel__body--bank">
-                    <div>
-                      <h3>UK Bank Transfer</h3>
-                      <p>
-                        {flow === "monthly"
-                          ? "Set up a standing order from your bank using these details."
-                          : fromBuilding
-                            ? "Transfer to the building fund using these bank details. Please use your name and 'Building Fund' as the reference."
-                            : "Transfer your tithe or offering directly using these bank details."}
-                      </p>
-                      <CopyRow label="Account name" value={BANK.accountName} />
-                      <CopyRow label="Account number" value={BANK.accountNumber} />
-                      <CopyRow label="Sort code" value={BANK.sortCode} />
-                      <CopyRow label="IBAN" value={BANK.iban} />
-                      <CopyRow label="SWIFT / BIC" value={BANK.swift} />
-                    </div>
-                    <div className="give-panel__text">
-                      <h3>Ghana (CalBank)</h3>
-                      <p>For giving from Ghana, use the CalBank details below.</p>
-                      <CopyRow label="Account name" value={BANK_ACCRA.accountName} />
-                      <CopyRow label="Account number" value={BANK_ACCRA.accountNumber} />
-                      <CopyRow label="Bank" value={BANK_ACCRA.bank} />
-                      <CopyRow label="SWIFT / BIC" value={BANK_ACCRA.swift} />
-                    </div>
-                    <div className="give-panel__text">
-                      <h3>Mobile Money (MoMo)</h3>
-                      <p>Give via Mobile Money in Ghana.</p>
-                      <CopyRow label="Account name" value={MOMO.accountName} />
-                      <CopyRow label="USSD code" value={MOMO.ussd} />
-                    </div>
-                  </div>
-                ) : null}
-
-                {flow === "app" ? (
-                  <div className="give-panel__body give-panel__body--app">
-                    <h3>Download the Kharis Hub app</h3>
-                    <p>
-                      Manage recurring giving and track your history from your phone. Available on
-                      iPhone and Android.
-                    </p>
-                    <div className="give-panel__stores">
-                      <a href="https://kharis.org/" className="vision-store vision-store--apple">
-                        <span className="vision-store__icon" aria-hidden>
-                          <Icon name="apple" className="h-6 w-6" />
-                        </span>
-                        <span className="vision-store__copy">
-                          <strong>App Store</strong>
-                          <span>Download for iPhone</span>
-                        </span>
-                      </a>
-                      <a href="https://kharis.org/" className="vision-store vision-store--android">
-                        <span className="vision-store__icon" aria-hidden>
-                          <Icon name="android" className="h-6 w-6" />
-                        </span>
-                        <span className="vision-store__copy">
-                          <strong>Google Play</strong>
-                          <span>Download for Android</span>
-                        </span>
-                      </a>
-                    </div>
-                  </div>
-                ) : null}
-
-                {flow === "bank" ? (
-                  <div className="give-panel__body give-panel__body--bank">
-                    <div>
-                      <h3>Kharis Ministries</h3>
-                      <p>
-                        {fromBuilding
-                          ? "Transfer to the building fund using these bank details. Please use your name and 'Building Fund' as the reference."
-                          : "Direct deposits for tithes, offerings, or structured monthly transfers. Use these details from your own bank."}
-                      </p>
-                      <CopyRow label="Account name" value={BANK.accountName} />
-                      <CopyRow label="Account number" value={BANK.accountNumber} />
-                      <CopyRow label="Sort code" value={BANK.sortCode} />
-                      <CopyRow label="IBAN" value={BANK.iban} />
-                      <CopyRow label="SWIFT / BIC" value={BANK.swift} />
-                    </div>
-                    <div className="give-panel__text">
-                      <h3>Ghana (CalBank)</h3>
-                      <p>For giving from Ghana, use the CalBank details below.</p>
-                      <CopyRow label="Account name" value={BANK_ACCRA.accountName} />
-                      <CopyRow label="Account number" value={BANK_ACCRA.accountNumber} />
-                      <CopyRow label="Bank" value={BANK_ACCRA.bank} />
-                      <CopyRow label="SWIFT / BIC" value={BANK_ACCRA.swift} />
-                    </div>
-                    <div className="give-panel__text">
-                      <h3>Or text (UK)</h3>
-                      <p>
-                        Text{" "}
-                        <strong>
-                          {TEXT_GIVE.keyword} {amount}
-                        </strong>{" "}
-                        to <strong>{TEXT_GIVE.number}</strong>. Maximum £{TEXT_GIVE.maxPounds}.
-                      </p>
-                      <div className="give-amounts" role="group" aria-label="Amount">
-                        {TEXT_AMOUNTS.map((n) => (
-                          <button
-                            key={n}
-                            type="button"
-                            className={`give-amounts__chip${amount === n ? " is-on" : ""}`}
-                            onClick={() => setAmount(n)}
-                          >
-                            £{n}
-                          </button>
-                        ))}
-                      </div>
-                      <p className="give-card__hint">
-                        Added to your next bill, or taken from pay-as-you-go.
-                      </p>
-                      <a href={smsHref} className="give-cta give-cta--quiet">
-                        Open messages
-                      </a>
-                    </div>
-                  </div>
-                ) : null}
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+          <div
+            id="way-panel"
+            role="tabpanel"
+            aria-labelledby={`way-${way}`}
+            className="gv-panel"
+            tabIndex={0}
+          >
+            {way === "online" ? <OnlinePanel branches={branches} onGhana={showGhana} /> : null}
+            {way === "bank" ? <BankPanel /> : null}
+            {way === "text" ? <TextPanel /> : null}
+            {way === "ghana" ? <GhanaPanel /> : null}
+          </div>
         </div>
       </section>
 
-      <section className="give-why" aria-labelledby="why-we-give">
-        <Reveal className="give-why__intro">
-          <h2 id="why-we-give" className="give-why__title">
-            <span className="give-why__mark">Why</span> we give
-          </h2>
-          <p>
-            Giving is an act of worship, faith, and love. It fuels the mission, cares for people,
-            and plants seeds for the next generation.
-          </p>
-        </Reveal>
-
-        <RevealStagger className="give-why__grid" stagger={0.07}>
-          {WHY.map((card) => (
-            <RevealItem
-              key={card.title}
-              className={`give-why__card give-why__card--${card.tone}`}
-              variant="up"
-            >
-              <IconWell Glyph={card.Glyph} tone={card.well} />
-              <h3>{card.title}</h3>
-              <p>{card.text}</p>
-            </RevealItem>
-          ))}
-        </RevealStagger>
-      </section>
-
-      <section className="give-close" aria-labelledby="ready-to-give">
-        <Reveal className="give-banner">
-          <div className="give-banner__shapes" aria-hidden>
-            <span className="unsure-shape unsure-shape--orb-a" />
-            <span className="unsure-shape unsure-shape--orb-b" />
-            <span className="unsure-shape unsure-shape--orb-c" />
-            <span className="unsure-shape unsure-shape--ring" />
+      <section id="building" className="gv-build" aria-labelledby="building-title">
+        <div className="gv-build__inner">
+          <div className="gv-build__art">
+            <Image
+              src="/images/spurgeons-impression.jpg"
+              alt="An artist's impression of the renovated Spurgeon's Centre in South London"
+              fill
+              sizes="(max-width: 899px) 92vw, 44vw"
+            />
           </div>
-          <div className="give-banner__content">
-            <p className="give-banner__eyebrow">Partner with the mission</p>
-            <h2 id="ready-to-give">Ready to make a difference?</h2>
+          <div className="gv-build__copy">
+            <p className="gv-eyebrow">Building fund</p>
+            <h2 id="building-title">
+              Spurgeon&apos;s <span className="gv-yellow">Centre</span>
+            </h2>
             <p>
-              Your gift helps Kharis preach Christ, care for people, and raise the next generation.
-              Thank you for sowing into what God is doing among us.
+              Kharis Church has purchased Spurgeon&apos;s College in South London. We are renovating
+              it to keep training missionaries and sending them into the world, and to strengthen
+              the church in the UK.
             </p>
-            <div className="give-banner__actions">
-              <button
-                type="button"
-                className="unsure-panel__btn unsure-panel__btn--solid"
-                onClick={() => openFlow("bank")}
+            <div className="btn-pair">
+              <a
+                href={SPURGEONS_CENTRE.giveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-give"
               >
-                Give by bank transfer
-              </button>
-              <button
-                type="button"
-                className="unsure-panel__btn unsure-panel__btn--ghost"
-                onClick={() => openFlow("monthly")}
+                Give to the building
+              </a>
+              <a
+                href={SPURGEONS_CENTRE.pledgeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary"
               >
-                Set up monthly
-              </button>
+                Make a pledge
+              </a>
             </div>
-            <p className="give-banner__foot">Kharis Ministries · Charity number 1139291</p>
+            <a
+              href={SPURGEONS_CENTRE.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gv-build__more"
+            >
+              See the project at spurgeonscentre.org
+            </a>
           </div>
-        </Reveal>
+        </div>
       </section>
     </div>
   );
