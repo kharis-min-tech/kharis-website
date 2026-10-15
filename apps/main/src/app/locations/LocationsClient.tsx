@@ -140,7 +140,7 @@ export function LocationsClient({ items, full }: Props) {
       <section className="locations-hero">
         <div className="locations-hero__intro">
           <p className="locations-hero__eyebrow">Locations</p>
-          <h1 className="locations-hero__title">Find your Kharis family</h1>
+          <h1 className="locations-hero__title">Many branches. One family.</h1>
           <p className="locations-hero__lead">
             {items.length ? (
               <>

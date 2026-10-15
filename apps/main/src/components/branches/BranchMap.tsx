@@ -2,7 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Minus, RotateCcw } from "lucide-react";
+import {
+  Plus,
+  Minus,
+  RotateCcw,
+  Globe2,
+  ChevronDown,
+  Check,
+  ArrowUpRight,
+  MapPin,
+} from "lucide-react";
 import { globeOrigin } from "@/lib/globe-origin";
 import countryOutlines from "@/data/countryOutlines.json";
 import "./globe.css";
@@ -105,7 +114,31 @@ export function BranchMap({
     return () => window.clearTimeout(timer);
   }, [destination.id]);
   const cameraDestination = destinations.find((d) => d.id === cameraCountry) ?? destinations[0];
-  const hitPins = useRef<{ x: number; y: number; slug: string; name: string }[]>([]);
+  type HoverPin = {
+    x: number;
+    y: number;
+    slug: string;
+    name: string;
+    country: string | null;
+    width: number;
+  };
+  const [hovered, setHovered] = useState<HoverPin | null>(null);
+  const hoveredSlug = useRef<string | null>(null);
+  const redraw = useRef<(() => void) | null>(null);
+  const pickerRef = useRef<HTMLDetailsElement>(null);
+  const hitPins = useRef<Omit<HoverPin, "width">[]>([]);
+  useEffect(() => {
+    const close = (event: PointerEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(event.target as Node))
+        pickerRef.current.open = false;
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, []);
+  useEffect(() => {
+    hoveredSlug.current = null;
+    setHovered(null);
+  }, [destination.id, zoomMultiplier]);
   const worldAngle = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const camera = useRef({ lat: 35, lng: -2, zoom: 1 });
@@ -157,7 +190,13 @@ export function BranchMap({
       const delta = ((target.lng - c.lng + 540) % 360) - 180;
       settled =
         Math.abs(delta) + Math.abs(c.lat - target.lat) + Math.abs(c.zoom - target.zoom) < 0.02;
-      if (cameraDestination.id === "world" && settled && !paused && !motion.matches) {
+      if (
+        cameraDestination.id === "world" &&
+        settled &&
+        !paused &&
+        !motion.matches &&
+        !hoveredSlug.current
+      ) {
         target.lng += elapsed * 3;
         worldAngle.current += elapsed * 3;
         c.lng = target.lng;
@@ -234,10 +273,22 @@ export function BranchMap({
           Math.cos(lat) * Math.cos(lng),
         );
         if (p.depth <= 0) continue;
-        hitPins.current.push({ ...p, slug: pin.slug, name: pin.name });
+        hitPins.current.push({ ...p, slug: pin.slug, name: pin.name, country: pin.country });
+        const highlighted = hoveredSlug.current === pin.slug;
+        if (highlighted) {
+          ctx.strokeStyle = "#ffde5990";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 11, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.fillStyle = "#ffde5930";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 15, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.fillStyle = "#ffde59";
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, highlighted ? 5 : 3.5, 0, Math.PI * 2);
         ctx.fill();
       }
       if (!motion.matches && (!settled || (cameraDestination.id === "world" && !paused)))
@@ -248,6 +299,7 @@ export function BranchMap({
       last = 0;
       if (active && !document.hidden) frame = requestAnimationFrame(draw);
     };
+    redraw.current = start;
     const resize = new ResizeObserver(([entry]) => {
       width = entry.contentRect.width;
       height = entry.contentRect.height;
@@ -266,6 +318,7 @@ export function BranchMap({
     document.addEventListener("visibilitychange", start);
     motion.addEventListener("change", start);
     return () => {
+      redraw.current = null;
       cancelAnimationFrame(frame);
       resize.disconnect();
       observer.disconnect();
@@ -280,23 +333,78 @@ export function BranchMap({
       aria-label="Explore Kharis around the world"
     >
       <div className="location-globe__toolbar">
-        <label>
-          Explore our family
-          <select
-            value={destination.id}
-            onChange={(event) => {
-              setZoomMultiplier(1);
-              setSelection(event.target.value);
-              onCountryChange?.(event.target.value);
-            }}
-          >
+        <details
+          className="globe-picker"
+          ref={pickerRef}
+          onKeyDown={(event) => {
+            const details = event.currentTarget;
+            if (event.key === "Escape") {
+              details.open = false;
+              details.querySelector("summary")?.focus();
+            }
+            if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+            event.preventDefault();
+            details.open = true;
+            const options = [
+              ...details.querySelectorAll<HTMLButtonElement>("[role='menuitemradio']"),
+            ];
+            const current = options.indexOf(document.activeElement as HTMLButtonElement);
+            const next =
+              current < 0
+                ? 0
+                : (current + (event.key === "ArrowDown" ? 1 : -1) + options.length) %
+                  options.length;
+            options[next]?.focus();
+          }}
+        >
+          <summary aria-haspopup="menu" aria-label={`Explore our family: ${destination.label}`}>
+            <span className="globe-picker__icon">
+              <Globe2 size={20} aria-hidden="true" />
+            </span>
+            <span className="globe-picker__text">
+              <span>Explore our family</span>
+              <strong>{destination.label}</strong>
+            </span>
+            <ChevronDown className="globe-picker__chevron" size={18} aria-hidden="true" />
+          </summary>
+          <div className="globe-picker__menu" role="menu" aria-label="Choose a country">
             {destinations.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.label}
-              </option>
+              <button
+                key={d.id}
+                type="button"
+                role="menuitemradio"
+                aria-label={d.label}
+                aria-checked={destination.id === d.id}
+                onClick={() => {
+                  setZoomMultiplier(1);
+                  setSelection(d.id);
+                  onCountryChange?.(d.id);
+                  if (pickerRef.current) {
+                    pickerRef.current.open = false;
+                    pickerRef.current.querySelector("summary")?.focus();
+                  }
+                }}
+              >
+                <span className="globe-picker__option-icon">
+                  {d.id === "world" ? (
+                    <Globe2 size={17} aria-hidden="true" />
+                  ) : (
+                    <MapPin size={17} aria-hidden="true" />
+                  )}
+                </span>
+                <span>
+                  <strong>{d.label}</strong>
+                  <small>
+                    {d.id === "world"
+                      ? "One global family"
+                      : `Discover Kharis in ${d.label === "United Kingdom" ? "the UK" : d.label}`}
+                  </small>
+                </span>
+                {destination.id === d.id ? <Check size={17} aria-hidden="true" /> : null}
+              </button>
             ))}
-          </select>
-        </label>
+          </div>
+        </details>
         <button type="button" onClick={() => setPaused((value) => !value)} aria-pressed={paused}>
           {paused ? "Resume rotation" : "Pause rotation"}
         </button>
@@ -340,7 +448,18 @@ export function BranchMap({
                 ) < 14,
             );
             event.currentTarget.style.cursor = pin ? "pointer" : "default";
-            event.currentTarget.title = pin?.name ?? "";
+            event.currentTarget.removeAttribute("title");
+            if (event.pointerType === "touch") return;
+            if (hoveredSlug.current !== (pin?.slug ?? null)) {
+              hoveredSlug.current = pin?.slug ?? null;
+              setHovered(pin ? { ...pin, width: rect.width } : null);
+              redraw.current?.();
+            }
+          }}
+          onPointerLeave={() => {
+            hoveredSlug.current = null;
+            setHovered(null);
+            redraw.current?.();
           }}
           onClick={(event) => {
             const rect = event.currentTarget.getBoundingClientRect();
@@ -357,6 +476,25 @@ export function BranchMap({
             }
           }}
         />
+        {hovered ? (
+          <div
+            className="globe-hover"
+            aria-hidden="true"
+            style={{
+              left: Math.max(12, Math.min(hovered.width - 240, hovered.x - 110)),
+              top: Math.max(12, hovered.y - 126),
+            }}
+          >
+            <span className="globe-hover__eyebrow">
+              <MapPin size={12} />
+              {hovered.country ?? "Kharis Church"}
+            </span>
+            <strong>{hovered.name}</strong>
+            <span className="globe-hover__action">
+              Explore this branch <ArrowUpRight size={15} />
+            </span>
+          </div>
+        ) : null}
         <div
           className={`location-globe__welcome${destination.id !== "world" ? " location-globe__welcome--journey" : ""}`}
           key={destination.id}
