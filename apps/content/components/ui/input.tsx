@@ -20,7 +20,10 @@ export function Select({ className, ...props }: React.SelectHTMLAttributes<HTMLS
 
 export function Label({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) {
   return (
-    <label htmlFor={htmlFor} className="mb-1.5 block text-xs font-extrabold uppercase tracking-wider text-gold">
+    <label
+      htmlFor={htmlFor}
+      className="mb-1.5 block text-xs font-extrabold uppercase tracking-wider text-gold"
+    >
       {children}
     </label>
   );

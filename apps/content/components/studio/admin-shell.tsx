@@ -119,7 +119,8 @@ export function AdminShell({ email, children }: { email: string; children: React
                       href={`/workspace/${item.id}`}
                       className={cn(
                         "block rounded-lg px-3 py-2 text-sm font-semibold hover:bg-accent",
-                        workspace === item.id && "bg-primary font-extrabold text-primary-foreground",
+                        workspace === item.id &&
+                          "bg-primary font-extrabold text-primary-foreground",
                       )}
                       aria-current={workspace === item.id ? "page" : undefined}
                     >
