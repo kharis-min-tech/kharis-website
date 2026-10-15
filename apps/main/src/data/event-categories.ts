@@ -1,21 +1,20 @@
 /**
- * Events on /events, shown one after another in this order: weekly services first,
- * then past events, with Singles Ball last.
+ * Events on /events. Each event is ONE picture (or video) with its words and an
+ * "Explore" button that opens `gallery`. They appear in this order, laid out by `layout`:
  *
- * Each event has these parts. Photos live in /public/images, videos in /public/videos.
+ *  full   Edge-to-edge banner (Sunday Service, Let the Bible Speak).
+ *  half   Square tile; two halves in a row sit side by side (Midweek | Family Fun Day,
+ *         Praise Night | Jesus Campaign). Keep halves in pairs.
+ *  split  Two photos joined edge to edge to look like one wide image (Singles Ball,
+ *         always last). Uses `split` instead of `media`.
  *
- *  hero     Full-width banner with no buttons. `video` is optional and only Sunday Service
- *           and Singles Ball use one; without it the poster photo is shown with a slow
- *           zoom. `poster` is also the still shown while the video loads.
- *  tiles    Exactly two large photos side by side, each with a short caption.
- *  split    Optional. Two photos joined edge to edge to look like one wide image, with a
- *           big headline and the "Explore" button. Only the last event should have one;
- *           every other event gets a plain "See more photos" button instead.
- *  gallery  Any number of photos for the photo viewer (6–12 works well).
+ * Photos live in /public/images, videos in /public/videos. `media.video` is optional;
+ * `media.poster` is the photo (and the still shown while a video loads).
+ * `gallery` takes any number of photos (6–12 works well).
  *
- * Keep every `alt` describing what is actually in the new photo. Upcoming events take
- * their day, time and venue from the branch data, so never put those here, and never
- * invent dates for past events.
+ * Keep every `alt` describing what is actually in the photo. Upcoming events take their
+ * day, time and venue from the branch data, so never put those here, and never invent
+ * dates for past events.
  */
 
 export type EventCategoryStatus = "upcoming" | "past";
@@ -29,38 +28,36 @@ export type EventPhoto = {
   mobilePosition?: string;
 };
 
-export type EventHero = {
+export type EventMedia = {
   video?: string;
   poster: string;
-  posterAlt: string;
-  headline: string;
-  subtext: string;
-};
-
-export type EventTile = EventPhoto & {
-  eyebrow: string;
-  title: string;
-  description: string;
+  alt: string;
+  position?: string;
 };
 
 export type EventSplit = {
   left: EventPhoto;
   right: EventPhoto;
+  /** Replaces the usual "Past event" line above the headline. */
   eyebrow: string;
-  headline: string;
 };
 
-export type EventCategory = {
+type EventBase = {
   id: string;
   label: string;
   status: EventCategoryStatus;
-  /** Which branch service an upcoming category maps to. */
+  /** Which branch service an upcoming event maps to. */
   service?: "sunday" | "midweek";
-  hero: EventHero;
-  tiles: [EventTile, EventTile];
-  split?: EventSplit;
+  headline: string;
+  subtext: string;
   gallery: EventPhoto[];
 };
+
+export type EventCategory = EventBase &
+  (
+    | { layout: "full" | "half"; media: EventMedia; split?: never }
+    | { layout: "split"; split: EventSplit; media?: never }
+  );
 
 export type EventFilter = "all" | "sunday" | "midweek" | "events";
 
@@ -77,7 +74,7 @@ export function matchesEvent(category: EventCategory, filter: EventFilter, query
     (filter === "events" ? category.status === "past" : category.service === filter);
   const q = query.trim().toLowerCase();
   if (!inFilter || !q) return inFilter;
-  return [category.label, category.hero.headline, category.hero.subtext].some((text) =>
+  return [category.label, category.headline, category.subtext].some((text) =>
     text.toLowerCase().includes(q),
   );
 }
@@ -88,31 +85,29 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     label: "Sunday Service",
     status: "upcoming",
     service: "sunday",
-    hero: {
+    layout: "full",
+    media: {
       video: "/videos/hero-a.mp4?v=2",
       poster: "/videos/hero-a-poster.jpg",
-      posterAlt: "Congregation in worship during a Sunday service",
-      headline: "Sunday Service",
-      subtext: "Worship, the Word and a church family to belong to. Everyone is welcome.",
+      alt: "Congregation in worship during a Sunday service",
     },
-    tiles: [
+    headline: "Sunday Service",
+    subtext: "Worship, the Word and a church family to belong to. Everyone is welcome.",
+    gallery: [
       {
         src: "/images/events/sunday-worship-hands.jpg",
         alt: "Woman worshipping with both hands raised during a Sunday service",
         position: "82% center",
-        eyebrow: "Worship",
-        title: "Hearts lifted high",
-        description: "We open every Sunday giving God the praise He deserves.",
       },
       {
         src: "/images/hero/sunday-bible-raised.jpg",
         alt: "Church member smiling and holding up her Bible during the service",
-        eyebrow: "The Word",
-        title: "Bibles open, hearts ready",
-        description: "Clear, practical teaching from Scripture for the week ahead.",
       },
-    ],
-    gallery: [
+      { src: "/images/events/sunday-pastor-open-bible.jpg", alt: "Pastor David holding up an open Bible on stage" },
+      {
+        src: "/images/events/sunday-pastor-bible-raised.jpg",
+        alt: "Pastor David lifting a red Bible during the service",
+      },
       { src: "/images/branch-slide-1.jpg", alt: "Congregation standing in worship" },
       { src: "/images/branch-slide-4.jpg", alt: "Wide view of the congregation in the main hall" },
       { src: "/images/hero/sunday-service-stage.jpg", alt: "Hands raised under blue stage lights" },
@@ -128,29 +123,18 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     label: "Midweek Service",
     status: "upcoming",
     service: "midweek",
-    hero: {
+    layout: "half",
+    media: {
       poster: "/images/hero/preaching-open-bible.jpg",
-      posterAlt: "Pastor preaching from an open Bible with scripture on the screen",
-      headline: "Midweek Service",
-      subtext: "The Word and prayer, right in the middle of your week.",
+      alt: "Pastor preaching from an open Bible with scripture on the screen behind him",
     },
-    tiles: [
-      {
-        src: "/videos/hero-b-poster.jpg",
-        alt: "Pastor preaching on stage in front of a blue screen",
-        eyebrow: "The Word",
-        title: "Teaching for everyday life",
-        description: "An evening in Scripture to steady you for the rest of the week.",
-      },
-      {
-        src: "/images/grace-filled-prayer.jpg",
-        alt: "Church members praying together",
-        eyebrow: "Prayer",
-        title: "Bring your burdens",
-        description: "Time set aside to pray for one another and leave with fresh strength.",
-      },
-    ],
+    headline: "Midweek Service",
+    subtext: "The Word and prayer, right in the middle of your week.",
     gallery: [
+      { src: "/videos/hero-b-poster.jpg", alt: "Pastor preaching on stage in front of a blue screen" },
+      { src: "/images/grace-filled-prayer.jpg", alt: "Church members praying together" },
+      { src: "/images/testimony-stage-1.jpg", alt: "Members sharing on stage" },
+      { src: "/images/testimony-stage-2.jpg", alt: "Pastor praying with members on stage" },
       { src: "/images/testimony-sharing.jpg", alt: "Member sharing a testimony" },
       { src: "/images/love-greeting.jpg", alt: "Two members greeting each other warmly" },
       { src: "/images/hero/impartation-celebration.jpg", alt: "Pastor celebrating with the congregation" },
@@ -160,35 +144,41 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     ],
   },
   {
+    id: "family-fun-day",
+    label: "Family Fun Day",
+    status: "past",
+    layout: "half",
+    media: {
+      poster: "/images/about-hero-bench-3200.jpg",
+      alt: "Three church members, two in Kharis Church T-shirts, sitting on a bench outdoors, seen from behind",
+    },
+    headline: "Family Fun Day",
+    subtext: "A day out for the whole church family, from the youngest to the oldest.",
+    gallery: [
+      { src: "/images/hero/outreach-community.jpg", alt: "Church members gathered outdoors in a park" },
+      { src: "/images/branch-slide-2.jpg", alt: "Pastor celebrating on stage with the congregation" },
+      { src: "/images/about-hero-bench-3200.jpg", alt: "Members on a bench outdoors" },
+      { src: "/images/hero/impartation-celebration.jpg", alt: "Pastor celebrating with members" },
+      { src: "/images/love-greeting.jpg", alt: "Members greeting each other" },
+      { src: "/images/young-adults.jpg", alt: "Young adults together" },
+    ],
+  },
+  {
     id: "praise-night",
     label: "Praise Night",
     status: "past",
-    hero: {
+    layout: "half",
+    media: {
       poster: "/images/joyful-worship.jpg",
-      posterAlt: "Congregation worshipping with hands raised",
-      headline: "Praise Night",
-      subtext: "A whole night set apart for praise and worship.",
+      alt: "Woman worshipping with her hand raised among the congregation",
+      position: "60% center",
     },
-    tiles: [
-      {
-        src: "/images/locations-worship-team.jpg",
-        alt: "Worship team singing on stage",
-        eyebrow: "The team",
-        title: "Voices raised, hearts open",
-        description: "The worship team led the room in song from start to finish.",
-      },
-      {
-        src: "/images/get-involved-sax.jpg",
-        alt: "Saxophonist playing during worship",
-        eyebrow: "The sound",
-        title: "Every instrument giving thanks",
-        description: "Live music carried the night from one song to the next.",
-        position: "50% 30%",
-      },
-    ],
+    headline: "Praise Night",
+    subtext: "A whole night set apart for praise and worship.",
     gallery: [
+      { src: "/images/locations-worship-team.jpg", alt: "Worship team singing on stage" },
+      { src: "/images/get-involved-sax.jpg", alt: "Saxophonist playing during worship", position: "50% 30%" },
       { src: "/images/joyful-worship.jpg", alt: "Congregation worshipping with joy" },
-      { src: "/images/locations-worship-team.jpg", alt: "Worship team singing" },
       { src: "/images/hero/worship-altar.jpg", alt: "Worship at the front of the hall" },
       { src: "/images/hero/sunday-service-stage.jpg", alt: "Hands raised under stage lights" },
       { src: "/images/branch-slide-2.jpg", alt: "Celebration on stage" },
@@ -196,71 +186,21 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     ],
   },
   {
-    id: "family-fun-day",
-    label: "Family Fun Day",
-    status: "past",
-    hero: {
-      poster: "/images/about-hero-bench-3200.jpg",
-      posterAlt: "Church members sitting together on a bench outdoors",
-      headline: "Family Fun Day",
-      subtext: "A day out for the whole church family, from the youngest to the oldest.",
-    },
-    tiles: [
-      {
-        src: "/images/hero/outreach-community.jpg",
-        alt: "Church members gathered outdoors in a park",
-        eyebrow: "Outdoors",
-        title: "Sunshine and good company",
-        description: "Families spent the day together out in the open air.",
-      },
-      {
-        src: "/images/branch-slide-2.jpg",
-        alt: "Pastor celebrating on stage with the congregation",
-        eyebrow: "Celebration",
-        title: "Joy you could hear",
-        description: "Games, food and plenty of laughter for every age.",
-      },
-    ],
-    gallery: [
-      { src: "/images/about-hero-bench-3200.jpg", alt: "Members on a bench outdoors" },
-      { src: "/images/hero/outreach-community.jpg", alt: "Members in a park" },
-      { src: "/images/branch-slide-2.jpg", alt: "Celebration on stage" },
-      { src: "/images/hero/impartation-celebration.jpg", alt: "Pastor celebrating with members" },
-      { src: "/images/love-greeting.jpg", alt: "Members greeting each other" },
-      { src: "/images/young-adults.jpg", alt: "Young adults together" },
-    ],
-  },
-  {
     id: "jesus-campaign",
     label: "Jesus Campaign",
     status: "past",
-    hero: {
+    layout: "half",
+    media: {
       poster: "/images/about-mission-outreach-3200.jpg",
-      posterAlt: "Church members in yellow shirts talking with people on the street",
-      headline: "Jesus Campaign",
-      subtext: "Taking the good news of Jesus to the streets of our cities.",
+      alt: "Two members in yellow campaign T-shirts talking with a woman at Stratford station",
     },
-    tiles: [
-      {
-        src: "/images/hero/outreach-street.jpg",
-        alt: "Outreach team in yellow shirts on a city street",
-        eyebrow: "On the streets",
-        title: "One conversation can change a life",
-        description: "Teams went out to share the gospel with anyone who would listen.",
-      },
-      {
-        src: "/images/about-vision-team-2048.jpg",
-        alt: "Outreach team posing together in yellow shirts",
-        eyebrow: "The team",
-        title: "Yellow shirts, one message",
-        description: "Members from across the church served side by side.",
-      },
-    ],
+    headline: "Jesus Campaign",
+    subtext: "Taking the good news of Jesus to the streets of our cities.",
     gallery: [
+      { src: "/images/hero/outreach-street.jpg", alt: "Outreach team in yellow shirts on a city street" },
+      { src: "/images/about-vision-team-2048.jpg", alt: "Outreach team posing together in yellow shirts" },
       { src: "/images/about-mission-outreach-3200.jpg", alt: "Talking with people on the street" },
-      { src: "/images/hero/outreach-street.jpg", alt: "Outreach team on a city street" },
       { src: "/images/vision-campaign.jpg", alt: "Crowd in yellow campaign shirts" },
-      { src: "/images/about-vision-team-2048.jpg", alt: "Outreach team group photo" },
       { src: "/images/about-hero-bench-3200.jpg", alt: "Team members outdoors" },
       { src: "/images/hero/outreach-community.jpg", alt: "Team gathered in a park" },
     ],
@@ -269,33 +209,19 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     id: "let-the-bible-speak",
     label: "Let the Bible Speak Conference",
     status: "past",
-    hero: {
+    layout: "full",
+    media: {
       poster: "/images/biblical-open-bible.jpg",
-      posterAlt: "Hands holding an open Bible",
-      headline: "Let the Bible Speak",
-      subtext: "A conference of teaching that roots us in Scripture.",
+      alt: "Pastor holding an open Bible up high",
+      position: "50% 30%",
     },
-    tiles: [
-      {
-        src: "/images/hero/easter-bibles-raised.jpg",
-        alt: "Congregation holding their Bibles up high",
-        eyebrow: "Scripture",
-        title: "Open the Word, hear God speak",
-        description: "Sessions built around reading and understanding the Bible together.",
-      },
-      {
-        src: "/images/hero/preaching-open-bible.jpg",
-        alt: "Pastor preaching from an open Bible",
-        eyebrow: "Teaching",
-        title: "Rooted and grounded",
-        description: "Speakers opened the Scriptures and applied them to everyday life.",
-      },
-    ],
+    headline: "Let the Bible Speak",
+    subtext: "A conference of teaching that roots us in Scripture.",
     gallery: [
+      { src: "/images/hero/easter-bibles-raised.jpg", alt: "Congregation holding their Bibles up high" },
+      { src: "/images/hero/preaching-open-bible.jpg", alt: "Pastor preaching from an open Bible" },
       { src: "/images/biblical-open-bible.jpg", alt: "Open Bible" },
-      { src: "/images/hero/easter-bibles-raised.jpg", alt: "Bibles raised high" },
       { src: "/images/hero/easter-pastor-david.jpg", alt: "Pastor teaching" },
-      { src: "/images/hero/preaching-open-bible.jpg", alt: "Preaching from an open Bible" },
       { src: "/images/hero/sunday-bible-raised.jpg", alt: "Member holding up her Bible" },
       { src: "/images/pastor-stage.jpg", alt: "Pastor on stage" },
     ],
@@ -304,32 +230,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     id: "singles-ball",
     label: "Singles Ball",
     status: "past",
-    hero: {
-      // video: "/videos/singles-ball.mp4",
-      poster: "/images/events/singles-ball/stage-panel.jpg",
-      posterAlt:
-        "Three hosts in evening wear seated on stage with microphones in front of a glowing pink backdrop",
-      headline: "Singles Ball",
-      subtext: "An evening of elegance, good food and great company.",
-    },
-    tiles: [
-      {
-        src: "/images/events/singles-ball/gentlemen-stairs.jpg",
-        alt: "Gentlemen in black tuxedos and bow ties walking down a grand staircase",
-        eyebrow: "The gentlemen",
-        title: "Black tie, best foot forward.",
-        description: "Tuxedos pressed and bow ties straight for the walk down to the ballroom.",
-        position: "50% 30%",
-      },
-      {
-        src: "/images/events/singles-ball/ladies-selfie.jpg",
-        alt: "Ladies in evening gowns smiling and posing together for a selfie",
-        eyebrow: "The ladies",
-        title: "Glamour, laughter and selfies all night.",
-        description: "Evening gowns, big smiles and plenty of photos to remember the night.",
-        position: "50% 30%",
-      },
-    ],
+    layout: "split",
     split: {
       left: {
         src: "/images/events/singles-ball/pastor-david.jpg",
@@ -342,8 +243,9 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         position: "50% 18%",
       },
       eyebrow: "Hosted by Pastor David & Pastor Awo",
-      headline: "Kharis Singles Ball",
     },
+    headline: "Kharis Singles Ball",
+    subtext: "An evening of elegance, good food and great company.",
     gallery: [
       {
         src: "/images/events/singles-ball/ballroom-overview.jpg",
@@ -359,11 +261,11 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       },
       {
         src: "/images/events/singles-ball/gentlemen-stairs.jpg",
-        alt: "Gentlemen in tuxedos walking down a grand staircase",
+        alt: "Gentlemen in black tuxedos and bow ties walking down a grand staircase",
       },
       {
         src: "/images/events/singles-ball/ladies-selfie.jpg",
-        alt: "Ladies in evening gowns posing for a selfie",
+        alt: "Ladies in evening gowns smiling and posing together for a selfie",
       },
       {
         src: "/images/events/singles-ball/pastor-david.jpg",

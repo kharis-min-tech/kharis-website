@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { getImageProps } from "next/image";
-import { Fragment, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
@@ -12,7 +12,7 @@ import {
   Play,
   X,
 } from "lucide-react";
-import type { EventCategory, EventPhoto, EventSplit, EventTile } from "@/data/event-categories";
+import type { EventCategory, EventMedia, EventPhoto, EventSplit } from "@/data/event-categories";
 import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
 import { useStoredBranch } from "./BranchSelect";
 import "./event-categories.css";
@@ -307,33 +307,54 @@ function GalleryModal({
   );
 }
 
-function EventHero({
+function ExploreButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button type="button" className="events-explore k-cta" onClick={onClick}>
+      Explore
+      <span className="sr-only"> photos from {label}</span>
+      <ArrowUpRight aria-hidden className="h-4 w-4" />
+    </button>
+  );
+}
+
+function eyebrowFor(category: EventCategory, visit: ServiceVisit | null) {
+  if (category.status === "past") return "Past event · Coming back soon";
+  return visit ? `Every ${visit.day} · ${visit.times.join(" & ")}` : "Upcoming";
+}
+
+/** One picture (or video) with the event's words and its Explore button on top. */
+function EventCard({
   category,
+  media,
   visit,
   titleId,
+  wide,
+  onExplore,
 }: {
   category: EventCategory;
+  media: EventMedia;
   visit: ServiceVisit | null;
   titleId: string;
+  wide: boolean;
+  onExplore: () => void;
 }) {
   const reduce = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [userPlay, setUserPlay] = useState<boolean | null>(null);
   const [inView, setInView] = useState(false);
-  const { hero } = category;
   const playing = userPlay ?? !reduce;
-  const upcoming = category.status === "upcoming";
+  const full = category.layout === "full";
 
   useEffect(() => {
     const root = rootRef.current;
-    if (!root) return;
+    if (!root || !media.video) return;
     const io = new IntersectionObserver(([entry]) => setInView(Boolean(entry?.isIntersecting)), {
       threshold: 0.2,
     });
     io.observe(root);
     return () => io.disconnect();
-  }, []);
+  }, [media.video]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -342,20 +363,14 @@ function EventHero({
     else video.pause();
   }, [playing, inView]);
 
-  const eyebrow = upcoming
-    ? visit
-      ? `Every ${visit.day} · ${visit.times.join(" & ")}`
-      : "Upcoming"
-    : "Past event · Coming back soon";
-
   return (
-    <div ref={rootRef} className="events-hero">
-      {hero.video ? (
+    <div ref={rootRef} className={`events-card events-card--${full ? "full" : "tile"}`}>
+      {media.video ? (
         <video
           ref={videoRef}
-          className="events-hero__media"
-          src={hero.video}
-          poster={hero.poster}
+          className="events-card__media"
+          src={media.video}
+          poster={media.poster}
           muted
           loop
           playsInline
@@ -363,31 +378,33 @@ function EventHero({
           aria-hidden
         />
       ) : (
-        <div className={`events-hero__media${reduce ? "" : " events-hero__media--zoom"}`}>
+        <div className={`events-card__media${full && !reduce ? " events-card__media--zoom" : ""}`}>
           <Image
-            src={hero.poster}
-            alt={hero.posterAlt}
+            src={media.poster}
+            alt={media.alt}
             fill
             quality={95}
-            sizes="100vw"
+            sizes={full || wide ? "100vw" : "(max-width: 759px) 100vw, 50vw"}
             className="object-cover"
+            style={media.position ? { objectPosition: media.position } : undefined}
           />
         </div>
       )}
-      <span className="events-hero__veil" aria-hidden />
+      <span className="events-card__veil" aria-hidden />
 
-      <div className="events-hero__copy">
-        <p className="events-hero__eyebrow">{eyebrow}</p>
-        <h2 id={titleId} className="events-hero__headline">
-          {hero.headline}
+      <div className="events-card__copy">
+        <p className="events-card__eyebrow">{eyebrowFor(category, visit)}</p>
+        <h2 id={titleId} className="events-card__headline">
+          {category.headline}
         </h2>
-        <p className="events-hero__sub">{hero.subtext}</p>
+        <p className="events-card__sub">{category.subtext}</p>
+        <ExploreButton label={category.label} onClick={onExplore} />
       </div>
 
-      {hero.video ? (
+      {media.video ? (
         <button
           type="button"
-          className="events-round events-hero__toggle"
+          className="events-round events-card__toggle"
           aria-label={playing ? "Pause background video" : "Play background video"}
           onClick={() => setUserPlay(!playing)}
         >
@@ -402,39 +419,15 @@ function EventHero({
   );
 }
 
-function EventTiles({ tiles }: { tiles: EventTile[] }) {
-  return (
-    <div className="events-tiles">
-      {tiles.map((tile) => (
-        <figure key={tile.src} className="events-tile">
-          <Image
-            src={tile.src}
-            alt={tile.alt}
-            fill
-            quality={95}
-            sizes="(max-width: 760px) 100vw, 50vw"
-            className="object-cover"
-            style={tile.position ? { objectPosition: tile.position } : undefined}
-          />
-          <span className="events-tile__veil" aria-hidden />
-          <figcaption className="events-tile__copy">
-            <span className="events-tile__eyebrow">{tile.eyebrow}</span>
-            <span className="events-tile__title">{tile.title}</span>
-            <span className="events-tile__desc">{tile.description}</span>
-          </figcaption>
-        </figure>
-      ))}
-    </div>
-  );
-}
-
 function EventSplitPanel({
+  category,
   split,
-  label,
+  titleId,
   onExplore,
 }: {
+  category: EventCategory;
   split: EventSplit;
-  label: string;
+  titleId: string;
   onExplore: () => void;
 }) {
   return (
@@ -459,13 +452,12 @@ function EventSplitPanel({
       ))}
       <span className="events-split__veil" aria-hidden />
       <div className="events-split__copy">
-        <p className="events-split__eyebrow">{split.eyebrow}</p>
-        <h3 className="events-split__headline">{split.headline}</h3>
-        <button type="button" className="events-explore k-cta" onClick={onExplore}>
-          Explore
-          <span className="sr-only"> photos from {label}</span>
-          <ArrowUpRight aria-hidden className="h-4 w-4" />
-        </button>
+        <p className="events-card__eyebrow">{split.eyebrow}</p>
+        <h2 id={titleId} className="events-split__headline">
+          {category.headline}
+        </h2>
+        <p className="events-card__sub">{category.subtext}</p>
+        <ExploreButton label={category.label} onClick={onExplore} />
       </div>
     </div>
   );
@@ -475,10 +467,12 @@ function EventBlock({
   category,
   branches,
   hidden,
+  wide = false,
 }: {
   category: EventCategory;
   branches: ServiceBranch[];
   hidden: boolean;
+  wide?: boolean;
 }) {
   const branch = useStoredBranch(branches);
   const [galleryOpen, setGalleryOpen] = useState(false);
@@ -492,19 +486,23 @@ function EventBlock({
   const openGallery = () => setGalleryOpen(true);
 
   return (
-    <article id={category.id} className="events-block" aria-labelledby={titleId} hidden={hidden}>
-      <EventHero category={category} visit={visit} titleId={titleId} />
-      <EventTiles tiles={category.tiles} />
-      {category.split ? (
-        <EventSplitPanel split={category.split} label={category.label} onExplore={openGallery} />
+    <article
+      id={category.id}
+      className={`events-block events-block--${category.layout}`}
+      aria-labelledby={titleId}
+      hidden={hidden}
+    >
+      {category.layout === "split" ? (
+        <EventSplitPanel category={category} split={category.split} titleId={titleId} onExplore={openGallery} />
       ) : (
-        <div className="events-block__more">
-          <button type="button" className="events-explore k-cta" onClick={openGallery}>
-            See more photos
-            <span className="sr-only"> from {category.label}</span>
-            <ArrowUpRight aria-hidden className="h-4 w-4" />
-          </button>
-        </div>
+        <EventCard
+          category={category}
+          media={category.media}
+          visit={visit}
+          titleId={titleId}
+          wide={wide}
+          onExplore={openGallery}
+        />
       )}
 
       <AnimatePresence>
@@ -521,6 +519,17 @@ function EventBlock({
   );
 }
 
+/** Consecutive "half" events pair up into two-up rows; everything else gets its own row. */
+function toRows(categories: EventCategory[]) {
+  const rows: EventCategory[][] = [];
+  for (const category of categories) {
+    const last = rows.at(-1);
+    if (category.layout === "half" && last?.length === 1 && last[0]!.layout === "half") last.push(category);
+    else rows.push([category]);
+  }
+  return rows;
+}
+
 type Props = {
   branches: ServiceBranch[];
   categories: EventCategory[];
@@ -528,22 +537,41 @@ type Props = {
   onClear: () => void;
 };
 
-/** Every event stacked in order; ones outside the current filter stay mounted but hidden. */
+/** Every event in order; ones outside the current filter stay mounted but hidden. */
 export function EventCategories({ branches, categories, visibleIds, onClear }: Props) {
-  const firstPast = categories.find((c) => c.status === "past" && visibleIds.has(c.id));
-
   return (
     <section className="events-stack" aria-label="Kharis events">
-      {categories.map((category) => (
-        <Fragment key={category.id}>
-          {category === firstPast ? (
-            <div className="events-stack__group">
-              <h2 className="events-stack__group-title">Past events</h2>
-            </div>
-          ) : null}
-          <EventBlock category={category} branches={branches} hidden={!visibleIds.has(category.id)} />
-        </Fragment>
-      ))}
+      {toRows(categories).map((row) => {
+        const first = row[0]!;
+        if (first.layout !== "half") {
+          return (
+            <EventBlock
+              key={first.id}
+              category={first}
+              branches={branches}
+              hidden={!visibleIds.has(first.id)}
+            />
+          );
+        }
+        const shown = row.filter((c) => visibleIds.has(c.id)).length;
+        return (
+          <div
+            key={row.map((c) => c.id).join("+")}
+            className={`events-row${shown === 1 ? " is-single" : ""}`}
+            hidden={shown === 0}
+          >
+            {row.map((c) => (
+              <EventBlock
+                key={c.id}
+                category={c}
+                branches={branches}
+                hidden={!visibleIds.has(c.id)}
+                wide={shown === 1}
+              />
+            ))}
+          </div>
+        );
+      })}
 
       {visibleIds.size === 0 ? (
         <div className="events-stack__empty" role="status">
