@@ -30,7 +30,7 @@ export function EventsExperience({ branches }: Props) {
       <header className="events-top">
         <div className="events-top__media">
           <Image
-            src="/images/events-hero-banquet.jpg"
+            src="https://images.kharis.org/site-images/main/4ad6b94f8e2d8cf0/events-hero-banquet.jpg"
             alt="Banquet table set with red roses and candles beneath chandeliers"
             fill
             priority

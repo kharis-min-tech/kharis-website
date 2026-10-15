@@ -14,14 +14,14 @@ export function LeadershipExperience() {
       eyebrow="Who leads us"
       title="Our Leadership"
       subtitle="Pastors who founded and set the vision of Kharis Ministries."
-      image="/images/young-adults.jpg"
+      image="https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg"
       imagePosition="object-[center_35%]"
       next={{ href: "/messages", label: "Watch messages →" }}
     >
       <div className="about-chapter__leaders">
         <Reveal className="about-chapter__leader-media">
           <Image
-            src="/images/community.jpg"
+            src="https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg"
             alt="Kharis leadership and church family"
             fill
             className="object-cover object-[center_18%]"

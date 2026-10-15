@@ -134,7 +134,10 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
         <img
           alt="Kharis worship gathering"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
-          src={posts[0]?.image || "/kp2/assets/worship.jpg"}
+          src={
+            posts[0]?.image ||
+            "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
+          }
           loading="eager"
           decoding="async"
         />
@@ -244,7 +247,7 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
                   <img
                     alt="Senior Pastor preaching"
                     className="absolute inset-0 w-full h-full object-cover opacity-80"
-                    src="/kp2/assets/pastor-stage.jpg"
+                    src="https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/pastor-stage.jpg"
                   />
                 )}
                 {featured ? (

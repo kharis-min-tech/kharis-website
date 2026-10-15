@@ -47,6 +47,7 @@ export default function RootLayout({
         </noscript>
         <meta name="color-scheme" content="light" />
         <link rel="preconnect" href="https://cqgyiqxhpxwasogpdghx.supabase.co" />
+        <link rel="preconnect" href="https://images.kharis.org" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('kharis-site-theme');var d=t==='dark'?'dark':'light';document.documentElement.dataset.theme=d;document.documentElement.style.colorScheme=d;}catch(e){document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light';}})();`,

@@ -11,7 +11,8 @@ export function BuildHouseSection() {
         <div
           className="absolute inset-0 h-[120%] w-full -translate-y-[8%] bg-cover bg-center"
           style={{
-            backgroundImage: "url(/images/spurgeons-impression.jpg)",
+            backgroundImage:
+              "url(https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg)",
           }}
         />
       </Parallax>

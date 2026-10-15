@@ -127,7 +127,7 @@ export function BranchCarousel({ slides }: Props) {
                 <div className="apple-slide__brand">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/images/kharis-logo.png"
+                    src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
                     alt=""
                     className="h-7 w-7 object-contain drop-shadow md:h-8 md:w-8"
                   />

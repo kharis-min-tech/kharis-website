@@ -13,7 +13,7 @@ export function BrandLogo({ tone = "onLight", className = "", showWordmark = tru
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <Image
-        src="/images/kharis-logo.png"
+        src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
         alt="Kharis"
         width={40}
         height={40}

@@ -103,15 +103,17 @@ function ownBlurb(stored: string, city: string) {
   );
   return namesAnotherCampus ? placeholderDescription(city) : text;
 }
-const FALLBACK_IMAGE = "/kp2/assets/branch-slide-1.jpg";
+const FALLBACK_IMAGE =
+  "https://images.kharis.org/site-images/kp2/571e499ea60fdffc/branch-slide-1.jpg";
 const LOCAL_SLIDES = [
-  "/kp2/assets/branch-slide-1.jpg",
-  "/kp2/assets/branch-slide-2.jpg",
-  "/kp2/assets/branch-slide-3.jpg",
-  "/kp2/assets/branch-slide-4.jpg",
-  "/kp2/assets/branch-slide-5.jpg",
+  "https://images.kharis.org/site-images/kp2/571e499ea60fdffc/branch-slide-1.jpg",
+  "https://images.kharis.org/site-images/kp2/79f53822455f01b0/branch-slide-2.jpg",
+  "https://images.kharis.org/site-images/kp2/3f1f49569aefd282/branch-slide-3.jpg",
+  "https://images.kharis.org/site-images/kp2/074fce9dca42072a/branch-slide-4.jpg",
+  "https://images.kharis.org/site-images/kp2/4cdb8d19355fced2/branch-slide-5.jpg",
 ];
-const FALLBACK_PASTOR = "/kp2/assets/leadership-pastor-david.jpg";
+const FALLBACK_PASTOR =
+  "https://images.kharis.org/site-images/kp2/64154a5197622b53/leadership-pastor-david.jpg";
 const DEFAULT_PARKING = "Public parking is available near the venue.";
 const DEFAULT_TRANSIT =
   "The venue is reachable by public transport. Check local bus and rail times before you travel.";

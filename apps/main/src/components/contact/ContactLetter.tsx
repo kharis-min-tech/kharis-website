@@ -181,7 +181,7 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
               <div ref={thanksRef} tabIndex={-1} className="hello-thanks" role="status">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/images/kharis-logo.png"
+                  src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
                   alt=""
                   aria-hidden
                   className="hello-thanks__dove"
@@ -357,7 +357,7 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
         <aside className="hello-write__aside" aria-label="What happens next">
           <figure className="hello-write__photo">
             <Image
-              src="/images/contact/after-service-conversation.jpg"
+              src="https://images.kharis.org/site-images/main/67210f0fba54b6a1/contact/after-service-conversation.jpg"
               alt="Two women talking after a Sunday service"
               fill
               sizes="(max-width: 1023px) 92vw, 34vw"

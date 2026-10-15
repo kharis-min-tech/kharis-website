@@ -257,7 +257,7 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
         <ServiceTile
           key="this-sunday"
           name="This Sunday"
-          photo="/images/joyful-worship.jpg"
+          photo="https://images.kharis.org/site-images/main/850b7f32a7f6712c/joyful-worship.jpg"
           position="55% 35%"
           date={sunday ? dateOn(sunday) : null}
           visit={sunday}
@@ -267,7 +267,7 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
         <ServiceTile
           key="midweek"
           name={midweek ? `Midweek · ${midweek.day}` : "Midweek"}
-          photo="/images/hero/worship-altar.jpg"
+          photo="https://images.kharis.org/site-images/main/1cd1968f552f6970/hero/worship-altar.jpg"
           position="62% 50%"
           date={midweek ? dateOn(midweek) : null}
           visit={midweek}
@@ -277,7 +277,7 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
         <ServiceTile
           key="next-sunday"
           name="Next Sunday"
-          photo="/images/hero/easter-bibles-raised.jpg"
+          photo="https://images.kharis.org/site-images/main/00a8e9b517ac4517/hero/easter-bibles-raised.jpg"
           position="45% 40%"
           date={sunday ? dateOn(sunday, 1) : null}
           visit={sunday}
@@ -290,7 +290,7 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
   tiles.push(
     <Link key="find" href="/locations" className="events-next__tile events-next__tile--find">
       <Image
-        src="/images/branch-slide-4.jpg"
+        src="https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg"
         alt=""
         fill
         quality={95}
@@ -300,7 +300,12 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
       />
       <span className="events-next__find-veil" aria-hidden />
       {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG */}
-      <img src="/images/kharis-globe.svg" alt="" aria-hidden className="events-next__find-globe" />
+      <img
+        src="https://images.kharis.org/site-images/main/5c32b446a93fde12/kharis-globe.svg"
+        alt=""
+        aria-hidden
+        className="events-next__find-globe"
+      />
       <MapPin aria-hidden className="events-next__find-pin" strokeWidth={1.5} />
       <span className="events-next__copy">
         <span className="events-next__name">Find your church</span>

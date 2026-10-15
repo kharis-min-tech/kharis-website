@@ -89,7 +89,8 @@
   background: #18171a;
 }
 .about-page .about-panel__hero-media {
-  background: url("/images/about-mission-outreach.jpg") center 45% / cover no-repeat;
+  background: url("https://images.kharis.org/site-images/main/11577f5e512c33cd/about-mission-outreach.jpg")
+    center 45% / cover no-repeat;
   filter: grayscale(1);
 }
 .about-page .about-panel__hero-media > svg {
@@ -438,7 +439,7 @@
 }
 
 .about-page .about-panel__hero--leadership .about-panel__hero-media {
-  background-image: url("/images/about-pastors-portrait.jpg");
+  background-image: url("https://images.kharis.org/site-images/main/61b5f617ef58872c/about-pastors-portrait.jpg");
 }
 .about-page .about-panel__focus {
   border-left: 0;
@@ -730,7 +731,7 @@
 }
 
 .about-page .about-panel__hero--vision .about-panel__hero-media {
-  background-image: url("/images/vision-church-family.jpg");
+  background-image: url("https://images.kharis.org/site-images/main/a080e8123b487573/vision-church-family.jpg");
   background-position: center 40%;
 }
 .about-page .about-vision-themes .about-panel__hero-copy h3 {

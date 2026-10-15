@@ -20,7 +20,7 @@ export function VisionPhoneMock() {
 
           <div className="vision-phone__brand">
             <Image
-              src="/images/kharis-logo.png"
+              src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
               alt=""
               width={22}
               height={22}
@@ -53,7 +53,11 @@ export function VisionPhoneMock() {
             </div>
             <a href="#messages" className="vision-phone__message">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/pastor-stage.jpg" alt="" className="vision-phone__message-img" />
+              <img
+                src="https://images.kharis.org/site-images/main/ffbe5aca25d25b8c/pastor-stage.jpg"
+                alt=""
+                className="vision-phone__message-img"
+              />
               <span className="vision-phone__play" aria-hidden>
                 <Icon name="play" className="h-3.5 w-3.5" />
               </span>

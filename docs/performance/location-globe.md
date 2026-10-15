@@ -8,7 +8,7 @@ Both builds used the same installed dependencies (Next.js 15.5.27), without Supa
 
 | Measurement                     |               Main |                        This branch |
 | ------------------------------- | -----------------: | ---------------------------------: |
-| Locations route JavaScript      |            81.9 KB |                            16.7 KB |
+| Locations route JavaScript      |            81.9 KB |                            17.0 KB |
 | Locations first-load JavaScript |             244 KB |                             179 KB |
 | Land geometry DOM elements      | 16,995 SVG circles |                           1 canvas |
 | Separate land asset             |               None | 33,992 bytes, loaded near viewport |
@@ -26,6 +26,7 @@ Shared navigation now transitions internal links, caps transition waiting at 500
 - Production build passes using installed dependencies.
 - Type checking reports the same seven errors as unchanged main, in LocationBranchView, BranchMonthCalendar, BranchTemplate and events-content.
 - Mobile and desktop browser checks covered whole-world rendering, Ghana selection and welcome, and navigation to About. No globe console errors in production preview.
-- Preview content is empty without Supabase credentials, so live marker positions, branch counts and country filter integration with real records still need a configured preview check.
+- Follow-up verification restored the real public Supabase settings from the Kharis GitHub deployment variables into the ignored local environment. The live directory returns 21 active branches; Ghana selection shows one Accra branch and opens its correct address and Sunday service details. Missing connection states now show an unavailable message rather than a false zero count.
+- Country welcomes now use staggered masked text reveals, a 950ms lead before camera travel, and a 2.6s settling animation. Reduced motion skips the sequence.
 
 Regenerate the binary land asset after changing source coordinates with `node scripts/build-globe-land.mjs`. No push or deployment performed.

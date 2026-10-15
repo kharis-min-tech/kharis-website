@@ -349,14 +349,24 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
 
         <div className="gv-hero__stack" aria-hidden>
           <figure className="gv-hero__photo gv-hero__photo--left">
-            <Image src="/images/give/thanksgiving-hands-raised.jpg" alt="" fill sizes="34vw" />
+            <Image
+              src="https://images.kharis.org/site-images/main/8527db06a4968c60/give/thanksgiving-hands-raised.jpg"
+              alt=""
+              fill
+              sizes="34vw"
+            />
           </figure>
           <figure className="gv-hero__photo gv-hero__photo--right">
-            <Image src="/images/give/thanksgiving-hall.jpg" alt="" fill sizes="34vw" />
+            <Image
+              src="https://images.kharis.org/site-images/main/e686a4818115ee4e/give/thanksgiving-hall.jpg"
+              alt=""
+              fill
+              sizes="34vw"
+            />
           </figure>
           <figure className="gv-hero__photo gv-hero__photo--centre">
             <Image
-              src="/images/give/thanksgiving-heart-hands.jpg"
+              src="https://images.kharis.org/site-images/main/72e8b112e585bed6/give/thanksgiving-heart-hands.jpg"
               alt=""
               fill
               priority
@@ -418,7 +428,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
         <div className="gv-build__inner">
           <div className="gv-build__art">
             <Image
-              src="/images/spurgeons-impression.jpg"
+              src="https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg"
               alt="An artist's impression of the renovated Spurgeon's Centre in South London"
               fill
               sizes="(max-width: 899px) 92vw, 44vw"

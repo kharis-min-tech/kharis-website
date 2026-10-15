@@ -52,7 +52,10 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
             <div
               className="w-full h-full bg-cover bg-center"
               data-alt="Kharis vision campaign"
-              style={{ backgroundImage: "url('/kp2/assets/vision-campaign.jpg')" }}
+              style={{
+                backgroundImage:
+                  "url('https://images.kharis.org/site-images/kp2/91479ba234a71277/vision-campaign.jpg')",
+              }}
             ></div>
           </div>
 

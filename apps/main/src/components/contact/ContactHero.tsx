@@ -6,25 +6,25 @@ import { useEffect, useRef, useState } from "react";
 /** Real Kharis photographs. The spotlight moves between them, the way the homepage wall does. */
 const PHOTOS = [
   {
-    src: "/images/contact/easter-welcome-wave.jpg",
+    src: "https://images.kharis.org/site-images/main/56fc2395a9b23afb/contact/easter-welcome-wave.jpg",
     alt: "Two women waving as they arrive for the Easter Saturday service",
     caption: "Easter Saturday",
     spot: "hello-hero__photo--a",
   },
   {
-    src: "/images/contact/easter-door-greeter.jpg",
+    src: "https://images.kharis.org/site-images/main/421991ee4530d49b/contact/easter-door-greeter.jpg",
     alt: "A greeter welcoming people at the door on a London street before the Easter Saturday service",
     caption: "Welcome at the door",
     spot: "hello-hero__photo--b",
   },
   {
-    src: "/images/contact/after-service-handshake.jpg",
+    src: "https://images.kharis.org/site-images/main/548f1d84de49653b/contact/after-service-handshake.jpg",
     alt: "Two men shaking hands after a Sunday service",
     caption: "After service",
     spot: "hello-hero__photo--c",
   },
   {
-    src: "/images/contact/service-prayer.jpg",
+    src: "https://images.kharis.org/site-images/main/fb9b5e9814886abb/contact/service-prayer.jpg",
     alt: "People praying together at a Kharis service",
     caption: "Prayer",
     spot: "hello-hero__photo--d",

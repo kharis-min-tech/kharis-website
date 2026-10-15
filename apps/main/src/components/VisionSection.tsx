@@ -9,19 +9,22 @@ const LISTEN_STEPS = [
   {
     title: "Open the app home",
     detail: "See latest audio, video and playlists.",
-    image: "/images/app-steps/step-2-browse.png",
+    image:
+      "https://images.kharis.org/site-images/main/c9ae7d1c19dd35f4/app-steps/step-2-browse.png",
     alt: "Kharis app home with latest audio, video and playlists",
   },
   {
     title: "Search any message",
     detail: "Find the teaching you need in a tap.",
-    image: "/images/app-steps/step-1-messages.png",
+    image:
+      "https://images.kharis.org/site-images/main/0cae2b998ffa6335/app-steps/step-1-messages.png",
     alt: "Kharis app messages list with search",
   },
   {
     title: "Press play and go",
     detail: "Listen anywhere you are.",
-    image: "/images/app-steps/step-3-player.png",
+    image:
+      "https://images.kharis.org/site-images/main/0c5df54aeea92af4/app-steps/step-3-player.png",
     alt: "Kharis app audio player",
   },
 ];

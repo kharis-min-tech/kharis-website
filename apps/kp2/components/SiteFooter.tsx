@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { TIKTOK_URL } from "@/lib/social";
-const eaLogoLight = "/kp2/assets/ea-logo-light.png";
-const eaLogoDark = "/kp2/assets/ea-logo-dark.png";
+const eaLogoLight = "https://images.kharis.org/site-images/kp2/7034e8bd749d082a/ea-logo-light.png";
+const eaLogoDark = "https://images.kharis.org/site-images/kp2/8d53006577293048/ea-logo-dark.png";
 
 type FooterColumn = {
   title: string;

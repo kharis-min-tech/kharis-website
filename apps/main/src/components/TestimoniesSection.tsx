@@ -12,17 +12,17 @@ interface TestimoniesSectionProps {
 }
 const photos = [
   {
-    src: "/images/testimony-sharing.jpg",
+    src: "https://images.kharis.org/site-images/main/79c0eac25d6bc370/testimony-sharing.jpg",
     alt: "Sharing a testimony on stage",
     position: "object-center",
   },
   {
-    src: "/images/testimony-stage-1.jpg",
+    src: "https://images.kharis.org/site-images/main/cc4f9c67e2c899e3/testimony-stage-1.jpg",
     alt: "A sister sharing her testimony on stage",
     position: "object-[12%_top]",
   },
   {
-    src: "/images/testimony-stage-2.jpg",
+    src: "https://images.kharis.org/site-images/main/bb1a12396469052d/testimony-stage-2.jpg",
     alt: "Giving glory to God in testimony",
     position: "object-[86%_top]",
   },

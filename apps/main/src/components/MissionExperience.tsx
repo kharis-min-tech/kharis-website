@@ -13,7 +13,7 @@ export function MissionExperience() {
       eyebrow="Who we are"
       title="Our Mission"
       subtitle={mission.lead}
-      image="/images/serve-with-us.jpg"
+      image="https://images.kharis.org/site-images/main/8440a4a63e4ae020/serve-with-us.jpg"
       imagePosition="object-[center_22%]"
       next={{ href: "/about/vision", label: "Our Vision →" }}
     >

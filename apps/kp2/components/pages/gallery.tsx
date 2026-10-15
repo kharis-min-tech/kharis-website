@@ -6,17 +6,29 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 const PLACEHOLDERS = [
   {
-    src: "/kp2/assets/worship.jpg",
+    src: "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg",
     alt: "Worship at Kharis Phase 2",
     quote: "Preach Christ Crucified.",
     wide: true,
   },
-  { src: "/kp2/assets/young-adults.jpg", alt: "Young adults together", quote: "Get busy serving!" },
-  { src: "/kp2/assets/community.jpg", alt: "Community gathering", quote: null },
-  { src: null, alt: "Photo coming soon", quote: "We are passionate about God and His word." },
-  { src: "/kp2/assets/praise-night.jpg", alt: "Praise night", quote: null },
   {
-    src: "/kp2/assets/bass-sunday.jpg",
+    src: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg",
+    alt: "Young adults together",
+    quote: "Get busy serving!",
+  },
+  {
+    src: "https://images.kharis.org/site-images/kp2/ca1bcf57dbf80629/community.jpg",
+    alt: "Community gathering",
+    quote: null,
+  },
+  { src: null, alt: "Photo coming soon", quote: "We are passionate about God and His word." },
+  {
+    src: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
+    alt: "Praise night",
+    quote: null,
+  },
+  {
+    src: "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
     alt: "Bring a soul Sunday",
     quote: "Preach Christ Crucified.",
   },
@@ -26,9 +38,13 @@ const PLACEHOLDERS = [
     alt: "Photo coming soon",
     quote: "Your hunger and zeal for God is your greatest advantage as a believer.",
   },
-  { src: "/kp2/assets/sports-day.jpg", alt: "Sports day", quote: "Get busy serving!" },
   {
-    src: "/kp2/assets/leadership-pastors-together.jpg",
+    src: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
+    alt: "Sports day",
+    quote: "Get busy serving!",
+  },
+  {
+    src: "https://images.kharis.org/site-images/kp2/9804bc45d0e21f85/leadership-pastors-together.jpg",
     alt: "Pastors David and Awo Antwi",
     quote: null,
     wide: true,
@@ -42,7 +58,7 @@ function GalleryPage() {
       <main className="pt-[74px]">
         <header className="relative min-h-[420px] md:min-h-[520px] flex items-end bg-on-background text-white overflow-hidden border-b-4 border-primary">
           <img
-            src="/kp2/assets/events-hero-worship.jpg"
+            src="https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/events-hero-worship.jpg"
             alt="Kharis Phase 2 congregation in worship"
             className="absolute inset-0 w-full h-full object-cover opacity-40"
           />

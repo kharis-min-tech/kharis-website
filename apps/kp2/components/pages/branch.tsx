@@ -24,12 +24,12 @@ import type { ChurchEvent } from "@/lib/events";
 import { displayMessageTitle, formatMessageDate, type MessageVideo } from "@/lib/youtube";
 
 const GALLERY_FALLBACKS = [
-  "/kp2/assets/worship.jpg",
-  "/kp2/assets/young-adults.jpg",
-  "/kp2/assets/community.jpg",
-  "/kp2/assets/events-hero-worship.jpg",
-  "/kp2/assets/praise-night.jpg",
-  "/kp2/assets/events-sunday-service.jpg",
+  "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg",
+  "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg",
+  "https://images.kharis.org/site-images/kp2/ca1bcf57dbf80629/community.jpg",
+  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/events-hero-worship.jpg",
+  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
+  "https://images.kharis.org/site-images/kp2/d6b67a1d5d3003b0/events-sunday-service.jpg",
 ];
 
 function galleryFor(branch: Branch) {

@@ -14,9 +14,19 @@ export function UnsureBranchCta({ showFindBranch = true }: Props) {
       <Reveal variant="up" distance={36} className="mx-auto max-w-7xl">
         <div className="unsure-panel">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/kharis-logo.png" alt="" aria-hidden className="unsure-panel__dove" />
+          <img
+            src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
+            alt=""
+            aria-hidden
+            className="unsure-panel__dove"
+          />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/kharis-globe.svg" alt="" aria-hidden className="unsure-panel__map" />
+          <img
+            src="https://images.kharis.org/site-images/main/5c32b446a93fde12/kharis-globe.svg"
+            alt=""
+            aria-hidden
+            className="unsure-panel__map"
+          />
 
           <div className="unsure-panel__content">
             <p className="unsure-panel__eyebrow">Still deciding?</p>

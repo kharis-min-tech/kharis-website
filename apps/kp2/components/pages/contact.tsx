@@ -57,7 +57,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
                   <img
                     alt="Worship on stage at Kharis"
                     className="absolute inset-x-0 top-0 h-[200%] w-full max-w-none object-cover object-top"
-                    src="/kp2/assets/worship.jpg"
+                    src="https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
                     loading="eager"
                     decoding="async"
                   />
@@ -66,7 +66,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
                   <img
                     alt="Congregation gathered in the auditorium"
                     className="absolute inset-x-0 bottom-0 h-[200%] w-full max-w-none object-cover object-bottom"
-                    src="/kp2/assets/worship.jpg"
+                    src="https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
                     loading="eager"
                     decoding="async"
                   />
@@ -154,7 +154,7 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
               <img
                 alt="Community gathering at Kharis"
                 className="w-full h-full object-cover"
-                src="/kp2/assets/community.jpg"
+                src="https://images.kharis.org/site-images/kp2/ca1bcf57dbf80629/community.jpg"
                 loading="lazy"
                 decoding="async"
               />

@@ -200,13 +200,13 @@ export function LocationsClient({ items, full }: Props) {
       <figure className="locations-sunday">
         <div className="locations-sunday__photos">
           <img
-            src="/images/locations/london-sunday-laughter.jpg"
+            src="https://images.kharis.org/site-images/main/8687dacfd8faa5e2/locations/london-sunday-laughter.jpg"
             alt="Three women in the congregation laughing together during the service"
             loading="lazy"
             decoding="async"
           />
           <img
-            src="/images/locations/london-sunday-prayer.jpg"
+            src="https://images.kharis.org/site-images/main/894014bef2ca905c/locations/london-sunday-prayer.jpg"
             alt="A row of people standing side by side in prayer, hands open"
             loading="lazy"
             decoding="async"
@@ -303,7 +303,10 @@ function BranchCard({
           <img src={branch.photo} alt="" loading="lazy" decoding="async" />
         ) : (
           <span className="branch-card__fallback">
-            <img src="/images/kharis-logo.png" alt="" />
+            <img
+              src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
+              alt=""
+            />
             <span>{branch.place}</span>
           </span>
         )}
