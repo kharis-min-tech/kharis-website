@@ -242,7 +242,7 @@ const titleCase = (value: string) => value.charAt(0).toUpperCase() + value.slice
 
 // Our own photos for branches the studio has no photo for yet. Only add a branch here with photos taken there.
 const SITE_PHOTOS: Record<string, string> = {
-  london: "/images/locations/london-sunday-worship.jpg",
+  london: "/images/locations/london-sunday-smiles.jpg",
 };
 
 export function toBranchItem(
