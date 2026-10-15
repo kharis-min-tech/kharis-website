@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Icon } from "@/components/Icon";
-import { LifeChatbot } from "@/components/LifeChatbot";
 import { LifeDetailModal } from "@/components/LifeDetailModal";
 import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
@@ -356,7 +355,6 @@ export function LifeExperience({ baptismVideoId }: Props) {
         showFollowup={showBaptismFollowup && modalSlug === "baptism"}
         onClose={closeModal}
       />
-      <LifeChatbot />
     </div>
   );
 }
