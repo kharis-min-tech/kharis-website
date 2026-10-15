@@ -1,4 +1,11 @@
-import { placeholderDescription, remoteImage } from "@/lib/branch-display";
+import {
+  branchDisplayName,
+  directionsUrl,
+  placeholderDescription,
+  remoteImage,
+  sundayVenue,
+  venueAddress,
+} from "@/lib/branch-display";
 import { supabase } from "@/lib/supabase";
 
 // ======================================================
@@ -55,6 +62,8 @@ export interface BranchData {
   slug: string;
 
   subtitle: string | null;
+  /** "Kharis", or "Kharis Phase 2" for the KP2 young adults' branches. */
+  group?: string | null;
 
   short_description: string | null;
   description: string | null;
@@ -87,21 +96,41 @@ export interface BranchData {
 // TYPE USED BY YOUR LOCATIONS CARDS
 // ======================================================
 
+export interface Gathering {
+  /** e.g. "Midweek service", "Friday Revival Prayers" */
+  label: string;
+  day: string;
+  time: string;
+  /** Where it meets, when that isn't the Sunday venue. */
+  place?: string;
+}
+
 export interface BranchItem {
   id: string;
 
   name: string;
 
+  /** "KP2" for the young adults' branches, otherwise "Kharis". */
+  family: "Kharis" | "KP2";
+  /** Name without the "KP2" prefix, e.g. "Barking". */
+  place: string;
+
   city: string;
   region: string;
+  country: string;
 
+  /** A real photo of the branch, or "" when only a placeholder graphic is stored. */
+  photo: string;
   heroImage: string;
 
   postcode: string;
   address: string;
+  directions: string;
 
   description: string;
 
+  sundayTimes: string[];
+  gatherings: Gathering[];
   serviceSummary: string;
   midweekSummary?: string;
 
@@ -207,138 +236,98 @@ export async function listBranchData(): Promise<BranchData[]> {
 // TURN SUPABASE BRANCH INTO LOCATION CARD DATA
 // ======================================================
 
-export function toBranchItem(branch: BranchData): BranchItem {
-  // ------------------------------------------
-  // ACTIVE SERVICES ONLY
-  // ------------------------------------------
+const unique = (values: string[]) => [...new Set(values.filter(Boolean))];
 
+const titleCase = (value: string) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+
+// Our own photos for branches the studio has no photo for yet. Only add a branch here with photos taken there.
+const SITE_PHOTOS: Record<string, string> = {
+  london: "/images/locations/london-sunday-worship.jpg",
+};
+
+export function toBranchItem(
+  branch: BranchData,
+  placeholders: Set<string> = new Set(),
+): BranchItem {
   const activeServices = (branch.services ?? [])
     .filter((service) => service.is_active)
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
-  // ------------------------------------------
-  // SUNDAY SERVICES
-  // ------------------------------------------
+  const isSunday = (service: Service) => service.type?.toLowerCase() === "sunday";
+  const sundayTimes = unique(activeServices.filter(isSunday).map((s) => formatTime(s.start_time)));
 
-  const sundayServices = activeServices.filter(
-    (service) => service.type?.toLowerCase() === "sunday",
-  );
-
-  // ------------------------------------------
-  // MIDWEEK SERVICE
-  // ------------------------------------------
-
-  const midweekServices = activeServices.filter(
-    (service) => service.type?.toLowerCase() === "midweek",
-  );
-
-  // ------------------------------------------
-  // MAIN SUNDAY SERVICE
-  //
-  // Used to determine the primary venue shown
-  // on the locations page.
-  // ------------------------------------------
-
-  const mainSundayService = sundayServices[0];
-
-  // ------------------------------------------
-  // FIND MAIN VENUE
-  // ------------------------------------------
-
-  let mainVenue: Venue | undefined;
-
-  if (mainSundayService?.venue_id) {
-    mainVenue = branch.venues.find((venue) => venue.id === mainSundayService.venue_id);
+  // Everything else people can come to, each once (some branches have the same service saved twice).
+  const mainVenue = sundayVenue(branch);
+  const sundayPlace = venueAddress(mainVenue);
+  const seen = new Set<string>();
+  const gatherings: Gathering[] = [];
+  for (const service of activeServices.filter((s) => !isSunday(s))) {
+    const time = formatTime(service.start_time);
+    const key = `${service.day}|${time}`;
+    if (!time || seen.has(key)) continue;
+    seen.add(key);
+    const venue = branch.venues.find((v) => v.id === service.venue_id);
+    // Some venues are named after what happens there ("Friday Revival Prayers"); use that as the label.
+    const describesService = /prayer|bible|revival|study|worship/i.test(venue?.name ?? "");
+    const place = venueAddress(venue, { withName: !describesService });
+    gatherings.push({
+      label:
+        describesService && venue ? venue.name : `${titleCase(service.type || "midweek")} service`,
+      day: service.day,
+      time,
+      place: place && place !== sundayPlace ? place.split(", ")[0] : undefined,
+    });
   }
 
-  // If no Sunday venue exists,
-  // fall back to the first venue.
-
-  if (!mainVenue) {
-    mainVenue = branch.venues?.[0];
-  }
-
-  // ------------------------------------------
-  // ADDRESS
-  // ------------------------------------------
-
-  const address = [
-    mainVenue?.name,
-    mainVenue?.address_line1,
-    mainVenue?.address_line2,
-    mainVenue?.city,
-  ]
-    .filter(Boolean)
-    .join(", ");
-
-  // ------------------------------------------
-  // SUNDAY SERVICE TEXT
-  //
-  // One service:
-  // Sunday 10:00 AM
-  //
-  // Two services:
-  // Sunday 10:00 AM & 1:00 PM
-  // ------------------------------------------
-
-  let serviceSummary = "Service information coming soon";
-
-  if (sundayServices.length > 0) {
-    const sundayTimes = sundayServices
-      .map((service) => formatTime(service.start_time))
-      .filter(Boolean)
-      .join(" & ");
-
-    serviceSummary = `Sunday ${sundayTimes}`;
-  }
-
-  // ------------------------------------------
-  // MIDWEEK TEXT
-  //
-  // Example:
-  // Tuesday 7:00 PM
-  // ------------------------------------------
-
-  let midweekSummary: string | undefined;
-
-  if (midweekServices.length > 0) {
-    midweekSummary = midweekServices
-      .map((service) => `${service.day} ${formatTime(service.start_time)}`)
-      .join(" & ");
-  }
-
-  // ------------------------------------------
-  // FINAL LOCATION CARD
-  // ------------------------------------------
+  const isKp2 = /phase 2/i.test(branch.group ?? "") || /^kp2\b/i.test(branch.name);
+  const name = branchDisplayName(branch.name);
+  const place = name
+    .replace(/^kp2\s+/i, "")
+    .replace(/\s+branch$/i, "")
+    .trim();
+  const hero = remoteImage(branch.hero_image_url);
+  const photo =
+    (hero && !placeholders.has(hero) ? hero : "") ||
+    branch.gallery[0] ||
+    SITE_PHOTOS[branch.slug] ||
+    "";
+  const city = mainVenue?.city ?? place;
 
   return {
     id: branch.slug,
-
-    name: branch.name,
-
-    city: mainVenue?.city ?? branch.name.replace(/ Branch$/i, ""),
-
+    name,
+    family: isKp2 ? "KP2" : "Kharis",
+    place,
+    city,
     region: branch.subtitle ?? mainVenue?.country ?? "United Kingdom",
-
-    heroImage: remoteImage(branch.hero_image_url) || branch.gallery[0] || "",
-
+    country: mainVenue?.country || branch.subtitle || "United Kingdom",
+    photo,
+    heroImage: photo || hero,
     postcode: mainVenue?.postcode ?? "",
-
-    address,
-
-    description:
-      branch.short_description ??
-      branch.description ??
-      placeholderDescription(mainVenue?.city ?? branch.name.replace(/ Branch$/i, "")),
-
-    serviceSummary,
-
-    midweekSummary,
-
+    address: venueAddress(mainVenue),
+    directions: directionsUrl(mainVenue),
+    description: branch.short_description ?? branch.description ?? placeholderDescription(city),
+    sundayTimes,
+    gatherings,
+    serviceSummary: sundayTimes.length
+      ? `Sunday ${sundayTimes.join(" & ")}`
+      : "Service information coming soon",
+    midweekSummary: gatherings.length
+      ? gatherings.map((g) => `${g.day} ${g.time}`).join(" & ")
+      : undefined,
     latitude: mainVenue?.latitude ?? undefined,
-
     longitude: mainVenue?.longitude ?? undefined,
   };
+}
+
+/** A hero image stored on several branches is the studio's placeholder graphic, not a photo of that branch. */
+export function placeholderHeroes(branches: BranchData[]) {
+  const counts = new Map<string, number>();
+  for (const branch of branches) {
+    const hero = remoteImage(branch.hero_image_url);
+    if (hero) counts.set(hero, (counts.get(hero) ?? 0) + 1);
+  }
+  return new Set([...counts].filter(([, n]) => n > 2).map(([url]) => url));
 }
 
 // ======================================================
@@ -347,8 +336,8 @@ export function toBranchItem(branch: BranchData): BranchItem {
 
 export async function listBranches(): Promise<BranchItem[]> {
   const branches = await listBranchData();
-
-  return branches.map(toBranchItem);
+  const placeholders = placeholderHeroes(branches);
+  return branches.map((branch) => toBranchItem(branch, placeholders));
 }
 
 // ======================================================

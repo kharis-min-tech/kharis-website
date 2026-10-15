@@ -8,8 +8,9 @@ html[data-site-intro="playing"] {
   z-index: 1000;
   display: grid;
   place-items: center;
-  background: #100e13;
-  color: #fff;
+  /* The page's own background in either theme, so the intro fades into the page beneath it. */
+  background: var(--bg, #fff);
+  color: var(--fg, #1c1c1f);
   animation: site-intro-exit 0.6s cubic-bezier(0.22, 1, 0.36, 1) 2.05s both;
 }
 
@@ -21,6 +22,12 @@ html[data-site-intro="seen"] .site-intro {
   width: clamp(8rem, 15vw, 11rem);
   height: auto;
   overflow: visible;
+  /* The artwork is a white dove; light mode draws it dark, like the header logo. */
+  filter: brightness(0);
+}
+
+html[data-theme="dark"] .site-intro__dove {
+  filter: none;
 }
 
 .site-intro__stroke {
@@ -70,17 +77,21 @@ html[data-site-intro="seen"] .site-intro {
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #c5c1cb;
+  color: var(--muted, #4a4a52);
   font-size: 0.75rem;
   cursor: pointer;
 }
 
 .site-intro__skip:hover {
-  color: #fff;
+  color: var(--fg, #1c1c1f);
 }
 .site-intro__skip:focus-visible {
-  outline: 2px solid #ffde59;
+  outline: 2px solid var(--purple, #630ed4);
   outline-offset: 3px;
+}
+
+html[data-theme="dark"] .site-intro__skip:focus-visible {
+  outline-color: #ffde59;
 }
 
 @keyframes site-intro-draw {
