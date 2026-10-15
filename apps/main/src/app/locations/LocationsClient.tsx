@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useSmoothRouter } from "@/lib/use-smooth-router";
 import { useMemo, useState } from "react";
 import type { BranchItem } from "@/lib/branches";
 import BranchMap, { type GlobeBranch } from "@/components/branches/BranchMap";
@@ -41,7 +41,7 @@ function listCountries(countries: string[]) {
 }
 
 export function LocationsClient({ items, full }: Props) {
-  const router = useRouter();
+  const router = useSmoothRouter();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [origin, setOrigin] = useState<Origin | null>(null);

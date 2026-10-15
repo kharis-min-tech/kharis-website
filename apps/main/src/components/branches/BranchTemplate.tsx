@@ -425,14 +425,13 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
               <span>Watch</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
-              This is {currentBranch.name}
+              The Word for your week
             </h2>
           </div>
 
           <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
-            <button
-              type="button"
-              onClick={() => setMediaModal({ type: "video" })}
+            <Link
+              href="/messages"
               className="group relative block aspect-video w-full cursor-pointer text-left"
             >
               {view.hero ? (
@@ -448,10 +447,10 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                   <Play className="ml-1 h-8 w-8 fill-current" />
                 </span>
                 <span className="text-sm font-extrabold uppercase tracking-wider text-[var(--branch-ink)]">
-                  Watch on YouTube
+                  Explore messages
                 </span>
               </div>
-            </button>
+            </Link>
           </div>
         </section>
 

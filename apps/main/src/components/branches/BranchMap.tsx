@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSmoothRouter } from "@/lib/use-smooth-router";
 import { Plus, Minus, RotateCcw, ChevronDown, Check, ArrowUpRight } from "lucide-react";
 import { globeOrigin } from "@/lib/globe-origin";
 import countryOutlines from "@/data/countryOutlines.json";
@@ -39,7 +39,7 @@ export function BranchMap({
   onCountryChange,
   origin,
 }: Props) {
-  const router = useRouter();
+  const router = useSmoothRouter();
   const [selection, setSelection] = useState("world");
   const [land, setLand] = useState<{ x: number; y: number; z: number }[]>([]);
   useEffect(() => {

@@ -2,7 +2,8 @@
 import React, { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
-import type { BranchData } from "@/data/branchesData";
+import { calendarServices, WEEKDAYS as WEEKDAY_LABEL } from "@/lib/branch-calendar";
+import type { BranchData } from "@/lib/branches";
 
 interface BranchMonthCalendarProps {
   branch: BranchData;
@@ -22,24 +23,6 @@ interface Entry {
   category: string;
 }
 
-const WEEKDAY_LABEL = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
-function serviceWeekday(name: string): number {
-  const lower = name.toLowerCase();
-  if (lower.includes("thursday") || lower.includes("midweek") || lower.includes("bible")) return 4;
-  if (lower.includes("friday") || lower.includes("prayer")) return 5;
-  if (lower.includes("saturday") || lower.includes("youth")) return 6;
-  return 0;
-}
-
 function formatServiceTime(time?: string | null) {
   if (!time) return "";
 
@@ -53,8 +36,8 @@ function formatServiceTime(time?: string | null) {
 }
 
 export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMonthCalendarProps) {
-  const placeName = city || branch.city;
-  const placeAddress = address || branch.address;
+  const placeName = city || branch.name;
+  const placeAddress = address || "Contact the branch for venue details.";
   const [offset, setOffset] = useState(0);
 
   const viewDate = useMemo(() => {
@@ -73,8 +56,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const list: Entry[] = [];
 
-    (branch.services ?? []).forEach((service, si) => {
-      const target = serviceWeekday(service.day || "Sunday");
+    calendarServices(branch.services ?? []).forEach(({ service, weekday: target }, si) => {
       for (let day = 1; day <= daysInMonth; day += 1) {
         const date = new Date(year, month, day);
         if (date.getDay() !== target) continue;
@@ -84,54 +66,11 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
           weekday: WEEKDAY_LABEL[target]!,
           title: service.name,
           time: `${formatServiceTime(service.start_time)}`,
-          description: service.description,
+          description: service.description ?? "",
           location: placeAddress,
           category: "Gathering",
         });
       }
-    });
-
-    if (branch.midweek) {
-      const dayNames = [
-        "sunday",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-      ];
-      const target = Math.max(0, dayNames.indexOf(branch.midweek.day.toLowerCase()));
-      for (let day = 1; day <= daysInMonth; day += 1) {
-        const date = new Date(year, month, day);
-        if (date.getDay() !== target) continue;
-        list.push({
-          key: `mid-${day}`,
-          day,
-          weekday: WEEKDAY_LABEL[target]!,
-          title: branch.midweek.name,
-          time: `${branch.midweek.time} ${branch.midweek.ampm}`,
-          description: branch.midweek.description ?? "",
-          location: placeAddress,
-          category: "Midweek",
-        });
-      }
-    }
-
-    (branch.upcomingEvents ?? []).forEach((evt, i) => {
-      const parsed = new Date(evt.date);
-      const day = Number.isNaN(parsed.getTime()) ? 1 : parsed.getDate();
-      if (!Number.isNaN(parsed.getTime()) && parsed.getMonth() !== month) return;
-      list.push({
-        key: `evt-${evt.id}-${i}`,
-        day,
-        weekday: WEEKDAY_LABEL[Number.isNaN(parsed.getTime()) ? 0 : parsed.getDay()]!,
-        title: evt.title,
-        time: evt.time,
-        description: evt.description,
-        location: evt.location,
-        category: evt.category,
-      });
     });
 
     return list.sort((a, b) => a.day - b.day);

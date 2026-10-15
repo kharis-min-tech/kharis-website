@@ -373,3 +373,11 @@ html[data-theme="dark"] .branch-action--primary {
 .branch-intro__placeholder {
   color: #ffde59;
 }
+
+.branch-service-card .w-20 {
+  width: 6rem;
+}
+.branch-service-card .w-20 > span:first-child {
+  font-size: 1.3rem;
+  white-space: nowrap;
+}

@@ -258,3 +258,82 @@ html[data-navigating="true"]::before {
     animation: none;
   }
 }
+
+/* Fast control feedback, then panels, then the next page. */
+:where(button, a, input, select, textarea, summary) {
+  -webkit-tap-highlight-color: transparent;
+}
+:where(button, summary, [role="tab"], [role="menuitemradio"]) {
+  transition:
+    color 160ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 220ms ease;
+}
+:where(input, textarea, select):focus-visible {
+  transition:
+    border-color 160ms ease,
+    box-shadow 220ms ease;
+}
+[data-site-footer] {
+  view-transition-name: site-footer;
+}
+::view-transition-old(site-footer) {
+  animation: page-depart 140ms ease-out both;
+}
+::view-transition-new(site-footer) {
+  animation: page-arrive 360ms var(--ease-out) 90ms both;
+}
+@keyframes content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .route-content {
+    animation: route-fade 380ms var(--ease-out);
+  }
+  html[data-navigating="true"] .route-content {
+    animation: none;
+  }
+  .locations-group li,
+  .msg-filter-results .msg-tile {
+    animation: content-enter 360ms var(--ease-out) both;
+  }
+  .locations-group li:nth-child(2) {
+    animation-delay: 35ms;
+  }
+  .locations-group li:nth-child(3) {
+    animation-delay: 70ms;
+  }
+  .locations-group li:nth-child(n + 4) {
+    animation-delay: 100ms;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+@keyframes route-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

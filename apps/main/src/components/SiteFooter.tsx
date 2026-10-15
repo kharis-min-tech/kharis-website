@@ -23,6 +23,7 @@ export function SiteFooter({ tone }: Props) {
 
   return (
     <footer
+      data-site-footer
       data-smooth-nav
       className={`site-footer border-t ${
         dark ? "site-footer--dark border-white/10 bg-[#0d0914] text-white" : "border-line bg-bg"

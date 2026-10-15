@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -229,53 +230,73 @@ export function SiteHeader({ tone = "auto" }: Props) {
         </div>
       </div>
 
-      {open && (
-        <div
-          className={`border-t px-5 py-4 lg:hidden ${
-            forceDark ? "border-white/10 bg-[#0a0612] text-white" : "border-line bg-white"
-          }`}
-        >
-          {links.map((link) => {
-            if (link.children) {
-              return (
-                <div key={link.label} className="py-2">
-                  <p
-                    className={`mb-1 text-xs font-bold uppercase tracking-[0.14em] ${
-                      forceDark ? "text-white/55" : "text-muted"
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            style={{ overflow: "hidden", maxHeight: "calc(100svh - 4.5rem)", overflowY: "auto" }}
+            className={`border-t px-5 py-4 lg:hidden ${
+              forceDark ? "border-white/10 bg-[#0a0612] text-white" : "border-line bg-white"
+            }`}
+          >
+            {links.map((link) => {
+              if (link.children) {
+                return (
+                  <div key={link.label} className="py-2">
+                    <p
+                      className={`mb-1 text-xs font-bold uppercase tracking-[0.14em] ${
+                        forceDark ? "text-white/55" : "text-muted"
+                      }`}
+                    >
+                      {link.label}
+                    </p>
+                    {link.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        onClick={() => setOpen(false)}
+                        className={`block py-2.5 pl-2 text-sm font-semibold ${
+                          forceDark ? "text-white" : "text-fg"
+                        }`}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                );
+              }
+              if (!link.href) {
+                return (
+                  <span
+                    key={link.label}
+                    className={`block py-3 text-sm font-semibold cursor-default ${
+                      forceDark ? "text-white/80" : "text-fg"
                     }`}
                   >
                     {link.label}
-                  </p>
-                  {link.children.map((child) => (
-                    <Link
-                      key={child.href}
-                      href={child.href}
-                      onClick={() => setOpen(false)}
-                      className={`block py-2.5 pl-2 text-sm font-semibold ${
-                        forceDark ? "text-white" : "text-fg"
-                      }`}
-                    >
-                      {child.label}
-                    </Link>
-                  ))}
-                </div>
-              );
-            }
-            if (!link.href) {
+                  </span>
+                );
+              }
+              if (link.href.startsWith("http")) {
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className={`block py-3 text-sm font-semibold ${
+                      forceDark ? "text-white" : "text-fg"
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                );
+              }
               return (
-                <span
-                  key={link.label}
-                  className={`block py-3 text-sm font-semibold cursor-default ${
-                    forceDark ? "text-white/80" : "text-fg"
-                  }`}
-                >
-                  {link.label}
-                </span>
-              );
-            }
-            if (link.href.startsWith("http")) {
-              return (
-                <a
+                <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setOpen(false)}
@@ -284,31 +305,19 @@ export function SiteHeader({ tone = "auto" }: Props) {
                   }`}
                 >
                   {link.label}
-                </a>
+                </Link>
               );
-            }
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className={`block py-3 text-sm font-semibold ${
-                  forceDark ? "text-white" : "text-fg"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-          <Link
-            href="/locations"
-            className="k-cta mt-2 flex w-full items-center justify-center bg-purple px-5 py-3.5 text-sm font-extrabold text-white"
-            onClick={() => setOpen(false)}
-          >
-            Find a Branch
-          </Link>
-        </div>
-      )}
+            })}
+            <Link
+              href="/locations"
+              className="k-cta mt-2 flex w-full items-center justify-center bg-purple px-5 py-3.5 text-sm font-extrabold text-white"
+              onClick={() => setOpen(false)}
+            >
+              Find a Branch
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
