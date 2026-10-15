@@ -11,8 +11,9 @@ import {
   LIFE_MEMBERSHIP_URL,
   LIFE_VISIBLE_SLUGS,
 } from "@/lib/life-content";
-import { BANK, BANK_ACCRA, MOMO, ONLINE_GIVE_URL } from "@/lib/giving";
+import { BANK, BANK_ACCRA, MOMO, TEXT_GIVE } from "@/lib/giving";
 import { KHARIS_APP } from "@/lib/kharis-app";
+import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import { fetchPastorMessages, type MessageVideo } from "@/lib/youtube";
 
 /** Every message the site can load (the uploads playlist is ~1,200 videos). */
@@ -50,10 +51,12 @@ CTA: ${cat.cta.label} -> ${cat.cta.href}
   }
 
   parts.push(`## Giving
-Online: ${ONLINE_GIVE_URL}
-UK bank: ${BANK.accountName}, account ${BANK.accountNumber}
+Online, by branch: /give
+UK bank: ${BANK.accountName}, account ${BANK.accountNumber}, sort code ${BANK.sortCode}
+Text (UK): ${TEXT_GIVE.keyword} followed by the amount to ${TEXT_GIVE.number}, up to £${TEXT_GIVE.maxPounds}
 Accra: ${BANK_ACCRA.accountName}, ${BANK_ACCRA.bank} ${BANK_ACCRA.accountNumber}
-MoMo: ${MOMO.accountName}
+MoMo: ${MOMO.accountName}, dial ${MOMO.ussd}
+Building fund (Spurgeon's Centre): ${SPURGEONS_CENTRE.giveUrl}
 `);
 
   try {
