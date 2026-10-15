@@ -2,15 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Plus, Minus, RotateCcw } from "lucide-react";
 import { globeOrigin } from "@/lib/globe-origin";
 import countryOutlines from "@/data/countryOutlines.json";
 import "./globe.css";
 
 const destinations = [
   { id: "world", label: "Whole world", lat: 35, lng: -2, zoom: 1 },
-  { id: "United Kingdom", label: "United Kingdom", lat: 54, lng: -2, zoom: 3 },
-  { id: "Ghana", label: "Ghana", lat: 7.9, lng: -1.1, zoom: 4 },
-  { id: "Sierra Leone", label: "Sierra Leone", lat: 8.6, lng: -11.9, zoom: 4.5 },
+  { id: "United Kingdom", label: "United Kingdom", lat: 54, lng: -2, zoom: 6 },
+  { id: "Ghana", label: "Ghana", lat: 7.9, lng: -1.1, zoom: 9 },
+  { id: "Sierra Leone", label: "Sierra Leone", lat: 8.6, lng: -11.9, zoom: 16 },
 ];
 const rad = Math.PI / 180;
 export interface GlobeBranch {
@@ -90,11 +91,15 @@ export function BranchMap({
   }, []);
   const selected = country === undefined ? selection : country;
   const destination = destinations.find((d) => d.id === selected) ?? destinations[0];
+  const [zoomMultiplier, setZoomMultiplier] = useState(1);
   const [cameraCountry, setCameraCountry] = useState(destination.id);
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timer = window.setTimeout(
-      () => setCameraCountry(destination.id),
+      () => {
+        setZoomMultiplier(1);
+        setCameraCountry(destination.id);
+      },
       reduced || destination.id === "world" ? 0 : 950,
     );
     return () => window.clearTimeout(timer);
@@ -124,6 +129,7 @@ export function BranchMap({
       cameraDestination.id === "world"
         ? { ...(origin ?? initialCenter), zoom: 1 }
         : { ...cameraDestination };
+    target.zoom = Math.min(32, Math.max(1, target.zoom * zoomMultiplier));
     if (cameraDestination.id === "world") target.lng += worldAngle.current;
     const project = (x: number, y: number, z: number) => {
       const c = camera.current;
@@ -266,7 +272,7 @@ export function BranchMap({
       document.removeEventListener("visibilitychange", start);
       motion.removeEventListener("change", start);
     };
-  }, [cameraDestination, pins, paused, origin, initialCenter, land]);
+  }, [cameraDestination, pins, paused, origin, initialCenter, land, zoomMultiplier]);
 
   return (
     <section
@@ -279,6 +285,7 @@ export function BranchMap({
           <select
             value={destination.id}
             onChange={(event) => {
+              setZoomMultiplier(1);
               setSelection(event.target.value);
               onCountryChange?.(event.target.value);
             }}
@@ -295,6 +302,31 @@ export function BranchMap({
         </button>
       </div>
       <div className="location-globe__scene">
+        <div className="location-globe__zoom" role="group" aria-label="Globe zoom">
+          <button
+            type="button"
+            aria-label="Zoom in"
+            disabled={cameraDestination.zoom * zoomMultiplier >= 32}
+            onClick={() =>
+              setZoomMultiplier((zoom) => Math.min(32 / cameraDestination.zoom, zoom * 1.5))
+            }
+          >
+            <Plus aria-hidden="true" size={18} />
+          </button>
+          <button
+            type="button"
+            aria-label="Zoom out"
+            disabled={cameraDestination.zoom * zoomMultiplier <= 1}
+            onClick={() =>
+              setZoomMultiplier((zoom) => Math.max(1 / cameraDestination.zoom, zoom / 1.5))
+            }
+          >
+            <Minus aria-hidden="true" size={18} />
+          </button>
+          <button type="button" aria-label="Reset zoom" onClick={() => setZoomMultiplier(1)}>
+            <RotateCcw aria-hidden="true" size={16} />
+          </button>
+        </div>
         <canvas
           ref={canvasRef}
           aria-hidden="true"

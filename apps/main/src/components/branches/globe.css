@@ -174,3 +174,30 @@
   font: inherit;
   color: inherit;
 }
+
+.location-globe__zoom {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.location-globe__zoom button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: #fff;
+  background: #180f2ce6;
+  border: 1px solid #b99ad866;
+  transition: background 0.2s;
+}
+.location-globe__zoom button:hover:not(:disabled) {
+  background: #49236a;
+}
+.location-globe__zoom button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
