@@ -7,6 +7,7 @@ import {
   formatServiceTime,
   isKp2Branch,
   isUkBranch,
+  kharisFirst,
   primaryVenue,
   publicPhone,
   telHref,
@@ -246,5 +247,21 @@ describe("isKp2Branch", () => {
     expect(isKp2Branch({ name: "KP2 Romford" })).toBe(true);
     expect(isKp2Branch({ name: "London", workspace: null })).toBe(false);
     expect(isKp2Branch({ name: "KP2X" })).toBe(false);
+  });
+});
+
+describe("kharisFirst", () => {
+  it("lists main branches before KP2, keeping each group's order", () => {
+    const names = ["London", "KP2 Barking", "Accra", "KP2 London", "Manchester"].map((name) => ({
+      name,
+      workspace: "general",
+    }));
+    expect(kharisFirst(names).map((b) => b.name)).toEqual([
+      "London",
+      "Accra",
+      "Manchester",
+      "KP2 Barking",
+      "KP2 London",
+    ]);
   });
 });

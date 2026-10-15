@@ -62,12 +62,11 @@ export type TestimonyRow = {
 
 export type VisitorRow = {
   id: string;
-  first_name: string;
-  last_name: string | null;
+  name: string | null;
   email: string | null;
   phone: string | null;
-  branch: string | null;
-  notes: string | null;
+  branch_name: string | null;
+  message: string | null;
   created_at?: string | null;
 };
 
