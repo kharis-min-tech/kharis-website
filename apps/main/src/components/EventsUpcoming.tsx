@@ -76,9 +76,9 @@ function countryList(branches: ServiceBranch[]) {
   return `${list.slice(0, -1).join(", ")} & ${list.at(-1)}`;
 }
 
-function TypedHeading({ id, text }: { id: string; text: string }) {
+function RevealHeading({ id, text }: { id: string; text: string }) {
   const ref = useRef<HTMLHeadingElement>(null);
-  const [phase, setPhase] = useState<"idle" | "armed" | "typed">("idle");
+  const [phase, setPhase] = useState<"idle" | "armed" | "revealed">("idle");
 
   useEffect(() => {
     const el = ref.current;
@@ -87,7 +87,7 @@ function TypedHeading({ id, text }: { id: string; text: string }) {
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
-        setPhase("typed");
+        setPhase("revealed");
         io.disconnect();
       },
       { threshold: 0.6 },
@@ -96,18 +96,13 @@ function TypedHeading({ id, text }: { id: string; text: string }) {
     return () => io.disconnect();
   }, []);
 
-  let index = 0;
   return (
     <h2 ref={ref} id={id} className={`events-next__title is-${phase}`} aria-label={text}>
       {text.split(" ").map((word, w) => (
         <Fragment key={w}>
           {w > 0 ? " " : null}
           <span className="events-next__word" aria-hidden>
-            {Array.from(word).map((ch, i) => (
-              <span key={i} style={{ transitionDelay: `${index++ * 35}ms` }}>
-                {ch}
-              </span>
-            ))}
+            <span style={{ transitionDelay: `${w * 65}ms` }}>{word}</span>
           </span>
         </Fragment>
       ))}
@@ -327,7 +322,7 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
         <div className="events-next__head">
           <div>
             <p className="events-next__eyebrow">Coming up</p>
-            <TypedHeading id="events-next-title" text="Don’t miss out on what’s happening" />
+            <RevealHeading id="events-next-title" text="Don’t miss out on what’s happening" />
           </div>
           {branch ? (
             <BranchSelect

@@ -2,16 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Plus,
-  Minus,
-  RotateCcw,
-  Globe2,
-  ChevronDown,
-  Check,
-  ArrowUpRight,
-  MapPin,
-} from "lucide-react";
+import { Plus, Minus, RotateCcw, ChevronDown, Check, ArrowUpRight } from "lucide-react";
 import { globeOrigin } from "@/lib/globe-origin";
 import countryOutlines from "@/data/countryOutlines.json";
 import "./globe.css";
@@ -358,9 +349,6 @@ export function BranchMap({
           }}
         >
           <summary aria-haspopup="menu" aria-label={`Explore our family: ${destination.label}`}>
-            <span className="globe-picker__icon">
-              <Globe2 size={20} aria-hidden="true" />
-            </span>
             <span className="globe-picker__text">
               <span>Explore our family</span>
               <strong>{destination.label}</strong>
@@ -385,13 +373,6 @@ export function BranchMap({
                   }
                 }}
               >
-                <span className="globe-picker__option-icon">
-                  {d.id === "world" ? (
-                    <Globe2 size={17} aria-hidden="true" />
-                  ) : (
-                    <MapPin size={17} aria-hidden="true" />
-                  )}
-                </span>
                 <span>
                   <strong>{d.label}</strong>
                   <small>
@@ -485,10 +466,7 @@ export function BranchMap({
               top: Math.max(12, hovered.y - 126),
             }}
           >
-            <span className="globe-hover__eyebrow">
-              <MapPin size={12} />
-              {hovered.country ?? "Kharis Church"}
-            </span>
+            <span className="globe-hover__eyebrow">{hovered.country ?? "Kharis Church"}</span>
             <strong>{hovered.name}</strong>
             <span className="globe-hover__action">
               Explore this branch <ArrowUpRight size={15} />

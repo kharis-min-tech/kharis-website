@@ -304,7 +304,7 @@
   background: #ffde590d;
   color: #ffde59;
 }
-.globe-picker__menu button > span:nth-child(2) {
+.globe-picker__menu button > span:first-child {
   display: grid;
   gap: 0.2rem;
   flex: 1;
