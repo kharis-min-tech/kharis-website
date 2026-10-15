@@ -135,7 +135,7 @@ export const ABOUT = {
         id: "awo",
         name: "Pastor Awo Antwi",
         role: "Co-founder & Pastor",
-        image: "/images/leadership/pastor-awo-sunday.jpg",
+        image: "/images/leadership/pastor-awo-portrait.jpg",
         focus: "People, family, and raising the next generation",
         blurb:
           "Pastor Awo co-founded Kharis with Pastor David and helped establish Kharis Phase 2 for students and young people. She serves with care, strength and a heart for the church family.",
