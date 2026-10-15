@@ -1,8 +1,28 @@
+/* Shared surfaces keep every branch section in sync with the site theme. */
 .branch-page {
+  --branch-yellow: #630ed4;
+  --branch-accent: #630ed4;
+  --branch-muted: #736580;
+  --branch-soft: #51455e;
+  --branch-ink: #21162e;
+  --branch-card: #fff;
+  --branch-inset: #f4eff9;
+  --branch-line: #e5dced;
+  --branch-band: #eee6f7;
+  background: #fbf9fd;
+  color: var(--branch-ink);
+}
+html[data-theme="dark"] .branch-page {
   --branch-yellow: #ffde59;
+  --branch-accent: #ffde59;
   --branch-muted: #bcaece;
+  --branch-soft: #cfc5dc;
+  --branch-ink: #faf7ff;
+  --branch-card: #1c1229;
+  --branch-inset: #ffffff06;
+  --branch-line: #ffffff18;
+  --branch-band: #20122f;
   background: #0d0815;
-  color: #fff;
 }
 .branch-intro {
   max-width: 1440px;
@@ -49,14 +69,14 @@
 }
 .branch-intro h1 > span {
   display: block;
-  color: #fff;
+  color: var(--branch-ink);
 }
 .branch-intro__description {
   max-width: 34rem;
   margin: 1.75rem 0 2rem;
   font-size: clamp(1rem, 1.2vw, 1.15rem);
   line-height: 1.8;
-  color: #cfc5dc;
+  color: var(--branch-soft);
 }
 .branch-intro__actions {
   display: flex;
@@ -69,8 +89,8 @@
   justify-content: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  border: 1px solid #ffffff25;
-  color: #fff;
+  border: 1px solid var(--branch-line);
+  color: var(--branch-ink);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -81,12 +101,11 @@
 }
 .branch-action--primary {
   background: var(--branch-yellow);
-  color: #160c24;
+  color: #fff;
   border-color: var(--branch-yellow);
 }
 .branch-action--primary:hover {
-  background: #ffe881;
-  border-color: #ffe881;
+  filter: brightness(1.1);
 }
 .branch-action:focus-visible,
 .branch-section-nav a:focus-visible {
@@ -146,8 +165,8 @@
   gap: 1rem 2.5rem;
   padding: 1.5rem 0;
   margin-top: 3rem;
-  border-top: 1px solid #ffffff18;
-  border-bottom: 1px solid #ffffff18;
+  border-top: 1px solid var(--branch-line);
+  border-bottom: 1px solid var(--branch-line);
 }
 .branch-section-nav a {
   color: var(--branch-muted);
@@ -184,13 +203,13 @@
 .branch-service-card,
 .branch-map-card {
   border-radius: 20px;
-  background: #191023;
-  border-color: #ffffff12;
+  background: var(--branch-card);
+  border-color: var(--branch-line);
   box-shadow: none;
 }
 .branch-pastor {
-  background: #1b102a;
-  border-color: #ffffff0d;
+  background: var(--branch-band);
+  border-color: var(--branch-line);
   padding-block: clamp(3.5rem, 7vw, 6rem);
 }
 .branch-pastor > div,
@@ -208,11 +227,11 @@
   border-color: var(--branch-yellow);
 }
 .branch-travel {
-  background: #140c20;
+  background: var(--branch-band);
 }
 .branch-travel .grid > div {
   border-radius: 16px;
-  background: #ffffff03;
+  background: var(--branch-card);
 }
 @keyframes branch-copy-arrive {
   from {
@@ -264,4 +283,93 @@
     margin-top: 2rem;
     gap: 1rem 1.5rem;
   }
+}
+
+html[data-theme="dark"] .branch-action--primary {
+  color: #160c24;
+}
+.branch-on-photo,
+.branch-on-photo [class*="text-"] {
+  color: #fff;
+}
+.branch-intro {
+  position: relative;
+  isolation: isolate;
+}
+.branch-intro::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: min(60vw, 800px);
+  height: 650px;
+  top: 0;
+  right: -10%;
+  background: radial-gradient(ellipse, #a76ce525, transparent 68%);
+}
+.branch-intro__visual {
+  box-shadow: 16px 18px 0 var(--branch-band);
+}
+.branch-intro__eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 1.8rem;
+  height: 2px;
+  margin-right: 0.65rem;
+  background: var(--branch-accent);
+  vertical-align: middle;
+}
+.branch-section-label {
+  color: var(--branch-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.65rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+.branch-service-card {
+  border-top: 3px solid var(--branch-accent);
+  box-shadow: 0 16px 48px #32115108;
+}
+.branch-pastor {
+  position: relative;
+  overflow: hidden;
+}
+.branch-pastor blockquote {
+  padding: 1.5rem;
+  background: var(--branch-card);
+  border-radius: 0 16px 16px 0;
+}
+.branch-page #events > div:last-child,
+.branch-page #contact form {
+  border-radius: 20px;
+}
+.branch-page #contact input,
+.branch-page #contact textarea {
+  color: var(--branch-ink);
+  border-color: var(--branch-line);
+  background: var(--branch-card);
+}
+.branch-page #contact label {
+  color: var(--branch-muted);
+}
+.branch-travel .grid > div {
+  border-top: 2px solid var(--branch-accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .branch-travel .grid > div {
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease;
+  }
+  .branch-travel .grid > div:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px #32115112;
+  }
+}
+.branch-page [class*="bg-[#630ed4]"] {
+  --branch-ink: #fff;
+}
+.branch-intro__placeholder {
+  color: #ffde59;
 }

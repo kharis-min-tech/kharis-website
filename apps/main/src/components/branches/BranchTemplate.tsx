@@ -80,8 +80,8 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
   } | null>(null);
 
   return (
-    <div className="branch-page min-h-screen font-sans overflow-x-hidden flex flex-col text-white">
-      <SiteHeader />
+    <div className="branch-page min-h-screen font-sans overflow-x-hidden flex flex-col text-[var(--branch-ink)]">
+      <SiteHeader tone="light" />
 
       {/* Main Content Area */}
       <main className="w-full">
@@ -130,7 +130,7 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                   One family.
                 </div>
               )}
-              <div className="branch-intro__caption">
+              <div className="branch-intro__caption branch-on-photo">
                 <span>Kharis Church</span>
                 <strong>{view.city}</strong>
               </div>
@@ -150,10 +150,11 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
           className="branch-services py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
         >
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            <p className="branch-section-label">01 / Your Sunday starts here</p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)] mb-4">
               Join Us This Sunday
             </h2>
-            <p className="text-base font-medium text-gray-400 max-w-2xl mx-auto">
+            <p className="text-base font-medium text-[var(--branch-muted)] max-w-2xl mx-auto">
               We can&apos;t wait to host you. Choose a service time that works best for you and your
               family.
             </p>
@@ -161,15 +162,17 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-5 flex flex-col gap-6">
-              <div className="branch-service-card bg-[#15131f] p-6 sm:p-8 border border-white/10 shadow-sm h-full flex flex-col justify-between">
+              <div className="branch-service-card bg-[var(--branch-card)] p-6 sm:p-8 border border-[var(--branch-line)] shadow-sm h-full flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center gap-3 mb-8 pb-4 border-b border-white/10">
-                    <div className="w-12 h-12 bg-white/5 flex items-center justify-center text-[#e8a33d]">
+                  <div className="flex items-center gap-3 mb-8 pb-4 border-b border-[var(--branch-line)]">
+                    <div className="w-12 h-12 bg-[var(--branch-inset)] flex items-center justify-center text-[var(--branch-accent)]">
                       <Clock className="w-6 h-6 stroke-[2.5]" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-white!">Service Times</h3>
-                      <p className="text-xs font-semibold text-gray-400">
+                      <h3 className="text-2xl font-bold text-[var(--branch-ink)]!">
+                        Service Times
+                      </h3>
+                      <p className="text-xs font-semibold text-[var(--branch-muted)]">
                         Sunday & Midweek Gathering
                       </p>
                     </div>
@@ -177,15 +180,17 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
 
                   <div className="space-y-4">
                     {sundayServices.length === 0 ? (
-                      <div className="flex items-start gap-4 p-4 bg-black/30 border border-white/10">
+                      <div className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[var(--branch-line)]">
                         <div className="flex-shrink-0 w-20 text-center">
-                          <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
+                          <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
                             TBC
                           </span>
                         </div>
                         <div className="flex-grow pt-0.5">
-                          <h4 className="text-sm font-bold text-white! mb-1">Sunday gathering</h4>
-                          <p className="text-xs font-medium text-gray-300 leading-relaxed">
+                          <h4 className="text-sm font-bold text-[var(--branch-ink)]! mb-1">
+                            Sunday gathering
+                          </h4>
+                          <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
                             Service time will be confirmed soon.
                           </p>
                         </div>
@@ -195,41 +200,43 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                       <div
                         key={index}
                         onClick={() => setIsPlanVisitOpen(true)}
-                        className="flex items-start gap-4 p-4 hover:bg-white/5 transition-colors group cursor-pointer border relative overflow-hidden bg-black/30 border-white/10"
+                        className="flex items-start gap-4 p-4 hover:bg-[var(--branch-inset)] transition-colors group cursor-pointer border relative overflow-hidden bg-[var(--branch-inset)] border-[var(--branch-line)]"
                       >
                         <div className="flex-shrink-0 w-20 text-center">
-                          <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
+                          <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
                             {formatServiceTime(service.start_time)}
                           </span>
-                          <span className="text-[10px] font-extrabold text-gray-300 uppercase tracking-wider bg-white/10 px-2 py-0.5"></span>
+                          <span className="text-[10px] font-extrabold text-[var(--branch-soft)] uppercase tracking-wider bg-[var(--branch-inset)] px-2 py-0.5"></span>
                         </div>
 
                         <div className="flex-grow pt-0.5">
-                          <h4 className="text-sm font-bold text-white! mb-1 group-hover:text-[#e8a33d] transition-colors">
+                          <h4 className="text-sm font-bold text-[var(--branch-ink)]! mb-1 group-hover:text-[var(--branch-accent)] transition-colors">
                             {service.name}
                           </h4>
-                          <p className="text-xs font-medium text-gray-300 leading-relaxed">
+                          <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
                             {service.description || "Details will be added soon."}
                           </p>
                         </div>
 
-                        <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors pt-1" />
+                        <ChevronRight className="w-5 h-5 text-[var(--branch-muted)] group-hover:text-[var(--branch-ink)] transition-colors pt-1" />
                       </div>
                     ))}
 
                     {midweekServices.length === 0 ? (
-                      <div className="flex items-start gap-4 p-4 bg-black/30 border border-[#e8a33d]/30">
+                      <div className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[#e8a33d]/30">
                         <div className="flex-shrink-0 w-20 text-center">
-                          <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
+                          <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
                             TBC
                           </span>
                         </div>
                         <div className="flex-grow pt-0.5">
-                          <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[#e8a33d] mb-1">
+                          <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[var(--branch-accent)] mb-1">
                             Midweek
                           </span>
-                          <h4 className="text-sm font-bold text-white mb-1">Midweek gathering</h4>
-                          <p className="text-xs font-medium text-gray-300 leading-relaxed">
+                          <h4 className="text-sm font-bold text-[var(--branch-ink)] mb-1">
+                            Midweek gathering
+                          </h4>
+                          <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
                             Midweek details will be added soon.
                           </p>
                         </div>
@@ -239,44 +246,44 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                         <div
                           key={service.id}
                           onClick={() => setIsPlanVisitOpen(true)}
-                          className="flex items-start gap-4 p-4 bg-black/30 border border-[#e8a33d]/30 hover:bg-white/5 transition-colors group cursor-pointer relative overflow-hidden"
+                          className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[#e8a33d]/30 hover:bg-[var(--branch-inset)] transition-colors group cursor-pointer relative overflow-hidden"
                         >
                           <div className="flex-shrink-0 w-20 text-center">
-                            <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
+                            <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
                               {formatServiceTime(service.start_time) || "TBC"}
                             </span>
                           </div>
                           <div className="flex-grow pt-0.5">
-                            <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[#e8a33d] mb-1">
+                            <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[var(--branch-accent)] mb-1">
                               {service.day || "Midweek"} · Midweek
                             </span>
-                            <h4 className="text-sm font-bold text-white mb-1 group-hover:text-[#e8a33d] transition-colors">
+                            <h4 className="text-sm font-bold text-[var(--branch-ink)] mb-1 group-hover:text-[var(--branch-accent)] transition-colors">
                               {service.name || "Midweek gathering"}
                             </h4>
-                            <p className="text-xs font-medium text-gray-300 leading-relaxed">
+                            <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
                               {service.description || "Details will be added soon."}
                             </p>
                           </div>
-                          <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors pt-1" />
+                          <ChevronRight className="w-5 h-5 text-[var(--branch-muted)] group-hover:text-[var(--branch-ink)] transition-colors pt-1" />
                         </div>
                       ))
                     )}
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-white/10 flex justify-between items-center bg-black/40 p-4">
+                <div className="mt-8 pt-6 border-t border-[var(--branch-line)] flex justify-between items-center bg-[var(--branch-inset)] p-4">
                   <div className="flex items-center gap-2">
                     <span className="relative flex h-3 w-3">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d4920a] opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-[#d4920a]"></span>
                     </span>
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-[var(--branch-ink)]">
                       Warm welcome team on hand when you arrive
                     </span>
                   </div>
                   <button
                     onClick={() => setIsPlanVisitOpen(true)}
-                    className="text-[#e8a33d] hover:underline text-xs font-bold cursor-pointer"
+                    className="text-[var(--branch-accent)] hover:underline text-xs font-bold cursor-pointer"
                   >
                     Plan your visit
                   </button>
@@ -285,7 +292,7 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
             </div>
 
             <div className="lg:col-span-7 flex flex-col gap-6">
-              <div className="branch-map-card bg-[#15131f] p-3 border border-white/10 shadow-sm h-[500px] relative overflow-hidden group">
+              <div className="branch-map-card bg-[var(--branch-card)] p-3 border border-[var(--branch-line)] shadow-sm h-[500px] relative overflow-hidden group">
                 <div className="absolute inset-3 overflow-hidden">
                   {mapEmbedSrc ? (
                     <iframe
@@ -309,9 +316,11 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                 </div>
 
                 <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
-                  <div className="bg-[#15131f]/95 backdrop-blur-md p-4 max-w-xs pointer-events-auto shadow-lg border border-white/10 text-white">
-                    <h4 className="font-bold text-sm text-white! mb-1">{currentBranch.name}</h4>
-                    <p className="font-medium text-xs text-gray-300 mb-3 leading-snug">
+                  <div className="bg-[var(--branch-card)]/95 backdrop-blur-md p-4 max-w-xs pointer-events-auto shadow-lg border border-[var(--branch-line)] text-[var(--branch-ink)]">
+                    <h4 className="font-bold text-sm text-[var(--branch-ink)]! mb-1">
+                      {currentBranch.name}
+                    </h4>
+                    <p className="font-medium text-xs text-[var(--branch-soft)] mb-3 leading-snug">
                       {view.address}
                     </p>
                     {view.hasAddress ? (
@@ -319,7 +328,7 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                         href={`https://maps.google.com/?q=${encodeURIComponent(view.address)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[#e8a33d] text-xs font-bold hover:underline"
+                        className="inline-flex items-center gap-1.5 text-[var(--branch-accent)] text-xs font-bold hover:underline"
                       >
                         <Navigation className="w-3.5 h-3.5" />
                         <span>Get Directions</span>
@@ -331,14 +340,14 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                     <div className="flex flex-col gap-2 pointer-events-auto">
                       <button
                         onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
-                        className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
+                        className="w-10 h-10 bg-[var(--branch-card)]/90 backdrop-blur-md flex items-center justify-center text-[var(--branch-ink)] hover:text-[var(--branch-accent)] transition-colors shadow-md border border-[var(--branch-line)] cursor-pointer"
                         aria-label="Zoom In"
                       >
                         <Plus className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => setZoomLevel((z) => Math.max(z - 1, 10))}
-                        className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
+                        className="w-10 h-10 bg-[var(--branch-card)]/90 backdrop-blur-md flex items-center justify-center text-[var(--branch-ink)] hover:text-[var(--branch-accent)] transition-colors shadow-md border border-[var(--branch-line)] cursor-pointer"
                         aria-label="Zoom Out"
                       >
                         <Minus className="w-5 h-5" />
@@ -352,14 +361,17 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
         </section>
 
         {/* WELCOME / LEAD PASTOR SECTION */}
-        <section id="pastor" className="branch-pastor py-16 bg-[#15131f] border-y border-white/10">
+        <section
+          id="pastor"
+          className="branch-pastor py-16 bg-[var(--branch-card)] border-y border-[var(--branch-line)]"
+        >
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
             <div
               className={`grid grid-cols-1 gap-10 lg:gap-14 items-center ${view.portrait ? "md:grid-cols-12" : ""}`}
             >
               {view.portrait ? (
                 <div className="md:col-span-5 relative">
-                  <div className="relative aspect-4/5 overflow-hidden border border-white/10 bg-black shadow-2xl">
+                  <div className="relative aspect-4/5 overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
                     <img
                       src={view.portrait}
                       alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
@@ -368,33 +380,37 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                       decoding="async"
                     />
                   </div>
-                  <div className="absolute -bottom-4 -right-4 border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
-                    <p className="text-xs font-extrabold uppercase tracking-wider text-[#e8a33d]">
+                  <div className="absolute -bottom-4 -right-4 border border-[var(--branch-line)] bg-[var(--branch-card)] px-5 py-3 shadow-xl">
+                    <p className="text-xs font-extrabold uppercase tracking-wider text-[var(--branch-accent)]">
                       {view.pastorRole}
                     </p>
-                    <p className="text-sm font-bold text-white">{view.pastorName}</p>
+                    <p className="text-sm font-bold text-[var(--branch-ink)]">{view.pastorName}</p>
                   </div>
                 </div>
               ) : null}
 
               <div className={`${view.portrait ? "md:col-span-7" : ""} space-y-5`}>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-white!">
+                <p className="branch-section-label">02 / A personal welcome</p>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-[var(--branch-ink)]!">
                   Welcome to <span className="branch-pastor__name">{currentBranch.name}</span>
                 </h2>
 
-                <p className="text-sm font-bold uppercase tracking-wider text-[#e8a33d]">
+                <p className="text-sm font-bold uppercase tracking-wider text-[var(--branch-accent)]">
                   {view.pastorRole} {view.pastorKnown ? `· ${view.pastorName}` : ""}
                 </p>
 
                 <div className="space-y-4">
                   {view.welcome.map((para, i) => (
-                    <p key={i} className="text-base font-medium leading-relaxed text-gray-300">
+                    <p
+                      key={i}
+                      className="text-base font-medium leading-relaxed text-[var(--branch-soft)]"
+                    >
                       {para}
                     </p>
                   ))}
                 </div>
 
-                <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-white">
+                <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-[var(--branch-ink)]">
                   &ldquo;{view.quote}&rdquo;
                 </blockquote>
               </div>
@@ -405,15 +421,15 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
         {/* FEATURED MESSAGE / VIDEO SECTION */}
         <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
           <div className="mb-10 text-center">
-            <div className="inline-flex items-center gap-1.5 border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#e8a33d] mb-3">
+            <div className="inline-flex items-center gap-1.5 border border-[var(--branch-line)] bg-[var(--branch-inset)] px-3.5 py-1 text-xs font-bold text-[var(--branch-accent)] mb-3">
               <span>Watch</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
               This is {currentBranch.name}
             </h2>
           </div>
 
-          <div className="relative overflow-hidden border border-white/10 bg-black shadow-2xl">
+          <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
             <button
               type="button"
               onClick={() => setMediaModal({ type: "video" })}
@@ -427,11 +443,11 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                 />
               ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
-                <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#630ed4] text-white shadow-2xl transition-transform duration-300 group-hover:scale-110">
+              <div className="branch-on-photo absolute inset-0 flex flex-col items-center justify-center gap-5">
+                <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#630ed4] text-[var(--branch-ink)] shadow-2xl transition-transform duration-300 group-hover:scale-110">
                   <Play className="ml-1 h-8 w-8 fill-current" />
                 </span>
-                <span className="text-sm font-extrabold uppercase tracking-wider text-white">
+                <span className="text-sm font-extrabold uppercase tracking-wider text-[var(--branch-ink)]">
                   Watch on YouTube
                 </span>
               </div>
@@ -463,23 +479,27 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
         />
 
         {/* TRANSIT & PARKING INFO SECTION */}
-        <section className="branch-travel py-16 bg-[#15131f] border-t border-white/10">
+        <section className="branch-travel py-16 bg-[var(--branch-card)] border-t border-[var(--branch-line)]">
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-black/40 p-6 sm:p-8 border border-white/10 shadow-sm space-y-3">
-                <div className="w-12 h-12 bg-white/5 text-[#e8a33d] flex items-center justify-center">
+              <div className="bg-[var(--branch-inset)] p-6 sm:p-8 border border-[var(--branch-line)] shadow-sm space-y-3">
+                <div className="w-12 h-12 bg-[var(--branch-inset)] text-[var(--branch-accent)] flex items-center justify-center">
                   <Car className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-white!">Parking Information</h3>
-                <p className="text-sm text-gray-300 font-medium leading-relaxed">{view.parking}</p>
+                <h3 className="text-xl font-bold text-[var(--branch-ink)]!">Parking Information</h3>
+                <p className="text-sm text-[var(--branch-soft)] font-medium leading-relaxed">
+                  {view.parking}
+                </p>
               </div>
 
-              <div className="bg-black/40 p-6 sm:p-8 border border-white/10 shadow-sm space-y-3">
-                <div className="w-12 h-12 bg-white/5 text-[#e8a33d] flex items-center justify-center">
+              <div className="bg-[var(--branch-inset)] p-6 sm:p-8 border border-[var(--branch-line)] shadow-sm space-y-3">
+                <div className="w-12 h-12 bg-[var(--branch-inset)] text-[var(--branch-accent)] flex items-center justify-center">
                   <Train className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-white!">Public Transit</h3>
-                <p className="text-sm text-gray-300 font-medium leading-relaxed">{view.transit}</p>
+                <h3 className="text-xl font-bold text-[var(--branch-ink)]!">Public Transit</h3>
+                <p className="text-sm text-[var(--branch-soft)] font-medium leading-relaxed">
+                  {view.transit}
+                </p>
               </div>
             </div>
           </div>
