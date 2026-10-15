@@ -2,24 +2,20 @@
 /* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import SiteImage from "@/components/SiteImage";
+import "./branch-page.css";
 import {
-  MapPin,
   Clock,
-  Calendar,
   Navigation,
   ChevronRight,
   Plus,
   Minus,
-  Sparkles,
   ArrowRight,
-  Heart,
   Car,
   Train,
-  ChevronDown,
   Play,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import type { BranchData } from "@/lib/branches";
 import { presentBranch } from "@/lib/branch-display";
 import PlanVisitModal from "@/components/PlanVisitModal";
@@ -51,14 +47,7 @@ function formatServiceTime(time?: string | null) {
   return `${displayHour}:${minute} ${ampm}`;
 }
 
-export function BranchTemplate({
-  branchData,
-  branches = [],
-  onNavigateBranch,
-  onNavigateDirectory,
-  extraSections,
-}: BranchTemplateProps) {
-  const router = useRouter();
+export function BranchTemplate({ branchData, extraSections }: BranchTemplateProps) {
   const currentBranch = branchData;
   const view = presentBranch(currentBranch);
 
@@ -85,141 +74,81 @@ export function BranchTemplate({
 
   const [isPlanVisitOpen, setIsPlanVisitOpen] = useState(false);
   const [selectedEventRsvp, setSelectedEventRsvp] = useState<string | null>(null);
-  const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
   const [mediaModal, setMediaModal] = useState<{
     type: "image" | "video";
     src?: string;
   } | null>(null);
 
-  // useEffect(() => {
-  //   document.documentElement.classList.add("branch-light");
-  //   return () => document.documentElement.classList.remove("branch-light");
-  // }, []);
-
   return (
-    <div className="min-h-screen font-sans text-[var(--page-fg)] overflow-x-hidden pt-[4.5rem] selection:bg-[#630ed4] selection:text-white flex flex-col bg-[var(--page-bg)] text-white">
-      <SiteHeader tone="light" />
+    <div className="branch-page min-h-screen font-sans overflow-x-hidden flex flex-col text-white">
+      <SiteHeader />
 
       {/* Main Content Area */}
       <main className="w-full">
-        {/* HERO SECTION */}
-        <section className="branch-hero relative w-full min-h-[65vh] flex items-center justify-center pt-10 pb-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-          <div className="absolute inset-0 z-0 overflow-hidden mx-5 md:mx-8 mt-10 shadow-lg border border-white/10 bg-black">
-            {view.hero ? (
-              <img src={view.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
-            ) : null}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
-          </div>
-
-          <div className="relative z-10 flex flex-col items-center text-center max-w-4xl pt-16 text-white">
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
-                <MapPin className="w-4 h-4 text-[#d4920a]" />
-                <span className="font-semibold text-xs text-white uppercase tracking-wider">
-                  Kharis Church UK • {view.city} Branch
-                </span>
-              </div>
-
-              {/* Branch switcher */}
-              <div className="relative">
-                <button
-                  onClick={() => setBranchDropdownOpen(!branchDropdownOpen)}
-                  className="k-cta inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#630ed4] border border-[#630ed4] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#2a035c] cursor-pointer"
-                >
-                  <span>Switch branch</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform ${branchDropdownOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
-
-                <AnimatePresence>
-                  {branchDropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      className="absolute left-1/2 top-full z-50 mt-2 max-h-[70vh] w-64 -translate-x-1/2 overflow-auto border border-white/10 bg-[#15131f] p-2 shadow-2xl"
-                    >
-                      <div className="mb-1 border-b border-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                        Switch Kharis Branch
-                      </div>
-                      {branches.map((b) => (
-                        <button
-                          key={b.slug}
-                          onClick={() => {
-                            setBranchDropdownOpen(false);
-                            if (onNavigateBranch) onNavigateBranch(b.slug);
-                            else router.push(`/locations/${b.slug}`);
-                          }}
-                          className={`flex w-full items-center justify-between px-3 py-2 text-left text-xs font-bold transition-colors cursor-pointer ${
-                            b.slug === currentBranch.slug
-                              ? "bg-[#630ed4] text-white"
-                              : "text-gray-300 hover:bg-white/5 hover:text-white"
-                          }`}
-                        >
-                          <span>{b.name}</span>
-                          <span className="text-[10px] opacity-80">{b.region}</span>
-                        </button>
-                      ))}
-                      <div className="mt-1 border-t border-white/10 pt-1.5">
-                        <button
-                          onClick={() => {
-                            setBranchDropdownOpen(false);
-                            if (onNavigateDirectory) onNavigateDirectory();
-                            else router.push("/locations");
-                          }}
-                          className="w-full py-1.5 text-center text-xs font-extrabold text-[#e8a33d] hover:underline cursor-pointer"
-                        >
-                          View all branches →
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight text-white!">
-              Welcome to <br />
-              <span className="bg-gradient-to-r from-[#e8a33d] via-[#d4920a] to-[#ffffff] bg-clip-text text-transparent">
+        <section className="branch-intro" aria-labelledby="branch-title">
+          <nav className="branch-intro__breadcrumb" aria-label="Breadcrumb">
+            <Link href="/locations">All locations</Link>
+            <span aria-hidden="true">/</span>
+            <span>{view.city}</span>
+          </nav>
+          <div className="branch-intro__grid">
+            <div className="branch-intro__copy">
+              <p className="branch-intro__eyebrow">One family. Right here in {view.city}.</p>
+              <h1 id="branch-title">
+                <span>Welcome to</span>
                 {currentBranch.name}
-              </span>
-            </h1>
-
-            <p className="text-base sm:text-lg md:text-xl font-medium text-gray-300 max-w-2xl mb-10 leading-relaxed">
-              {view.description}
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <button
-                onClick={() => setIsPlanVisitOpen(true)}
-                className="k-cta bg-[#630ed4] hover:bg-[#2a035c] text-white! font-extrabold text-sm px-8 py-4 shadow-xl shadow-[#630ed4]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>Plan Your Visit</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <a
-                href="#events"
-                className="k-cta bg-white/10 hover:bg-white/20 text-white border border-white/20 font-extrabold text-sm px-8 py-4 shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md"
-              >
-                <Calendar className="w-4 h-4 text-[#e8a33d]" />
-                <span>Upcoming Events</span>
-              </a>
-
-              <a
-                href="/give"
-                className="k-cta bg-transparent hover:bg-white/10 text-white border border-white/20 font-extrabold text-sm px-8 py-4 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Heart className="w-4 h-4 text-[#e8a33d] fill-current" />
-                <span>Give</span>
-              </a>
+              </h1>
+              <p className="branch-intro__description">{view.description}</p>
+              <div className="branch-intro__actions">
+                <button
+                  type="button"
+                  className="branch-action branch-action--primary k-cta"
+                  onClick={() => setIsPlanVisitOpen(true)}
+                >
+                  Plan your visit <ArrowRight size={18} aria-hidden="true" />
+                </button>
+                <a href="#services" className="branch-action k-cta">
+                  Times & directions <ArrowRight size={18} aria-hidden="true" />
+                </a>
+              </div>
+              <p className="branch-intro__note">Come as you are. There’s a place for you here.</p>
+            </div>
+            <div className="branch-intro__visual">
+              {view.hero ? (
+                <SiteImage
+                  src={view.hero}
+                  alt={`Church family at ${currentBranch.name}`}
+                  fill
+                  priority
+                  sizes="(max-width: 800px) 100vw, 52vw"
+                  className="branch-intro__photo"
+                />
+              ) : (
+                <div className="branch-intro__placeholder">
+                  Many branches.
+                  <br />
+                  One family.
+                </div>
+              )}
+              <div className="branch-intro__caption">
+                <span>Kharis Church</span>
+                <strong>{view.city}</strong>
+              </div>
             </div>
           </div>
+          <nav className="branch-section-nav" aria-label="Explore this branch">
+            <a href="#services">Your Sunday</a>
+            <a href="#pastor">Meet the pastor</a>
+            <a href="#events">What’s on</a>
+            <a href="#contact">Say hello</a>
+          </nav>
         </section>
 
         {/* SERVICE TIMES & LOCATION BENTO GRID SECTION */}
-        <section id="services" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
+        <section
+          id="services"
+          className="branch-services py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
+        >
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
               Join Us This Sunday
@@ -232,7 +161,7 @@ export function BranchTemplate({
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-5 flex flex-col gap-6">
-              <div className="bg-[#15131f] p-6 sm:p-8 border border-white/10 shadow-sm h-full flex flex-col justify-between">
+              <div className="branch-service-card bg-[#15131f] p-6 sm:p-8 border border-white/10 shadow-sm h-full flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-8 pb-4 border-b border-white/10">
                     <div className="w-12 h-12 bg-white/5 flex items-center justify-center text-[#e8a33d]">
@@ -349,14 +278,14 @@ export function BranchTemplate({
                     onClick={() => setIsPlanVisitOpen(true)}
                     className="text-[#e8a33d] hover:underline text-xs font-bold cursor-pointer"
                   >
-                    Reserve Seats
+                    Plan your visit
                   </button>
                 </div>
               </div>
             </div>
 
             <div className="lg:col-span-7 flex flex-col gap-6">
-              <div className="bg-[#15131f] p-3 border border-white/10 shadow-sm h-[500px] relative overflow-hidden group">
+              <div className="branch-map-card bg-[#15131f] p-3 border border-white/10 shadow-sm h-[500px] relative overflow-hidden group">
                 <div className="absolute inset-3 overflow-hidden">
                   {mapEmbedSrc ? (
                     <iframe
@@ -367,7 +296,13 @@ export function BranchTemplate({
                       referrerPolicy="no-referrer-when-downgrade"
                     />
                   ) : view.hero ? (
-                    <img src={view.hero} alt="" className="h-full w-full object-cover" />
+                    <img
+                      src={view.hero}
+                      alt=""
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   ) : (
                     <div className="h-full w-full bg-black" />
                   )}
@@ -417,21 +352,20 @@ export function BranchTemplate({
         </section>
 
         {/* WELCOME / LEAD PASTOR SECTION */}
-        <section id="pastor" className="py-16 bg-[#15131f] border-y border-white/10">
+        <section id="pastor" className="branch-pastor py-16 bg-[#15131f] border-y border-white/10">
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
             <div
               className={`grid grid-cols-1 gap-10 lg:gap-14 items-center ${view.portrait ? "md:grid-cols-12" : ""}`}
             >
               {view.portrait ? (
                 <div className="md:col-span-5 relative">
-                  <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center bg-[#630ed4] text-white shadow-lg sm:flex">
-                    <Sparkles className="h-6 w-6" />
-                  </div>
                   <div className="relative aspect-4/5 overflow-hidden border border-white/10 bg-black shadow-2xl">
                     <img
                       src={view.portrait}
                       alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
                       className="h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <div className="absolute -bottom-4 -right-4 border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
@@ -445,10 +379,7 @@ export function BranchTemplate({
 
               <div className={`${view.portrait ? "md:col-span-7" : ""} space-y-5`}>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-white!">
-                  Welcome to{" "}
-                  <span className="bg-gradient-to-r from-[#e8a33d] to-[#d4920a] bg-clip-text text-transparent">
-                    {currentBranch.name}
-                  </span>
+                  Welcome to <span className="branch-pastor__name">{currentBranch.name}</span>
                 </h2>
 
                 <p className="text-sm font-bold uppercase tracking-wider text-[#e8a33d]">
@@ -472,7 +403,7 @@ export function BranchTemplate({
         </section>
 
         {/* FEATURED MESSAGE / VIDEO SECTION */}
-        <section id="watch" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
+        <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
           <div className="mb-10 text-center">
             <div className="inline-flex items-center gap-1.5 border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#e8a33d] mb-3">
               <span>Watch</span>
@@ -532,7 +463,7 @@ export function BranchTemplate({
         />
 
         {/* TRANSIT & PARKING INFO SECTION */}
-        <section className="py-16 bg-[#15131f] border-t border-white/10">
+        <section className="branch-travel py-16 bg-[#15131f] border-t border-white/10">
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-black/40 p-6 sm:p-8 border border-white/10 shadow-sm space-y-3">
