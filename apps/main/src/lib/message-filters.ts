@@ -33,6 +33,14 @@ export function matchesTopic(message: MessageVideo, topicId: string) {
   return topic.match.test(title);
 }
 
+/** Every word of the search has to appear somewhere in the title, in any order. */
+export function matchesQuery(message: MessageVideo, query: string) {
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (!words.length) return true;
+  const title = message.title.toLowerCase();
+  return words.every((w) => title.includes(w));
+}
+
 export function messageYear(message: MessageVideo): number | null {
   return message.publishedAt ? new Date(message.publishedAt).getFullYear() : null;
 }
