@@ -94,7 +94,7 @@ export function groupEventsByMonth(events: ChurchEvent[]) {
   const map = new Map<string, ChurchEvent[]>();
 
   for (const event of events) {
-    const key = eventMonthKey(event.start_time);
+    const key = eventMonthKey(`${event.date}T12:00:00`);
     const bucket = map.get(key);
     if (bucket) bucket.push(event);
     else map.set(key, [event]);
@@ -109,20 +109,25 @@ export function groupEventsByMonth(events: ChurchEvent[]) {
     }));
 }
 
-export function formatEventCardTime(time: string, timezone: string) {
-  const compact = time.replace(" ", "").replace("am", "AM").replace("pm", "PM");
-  const tz = timezone.replace("GMT+01:00", "GMT+1");
-  return `${compact} ${tz}`;
+/** "09:00", "19:00" or "7:00 pm" → "9:00 AM" / "7:00 PM". */
+export function formatEventCardTime(time: string) {
+  const match = time.trim().match(/^(\d{1,2}):(\d{2})\s*([ap]m)?$/i);
+  if (!match) return time;
+  const [, h, m, suffix] = match;
+  let hour = Number(h);
+  if (suffix) hour = (hour % 12) + (suffix.toLowerCase() === "pm" ? 12 : 0);
+  return `${hour % 12 || 12}:${m} ${hour >= 12 ? "PM" : "AM"}`;
 }
 
-export function formatEventLong(date: string, time: string, timezone: string) {
+export function formatEventLong(date: string, time: string) {
   const d = new Date(`${date}T12:00:00`);
   const long = d.toLocaleDateString("en-GB", {
+    weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  return `${long} ${time} (${timezone})`;
+  return `${long} · ${formatEventCardTime(time)}`;
 }
 
 export function googleCalendarUrl(event: ChurchEvent) {

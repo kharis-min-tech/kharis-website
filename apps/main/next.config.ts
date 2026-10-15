@@ -16,7 +16,9 @@ const nextConfig: NextConfig = {
   // Remove this block once tsc is clean.
   typescript: { ignoreBuildErrors: true },
   images: {
-    formats: ["image/avif", "image/webp"],
+    // AVIF encoding of large photos at quality 95 can take over a minute, so the
+    // browser gives up and the tile stays empty. WebP is near-instant.
+    formats: ["image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 7,
     qualities: [75, 95],
     remotePatterns: [

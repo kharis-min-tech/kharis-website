@@ -1,19 +1,56 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useEffect, useMemo, useRef } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronDown,
+  Compass,
+  Cross,
+  Flame,
+  Flower,
+  HandHeart,
+  Heart,
+  LayoutGrid,
+  Search,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+import { Icon } from "@/components/Icon";
 import { MessageHoverTile } from "@/components/MessageHoverTile";
 import { MessagesDeviceCluster } from "@/components/MessagesDeviceCluster";
 import { MessagesFaq } from "@/components/MessagesFaq";
+import { MessagesHero } from "@/components/MessagesHero";
 import { PlatformIcon } from "@/components/PlatformIcon";
+import { KHARIS_APP } from "@/lib/kharis-app";
 import { LISTEN_PLATFORMS } from "@/lib/listen-platforms";
+import {
+  MESSAGE_TOPICS,
+  matchesQuery,
+  matchesTopic,
+  messageYear,
+  messageYears,
+} from "@/lib/message-filters";
 import { buildMessageShelves } from "@/lib/message-shelves";
 import type { MessageVideo } from "@/lib/youtube";
+import "./messages-hub.css";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const TOPIC_ICONS: Record<string, LucideIcon> = {
+  all: LayoutGrid,
+  jesus: Cross,
+  bible: BookOpen,
+  prayer: HandHeart,
+  love: Heart,
+  purpose: Compass,
+  acts: Flame,
+  "just-men": Users,
+  fragrance: Flower,
+};
 
 /** Original Teachings wall posters (same five sermons). mqdefault is 16:9 so no YouTube letterbox bars. */
 const ORIGINAL_WALL_POSTERS: MessageVideo[] = [
@@ -152,6 +189,38 @@ function pickListenDevicePosters(archive: MessageVideo[]): MessageVideo[] {
   return picked.length ? picked : LISTEN_DEVICE_POSTERS;
 }
 
+/** The app has every message, so it is where a search that comes up empty should lead. */
+function AppStoreButtons() {
+  return (
+    <div className="msg-app-buttons" role="group" aria-label={`Get the ${KHARIS_APP.name}`}>
+      <a
+        href={KHARIS_APP.iosUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="msg-app-btn k-cta"
+      >
+        <Icon name="apple" className="msg-app-btn__icon" />
+        <span className="msg-app-btn__copy">
+          <span className="msg-app-btn__kicker">All messages on the</span>
+          <strong>App Store</strong>
+        </span>
+      </a>
+      <a
+        href={KHARIS_APP.androidUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="msg-app-btn k-cta"
+      >
+        <Icon name="android" className="msg-app-btn__icon" />
+        <span className="msg-app-btn__copy">
+          <span className="msg-app-btn__kicker">All messages on</span>
+          <strong>Google Play</strong>
+        </span>
+      </a>
+    </div>
+  );
+}
+
 type Props = {
   messages: MessageVideo[];
   /** Same 5 as homepage Latest Messages */
@@ -178,6 +247,53 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
     const rest = messages.filter((m) => !taken.has(m.id));
     return buildMessageShelves(rest);
   }, [messages, topRow]);
+
+  const [topic, setTopic] = useState("all");
+  const [year, setYear] = useState<number | "all">("all");
+  const [query, setQuery] = useState("");
+  const search = useDeferredValue(query.trim());
+  const years = useMemo(() => messageYears(messages), [messages]);
+  const topics = useMemo(
+    () => MESSAGE_TOPICS.filter((t) => messages.some((m) => matchesTopic(m, t.id))),
+    [messages],
+  );
+  const filtering = topic !== "all" || year !== "all" || search !== "";
+
+  const filtered = useMemo(() => {
+    if (!filtering) return [];
+    return messages.filter(
+      (m) =>
+        (topic === "all" || matchesTopic(m, topic)) &&
+        (year === "all" || messageYear(m) === year) &&
+        matchesQuery(m, search),
+    );
+  }, [messages, topic, year, search, filtering]);
+
+  const filteredRows = useMemo(() => {
+    const rows: MessageVideo[][] = [];
+    for (let i = 0; i < filtered.length; i += 4) rows.push(filtered.slice(i, i + 4));
+    return rows;
+  }, [filtered]);
+
+  const topicLabel = MESSAGE_TOPICS.find((t) => t.id === topic)?.label;
+  const filterHeading = [
+    search ? `“${search}”` : null,
+    topicLabel ?? (search ? null : "All messages"),
+    year === "all" ? null : String(year),
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  const clearFilters = () => {
+    setTopic("all");
+    setYear("all");
+    setQuery("");
+  };
+
+  useEffect(() => {
+    // Results change the page height; keep the scroll-in animations below lined up.
+    ScrollTrigger.refresh();
+  }, [topic, year, search]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -283,33 +399,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         </svg>
       </div>
 
-      <section className="msg-hub__hero" aria-label="Kharis messages">
-        <div className="msg-hub__wall" aria-hidden>
-          {wall.map((msg, i) => (
-            <div key={`${msg.id}-${i}`} className="msg-hub__wall-cell">
-              <div className="msg-wall-poster">
-                <Image
-                  src={msg.thumbnail}
-                  alt=""
-                  fill
-                  className="msg-wall-poster__img"
-                  sizes="20vw"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="msg-hub__veil" aria-hidden />
-
-        <div className="msg-hub__hero-copy">
-          <p className="msg-hub__eyebrow">Kharis Messages</p>
-          <h1 className="msg-hub__title">
-            Teachings that
-            <br />
-            <span>feed your faith.</span>
-          </h1>
-        </div>
-      </section>
+      <MessagesHero wall={wall} messages={messages} />
 
       <section className="msg-row-band">
         <div className="msg-row-band__head">
@@ -322,22 +412,120 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         </div>
       </section>
 
-      {shelves.map((shelf) => (
-        <section key={shelf.id} className="msg-shelf" aria-label={shelf.title}>
-          <div className="msg-shelf__head">
-            <h2>{shelf.title}</h2>
+      <section className="msg-filter" aria-label="Filter messages">
+        <div className="msg-filter__inner">
+          <div className="msg-filter__topics" role="group" aria-label="Filter by topic">
+            {[{ id: "all", label: "All" }, ...topics].map((t) => {
+              const Icon = TOPIC_ICONS[t.id] ?? LayoutGrid;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  className="msg-filter__chip"
+                  aria-pressed={topic === t.id}
+                  onClick={() => setTopic(t.id)}
+                >
+                  <Icon className="msg-filter__icon" strokeWidth={1.9} aria-hidden />
+                  {t.label}
+                </button>
+              );
+            })}
           </div>
-          <div className="msg-shelf__rows">
-            {shelf.rows.map((row, ri) => (
-              <div key={`${shelf.id}-r${ri}`} className="msg-row msg-row--wide">
-                {row.map((msg) => (
-                  <MessageHoverTile key={msg.id} message={msg} className="msg-tile--wide" />
-                ))}
-              </div>
-            ))}
+          <label className="msg-filter__search" data-active={query.trim() !== "" || undefined}>
+            <Search className="msg-filter__icon" strokeWidth={1.9} aria-hidden />
+            <input
+              type="search"
+              aria-label="Search messages"
+              placeholder="Search messages"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              enterKeyHint="search"
+              autoComplete="off"
+            />
+          </label>
+          <label className="msg-filter__year" data-active={year !== "all" || undefined}>
+            <CalendarDays className="msg-filter__icon" strokeWidth={1.9} aria-hidden />
+            <select
+              aria-label="Filter by year"
+              value={year}
+              onChange={(e) => setYear(e.target.value === "all" ? "all" : Number(e.target.value))}
+            >
+              <option value="all">Year</option>
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="msg-filter__caret" strokeWidth={2} aria-hidden />
+          </label>
+        </div>
+      </section>
+
+      {filtering ? (
+        <section className="msg-shelf msg-filter-results" aria-label="Filtered messages">
+          <div className="msg-shelf__head msg-filter-results__head">
+            <h2>{filterHeading}</h2>
+            <p className="msg-filter-results__count" aria-live="polite">
+              {filtered.length === 1 ? "1 message" : `${filtered.length} messages`}
+            </p>
+            <button type="button" className="msg-filter-results__clear" onClick={clearFilters}>
+              Clear
+            </button>
           </div>
+          {filtered.length ? (
+            <div className="msg-shelf__rows">
+              {filteredRows.map((row, ri) => (
+                <div key={`filtered-r${ri}`} className="msg-row msg-row--wide">
+                  {row.map((msg) => (
+                    <MessageHoverTile key={msg.id} message={msg} className="msg-tile--wide" />
+                  ))}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="msg-empty">
+              <h3 className="msg-empty__title">Can’t find the message you’re looking for?</h3>
+              <p className="msg-empty__lede">Every Kharis message is in the Kharis app.</p>
+              <AppStoreButtons />
+              <button type="button" className="msg-empty__clear" onClick={clearFilters}>
+                Clear search and filters
+              </button>
+            </div>
+          )}
         </section>
-      ))}
+      ) : (
+        shelves.map((shelf) => (
+          <section key={shelf.id} className="msg-shelf" aria-label={shelf.title}>
+            <div className="msg-shelf__head">
+              <h2>{shelf.title}</h2>
+            </div>
+            <div className="msg-shelf__rows">
+              {shelf.rows.map((row, ri) => (
+                <div key={`${shelf.id}-r${ri}`} className="msg-row msg-row--wide">
+                  {row.map((msg) => (
+                    <MessageHoverTile key={msg.id} message={msg} className="msg-tile--wide" />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </section>
+        ))
+      )}
+
+      {(!filtering || filtered.length > 0) && (
+        <aside className="msg-app-strip" aria-label={KHARIS_APP.name}>
+          <div className="msg-app-strip__inner">
+            <div className="msg-app-strip__copy">
+              <p className="msg-app-strip__title">Watch all messages in the Kharis app</p>
+              <p className="msg-app-strip__sub">
+                Every teaching, including ones not listed here. Free on iPhone and Android.
+              </p>
+            </div>
+            <AppStoreButtons />
+          </div>
+        </aside>
+      )}
 
       <section id="listen" className="msg-listen" aria-label="Listen platforms">
         <p className="msg-listen__eyebrow">Catch every message</p>

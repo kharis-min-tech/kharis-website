@@ -319,6 +319,34 @@ function mergeMessages(...lists: MessageVideo[][]) {
   return out;
 }
 
+/** YouTube Shorts can run up to 3 minutes; full messages are far longer. */
+const SHORTS_MAX_SECONDS = 180;
+
+/**
+ * Video lengths for up to 50 ids. The playlist API doesn't say which uploads are Shorts
+ * (the RSS feed does, via /shorts/ links), so length is how the API path drops them.
+ */
+async function fetchDurations(ids: string[], key: string): Promise<Map<string, number>> {
+  const params = new URLSearchParams({
+    part: "contentDetails",
+    id: ids.join(","),
+    fields: "items(id,contentDetails/duration)",
+    key,
+  });
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?${params}`, {
+    next: { revalidate: 3600 },
+  });
+  if (!res.ok) throw new Error("video details failed");
+  const data = (await res.json()) as {
+    items?: Array<{ id?: string; contentDetails?: { duration?: string } }>;
+  };
+  const durations = new Map<string, number>();
+  for (const v of data.items || []) {
+    if (v.id) durations.set(v.id, parseDuration(v.contentDetails?.duration || ""));
+  }
+  return durations;
+}
+
 async function fetchFromRss(): Promise<MessageVideo[]> {
   try {
     const res = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`, {
@@ -396,10 +424,17 @@ export async function fetchPastorMessages(limit = 120): Promise<MessageVideo[]> 
         }>;
       };
 
-      for (const item of playlist.items || []) {
+      const items = playlist.items || [];
+      const ids = items
+        .map((item) => item.contentDetails?.videoId)
+        .filter((id): id is string => !!id);
+      const durations = ids.length ? await fetchDurations(ids, key) : new Map<string, number>();
+
+      for (const item of items) {
         const id = item.contentDetails?.videoId;
         const title = item.snippet?.title || "";
         if (!id || !title || isSkippedMessage(title)) continue;
+        if ((durations.get(id) ?? 0) <= SHORTS_MAX_SECONDS) continue;
         messages.push({
           id,
           title,
