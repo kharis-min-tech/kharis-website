@@ -43,6 +43,15 @@ Scope: main Kharis site only. KP2 was excluded from this final pass at the user'
 - No missing main route was found. Some pages have incomplete content as listed above.
 - Before release, verify real contact delivery and giving hand-offs in the deployment environment, and obtain the required peer review and automated PR checks. No production deployment or merge was performed.
 
-Local build tooling uses installed Next.js 15.5.27 while the manifests pin 16.3.8. A clean dependency install and CI build against the pinned version remain a release validation step.
+The follow-up mobile pass was built and tested with the pinned Next.js 16.3.8 dependencies. PR #44’s preceding CI run also passed.
 
 GitHub also reports an existing high-severity default-branch Dependabot alert for the glob CLI's -c/--cmd handling: https://github.com/kharis-min-tech/kharis-website/security/dependabot/11. GitHub lists 10.5.0 as the first patched version. Dependency remediation remains a release follow-up and was not included in the main-site interaction changes.
+
+## Follow-up mobile UX pass
+
+- Replaced the mobile navigation dropdown with a reference-inspired menu sheet: message strip, five large divided primary links, arrow accents, secondary navigation and a prominent Locations CTA.
+- Added light/dark styling, safe-area padding, independently scrolling short-screen layout, Escape/backdrop close, focus trapping/restoration and automatic close when switching to desktop width.
+- Added 44px minimum control hit areas, 16px phone form text and stacked branch hero actions at the narrowest widths.
+- Checked primary main-site layouts at 320px and 375px: no document-level horizontal overflow. Checked the menu at 320x568 and 375x812, and the desktop breakpoint at 1024px. Verified keyboard wrap and focus/scroll restoration.
+- Verified contact form controls render at 16px on phones. Viewport overrides were reset after testing.
+- Main production build passes on Next.js 16.3.8; 98 tests, lint and TypeScript pass.
