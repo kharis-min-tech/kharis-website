@@ -204,6 +204,11 @@ export function CrudPage<T extends Row>({
   );
 }
 
+function selectOptions(options: { value: string; label: string }[], value: string) {
+  if (!value || options.some((option) => option.value === value)) return options;
+  return [{ value, label: value }, ...options];
+}
+
 function FieldControl({
   field,
   value,
@@ -238,7 +243,7 @@ function FieldControl({
         <Textarea id={field.key} value={value} onChange={(event) => onChange(event.target.value)} />
       ) : field.kind === "select" ? (
         <Select id={field.key} value={value} onChange={(event) => onChange(event.target.value)}>
-          {field.options.map((option) => (
+          {selectOptions(field.options, value).map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>

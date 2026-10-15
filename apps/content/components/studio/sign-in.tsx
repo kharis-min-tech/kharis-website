@@ -32,7 +32,7 @@ export function SignIn() {
       <Card className="w-full max-w-sm p-6">
         <div className="mb-6 flex flex-col items-center text-center">
           <Mark className="h-12 w-12 text-xl" />
-          <h1 className="mt-4 font-heading text-2xl font-semibold">Kharis Content Studio</h1>
+          <h1 className="mt-4 font-heading text-2xl font-extrabold tracking-tight">Kharis Content Studio</h1>
           <p className="mt-1 text-sm text-muted-foreground">Sign in to manage church content.</p>
         </div>
         {configured ? null : (

@@ -13,18 +13,18 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const themeScript = `(function(){try{if(localStorage.getItem("kharis-content-theme")==="light")document.documentElement.classList.remove("dark")}catch(e){}})();`;
+const themeScript = `(function(){try{if(localStorage.getItem("kharis-content-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className="dark" suppressHydrationWarning>
+    <html lang="en-GB" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700&family=Maven+Pro:wght@500;600;700;800;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,500&display=swap"
         />
       </head>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
