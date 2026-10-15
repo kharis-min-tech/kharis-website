@@ -1,0 +1,193 @@
+.gov-page
+  :is(button, a, .gov-policy, .gov-incident__panel, .gov-policy__icon, .gov-incident__icon) {
+  border-radius: 0;
+}
+.gov-page .gov-incident__cta {
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.gov-page .gov-incident__cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px -10px rgba(25, 10, 40, 0.45);
+}
+@media (prefers-reduced-motion: reduce) {
+  .gov-page .gov-incident__cta {
+    transition: none;
+  }
+  .gov-page .gov-incident__cta:hover {
+    transform: none;
+  }
+}
+.gov-page .gov-incident__panel {
+  background: #19151f;
+}
+
+.gov-page .gov-hero {
+  padding: clamp(7rem, 12vw, 10rem) clamp(1.25rem, 5vw, 5rem) 3rem;
+}
+.gov-page .gov-hero > div {
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 0.75rem 4rem;
+  align-items: end;
+}
+.gov-page .gov-hero .eyebrow {
+  grid-column: 1 / -1;
+}
+.gov-page .gov-hero__title {
+  white-space: normal;
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+.gov-page .gov-hero__lede {
+  font-weight: 400;
+  line-height: 1.75;
+  margin-bottom: 0.3rem;
+}
+.gov-page :is(.gov-hero__title, .gov-policy h2) {
+  text-shadow:
+    0 1px 0 rgba(21, 14, 30, 0.06),
+    0 3px 3px rgba(21, 14, 30, 0.04),
+    0 8px 12px rgba(21, 14, 30, 0.07);
+}
+.gov-page .gov-policies {
+  padding: 1rem clamp(1.25rem, 5vw, 5rem) 4rem;
+}
+.gov-page .gov-policies__grid {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.gov-page .gov-policy {
+  display: grid;
+  align-items: start;
+  min-height: 0;
+  padding: 2rem 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+.gov-page .gov-policy:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--line);
+}
+.gov-page .gov-policy__number {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding-top: 0.4rem;
+}
+.gov-page .gov-policy__icon {
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  margin: 0;
+}
+.gov-page .gov-policy__icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+.gov-page .gov-policy h2 {
+  letter-spacing: -0.03em;
+}
+.gov-page .gov-policy p {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.7;
+  max-width: 48ch;
+}
+.gov-page .gov-incident {
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+}
+.gov-page .gov-incident__panel {
+  box-shadow:
+    0 4px 8px rgba(20, 12, 30, 0.04),
+    0 12px 24px -12px rgba(20, 12, 30, 0.15),
+    0 24px 40px -24px rgba(20, 12, 30, 0.2);
+}
+.gov-page .gov-incident__panel h2 {
+  text-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.25),
+    0 8px 14px rgba(0, 0, 0, 0.2);
+}
+.gov-page .gov-incident__icon {
+  background: transparent;
+}
+.gov-page .gov-incident__cta:focus-visible {
+  outline: 3px solid #ffde59;
+  outline-offset: 4px;
+}
+@media (max-width: 800px) {
+  .gov-page .gov-hero > div {
+    display: block;
+  }
+  .gov-page .gov-hero__lede {
+    margin-top: 1.5rem;
+  }
+  .gov-page .gov-policy {
+    grid-template-columns: 2rem 1fr;
+    gap: 0.75rem 1rem;
+  }
+  .gov-page .gov-policy__icon {
+    display: none;
+  }
+  .gov-page .gov-policy p {
+    grid-column: 2;
+  }
+}
+
+.gov-page :is(.gov-hero__title, .gov-policy h2, .gov-incident__panel h2) {
+  text-shadow: none;
+}
+
+.gov-page .gov-hero {
+  max-width: 76rem;
+  padding-top: 7rem;
+  padding-bottom: 2rem;
+}
+.gov-page .gov-hero > div {
+  display: block;
+}
+.gov-page .gov-hero__title {
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  max-width: none;
+}
+.gov-page .gov-hero__lede {
+  max-width: 64ch;
+  margin-top: 1rem;
+}
+.gov-page .gov-policies {
+  max-width: 76rem;
+  padding-bottom: 2rem;
+}
+.gov-page .gov-policies__grid {
+  background: var(--bg-soft);
+  padding: 0.25rem clamp(1.25rem, 3vw, 2.5rem);
+}
+.gov-page .gov-policy {
+  grid-template-columns: 2.5rem 1fr 1.25fr;
+  gap: 1rem 1.5rem;
+  padding-block: 1.5rem;
+}
+.gov-page .gov-policy:last-child {
+  border-bottom: 0;
+}
+.gov-page .gov-policy h2 {
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+}
+.gov-page .gov-incident {
+  max-width: 76rem;
+}
+@media (max-width: 800px) {
+  .gov-page .gov-policy {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+  .gov-page .gov-policy p {
+    grid-column: 1;
+  }
+  .gov-page .gov-hero {
+    padding-bottom: 1rem;
+  }
+}

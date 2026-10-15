@@ -104,7 +104,7 @@ export function BranchTemplate({
       <main className="w-full">
         {/* HERO SECTION */}
         <section className="branch-hero relative w-full min-h-[65vh] flex items-center justify-center pt-10 pb-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-          <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl mx-5 md:mx-8 mt-10 shadow-lg border border-white/10 bg-black">
+          <div className="absolute inset-0 z-0 overflow-hidden mx-5 md:mx-8 mt-10 shadow-lg border border-white/10 bg-black">
             {view.hero ? (
               <img src={view.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
             ) : null}
@@ -113,7 +113,7 @@ export function BranchTemplate({
 
           <div className="relative z-10 flex flex-col items-center text-center max-w-4xl pt-16 text-white">
             <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
                 <MapPin className="w-4 h-4 text-[#d4920a]" />
                 <span className="font-semibold text-xs text-white uppercase tracking-wider">
                   Kharis Church UK • {view.city} Branch
@@ -124,7 +124,7 @@ export function BranchTemplate({
               <div className="relative">
                 <button
                   onClick={() => setBranchDropdownOpen(!branchDropdownOpen)}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#630ed4] border border-[#630ed4] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#2a035c] cursor-pointer"
+                  className="k-cta inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#630ed4] border border-[#630ed4] font-semibold text-xs text-white uppercase tracking-wider shadow-sm transition-all hover:bg-[#2a035c] cursor-pointer"
                 >
                   <span>Switch branch</span>
                   <ChevronDown
@@ -138,7 +138,7 @@ export function BranchTemplate({
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
-                      className="absolute left-1/2 top-full z-50 mt-2 max-h-[70vh] w-64 -translate-x-1/2 overflow-auto rounded-2xl border border-white/10 bg-[#15131f] p-2 shadow-2xl"
+                      className="absolute left-1/2 top-full z-50 mt-2 max-h-[70vh] w-64 -translate-x-1/2 overflow-auto border border-white/10 bg-[#15131f] p-2 shadow-2xl"
                     >
                       <div className="mb-1 border-b border-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
                         Switch Kharis Branch
@@ -151,7 +151,7 @@ export function BranchTemplate({
                             if (onNavigateBranch) onNavigateBranch(b.slug);
                             else router.push(`/locations/${b.slug}`);
                           }}
-                          className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs font-bold transition-colors cursor-pointer ${
+                          className={`flex w-full items-center justify-between px-3 py-2 text-left text-xs font-bold transition-colors cursor-pointer ${
                             b.slug === currentBranch.slug
                               ? "bg-[#630ed4] text-white"
                               : "text-gray-300 hover:bg-white/5 hover:text-white"
@@ -193,7 +193,7 @@ export function BranchTemplate({
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <button
                 onClick={() => setIsPlanVisitOpen(true)}
-                className="bg-[#630ed4] hover:bg-[#2a035c] text-white! font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-[#630ed4]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="k-cta bg-[#630ed4] hover:bg-[#2a035c] text-white! font-extrabold text-sm px-8 py-4 shadow-xl shadow-[#630ed4]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Plan Your Visit</span>
                 <ArrowRight className="w-4 h-4" />
@@ -201,7 +201,7 @@ export function BranchTemplate({
 
               <a
                 href="#events"
-                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md"
+                className="k-cta bg-white/10 hover:bg-white/20 text-white border border-white/20 font-extrabold text-sm px-8 py-4 shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md"
               >
                 <Calendar className="w-4 h-4 text-[#e8a33d]" />
                 <span>Upcoming Events</span>
@@ -209,7 +209,7 @@ export function BranchTemplate({
 
               <a
                 href="/give"
-                className="bg-transparent hover:bg-white/10 text-white border border-white/20 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="k-cta bg-transparent hover:bg-white/10 text-white border border-white/20 font-extrabold text-sm px-8 py-4 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Heart className="w-4 h-4 text-[#e8a33d] fill-current" />
                 <span>Give</span>
@@ -232,10 +232,10 @@ export function BranchTemplate({
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-5 flex flex-col gap-6">
-              <div className="bg-[#15131f] rounded-3xl p-6 sm:p-8 border border-white/10 shadow-sm h-full flex flex-col justify-between">
+              <div className="bg-[#15131f] p-6 sm:p-8 border border-white/10 shadow-sm h-full flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-8 pb-4 border-b border-white/10">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-[#e8a33d]">
+                    <div className="w-12 h-12 bg-white/5 flex items-center justify-center text-[#e8a33d]">
                       <Clock className="w-6 h-6 stroke-[2.5]" />
                     </div>
                     <div>
@@ -248,7 +248,7 @@ export function BranchTemplate({
 
                   <div className="space-y-4">
                     {sundayServices.length === 0 ? (
-                      <div className="flex items-start gap-4 p-4 rounded-2xl bg-black/30 border border-white/10">
+                      <div className="flex items-start gap-4 p-4 bg-black/30 border border-white/10">
                         <div className="flex-shrink-0 w-20 text-center">
                           <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
                             TBC
@@ -266,13 +266,13 @@ export function BranchTemplate({
                       <div
                         key={index}
                         onClick={() => setIsPlanVisitOpen(true)}
-                        className="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors group cursor-pointer border relative overflow-hidden bg-black/30 border-white/10"
+                        className="flex items-start gap-4 p-4 hover:bg-white/5 transition-colors group cursor-pointer border relative overflow-hidden bg-black/30 border-white/10"
                       >
                         <div className="flex-shrink-0 w-20 text-center">
                           <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
                             {formatServiceTime(service.start_time)}
                           </span>
-                          <span className="text-[10px] font-extrabold text-gray-300 uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded-full"></span>
+                          <span className="text-[10px] font-extrabold text-gray-300 uppercase tracking-wider bg-white/10 px-2 py-0.5"></span>
                         </div>
 
                         <div className="flex-grow pt-0.5">
@@ -289,7 +289,7 @@ export function BranchTemplate({
                     ))}
 
                     {midweekServices.length === 0 ? (
-                      <div className="flex items-start gap-4 p-4 rounded-2xl bg-black/30 border border-[#e8a33d]/30">
+                      <div className="flex items-start gap-4 p-4 bg-black/30 border border-[#e8a33d]/30">
                         <div className="flex-shrink-0 w-20 text-center">
                           <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
                             TBC
@@ -310,7 +310,7 @@ export function BranchTemplate({
                         <div
                           key={service.id}
                           onClick={() => setIsPlanVisitOpen(true)}
-                          className="flex items-start gap-4 p-4 rounded-2xl bg-black/30 border border-[#e8a33d]/30 hover:bg-white/5 transition-colors group cursor-pointer relative overflow-hidden"
+                          className="flex items-start gap-4 p-4 bg-black/30 border border-[#e8a33d]/30 hover:bg-white/5 transition-colors group cursor-pointer relative overflow-hidden"
                         >
                           <div className="flex-shrink-0 w-20 text-center">
                             <span className="block text-2xl font-extrabold text-[#e8a33d] mb-0.5">
@@ -335,7 +335,7 @@ export function BranchTemplate({
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-white/10 flex justify-between items-center bg-black/40 p-4 rounded-2xl">
+                <div className="mt-8 pt-6 border-t border-white/10 flex justify-between items-center bg-black/40 p-4">
                   <div className="flex items-center gap-2">
                     <span className="relative flex h-3 w-3">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d4920a] opacity-75"></span>
@@ -356,8 +356,8 @@ export function BranchTemplate({
             </div>
 
             <div className="lg:col-span-7 flex flex-col gap-6">
-              <div className="bg-[#15131f] rounded-3xl p-3 border border-white/10 shadow-sm h-[500px] relative overflow-hidden group">
-                <div className="absolute inset-3 rounded-2xl overflow-hidden">
+              <div className="bg-[#15131f] p-3 border border-white/10 shadow-sm h-[500px] relative overflow-hidden group">
+                <div className="absolute inset-3 overflow-hidden">
                   {mapEmbedSrc ? (
                     <iframe
                       title={`Map of ${currentBranch.name}`}
@@ -374,7 +374,7 @@ export function BranchTemplate({
                 </div>
 
                 <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
-                  <div className="bg-[#15131f]/95 backdrop-blur-md p-4 rounded-2xl max-w-xs pointer-events-auto shadow-lg border border-white/10 text-white">
+                  <div className="bg-[#15131f]/95 backdrop-blur-md p-4 max-w-xs pointer-events-auto shadow-lg border border-white/10 text-white">
                     <h4 className="font-bold text-sm text-white! mb-1">{currentBranch.name}</h4>
                     <p className="font-medium text-xs text-gray-300 mb-3 leading-snug">
                       {view.address}
@@ -396,14 +396,14 @@ export function BranchTemplate({
                     <div className="flex flex-col gap-2 pointer-events-auto">
                       <button
                         onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
-                        className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
+                        className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
                         aria-label="Zoom In"
                       >
                         <Plus className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => setZoomLevel((z) => Math.max(z - 1, 10))}
-                        className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
+                        className="w-10 h-10 bg-[#15131f]/90 backdrop-blur-md flex items-center justify-center text-white hover:text-[#e8a33d] transition-colors shadow-md border border-white/10 cursor-pointer"
                         aria-label="Zoom Out"
                       >
                         <Minus className="w-5 h-5" />
@@ -424,17 +424,17 @@ export function BranchTemplate({
             >
               {view.portrait ? (
                 <div className="md:col-span-5 relative">
-                  <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl bg-[#630ed4] text-white shadow-lg sm:flex">
+                  <div className="absolute -left-3 -top-3 z-10 hidden h-14 w-14 items-center justify-center bg-[#630ed4] text-white shadow-lg sm:flex">
                     <Sparkles className="h-6 w-6" />
                   </div>
-                  <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
+                  <div className="relative aspect-4/5 overflow-hidden border border-white/10 bg-black shadow-2xl">
                     <img
                       src={view.portrait}
                       alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
                       className="h-full w-full object-cover"
                     />
                   </div>
-                  <div className="absolute -bottom-4 -right-4 rounded-2xl border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
+                  <div className="absolute -bottom-4 -right-4 border border-white/10 bg-[#0d0710] px-5 py-3 shadow-xl">
                     <p className="text-xs font-extrabold uppercase tracking-wider text-[#e8a33d]">
                       {view.pastorRole}
                     </p>
@@ -474,7 +474,7 @@ export function BranchTemplate({
         {/* FEATURED MESSAGE / VIDEO SECTION */}
         <section id="watch" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
           <div className="mb-10 text-center">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#e8a33d] mb-3">
+            <div className="inline-flex items-center gap-1.5 border border-white/10 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#e8a33d] mb-3">
               <span>Watch</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
@@ -482,7 +482,7 @@ export function BranchTemplate({
             </h2>
           </div>
 
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-2xl">
+          <div className="relative overflow-hidden border border-white/10 bg-black shadow-2xl">
             <button
               type="button"
               onClick={() => setMediaModal({ type: "video" })}
@@ -535,16 +535,16 @@ export function BranchTemplate({
         <section className="py-16 bg-[#15131f] border-t border-white/10">
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-black/40 p-6 sm:p-8 rounded-3xl border border-white/10 shadow-sm space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 text-[#e8a33d] flex items-center justify-center">
+              <div className="bg-black/40 p-6 sm:p-8 border border-white/10 shadow-sm space-y-3">
+                <div className="w-12 h-12 bg-white/5 text-[#e8a33d] flex items-center justify-center">
                   <Car className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold text-white!">Parking Information</h3>
                 <p className="text-sm text-gray-300 font-medium leading-relaxed">{view.parking}</p>
               </div>
 
-              <div className="bg-black/40 p-6 sm:p-8 rounded-3xl border border-white/10 shadow-sm space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 text-[#e8a33d] flex items-center justify-center">
+              <div className="bg-black/40 p-6 sm:p-8 border border-white/10 shadow-sm space-y-3">
+                <div className="w-12 h-12 bg-white/5 text-[#e8a33d] flex items-center justify-center">
                   <Train className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold text-white!">Public Transit</h3>

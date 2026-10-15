@@ -94,7 +94,7 @@ export function EventDetailModal({ event, onClose }: Props) {
                     <Icon name="watch" className="h-4 w-4" />
                     Time
                   </p>
-                  <p>{formatEventLong(event.date, event.time, event.timezone)}</p>
+                  <p>{formatEventLong(event.date, event.time)}</p>
                 </div>
                 <div className="event-modal__fact">
                   <p className="event-modal__fact-label">
