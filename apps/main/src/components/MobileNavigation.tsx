@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Play, X } from "lucide-react";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -12,15 +12,16 @@ import { KP2_URL } from "@/lib/kp2";
 import "./mobile-navigation.css";
 
 const primary = [
-  { label: "I’m new", href: "/about" },
-  { label: "Get connected", href: "/life" },
-  { label: "What’s on", href: "/events" },
-  { label: "Watch & listen", href: "/messages" },
+  { label: "Home", href: "/" },
+  { label: "About us", href: "/about" },
+  { label: "Locations", href: "/locations" },
+  { label: "Events", href: "/events" },
+  { label: "Messages", href: "/messages" },
+  { label: "Life at Kharis", href: "/life" },
   { label: "Give", href: "/give" },
+  { label: "Contact", href: "/contact" },
 ];
 const secondary = [
-  { label: "Home", href: "/" },
-  { label: "Contact", href: "/contact" },
   { label: "Governance", href: "/governance" },
   { label: "KP2", href: KP2_URL },
 ];
@@ -82,11 +83,6 @@ export function MobileNavigation({
             exit={reduce ? { opacity: 0 } : { y: -12, opacity: 0 }}
             transition={{ duration: reduce ? 0 : 0.36, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Link href="/messages" className="mobile-nav__announcement" onClick={onClose}>
-              <Play size={16} aria-hidden="true" />
-              <span>Watch a message. Be encouraged.</span>
-              <ArrowRight size={16} aria-hidden="true" />
-            </Link>
             <div className="mobile-nav__brand-row">
               <Link href="/" aria-label="Kharis home" onClick={onClose}>
                 <BrandLogo tone={dark ? "onDark" : "onLight"} />
@@ -108,7 +104,7 @@ export function MobileNavigation({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
                     duration: reduce ? 0 : 0.32,
-                    delay: reduce ? 0 : 0.07 + index * 0.035,
+                    delay: reduce ? 0 : 0.06 + index * 0.025,
                   }}
                 >
                   <Link
@@ -117,18 +113,11 @@ export function MobileNavigation({
                     onClick={onClose}
                   >
                     <span>{item.label}</span>
-                    <ArrowRight size={23} strokeWidth={1.5} aria-hidden="true" />
                   </Link>
                 </motion.div>
               ))}
             </nav>
             <div className="mobile-nav__bottom">
-              <Link href="/locations" onClick={onClose} className="mobile-nav__locations">
-                <span>Find your Kharis family</span>
-                <span className="mobile-nav__locations-arrow">
-                  <ArrowRight size={24} aria-hidden="true" />
-                </span>
-              </Link>
               <nav aria-label="More Kharis links" className="mobile-nav__secondary">
                 {secondary.map((item) => (
                   <a
