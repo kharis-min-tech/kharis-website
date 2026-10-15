@@ -88,8 +88,10 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     layout: "full",
     media: {
       video: "/videos/hero-a.mp4?v=2",
-      poster: "https://images.kharis.org/site-images/main/59beb230d62d3613/hero-a-poster.jpg",
-      alt: "Congregation in worship during a Sunday service",
+      poster:
+        "https://images.kharis.org/site-images/main/72df91d4341c5b55/events/sunday-pastor-open-bible.jpg",
+      alt: "Pastor David holding an open Bible during a Sunday service",
+      position: "50% 28%",
     },
     headline: "Sunday Service",
     subtext: "Worship, the Word and a church family to belong to. Everyone is welcome.",

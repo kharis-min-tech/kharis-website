@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useEffect, useRef, useState } from "react";
 
 /** Real Kharis photographs. The spotlight moves between them, the way the homepage wall does. */

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import type { MessageVideo } from "@/lib/youtube";
 
 type Props = {

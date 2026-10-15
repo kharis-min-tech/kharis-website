@@ -1,7 +1,7 @@
 /** Homepage hero: two rows of media cards drifting right (swiperjs.com style); each row's centre card is in colour. */
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HeroHeadline } from "./HeroHeadline";

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { MessageVideo } from "@/lib/youtube";
 

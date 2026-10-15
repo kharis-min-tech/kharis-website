@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import {
   ArrowRight,

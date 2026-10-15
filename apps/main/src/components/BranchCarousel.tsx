@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { BranchSlide } from "@/lib/branch-slides";
 
@@ -119,7 +119,7 @@ export function BranchCarousel({ slides }: Props) {
                   unoptimized={slide.image.startsWith("/images/")}
                   className="object-cover object-center"
                   sizes="(max-width: 768px) 86vw, 1000px"
-                  quality={90}
+                  quality={95}
                   priority={i === n}
                 />
                 <div className="apple-slide__scrim" />

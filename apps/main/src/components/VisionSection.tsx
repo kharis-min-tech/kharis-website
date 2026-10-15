@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { KHARIS_APP } from "@/lib/kharis-app";

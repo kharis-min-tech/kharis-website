@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 
 type Props = {
   /** `onDark` = white dove on dark/hero; `onLight` = dark dove on white */

@@ -1,6 +1,7 @@
 "use client";
 
-import Image, { getImageProps } from "next/image";
+import Image from "@/components/SiteImage";
+import { getImageProps } from "next/image";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -345,7 +346,16 @@ function EventCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [userPlay, setUserPlay] = useState<boolean | null>(null);
   const [inView, setInView] = useState(false);
-  const playing = userPlay ?? !reduce;
+  const [largeScreen, setLargeScreen] = useState(true);
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1000px)");
+    const update = () => setLargeScreen(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  // The available background clip is 720p. Keep the sharper photo on large displays.
+  const playing = userPlay ?? (!reduce && !largeScreen);
   const full = category.layout === "full";
 
   useEffect(() => {
@@ -368,17 +378,29 @@ function EventCard({
   return (
     <div ref={rootRef} className={`events-card events-card--${full ? "full" : "tile"}`}>
       {media.video ? (
-        <video
-          ref={videoRef}
-          className="events-card__media"
-          src={media.video}
-          poster={media.poster}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden
-        />
+        <>
+          <div className="events-card__media">
+            <Image
+              src={media.poster}
+              alt={media.alt}
+              fill
+              sizes="100vw"
+              className="object-cover"
+              style={media.position ? { objectPosition: media.position } : undefined}
+            />
+          </div>
+          <video
+            ref={videoRef}
+            className={`events-card__media events-card__video${playing ? " is-playing" : ""}`}
+            src={playing && inView ? media.video : undefined}
+            poster={media.poster}
+            muted
+            loop
+            playsInline
+            preload="none"
+            aria-hidden
+          />
+        </>
       ) : (
         <div className={`events-card__media${full && !reduce ? " events-card__media--zoom" : ""}`}>
           <Image
@@ -441,7 +463,7 @@ function EventSplitPanel({
             alt={photo.alt}
             fill
             quality={95}
-            sizes="50vw"
+            sizes="(max-width: 759px) 100vw, 50vw"
             className="object-cover events-split__photo"
             style={
               {

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { Icon } from "@/components/Icon";
 
 /**

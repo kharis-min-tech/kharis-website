@@ -17,3 +17,19 @@ it("accepts the branch carousel's quality for Cloudflare pictures", () => {
   );
   expect(props.src).toContain("q=90");
 });
+
+it("delivers full-width high-resolution candidates at the site's default photo quality", async () => {
+  const { default: SiteImage } = await import("../components/SiteImage");
+  const element = SiteImage({
+    src: "https://images.kharis.org/site-images/main/example.jpg",
+    alt: "Full-width event photo",
+    fill: true,
+    sizes: "100vw",
+  });
+  const { props } = getImgProps(element.props, {
+    defaultLoader,
+    imgConf: { ...imageConfigDefault, ...nextConfig.images },
+  });
+  expect(props.src).toContain("q=95");
+  expect(props.srcSet).toContain("3840w");
+});

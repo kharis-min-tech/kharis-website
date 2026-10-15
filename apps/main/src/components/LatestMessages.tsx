@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import { useState } from "react";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import type { MessageVideo } from "@/lib/youtube";
