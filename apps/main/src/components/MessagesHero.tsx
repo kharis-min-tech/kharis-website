@@ -13,18 +13,15 @@ const PREVIEW = {
 };
 
 /**
- * Even with controls=0, YouTube flashes its centre previous / pause / next overlay for about
- * 3s whenever playback starts or resumes. Keep the poster up until it has fully faded.
+ * YouTube flashes a centre pause overlay for ~3s after play starts. Keep the poster
+ * up until that clears. Interaction can reveal a little sooner once playback is real.
  */
-const PLAY_SETTLE_MS = 4500;
-/** Matches the crossfade in messages-hub.css; we only pause once the video is invisible. */
-const FADE_MS = 600;
-/** Playback per visit before the hero settles back on the poster wall. */
-const PREVIEW_PLAY_MS = 20000;
-/** Scrolling back to the hero waits this long before the video returns. */
-const RETURN_DELAY_MS = 2000;
-/** Autoplay is sometimes ignored (notably on phones), so keep asking while the video should run. */
-const PLAY_RETRY_MS = 3000;
+const PLAY_SETTLE_MS = 3200;
+const PLAY_SETTLE_INTERACT_MS = 1400;
+/** Matches the crossfade in messages-hub.css; pause only once the video is invisible. */
+const FADE_MS = 320;
+/** Autoplay is sometimes ignored (notably on phones), so keep asking while it should run. */
+const PLAY_RETRY_MS = 2500;
 const MIN_VISIBLE_RATIO = 0.35;
 
 const YT_ORIGIN = "https://www.youtube-nocookie.com";
@@ -85,22 +82,21 @@ export function MessagesHero({ wall, messages }: Props) {
   const pauseTimer = useRef<number | null>(null);
   const playingRef = useRef(false);
   const wantPlay = useRef(false);
-  const hasPlayed = useRef(false);
-  const playedMs = useRef(0);
+  const playStartedAt = useRef(0);
   const currentTime = useRef(PREVIEW.start);
 
   const [allowed, setAllowed] = useState(false);
   const [inView, setInView] = useState(true);
-  /** off: poster wall. warming: playing behind the poster. on: video shows once settled. */
-  const [phase, setPhase] = useState<"off" | "warming" | "on">("off");
+  /** Video is running under the poster until settled, then shows. */
+  const [warming, setWarming] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [settled, setSettled] = useState(false);
-  /** The player stopped on its own (pause, buffering, end): drop the video with no fade. */
+  /** The player stopped on its own: hide at once so YouTube's overlay never fades through. */
   const [cut, setCut] = useState(false);
   const [watchStart, setWatchStart] = useState<number | null>(null);
 
   const watching = watchStart !== null;
-  const showPreview = allowed && phase === "on" && settled && inView && !watching;
+  const showPreview = allowed && warming && settled && inView && !watching;
   const title =
     messages
       .find((m) => m.id === PREVIEW.id)
@@ -108,10 +104,14 @@ export function MessagesHero({ wall, messages }: Props) {
       ?.trim() || PREVIEW.title;
 
   const command = useCallback((func: string, args: unknown[] = []) => {
-    frameRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: "command", func, args }),
-      YT_ORIGIN,
-    );
+    const frame = frameRef.current;
+    // Skip until the iframe has actually navigated to YouTube (avoids origin mismatch noise).
+    if (!frame?.contentWindow || !frame.src.startsWith(YT_ORIGIN)) return;
+    try {
+      frame.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), YT_ORIGIN);
+    } catch {
+      /* iframe not ready */
+    }
   }, []);
 
   const resume = useCallback(() => {
@@ -128,11 +128,19 @@ export function MessagesHero({ wall, messages }: Props) {
     [command],
   );
 
+  const scheduleSettle = useCallback((ms: number) => {
+    if (settleTimer.current) window.clearTimeout(settleTimer.current);
+    settleTimer.current = window.setTimeout(() => {
+      setSettled(true);
+      setCut(false);
+    }, ms);
+  }, []);
+
   useEffect(() => {
-    // Reduced motion and data saver never load the player at all.
     setAllowed(previewAllowed());
     return () => {
       if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
+      if (settleTimer.current) window.clearTimeout(settleTimer.current);
     };
   }, []);
 
@@ -151,46 +159,23 @@ export function MessagesHero({ wall, messages }: Props) {
     if (!inView) setWatchStart(null);
   }, [inView]);
 
-  // Each visit to the hero plays the video once: straight away on load, after a short pause
-  // when scrolling back. The player starts behind the poster so YouTube's overlay clears meanwhile.
+  // Poster first. While the hero is in view, keep the muted video playing (no 20s cut-off).
+  // Scroll away → poster + pause. Scroll back → poster briefly, then video again.
   useEffect(() => {
     if (!allowed) return;
     if (!inView || watching) {
       wantPlay.current = false;
-      setPhase("off");
+      setWarming(false);
+      setSettled(false);
       pauseLater(FADE_MS + 50);
       return;
     }
     wantPlay.current = true;
-    playedMs.current = 0;
+    setWarming(true);
+    setSettled(false);
+    setCut(false);
     resume();
-    if (!hasPlayed.current) {
-      hasPlayed.current = true;
-      setPhase("on");
-      return;
-    }
-    setPhase("warming");
-    const id = window.setTimeout(() => setPhase("on"), RETURN_DELAY_MS);
-    return () => window.clearTimeout(id);
   }, [inView, allowed, watching, resume, pauseLater]);
-
-  // After PREVIEW_PLAY_MS of actual playback in this visit, fade back to the poster and pause.
-  useEffect(() => {
-    if (phase !== "on" || !playing) return;
-    const started = performance.now();
-    const id = window.setTimeout(
-      () => {
-        wantPlay.current = false;
-        setPhase("off");
-        pauseLater(FADE_MS + 50);
-      },
-      Math.max(0, PREVIEW_PLAY_MS - playedMs.current),
-    );
-    return () => {
-      window.clearTimeout(id);
-      playedMs.current += performance.now() - started;
-    };
-  }, [phase, playing, pauseLater]);
 
   useEffect(() => {
     if (!allowed) return;
@@ -200,7 +185,25 @@ export function MessagesHero({ wall, messages }: Props) {
     return () => window.clearInterval(id);
   }, [allowed, command]);
 
-  // Follow the hidden player's state through the YouTube iframe API messages.
+  // First pointer / touch / key: reveal the video sooner once it's actually playing.
+  useEffect(() => {
+    if (!allowed || !warming || settled || watching) return;
+    const early = () => {
+      if (!playingRef.current || !wantPlay.current) return;
+      const elapsed = playStartedAt.current ? performance.now() - playStartedAt.current : 0;
+      const wait = Math.max(0, PLAY_SETTLE_INTERACT_MS - elapsed);
+      scheduleSettle(wait);
+    };
+    window.addEventListener("pointerdown", early, { passive: true });
+    window.addEventListener("touchstart", early, { passive: true });
+    window.addEventListener("keydown", early);
+    return () => {
+      window.removeEventListener("pointerdown", early);
+      window.removeEventListener("touchstart", early);
+      window.removeEventListener("keydown", early);
+    };
+  }, [allowed, warming, settled, watching, scheduleSettle]);
+
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
       if (e.origin !== YT_ORIGIN || e.source !== frameRef.current?.contentWindow) return;
@@ -229,19 +232,16 @@ export function MessagesHero({ wall, messages }: Props) {
         setCut(true);
         return;
       }
-      // Some uploads switch captions on by default; cc_load_policy alone doesn't stop that.
+      playStartedAt.current = performance.now();
       command("unloadModule", ["captions"]);
-      settleTimer.current = window.setTimeout(() => {
-        setSettled(true);
-        setCut(false);
-      }, PLAY_SETTLE_MS);
+      scheduleSettle(PLAY_SETTLE_MS);
     };
     window.addEventListener("message", onMessage);
     return () => {
       window.removeEventListener("message", onMessage);
       if (settleTimer.current) window.clearTimeout(settleTimer.current);
     };
-  }, [command]);
+  }, [command, scheduleSettle]);
 
   const onFrameLoad = () => {
     const win = frameRef.current?.contentWindow;
@@ -263,7 +263,6 @@ export function MessagesHero({ wall, messages }: Props) {
   const wasWatching = useRef(false);
   useEffect(() => {
     if (!watching) {
-      // The close button unmounts with the player, so hand focus back to the Watch button.
       const lost = !document.activeElement || document.activeElement === document.body;
       if (wasWatching.current && lost) watchBtnRef.current?.focus({ preventScroll: true });
       wasWatching.current = false;
@@ -277,6 +276,8 @@ export function MessagesHero({ wall, messages }: Props) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [watching, closePlayer]);
+
+  void playing;
 
   return (
     <section
@@ -297,6 +298,7 @@ export function MessagesHero({ wall, messages }: Props) {
                 fill
                 className="msg-wall-poster__img"
                 sizes="20vw"
+                priority={i < 4}
               />
             </div>
           </div>

@@ -122,18 +122,26 @@ export function SiteHeader({ tone = "auto" }: Props) {
                   onMouseEnter={() => setAboutOpen(true)}
                   onMouseLeave={() => setAboutOpen(false)}
                 >
-                  <button
-                    type="button"
+                  <Link
+                    href={link.href || "/about"}
                     className={`${linkTone(aboutActive)} inline-flex items-center gap-1`}
                     aria-expanded={aboutOpen}
                     aria-haspopup="true"
-                    onClick={() => setAboutOpen((v) => !v)}
+                    onClick={() => setAboutOpen(false)}
                   >
                     {link.label}
-                    <span className="text-[10px] opacity-70" aria-hidden>
+                    <span
+                      className="text-[10px] opacity-70"
+                      aria-hidden
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setAboutOpen((v) => !v);
+                      }}
+                    >
                       ▾
                     </span>
-                  </button>
+                  </Link>
                   {aboutOpen && (
                     <div
                       className={`absolute left-1/2 top-full z-50 min-w-[13.5rem] -translate-x-1/2 pt-3`}

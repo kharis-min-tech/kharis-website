@@ -73,7 +73,7 @@ const HERO_SLIDES: HeroSlide[] = [
 
 /** Seconds for one card to drift past the centre, per row (lower = faster). */
 const ROW_SECONDS_PER_CARD = [6, 7.5] as const;
-const FALLBACK_REVEAL_MS = 1500;
+const FALLBACK_REVEAL_MS = 700;
 
 /** Videos only run on the top row; the lower row is photos only so a clip never shows as a still. */
 const TOP_ROW: HeroSlide[] = [];

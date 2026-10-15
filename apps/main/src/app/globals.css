@@ -2383,11 +2383,12 @@ html:has(.home-page):not(.hero-ready) {
 .hero-site-skeleton {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 40;
   overflow: hidden;
   background: #f8f6fa;
   color: transparent;
-  pointer-events: all;
+  /* Never block the real header / CTAs while the home hero is still preparing. */
+  pointer-events: none;
 }
 
 html.hero-ready .hero-site-skeleton,
