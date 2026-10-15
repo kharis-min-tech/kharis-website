@@ -163,7 +163,11 @@ export function RevealItem({
   const variants = makeVariants(variant, distance);
 
   return (
-    <motion.div className={className} variants={variants} transition={reduce ? { duration: 0 } : { duration: 0.9, ease }}>
+    <motion.div
+      className={className}
+      variants={variants}
+      transition={reduce ? { duration: 0 } : { duration: 0.9, ease }}
+    >
       {children}
     </motion.div>
   );

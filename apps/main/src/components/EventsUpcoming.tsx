@@ -69,7 +69,9 @@ function countryList(branches: ServiceBranch[]) {
     if (!c) continue;
     names.add(/^(uk|united kingdom|england|great britain|gb)$/i.test(c) ? "the UK" : c);
   }
-  const list = [...names].sort((a, b) => (a === "the UK" ? -1 : b === "the UK" ? 1 : a.localeCompare(b)));
+  const list = [...names].sort((a, b) =>
+    a === "the UK" ? -1 : b === "the UK" ? 1 : a.localeCompare(b),
+  );
   if (list.length < 2) return list[0] ?? "";
   return `${list.slice(0, -1).join(", ")} & ${list.at(-1)}`;
 }
@@ -170,7 +172,12 @@ function ServiceTile({ name, photo, position, date, visit, branch, missing }: Se
 
   if (visit?.mapsUrl) {
     return (
-      <a className="events-next__tile" href={visit.mapsUrl} target="_blank" rel="noopener noreferrer">
+      <a
+        className="events-next__tile"
+        href={visit.mapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {body}
         <span className="sr-only"> (opens Google Maps in a new tab)</span>
       </a>

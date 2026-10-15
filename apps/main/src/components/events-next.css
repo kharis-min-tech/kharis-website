@@ -205,7 +205,12 @@
 .events-next__find-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(99, 14, 212, 0.72) 0%, rgba(61, 10, 133, 0.74) 50%, rgba(20, 11, 34, 0.92) 100%);
+  background: linear-gradient(
+    160deg,
+    rgba(99, 14, 212, 0.72) 0%,
+    rgba(61, 10, 133, 0.74) 50%,
+    rgba(20, 11, 34, 0.92) 100%
+  );
 }
 
 .events-next__find-globe {

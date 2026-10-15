@@ -4,21 +4,15 @@ import Image, { getImageProps } from "next/image";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  ArrowUpRight,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-  X,
-} from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
 import type { EventCategory, EventMedia, EventPhoto, EventSplit } from "@/data/event-categories";
 import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { useStoredBranch } from "./BranchSelect";
 import "./event-categories.css";
 
-const FOCUSABLE = 'button:not([disabled]), [href], video[controls], select, [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE =
+  'button:not([disabled]), [href], video[controls], select, [tabindex]:not([tabindex="-1"])';
 const galleryEase = [0.2, 0.8, 0.2, 1] as const;
 const GALLERY_IMAGE = { fill: true, quality: 95, sizes: "100vw" } as const;
 /** Fill the stage edge to edge when the photo's shape is within ~10% of it. */
@@ -92,7 +86,12 @@ function StoryModal({
       exit={{ opacity: 0 }}
       transition={{ duration: reduce ? 0.15 : 0.28, ease: galleryEase }}
     >
-      <button type="button" className="events-gallery__close" aria-label="Close gallery" onClick={onClose}>
+      <button
+        type="button"
+        className="events-gallery__close"
+        aria-label="Close gallery"
+        onClick={onClose}
+      >
         <X aria-hidden className="h-5 w-5" />
       </button>
       <motion.div
@@ -176,7 +175,9 @@ function GalleryModal({
   }, [index, reduce]);
 
   const ratio = ratios[photo.src];
-  const cover = Boolean(ratio && stageRatio && Math.abs(Math.log(ratio / stageRatio)) < COVER_TOLERANCE);
+  const cover = Boolean(
+    ratio && stageRatio && Math.abs(Math.log(ratio / stageRatio)) < COVER_TOLERANCE,
+  );
   const offset = reduce ? 0 : 28;
   const slide = {
     enter: (d: number) => ({ x: `${d * offset}%`, opacity: 0 }),
@@ -494,7 +495,12 @@ function EventBlock({
       hidden={hidden}
     >
       {category.layout === "split" ? (
-        <EventSplitPanel category={category} split={category.split} titleId={titleId} onExplore={openGallery} />
+        <EventSplitPanel
+          category={category}
+          split={category.split}
+          titleId={titleId}
+          onExplore={openGallery}
+        />
       ) : (
         <EventCard
           category={category}
@@ -525,7 +531,8 @@ function toRows(categories: EventCategory[]) {
   const rows: EventCategory[][] = [];
   for (const category of categories) {
     const last = rows.at(-1);
-    if (category.layout === "half" && last?.length === 1 && last[0]!.layout === "half") last.push(category);
+    if (category.layout === "half" && last?.length === 1 && last[0]!.layout === "half")
+      last.push(category);
     else rows.push([category]);
   }
   return rows;

@@ -58,8 +58,9 @@ function watchSrc(start: number) {
 /** Reduced motion and data saver keep the poster; the Watch button still works. */
 function previewAllowed() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-  const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } })
-    .connection;
+  const conn = (
+    navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }
+  ).connection;
   if (conn?.saveData) return false;
   return !/(^|-)2g$/.test(conn?.effectiveType ?? "");
 }
@@ -90,7 +91,10 @@ export function MessagesHero({ wall, messages }: Props) {
   const watching = watchStart !== null;
   const showPreview = want && settled && inView && !watching;
   const title =
-    messages.find((m) => m.id === PREVIEW.id)?.title.split("|")[0]?.trim() || PREVIEW.title;
+    messages
+      .find((m) => m.id === PREVIEW.id)
+      ?.title.split("|")[0]
+      ?.trim() || PREVIEW.title;
 
   const command = useCallback((func: string, args: unknown[] = []) => {
     frameRef.current?.contentWindow?.postMessage(
@@ -181,7 +185,10 @@ export function MessagesHero({ wall, messages }: Props) {
   const onFrameLoad = () => {
     const win = frameRef.current?.contentWindow;
     if (!win) return;
-    win.postMessage(JSON.stringify({ event: "listening", id: "msg-hero", channel: "widget" }), YT_ORIGIN);
+    win.postMessage(
+      JSON.stringify({ event: "listening", id: "msg-hero", channel: "widget" }),
+      YT_ORIGIN,
+    );
     win.postMessage(
       JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }),
       YT_ORIGIN,
@@ -243,7 +250,13 @@ export function MessagesHero({ wall, messages }: Props) {
         {wall.map((msg, i) => (
           <div key={`${msg.id}-${i}`} className="msg-hub__wall-cell">
             <div className="msg-wall-poster">
-              <Image src={msg.thumbnail} alt="" fill className="msg-wall-poster__img" sizes="20vw" />
+              <Image
+                src={msg.thumbnail}
+                alt=""
+                fill
+                className="msg-wall-poster__img"
+                sizes="20vw"
+              />
             </div>
           </div>
         ))}

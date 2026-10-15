@@ -103,7 +103,10 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         src: "/images/hero/sunday-bible-raised.jpg",
         alt: "Church member smiling and holding up her Bible during the service",
       },
-      { src: "/images/events/sunday-pastor-open-bible.jpg", alt: "Pastor David holding up an open Bible on stage" },
+      {
+        src: "/images/events/sunday-pastor-open-bible.jpg",
+        alt: "Pastor David holding up an open Bible on stage",
+      },
       {
         src: "/images/events/sunday-pastor-bible-raised.jpg",
         alt: "Pastor David lifting a red Bible during the service",
@@ -113,9 +116,15 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       { src: "/images/hero/sunday-service-stage.jpg", alt: "Hands raised under blue stage lights" },
       { src: "/images/hero/easter-bibles-raised.jpg", alt: "Congregation holding their Bibles up" },
       { src: "/images/joyful-worship.jpg", alt: "Congregation worshipping with joy" },
-      { src: "/images/branch-slide-2.jpg", alt: "Pastor celebrating on stage with the congregation" },
+      {
+        src: "/images/branch-slide-2.jpg",
+        alt: "Pastor celebrating on stage with the congregation",
+      },
       { src: "/images/branch-slide-5.jpg", alt: "Sunday service in the main hall" },
-      { src: "/images/hero/worship-altar.jpg", alt: "Congregation gathered at the front in worship" },
+      {
+        src: "/images/hero/worship-altar.jpg",
+        alt: "Congregation gathered at the front in worship",
+      },
     ],
   },
   {
@@ -131,13 +140,19 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     headline: "Midweek Service",
     subtext: "The Word and prayer, right in the middle of your week.",
     gallery: [
-      { src: "/videos/hero-b-poster.jpg", alt: "Pastor preaching on stage in front of a blue screen" },
+      {
+        src: "/videos/hero-b-poster.jpg",
+        alt: "Pastor preaching on stage in front of a blue screen",
+      },
       { src: "/images/grace-filled-prayer.jpg", alt: "Church members praying together" },
       { src: "/images/testimony-stage-1.jpg", alt: "Members sharing on stage" },
       { src: "/images/testimony-stage-2.jpg", alt: "Pastor praying with members on stage" },
       { src: "/images/testimony-sharing.jpg", alt: "Member sharing a testimony" },
       { src: "/images/love-greeting.jpg", alt: "Two members greeting each other warmly" },
-      { src: "/images/hero/impartation-celebration.jpg", alt: "Pastor celebrating with the congregation" },
+      {
+        src: "/images/hero/impartation-celebration.jpg",
+        alt: "Pastor celebrating with the congregation",
+      },
       { src: "/images/hero/easter-pastor-david.jpg", alt: "Pastor teaching from the stage" },
       { src: "/images/branch-slide-3.jpg", alt: "Members taking notes during teaching" },
       { src: "/images/young-adults.jpg", alt: "Young adults seated together in a session" },
@@ -160,8 +175,14 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         src: "/images/events/family-fun-day-race.jpg",
         alt: "Members in 316 jerseys racing across the court on Family Fun Day",
       },
-      { src: "/images/hero/outreach-community.jpg", alt: "Church members gathered outdoors in a park" },
-      { src: "/images/branch-slide-2.jpg", alt: "Pastor celebrating on stage with the congregation" },
+      {
+        src: "/images/hero/outreach-community.jpg",
+        alt: "Church members gathered outdoors in a park",
+      },
+      {
+        src: "/images/branch-slide-2.jpg",
+        alt: "Pastor celebrating on stage with the congregation",
+      },
       { src: "/images/about-hero-bench-3200.jpg", alt: "Members on a bench outdoors" },
       { src: "/images/hero/impartation-celebration.jpg", alt: "Pastor celebrating with members" },
       { src: "/images/love-greeting.jpg", alt: "Members greeting each other" },
@@ -186,7 +207,11 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         alt: "Singers on stage leading a packed hall in praise",
       },
       { src: "/images/locations-worship-team.jpg", alt: "Worship team singing on stage" },
-      { src: "/images/get-involved-sax.jpg", alt: "Saxophonist playing during worship", position: "50% 30%" },
+      {
+        src: "/images/get-involved-sax.jpg",
+        alt: "Saxophonist playing during worship",
+        position: "50% 30%",
+      },
       { src: "/images/joyful-worship.jpg", alt: "Congregation worshipping with joy" },
       { src: "/images/hero/worship-altar.jpg", alt: "Worship at the front of the hall" },
       { src: "/images/hero/sunday-service-stage.jpg", alt: "Hands raised under stage lights" },
@@ -206,8 +231,14 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     headline: "Jesus Campaign",
     subtext: "Taking the good news of Jesus to the streets of our cities.",
     gallery: [
-      { src: "/images/hero/outreach-street.jpg", alt: "Outreach team in yellow shirts on a city street" },
-      { src: "/images/about-vision-team-2048.jpg", alt: "Outreach team posing together in yellow shirts" },
+      {
+        src: "/images/hero/outreach-street.jpg",
+        alt: "Outreach team in yellow shirts on a city street",
+      },
+      {
+        src: "/images/about-vision-team-2048.jpg",
+        alt: "Outreach team posing together in yellow shirts",
+      },
       { src: "/images/about-mission-outreach-3200.jpg", alt: "Talking with people on the street" },
       { src: "/images/vision-campaign.jpg", alt: "Crowd in yellow campaign shirts" },
       { src: "/images/about-hero-bench-3200.jpg", alt: "Team members outdoors" },
@@ -232,8 +263,15 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         alt: "Let the Bible Speak team in matching caps and T-shirts",
         position: "50% 25%",
       },
-      { src: "/images/biblical-open-bible.jpg", alt: "Pastor holding an open Bible up high", position: "50% 30%" },
-      { src: "/images/hero/easter-bibles-raised.jpg", alt: "Congregation holding their Bibles up high" },
+      {
+        src: "/images/biblical-open-bible.jpg",
+        alt: "Pastor holding an open Bible up high",
+        position: "50% 30%",
+      },
+      {
+        src: "/images/hero/easter-bibles-raised.jpg",
+        alt: "Congregation holding their Bibles up high",
+      },
       { src: "/images/hero/preaching-open-bible.jpg", alt: "Pastor preaching from an open Bible" },
       { src: "/images/hero/easter-pastor-david.jpg", alt: "Pastor teaching" },
       { src: "/images/hero/sunday-bible-raised.jpg", alt: "Member holding up her Bible" },
@@ -291,7 +329,10 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         alt: "Pastor Awo Antwi at the KM Singles Ball backdrop",
         position: "50% 20%",
       },
-      { src: "/images/events-hero-banquet.jpg", alt: "Banquet tables set with red roses and candles" },
+      {
+        src: "/images/events-hero-banquet.jpg",
+        alt: "Banquet tables set with red roses and candles",
+      },
     ],
   },
 ];
