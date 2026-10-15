@@ -3,6 +3,10 @@
 import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
+  Radio,
+  Gift,
+  House,
+  Plane,
   Cross,
   Flame,
   Globe,
@@ -19,6 +23,10 @@ import {
 
 const MAP: Record<string, LucideIcon> = {
   "book-open": BookOpen,
+  radio: Radio,
+  gift: Gift,
+  house: House,
+  plane: Plane,
   "heart-handshake": HeartHandshake,
   globe: Globe,
   users: Users,
