@@ -144,8 +144,8 @@ export function LocationsClient({ items, full }: Props) {
           <p className="locations-hero__lead">
             {items.length ? (
               <>
-                {items.length} branches across {listCountries(countries)}. Every one of them meets
-                this Sunday.
+                Find your Kharis family across {listCountries(countries)}. Every branch meets this
+                Sunday.
               </>
             ) : (
               "Our branch directory is temporarily unavailable. You can still explore the globe or contact us to find your Kharis family."
@@ -232,7 +232,7 @@ export function LocationsClient({ items, full }: Props) {
               aria-pressed={filter === f.id}
               onClick={() => setFilter(f.id)}
             >
-              {f.label} <span>{f.count}</span>
+              {f.label}
             </button>
           ))}
         </div>
@@ -254,9 +254,7 @@ export function LocationsClient({ items, full }: Props) {
         ) : (
           groups.map((group) => (
             <div key={group.title} className="locations-group">
-              <h3 className="locations-group__title">
-                {group.title} <span>{group.rows.length}</span>
-              </h3>
+              <h3 className="locations-group__title">{group.title}</h3>
               <ul className="locations-grid">
                 {group.rows.map(({ branch, miles }) => (
                   <BranchCard

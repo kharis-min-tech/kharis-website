@@ -310,7 +310,7 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
       <span className="events-next__copy">
         <span className="events-next__name">Find your church</span>
         <span className="events-next__find-copy">
-          Find a Kharis near you: {branches.length} branches
+          Find a Kharis near you
           {countries ? ` across ${countries}` : ""}.
         </span>
         <span className="events-next__go">

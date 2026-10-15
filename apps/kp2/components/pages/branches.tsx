@@ -29,8 +29,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
               Find a <span className="text-primary">Kharis Phase 2</span> branch near you
             </h1>
             <p className="mx-auto max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
-              {branches.length} {branches.length === 1 ? "branch" : "branches"} across the UK, each
-              with a family waiting to welcome you.
+              Find your Kharis family across the UK, with a warm welcome waiting for you.
             </p>
 
             <div className="mx-auto max-w-2xl space-y-4 pt-4">
@@ -112,7 +111,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
 
         <section className="mx-auto w-full max-w-[1536px] px-margin-mobile md:px-margin-desktop pb-20">
           <h2 className="mb-8 border-b-4 border-on-background pb-6 font-display-lg text-[28px] uppercase">
-            Our branches (<span data-branch-count>{branches.length}</span>)
+            Our branches
           </h2>
 
           <div

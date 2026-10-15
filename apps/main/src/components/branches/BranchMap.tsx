@@ -357,7 +357,7 @@ export function BranchMap({
           </h2>
           <span className="location-globe__detail">
             {branches.length
-              ? `${visible.length} ${visible.length === 1 ? "branch" : "branches"}. A place for you.`
+              ? "A place for you. A family to call home."
               : "Explore our global family. Branch details are temporarily unavailable."}
           </span>
         </div>

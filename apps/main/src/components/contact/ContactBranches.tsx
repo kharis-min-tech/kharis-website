@@ -219,7 +219,7 @@ export function ContactBranches({ branches, activeId, onSelect, onWrite }: Props
           <div>
             <p className="hello-eyebrow">Branches</p>
             <h2 id="hello-branches-title" className="hello-h2">
-              {branches.length} branches. <em>One family.</em>
+              Find your branch. <em>One family.</em>
             </h2>
             <p className="hello-branches__sub">
               Every Kharis branch keeps the same welcome. Pick yours for service times, directions
@@ -245,7 +245,7 @@ export function ContactBranches({ branches, activeId, onSelect, onWrite }: Props
                   aria-pressed={region === r.id}
                   onClick={() => setRegion(r.id)}
                 >
-                  {r.label} <span>{r.count}</span>
+                  {r.label}
                 </button>
               ))}
             </div>
