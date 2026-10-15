@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
     // browser gives up and the tile stays empty. WebP is near-instant.
     formats: ["image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 7,
-    qualities: [75, 95],
+    qualities: [75, 90, 95],
     remotePatterns: [
       { protocol: "https", hostname: "i.ytimg.com" },
       { protocol: "https", hostname: "img.youtube.com" },
