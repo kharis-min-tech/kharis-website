@@ -4,145 +4,343 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { MapPin, Search, Clock, CalendarDays, ChevronRight, Compass } from "lucide-react";
-import type { BranchItem } from "@/lib/branches";
-import type { BranchData } from "@/data/branchesData";
+import type { BranchData, BranchItem } from "@/lib/branches";
 import BranchMap from "@/components/branches/BranchMap";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { UnsureBranchCta } from "@/components/UnsureBranchCta";
+import { kp2BranchUrl } from "@/lib/kp2";
 
 interface Props {
   items: BranchItem[];
   full: BranchData[];
 }
 
-export function LocationsClient({ items: branches, full }: Props) {
+type Origin = { lat: number; lng: number };
+
+const KP2 = "KP2";
+
+/** KP2 branches have their own pages on the KP2 site. */
+const branchHref = (branch: BranchItem) =>
+  branch.family === KP2 ? kp2BranchUrl(branch.id) : `/locations/${branch.id}`;
+
+function milesBetween(a: Origin, b: Origin) {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 3958.8 * 2 * Math.asin(Math.sqrt(h));
+}
+
+/** "the United Kingdom, Ghana and Sierra Leone" */
+function listCountries(countries: string[]) {
+  const names = countries.map((c) => (c === "United Kingdom" ? "the United Kingdom" : c));
+  return names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : names[0];
+}
+
+export function LocationsClient({ items, full }: Props) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [origin, setOrigin] = useState<Origin | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [geoNote, setGeoNote] = useState("");
 
-  const filtered = useMemo(() => {
+  const countries = useMemo(() => {
+    const seen = items.filter((b) => b.family !== KP2).map((b) => b.country);
+    return [...new Set(seen)].sort((a, b) =>
+      a === "United Kingdom" ? -1 : b === "United Kingdom" ? 1 : a.localeCompare(b),
+    );
+  }, [items]);
+
+  const filters = useMemo(
+    () =>
+      [
+        { id: "all", label: "All", count: items.length },
+        ...countries.map((c) => ({
+          id: c,
+          label: c,
+          count: items.filter((b) => b.family !== KP2 && b.country === c).length,
+        })),
+        { id: KP2, label: "KP2 young adults", count: items.filter((b) => b.family === KP2).length },
+      ].filter((f) => f.count > 0),
+    [items, countries],
+  );
+
+  const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return branches.filter((b) => {
-      return (
-        !q || [b.name, b.city, b.postcode, b.address].some((v) => v?.toLowerCase().includes(q))
-      );
-    });
-  }, [branches, query]);
+    return items
+      .filter((b) =>
+        filter === "all"
+          ? true
+          : filter === KP2
+            ? b.family === KP2
+            : b.family !== KP2 && b.country === filter,
+      )
+      .filter(
+        (b) =>
+          !q ||
+          [b.name, b.place, b.city, b.postcode, b.address].some((v) =>
+            v?.toLowerCase().includes(q),
+          ),
+      )
+      .map((b) => ({
+        branch: b,
+        miles:
+          origin && b.latitude != null && b.longitude != null
+            ? milesBetween(origin, { lat: b.latitude, lng: b.longitude })
+            : null,
+      }));
+  }, [items, filter, query, origin]);
+
+  // Nearest first once we know where the visitor is; otherwise grouped by country, KP2 last.
+  const groups = useMemo(() => {
+    if (origin) {
+      const sorted = [...shown].sort((a, b) => (a.miles ?? Infinity) - (b.miles ?? Infinity));
+      return [{ title: "Nearest to you", rows: sorted }];
+    }
+    return [...countries, KP2]
+      .map((title) => ({
+        title: title === KP2 ? "KP2 · young adults" : title,
+        rows: shown.filter(({ branch }) =>
+          title === KP2 ? branch.family === KP2 : branch.family !== KP2 && branch.country === title,
+        ),
+      }))
+      .filter((g) => g.rows.length);
+  }, [shown, origin, countries]);
+
+  const locate = () => {
+    if (!navigator.geolocation) {
+      setGeoNote("Your browser can't share your location. Search by town or postcode instead.");
+      return;
+    }
+    setLocating(true);
+    setGeoNote("");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setFilter("all");
+        setLocating(false);
+        document.getElementById("branches")?.scrollIntoView({ behavior: "smooth" });
+      },
+      () => {
+        setGeoNote("We couldn't get your location. Search by town or postcode instead.");
+        setLocating(false);
+      },
+      { timeout: 10000 },
+    );
+  };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--page-bg)] pt-[4.5rem] font-sans text-[var(--page-fg)]">
-      <SiteHeader tone="light" />
+    <div className="locations-page">
+      <SiteHeader />
 
-      <section className="relative overflow-hidden px-5 pt-16 pb-14 md:px-8">
-        <div className="pointer-events-none absolute -top-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#630ed4]/20 blur-3xl" />
-        <div className="relative z-10 mx-auto max-w-[1536px] space-y-6 text-center">
-          <div className="inline-flex items-center gap-2 border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-1.5 text-xs font-bold text-[var(--purple)]">
-            <Compass className="h-4 w-4 text-[#d4920a]" />
-            <span>Live from the Kharis directory</span>
-          </div>
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-            Find a{" "}
-            <span className="bg-gradient-to-r from-[#e8a33d] via-[#d4920a] to-[var(--purple)] bg-clip-text text-transparent">
-              Kharis Church
-            </span>{" "}
-            near you
-          </h1>
-          <p className="mx-auto max-w-2xl text-base font-medium leading-relaxed text-[var(--muted)] sm:text-lg">
-            Branches across the UK and beyond, each with a family waiting to welcome you.
+      <section className="locations-hero">
+        <div className="locations-hero__intro">
+          <p className="locations-hero__eyebrow">Locations</p>
+          <h1 className="locations-hero__title">Find your Kharis family</h1>
+          <p className="locations-hero__lead">
+            {items.length} branches across {listCountries(countries)}. Every one of them meets this
+            Sunday.
           </p>
 
-          <div className="mx-auto max-w-2xl space-y-4 pt-4">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by city, postcode or branch name..."
-                className="w-full border border-[var(--border)] bg-[var(--input-bg)] py-4 pl-12 pr-4 text-sm font-bold shadow-xl outline-none focus:ring-2 focus:ring-[var(--purple)]"
-              />
-            </div>
-          </div>
+          <form
+            role="search"
+            className="locations-search"
+            onSubmit={(e) => {
+              e.preventDefault();
+              document.getElementById("branches")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            <label htmlFor="branch-search" className="sr-only">
+              Search branches by town, postcode or name
+            </label>
+            <input
+              id="branch-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Town, postcode or branch name"
+              autoComplete="postal-code"
+              className="locations-search__input"
+            />
+            <button type="button" className="btn-give" onClick={locate} disabled={locating}>
+              {locating ? "Finding you…" : origin ? "Nearest first" : "Near me"}
+            </button>
+          </form>
+          {geoNote ? (
+            <p className="locations-hero__note" role="status">
+              {geoNote}
+            </p>
+          ) : null}
         </div>
+
+        <BranchMap
+          bare
+          branches={full}
+          onSelectBranch={(id) => {
+            const branch = items.find((b) => b.id === id);
+            if (branch?.family === KP2) window.location.assign(kp2BranchUrl(id));
+            else router.push(`/locations/${id}`);
+          }}
+        />
       </section>
 
-      <BranchMap branches={full} onSelectBranch={(id) => router.push(`/locations/${id}`)} />
+      <figure className="locations-sunday">
+        <div className="locations-sunday__photos">
+          <img
+            src="/images/locations/london-sunday-laughter.jpg"
+            alt="Three women in the congregation laughing together during the service"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            src="/images/locations/london-sunday-prayer.jpg"
+            alt="A row of people standing side by side in prayer, hands open"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <figcaption>Sunday at Kharis London</figcaption>
+      </figure>
 
-      <section className="mx-auto w-full max-w-[1536px] px-5 pb-20 md:px-8">
-        <h2 className="mb-8 border-b border-[var(--border)] pb-6 text-2xl font-extrabold">
-          Our Branches
-        </h2>
+      <section id="branches" className="locations-list" aria-labelledby="branches-title">
+        <div className="locations-list__head">
+          <p className="eyebrow">Every branch</p>
+          <h2 id="branches-title" className="section-title mt-2">
+            Where we meet on Sunday
+          </h2>
+        </div>
 
-        {filtered.length === 0 ? (
-          <div className="border border-[var(--border)] bg-[var(--card-bg)] p-12 text-center">
-            <h3 className="text-xl font-bold">No branches matched your search</h3>
-            <p className="mt-2 text-sm font-medium text-[var(--muted)]">
-              Try another city or postcode.
+        <div className="locations-filters" role="group" aria-label="Show branches in">
+          {filters.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              className="locations-filter"
+              aria-pressed={filter === f.id}
+              onClick={() => setFilter(f.id)}
+            >
+              {f.label} <span>{f.count}</span>
+            </button>
+          ))}
+        </div>
+
+        {groups.length === 0 ? (
+          <div className="locations-empty">
+            <h3>No branch matches “{query.trim()}”</h3>
+            <p>
+              Try a nearby town or the first half of your postcode, or{" "}
+              <Link href="/contact">message us</Link> and we&apos;ll point you to the closest one.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((branch) => (
-              <div
-                key={branch.id}
-                className="group flex flex-col justify-between overflow-hidden border border-[var(--border)] bg-[var(--card-bg)] shadow-sm transition-all duration-300 hover:shadow-xl"
-              >
-                <div>
-                  <div className="relative h-52 overflow-hidden bg-black">
-                    {branch.heroImage ? (
-                      <img
-                        src={branch.heroImage}
-                        alt={branch.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : null}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <span className="absolute left-3 top-3 bg-[#630ed4] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
-                      {branch.region}
-                    </span>
-                    <div className="absolute bottom-3 left-3 right-3 text-white">
-                      <h3 className="text-2xl font-extrabold leading-snug text-white!">
-                        {branch.name}
-                      </h3>
-                      <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-white/90">
-                        <MapPin className="h-3.5 w-3.5 text-[#d4920a]" />
-                        {branch.address}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4 p-6">
-                    <p className="line-clamp-2 text-xs font-medium leading-relaxed text-[var(--muted)]">
-                      {branch.description}
-                    </p>
-                    <div className="divide-y divide-[var(--border)] overflow-hidden border border-[var(--border)] bg-[var(--surface-muted)]">
-                      <div className="flex items-center gap-2 px-3.5 py-3">
-                        <Clock className="h-4 w-4 shrink-0 text-[var(--purple)]" />
-                        <span className="text-xs font-bold">{branch.serviceSummary}</span>
-                      </div>
-                      {branch.midweekSummary && (
-                        <div className="flex items-center gap-2 px-3.5 py-3">
-                          <CalendarDays className="h-4 w-4 shrink-0 text-[#e8a33d]" />
-                          <span className="text-xs font-bold">{branch.midweekSummary}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t border-[var(--border)] p-6 pt-4">
-                  <Link href={`/locations/${branch.id}`} className="btn-secondary w-full !text-xs">
-                    <span>Explore {branch.city}</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+          groups.map((group) => (
+            <div key={group.title} className="locations-group">
+              <h3 className="locations-group__title">
+                {group.title} <span>{group.rows.length}</span>
+              </h3>
+              <ul className="locations-grid">
+                {group.rows.map(({ branch, miles }) => (
+                  <BranchCard
+                    key={branch.id}
+                    branch={branch}
+                    miles={miles}
+                    showCountry={Boolean(origin)}
+                  />
+                ))}
+              </ul>
+            </div>
+          ))
         )}
       </section>
 
+      <UnsureBranchCta showFindBranch={false} />
       <SiteFooter />
     </div>
+  );
+}
+
+function BranchCard({
+  branch,
+  miles,
+  showCountry,
+}: {
+  branch: BranchItem;
+  miles: number | null;
+  /** The country heading is gone when the list is sorted by distance. */
+  showCountry: boolean;
+}) {
+  const href = branchHref(branch);
+  const distance =
+    miles == null
+      ? ""
+      : miles < 10
+        ? `${miles.toFixed(1)} mi away`
+        : `${Math.round(miles).toLocaleString("en-GB")} mi away`;
+
+  return (
+    <li className="branch-card">
+      <Link href={href} className="branch-card__media" tabIndex={-1} aria-hidden>
+        {branch.photo ? (
+          <img src={branch.photo} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <span className="branch-card__fallback">
+            <img src="/images/kharis-logo.png" alt="" />
+            <span>{branch.place}</span>
+          </span>
+        )}
+      </Link>
+
+      <div className="branch-card__body">
+        <p className="branch-card__label">
+          {[branch.family === KP2 ? "KP2" : "Kharis", showCountry && branch.country, distance]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+        <h4 className="branch-card__name">
+          <Link href={href}>{branch.place}</Link>
+        </h4>
+        {branch.address ? (
+          <p className="branch-card__address">
+            {branch.address}
+            {branch.postcode ? `, ${branch.postcode}` : ""}
+          </p>
+        ) : null}
+
+        <p className="branch-card__sunday">
+          <span>Sunday</span>
+          {branch.sundayTimes.length ? branch.sundayTimes.join(" & ") : "Times coming soon"}
+        </p>
+        {branch.gatherings.length ? (
+          <ul className="branch-card__also">
+            {branch.gatherings.map((g) => (
+              <li key={`${g.day}-${g.time}`}>
+                {g.day} {g.time} · {g.label}
+                {g.place ? (/zoom/i.test(g.place) ? " on Zoom" : ` at ${g.place}`) : ""}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        <div className="branch-card__actions btn-pair">
+          <Link href={href} className="btn-primary">
+            Plan your visit
+          </Link>
+          {branch.directions ? (
+            <a
+              href={branch.directions}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary"
+            >
+              Directions
+            </a>
+          ) : null}
+        </div>
+      </div>
+    </li>
   );
 }

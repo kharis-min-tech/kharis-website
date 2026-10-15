@@ -12396,3 +12396,511 @@ html[data-theme="dark"] :is(#messages, #testimonies) .text-purple {
 html[data-theme="dark"] .listen-card__step {
   color: #5c358e;
 }
+
+/* —— Locations —— */
+.locations-page {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Same deep violet as the homepage hero, with the closing panel's dot grain */
+.locations-hero {
+  background-color: #150934;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+  padding: calc(4.5rem + 3rem) 1.25rem 3rem;
+  color: #fff;
+}
+
+.locations-hero__intro {
+  margin: 0 auto;
+  max-width: 46rem;
+  text-align: center;
+}
+
+.locations-hero__eyebrow {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+
+.locations-hero__title {
+  --c: #fff;
+  margin: 0.9rem 0 0;
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow:
+    0 0.01em 0 color-mix(in srgb, var(--c) 78%, #1b0a45),
+    0 0.02em 0 color-mix(in srgb, var(--c) 60%, #1b0a45),
+    0 0.03em 0 color-mix(in srgb, var(--c) 44%, #1b0a45),
+    0 0.16em 0.28em rgba(0, 0, 0, 0.45);
+}
+
+.locations-hero__lead {
+  margin: 1.1rem auto 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 600;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.locations-search {
+  display: flex;
+  gap: 0.75rem;
+  margin: 2rem auto 0;
+  max-width: 38rem;
+}
+
+.locations-search__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  color: #1c1c1f;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 2px 0 var(--lilac-edge);
+}
+
+.locations-search__input::placeholder {
+  color: #6e6e76;
+}
+
+.locations-search__input:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.locations-search .btn-give {
+  min-width: 8.5rem;
+}
+
+.locations-hero__note {
+  margin-top: 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--yellow);
+}
+
+.branch-map--bare {
+  margin: 2.5rem auto 0;
+  max-width: 80rem;
+}
+
+.branch-map__frame {
+  background: #0d0420;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+}
+
+.locations-sunday {
+  margin: 0;
+  background: #150934;
+  padding: 0 1.25rem 2.25rem;
+}
+
+.locations-sunday__photos {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 0.5rem;
+  margin: 0 auto;
+  max-width: 80rem;
+  height: clamp(15rem, 30vw, 26rem);
+}
+
+.locations-sunday__photos img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+}
+
+.locations-sunday__photos img:first-child {
+  object-position: 55% 30%;
+}
+
+.locations-sunday__photos img:last-child {
+  object-position: 50% 35%;
+}
+
+.locations-sunday figcaption {
+  margin: 0.85rem auto 0;
+  max-width: 80rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .locations-sunday__photos img {
+      animation: locations-sunday-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+
+    .locations-sunday__photos img:last-child {
+      animation-range: entry 15% entry 90%;
+    }
+  }
+}
+
+@keyframes locations-sunday-in {
+  from {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+}
+
+@media (max-width: 640px) {
+  .locations-sunday__photos {
+    grid-template-columns: 1fr;
+    grid-template-rows: 15rem 11rem;
+    height: auto;
+  }
+}
+
+.locations-list {
+  background: var(--bg-soft);
+  padding: 4rem 1.25rem 4.5rem;
+}
+
+.locations-list__head {
+  margin: 0 auto;
+  max-width: 42rem;
+  text-align: center;
+}
+
+.locations-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.75rem auto 2.75rem;
+}
+
+.locations-filter {
+  padding: 0.6rem 1rem;
+  border: 0;
+  background: var(--card-bg, #fff);
+  color: var(--fg);
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(99, 14, 212, 0.28);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.locations-filter span {
+  margin-left: 0.25rem;
+  opacity: 0.6;
+}
+
+.locations-filter:is(:hover, :focus-visible) {
+  box-shadow: inset 0 0 0 1px var(--purple);
+}
+
+.locations-filter[aria-pressed="true"] {
+  background: var(--purple);
+  color: #fff;
+  box-shadow: none;
+}
+
+.locations-group {
+  margin: 0 auto;
+  max-width: 80rem;
+}
+
+.locations-group + .locations-group {
+  margin-top: 3.25rem;
+}
+
+.locations-group__title {
+  margin-bottom: 1.25rem;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+.locations-group__title span {
+  margin-left: 0.35rem;
+  color: var(--muted);
+}
+
+.locations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.branch-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg, #fff);
+  text-align: center;
+  box-shadow:
+    0 2px 0 rgba(28, 10, 70, 0.08),
+    0 16px 32px rgba(28, 10, 70, 0.1);
+}
+
+.branch-card__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #150934;
+}
+
+.branch-card__media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Faces sit in the top third of most church photos; a centred crop cut them off. */
+  object-position: 50% 30%;
+  transition:
+    filter 0.5s ease,
+    transform 0.6s ease;
+}
+
+/* Like the hero wall: photos sit back in greyscale until you reach for one. Touch screens keep colour. */
+@media (hover: hover) {
+  .branch-card__media > img {
+    filter: grayscale(1) brightness(0.9);
+  }
+
+  .branch-card:is(:hover, :focus-within) .branch-card__media > img {
+    filter: none;
+    transform: scale(1.03);
+  }
+}
+
+.branch-card__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background-color: #22075c;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+}
+
+.branch-card__fallback img {
+  width: 3rem;
+  height: auto;
+  opacity: 0.9;
+}
+
+.branch-card__fallback span {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.branch-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 1.4rem 1.25rem 1.5rem;
+}
+
+.branch-card__label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+.branch-card__name {
+  margin: 0;
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.branch-card__name a {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.branch-card__name a:is(:hover, :focus-visible) {
+  color: var(--purple);
+}
+
+.branch-card__address {
+  max-width: 24rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.branch-card__sunday {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  background: var(--yellow);
+  color: #1c1c1f;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.branch-card__sunday span {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.branch-card__also {
+  margin: 0.15rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.branch-card__actions {
+  margin-top: auto;
+  padding-top: 1.1rem;
+}
+
+.locations-empty {
+  margin: 0 auto;
+  max-width: 34rem;
+  padding: 2.5rem 1.5rem;
+  background: var(--card-bg, #fff);
+  text-align: center;
+}
+
+.locations-empty h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.locations-empty p {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.locations-empty a {
+  color: var(--purple);
+  text-decoration: underline;
+}
+
+@media (max-width: 479px) {
+  .locations-search {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .branch-card__media > img {
+    transition: none;
+  }
+}
+
+/* Dark mode: shadows vanish on a dark page, so cards get a hairline instead; small purple text goes lighter */
+html[data-theme="dark"] .branch-card {
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+html[data-theme="dark"] :is(.branch-card__label, .locations-group__title) {
+  color: #a98be6;
+}
+
+html[data-theme="dark"] .locations-filter {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+html[data-theme="dark"] .locations-filter[aria-pressed="true"] {
+  background: #630ed4;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .locations-empty a {
+  color: #a98be6;
+}
+
+.branch-map__zoom {
+  position: absolute;
+  top: 0.75rem;
+  left: 1rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.branch-map__zoom button {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  background: rgba(17, 11, 26, 0.85);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+}
+
+.branch-map__zoom button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.branch-map__zoom button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.branch-map__zoom button:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.branch-map__zoom button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* The map is short on a phone; a row of buttons covers less of it than a column. */
+@media (max-width: 640px) {
+  .branch-map__zoom {
+    top: 0.5rem;
+    left: 0.75rem;
+    flex-direction: row;
+  }
+}
