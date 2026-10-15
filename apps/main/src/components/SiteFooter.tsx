@@ -8,7 +8,6 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Reveal } from "@/components/Reveal";
 import { KP2_URL } from "@/lib/kp2";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
-import "./site-footer.css";
 
 type Props = {
   tone?: "onLight" | "onDark";
