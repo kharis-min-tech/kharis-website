@@ -25,7 +25,7 @@ export function SmoothNavigation() {
 
   useEffect(() => {
     if (!finish.current) return;
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    if (!window.location.hash) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     finish.current();
     finish.current = null;
   }, [pathname]);
@@ -63,15 +63,18 @@ export function SmoothNavigation() {
       e.preventDefault();
       e.stopPropagation();
       const href = `${url.pathname}${url.search}${url.hash}`;
+      document.documentElement.dataset.navigating = "true";
       doc.startViewTransition(
         () =>
           new Promise<void>((resolve) => {
             const timer = window.setTimeout(() => {
               finish.current = null;
+              delete document.documentElement.dataset.navigating;
               resolve();
             }, MAX_WAIT_MS);
             finish.current = () => {
               window.clearTimeout(timer);
+              delete document.documentElement.dataset.navigating;
               resolve();
             };
             router.push(href);

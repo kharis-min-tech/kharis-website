@@ -97,6 +97,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
 
   return (
     <header
+      data-site-header
       data-smooth-nav
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-400 ${
         solid
