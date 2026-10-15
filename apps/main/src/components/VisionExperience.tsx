@@ -12,7 +12,7 @@ export function VisionExperience() {
       eyebrow="Where we are going"
       title="Our Vision"
       subtitle={vision.lead}
-      image="/images/vision-campaign.jpg"
+      image="https://images.kharis.org/site-images/main/91479ba234a71277/vision-campaign.jpg"
       imagePosition="object-center"
       next={{ href: "/about/leadership", label: "Our Leadership →" }}
     >

@@ -35,7 +35,7 @@ const KIDS_GROUPS = [
     title: "Transition",
     ages: "12–16 years",
     icon: Heart,
-    image: "/images/young-adults.jpg",
+    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
     color: "#eef6ff",
   },
 ] as const;
@@ -46,27 +46,27 @@ const DEPT_BANDS = [
   {
     title: "Worship & Music",
     body: "Instrumentalists, singers and sound teams who lead the house in praise as an act of service to God.",
-    image: "/images/worship.jpg",
+    image: "https://images.kharis.org/site-images/main/9b547f88f3b4d297/worship.jpg",
   },
   {
     title: "Welcome & Care",
     body: "Ushers, host team, hospitality and welfare: the Kharis welcome from the door to the seat, and care for those in need.",
-    image: "/images/community.jpg",
+    image: "https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg",
   },
   {
     title: "Kids & Youth",
     body: "Teaching ages 3–16 with creativity and joy, and walking with young people as they grow in Christ.",
-    image: "/images/young-adults.jpg",
+    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
   },
   {
     title: "Media & Production",
     body: "Camera, graphics, social and stage production that carry the Word beyond the room.",
-    image: "/images/pastor-stage.jpg",
+    image: "https://images.kharis.org/site-images/main/ffbe5aca25d25b8c/pastor-stage.jpg",
   },
   {
     title: "Prayer & Evangelism",
     body: "Intercession, follow-up and outreach, preaching Christ and establishing new people in the family.",
-    image: "/images/serve-with-us.jpg",
+    image: "https://images.kharis.org/site-images/main/8440a4a63e4ae020/serve-with-us.jpg",
   },
 ] as const;
 

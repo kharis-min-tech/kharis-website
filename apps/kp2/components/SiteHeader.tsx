@@ -46,7 +46,7 @@ const NAV_ITEMS: NavItem[] = [
 const linkBase =
   "relative font-body-md text-[13px] font-bold uppercase tracking-wide text-on-background transition-colors duration-200 after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full";
 
-const KP2_LOGO = "/kp2/assets/kp2-logo-new.png";
+const KP2_LOGO = "https://images.kharis.org/site-images/kp2/2d0d7fb8b146df33/kp2-logo-new.png";
 
 export function SiteHeader() {
   const pathname = usePathname();

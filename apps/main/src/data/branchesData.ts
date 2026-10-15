@@ -62,14 +62,14 @@ export interface BranchData {
 }
 
 export const DEFAULT_GALLERY_IMAGES = [
-  "/images/branch-slide-1.jpg",
-  "/images/branch-slide-2.jpg",
-  "/images/branch-slide-3.jpg",
-  "/images/branch-slide-4.jpg",
-  "/images/branch-slide-5.jpg",
-  "/images/worship.jpg",
-  "/images/community.jpg",
-  "/images/young-adults.jpg",
+  "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
+  "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
+  "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
+  "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
+  "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
+  "https://images.kharis.org/site-images/main/9b547f88f3b4d297/worship.jpg",
+  "https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg",
+  "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
 ];
 
 export const BRANCHES_DATA: Record<string, BranchData> = {
@@ -78,7 +78,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "London Branch",
     city: "London",
     region: "UK South",
-    heroImage: "/images/branch-slide-1.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     tagline: "Christians boldly holding their Bible.",
     description:
       "A thriving, multicultural congregation serving London. Experience uplifting worship, relevant biblical message, and deep kingdom connections.",
@@ -87,12 +87,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "EC1A 2FD",
     phone: "+44 (0) 20 7946 0199",
     email: "london@kharischurch.org",
-    mapImage: "/images/branch-slide-1.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     mapCoordinates: { lat: 51.5175, lng: -0.1062 },
     leadPastor: {
       name: "Pastor David Antwi",
       title: "Lead Pastors, London Branch",
-      image: "/images/branch-slide-2.jpg",
+      image: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
       quote:
         "London is a global crossroads. We exist to build a home of faith, hope, and love for every soul.",
     },
@@ -129,7 +129,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Birmingham Branch",
     city: "Birmingham",
     region: "UK Midlands",
-    heroImage: "/images/branch-slide-3.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
     tagline: "Heart for the Midlands & generational growth",
     description:
       "Welcome to Kharis Birmingham! A passionate, multi-generational family devoted to spiritual growth and service.",
@@ -138,12 +138,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "B5 6DY",
     phone: "+44 (0) 121 496 0341",
     email: "birmingham@kharischurch.org",
-    mapImage: "/images/branch-slide-2.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
     mapCoordinates: { lat: 52.4751, lng: -1.8882 },
     leadPastor: {
       name: "Pastor Samuel & Sarah Adeleke",
       title: "Lead Pastors, Birmingham Branch",
-      image: "/images/branch-slide-3.jpg",
+      image: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
       quote: "Equipping families to shine as beacons of hope in every neighborhood.",
     },
     serviceTimes: [
@@ -173,7 +173,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Brighton Branch",
     city: "Brighton",
     region: "UK South",
-    heroImage: "/images/branch-slide-4.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
     tagline: "Dynamic worship & warm community on the south coast",
     description:
       "Experience dynamic worship, life-changing teaching, and a welcoming community on the south coast.",
@@ -182,12 +182,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "BN1 1AA",
     phone: "+44 (0) 1273 555 123",
     email: "brighton@kharischurch.org",
-    mapImage: "/images/branch-slide-5.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
     mapCoordinates: { lat: 50.8225, lng: -0.1372 },
     leadPastor: {
       name: "Pastor David & Grace Miller",
       title: "Lead Pastors, Brighton Branch",
-      image: "/images/branch-slide-1.jpg",
+      image: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
       quote: "We cannot wait to welcome you home.",
     },
     serviceTimes: [
@@ -223,7 +223,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Bristol Branch",
     city: "Bristol",
     region: "UK South",
-    heroImage: "/images/branch-slide-2.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
     tagline: "Faith and community in the West Country",
     description:
       "A vibrant home for believers in Bristol seeking authentic fellowship and spiritual growth.",
@@ -232,12 +232,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "BS1 3QP",
     phone: "+44 (0) 117 900 1122",
     email: "bristol@kharischurch.org",
-    mapImage: "/images/branch-slide-3.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
     mapCoordinates: { lat: 51.4601, lng: -2.5891 },
     leadPastor: {
       name: "Pastor Nathan & Ruth Cole",
       title: "Lead Pastors, Bristol Branch",
-      image: "/images/branch-slide-4.jpg",
+      image: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
       quote: "Building a community anchored in grace and purpose.",
     },
     serviceTimes: [
@@ -267,7 +267,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Chatham Branch",
     city: "Chatham",
     region: "UK South",
-    heroImage: "/images/branch-slide-5.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
     tagline: "Spreading light across Medway",
     description:
       "Serving Chatham and the Medway towns with dynamic services and community programs.",
@@ -276,12 +276,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "ME4 4BZ",
     phone: "+44 (0) 1634 888 333",
     email: "chatham@kharischurch.org",
-    mapImage: "/images/branch-slide-1.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     mapCoordinates: { lat: 51.3855, lng: 0.5252 },
     leadPastor: {
       name: "Pastor Mark & Tina Johnson",
       title: "Lead Pastors, Chatham Branch",
-      image: "/images/branch-slide-2.jpg",
+      image: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
       quote: "A church family ready to welcome you with open arms.",
     },
     serviceTimes: [
@@ -311,7 +311,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Chelmsford Branch",
     city: "Chelmsford",
     region: "UK South",
-    heroImage: "/images/branch-slide-3.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
     tagline: "Growing in faith in Essex",
     description:
       "A welcoming community in Chelmsford focused on raising strong families and disciples.",
@@ -320,12 +320,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "CM1 1HX",
     phone: "+44 (0) 1245 333 444",
     email: "chelmsford@kharischurch.org",
-    mapImage: "/images/branch-slide-4.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
     mapCoordinates: { lat: 51.7356, lng: 0.4685 },
     leadPastor: {
       name: "Pastor Peter & Sarah Hughes",
       title: "Lead Pastors, Chelmsford Branch",
-      image: "/images/branch-slide-5.jpg",
+      image: "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
       quote: "Experiencing God’s grace together in Essex.",
     },
     serviceTimes: [
@@ -355,7 +355,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Coventry Branch",
     city: "Coventry",
     region: "UK Midlands",
-    heroImage: "/images/branch-slide-1.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     tagline: "Igniting faith in the West Midlands",
     description:
       "Serving students and families in Coventry with passionate worship and biblical teaching.",
@@ -364,12 +364,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "CV1 2LE",
     phone: "+44 (0) 2476 555 666",
     email: "coventry@kharischurch.org",
-    mapImage: "/images/branch-slide-2.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
     mapCoordinates: { lat: 52.4068, lng: -1.5197 },
     leadPastor: {
       name: "Pastor Daniel & Rachel Okafor",
       title: "Lead Pastors, Coventry Branch",
-      image: "/images/branch-slide-3.jpg",
+      image: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
       quote: "A place of purpose and power.",
     },
     serviceTimes: [
@@ -399,7 +399,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Croydon Branch",
     city: "Croydon",
     region: "UK South",
-    heroImage: "/images/branch-slide-4.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
     tagline: "Family-centered grace and youth empowerment",
     description:
       "A thriving community hub offering rich family ministry and youth empowerment programs.",
@@ -408,12 +408,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "CR0 2AG",
     phone: "+44 (0) 20 8688 4422",
     email: "croydon@kharischurch.org",
-    mapImage: "/images/branch-slide-5.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
     mapCoordinates: { lat: 51.3762, lng: -0.0982 },
     leadPastor: {
       name: "Pastor Joshua & Brenda Mensah",
       title: "Lead Pastors, Croydon Branch",
-      image: "/images/branch-slide-1.jpg",
+      image: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
       quote: "Serving our local schools, youth, and families every week.",
     },
     serviceTimes: [
@@ -444,7 +444,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Luton Branch",
     city: "Luton",
     region: "UK South",
-    heroImage: "/images/branch-slide-2.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
     tagline: "Dynamic fellowship in Bedfordshire",
     description:
       "A passionate community bringing the message of grace and transformation to Luton.",
@@ -453,12 +453,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "LU1 2AT",
     phone: "+44 (0) 1582 777 888",
     email: "luton@kharischurch.org",
-    mapImage: "/images/branch-slide-3.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
     mapCoordinates: { lat: 51.8787, lng: -0.415 },
     leadPastor: {
       name: "Pastor Ben & Joy Akpan",
       title: "Lead Pastors, Luton Branch",
-      image: "/images/branch-slide-4.jpg",
+      image: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
       quote: "Experiencing breakthrough and community together.",
     },
     serviceTimes: [
@@ -488,7 +488,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Northampton Branch",
     city: "Northampton",
     region: "UK Midlands",
-    heroImage: "/images/branch-slide-5.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
     tagline: "Anchored in Christ, active in community",
     description: "Serving Northampton with life-giving word and warm fellowship.",
     address: "Abington Street, Northampton",
@@ -496,12 +496,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "NN1 2BH",
     phone: "+44 (0) 1604 444 555",
     email: "northampton@kharischurch.org",
-    mapImage: "/images/branch-slide-1.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     mapCoordinates: { lat: 52.2405, lng: -0.89 },
     leadPastor: {
       name: "Pastor Chris & Linda Vance",
       title: "Lead Pastors, Northampton Branch",
-      image: "/images/branch-slide-2.jpg",
+      image: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
       quote: "A church where everyone is valued and empowered.",
     },
     serviceTimes: [
@@ -531,7 +531,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Nottingham Branch",
     city: "Nottingham",
     region: "UK Midlands",
-    heroImage: "/images/branch-slide-3.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
     tagline: "Passionate worship in the East Midlands",
     description: "A thriving spiritual home for students and families across Nottingham.",
     address: "Hockley, Nottingham",
@@ -539,12 +539,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "NG1 1FP",
     phone: "+44 (0) 115 999 0000",
     email: "nottingham@kharischurch.org",
-    mapImage: "/images/branch-slide-4.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
     mapCoordinates: { lat: 52.9548, lng: -1.1481 },
     leadPastor: {
       name: "Pastor George & Miriam Smith",
       title: "Lead Pastors, Nottingham Branch",
-      image: "/images/branch-slide-5.jpg",
+      image: "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
       quote: "Bringing light and love to Nottingham.",
     },
     serviceTimes: [
@@ -574,7 +574,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Orpington Branch",
     city: "Orpington",
     region: "UK South",
-    heroImage: "/images/branch-slide-1.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     tagline: "Grace in the heart of Orpington",
     description: "A welcoming fellowship centered on community, prayer, and spiritual growth.",
     address: "High Street, Orpington",
@@ -582,12 +582,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "BR6 0PG",
     phone: "+44 (0) 1689 222 333",
     email: "orpington@kharischurch.org",
-    mapImage: "/images/branch-slide-2.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
     mapCoordinates: { lat: 51.3734, lng: 0.0963 },
     leadPastor: {
       name: "Pastor Martin & Claire Evans",
       title: "Lead Pastors, Orpington Branch",
-      image: "/images/branch-slide-3.jpg",
+      image: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
       quote: "Growing together in faith and love.",
     },
     serviceTimes: [
@@ -617,7 +617,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Reading Branch",
     city: "Reading",
     region: "UK South",
-    heroImage: "/images/branch-slide-4.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
     tagline: "Dynamic worship in Berkshire",
     description:
       "Serving Reading and the Thames Valley with energetic worship and clear biblical teaching.",
@@ -626,12 +626,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "RG1 1DP",
     phone: "+44 (0) 118 555 7788",
     email: "reading@kharischurch.org",
-    mapImage: "/images/branch-slide-5.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
     mapCoordinates: { lat: 51.4556, lng: -0.9754 },
     leadPastor: {
       name: "Pastor Kelvin & Sandra Aboagye",
       title: "Lead Pastors, Reading Branch",
-      image: "/images/branch-slide-1.jpg",
+      image: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
       quote: "A vibrant family experience for everyone.",
     },
     serviceTimes: [
@@ -661,7 +661,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Accra Branch",
     city: "Accra",
     region: "International",
-    heroImage: "/images/branch-slide-2.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
     tagline: "Kharis International, West Africa hub",
     description:
       "A powerhouse of prayer, dynamic praise, and community transformation in the heart of Accra.",
@@ -670,12 +670,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "GA-000",
     phone: "+233 (0) 30 222 4455",
     email: "accra@kharischurch.org",
-    mapImage: "/images/branch-slide-3.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/3f1f49569aefd282/branch-slide-3.jpg",
     mapCoordinates: { lat: 5.556, lng: -0.1969 },
     leadPastor: {
       name: "Pastor Kofi & Akosua Mensah",
       title: "Lead Pastors, Accra Branch",
-      image: "/images/branch-slide-4.jpg",
+      image: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
       quote: "Igniting revival and raising kingdom ambassadors across West Africa.",
     },
     serviceTimes: [
@@ -711,7 +711,7 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     name: "Freetown Branch",
     city: "Freetown",
     region: "International",
-    heroImage: "/images/branch-slide-5.jpg",
+    heroImage: "https://images.kharis.org/site-images/main/4cdb8d19355fced2/branch-slide-5.jpg",
     tagline: "Kharis International, Sierra Leone",
     description: "Bringing hope, healing, and vibrant gospel community to Freetown.",
     address: "Siaka Stevens Street, Freetown",
@@ -719,12 +719,12 @@ export const BRANCHES_DATA: Record<string, BranchData> = {
     postcode: "FSU-001",
     phone: "+232 (0) 76 111 222",
     email: "freetown@kharischurch.org",
-    mapImage: "/images/branch-slide-1.jpg",
+    mapImage: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     mapCoordinates: { lat: 8.484, lng: -13.2344 },
     leadPastor: {
       name: "Pastor Fred & Laura Sesay",
       title: "Lead Pastors, Freetown Branch",
-      image: "/images/branch-slide-2.jpg",
+      image: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
       quote: "A beacon of God’s grace and unending love in Freetown.",
     },
     serviceTimes: [

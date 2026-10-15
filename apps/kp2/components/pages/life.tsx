@@ -38,7 +38,10 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
           <div
             className="w-full h-full bg-cover bg-center"
             data-alt="Young adults at Kharis Life"
-            style={{ backgroundImage: "url('/kp2/assets/young-adults.jpg')" }}
+            style={{
+              backgroundImage:
+                "url('https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg')",
+            }}
           ></div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>

@@ -90,7 +90,7 @@ export function SiteIntro() {
           </mask>
         </defs>
         <image
-          href="/images/kharis-logo.png"
+          href="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
           width="350"
           height="338"
           mask="url(#site-intro-dove-mask)"

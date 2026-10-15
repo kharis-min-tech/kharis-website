@@ -1,4 +1,4 @@
-import staticEvents from "@/data/events.json";
+import staticEvents from "../data/events.json";
 
 export type ChurchEvent = {
   id: string;
@@ -131,9 +131,26 @@ export function formatEventLong(date: string, time: string) {
 }
 
 export function googleCalendarUrl(event: ChurchEvent) {
-  const start = event.start_time?.replace(/-/g, "");
-  const text = encodeURIComponent(event.title);
-  const details = encodeURIComponent(event.description);
-  const location = encodeURIComponent(`${event.location}, ${event.address}`);
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start}/${start}&details=${details}&location=${location}`;
+  const match = formatEventCardTime(event.time).match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/);
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: event.title,
+    details: event.description,
+    location: `${event.location}, ${event.address}`,
+    ctz: event.timezone,
+  });
+  if (match) {
+    const hour = (Number(match[1]) % 12) + (match[3] === "PM" ? 12 : 0);
+    const start = new Date(`${event.date}T${String(hour).padStart(2, "0")}:${match[2]}:00Z`);
+    const stamp = (date: Date) => date.toISOString().replace(/[-:]/g, "").slice(0, 15);
+    params.set("dates", `${stamp(start)}/${stamp(new Date(start.getTime() + 60 * 60 * 1000))}`);
+  } else {
+    const end = new Date(`${event.date}T12:00:00Z`);
+    end.setUTCDate(end.getUTCDate() + 1);
+    params.set(
+      "dates",
+      `${event.date.replace(/-/g, "")}/${end.toISOString().slice(0, 10).replace(/-/g, "")}`,
+    );
+  }
+  return `https://calendar.google.com/calendar/render?${params}`;
 }

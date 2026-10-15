@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-const YOUNG_ADULTS = "/kp2/assets/young-adults.jpg";
+const YOUNG_ADULTS = "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg";
 
 function FellowshipsPage() {
   return (

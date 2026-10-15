@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState, type ReactNode } from "react";
-import Image from "next/image";
+import Image from "@/components/SiteImage";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -94,15 +94,24 @@ function KidsCard({ onOpen }: { onOpen: (slug: LifeSlug) => void }) {
       <div className="life-kids__blend" aria-hidden>
         <span
           className="life-kids__photo life-kids__photo--a"
-          style={{ backgroundImage: "url(/images/young-adults.jpg)" }}
+          style={{
+            backgroundImage:
+              "url(https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg)",
+          }}
         />
         <span
           className="life-kids__photo life-kids__photo--b"
-          style={{ backgroundImage: "url(/images/branch-slide-1.jpg)" }}
+          style={{
+            backgroundImage:
+              "url(https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg)",
+          }}
         />
         <span
           className="life-kids__photo life-kids__photo--c"
-          style={{ backgroundImage: "url(/images/testimony-1.jpg)" }}
+          style={{
+            backgroundImage:
+              "url(https://images.kharis.org/site-images/main/e72bc6cd2499f16c/testimony-1.jpg)",
+          }}
         />
       </div>
       <div className="life-kids__copy">
@@ -123,7 +132,10 @@ function JoinFamilyCard() {
     <article className="life-textcard life-textcard--cream life-joinfamily">
       <div
         className="life-joinfamily__media"
-        style={{ backgroundImage: "url(/images/community.jpg)" }}
+        style={{
+          backgroundImage:
+            "url(https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg)",
+        }}
         role="img"
         aria-label="Kharis family gathered together"
       />

@@ -71,7 +71,12 @@ export function ContactExperience({ locations }: Props) {
       <section className="hello-close unsure-band" aria-labelledby="hello-close-title">
         <div className="unsure-panel hello-close__panel">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/kharis-logo.png" alt="" aria-hidden className="unsure-panel__dove" />
+          <img
+            src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
+            alt=""
+            aria-hidden
+            className="unsure-panel__dove"
+          />
           <div className="unsure-panel__content">
             <p className="unsure-panel__eyebrow">Between Sundays</p>
             <h2 id="hello-close-title" className="unsure-panel__title">
