@@ -29,6 +29,38 @@
   .branch-page #contact .grid {
     min-width: 0;
   }
+  .msg-filter__chip,
+  .msg-filter__search input,
+  .msg-filter__year select,
+  .hello-field {
+    min-height: 44px;
+  }
+  .msg-filter__year {
+    padding-block: 0;
+  }
+  .site-footer__links a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .site-footer__links {
+    gap: 0;
+  }
+  .footer-social {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .site-footer__brand > a,
+  .branch-intro__breadcrumb a,
+  .branch-section-nav a,
+  .life-crumb,
+  .life-detail-nav a,
+  .give-more,
+  .gv-build__more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }
 @media (max-width: 359px) {
   .branch-intro__actions {

@@ -1,0 +1,108 @@
+/* Clip sideways reveals without making the About page a nested scroll container. */
+.about-page {
+  overflow-x: clip;
+}
+
+.about-page .faith-stack {
+  overflow: visible;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+.faith-stack__inner {
+  display: grid;
+  gap: 2.5rem;
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+.faith-stack__intro .eyebrow {
+  margin-bottom: 1rem;
+}
+
+.faith-stack__cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  isolation: isolate;
+}
+
+.faith-stack__slot {
+  position: relative;
+  top: 0;
+  margin-bottom: 1rem;
+}
+
+.faith-stack[data-stack="on"] .faith-stack__slot {
+  position: sticky;
+  top: var(--faith-card-top);
+  margin-bottom: clamp(1.5rem, 6svh, 4rem);
+}
+
+.faith-stack[data-stack="on"] .faith-stack__slot:last-child {
+  margin-bottom: 0;
+}
+
+.faith-stack__card {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(17rem, 36svh, 25rem);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  border: 1px solid var(--line);
+  background: var(--card-bg, var(--bg));
+  color: var(--fg);
+  box-shadow: 0 12px 36px rgba(15, 7, 25, 0.08);
+  transform-origin: center top;
+}
+
+.faith-stack__number {
+  margin: 0 0 1.5rem;
+  color: var(--purple);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.faith-stack__card h3 {
+  margin: 0;
+  color: var(--fg);
+  font-size: clamp(1.65rem, 3vw, 2.65rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.faith-stack__body {
+  margin: 1.5rem 0 0;
+  max-width: 52ch;
+  color: var(--fg-soft);
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.65;
+}
+
+.faith-stack__shade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+}
+
+html[data-theme="dark"] .faith-stack__number {
+  color: #b48fe5;
+}
+
+@media (min-width: 1000px) {
+  .faith-stack__inner {
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .faith-stack[data-stack="on"] .faith-stack__intro {
+    position: sticky;
+    top: 104px;
+  }
+}
+
+.faith-stack[data-stack="off"] .faith-stack__card {
+  min-height: 0;
+}

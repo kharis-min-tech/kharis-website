@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "@/components/SiteImage";
+import { AppPhonePreview } from "../../../../shared/AppPhonePreview";
 import type { MessageVideo } from "@/lib/youtube";
 
 type Props = {
@@ -115,15 +116,8 @@ export function MessagesDeviceCluster({ messages }: Props) {
         </div>
       </div>
 
-      {/* Phone — homepage listen asset */}
       <div className="msg-devices__phone">
-        <Image
-          src="https://images.kharis.org/site-images/main/0cae2b998ffa6335/app-steps/step-1-messages.png"
-          alt=""
-          width={360}
-          height={720}
-          className="msg-devices__phone-img"
-        />
+        <AppPhonePreview screen="messages" alt="" sizes="(max-width: 760px) 22vw, 152px" />
       </div>
     </div>
   );
