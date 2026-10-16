@@ -129,7 +129,7 @@
   gap: 0.55rem;
   min-width: 86px;
   min-height: 44px;
-  border-radius: 999px;
+  border-radius: 0;
   font-size: 0.72rem;
   font-weight: 600;
 }
@@ -161,7 +161,8 @@
   color: var(--menu-accent);
   transition: transform 220ms ease;
 }
-.mobile-nav__parent[aria-expanded="true"] {
+.mobile-nav__parent[aria-expanded="true"],
+.mobile-nav__parent[data-current] {
   color: var(--menu-accent);
 }
 .mobile-nav__parent[aria-expanded="true"] svg {

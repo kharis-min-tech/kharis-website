@@ -368,50 +368,8 @@ h6 {
   z-index: 1;
   width: min(100%, 220px);
   margin-top: auto;
+  margin-bottom: 1rem;
   pointer-events: none;
-}
-
-/* Phone assets already include device chrome — no extra black bezel. */
-.listen-phone__frame {
-  position: relative;
-  border-radius: 0;
-  overflow: visible;
-  background: transparent;
-  box-shadow: none;
-}
-
-.listen-phone__img {
-  display: block;
-  width: 100%;
-  height: auto;
-  transform: none;
-  filter: none;
-}
-
-/* Soft fade into card colour (Arc-style transparency) — light only, keep phone readable */
-.listen-phone__fade {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 14%;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in srgb, #ececef 55%, transparent) 55%,
-    #ececef 100%
-  );
-  pointer-events: none;
-  transition: background 0.25s ease;
-}
-
-.listen-card:hover .listen-phone__fade {
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in srgb, #f1ecff 45%, transparent) 42%,
-    #f1ecff 100%
-  );
 }
 
 @media (min-width: 768px) {
@@ -441,37 +399,6 @@ h6 {
 
 .listen-band--bare .listen-phone {
   width: min(100%, 248px);
-}
-
-.listen-band--bare .listen-phone__frame {
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  overflow: visible;
-}
-
-.listen-band--bare .listen-phone__img {
-  transform: none;
-  filter: drop-shadow(0 22px 40px rgba(20, 10, 30, 0.22));
-}
-
-.listen-band--bare .listen-phone__fade {
-  height: 28%;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in srgb, #f3f1f5 40%, transparent) 45%,
-    #f3f1f5 100%
-  );
-}
-
-.listen-band--bare .listen-card:hover .listen-phone__fade {
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in srgb, #f3f1f5 40%, transparent) 45%,
-    #f3f1f5 100%
-  );
 }
 
 @media (min-width: 768px) {
@@ -3947,12 +3874,6 @@ h6 {
   filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.55));
 }
 
-.msg-devices__phone-img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 @media (max-width: 760px) {
   .msg-devices {
     height: 17.5rem;
@@ -5290,13 +5211,6 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   background: var(--bg-soft);
 }
 
-.about-faith-band__inner {
-  position: relative;
-  z-index: 1;
-  max-width: 56rem;
-  margin-inline: auto;
-}
-
 .faith-svg {
   pointer-events: none;
   position: absolute;
@@ -5487,64 +5401,6 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   margin: 2.5rem 0 1.15rem;
   font-size: clamp(1.25rem, 2.8vw, 1.55rem);
   color: var(--fg) !important;
-}
-
-.about-faith {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.about-faith__item {
-  background: #fff;
-  border: 1px solid var(--line);
-}
-
-.about-faith__q {
-  width: 100%;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 1rem 1.15rem;
-  border: 0;
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-  color: var(--fg);
-}
-
-.about-faith__q:hover {
-  background: var(--bg-purple);
-}
-
-.about-faith__num {
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--purple);
-}
-
-.about-faith__title {
-  font-size: 1.05rem;
-  font-weight: 800;
-}
-
-.about-faith__icon {
-  font-size: 1.5rem;
-  font-weight: 300;
-  color: var(--purple);
-}
-
-.about-faith__a {
-  margin: 0;
-  padding: 0 1.15rem 1.2rem 3.4rem;
-  font-size: 0.98rem;
-  font-weight: 600;
-  line-height: 1.6;
-  color: var(--fg-soft);
 }
 
 .about-bible {
@@ -11218,23 +11074,6 @@ html[data-theme="dark"] .about-faith-band {
   background: var(--bg-soft);
 }
 
-html[data-theme="dark"] .about-faith__item {
-  background: var(--card-bg);
-  border-color: var(--line);
-}
-
-html[data-theme="dark"] .about-faith__q {
-  color: var(--fg);
-}
-
-html[data-theme="dark"] .about-faith__title {
-  color: var(--fg);
-}
-
-html[data-theme="dark"] .about-faith__a {
-  color: var(--fg-soft);
-}
-
 html[data-theme="dark"] .about-chapter {
   background:
     radial-gradient(ellipse 70% 50% at 0% 20%, rgba(28, 18, 36, 0.95), transparent 55%),
@@ -12393,8 +12232,25 @@ html[data-theme="dark"] :is(#messages, #testimonies) .text-purple {
   color: #a98be6;
 }
 
+html[data-theme="dark"] .listen-card {
+  --listen-card-surface: #0b0711;
+  background: var(--listen-card-surface);
+}
+
+html[data-theme="dark"] .listen-card:hover {
+  --listen-card-surface: #100a19;
+}
+
 html[data-theme="dark"] .listen-card__step {
-  color: #5c358e;
+  color: #c8a7ed;
+}
+
+html[data-theme="dark"] .listen-card__title {
+  color: #f4effa;
+}
+
+html[data-theme="dark"] .listen-card__detail {
+  color: #b9acc9;
 }
 
 /* —— Locations —— */
