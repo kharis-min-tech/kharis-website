@@ -322,7 +322,10 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
         <div className="events-next__head">
           <div>
             <p className="events-next__eyebrow">Coming up</p>
-            <RevealHeading id="events-next-title" text="Stay connected to what God is doing in His house." />
+            <RevealHeading
+              id="events-next-title"
+              text="Stay connected to what God is doing in His house."
+            />
           </div>
           {branch ? (
             <BranchSelect
