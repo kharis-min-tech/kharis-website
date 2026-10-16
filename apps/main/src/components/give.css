@@ -361,12 +361,12 @@
 
 .gv-panel__viewport {
   overflow: hidden;
-  overflow: clip;
-  overflow-clip-margin: 6px;
+  margin: -6px;
 }
 
 .gv-panel__content {
   display: flow-root;
+  padding: 6px;
 }
 
 .gv .gv-panel h3 {

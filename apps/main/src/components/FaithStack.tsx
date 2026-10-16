@@ -66,29 +66,32 @@ function FaithCard({
 
 export function FaithStack({ statements }: { statements: readonly Statement[] }) {
   const listRef = useRef<HTMLOListElement>(null);
+  const viewportRef = useRef<HTMLSpanElement>(null);
   const refs = useMemo(() => statements.map(() => createRef<HTMLLIElement>()), [statements]);
-  const [fitsViewport, setFitsViewport] = useState(false);
+  const [fitsViewport, setFitsViewport] = useState<boolean | null>(null);
   const reduceMotion = usePrefersReducedMotion();
-  const animate = fitsViewport && !reduceMotion;
+  const animate = fitsViewport === true && !reduceMotion;
 
   useLayoutEffect(() => {
     const list = listRef.current;
-    if (!list) return;
+    const viewport = viewportRef.current;
+    if (!list || !viewport) return;
     const cards = [...list.querySelectorAll<HTMLElement>(".faith-stack__card")];
     const measure = () => {
       const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      const minimum = Math.min(25 * rem, Math.max(17 * rem, innerHeight * 0.36));
+      const height = viewport.offsetHeight;
+      const minimum = Math.min(25 * rem, Math.max(17 * rem, height * 0.36));
       setFitsViewport(
         cards.every(
           (card, index) =>
-            Math.max(card.offsetHeight, minimum) + STACK_TOP + index * STACK_STEP + 24 <=
-            innerHeight,
+            Math.max(card.offsetHeight, minimum) + STACK_TOP + index * STACK_STEP + 24 <= height,
         ),
       );
     };
     measure();
     const observer = new ResizeObserver(measure);
     cards.forEach((card) => observer.observe(card));
+    observer.observe(viewport);
     window.addEventListener("resize", measure);
     return () => {
       observer.disconnect();
@@ -101,8 +104,11 @@ export function FaithStack({ statements }: { statements: readonly Statement[] })
       id="faith"
       className="about-faith-band faith-stack"
       aria-labelledby="faith-title"
-      data-stack={animate ? "on" : "off"}
+      data-stack={
+        reduceMotion || fitsViewport === false ? "off" : fitsViewport === null ? "pending" : "on"
+      }
     >
+      <span ref={viewportRef} className="faith-stack__viewport" aria-hidden="true" />
       <div className="faith-stack__inner">
         <header className="faith-stack__intro">
           <p className="eyebrow">Believe</p>

@@ -39,11 +39,11 @@ export function MobileNavigation({
   dark: boolean;
 }) {
   const [mounted, setMounted] = useState(false);
-  const [aboutOpen, setAboutOpen] = useState(false);
   const aboutActive =
     pathname === "/about" || pathname.startsWith("/about/") || pathname.startsWith("/governance");
+  const [aboutOpen, setAboutOpen] = useState(aboutActive);
   useEffect(() => {
-    setAboutOpen(open && aboutActive);
+    if (!open) setAboutOpen(aboutActive);
   }, [open, aboutActive]);
   const ref = useDialog(open, onClose);
   const reduce = usePrefersReducedMotion();

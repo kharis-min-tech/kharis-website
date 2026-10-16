@@ -289,6 +289,7 @@ function GhanaPanel() {
 
 export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
   const [way, setWay] = useState<Way>("online");
+  const [hasSwitched, setHasSwitched] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const deskRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -306,6 +307,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
   }, [way]);
 
   const showWay = (next: Way, focus = false) => {
+    if (next !== way) setHasSwitched(true);
     setWay(next);
     if (focus) tabRefs.current[WAYS.findIndex((w) => w.id === next)]?.focus();
   };
@@ -327,7 +329,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
   };
 
   const showGhana = () => {
-    showWay("ghana");
+    showWay("ghana", true);
     deskRef.current?.scrollIntoView({ block: "start" });
   };
 
@@ -441,7 +443,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
                 key={way}
                 ref={contentRef}
                 className="gv-panel__content"
-                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                initial={hasSwitched && !reduceMotion ? { opacity: 0, y: 12 } : false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
               >

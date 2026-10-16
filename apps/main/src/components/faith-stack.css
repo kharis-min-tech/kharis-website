@@ -30,17 +30,29 @@
 .faith-stack__slot {
   position: relative;
   top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: clamp(1.5rem, 6svh, 4rem);
 }
 
 .faith-stack[data-stack="on"] .faith-stack__slot {
   position: sticky;
   top: var(--faith-card-top);
-  margin-bottom: clamp(1.5rem, 6svh, 4rem);
 }
 
-.faith-stack[data-stack="on"] .faith-stack__slot:last-child {
+.faith-stack[data-stack="off"] .faith-stack__slot {
+  margin-bottom: 1rem;
+}
+
+.faith-stack .faith-stack__slot:last-child {
   margin-bottom: 0;
+}
+
+.faith-stack__viewport {
+  position: absolute;
+  width: 0;
+  height: 100vh;
+  height: 100svh;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .faith-stack__card {
