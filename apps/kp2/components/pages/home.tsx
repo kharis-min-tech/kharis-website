@@ -1,5 +1,6 @@
 "use client";
 
+import { AppPhonePreview } from "../../../../shared/AppPhonePreview";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -589,7 +590,7 @@ function Index({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
+              <div className="flex flex-col bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
                 <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
                   Step 1
                 </span>
@@ -599,18 +600,12 @@ function Index({
                 <p className="font-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
                   See latest audio, video and playlists.
                 </p>
-                <div className="relative mx-auto max-w-[260px]">
-                  <img
-                    alt="Kharis app home screen"
-                    className="w-full h-auto rounded-2xl"
-                    src="https://images.kharis.org/site-images/kp2/0cae2b998ffa6335/app-steps-step-1-messages.png"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                <div className="relative mx-auto mt-auto w-full max-w-[260px]">
+                  <AppPhonePreview screen="home" sizes="(max-width: 767px) 260px, 240px" />
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
+              <div className="flex flex-col bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
                 <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
                   Step 2
                 </span>
@@ -620,18 +615,12 @@ function Index({
                 <p className="font-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
                   Find the teaching you need in a tap.
                 </p>
-                <div className="relative mx-auto max-w-[260px]">
-                  <img
-                    alt="Kharis app search screen"
-                    className="w-full h-auto rounded-2xl"
-                    src="https://images.kharis.org/site-images/kp2/c9ae7d1c19dd35f4/app-steps-step-2-browse.png"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                <div className="relative mx-auto mt-auto w-full max-w-[260px]">
+                  <AppPhonePreview screen="messages" sizes="(max-width: 767px) 260px, 240px" />
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
+              <div className="flex flex-col bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
                 <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
                   Step 3
                 </span>
@@ -641,14 +630,8 @@ function Index({
                 <p className="font-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
                   Listen anywhere you are.
                 </p>
-                <div className="relative mx-auto max-w-[260px]">
-                  <img
-                    alt="Kharis app player screen"
-                    className="w-full h-auto rounded-2xl"
-                    src="https://images.kharis.org/site-images/kp2/0c5df54aeea92af4/app-steps-step-3-player.png"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                <div className="relative mx-auto mt-auto w-full max-w-[260px]">
+                  <AppPhonePreview screen="player" sizes="(max-width: 767px) 260px, 240px" />
                 </div>
               </div>
             </div>

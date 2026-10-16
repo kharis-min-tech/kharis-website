@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "@/components/SiteImage";
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import {
   ArrowRight,
   ArrowUp,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 import { BANK, BANK_ACCRA, MOMO, TEXT_GIVE, type GivingBranch } from "@/lib/giving";
 import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import "./give.css";
 
 const TEXT_AMOUNTS = [5, 10, 15, 20] as const;
@@ -287,10 +289,25 @@ function GhanaPanel() {
 
 export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
   const [way, setWay] = useState<Way>("online");
+  const [hasSwitched, setHasSwitched] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const deskRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [panelHeight, setPanelHeight] = useState<number | null>(null);
+  const reduceMotion = usePrefersReducedMotion();
+
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+    const measure = () => setPanelHeight(content.getBoundingClientRect().height);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, [way]);
 
   const showWay = (next: Way, focus = false) => {
+    if (next !== way) setHasSwitched(true);
     setWay(next);
     if (focus) tabRefs.current[WAYS.findIndex((w) => w.id === next)]?.focus();
   };
@@ -312,7 +329,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
   };
 
   const showGhana = () => {
-    showWay("ghana");
+    showWay("ghana", true);
     deskRef.current?.scrollIntoView({ block: "start" });
   };
 
@@ -416,10 +433,26 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
             className="gv-panel"
             tabIndex={0}
           >
-            {way === "online" ? <OnlinePanel branches={branches} onGhana={showGhana} /> : null}
-            {way === "bank" ? <BankPanel /> : null}
-            {way === "text" ? <TextPanel /> : null}
-            {way === "ghana" ? <GhanaPanel /> : null}
+            <motion.div
+              className="gv-panel__viewport"
+              initial={false}
+              animate={{ height: panelHeight ?? "auto" }}
+              transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <motion.div
+                key={way}
+                ref={contentRef}
+                className="gv-panel__content"
+                initial={hasSwitched && !reduceMotion ? { opacity: 0, y: 12 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {way === "online" ? <OnlinePanel branches={branches} onGhana={showGhana} /> : null}
+                {way === "bank" ? <BankPanel /> : null}
+                {way === "text" ? <TextPanel /> : null}
+                {way === "ghana" ? <GhanaPanel /> : null}
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>

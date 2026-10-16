@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "@/components/SiteImage";
+import { AppPhonePreview } from "../../../../shared/AppPhonePreview";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { KHARIS_APP } from "@/lib/kharis-app";
@@ -9,25 +9,19 @@ const LISTEN_STEPS = [
   {
     title: "Open the app home",
     detail: "See latest audio, video and playlists.",
-    image:
-      "https://images.kharis.org/site-images/main/c9ae7d1c19dd35f4/app-steps/step-2-browse.png",
-    alt: "Kharis app home with latest audio, video and playlists",
+    screen: "home",
   },
   {
     title: "Search any message",
     detail: "Find the teaching you need in a tap.",
-    image:
-      "https://images.kharis.org/site-images/main/0cae2b998ffa6335/app-steps/step-1-messages.png",
-    alt: "Kharis app messages list with search",
+    screen: "messages",
   },
   {
     title: "Press play and go",
     detail: "Listen anywhere you are.",
-    image:
-      "https://images.kharis.org/site-images/main/0c5df54aeea92af4/app-steps/step-3-player.png",
-    alt: "Kharis app audio player",
+    screen: "player",
   },
-];
+] as const;
 
 export function VisionSection() {
   return (
@@ -68,18 +62,7 @@ export function VisionSection() {
               </div>
 
               <div className="listen-phone">
-                <div className="listen-phone__frame">
-                  <Image
-                    src={step.image}
-                    alt={step.alt}
-                    width={486}
-                    height={986}
-                    className="listen-phone__img"
-                    sizes="(max-width: 768px) 70vw, 240px"
-                    unoptimized
-                  />
-                  <div className="listen-phone__fade" aria-hidden />
-                </div>
+                <AppPhonePreview screen={step.screen} />
               </div>
             </article>
           ))}
