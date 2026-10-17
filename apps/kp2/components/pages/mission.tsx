@@ -4,6 +4,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useState } from "react";
+import { AnimatedHeight } from "@/components/AnimatedHeight";
+import { FaithAccordion } from "@/components/FaithAccordion";
 
 const MAIN_TABS = [
   {
@@ -72,7 +74,7 @@ function WhoWeAreBecoming() {
   const item = tab.items[subTab]!;
 
   return (
-    <section className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop relative overflow-hidden bg-background">
+    <section className="py-12 md:py-16 px-margin-mobile md:px-margin-desktop relative overflow-hidden bg-background">
       {/* backdrop */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96  bg-primary/10 blur-3xl"></div>
@@ -80,7 +82,7 @@ function WhoWeAreBecoming() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div className="text-center mb-14">
+        <div className="text-center mb-8">
           <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-on-background mb-6 uppercase tracking-widest">
             Passionate for God and His Word
           </span>
@@ -90,15 +92,16 @@ function WhoWeAreBecoming() {
         </div>
 
         {/* Main tabs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-7">
           {MAIN_TABS.map((t, i) => (
             <button
               key={t.id}
+              aria-pressed={mainTab === i}
               onClick={() => {
                 setMainTab(i);
                 setSubTab(0);
               }}
-              className={`no-accent-fill text-left p-6 rounded-none border-2 border-black brutalist-shadow transition-all duration-200 flex items-start gap-4 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+              className={`kp-mission-tab no-accent-fill text-left p-6 rounded-none border-2 border-black brutalist-shadow transition-all duration-200 flex items-start gap-4 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
                 mainTab === i
                   ? "bg-primary text-white"
                   : "bg-surface text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
@@ -129,76 +132,84 @@ function WhoWeAreBecoming() {
 
         {/* Content area */}
         <div className="bg-surface rounded-none border-2 border-black brutalist-shadow-lg overflow-hidden">
-          {/* Content header */}
-          <div className="bg-primary px-6 md:px-10 py-8 md:py-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40  bg-white/10 -mr-10 -mt-10"></div>
-            <span className="relative z-10 font-label-md text-white/80 uppercase tracking-[0.2em] block mb-3">
-              {tab.eyebrow || "How we fulfil it"}
-            </span>
-            <h3 className="relative z-10 font-display-xl text-3xl md:text-5xl text-white uppercase leading-tight max-w-3xl">
-              {tab.headline}
-            </h3>
-            <p className="relative z-10 font-body-lg text-body-lg text-white/90 mt-4 max-w-3xl">
-              {tab.body}
-            </p>
-          </div>
+          <AnimatedHeight>
+            {/* Content header */}
+            <div
+              key={tab.id}
+              className="kp-content-enter kp-mission-banner bg-primary px-6 md:px-10 py-8 md:py-10 relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-40 h-40  bg-white/10 -mr-10 -mt-10"></div>
+              <span className="relative z-10 font-label-md text-white/80 uppercase tracking-[0.2em] block mb-3">
+                {tab.eyebrow || "How we fulfil it"}
+              </span>
+              <h3 className="relative z-10 font-display-xl text-3xl md:text-5xl text-white uppercase leading-tight max-w-3xl">
+                {tab.headline}
+              </h3>
+              <p className="relative z-10 font-body-lg text-body-lg text-white/90 mt-4 max-w-3xl">
+                {tab.body}
+              </p>
+            </div>
 
-          {tab.id === "vision" ? (
-            <VisionContent />
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12">
-              {/* Left: vertical list */}
-              <div className="lg:col-span-5 border-b-2 lg:border-b-0 lg:border-r-2 border-on-background bg-background">
-                {tab.items.map((it, i) => (
-                  <button
-                    key={it.title}
-                    onClick={() => setSubTab(i)}
-                    className={`no-accent-fill w-full text-left flex items-center gap-4 px-6 md:px-8 py-5 border-b-2 border-on-background last:border-b-0 transition-colors duration-200 relative ${
-                      subTab === i
-                        ? "bg-primary-fixed-dim text-on-primary-fixed"
-                        : "bg-transparent text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
-                    }`}
-                  >
-                    <span
-                      className={`absolute left-0 top-0 bottom-0 w-1.5 ${subTab === i ? "bg-primary" : "bg-transparent"}`}
-                    ></span>
-                    <span
-                      className={`font-display-lg text-2xl md:text-3xl ${subTab === i ? "text-primary" : "text-on-surface-variant"}`}
+            {tab.id === "vision" ? (
+              <VisionContent />
+            ) : (
+              <div className="kp-content-enter grid grid-cols-1 lg:grid-cols-12">
+                {/* Left: vertical list */}
+                <div className="kp-mission-options lg:col-span-5 bg-background">
+                  {tab.items.map((it, i) => (
+                    <button
+                      key={it.title}
+                      aria-pressed={subTab === i}
+                      onClick={() => setSubTab(i)}
+                      className={`kp-mission-option no-accent-fill w-full text-left flex items-center gap-4 px-6 md:px-8 py-5 border-b-2 border-on-background last:border-b-0 transition-colors duration-200 relative ${
+                        subTab === i
+                          ? "bg-primary-fixed-dim text-on-primary-fixed"
+                          : "bg-transparent text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
+                      }`}
                     >
-                      {it.num}
-                    </span>
-                    <span className="w-10 h-10 shrink-0 border-2 border-current flex items-center justify-center">
-                      <span className="material-symbols-outlined" data-weight="fill">
-                        {it.icon}
+                      <span
+                        className={`font-display-lg text-2xl md:text-3xl ${subTab === i ? "text-primary" : "text-on-surface-variant"}`}
+                      >
+                        {it.num}
                       </span>
-                    </span>
-                    <span className="font-headline-md text-headline-md uppercase">{it.title}</span>
-                  </button>
-                ))}
-              </div>
+                      <span className="w-10 h-10 shrink-0 border-2 border-current flex items-center justify-center">
+                        <span className="material-symbols-outlined" data-weight="fill">
+                          {it.icon}
+                        </span>
+                      </span>
+                      <span className="font-headline-md text-headline-md uppercase">
+                        {it.title}
+                      </span>
+                    </button>
+                  ))}
+                </div>
 
-              {/* Right: detail card */}
-              <div className="lg:col-span-7 bg-surface p-6 md:p-10 lg:p-12">
-                <span className="font-label-md text-primary uppercase tracking-[0.2em] block mb-4">
-                  {tab.eyebrow || "How we fulfil it"}
-                </span>
-                <h4 className="font-display-xl text-4xl md:text-5xl text-on-background uppercase mb-5">
-                  {item.title}
-                </h4>
-                <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
-                  {item.desc}
-                </p>
-                <div className="rounded-none border-2 border-black bg-secondary-container p-6">
-                  <span className="font-label-md text-on-secondary-container uppercase tracking-[0.2em] block mb-3">
-                    {item.ref}
+                {/* Right: detail card */}
+                <div
+                  key={item.title}
+                  className="kp-content-enter kp-mission-detail lg:col-span-7 bg-surface p-6 md:p-8"
+                >
+                  <span className="font-label-md text-primary uppercase tracking-[0.2em] block mb-4">
+                    {tab.eyebrow || "How we fulfil it"}
                   </span>
-                  <p className="font-body-lg text-body-lg italic text-on-secondary-container leading-relaxed">
-                    &quot;{item.scripture}&quot;
+                  <h4 className="font-display-xl text-4xl md:text-5xl text-on-background uppercase mb-5">
+                    {item.title}
+                  </h4>
+                  <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
+                    {item.desc}
                   </p>
+                  <div className="rounded-none border-2 border-black bg-secondary-container p-6">
+                    <span className="font-label-md text-on-secondary-container uppercase tracking-[0.2em] block mb-3">
+                      {item.ref}
+                    </span>
+                    <p className="font-body-lg text-body-lg italic text-on-secondary-container leading-relaxed">
+                      &quot;{item.scripture}&quot;
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </AnimatedHeight>
         </div>
       </div>
     </section>
@@ -219,7 +230,7 @@ const VISION_STATEMENTS = [
 
 function VisionContent() {
   return (
-    <div className="bg-background p-6 md:p-10 lg:p-12">
+    <div className="kp-content-enter bg-background p-6 md:p-10 lg:p-12">
       <div className="flex flex-wrap gap-3 mb-10">
         {VISION_PILLARS.map((pillar) => (
           <span
@@ -288,59 +299,7 @@ const FAITH_STATEMENTS = [
 ];
 
 function StatementOfFaith() {
-  return (
-    <section className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-background">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <span className="font-label-md text-primary uppercase tracking-[0.3em] block mb-4">
-              Believe
-            </span>
-            <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-background uppercase leading-none">
-              Our Statement of Faith
-            </h2>
-          </div>
-          <button
-            type="button"
-            data-ui="expand-faith"
-            className="self-start sm:self-auto border-2 border-black bg-surface px-6 py-3 font-headline-md text-sm uppercase brutalist-shadow hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
-          >
-            <span data-expand-label>Expand All</span>
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          {FAITH_STATEMENTS.map((s, i) => (
-            <details
-              key={s.title}
-              className="faith-item bg-surface rounded-none border-2 border-black brutalist-shadow"
-            >
-              <summary className="faith-summary w-full flex items-center gap-4 text-left px-5 md:px-8 py-5 cursor-pointer list-none hover:bg-secondary-container transition-colors duration-200">
-                <span className="font-display-lg text-xl md:text-2xl text-primary shrink-0">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="flex-1 font-headline-md text-headline-md uppercase text-on-background dark:text-[#e8e0e9]">
-                  {s.title}
-                </span>
-                <span
-                  className="faith-toggle w-9 h-9 shrink-0 border-2 border-black flex items-center justify-center text-on-background dark:text-[#e8e0e9]"
-                  aria-hidden="true"
-                >
-                  <span className="faith-icon-plus material-symbols-outlined text-xl">add</span>
-                  <span className="faith-icon-minus material-symbols-outlined text-xl">remove</span>
-                </span>
-              </summary>
-              <div className="px-5 md:px-8 pb-6 pt-0 border-t-2 border-on-background/10">
-                <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed pt-5">
-                  {s.body}
-                </p>
-              </div>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return <FaithAccordion statements={FAITH_STATEMENTS} />;
 }
 
 const PASTORS_TOGETHER =
@@ -352,7 +311,7 @@ const PASTOR_AWO =
 
 function OurLeadership() {
   return (
-    <section className="relative py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-surface border-y-4 border-on-background overflow-hidden">
+    <section className="relative py-12 md:py-16 px-margin-mobile md:px-margin-desktop bg-surface border-y-4 border-on-background overflow-hidden">
       <div className="halftone-bg absolute inset-0 pointer-events-none opacity-10 text-on-background"></div>
       <div className="absolute -top-32 -left-24 w-[28rem] h-[28rem]  bg-primary/10 blur-3xl pointer-events-none"></div>
 
@@ -433,20 +392,20 @@ function OurLeadership() {
 
 function AboutPage() {
   return (
-    <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
+    <div className="kp-mission-page bg-background text-on-surface font-body-md overflow-x-hidden">
       <SiteHeader />
 
-      <section className="relative box-border flex h-svh max-h-svh w-full items-center justify-center overflow-hidden border-b-4 border-primary bg-on-background pt-24 pb-8 text-background">
+      <section className="kp-mission-hero relative box-border flex h-svh max-h-svh w-full items-center justify-center overflow-hidden border-b-4 border-primary bg-on-background pt-24 pb-8 text-background">
         <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
         <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
         <div className="relative z-20 text-center px-margin-mobile md:px-margin-desktop max-w-5xl">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
+          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest">
             Preach Christ Crucified.
           </span>
           <h1 className="font-display-lg text-headline-lg md:text-display-lg text-primary-fixed-dim uppercase leading-none mb-4">
             Who We Are
           </h1>
-          <p className="font-body-lg text-body-lg text-background bg-surface/60 backdrop-blur-sm border border-on-surface/25 max-w-2xl mx-auto mb-8 font-medium px-6 py-4">
+          <p className="font-body-lg text-body-lg text-white kp-mission-intro max-w-2xl mx-auto mb-8 font-medium px-6 py-4">
             Kharis (χάρις) is the Greek word for Grace. While ministering to the total person, we
             seek to deepen people&apos;s commitment to God and to spiritual values such as holiness,
             prayer, evangelism, Christ-centred living, Bible study and fellowship.
@@ -454,7 +413,7 @@ function AboutPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="#kharis-name"
-              className="bg-primary text-on-primary font-headline-md px-8 py-4 border-heavier neo-shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-2"
+              className="kp-depth-button kp-button-purple bg-primary text-on-primary font-headline-md px-8 py-4 border-heavier neo-shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-2"
             >
               OUR STORY <span className="material-symbols-outlined">arrow_forward</span>
             </a>
@@ -462,48 +421,45 @@ function AboutPage() {
         </div>
       </section>
 
-      <section
-        id="kharis-name"
-        className="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-background transition-colors duration-300"
-      >
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 mb-12">
-            <div className="bg-[#f3edf7] dark:bg-[#1f1c24] border-l-8 border-primary p-8 md:p-10 neo-shadow transition-colors duration-300">
-              <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">
-                Kharis
-              </span>
-              <h2 className="font-display-lg text-4xl md:text-5xl lg:text-6xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">
-                χάρις, ιτος, ή
-              </h2>
-              <p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">
-                Greek word for Grace
-              </p>
-            </div>
-            <div className="bg-[#f3edf7] dark:bg-[#1f1c24] border-l-8 border-primary p-8 md:p-10 neo-shadow transition-colors duration-300">
-              <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">
-                Ministries
-              </span>
-              <h2 className="font-display-lg text-4xl md:text-5xl lg:text-6xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">
-                λειτουργία, ας, ή
-              </h2>
-              <p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">
-                With various services providing units
-              </p>
+      <main>
+        <section
+          id="kharis-name"
+          className="py-12 md:py-16 px-margin-mobile md:px-margin-desktop bg-background transition-colors duration-300"
+        >
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
+              <div className="kp-name-card bg-[#f2eef7] dark:bg-[#1f1c24] p-6 md:p-8 transition-colors duration-300">
+                <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">
+                  Kharis
+                </span>
+                <h2 className="kp-greek-word font-body-md text-4xl md:text-5xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">
+                  χάρις, ιτος, ή
+                </h2>
+                <p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">
+                  Greek word for Grace
+                </p>
+              </div>
+              <div className="kp-name-card bg-[#f2eef7] dark:bg-[#1f1c24] p-6 md:p-8 transition-colors duration-300">
+                <span className="font-label-md text-label-md uppercase tracking-[0.2em] text-primary mb-4 block">
+                  Ministries
+                </span>
+                <h2 className="kp-greek-word font-body-md text-4xl md:text-5xl text-on-surface dark:text-[#e8e0e9] mb-3 transition-colors duration-300">
+                  λειτουργία, ας, ή
+                </h2>
+                <p className="font-body-lg text-on-surface dark:text-[#e8e0e9] font-medium transition-colors duration-300">
+                  Serving through many ministries
+                </p>
+              </div>
             </div>
           </div>
-          <p className="font-body-lg text-body-lg text-on-surface dark:text-[#e8e0e9] leading-relaxed max-w-4xl transition-colors duration-300">
-            While ministering to the total person, we seek to deepen people’s commitment to God and
-            to spiritual values such as holiness, prayer, evangelism, Christ-centred living, Bible
-            study and fellowship.
-          </p>
-        </div>
-      </section>
+        </section>
 
-      <WhoWeAreBecoming />
+        <WhoWeAreBecoming />
 
-      <OurLeadership />
+        <OurLeadership />
 
-      <StatementOfFaith />
+        <StatementOfFaith />
+      </main>
 
       <SiteFooter />
 

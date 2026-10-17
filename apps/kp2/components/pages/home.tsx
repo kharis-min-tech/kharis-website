@@ -1,5 +1,8 @@
 "use client";
 
+import { AppListenSteps } from "@/components/AppListenSteps";
+import { KHARIS_APP } from "@/lib/kharis-app";
+import { AmbientVideo } from "@/components/AmbientVideo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -36,63 +39,62 @@ function Index({
   }, []);
 
   useEffect(() => {
+    let scrollFrame = 0;
     const sync = () => {
       if (window.location.hash === "#share-testimony") setFormOpen(true);
+      if (window.location.hash === "#app-stores") {
+        // Client navigation can resolve the hash before this page's target mounts.
+        scrollFrame = requestAnimationFrame(() => {
+          document.getElementById("app-stores")?.scrollIntoView({
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+              ? "instant"
+              : "smooth",
+            block: "start",
+          });
+        });
+      }
     };
     sync();
     window.addEventListener("hashchange", sync);
-    return () => window.removeEventListener("hashchange", sync);
+    return () => {
+      cancelAnimationFrame(scrollFrame);
+      window.removeEventListener("hashchange", sync);
+    };
   }, []);
 
   return (
     <div className="bg-white text-gray-900 font-body-md overflow-x-hidden pt-[74px]">
       <SiteHeader />
 
-      <header className="relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
+      <header className="kp-on-dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
         <div className="absolute inset-0 grid grid-cols-2 md:flex md:flex-row w-full h-full z-0">
           <div className="relative col-span-2 md:flex-1 group overflow-hidden border-b-2 md:border-b-0 md:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
+            <AmbientVideo
+              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/Choir-video.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
           <div className="relative md:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#deb7ff]/10">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
+            <AmbientVideo
+              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/crowd.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
           <div className="relative md:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#f7be1d]/10">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
+            <AmbientVideo
+              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/choir2.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
           <div className="relative hidden md:block md:flex-1 group overflow-hidden halftone-bg text-[#eaddff]/10">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
+            <AmbientVideo
+              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/dancing.mp4"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
@@ -117,36 +119,33 @@ function Index({
           <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 pointer-events-auto w-full sm:w-auto max-w-sm sm:max-w-none">
             <Link
               href="/branches"
-              className="bg-[#d2bbff] !text-black font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 brutalist-shadow border-2 border-[#151218] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+              className="kp-depth-button kp-button-light bg-[#d2bbff] !text-black font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 brutalist-shadow border-2 border-[#151218] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
             >
               FIND A BRANCH
             </Link>
-            <a
+            <Link
               href="/mission"
-              className="bg-[#2c292f] text-[#e8e0e9] border-2 border-[#958da1] font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 hover:bg-[#37333a] transition-colors flex items-center justify-center"
+              className="kp-depth-button kp-button-purple bg-[#2c292f] text-[#e8e0e9] border-2 border-[#958da1] font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 hover:bg-[#37333a] transition-colors flex items-center justify-center"
             >
               LEARN MORE
-            </a>
+            </Link>
           </div>
         </div>
       </header>
       <main className="relative z-20 overflow-hidden bg-white">
         <div className="halftone-bg absolute inset-0 pointer-events-none text-gray-200 opacity-50"></div>
 
-        <section
-          className="min-h-[100svh] md:h-[100svh] flex items-center px-margin-mobile md:px-margin-desktop relative z-10 overflow-hidden"
-          style={{ paddingTop: "clamp(2rem, 5vh, 5rem)", paddingBottom: "clamp(2rem, 5vh, 5rem)" }}
-        >
+        <section className="kp-home-intro flex items-center px-margin-mobile md:px-margin-desktop relative z-10 overflow-hidden">
           <div
             className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 items-center"
             style={{ gap: "clamp(1.5rem, 4vw, 4rem)" }}
           >
-            <div className="relative order-2 md:order-1">
+            <div className="kp-intro-visual relative order-2 md:order-1">
               <div className="border-4 border-gray-900 brutalist-shadow overflow-hidden rotate-[-2deg] bg-gray-100">
                 <img
                   alt="Worship moment at Kharis"
-                  className="w-full object-cover mix-blend-luminosity hover:mix-blend-normal transition-all duration-500"
-                  style={{ height: "clamp(180px, 46vh, 620px)" }}
+                  className="kp-intro-photo w-full object-cover"
+                  style={{ height: "clamp(240px, 28vw, 420px)" }}
                   src="https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/pastor-stage.jpg"
                   loading="lazy"
                   decoding="async"
@@ -163,19 +162,19 @@ function Index({
               </div>
             </div>
             <div
-              className="order-1 md:order-2 flex flex-col"
+              className="kp-intro-copy order-1 md:order-2 flex flex-col"
               style={{ gap: "clamp(0.9rem, 2.2vh, 2rem)" }}
             >
               <h2
-                className="font-display-xl uppercase text-[#7c3aed] leading-[0.95]"
+                className="font-display-xl uppercase text-[#630ed4] leading-[0.95]"
                 style={{ fontSize: "clamp(2.25rem, 5.2vw, 5.5rem)" }}
               >
                 WE ARE <br />
                 KHARIS PHASE 2
               </h2>
               <div
-                className="bg-[#7c3aed]"
-                style={{ width: "clamp(6rem, 12vw, 12rem)", height: "clamp(0.5rem, 0.9vw, 1rem)" }}
+                className="bg-[#630ed4]"
+                style={{ width: "clamp(6rem, 12vw, 12rem)", height: "clamp(4px, 0.5vw, 8px)" }}
               ></div>
               <p
                 className="font-body-lg text-gray-600 leading-relaxed max-w-2xl"
@@ -186,10 +185,9 @@ function Index({
                 authority, and Christ is the centre of our lives.
               </p>
               <p
-                className="font-body-lg text-gray-600 italic border-l-4 md:border-l-8 border-[#7c3aed] max-w-2xl"
+                className="font-body-lg text-gray-600 italic max-w-2xl"
                 style={{
                   fontSize: "clamp(1rem, 1.45vw, 1.6rem)",
-                  paddingLeft: "clamp(1rem, 1.6vw, 1.75rem)",
                 }}
               >
                 &quot;Transforming the culture by reflecting Christ&quot;
@@ -199,15 +197,15 @@ function Index({
         </section>
 
         <section
-          className="py-24 bg-gray-50 relative overflow-hidden border-b-4 border-gray-900"
+          className="py-12 md:py-16 bg-gray-50 relative overflow-hidden border-b-4 border-gray-900"
           id="departments"
         >
           <div className="max-w-7xl mx-auto px-margin-desktop relative z-10">
-            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#7c3aed] mb-3">
+            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#630ed4] mb-3">
               Passionate for God and His Word
             </p>
             <h2 className="font-display-xl text-5xl md:text-7xl uppercase text-gray-900 leading-none">
-              GET TO KNOW <span className="text-[#7c3aed]">KHARIS</span>
+              GET TO KNOW <span className="text-[#630ed4]">KHARIS</span>
             </h2>
             <p className="font-body-lg text-body-lg text-gray-600 mt-4 mb-12">
               Everything you need, one tap away.
@@ -243,7 +241,7 @@ function Index({
               </Link>
 
               <Link
-                href="/life"
+                href="/branches"
                 className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
               >
                 <img
@@ -346,7 +344,7 @@ function Index({
         </section>
 
         <section
-          className="py-24 bg-[#7c3aed] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden"
+          className="py-24 bg-[#630ed4] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden"
           id="pastor"
         >
           <div className="halftone-bg absolute inset-0 text-white opacity-20"></div>
@@ -369,7 +367,7 @@ function Index({
                 </p>
                 <Link
                   href="/mission"
-                  className="inline-flex items-center gap-2 bg-[#f7be1d] text-gray-900 px-10 py-4 font-label-comic text-lg border-4 border-gray-900 brutalist-shadow uppercase hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+                  className="kp-depth-button kp-button-gold inline-flex items-center gap-2 bg-[#f7be1d] text-gray-900 px-10 py-4 font-label-comic text-lg border-4 border-gray-900 brutalist-shadow uppercase hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
                 >
                   HEAR ABOUT US
                 </Link>
@@ -390,11 +388,11 @@ function Index({
 
         <section
           id="testimonies"
-          className="py-16 sm:py-20 lg:py-24 bg-[#f0e6f8] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
+          className="py-16 sm:py-20 lg:py-24 bg-[#f2eef7] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
         >
-          <div className="halftone-bg text-[#7c3aed]/10 opacity-30 absolute inset-0 z-0"></div>
+          <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
+            <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
               Salvation · Healing · Miracles
             </span>
             <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-4 transition-colors duration-300">
@@ -418,7 +416,7 @@ function Index({
                 type="button"
                 id="share-testimony"
                 onClick={openForm}
-                className="bg-[#7c3aed] !text-white font-label-comic text-label-comic uppercase px-8 py-4 brutalist-border brutalist-shadow"
+                className="kp-depth-button kp-button-purple bg-[#630ed4] !text-white font-label-comic text-label-comic uppercase px-8 py-4 brutalist-border brutalist-shadow"
               >
                 Share Your Testimony
               </button>
@@ -430,9 +428,9 @@ function Index({
           className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
           id="media"
         >
-          <div className="halftone-bg text-[#7c3aed]/10 opacity-30 absolute inset-0 z-0"></div>
+          <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
+            <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
               Teachings
             </span>
             <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-10 sm:mb-12 lg:mb-16 transition-colors duration-300">
@@ -461,7 +459,7 @@ function Index({
                   </div>
 
                   <div className="lg:col-span-4 bg-[#f3f3fb] dark:bg-[#23202a] border-4 border-gray-900 brutalist-shadow p-6 sm:p-8 flex flex-col transition-colors duration-300">
-                    <h4 className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] mb-2 uppercase">
+                    <h4 className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] mb-2 uppercase">
                       Now Playing
                     </h4>
                     <h3 className="font-headline-lg text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-4 transition-colors duration-300">
@@ -473,14 +471,14 @@ function Index({
                     <div className="space-y-3 mb-6">
                       {featured.publishedAt ? (
                         <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                          <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">
+                          <span className="material-symbols-outlined text-[#630ed4] dark:text-[#d2bbff]">
                             calendar_today
                           </span>
                           <span>{formatMessageDate(featured.publishedAt)}</span>
                         </div>
                       ) : null}
                       <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                        <span className="material-symbols-outlined text-[#7c3aed] dark:text-[#d2bbff]">
+                        <span className="material-symbols-outlined text-[#630ed4] dark:text-[#d2bbff]">
                           person
                         </span>
                         <span>Pastor David Antwi</span>
@@ -490,7 +488,7 @@ function Index({
                       <ShareVideoButton
                         id={featured.id}
                         title={featured.title}
-                        className="flex-1 bg-[#7c3aed] text-white font-label-comic text-sm uppercase px-4 py-3 border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2"
+                        className="flex-1 bg-[#630ed4] text-white font-label-comic text-sm uppercase px-4 py-3 border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2"
                       />
                     </div>
                   </div>
@@ -535,7 +533,7 @@ function Index({
             <div className="flex flex-wrap gap-4 mt-10">
               <Link
                 href="/messages"
-                className="bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+                className="kp-depth-button kp-button-gold bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
               >
                 Watch More Messages
               </Link>
@@ -543,7 +541,7 @@ function Index({
                 href="https://youtube.com/@davidantwi"
                 target="_blank"
                 rel="noreferrer"
-                className="bg-[#1f1c24] text-[#e8e0e9] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+                className="kp-depth-button kp-button-purple bg-[#1f1c24] text-[#e8e0e9] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
               >
                 Watch on YouTube
               </a>
@@ -552,33 +550,33 @@ function Index({
         </section>
 
         <section
-          className="py-16 sm:py-20 lg:py-24 bg-[#f0e6f8] dark:bg-[#1a1625] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
+          className="py-16 sm:py-20 lg:py-24 bg-[#f2eef7] dark:bg-[#1a1625] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
           id="app"
         >
-          <div className="halftone-bg text-[#7c3aed]/10 opacity-30 absolute inset-0 z-0"></div>
+          <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-              <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
+              <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
                 Get The App
               </span>
               <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-6 transition-colors duration-300">
                 Church in your pocket.
               </h2>
               <p className="font-body-lg text-body-lg text-gray-600 dark:text-[#ccc3d8] transition-colors duration-300">
-                Download the Kharis app, then listen to any message in three simple steps — home,
+                Download the Kharis app, then listen to any message in three simple steps: home,
                 search, and play.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
                 <a
                   href="#app-stores"
-                  className="bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all inline-flex items-center gap-2"
+                  className="kp-depth-button kp-button-gold bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all inline-flex items-center gap-2"
                 >
                   Download the app
                   <span className="material-symbols-outlined text-lg">arrow_forward</span>
                 </a>
                 <Link
                   href="/messages"
-                  className="bg-white dark:bg-[#2c2833] text-[#7c3aed] dark:text-[#d2bbff] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+                  className="kp-depth-button kp-button-light bg-white dark:bg-[#2c2833] text-[#630ed4] dark:text-[#d2bbff] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
                 >
                   Watch messages
                 </Link>
@@ -588,80 +586,17 @@ function Index({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
-                <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
-                  Step 1
-                </span>
-                <h3 className="font-headline-lg text-2xl md:text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-2 transition-colors duration-300">
-                  Open the app home
-                </h3>
-                <p className="font-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
-                  See latest audio, video and playlists.
-                </p>
-                <div className="relative mx-auto max-w-[260px]">
-                  <img
-                    alt="Kharis app home screen"
-                    className="w-full h-auto rounded-2xl"
-                    src="https://images.kharis.org/site-images/kp2/0cae2b998ffa6335/app-steps-step-1-messages.png"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
-                <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
-                  Step 2
-                </span>
-                <h3 className="font-headline-lg text-2xl md:text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-2 transition-colors duration-300">
-                  Search any message
-                </h3>
-                <p className="font-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
-                  Find the teaching you need in a tap.
-                </p>
-                <div className="relative mx-auto max-w-[260px]">
-                  <img
-                    alt="Kharis app search screen"
-                    className="w-full h-auto rounded-2xl"
-                    src="https://images.kharis.org/site-images/kp2/c9ae7d1c19dd35f4/app-steps-step-2-browse.png"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow p-6 md:p-8 text-center transition-colors duration-300">
-                <span className="font-label-comic text-xs tracking-[0.2em] text-[#7c3aed] dark:text-[#d2bbff] uppercase mb-3 block">
-                  Step 3
-                </span>
-                <h3 className="font-headline-lg text-2xl md:text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-2 transition-colors duration-300">
-                  Press play and go
-                </h3>
-                <p className="font-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
-                  Listen anywhere you are.
-                </p>
-                <div className="relative mx-auto max-w-[260px]">
-                  <img
-                    alt="Kharis app player screen"
-                    className="w-full h-auto rounded-2xl"
-                    src="https://images.kharis.org/site-images/kp2/0c5df54aeea92af4/app-steps-step-3-player.png"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </div>
-            </div>
+            <AppListenSteps />
 
             <div
               id="app-stores"
-              className="scroll-mt-28 flex flex-wrap items-center justify-center gap-4 mt-12 md:mt-16"
+              className="kp-app-stores scroll-mt-28 flex flex-wrap items-center justify-center gap-4 mt-8 md:mt-10"
             >
               <a
-                href="https://apps.apple.com/"
+                href={KHARIS_APP.iosUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-3 bg-white dark:bg-[#1f1c24] text-gray-900 dark:text-[#e8e0e9] px-5 py-3 comic-border brutalist-shadow hover:-translate-y-1 transition-transform"
+                className="kp-depth-button inline-flex items-center gap-3 bg-white dark:bg-[#1f1c24] text-gray-900 dark:text-[#e8e0e9] px-5 py-3 comic-border brutalist-shadow hover:-translate-y-1 transition-transform"
               >
                 <div className="w-10 h-10 bg-gray-900 dark:bg-[#e8e0e9] rounded-lg flex items-center justify-center">
                   <svg
@@ -680,10 +615,10 @@ function Index({
                 </div>
               </a>
               <a
-                href="https://play.google.com/store"
+                href={KHARIS_APP.androidUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-3 bg-white dark:bg-[#1f1c24] text-gray-900 dark:text-[#e8e0e9] px-5 py-3 comic-border brutalist-shadow hover:-translate-y-1 transition-transform"
+                className="kp-depth-button inline-flex items-center gap-3 bg-white dark:bg-[#1f1c24] text-gray-900 dark:text-[#e8e0e9] px-5 py-3 comic-border brutalist-shadow hover:-translate-y-1 transition-transform"
               >
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#3ddc84]">
                   <svg className="w-7 h-7" viewBox="2 5 20 12.5" aria-hidden="true">
@@ -704,40 +639,34 @@ function Index({
           </div>
         </section>
 
-        <section className="py-16 sm:py-20 lg:py-24 bg-white relative overflow-hidden">
+        <section className="py-12 md:py-16 bg-white relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="relative overflow-hidden rounded-none border-4 border-gray-900 brutalist-shadow bg-gradient-to-br from-[#7c3aed] via-[#9333ea] to-[#be185d] px-6 py-14 sm:px-12 sm:py-20 lg:px-20 lg:py-24 text-center">
-              {/* Decorative circles */}
-              <div className="absolute top-[-60px] left-[-40px] w-40 h-40 rounded-full bg-white/10 blur-2xl"></div>
-              <div className="absolute bottom-[-80px] right-[-20px] w-56 h-56 rounded-full bg-[#f7be1d]/20 blur-3xl"></div>
-              <div className="absolute top-1/2 left-[10%] w-4 h-4 rounded-full bg-white/60"></div>
-              <div className="absolute bottom-[20%] right-[15%] w-3 h-3 rounded-full bg-[#f7be1d]"></div>
-              <div className="absolute top-[20%] right-[20%] w-24 h-24 rounded-full border-2 border-white/20"></div>
-              <div className="absolute bottom-[30%] left-[15%] w-20 h-20 rounded-full border-2 border-white/10"></div>
-
-              <span className="relative z-10 font-label-comic text-xs tracking-[0.2em] text-white/80 uppercase mb-4 block">
-                Still Deciding?
-              </span>
-              <h2 className="relative z-10 font-display-xl text-4xl sm:text-5xl lg:text-7xl text-white uppercase leading-none mb-6">
+            <div className="kp-branch-panel kp-brand-panel relative overflow-hidden text-center">
+              <div className="kp-branch-dove" aria-hidden="true" />
+              <p className="kp-branch-eyebrow">Still deciding?</p>
+              <h2 className="kp-branch-title font-display-xl">
                 Can&apos;t decide which
-                <br className="hidden sm:block" /> branch to come to?
+                <span>branch to come to?</span>
               </h2>
-              <p className="relative z-10 font-body-lg text-body-lg text-white/90 max-w-2xl mx-auto mb-10">
+              <p className="kp-branch-copy font-body-lg">
                 You don&apos;t have to figure it out alone. Reach out and we&apos;ll help you find a
                 Kharis family near you, or guide you to your first Sunday.
               </p>
-              <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="kp-branch-actions relative z-10 flex flex-col sm:flex-row items-stretch justify-center gap-5">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center bg-white text-[#7c3aed] px-8 py-4 rounded-none font-label-comic text-sm uppercase tracking-wide border-2 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all min-w-[180px]"
+                  className="kp-depth-button kp-button-light inline-flex items-center justify-center bg-white text-[#630ed4] px-8 py-4 rounded-none font-label-comic text-sm uppercase tracking-wide border-2 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all min-w-[180px]"
                 >
                   Contact Us
                 </Link>
                 <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center bg-transparent text-white px-8 py-4 rounded-none font-label-comic text-sm uppercase tracking-wide border-2 border-white hover:bg-white/10 transition-colors min-w-[180px]"
+                  href="/branches"
+                  className="kp-depth-button kp-button-gold gap-2 px-8 py-4 font-label-comic text-sm uppercase tracking-wide min-w-[180px]"
                 >
                   Find a Branch
+                  <span className="material-symbols-outlined text-lg" aria-hidden="true">
+                    arrow_forward
+                  </span>
                 </Link>
               </div>
             </div>

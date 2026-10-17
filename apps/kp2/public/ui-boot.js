@@ -1,4 +1,8 @@
 (function () {
+  function scrollBehavior() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  }
+
   function ytId(value) {
     return /^[A-Za-z0-9_-]{6,20}$/.test(value || "") ? value : "";
   }
@@ -39,7 +43,7 @@
     if (!vp) return;
     var card = vp.querySelector("[data-stories-card]");
     var width = card ? card.getBoundingClientRect().width : vp.clientWidth / 3;
-    vp.scrollBy({ left: dir * width, behavior: "smooth" });
+    vp.scrollBy({ left: dir * width, behavior: scrollBehavior() });
   }
 
   var branchOrigin = null;
@@ -126,7 +130,7 @@
     }
 
     if (opts && opts.scroll && card.scrollIntoView) {
-      card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      card.scrollIntoView({ behavior: scrollBehavior(), block: "nearest" });
     }
   }
 
@@ -171,7 +175,12 @@
         milesBadge.textContent = "";
         setHidden(milesBadge, true);
       }
-      if (show) visible.push({ card: card, miles: miles, index: Number(card.getAttribute("data-index") || 0) });
+      if (show)
+        visible.push({
+          card: card,
+          miles: miles,
+          index: Number(card.getAttribute("data-index") || 0),
+        });
       else hidden.push(card);
     }
 
@@ -203,7 +212,8 @@
       if (nearest) {
         var nearestBadgeOn = nearest.card.querySelector("[data-nearest-badge]");
         setHidden(nearestBadgeOn, false);
-        var name = nearest.card.getAttribute("data-name") || nearest.card.getAttribute("data-city") || "";
+        var name =
+          nearest.card.getAttribute("data-name") || nearest.card.getAttribute("data-city") || "";
         var milesLabel =
           nearest.miles !== Infinity
             ? nearest.miles < 1
@@ -249,7 +259,9 @@
       return;
     }
     if (typeof navigator === "undefined" || !navigator.geolocation) {
-      showLocationError("Location isn't supported in this browser. Search by city or postcode instead.");
+      showLocationError(
+        "Location isn't supported in this browser. Search by city or postcode instead.",
+      );
       return;
     }
     setLocating(true);
@@ -432,10 +444,17 @@
 
   window.setInterval(function () {
     var vp = document.querySelector("[data-stories-viewport]");
-    if (!vp || vp.matches(":hover") || document.querySelector("dialog[open]")) return;
+    if (
+      !vp ||
+      document.hidden ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      vp.matches(":hover, :focus-within") ||
+      document.querySelector("dialog[open]")
+    )
+      return;
     var max = vp.scrollWidth - vp.clientWidth - 8;
     if (max <= 0) return;
-    if (vp.scrollLeft >= max) vp.scrollTo({ left: 0, behavior: "smooth" });
+    if (vp.scrollLeft >= max) vp.scrollTo({ left: 0, behavior: scrollBehavior() });
     else scrollStories(1);
   }, 5000);
 })();

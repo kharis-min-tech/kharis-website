@@ -12,31 +12,31 @@ function FellowshipsPage() {
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
       <main>
-        <section className="relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden border-b-4 border-primary bg-on-background pt-24 pb-8 text-background">
+        <section className="kp-on-dark relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden border-b-4 border-primary bg-on-background pt-24 pb-8 text-background">
           <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
           <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10 grid md:grid-cols-2 gap-stack-lg items-center">
             <div className="space-y-stack-md">
-              <div className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 border-heavy font-label-md uppercase tracking-widest animate-bounce motion-reduce:animate-none">
+              <div className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 border-heavy font-label-md uppercase tracking-widest">
                 Community First
               </div>
               <h1 className="font-display-lg text-display-lg text-primary-fixed-dim uppercase leading-none">
                 FELLOWSHIPS
               </h1>
-              <p className="font-body-lg text-body-lg max-w-md opacity-90 border-l-4 border-primary pl-6">
+              <p className="font-body-lg text-body-lg max-w-md opacity-90">
                 Smaller circles, deeper connections. Find your people, grow your faith, and do life
                 together in a space built for you.
               </p>
               <div className="pt-base flex flex-wrap gap-stack-sm">
                 <Link
-                  className="bg-primary text-on-primary font-headline-md text-headline-md px-8 py-4 border-heavy neo-shadow-lg hover-lift hover-press flex items-center gap-2"
+                  className="kp-depth-button kp-button-purple bg-primary text-on-primary font-headline-md text-headline-md px-8 py-4 border-heavy neo-shadow-lg hover-lift hover-press flex items-center gap-2"
                   href="/branches"
                 >
                   FIND YOUR FELLOWSHIP
                   <span className="material-symbols-outlined">arrow_downward</span>
                 </Link>
                 <Link
-                  className="keep-light px-8 py-4 font-headline-md text-headline-md border-2 border-black hover-press flex items-center gap-2"
+                  className="kp-depth-button kp-button-light keep-light px-8 py-4 font-headline-md text-headline-md border-2 border-black hover-press flex items-center gap-2"
                   href="/branches"
                 >
                   SEE SERVICES
@@ -73,7 +73,7 @@ function FellowshipsPage() {
               </p>
               <Link
                 href="/branches"
-                className="inline-flex items-center gap-2 bg-primary text-on-primary px-10 py-4 border-heavy neo-shadow-lg font-headline-md text-headline-md hover-lift hover-press uppercase tracking-wider"
+                className="kp-depth-button kp-button-purple inline-flex items-center gap-2 bg-primary text-on-primary px-10 py-4 border-heavy neo-shadow-lg font-headline-md text-headline-md hover-lift hover-press uppercase tracking-wider"
               >
                 Find a branch
                 <span className="material-symbols-outlined">arrow_forward</span>

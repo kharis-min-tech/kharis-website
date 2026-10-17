@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -56,7 +57,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
               <div className="flex flex-wrap gap-4">
                 <a
                   href="#latest-message"
-                  className="bg-primary text-white font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press group"
+                  className="kp-depth-button kp-button-purple bg-primary text-white font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press group"
                 >
                   <span
                     className="material-symbols-outlined"
@@ -70,7 +71,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   href={youtubeWatchUrl(featured.id)}
                   target="_blank"
                   rel="noreferrer"
-                  className="keep-light font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press"
+                  className="kp-depth-button kp-button-light keep-light font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press"
                 >
                   <span className="material-symbols-outlined">smart_display</span>
                   YOUTUBE
@@ -86,7 +87,6 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             className="max-w-7xl mx-auto px-margin-desktop py-16 scroll-mt-24"
           >
             <div className="flex items-center gap-4 mb-8">
-              <div className="w-4 h-8 bg-primary" />
               <h2 className="font-headline-md text-headline-md uppercase">Latest Message</h2>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
@@ -231,12 +231,12 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   muted: "text-white/90",
                 },
               ].map(({ label, copy, cta, href, icon, card, muted }) => (
-                <a
+                <Link
                   key={label}
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-                  className={`group ${card} border-2 border-black rounded-none neo-shadow hover-press flex flex-col p-6 no-accent-fill`}
+                  className={`kp-platform-card group ${card} border-2 border-black rounded-none neo-shadow flex flex-col p-6 no-accent-fill`}
                 >
                   <span className={`material-symbols-outlined text-4xl mb-4 ${muted}`}>{icon}</span>
                   <h3 className="font-headline-md text-title-lg uppercase mb-2">{label}</h3>
@@ -247,7 +247,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                       arrow_forward
                     </span>
                   </span>
-                </a>
+                </Link>
               ))}
             </div>
           </div>

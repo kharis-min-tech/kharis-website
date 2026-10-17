@@ -33,7 +33,7 @@ function GovernancePage() {
       {/* Hero */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pt-28 md:pt-32 pb-8 md:pb-10">
         <div className="max-w-4xl">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
+          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest">
             Governance
           </span>
           <h1 className="font-display-lg text-headline-lg md:text-display-lg text-on-surface dark:text-[#e8e0e9] uppercase leading-none mb-6">
@@ -53,7 +53,7 @@ function GovernancePage() {
               key={policy.title}
               className="bg-surface-container-lowest rounded-none border-2 border-black brutalist-shadow p-8 transition-all group hover:-translate-y-1"
             >
-              <div className="w-16 h-16 bg-[#f5f0f6] dark:bg-[#2a2430] border-heavy rounded-none flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
+              <div className="w-16 h-16 bg-[#f2eef7] dark:bg-[#2a2430] border-heavy rounded-none flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
                 <span
                   className="material-symbols-outlined text-3xl text-primary"
                   data-weight="fill"
@@ -74,7 +74,7 @@ function GovernancePage() {
 
       {/* Report an incident banner */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pb-24">
-        <div className="relative overflow-hidden rounded-none bg-gradient-to-br from-[#4a154b] via-[#6b1f63] to-[#7c3aed] border-heavy neo-shadow p-8 md:p-12 lg:p-16">
+        <div className="kp-brand-panel relative overflow-hidden rounded-none p-8 md:p-12 lg:p-16">
           <div className="absolute -top-16 -right-16 w-64 h-64 rounded-none bg-white/5"></div>
           <div className="absolute -bottom-20 -left-10 w-72 h-72 rounded-none bg-white/5"></div>
           <div className="absolute inset-0 halftone-pattern text-white/5 pointer-events-none"></div>
@@ -95,7 +95,7 @@ function GovernancePage() {
               href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=ktmX28Fl60WkrVF3jBeQnyCe1UcjuqNNks_4xo4RQiRURFJUMkZDOVpIVFlISUpKMkc5RlQxRksyMC4u"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-none bg-white text-[#4a154b] font-body-md text-sm font-bold uppercase tracking-wide px-8 py-4 border-heavy neo-shadow transition-all duration-150 hover:bg-secondary hover:text-on-secondary"
+              className="kp-depth-button kp-button-light inline-flex items-center justify-center gap-2 rounded-none bg-white text-[#4c08a8] font-body-md text-sm font-bold uppercase tracking-wide px-8 py-4 border-heavy neo-shadow transition-all duration-150 hover:bg-secondary hover:text-on-secondary"
             >
               Report an Incident
               <span className="material-symbols-outlined">arrow_forward</span>
