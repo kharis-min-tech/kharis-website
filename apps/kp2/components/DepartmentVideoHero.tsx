@@ -85,7 +85,10 @@ export function DepartmentVideoHero() {
                 psychology_alt
               </span>
               <span>Start Department Quiz</span>
-              <span className="material-symbols-outlined text-lg transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
+              <span
+                className="material-symbols-outlined text-lg transition-transform duration-200 group-hover:translate-x-1"
+                aria-hidden="true"
+              >
                 arrow_forward
               </span>
             </Link>

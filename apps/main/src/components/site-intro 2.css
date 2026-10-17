@@ -1,0 +1,131 @@
+html[data-site-intro="playing"] {
+  overflow: hidden;
+}
+
+.site-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  /* The page's own background in either theme, so the intro fades into the page beneath it. */
+  background: var(--bg, #fff);
+  color: var(--fg, #1c1c1f);
+  animation: site-intro-exit 0.6s cubic-bezier(0.22, 1, 0.36, 1) 2.05s both;
+}
+
+html[data-site-intro="seen"] .site-intro {
+  display: none;
+}
+
+.site-intro__dove {
+  width: clamp(8rem, 15vw, 11rem);
+  height: auto;
+  overflow: visible;
+  /* The artwork is a white dove; light mode draws it dark, like the header logo. */
+  filter: brightness(0);
+}
+
+html[data-theme="dark"] .site-intro__dove {
+  filter: none;
+}
+
+.site-intro__stroke {
+  fill: none;
+  stroke: white;
+  stroke-width: 22;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: site-intro-draw 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+}
+
+.site-intro__stroke--1 {
+  animation-delay: 0.55s;
+}
+.site-intro__stroke--2 {
+  animation-delay: 0.65s;
+}
+.site-intro__stroke--3 {
+  animation-delay: 0.7s;
+}
+.site-intro__stroke--4 {
+  animation-delay: 0.35s;
+}
+.site-intro__stroke--5 {
+  animation-delay: 0.8s;
+  animation-duration: 0.85s;
+}
+
+.site-intro__eye,
+.site-intro__complete {
+  opacity: 0;
+  animation: site-intro-complete 0.2s ease 1.75s forwards;
+}
+
+.site-intro__eye {
+  animation-delay: 0.85s;
+}
+
+.site-intro__skip {
+  position: absolute;
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
+  right: max(1.5rem, env(safe-area-inset-right));
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted, #4a4a52);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.site-intro__skip:hover {
+  color: var(--fg, #1c1c1f);
+}
+.site-intro__skip:focus-visible {
+  outline: 2px solid var(--purple, #630ed4);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .site-intro__skip:focus-visible {
+  outline-color: #ffde59;
+}
+
+@keyframes site-intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes site-intro-complete {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes site-intro-exit {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-intro {
+    animation: site-intro-exit 0.2s ease 0.1s both;
+  }
+  .site-intro__stroke {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .site-intro__eye,
+  .site-intro__complete {
+    animation: none;
+    opacity: 1;
+  }
+}

@@ -114,7 +114,7 @@ export default function DepartmentQuizPage() {
         // Suppress network errors
       }
     },
-    [branch, lang]
+    [branch, lang],
   );
 
   // Compute final scores and show results
@@ -140,7 +140,7 @@ export default function DepartmentQuizPage() {
         quizCardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     },
-    [submitToGoogleSheets]
+    [submitToGoogleSheets],
   );
 
   // Navigation: Next / Finish
@@ -319,529 +319,536 @@ export default function DepartmentQuizPage() {
                   key="start"
                   className="kp-content-enter relative overflow-hidden border-4 border-black bg-surface-container-lowest p-6 sm:p-10 brutalist-shadow-lg"
                 >
-                <div className="halftone-bg pointer-events-none absolute top-0 right-0 -mr-12 -mt-12 h-36 w-36 opacity-30" />
+                  <div className="halftone-bg pointer-events-none absolute top-0 right-0 -mr-12 -mt-12 h-36 w-36 opacity-30" />
 
-                <div className="relative z-10">
-                  <div className="mb-6 border-b-2 border-black pb-4">
-                    <span className="mb-2 inline-block rounded-none border border-black bg-primary px-3 py-0.5 text-[11px] font-black uppercase tracking-widest text-on-primary">
-                      {t.stepBadge}
-                    </span>
-                    <h2 className="font-display-lg text-2xl sm:text-3xl uppercase leading-tight text-on-surface">
-                      {t.startHeading}
-                    </h2>
-                    <p className="mt-2 text-sm text-on-surface-variant">
-                      {t.startDescription}
-                    </p>
-                  </div>
-
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleStart();
-                    }}
-                    className="space-y-6"
-                  >
-                    {/* Branch Select Field */}
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="user-branch" className="font-label-md uppercase tracking-wider text-on-surface">
-                        {t.branchLabel} <span className="text-error font-bold">*</span>
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="user-branch"
-                          value={branch}
-                          onChange={(e) => {
-                            setBranch(e.target.value);
-                            if (branchError) setBranchError(false);
-                          }}
-                          aria-required="true"
-                          aria-invalid={branchError}
-                          className={`w-full appearance-none rounded-none border-2 border-black bg-surface p-4 pr-10 font-body-md font-bold text-on-surface input-focus shadow-[3px_3px_0_0_#000] ${
-                            branchError ? "border-error ring-2 ring-error" : ""
-                          }`}
-                        >
-                          <option value="" disabled>
-                            {t.branchPlaceholder}
-                          </option>
-                          {QUIZ_BRANCHES.map((b) => (
-                            <option key={b} value={b}>
-                              {b}
-                            </option>
-                          ))}
-                        </select>
-                        <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl text-on-surface">
-                          expand_more
-                        </span>
-                      </div>
-                      {branchError && (
-                        <p className="inline-flex items-center gap-1.5 text-xs font-bold text-error">
-                          <span className="material-symbols-outlined text-sm">error</span>
-                          {t.branchError}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Submit CTA */}
-                    <button
-                      type="submit"
-                      className="kp-depth-button kp-button-purple group flex w-full items-center justify-center gap-3 rounded-none border-2 border-black bg-primary py-4 px-8 text-center font-display-lg text-xl uppercase tracking-wider text-on-primary shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-                    >
-                      <span>{t.startButton}</span>
-                      <span className="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1">
-                        arrow_forward
-                      </span>
-                    </button>
-
-                    {/* Privacy Note */}
-                    <div className="text-center pt-2">
-                      <p className="text-xs text-on-surface-variant font-medium">
-                        {t.privacyAgreement.includes("{policy}") ? (
-                          <>
-                            {t.privacyAgreement.split("{policy}")[0]}
-                            <button
-                              type="button"
-                              onClick={() => setShowPrivacy(true)}
-                              className="font-bold text-primary underline underline-offset-2 hover:text-on-background transition-colors cursor-pointer"
-                            >
-                              {t.privacyPolicyLink}
-                            </button>
-                            {t.privacyAgreement.split("{policy}")[1]}
-                          </>
-                        ) : (
-                          <>
-                            {t.privacyAgreement}{" "}
-                            <button
-                              type="button"
-                              onClick={() => setShowPrivacy(true)}
-                              className="font-bold text-primary underline underline-offset-2 hover:text-on-background transition-colors cursor-pointer"
-                            >
-                              {t.privacyPolicyLink}
-                            </button>
-                            .
-                          </>
-                        )}
-                      </p>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
-
-            {/* 2. QUIZ SCREEN */}
-            {screen === "quiz" && (
-              <div
-                key={`quiz-${currentQuestion}`}
-                className="kp-content-enter relative overflow-hidden border-4 border-black bg-surface-container-lowest p-6 sm:p-10 brutalist-shadow-lg"
-              >
-                {/* Progress Header */}
-                <div className="mb-6">
-                  <div className="mb-3 flex items-center justify-between text-xs font-black uppercase tracking-wider text-on-surface">
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-sm text-primary">
-                        quiz
-                      </span>
-                      {t.questionBadge
-                        .replace("{current}", String(currentQuestion + 1))
-                        .replace("{total}", String(t.questions.length))}
-                    </span>
-                    <span className="border border-black bg-secondary-container px-2 py-0.5 text-on-secondary-container font-mono">
-                      {Math.round(((currentQuestion + 1) / t.questions.length) * 100)}%
-                    </span>
-                  </div>
-
-                  <div
-                    className="h-3 w-full overflow-hidden rounded-none border-2 border-black bg-surface-container-high"
-                    role="progressbar"
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-valuenow={Math.round(((currentQuestion + 1) / t.questions.length) * 100)}
-                  >
-                    <div
-                      className="h-full bg-primary transition-all duration-300 ease-out"
-                      style={{
-                        width: `${((currentQuestion + 1) / t.questions.length) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Question & Scripture */}
-                <div className="mb-8">
-                  <h2 className="font-display-lg text-2xl sm:text-3xl uppercase leading-tight text-on-surface">
-                    {t.questions[currentQuestion].q}
-                  </h2>
-                  <div className="mt-3 flex items-start gap-2.5 border-l-4 border-primary bg-surface-container-low p-3.5">
-                    <span className="material-symbols-outlined text-lg text-primary shrink-0" aria-hidden="true">
-                      auto_stories
-                    </span>
-                    <p className="font-body-md text-xs sm:text-sm italic text-on-surface-variant leading-relaxed">
-                      {t.questions[currentQuestion].s}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Options List */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8" role="group">
-                  {t.questions[currentQuestion].options.map((option, idx) => {
-                    const isSelected = answers[currentQuestion]?.label === option.label;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => handleSelectOption(option)}
-                        className={`group relative flex items-start gap-3.5 rounded-none border-2 border-black p-4 sm:p-5 text-left transition-all ${
-                          isSelected
-                            ? "bg-primary text-on-primary shadow-[4px_4px_0_0_#000] scale-[1.01] ring-2 ring-black"
-                            : "bg-surface text-on-surface shadow-[4px_4px_0_0_#000] hover:bg-surface-variant hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5"
-                        }`}
-                      >
-                        <span
-                          className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-none border-2 border-black text-xs font-black transition-colors ${
-                            isSelected
-                              ? "bg-secondary-container text-on-secondary-container"
-                              : "bg-surface text-on-surface group-hover:bg-surface-container-high"
-                          }`}
-                        >
-                          {isSelected ? (
-                            <span className="material-symbols-outlined text-sm font-black">check</span>
-                          ) : (
-                            String.fromCharCode(65 + idx)
-                          )}
-                        </span>
-                        <span className="font-body-md text-sm sm:text-base font-bold leading-snug">
-                          {option.label}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Navigation Controls */}
-                <div className="flex items-center justify-between gap-4 border-t-2 border-black pt-6">
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    className="kp-depth-button kp-button-light inline-flex items-center gap-1.5 rounded-none border-2 border-black bg-surface-container-high px-5 py-3 font-bold uppercase tracking-wider text-on-surface shadow-[3px_3px_0_0_#000] transition-all hover:bg-surface-variant active:translate-x-0.5 active:translate-y-0.5"
-                  >
-                    <span className="material-symbols-outlined text-base">arrow_back</span>
-                    <span>{t.backButton}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    disabled={answers[currentQuestion] === null}
-                    className={`kp-depth-button kp-button-purple inline-flex items-center gap-2 rounded-none border-2 border-black bg-primary px-7 py-3 font-display-lg text-lg uppercase tracking-wider text-on-primary shadow-[4px_4px_0_0_#000] transition-all ${
-                      answers[currentQuestion] === null
-                        ? "opacity-40 cursor-not-allowed shadow-none"
-                        : "hover:shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-                    }`}
-                  >
-                    <span>
-                      {currentQuestion === t.questions.length - 1
-                        ? t.finishButton
-                        : t.nextButton}
-                    </span>
-                    <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* 3. RESULTS SCREEN */}
-            {screen === "result" && (
-              <div key="result" className="kp-content-enter space-y-8">
-                {/* Result Heading Banner */}
-                <div className="relative overflow-hidden border-4 border-black bg-surface-container-lowest p-6 sm:p-8 brutalist-shadow-lg">
-                  <div className="halftone-bg pointer-events-none absolute top-0 right-0 -mr-10 -mt-10 h-32 w-32 opacity-25" />
-                  <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                      <span className="mb-2 inline-flex items-center gap-1.5 border border-black bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-wider text-on-secondary-container">
-                        <span className="material-symbols-outlined text-sm">stars</span>
-                        {t.discoveryCompleted}
+                  <div className="relative z-10">
+                    <div className="mb-6 border-b-2 border-black pb-4">
+                      <span className="mb-2 inline-block rounded-none border border-black bg-primary px-3 py-0.5 text-[11px] font-black uppercase tracking-widest text-on-primary">
+                        {t.stepBadge}
                       </span>
                       <h2 className="font-display-lg text-2xl sm:text-3xl uppercase leading-tight text-on-surface">
-                        {t.resultsTitle}
+                        {t.startHeading}
                       </h2>
-                      <p className="mt-1 text-sm text-on-surface-variant">
-                        {t.resultsSubtitle}
-                      </p>
+                      <p className="mt-2 text-sm text-on-surface-variant">{t.startDescription}</p>
                     </div>
 
-                    <div className="border-2 border-black bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface">
-                      📍 {branch || "Kharis Church"}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Top Match (#1 Hero Card) */}
-                {topThree[0] && t.departments[topThree[0]] && (
-                  <div className="relative overflow-hidden border-4 border-black bg-surface-container-lowest p-6 sm:p-8 brutalist-shadow-lg">
-                    <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-none border-2 border-black bg-secondary-container px-3.5 py-1 text-xs font-black uppercase tracking-widest text-on-secondary-container shadow-[2px_2px_0_0_#000]">
-                        <span className="material-symbols-outlined text-sm">emoji_events</span>
-                        {t.topMatchBadge}
-                      </span>
-                      <span className="text-xs font-mono font-bold uppercase text-on-surface-variant">
-                        {t.highestCompatibility}
-                      </span>
-                    </div>
-
-                    <h3 className="font-display-lg text-3xl sm:text-4xl uppercase leading-none text-on-surface mb-3">
-                      {t.departments[topThree[0]].title ?? topThree[0]}
-                    </h3>
-
-                    <p className="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed mb-4">
-                      {t.departments[topThree[0]].desc}
-                    </p>
-
-                    <div className="mb-6 flex items-start gap-2.5 border-l-4 border-primary bg-surface-container-low p-3.5">
-                      <span className="material-symbols-outlined text-base text-primary shrink-0">
-                        format_quote
-                      </span>
-                      <p className="font-body-md text-xs sm:text-sm italic text-on-surface-variant">
-                        {t.departments[topThree[0]].scripture}
-                      </p>
-                    </div>
-
-                    {/* Top Dept Video Facade / Player */}
-                    <div className="relative aspect-video w-full overflow-hidden rounded-none border-2 border-black bg-black shadow-[4px_4px_0_0_#000]">
-                      {activeVideo === topThree[0] ? (
-                        <iframe
-                          src={`${t.departments[topThree[0]].video}?autoplay=1`}
-                          title={`${t.departments[topThree[0]].title ?? topThree[0]} Department Overview`}
-                          allow="autoplay; fullscreen"
-                          allowFullScreen
-                          className="h-full w-full border-0"
-                        />
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setActiveVideo(topThree[0])}
-                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-primary to-on-background p-6 text-center cursor-pointer"
-                          aria-label={`Play ${t.departments[topThree[0]].title ?? topThree[0]} department video`}
-                        >
-                          <div className="halftone-bg pointer-events-none absolute inset-0 opacity-20" />
-                          <div className="relative z-10 flex flex-col items-center gap-3">
-                            <span className="flex h-16 w-16 items-center justify-center rounded-none border-2 border-black bg-secondary-container text-on-secondary-container shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
-                              <span className="material-symbols-outlined text-3xl">play_arrow</span>
-                            </span>
-                            <span className="border border-black bg-black/80 px-3 py-1 font-label-md text-xs uppercase tracking-wider text-white">
-                              {t.watchSpotlight.replace("{dept}", t.departments[topThree[0]].title ?? topThree[0])}
-                            </span>
-                          </div>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Secondary Matches (#2 and #3) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {topThree.slice(1, 3).map((deptName, idx) => {
-                    const dept = t.departments[deptName];
-                    if (!dept) return null;
-                    const displayTitle = dept.title ?? deptName;
-                    const rankNum = idx + 2;
-                    return (
-                      <div
-                        key={deptName}
-                        className="flex flex-col justify-between overflow-hidden rounded-none border-2 border-black bg-surface-container-lowest p-5 sm:p-6 brutalist-shadow"
-                      >
-                        <div>
-                          <div className="mb-3 flex items-center justify-between">
-                            <span className="rounded-none border border-black bg-surface-container-high px-2.5 py-0.5 text-xs font-black uppercase tracking-wider text-on-surface">
-                              {t.matchRank.replace("{rank}", String(rankNum))}
-                            </span>
-                          </div>
-
-                          <h4 className="font-display-lg text-xl sm:text-2xl uppercase leading-tight text-on-surface mb-2">
-                            {displayTitle}
-                          </h4>
-
-                          <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-3">
-                            {dept.desc}
-                          </p>
-
-                          <p className="text-xs italic text-on-surface-variant/80 border-l-2 border-secondary pl-2 mb-4">
-                            {dept.scripture}
-                          </p>
-                        </div>
-
-                        {/* Video facade */}
-                        <div className="relative aspect-video w-full overflow-hidden rounded-none border-2 border-black bg-black mt-2">
-                          {activeVideo === deptName ? (
-                            <iframe
-                              src={`${dept.video}?autoplay=1`}
-                              title={`${displayTitle} Video`}
-                              allow="autoplay; fullscreen"
-                              allowFullScreen
-                              className="h-full w-full border-0"
-                            />
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => setActiveVideo(deptName)}
-                              className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
-                              aria-label={`Play ${displayTitle} department video`}
-                            >
-                              <div className="flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
-                                <span className="material-symbols-outlined text-sm">play_arrow</span>
-                                <span>{t.previewVideo}</span>
-                              </div>
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Explore All Departments Accordion */}
-                <div className="overflow-hidden border-4 border-black bg-surface-container-lowest brutalist-shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() => setIsExploreOpen((prev) => !prev)}
-                    className="flex w-full items-center justify-between bg-surface p-5 text-left font-display-lg text-xl uppercase tracking-wider text-on-surface hover:bg-surface-variant transition-colors"
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary">apps</span>
-                      {t.exploreButton} ({Object.keys(t.departments).length})
-                    </span>
-                    <span
-                      className={`material-symbols-outlined transition-transform duration-300 text-2xl ${
-                        isExploreOpen ? "rotate-180 text-primary" : ""
-                      }`}
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleStart();
+                      }}
+                      className="space-y-6"
                     >
-                      expand_more
-                    </span>
-                  </button>
-
-                  {isExploreOpen && (
-                    <div className="kp-content-enter border-t-2 border-black p-5 sm:p-6 bg-surface-container-low">
-                      {/* Search in explore */}
-                      <div className="mb-4">
-                        <label htmlFor="explore-search" className="sr-only">
-                          Search departments
+                      {/* Branch Select Field */}
+                      <div className="flex flex-col gap-2">
+                        <label
+                          htmlFor="user-branch"
+                          className="font-label-md uppercase tracking-wider text-on-surface"
+                        >
+                          {t.branchLabel} <span className="text-error font-bold">*</span>
                         </label>
                         <div className="relative">
-                          <input
-                            id="explore-search"
-                            type="search"
-                            value={exploreFilter}
-                            onChange={(e) => setExploreFilter(e.target.value)}
-                            placeholder={t.filterDepartmentsPlaceholder}
-                            className="w-full rounded-none border-2 border-black bg-surface px-4 py-2.5 pl-10 text-base sm:text-sm font-bold text-on-surface input-focus shadow-[2px_2px_0_0_#000]"
-                          />
-                          <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">
-                            search
+                          <select
+                            id="user-branch"
+                            value={branch}
+                            onChange={(e) => {
+                              setBranch(e.target.value);
+                              if (branchError) setBranchError(false);
+                            }}
+                            aria-required="true"
+                            aria-invalid={branchError}
+                            className={`w-full appearance-none rounded-none border-2 border-black bg-surface p-4 pr-10 font-body-md font-bold text-on-surface input-focus shadow-[3px_3px_0_0_#000] ${
+                              branchError ? "border-error ring-2 ring-error" : ""
+                            }`}
+                          >
+                            <option value="" disabled>
+                              {t.branchPlaceholder}
+                            </option>
+                            {QUIZ_BRANCHES.map((b) => (
+                              <option key={b} value={b}>
+                                {b}
+                              </option>
+                            ))}
+                          </select>
+                          <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl text-on-surface">
+                            expand_more
                           </span>
                         </div>
+                        {branchError && (
+                          <p className="inline-flex items-center gap-1.5 text-xs font-bold text-error">
+                            <span className="material-symbols-outlined text-sm">error</span>
+                            {t.branchError}
+                          </p>
+                        )}
                       </div>
 
-                      {/* Department Accordion List */}
-                      <div className="divide-y-2 divide-black border-2 border-black bg-surface">
-                        {exploreDepts.map((deptName) => {
-                          const dept = t.departments[deptName];
-                          const displayTitle = dept.title ?? deptName;
-                          const isExpanded = expandedExploreDept === deptName;
-                          return (
-                            <div key={deptName}>
+                      {/* Submit CTA */}
+                      <button
+                        type="submit"
+                        className="kp-depth-button kp-button-purple group flex w-full items-center justify-center gap-3 rounded-none border-2 border-black bg-primary py-4 px-8 text-center font-display-lg text-xl uppercase tracking-wider text-on-primary shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                      >
+                        <span>{t.startButton}</span>
+                        <span className="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1">
+                          arrow_forward
+                        </span>
+                      </button>
+
+                      {/* Privacy Note */}
+                      <div className="text-center pt-2">
+                        <p className="text-xs text-on-surface-variant font-medium">
+                          {t.privacyAgreement.includes("{policy}") ? (
+                            <>
+                              {t.privacyAgreement.split("{policy}")[0]}
                               <button
                                 type="button"
-                                onClick={() =>
-                                  setExpandedExploreDept((prev) =>
-                                    prev === deptName ? null : deptName
-                                  )
-                                }
-                                className="flex w-full items-center justify-between p-3.5 text-left font-headline-md text-sm font-black uppercase text-on-surface hover:bg-surface-variant transition-colors"
+                                onClick={() => setShowPrivacy(true)}
+                                className="font-bold text-primary underline underline-offset-2 hover:text-on-background transition-colors cursor-pointer"
                               >
-                                <span className="inline-flex items-center gap-2">
-                                  <span className="material-symbols-outlined text-sm text-primary">
-                                    arrow_right
-                                  </span>
-                                  {displayTitle}
-                                </span>
-                                <span
-                                  className={`material-symbols-outlined text-lg transition-transform ${
-                                    isExpanded ? "rotate-180 text-primary" : ""
-                                  }`}
-                                >
-                                  expand_more
-                                </span>
+                                {t.privacyPolicyLink}
                               </button>
+                              {t.privacyAgreement.split("{policy}")[1]}
+                            </>
+                          ) : (
+                            <>
+                              {t.privacyAgreement}{" "}
+                              <button
+                                type="button"
+                                onClick={() => setShowPrivacy(true)}
+                                className="font-bold text-primary underline underline-offset-2 hover:text-on-background transition-colors cursor-pointer"
+                              >
+                                {t.privacyPolicyLink}
+                              </button>
+                              .
+                            </>
+                          )}
+                        </p>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
 
-                              {isExpanded && (
-                                <div className="kp-content-enter border-t border-black/20 bg-surface-container-lowest p-4 text-xs sm:text-sm text-on-surface-variant space-y-3">
-                                  <p className="leading-relaxed">{dept.desc}</p>
-                                  <p className="italic text-on-surface-variant/80 border-l-2 border-primary pl-2">
-                                    {dept.scripture}
-                                  </p>
+              {/* 2. QUIZ SCREEN */}
+              {screen === "quiz" && (
+                <div
+                  key={`quiz-${currentQuestion}`}
+                  className="kp-content-enter relative overflow-hidden border-4 border-black bg-surface-container-lowest p-6 sm:p-10 brutalist-shadow-lg"
+                >
+                  {/* Progress Header */}
+                  <div className="mb-6">
+                    <div className="mb-3 flex items-center justify-between text-xs font-black uppercase tracking-wider text-on-surface">
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-sm text-primary">quiz</span>
+                        {t.questionBadge
+                          .replace("{current}", String(currentQuestion + 1))
+                          .replace("{total}", String(t.questions.length))}
+                      </span>
+                      <span className="border border-black bg-secondary-container px-2 py-0.5 text-on-secondary-container font-mono">
+                        {Math.round(((currentQuestion + 1) / t.questions.length) * 100)}%
+                      </span>
+                    </div>
 
-                                  <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-none border-2 border-black bg-black mt-2">
-                                    {activeVideo === `explore-${deptName}` ? (
-                                      <iframe
-                                        src={`${dept.video}?autoplay=1`}
-                                        title={`${displayTitle} Video`}
-                                        allow="autoplay; fullscreen"
-                                        allowFullScreen
-                                        className="h-full w-full border-0"
-                                      />
-                                    ) : (
-                                      <button
-                                        type="button"
-                                        onClick={() => setActiveVideo(`explore-${deptName}`)}
-                                        className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
-                                      >
-                                        <div className="flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
-                                          <span className="material-symbols-outlined text-sm">play_arrow</span>
-                                          <span>{t.playDeptVideo.replace("{dept}", displayTitle)}</span>
-                                        </div>
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
+                    <div
+                      className="h-3 w-full overflow-hidden rounded-none border-2 border-black bg-surface-container-high"
+                      role="progressbar"
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={Math.round(((currentQuestion + 1) / t.questions.length) * 100)}
+                    >
+                      <div
+                        className="h-full bg-primary transition-all duration-300 ease-out"
+                        style={{
+                          width: `${((currentQuestion + 1) / t.questions.length) * 100}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Question & Scripture */}
+                  <div className="mb-8">
+                    <h2 className="font-display-lg text-2xl sm:text-3xl uppercase leading-tight text-on-surface">
+                      {t.questions[currentQuestion].q}
+                    </h2>
+                    <div className="mt-3 flex items-start gap-2.5 border-l-4 border-primary bg-surface-container-low p-3.5">
+                      <span
+                        className="material-symbols-outlined text-lg text-primary shrink-0"
+                        aria-hidden="true"
+                      >
+                        auto_stories
+                      </span>
+                      <p className="font-body-md text-xs sm:text-sm italic text-on-surface-variant leading-relaxed">
+                        {t.questions[currentQuestion].s}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Options List */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8" role="group">
+                    {t.questions[currentQuestion].options.map((option, idx) => {
+                      const isSelected = answers[currentQuestion]?.label === option.label;
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => handleSelectOption(option)}
+                          className={`group relative flex items-start gap-3.5 rounded-none border-2 border-black p-4 sm:p-5 text-left transition-all ${
+                            isSelected
+                              ? "bg-primary text-on-primary shadow-[4px_4px_0_0_#000] scale-[1.01] ring-2 ring-black"
+                              : "bg-surface text-on-surface shadow-[4px_4px_0_0_#000] hover:bg-surface-variant hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5"
+                          }`}
+                        >
+                          <span
+                            className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-none border-2 border-black text-xs font-black transition-colors ${
+                              isSelected
+                                ? "bg-secondary-container text-on-secondary-container"
+                                : "bg-surface text-on-surface group-hover:bg-surface-container-high"
+                            }`}
+                          >
+                            {isSelected ? (
+                              <span className="material-symbols-outlined text-sm font-black">
+                                check
+                              </span>
+                            ) : (
+                              String.fromCharCode(65 + idx)
+                            )}
+                          </span>
+                          <span className="font-body-md text-sm sm:text-base font-bold leading-snug">
+                            {option.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Navigation Controls */}
+                  <div className="flex items-center justify-between gap-4 border-t-2 border-black pt-6">
+                    <button
+                      type="button"
+                      onClick={handleBack}
+                      className="kp-depth-button kp-button-light inline-flex items-center gap-1.5 rounded-none border-2 border-black bg-surface-container-high px-5 py-3 font-bold uppercase tracking-wider text-on-surface shadow-[3px_3px_0_0_#000] transition-all hover:bg-surface-variant active:translate-x-0.5 active:translate-y-0.5"
+                    >
+                      <span className="material-symbols-outlined text-base">arrow_back</span>
+                      <span>{t.backButton}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      disabled={answers[currentQuestion] === null}
+                      className={`kp-depth-button kp-button-purple inline-flex items-center gap-2 rounded-none border-2 border-black bg-primary px-7 py-3 font-display-lg text-lg uppercase tracking-wider text-on-primary shadow-[4px_4px_0_0_#000] transition-all ${
+                        answers[currentQuestion] === null
+                          ? "opacity-40 cursor-not-allowed shadow-none"
+                          : "hover:shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                      }`}
+                    >
+                      <span>
+                        {currentQuestion === t.questions.length - 1 ? t.finishButton : t.nextButton}
+                      </span>
+                      <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* 3. RESULTS SCREEN */}
+              {screen === "result" && (
+                <div key="result" className="kp-content-enter space-y-8">
+                  {/* Result Heading Banner */}
+                  <div className="relative overflow-hidden border-4 border-black bg-surface-container-lowest p-6 sm:p-8 brutalist-shadow-lg">
+                    <div className="halftone-bg pointer-events-none absolute top-0 right-0 -mr-10 -mt-10 h-32 w-32 opacity-25" />
+                    <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
+                      <div>
+                        <span className="mb-2 inline-flex items-center gap-1.5 border border-black bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-wider text-on-secondary-container">
+                          <span className="material-symbols-outlined text-sm">stars</span>
+                          {t.discoveryCompleted}
+                        </span>
+                        <h2 className="font-display-lg text-2xl sm:text-3xl uppercase leading-tight text-on-surface">
+                          {t.resultsTitle}
+                        </h2>
+                        <p className="mt-1 text-sm text-on-surface-variant">{t.resultsSubtitle}</p>
+                      </div>
+
+                      <div className="border-2 border-black bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface">
+                        📍 {branch || "Kharis Church"}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Top Match (#1 Hero Card) */}
+                  {topThree[0] && t.departments[topThree[0]] && (
+                    <div className="relative overflow-hidden border-4 border-black bg-surface-container-lowest p-6 sm:p-8 brutalist-shadow-lg">
+                      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-none border-2 border-black bg-secondary-container px-3.5 py-1 text-xs font-black uppercase tracking-widest text-on-secondary-container shadow-[2px_2px_0_0_#000]">
+                          <span className="material-symbols-outlined text-sm">emoji_events</span>
+                          {t.topMatchBadge}
+                        </span>
+                        <span className="text-xs font-mono font-bold uppercase text-on-surface-variant">
+                          {t.highestCompatibility}
+                        </span>
+                      </div>
+
+                      <h3 className="font-display-lg text-3xl sm:text-4xl uppercase leading-none text-on-surface mb-3">
+                        {t.departments[topThree[0]].title ?? topThree[0]}
+                      </h3>
+
+                      <p className="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed mb-4">
+                        {t.departments[topThree[0]].desc}
+                      </p>
+
+                      <div className="mb-6 flex items-start gap-2.5 border-l-4 border-primary bg-surface-container-low p-3.5">
+                        <span className="material-symbols-outlined text-base text-primary shrink-0">
+                          format_quote
+                        </span>
+                        <p className="font-body-md text-xs sm:text-sm italic text-on-surface-variant">
+                          {t.departments[topThree[0]].scripture}
+                        </p>
+                      </div>
+
+                      {/* Top Dept Video Facade / Player */}
+                      <div className="relative aspect-video w-full overflow-hidden rounded-none border-2 border-black bg-black shadow-[4px_4px_0_0_#000]">
+                        {activeVideo === topThree[0] ? (
+                          <iframe
+                            src={`${t.departments[topThree[0]].video}?autoplay=1`}
+                            title={`${t.departments[topThree[0]].title ?? topThree[0]} Department Overview`}
+                            allow="autoplay; fullscreen"
+                            allowFullScreen
+                            className="h-full w-full border-0"
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setActiveVideo(topThree[0])}
+                            className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-primary to-on-background p-6 text-center cursor-pointer"
+                            aria-label={`Play ${t.departments[topThree[0]].title ?? topThree[0]} department video`}
+                          >
+                            <div className="halftone-bg pointer-events-none absolute inset-0 opacity-20" />
+                            <div className="relative z-10 flex flex-col items-center gap-3">
+                              <span className="flex h-16 w-16 items-center justify-center rounded-none border-2 border-black bg-secondary-container text-on-secondary-container shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
+                                <span className="material-symbols-outlined text-3xl">
+                                  play_arrow
+                                </span>
+                              </span>
+                              <span className="border border-black bg-black/80 px-3 py-1 font-label-md text-xs uppercase tracking-wider text-white">
+                                {t.watchSpotlight.replace(
+                                  "{dept}",
+                                  t.departments[topThree[0]].title ?? topThree[0],
+                                )}
+                              </span>
                             </div>
-                          );
-                        })}
+                          </button>
+                        )}
                       </div>
                     </div>
                   )}
-                </div>
 
-                {/* Final Actions / Call to Action */}
-                <div className="kp-branch-panel kp-brand-panel relative overflow-hidden text-center">
-                  <div className="kp-branch-dove" aria-hidden="true" />
-                  <p className="kp-branch-eyebrow">{t.discoveryCompleted}</p>
-                  <h3 className="kp-branch-title font-display-lg">
-                    {t.nextStepTitle}
-                  </h3>
-                  <p className="kp-branch-copy">
-                    {t.nextStepSubtitle}
-                  </p>
+                  {/* Secondary Matches (#2 and #3) */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {topThree.slice(1, 3).map((deptName, idx) => {
+                      const dept = t.departments[deptName];
+                      if (!dept) return null;
+                      const displayTitle = dept.title ?? deptName;
+                      const rankNum = idx + 2;
+                      return (
+                        <div
+                          key={deptName}
+                          className="flex flex-col justify-between overflow-hidden rounded-none border-2 border-black bg-surface-container-lowest p-5 sm:p-6 brutalist-shadow"
+                        >
+                          <div>
+                            <div className="mb-3 flex items-center justify-between">
+                              <span className="rounded-none border border-black bg-surface-container-high px-2.5 py-0.5 text-xs font-black uppercase tracking-wider text-on-surface">
+                                {t.matchRank.replace("{rank}", String(rankNum))}
+                              </span>
+                            </div>
 
-                  <div className="kp-branch-actions relative z-10 flex flex-wrap items-center justify-center gap-4">
+                            <h4 className="font-display-lg text-xl sm:text-2xl uppercase leading-tight text-on-surface mb-2">
+                              {displayTitle}
+                            </h4>
+
+                            <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-3">
+                              {dept.desc}
+                            </p>
+
+                            <p className="text-xs italic text-on-surface-variant/80 border-l-2 border-secondary pl-2 mb-4">
+                              {dept.scripture}
+                            </p>
+                          </div>
+
+                          {/* Video facade */}
+                          <div className="relative aspect-video w-full overflow-hidden rounded-none border-2 border-black bg-black mt-2">
+                            {activeVideo === deptName ? (
+                              <iframe
+                                src={`${dept.video}?autoplay=1`}
+                                title={`${displayTitle} Video`}
+                                allow="autoplay; fullscreen"
+                                allowFullScreen
+                                className="h-full w-full border-0"
+                              />
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setActiveVideo(deptName)}
+                                className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
+                                aria-label={`Play ${displayTitle} department video`}
+                              >
+                                <div className="flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
+                                  <span className="material-symbols-outlined text-sm">
+                                    play_arrow
+                                  </span>
+                                  <span>{t.previewVideo}</span>
+                                </div>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Explore All Departments Accordion */}
+                  <div className="overflow-hidden border-4 border-black bg-surface-container-lowest brutalist-shadow-lg">
                     <button
                       type="button"
-                      onClick={handleRestart}
-                      className="kp-depth-button kp-button-light inline-flex items-center justify-center gap-2 rounded-none border-2 border-black bg-surface px-6 py-3 font-headline-md text-sm uppercase tracking-wider text-on-surface"
+                      onClick={() => setIsExploreOpen((prev) => !prev)}
+                      className="flex w-full items-center justify-between bg-surface p-5 text-left font-display-lg text-xl uppercase tracking-wider text-on-surface hover:bg-surface-variant transition-colors"
                     >
-                      <span className="material-symbols-outlined text-base">restart_alt</span>
-                      <span>{t.restartButton}</span>
+                      <span className="inline-flex items-center gap-2">
+                        <span className="material-symbols-outlined text-primary">apps</span>
+                        {t.exploreButton} ({Object.keys(t.departments).length})
+                      </span>
+                      <span
+                        className={`material-symbols-outlined transition-transform duration-300 text-2xl ${
+                          isExploreOpen ? "rotate-180 text-primary" : ""
+                        }`}
+                      >
+                        expand_more
+                      </span>
                     </button>
 
-                    <Link
-                      href="/branches"
-                      className="kp-depth-button kp-button-gold inline-flex items-center justify-center gap-2 rounded-none border-2 border-black bg-secondary-container px-7 py-3 font-display-lg text-sm uppercase tracking-wider text-on-secondary-container"
-                    >
-                      <span>{t.findBranchButton}</span>
-                      <span className="material-symbols-outlined text-base">arrow_forward</span>
-                    </Link>
+                    {isExploreOpen && (
+                      <div className="kp-content-enter border-t-2 border-black p-5 sm:p-6 bg-surface-container-low">
+                        {/* Search in explore */}
+                        <div className="mb-4">
+                          <label htmlFor="explore-search" className="sr-only">
+                            Search departments
+                          </label>
+                          <div className="relative">
+                            <input
+                              id="explore-search"
+                              type="search"
+                              value={exploreFilter}
+                              onChange={(e) => setExploreFilter(e.target.value)}
+                              placeholder={t.filterDepartmentsPlaceholder}
+                              className="w-full rounded-none border-2 border-black bg-surface px-4 py-2.5 pl-10 text-base sm:text-sm font-bold text-on-surface input-focus shadow-[2px_2px_0_0_#000]"
+                            />
+                            <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">
+                              search
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Department Accordion List */}
+                        <div className="divide-y-2 divide-black border-2 border-black bg-surface">
+                          {exploreDepts.map((deptName) => {
+                            const dept = t.departments[deptName];
+                            const displayTitle = dept.title ?? deptName;
+                            const isExpanded = expandedExploreDept === deptName;
+                            return (
+                              <div key={deptName}>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setExpandedExploreDept((prev) =>
+                                      prev === deptName ? null : deptName,
+                                    )
+                                  }
+                                  className="flex w-full items-center justify-between p-3.5 text-left font-headline-md text-sm font-black uppercase text-on-surface hover:bg-surface-variant transition-colors"
+                                >
+                                  <span className="inline-flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-sm text-primary">
+                                      arrow_right
+                                    </span>
+                                    {displayTitle}
+                                  </span>
+                                  <span
+                                    className={`material-symbols-outlined text-lg transition-transform ${
+                                      isExpanded ? "rotate-180 text-primary" : ""
+                                    }`}
+                                  >
+                                    expand_more
+                                  </span>
+                                </button>
+
+                                {isExpanded && (
+                                  <div className="kp-content-enter border-t border-black/20 bg-surface-container-lowest p-4 text-xs sm:text-sm text-on-surface-variant space-y-3">
+                                    <p className="leading-relaxed">{dept.desc}</p>
+                                    <p className="italic text-on-surface-variant/80 border-l-2 border-primary pl-2">
+                                      {dept.scripture}
+                                    </p>
+
+                                    <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-none border-2 border-black bg-black mt-2">
+                                      {activeVideo === `explore-${deptName}` ? (
+                                        <iframe
+                                          src={`${dept.video}?autoplay=1`}
+                                          title={`${displayTitle} Video`}
+                                          allow="autoplay; fullscreen"
+                                          allowFullScreen
+                                          className="h-full w-full border-0"
+                                        />
+                                      ) : (
+                                        <button
+                                          type="button"
+                                          onClick={() => setActiveVideo(`explore-${deptName}`)}
+                                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
+                                        >
+                                          <div className="flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
+                                            <span className="material-symbols-outlined text-sm">
+                                              play_arrow
+                                            </span>
+                                            <span>
+                                              {t.playDeptVideo.replace("{dept}", displayTitle)}
+                                            </span>
+                                          </div>
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Final Actions / Call to Action */}
+                  <div className="kp-branch-panel kp-brand-panel relative overflow-hidden text-center">
+                    <div className="kp-branch-dove" aria-hidden="true" />
+                    <p className="kp-branch-eyebrow">{t.discoveryCompleted}</p>
+                    <h3 className="kp-branch-title font-display-lg">{t.nextStepTitle}</h3>
+                    <p className="kp-branch-copy">{t.nextStepSubtitle}</p>
+
+                    <div className="kp-branch-actions relative z-10 flex flex-wrap items-center justify-center gap-4">
+                      <button
+                        type="button"
+                        onClick={handleRestart}
+                        className="kp-depth-button kp-button-light inline-flex items-center justify-center gap-2 rounded-none border-2 border-black bg-surface px-6 py-3 font-headline-md text-sm uppercase tracking-wider text-on-surface"
+                      >
+                        <span className="material-symbols-outlined text-base">restart_alt</span>
+                        <span>{t.restartButton}</span>
+                      </button>
+
+                      <Link
+                        href="/branches"
+                        className="kp-depth-button kp-button-gold inline-flex items-center justify-center gap-2 rounded-none border-2 border-black bg-secondary-container px-7 py-3 font-display-lg text-sm uppercase tracking-wider text-on-secondary-container"
+                      >
+                        <span>{t.findBranchButton}</span>
+                        <span className="material-symbols-outlined text-base">arrow_forward</span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
             </AnimatedHeight>
           </div>
         </section>
@@ -863,12 +870,13 @@ export default function DepartmentQuizPage() {
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b-2 border-black bg-primary px-6 py-4 text-on-primary">
               <div>
-                <h3 id="privacy-modal-title" className="font-display-lg text-2xl uppercase leading-none">
+                <h3
+                  id="privacy-modal-title"
+                  className="font-display-lg text-2xl uppercase leading-none"
+                >
                   {privacyData.title}
                 </h3>
-                <p className="mt-1 text-xs text-on-primary/80 font-mono">
-                  {privacyData.subtitle}
-                </p>
+                <p className="mt-1 text-xs text-on-primary/80 font-mono">{privacyData.subtitle}</p>
               </div>
               <button
                 type="button"
@@ -957,4 +965,3 @@ export default function DepartmentQuizPage() {
     </div>
   );
 }
-

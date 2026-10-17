@@ -7,12 +7,7 @@ import { Icon } from "@/components/Icon";
 import { LifeDeptList } from "@/components/LifeDeptGrid";
 import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
-import {
-  LIFE_CATEGORIES,
-  LIFE_VISIBLE_SLUGS,
-  lifeBySlug,
-  type LifeSlug,
-} from "@/lib/life-content";
+import { LIFE_CATEGORIES, LIFE_VISIBLE_SLUGS, lifeBySlug, type LifeSlug } from "@/lib/life-content";
 
 const KIDS_GROUPS = [
   {

@@ -50,11 +50,7 @@ export function QuizExperience() {
   const prefersReducedMotion = useReducedMotion();
 
   // Site theme subscription (light vs dark mode)
-  const theme = useSyncExternalStore(
-    subscribeSiteTheme,
-    getSiteTheme,
-    () => "light" as SiteTheme
-  );
+  const theme = useSyncExternalStore(subscribeSiteTheme, getSiteTheme, () => "light" as SiteTheme);
   const isDark = theme === "dark";
 
   // User details state
@@ -112,7 +108,10 @@ export function QuizExperience() {
     setActiveVideo(null);
     setScreen("quiz");
     if (containerRef.current) {
-      containerRef.current.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+      containerRef.current.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
     }
   };
 
@@ -149,7 +148,7 @@ export function QuizExperience() {
         // Suppress network errors
       }
     },
-    [branch, lang]
+    [branch, lang],
   );
 
   // Finish quiz & calculate scores
@@ -172,10 +171,13 @@ export function QuizExperience() {
       submitToGoogleSheets(top3);
       setScreen("result");
       if (containerRef.current) {
-        containerRef.current.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+        containerRef.current.scrollIntoView({
+          behavior: prefersReducedMotion ? "auto" : "smooth",
+          block: "start",
+        });
       }
     },
-    [submitToGoogleSheets, prefersReducedMotion]
+    [submitToGoogleSheets, prefersReducedMotion],
   );
 
   // Navigation handlers
@@ -184,7 +186,10 @@ export function QuizExperience() {
     if (currentQuestion < t.questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
       if (containerRef.current) {
-        containerRef.current.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+        containerRef.current.scrollIntoView({
+          behavior: prefersReducedMotion ? "auto" : "smooth",
+          block: "start",
+        });
       }
     } else {
       handleFinishQuiz(answers);
@@ -198,7 +203,10 @@ export function QuizExperience() {
       setScreen("start");
     }
     if (containerRef.current) {
-      containerRef.current.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+      containerRef.current.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
     }
   };
 
@@ -211,7 +219,10 @@ export function QuizExperience() {
     setBranchError(false);
     setScreen("start");
     if (containerRef.current) {
-      containerRef.current.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+      containerRef.current.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
     }
   };
 
@@ -257,11 +268,7 @@ export function QuizExperience() {
           <div
             key={src}
             className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
-              idx === activeSlide
-                ? isDark
-                  ? "opacity-[0.14]"
-                  : "opacity-[0.10]"
-                : "opacity-0"
+              idx === activeSlide ? (isDark ? "opacity-[0.14]" : "opacity-[0.10]") : "opacity-0"
             }`}
             style={{ backgroundImage: `url(${src})` }}
           />
@@ -329,16 +336,21 @@ export function QuizExperience() {
                       : "border-purple-900/15 bg-white text-[#1c1c1f] hover:bg-purple-50/50"
                   }`}
                 >
-                  {QUIZ_LANGUAGES.map((item: { code: SupportedLanguage; label: string; flag: string }) => (
-                    <option
-                      key={item.code}
-                      value={item.code}
-                      className={isDark ? "bg-[#151022] text-white" : "bg-white text-[#1c1c1f]"}
-                    >
-                      {item.flag} {item.label}
-                    </option>
-                  ))}
-                  <option disabled className={isDark ? "bg-[#151022] text-white/50" : "bg-white text-gray-400"}>
+                  {QUIZ_LANGUAGES.map(
+                    (item: { code: SupportedLanguage; label: string; flag: string }) => (
+                      <option
+                        key={item.code}
+                        value={item.code}
+                        className={isDark ? "bg-[#151022] text-white" : "bg-white text-[#1c1c1f]"}
+                      >
+                        {item.flag} {item.label}
+                      </option>
+                    ),
+                  )}
+                  <option
+                    disabled
+                    className={isDark ? "bg-[#151022] text-white/50" : "bg-white text-gray-400"}
+                  >
                     ────────────
                   </option>
                   {UPCOMING_LANGUAGES.map((item: { code: string; label: string }) => (
@@ -382,9 +394,7 @@ export function QuizExperience() {
               <span className="h-1.5 w-12 rounded-full bg-[#fd7f20]" />
               <span className="h-1.5 w-6 rounded-full bg-[#6b34fa]" />
               <span
-                className={`h-1.5 w-2 rounded-full ${
-                  isDark ? "bg-white/40" : "bg-purple-900/20"
-                }`}
+                className={`h-1.5 w-2 rounded-full ${isDark ? "bg-white/40" : "bg-purple-900/20"}`}
               />
             </div>
           </Reveal>
@@ -413,7 +423,9 @@ export function QuizExperience() {
                 />
 
                 <div className="relative z-10">
-                  <div className={`mb-7 pb-6 border-b ${isDark ? "border-white/10" : "border-purple-900/10"}`}>
+                  <div
+                    className={`mb-7 pb-6 border-b ${isDark ? "border-white/10" : "border-purple-900/10"}`}
+                  >
                     <span
                       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider mb-3 ${
                         isDark
@@ -430,7 +442,9 @@ export function QuizExperience() {
                     >
                       {t.startHeading}
                     </h2>
-                    <p className={`mt-2 text-sm sm:text-base leading-relaxed ${isDark ? "text-white/65" : "text-[#5a5a64]"}`}>
+                    <p
+                      className={`mt-2 text-sm sm:text-base leading-relaxed ${isDark ? "text-white/65" : "text-[#5a5a64]"}`}
+                    >
                       {t.startDescription}
                     </p>
                   </div>
@@ -463,21 +477,21 @@ export function QuizExperience() {
                           aria-required="true"
                           aria-invalid={branchError}
                           className={`w-full appearance-none rounded-2xl border px-4 py-3.5 pr-10 text-sm sm:text-base font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-[#6b34fa]/50 cursor-pointer ${
-                            isDark
-                              ? "bg-white/[0.04] text-white"
-                              : "bg-[#f8f5fb] text-[#1c1c1f]"
+                            isDark ? "bg-white/[0.04] text-white" : "bg-[#f8f5fb] text-[#1c1c1f]"
                           } ${
                             branchError
                               ? "border-rose-500 ring-2 ring-rose-500/30"
                               : isDark
-                              ? "border-white/15 hover:border-white/25 focus:border-[#6b34fa]"
-                              : "border-purple-900/15 hover:border-purple-900/30 focus:border-[#6b34fa]"
+                                ? "border-white/15 hover:border-white/25 focus:border-[#6b34fa]"
+                                : "border-purple-900/15 hover:border-purple-900/30 focus:border-[#6b34fa]"
                           }`}
                         >
                           <option
                             value=""
                             disabled
-                            className={isDark ? "bg-[#151022] text-white/40" : "bg-white text-gray-400"}
+                            className={
+                              isDark ? "bg-[#151022] text-white/40" : "bg-white text-gray-400"
+                            }
                           >
                             {t.branchPlaceholder}
                           </option>
@@ -485,7 +499,9 @@ export function QuizExperience() {
                             <option
                               key={b}
                               value={b}
-                              className={isDark ? "bg-[#151022] text-white" : "bg-white text-[#1c1c1f]"}
+                              className={
+                                isDark ? "bg-[#151022] text-white" : "bg-white text-[#1c1c1f]"
+                              }
                             >
                               {b}
                             </option>
@@ -516,7 +532,9 @@ export function QuizExperience() {
 
                     {/* Privacy Note */}
                     <div className="pt-2 text-center">
-                      <p className={`text-xs font-medium ${isDark ? "text-white/50" : "text-[#6e6e76]"}`}>
+                      <p
+                        className={`text-xs font-medium ${isDark ? "text-white/50" : "text-[#6e6e76]"}`}
+                      >
                         {t.privacyAgreement.includes("{policy}") ? (
                           <>
                             {t.privacyAgreement.split("{policy}")[0]}
@@ -578,7 +596,9 @@ export function QuizExperience() {
                       isDark ? "text-white/70" : "text-[#5a5a64]"
                     }`}
                   >
-                    <span className={`inline-flex items-center gap-1.5 ${isDark ? "text-[#c4b0ff]" : "text-[#6b34fa]"}`}>
+                    <span
+                      className={`inline-flex items-center gap-1.5 ${isDark ? "text-[#c4b0ff]" : "text-[#6b34fa]"}`}
+                    >
                       <Compass className="h-4 w-4 text-[#fd7f20]" />
                       {t.questionBadge
                         .replace("{current}", String(currentQuestion + 1))
@@ -661,8 +681,8 @@ export function QuizExperience() {
                               ? "border-[#6b34fa] bg-gradient-to-br from-[#6b34fa]/30 via-[#6b34fa]/15 to-transparent text-white ring-2 ring-[#6b34fa] shadow-[0_0_24px_rgba(107,52,250,0.3)] scale-[1.01]"
                               : "border-[#6b34fa] bg-gradient-to-br from-purple-100/90 via-purple-50 to-white text-[#1c1c1f] ring-2 ring-[#6b34fa] shadow-[0_8px_25px_rgba(107,52,250,0.18)] scale-[1.01]"
                             : isDark
-                            ? "border-white/10 bg-white/[0.03] text-white/90 hover:border-purple-400/40 hover:bg-white/[0.06] hover:-translate-y-0.5"
-                            : "border-purple-900/10 bg-[#faf7fc] text-[#1c1c1f] hover:border-purple-500/40 hover:bg-purple-50/60 hover:-translate-y-0.5 shadow-xs"
+                              ? "border-white/10 bg-white/[0.03] text-white/90 hover:border-purple-400/40 hover:bg-white/[0.06] hover:-translate-y-0.5"
+                              : "border-purple-900/10 bg-[#faf7fc] text-[#1c1c1f] hover:border-purple-500/40 hover:bg-purple-50/60 hover:-translate-y-0.5 shadow-xs"
                         }`}
                       >
                         <span
@@ -670,11 +690,15 @@ export function QuizExperience() {
                             isSelected
                               ? "bg-[#fd7f20] text-white shadow-md"
                               : isDark
-                              ? "bg-white/10 text-white/80 group-hover:bg-[#6b34fa] group-hover:text-white"
-                              : "bg-purple-100/80 text-[#6b34fa] group-hover:bg-[#6b34fa] group-hover:text-white"
+                                ? "bg-white/10 text-white/80 group-hover:bg-[#6b34fa] group-hover:text-white"
+                                : "bg-purple-100/80 text-[#6b34fa] group-hover:bg-[#6b34fa] group-hover:text-white"
                           }`}
                         >
-                          {isSelected ? <Check className="h-4 w-4" /> : String.fromCharCode(65 + idx)}
+                          {isSelected ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            String.fromCharCode(65 + idx)
+                          )}
                         </span>
                         <span className="text-sm sm:text-base font-bold leading-snug pt-0.5">
                           {option.label}
@@ -685,7 +709,9 @@ export function QuizExperience() {
                 </div>
 
                 {/* Nav Controls */}
-                <div className={`flex items-center justify-between gap-4 border-t pt-6 ${isDark ? "border-white/10" : "border-purple-900/10"}`}>
+                <div
+                  className={`flex items-center justify-between gap-4 border-t pt-6 ${isDark ? "border-white/10" : "border-purple-900/10"}`}
+                >
                   <button
                     type="button"
                     onClick={handleBack}
@@ -710,9 +736,7 @@ export function QuizExperience() {
                     }`}
                   >
                     <span>
-                      {currentQuestion === t.questions.length - 1
-                        ? t.finishButton
-                        : t.nextButton}
+                      {currentQuestion === t.questions.length - 1 ? t.finishButton : t.nextButton}
                     </span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
@@ -755,7 +779,9 @@ export function QuizExperience() {
                       >
                         {t.resultsTitle}
                       </h2>
-                      <p className={`mt-2 text-sm sm:text-base ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}>
+                      <p
+                        className={`mt-2 text-sm sm:text-base ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                      >
                         {t.resultsSubtitle}
                       </p>
                     </div>
@@ -800,7 +826,9 @@ export function QuizExperience() {
                       {t.departments[topThree[0]].title ?? topThree[0]}
                     </h3>
 
-                    <p className={`text-sm sm:text-base leading-relaxed mb-5 ${isDark ? "text-white/80" : "text-[#4a4a52]"}`}>
+                    <p
+                      className={`text-sm sm:text-base leading-relaxed mb-5 ${isDark ? "text-white/80" : "text-[#4a4a52]"}`}
+                    >
                       {t.departments[topThree[0]].desc}
                     </p>
 
@@ -809,8 +837,12 @@ export function QuizExperience() {
                         isDark ? "bg-white/[0.03]" : "bg-purple-50/70"
                       }`}
                     >
-                      <Quote className={`h-5 w-5 shrink-0 mt-0.5 ${isDark ? "text-[#c4b0ff]" : "text-[#6b34fa]"}`} />
-                      <p className={`text-xs sm:text-sm italic leading-relaxed ${isDark ? "text-purple-200/90" : "text-[#5420d6]"}`}>
+                      <Quote
+                        className={`h-5 w-5 shrink-0 mt-0.5 ${isDark ? "text-[#c4b0ff]" : "text-[#6b34fa]"}`}
+                      />
+                      <p
+                        className={`text-xs sm:text-sm italic leading-relaxed ${isDark ? "text-purple-200/90" : "text-[#5420d6]"}`}
+                      >
                         {t.departments[topThree[0]].scripture}
                       </p>
                     </div>
@@ -838,7 +870,10 @@ export function QuizExperience() {
                               <Play className="h-7 w-7 translate-x-0.5 fill-white" />
                             </span>
                             <span className="rounded-full border border-white/20 bg-black/60 backdrop-blur-md px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
-                              {t.watchSpotlight.replace("{dept}", t.departments[topThree[0]].title ?? topThree[0])}
+                              {t.watchSpotlight.replace(
+                                "{dept}",
+                                t.departments[topThree[0]].title ?? topThree[0],
+                              )}
                             </span>
                           </div>
                         </button>
@@ -884,7 +919,9 @@ export function QuizExperience() {
                             {displayTitle}
                           </h4>
 
-                          <p className={`text-xs sm:text-sm leading-relaxed mb-3 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}>
+                          <p
+                            className={`text-xs sm:text-sm leading-relaxed mb-3 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                          >
                             {dept.desc}
                           </p>
 
@@ -1007,7 +1044,7 @@ export function QuizExperience() {
                                   type="button"
                                   onClick={() =>
                                     setExpandedExploreDept((prev) =>
-                                      prev === deptName ? null : deptName
+                                      prev === deptName ? null : deptName,
                                     )
                                   }
                                   className={`flex w-full items-center justify-between p-4 text-left font-bold text-sm transition-colors cursor-pointer ${
@@ -1058,7 +1095,9 @@ export function QuizExperience() {
                                         >
                                           <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold text-white shadow-md group-hover:bg-[#6b34fa] transition-colors">
                                             <Play className="h-3.5 w-3.5 fill-white" />
-                                            <span>{t.playDeptVideo.replace("{dept}", displayTitle)}</span>
+                                            <span>
+                                              {t.playDeptVideo.replace("{dept}", displayTitle)}
+                                            </span>
                                           </div>
                                         </button>
                                       )}
@@ -1090,7 +1129,9 @@ export function QuizExperience() {
                     >
                       {t.nextStepTitle}
                     </h3>
-                    <p className={`mt-1 text-sm max-w-md ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}>
+                    <p
+                      className={`mt-1 text-sm max-w-md ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                    >
                       {t.nextStepSubtitle}
                     </p>
                   </div>
@@ -1212,8 +1253,12 @@ export function QuizExperience() {
 
                   {section.subsections?.map((sub: PrivacySubsection, sIdx: number) => (
                     <div key={sIdx} className="pl-3 space-y-1">
-                      <p className={`font-bold ${isDark ? "text-white" : "text-[#1c1c1f]"}`}>{sub.title}</p>
-                      <ul className={`list-disc pl-5 space-y-1 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}>
+                      <p className={`font-bold ${isDark ? "text-white" : "text-[#1c1c1f]"}`}>
+                        {sub.title}
+                      </p>
+                      <ul
+                        className={`list-disc pl-5 space-y-1 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                      >
                         {sub.items.map((item: string, iIdx: number) => (
                           <li key={iIdx}>{item}</li>
                         ))}
@@ -1222,7 +1267,9 @@ export function QuizExperience() {
                   ))}
 
                   {section.items && (
-                    <ul className={`list-disc pl-5 space-y-1 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}>
+                    <ul
+                      className={`list-disc pl-5 space-y-1 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                    >
                       {section.items.map((item: string, iIdx: number) => (
                         <li key={iIdx}>{item}</li>
                       ))}
@@ -1241,7 +1288,9 @@ export function QuizExperience() {
                         <a
                           href={`mailto:${section.contact.email}`}
                           className={`underline ${
-                            isDark ? "text-[#c4b0ff] hover:text-white" : "text-[#6b34fa] hover:text-[#5420d6]"
+                            isDark
+                              ? "text-[#c4b0ff] hover:text-white"
+                              : "text-[#6b34fa] hover:text-[#5420d6]"
                           }`}
                         >
                           {section.contact.email}
