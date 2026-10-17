@@ -20,6 +20,7 @@ export const STATIC_PATHS = [
   "/life",
   "/fellowships",
   "/departments",
+  "/quiz",
   "/gallery",
   "/events",
   "/messages",

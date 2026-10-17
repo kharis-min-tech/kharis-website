@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { DEPARTMENTS } from "@/data/departments";
 
 // Add a department video by adding one line here.
@@ -75,6 +76,20 @@ export function DepartmentVideoHero() {
           >
             Find where your gift meets the mission. Get busy serving.
           </p>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <Link
+              href="/quiz"
+              className="kp-depth-button kp-button-purple group inline-flex items-center gap-2.5 border-2 border-black bg-primary px-6 py-3 font-display-lg text-lg uppercase tracking-wider text-on-primary shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+            >
+              <span className="material-symbols-outlined text-xl" aria-hidden="true">
+                psychology_alt
+              </span>
+              <span>Start Department Quiz</span>
+              <span className="material-symbols-outlined text-lg transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
+                arrow_forward
+              </span>
+            </Link>
+          </div>
           <div className="mt-8 flex gap-4">
             <div className="h-2 w-12 bg-secondary-container" />
             <div className="h-2 w-12 bg-primary" />

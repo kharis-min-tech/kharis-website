@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Sparkles, Users, Heart } from "lucide-react";
 import { Icon } from "@/components/Icon";
@@ -8,7 +9,6 @@ import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import {
   LIFE_CATEGORIES,
-  LIFE_DEPARTMENTS_URL,
   LIFE_VISIBLE_SLUGS,
   lifeBySlug,
   type LifeSlug,
@@ -71,12 +71,23 @@ const DEPT_BANDS = [
 ] as const;
 
 export function LifeDetail({ slug }: { slug: LifeSlug }) {
+  const [activeDeptSlide, setActiveDeptSlide] = useState(0);
+  const depts = slug === "departments";
+
+  useEffect(() => {
+    if (!depts || typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => {
+      setActiveDeptSlide((prev) => (prev + 1) % DEPT_BANDS.length);
+    }, 4500);
+    return () => window.clearInterval(timer);
+  }, [depts]);
+
   const page = lifeBySlug(slug);
   if (!page) return null;
 
   const next = page.next ? lifeBySlug(page.next) : undefined;
   const kids = slug === "children";
-  const depts = slug === "departments";
   const navCats = LIFE_CATEGORIES.filter((c) => LIFE_VISIBLE_SLUGS.has(c.slug));
 
   if (kids) {
@@ -234,27 +245,44 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
             <LifeDeptList />
           </Reveal>
 
-          <Reveal variant="up" className="life-dept-discover">
-            <h2>Discover your Kharis department</h2>
-            <p>
-              Explore the teams and find where you can serve. If the interactive finder does not
-              load below, open it in a new tab.
-            </p>
-            <div className="life-dept-discover__frame">
-              <iframe
-                title="Discover your Kharis department"
-                src={LIFE_DEPARTMENTS_URL}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+          <Reveal
+            variant="up"
+            className="life-dept-discover relative overflow-hidden rounded-3xl border border-purple-500/25 p-8 sm:p-12 text-center text-white shadow-[0_24px_60px_rgba(40,20,80,0.22)]"
+          >
+            {/* Cross-fading department photos */}
+            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+              {DEPT_BANDS.map((band, idx) => (
+                <div
+                  key={band.image}
+                  className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
+                    idx === activeDeptSlide ? "opacity-35 scale-105" : "opacity-0 scale-100"
+                  }`}
+                  style={{
+                    backgroundImage: `url(${band.image})`,
+                    transitionProperty: "opacity, transform",
+                  }}
+                />
+              ))}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1d0b3b]/90 via-[#120826]/85 to-[#2b0f54]/90" />
             </div>
-            <p className="life-dept-discover__note">
-              Need an embeddable code from Ruth if this iframe is blocked. Meanwhile use{" "}
-              <a href={LIFE_DEPARTMENTS_URL} target="_blank" rel="noreferrer">
-                discover.khar.is
-              </a>
-              .
-            </p>
+
+            <div className="relative z-10 mx-auto max-w-xl flex flex-col items-center">
+              <p className="life-hero__eyebrow !text-[#ffaa55] mb-2">Department Discovery</p>
+              <h2 className="!text-white text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Not sure where your gifts fit best?
+              </h2>
+              <p className="!text-white/80 mt-3 mb-7 text-sm sm:text-base leading-relaxed">
+                Take our 2-minute interactive Department Discovery Quiz to match your passions and
+                strengths with the right Kharis ministry team.
+              </p>
+              <Link
+                href="/quiz"
+                className="life-cta !bg-[#fd7f20] hover:!bg-[#ff933f] !text-white !border-0 shadow-[0_12px_32px_rgba(253,127,32,0.38)]"
+              >
+                Start Department Quiz
+                <Icon name="arrow" className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </Reveal>
 
           <Reveal className="life-detail-end">
