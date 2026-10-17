@@ -1,0 +1,15 @@
+.evangelical-alliance {
+  --ea-tagline: #007482;
+  display: block;
+  width: min(100%, 24rem);
+  height: auto;
+  flex-shrink: 0;
+  color: #232f64;
+  overflow: visible;
+}
+
+html[data-theme="dark"] .evangelical-alliance,
+.site-footer--dark .evangelical-alliance {
+  --ea-tagline: #7bcbd5;
+  color: #fff;
+}

@@ -28,6 +28,7 @@ const COLUMNS: FooterColumn[] = [
     links: [
       { label: "Become a member", to: "https://kharis.org/", href: true },
       { label: "Volunteer", to: "/departments" },
+      { label: "Department Quiz", to: "/quiz" },
       { label: "Testimony Form", to: "/#share-testimony" },
     ],
   },
