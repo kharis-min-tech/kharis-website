@@ -66,7 +66,7 @@ function Index({
     <div className="bg-white text-gray-900 font-body-md overflow-x-hidden pt-[74px]">
       <SiteHeader />
 
-      <header className="kp-on-dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
+      <header className="kp-home-hero kp-on-dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
         <div className="absolute inset-0 grid grid-cols-2 md:flex md:flex-row w-full h-full z-0">
           <div className="relative col-span-2 md:flex-1 group overflow-hidden border-b-2 md:border-b-0 md:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
             <AmbientVideo
@@ -103,7 +103,7 @@ function Index({
 
         <div className="absolute inset-0 z-20 bg-[#151218]/55 md:bg-transparent"></div>
 
-        <div className="absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none px-margin-mobile md:px-margin-desktop text-center mt-0 md:mt-[-10vh]">
+        <div className="kp-home-hero-copy absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none px-margin-mobile md:px-margin-desktop text-center mt-0 md:mt-[-10vh]">
           <div className="bg-[#f7be1d] px-4 sm:px-6 py-2 sm:py-3 mb-5 md:mb-8 pointer-events-auto shadow-[4px_4px_0px_0px_rgba(19,16,22,1)] border-2 border-[#151218] rotate-[-2deg] max-w-full">
             <span className="font-label-comic text-[11px] sm:text-label-comic text-[#3f2e00] uppercase tracking-widest">
               Preach Christ Crucified.

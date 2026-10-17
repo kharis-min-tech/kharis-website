@@ -23,7 +23,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
       <SiteHeader />
       <main>
-        <section className="relative box-border w-full h-svh max-h-svh overflow-hidden bg-on-background border-b-4 border-black">
+        <section className="kp-messages-hero relative box-border w-full h-svh max-h-svh overflow-hidden bg-on-background border-b-4 border-black">
           {featured ? (
             <MutedHeroVideo
               id={featured.id}

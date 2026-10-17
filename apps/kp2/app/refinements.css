@@ -523,6 +523,17 @@ html[data-kp-intro="seen"] .kp-intro {
   object-fit: contain;
 }
 
+@media (max-width: 767px) {
+  .site-header .kp-header-logo {
+    width: 56px;
+    height: 44px;
+  }
+  .site-header .kp-header-logo-image {
+    width: 76px;
+    height: 76px;
+  }
+}
+
 /* Let the introduction fit its content instead of occupying a whole viewport. */
 .kp-home-intro {
   padding-block: clamp(2.5rem, 4vw, 3rem);
@@ -672,6 +683,93 @@ html[data-kp-intro="seen"] .kp-intro {
 
 .dark .site-header .kp-nav-label::after {
   background-color: var(--primary-fixed);
+}
+
+/* Phone layouts keep the print styling while giving content room to wrap. */
+@media (max-width: 767px) {
+  html {
+    scroll-padding-top: 90px;
+  }
+  .kp-home-hero {
+    height: auto;
+    min-height: min(680px, calc(100svh - 74px));
+  }
+  .kp-home-hero-copy {
+    position: relative;
+    flex: 1;
+    padding-block: 3rem;
+  }
+  .kp-home-hero h1 {
+    font-size: clamp(2rem, 10.5vw, 2.75rem);
+    line-height: 1.08;
+  }
+  main h2.font-display-xl {
+    font-size: clamp(1.875rem, 8vw, 2.25rem);
+    line-height: 1.12;
+  }
+  main :is(h1, h2, h3) {
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+  main :is(.p-8, .p-stack-md) {
+    padding: 1.25rem;
+  }
+  :is(main, dialog) :is(input, select, textarea) {
+    font-size: 1rem;
+    scroll-margin-block: 100px;
+  }
+  main :is(button, .kp-depth-button),
+  dialog :is(button, .kp-depth-button),
+  [data-branch-regions] button {
+    min-height: 44px;
+  }
+  .kp-depth-button {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+  .kp-faith .kp-faith-question {
+    gap: 0.625rem;
+    padding: 1rem;
+  }
+  .kp-faith-inner p {
+    padding: 0.25rem 1rem 1.25rem;
+  }
+  .kp-fellowships-hero,
+  .kp-messages-hero {
+    height: auto;
+    min-height: min(720px, 100svh);
+    max-height: none;
+  }
+  .kp-messages-hero > .relative {
+    min-height: inherit;
+  }
+  .kp-fellowships-hero .kp-depth-button {
+    width: 100%;
+    justify-content: center;
+    padding-inline: 1rem;
+    font-size: 1.125rem;
+  }
+  .theme-toggle {
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  footer ul a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    overflow-wrap: anywhere;
+  }
+  footer ul.space-y-2 > li {
+    margin-top: 0;
+  }
+  footer {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
 }
 @media (hover: hover) {
   .kp-faith-question:hover {
