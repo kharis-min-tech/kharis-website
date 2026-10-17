@@ -25,7 +25,7 @@ export const CHARACTER_SLIDES: BranchSlide[] = [
   },
   {
     name: "christ-centred",
-    title: "Christ-centred",
+    title: "Christ Exalting",
     subtitle: "Jesus at the heart of everything we do",
     image: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
     accent: ACCENTS[1],
@@ -33,21 +33,21 @@ export const CHARACTER_SLIDES: BranchSlide[] = [
   {
     name: "biblical",
     title: "Biblical",
-    subtitle: "Grounded in the Word, shaped by truth",
+    subtitle: "Grounded in the text, being renewed by the living word",
     image: "https://images.kharis.org/site-images/main/b65991e38ead9ab1/biblical-open-bible.jpg",
     accent: ACCENTS[0],
   },
   {
     name: "love",
     title: "Love",
-    subtitle: "A caring family where people belong",
+    subtitle: "A Family Knit together in love",
     image: "https://images.kharis.org/site-images/main/6cecd6b024bd301a/love-greeting.jpg",
     accent: ACCENTS[1],
   },
   {
     name: "grace-filled",
     title: "Grace-filled",
-    subtitle: "Changing the world with a touch of His grace",
+    subtitle: "The Grace of God makes the difference",
     image: "https://images.kharis.org/site-images/main/16b531253b8a325e/grace-filled-prayer.jpg",
     accent: ACCENTS[0],
   },

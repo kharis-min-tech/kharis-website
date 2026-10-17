@@ -10605,13 +10605,14 @@ html[data-theme="dark"] .life-kids-hero__bleed {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
-/* Homepage: fade in below hero once video is ready */
+/* Homepage: fade in below the hero once it is ready (or after the dove intro). */
 .home-below-hero {
   opacity: 0;
   transition: opacity 0.55s ease;
 }
 
-html.hero-ready .home-below-hero {
+html.hero-ready .home-below-hero,
+html[data-site-intro="seen"] .home-below-hero {
   opacity: 1;
 }
 

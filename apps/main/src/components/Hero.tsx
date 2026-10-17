@@ -3,7 +3,7 @@
 
 import Image from "@/components/SiteImage";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HeroHeadline } from "./HeroHeadline";
 import "./hero-slider.css";
 
@@ -81,7 +81,6 @@ const HERO_SLIDES: HeroSlide[] = [
 
 /** Seconds for one card to drift past the centre, per row (lower = faster). */
 const ROW_SECONDS_PER_CARD = [6, 7.5] as const;
-const FALLBACK_REVEAL_MS = 1500;
 
 /** Videos only run on the top row; the lower row is photos only so a clip never shows as a still. */
 const TOP_ROW: HeroSlide[] = [];
@@ -122,22 +121,14 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const wallRef = useRef<HTMLDivElement>(null);
   const trackRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const revealed = useRef(false);
   const [spots, setSpots] = useState<[number, number]>([0, 0]);
 
-  const revealSite = useCallback(() => {
-    if (revealed.current) return;
-    revealed.current = true;
-    document.documentElement.classList.add("hero-ready");
-  }, []);
-
   useEffect(() => {
-    const fallback = window.setTimeout(revealSite, FALLBACK_REVEAL_MS);
+    document.documentElement.classList.add("hero-ready");
     return () => {
-      window.clearTimeout(fallback);
       document.documentElement.classList.remove("hero-ready");
     };
-  }, [revealSite]);
+  }, []);
 
   useEffect(() => {
     const wall = wallRef.current;
@@ -296,7 +287,6 @@ export function Hero() {
 
     measure();
     apply();
-    revealSite();
     ensureRunning();
 
     return () => {
@@ -309,7 +299,7 @@ export function Hero() {
       wall.removeEventListener("pointerup", onPointerUp);
       wall.removeEventListener("pointercancel", onPointerUp);
     };
-  }, [revealSite]);
+  }, []);
 
   return (
     <section id="top" ref={sectionRef} className="hero-shell">
