@@ -12,7 +12,7 @@ function FellowshipsPage() {
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
       <main>
-        <section className="kp-on-dark relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden border-b-4 border-primary bg-on-background pt-24 pb-8 text-background">
+        <section className="kp-fellowships-hero kp-on-dark relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden border-b-4 border-primary bg-on-background pt-24 pb-8 text-background">
           <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
           <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
           <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10 grid md:grid-cols-2 gap-stack-lg items-center">

@@ -259,7 +259,7 @@ export function SiteHeader() {
       >
         <div className="min-h-0 overflow-hidden">
           <div
-            className={`border-t-2 border-on-background bg-surface-container-lowest px-4 md:px-6 py-6 flex flex-col gap-1 max-h-[calc(100svh-74px)] overflow-y-auto transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "translate-y-0" : "-translate-y-3"}`}
+            className={`border-t-2 border-on-background bg-surface-container-lowest px-4 md:px-6 py-6 flex flex-col gap-1 max-h-[calc(100dvh-74px)] overflow-y-auto transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "translate-y-0" : "-translate-y-3"}`}
           >
             {NAV_ITEMS.flatMap((item) =>
               item.children
