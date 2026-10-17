@@ -88,23 +88,23 @@ const WHY_FAQ = [
   },
   {
     q: "What makes Kharis messages different?",
-    a: "They are Christ-centric, text-driven, and gospel-saturated, with a focus on what the Bible is actually saying and revealing Christ through it, helping you to become a firm, sound believer.",
+    a: "Text-driven, Christ exalting and gospel-saturated",
   },
   {
     q: "Where can I watch?",
-    a: "Watch on this Messages page or on YouTube. Prefer audio? Listen on SoundCloud, Apple Podcasts, Spotify, or Amazon Music.",
+    a: "Watch on this Messages page or Youtube. Prefer audio Listen on the Kharis App, SoundCloud, Apple Podcasts, Spotify etc.",
   },
   {
     q: "How often are new messages added?",
-    a: "New teachings are added weekly from Sunday services and series. Browse the rows below for the newest and older archive messages.",
+    a: "New messages are added weekly from Sunday services and series. Browse the rows below for the newest and older archive messages.",
   },
   {
     q: "Can I go deeper in the Word at home?",
-    a: "Yes. Keep the Word on your lips and in your heart (Joshua 1:8). Replay teachings until truth settles, then share what God is saying.",
+    a: "Yes. Keep the Word on your lips and in your heart (Joshua 1:8). Replay messages until truth settles, then share what God is saying.",
   },
   {
     q: "Is Scripture really for my situation?",
-    a: "All Scripture is God-breathed and useful for teaching, correcting, and training in righteousness (2 Timothy 3:16). The Word is living and active (Hebrews 4:12).",
+    a: "\u201CAll Scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness,\u201D 2 Timothy 3:16. \u201CFor the word of God is living and powerful\u201D Hebrews 4:12.",
   },
 ];
 

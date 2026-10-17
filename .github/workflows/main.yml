@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - "apps/main/**"
+      - "shared/**"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/main.yml"

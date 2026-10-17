@@ -28,9 +28,6 @@
 .about-page .about-faith-band {
   background: var(--bg-soft);
 }
-.about-page .about-faith__q {
-  cursor: pointer;
-}
 .about-page .about-lead__story-glow {
   display: none;
 }
@@ -160,78 +157,6 @@
   }
 }
 
-.about-page .about-faith {
-  gap: 0;
-}
-.about-page .about-faith__item {
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  transition: background 0.3s ease;
-}
-.about-page .about-faith__item.is-open {
-  background: var(--bg);
-}
-.about-page .about-faith__q {
-  padding: 1.4rem 1.25rem;
-}
-.about-page .about-faith__title {
-  transition: transform 0.3s ease;
-}
-.about-page .about-faith__q:hover .about-faith__title {
-  transform: translateX(6px);
-}
-.about-page .about-faith__icon {
-  position: relative;
-  width: 24px;
-  height: 24px;
-}
-.about-page .about-faith__icon::before,
-.about-page .about-faith__icon::after {
-  content: "";
-  position: absolute;
-  background: currentColor;
-  top: 11px;
-  left: 4px;
-  width: 16px;
-  height: 2px;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.about-page .about-faith__icon::after {
-  transform: rotate(90deg);
-}
-.about-page .is-open .about-faith__icon::after {
-  transform: rotate(0);
-}
-.about-page .about-faith__answer-wrap {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transition:
-    grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.35s ease;
-}
-.about-page .is-open .about-faith__answer-wrap {
-  grid-template-rows: 1fr;
-  opacity: 1;
-}
-.about-page .about-faith__answer-inner {
-  min-height: 0;
-  overflow: hidden;
-}
-.about-page .about-faith__a {
-  padding: 0 1.25rem 1.5rem;
-  margin: 0;
-  max-width: 65ch;
-}
-@media (prefers-reduced-motion: reduce) {
-  .about-page :is(.about-faith__answer-wrap, .about-faith__icon::after, .about-faith__title) {
-    transition: none;
-  }
-  .about-page .about-faith__q:hover .about-faith__title {
-    transform: none;
-  }
-}
 .about-page .about-panel__pillar.is-active .about-panel__pillar-title {
   color: var(--fg);
 }
@@ -312,30 +237,11 @@
   margin-top: 3rem;
   padding-block: clamp(3rem, 7vw, 7rem);
 }
-.about-page .about-faith-band__inner {
-  max-width: none;
-  padding-inline: clamp(1.25rem, 5vw, 5rem);
-}
 .about-page .about-faith-band .about-section__title {
   font-size: clamp(2.8rem, 6vw, 5.5rem);
   letter-spacing: -0.05em;
   max-width: 12ch;
   line-height: 1;
-}
-.about-page .about-faith__title {
-  font-size: clamp(1.1rem, 2vw, 1.65rem);
-}
-@media (min-width: 1000px) {
-  .about-page .about-faith-band__inner {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 4rem;
-    align-items: start;
-  }
-  .about-page .about-faith-band__inner > div:first-child {
-    position: sticky;
-    top: 8rem;
-  }
 }
 @media (max-width: 759px) {
   .about-page .about-jump__row {
@@ -397,11 +303,6 @@
 }
 .about-page .about-jump__link:hover {
   text-shadow: 0 5px 16px rgba(35, 10, 60, 0.13);
-}
-.about-page .about-faith__item.is-open {
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 14px 30px -20px rgba(25, 10, 40, 0.35);
 }
 @media (max-width: 759px) {
   .about-page .about-panel__hero::before {

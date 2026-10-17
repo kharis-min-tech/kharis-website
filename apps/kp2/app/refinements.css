@@ -440,12 +440,7 @@ html[data-kp-intro="seen"] .kp-intro {
   margin-top: auto;
   pointer-events: none;
 }
-/* The supplied images already contain their phone frames. */
-#app .kp-app-phone-image {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 0;
+#app .kp-app-phone img {
   transform: none;
   filter: none;
 }

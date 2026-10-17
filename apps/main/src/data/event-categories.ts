@@ -94,7 +94,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       position: "50% 28%",
     },
     headline: "Sunday Service",
-    subtext: "Worship, the Word and a church family to belong to. Everyone is welcome.",
+    subtext: "Worship, the Word and a church family to belong to.",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/fd4b6a19fbb8f4d3/events/sunday-worship-hands.jpg",
@@ -215,7 +215,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       position: "48% 50%",
     },
     headline: "Family Fun Day",
-    subtext: "A day out for the whole church family, from the youngest to the oldest.",
+    subtext: "A time of joyful fellowship for the entire Kharis family.",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/3423ef762f6c2481/events/family-fun-day-race.jpg",
@@ -307,7 +307,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       alt: "Two members in yellow campaign T-shirts talking with a woman at Stratford station",
     },
     headline: "Jesus Campaign",
-    subtext: "Taking the good news of Jesus to the streets of our cities.",
+    subtext: "Taking the Glorious Gospel of Christ to the streets of our cities",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/5bbfb2fff5c0fc8c/hero/outreach-street.jpg",
@@ -347,7 +347,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       position: "50% 0%",
     },
     headline: "Let the Bible Speak",
-    subtext: "A conference of teaching that roots us in Scripture.",
+    subtext: "A conference where we open the Book and hear His voice.",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/69361724ac3b9413/events/ltbs-team-caps.jpg",
@@ -400,7 +400,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       eyebrow: "Hosted by Pastor David & Pastor Awo",
     },
     headline: "Kharis Singles Ball",
-    subtext: "An evening of elegance, good food and great company.",
+    subtext: "An evening of rich fellowship, joy, and celebration in Christ's love.",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/e06e47b90f538fed/events/singles-ball/ballroom-overview.jpg",

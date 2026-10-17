@@ -39,10 +39,12 @@ export function MobileNavigation({
   dark: boolean;
 }) {
   const [mounted, setMounted] = useState(false);
-  const [aboutOpen, setAboutOpen] = useState(false);
+  const aboutActive =
+    pathname === "/about" || pathname.startsWith("/about/") || pathname.startsWith("/governance");
+  const [aboutOpen, setAboutOpen] = useState(aboutActive);
   useEffect(() => {
-    if (!open) setAboutOpen(false);
-  }, [open]);
+    if (!open) setAboutOpen(aboutActive);
+  }, [open, aboutActive]);
   const ref = useDialog(open, onClose);
   const reduce = usePrefersReducedMotion();
   useEffect(() => setMounted(true), []);
@@ -117,6 +119,7 @@ export function MobileNavigation({
                       <button
                         type="button"
                         className="mobile-nav__parent"
+                        data-current={aboutActive || undefined}
                         aria-expanded={aboutOpen}
                         aria-controls="mobile-about-pages"
                         onClick={() => setAboutOpen((value) => !value)}
@@ -136,7 +139,12 @@ export function MobileNavigation({
                           >
                             <nav aria-label="About Kharis pages">
                               {aboutPages.map((page) => (
-                                <Link key={page.href} href={page.href} onClick={onClose}>
+                                <Link
+                                  key={page.href}
+                                  href={page.href}
+                                  aria-current={current(page.href) ? "page" : undefined}
+                                  onClick={onClose}
+                                >
                                   {page.label}
                                 </Link>
                               ))}

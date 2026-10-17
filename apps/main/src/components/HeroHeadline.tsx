@@ -11,7 +11,7 @@ const LEAD = "We are";
 /** Each phrase gets its own entrance (styles live in hero-slider.css). */
 const PHRASES = [
   { text: "Jesus Believers", anim: "wipe" },
-  { text: "Christ Centric", anim: "fade-up" },
+  { text: "Christ Glorifying", anim: "fade-up" },
   { text: "Biblical", anim: "tracking" },
   { text: "Spirit Filled", anim: "words" },
   { text: "Revival Seeking", anim: "wipe" },

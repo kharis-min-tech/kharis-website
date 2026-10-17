@@ -1,0 +1,62 @@
+/* Source captures are 486 x 986. Their screen is 434 x 936 at (26, 22).
+   The app content ends at source row 950; the space above it holds the camera. */
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 486 / 986;
+  border-radius: 14% / 7%;
+  background: #08080b;
+  box-shadow:
+    inset 0 0 0 1px #55545a,
+    inset 0 0 0 3px #242328;
+}
+
+.screen {
+  position: absolute;
+  left: calc(100% * 26 / 486);
+  top: calc(100% * 22 / 986);
+  width: calc(100% * 434 / 486);
+  height: calc(100% * 936 / 986);
+  overflow: hidden;
+  border-radius: 12% / 5.56%;
+  background: #000;
+}
+
+.capture {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: calc(100% * var(--capture-height) / 936);
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  display: block;
+  left: calc(-100% * 26 / 434);
+  top: calc(-100% * var(--capture-top) / var(--capture-height));
+  width: calc(100% * 486 / 434);
+  height: calc(100% * 986 / var(--capture-height));
+  max-width: none;
+}
+
+.camera {
+  position: absolute;
+  top: 1.1%;
+  left: 37%;
+  width: 26%;
+  height: 3.2%;
+  border-radius: 999px;
+  background: #060606;
+  box-shadow: 0 0 0 1px #121214;
+}
+
+.camera::after {
+  content: "";
+  position: absolute;
+  inset-block: 30%;
+  right: 12%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #17213b;
+}

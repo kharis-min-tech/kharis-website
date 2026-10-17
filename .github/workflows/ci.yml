@@ -41,10 +41,12 @@ jobs:
               - 'package-lock.json'
             kp2:
               - 'apps/kp2/**'
+              - 'shared/**'
               - 'package.json'
               - 'package-lock.json'
             main:
               - 'apps/main/**'
+              - 'shared/**'
               - 'package.json'
               - 'package-lock.json'
 

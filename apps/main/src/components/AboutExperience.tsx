@@ -3,6 +3,7 @@
 import Image from "@/components/SiteImage";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FaithStack } from "@/components/FaithStack";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { AboutChapters, isAboutChapterId, type AboutChapterId } from "@/components/AboutChapters";
 import { ABOUT } from "@/lib/about-content";
@@ -11,7 +12,6 @@ import "./about.css";
 /** About hub: Mission, Vision, and Leadership on one page. */
 export function AboutExperience() {
   const search = useSearchParams();
-  const [openFaith, setOpenFaith] = useState<number | null>(0);
   const [chapterId, setChapterId] = useState<AboutChapterId | null>(null);
 
   useEffect(() => {
@@ -62,49 +62,7 @@ export function AboutExperience() {
 
       <AboutChapters initialId={chapterId} />
 
-      <section id="faith" className="about-faith-band">
-        <div className="about-faith-band__inner">
-          <Reveal>
-            <p className="eyebrow">Believe</p>
-            <h2 className="about-section__title">Our Statement of Faith</h2>
-          </Reveal>
-          <div className="about-faith">
-            {ABOUT.faith.map((item, i) => {
-              const open = openFaith === i;
-              return (
-                <div key={item.title} className={`about-faith__item${open ? " is-open" : ""}`}>
-                  <button
-                    type="button"
-                    className="about-faith__q"
-                    aria-expanded={open}
-                    id={`faith-question-${i}`}
-                    aria-controls={`faith-answer-${i}`}
-                    onClick={() => setOpenFaith(open ? null : i)}
-                  >
-                    <span className="about-faith__num">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="about-faith__title">{item.title}</span>
-                    <span className="about-faith__icon" aria-hidden>
-                      <span />
-                    </span>
-                  </button>
-                  <div className="about-faith__answer-wrap" aria-hidden={!open} inert={!open}>
-                    <div className="about-faith__answer-inner">
-                      <p
-                        className="about-faith__a"
-                        id={`faith-answer-${i}`}
-                        role="region"
-                        aria-labelledby={`faith-question-${i}`}
-                      >
-                        {item.body}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <FaithStack statements={ABOUT.faith} />
     </div>
   );
 }
