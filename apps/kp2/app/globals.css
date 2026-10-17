@@ -32,7 +32,7 @@
   --outline: #7b7487;
   --outline-variant: #ccc3d8;
   --primary: #630ed4;
-  --primary-container: #7c3aed;
+  --primary-container: #4c08a8;
   --primary-fixed: #eaddff;
   --primary-fixed-dim: #d2bbff;
   --secondary: #705d00;
@@ -85,8 +85,8 @@
   --on-tertiary-fixed-variant: #c6c6c6;
   --outline: #948f99;
   --outline-variant: #49454f;
-  --primary: #7c3aed;
-  --primary-container: #7c3aed;
+  --primary: #630ed4;
+  --primary-container: #4c08a8;
   --primary-fixed: #d2bbff;
   --primary-fixed-dim: #b79bff;
   --secondary: #fde047;
@@ -533,7 +533,6 @@ button:hover,
     background-color 200ms ease,
     color 200ms ease,
     border-color 200ms ease;
-  will-change: transform;
 }
 
 .btn-neo {
@@ -591,15 +590,6 @@ a.hard-shadow-primary:active,
   box-shadow: 0px 0px 0px 0px var(--on-background);
 }
 
-/* Non-interactive cards keep a gentle lift instead of a press. */
-div.brutalist-shadow:hover,
-div.neo-shadow:hover,
-div.neo-shadow-lg:hover,
-div.hard-shadow:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px var(--on-background);
-}
-
 /* Dark mode replaces the light offset with a purple glow, including hover. */
 .dark .btn-neo:hover,
 .dark button.brutalist-shadow:hover,
@@ -643,10 +633,6 @@ div.hard-shadow:hover {
 .dark a.hard-shadow-primary:active,
 .dark [role="button"].neo-shadow:active,
 .dark [role="button"].brutalist-shadow:active,
-.dark div.brutalist-shadow:hover,
-.dark div.neo-shadow:hover,
-.dark div.neo-shadow-lg:hover,
-.dark div.hard-shadow:hover,
 .dark .neo-shadow-hover:hover,
 .dark .neo-brutal-shadow:hover,
 .dark .btn-hover:hover,
@@ -1200,43 +1186,22 @@ html.dark .site-logo {
   color: var(--primary-fixed);
 }
 
-/* ============================================================
-   Motion layer — scroll reveals, hover life, ambient loops
-   ============================================================ */
-
+/* Motion follows the main site's pace, retaining KP2's shapes and colours. */
+:root {
+  --kp-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --kp-duration-fast: 200ms;
+}
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(26px);
+  translate: 0 18px;
   transition:
-    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+    opacity 600ms var(--kp-ease-out),
+    translate 600ms var(--kp-ease-out);
 }
-.reveal-on-scroll.is-revealed {
+.reveal-on-scroll.is-revealed,
+.reveal-on-scroll:focus-within {
   opacity: 1;
-  transform: none;
-}
-
-/* Diagonal section transitions — the block wipes in on an angle. */
-.reveal-diagonal-left,
-.reveal-diagonal-right {
-  transition:
-    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
-    clip-path 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
-}
-.reveal-diagonal-left {
-  transform: translate3d(-3%, 22px, 0) skewY(1.6deg);
-  clip-path: polygon(0 0, 0 0, -30% 100%, -30% 100%);
-}
-.reveal-diagonal-right {
-  transform: translate3d(3%, 22px, 0) skewY(-1.6deg);
-  clip-path: polygon(100% 0, 130% 0, 130% 100%, 100% 100%);
-}
-.reveal-diagonal-left.is-revealed,
-.reveal-diagonal-right.is-revealed {
-  transform: none;
-  clip-path: polygon(-25% -25%, 125% -25%, 125% 125%, -25% 125%);
+  translate: none;
 }
 
 @keyframes kp-float {
@@ -1312,11 +1277,16 @@ main a[class*="comic"]:active {
   box-shadow: none;
 }
 
-/* Material icons inside buttons nudge on hover. */
-button:hover > .material-symbols-outlined,
-a:hover > .material-symbols-outlined {
-  transform: translateX(2px);
-  transition: transform 0.2s ease;
+/* Keep the return from hover as smooth as the entrance. */
+:is(button, a) > .material-symbols-outlined {
+  transition:
+    transform 200ms var(--kp-ease-out),
+    filter 200ms var(--kp-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  :is(button, a):hover > .material-symbols-outlined {
+    transform: translateX(2px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1339,9 +1309,6 @@ a:hover > .material-symbols-outlined {
    ============================================================ */
 
 /* Primary buttons and CTAs radiate a soft brand glow. */
-main .bg-primary,
-main a[class*="bg-primary"],
-main button[class*="bg-primary"],
 .btn-neo {
   box-shadow:
     0 0 0 1px color-mix(in oklab, var(--primary) 40%, transparent),
@@ -1351,9 +1318,6 @@ main button[class*="bg-primary"],
     transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
     background-color 0.2s ease;
 }
-main .bg-primary:hover,
-main a[class*="bg-primary"]:hover,
-main button[class*="bg-primary"]:hover,
 .btn-neo:hover {
   box-shadow:
     0 0 0 1px color-mix(in oklab, var(--primary) 60%, transparent),
@@ -1371,9 +1335,9 @@ main button[class*="bg-primary"]:hover,
     border-color 0.2s ease,
     transform 0.2s ease;
 }
-.comic-border:hover,
-.brutalist-border:hover,
-.neo-brutal-border:hover {
+:is(a, button).comic-border:hover,
+:is(a, button).brutalist-border:hover,
+:is(a, button).neo-brutal-border:hover {
   border-color: var(--primary);
   box-shadow:
     0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent),
@@ -1444,7 +1408,6 @@ footer a::after {
 button:hover > .material-symbols-outlined,
 a:hover > .material-symbols-outlined {
   filter: drop-shadow(0 0 6px color-mix(in oklab, currentColor 55%, transparent));
-  transition: filter 0.2s ease;
 }
 
 /* Reusable explicit glow helpers. */
@@ -1572,4 +1535,201 @@ dialog.ui-dialog::backdrop {
 }
 .faith-item[open] .faith-icon-minus.material-symbols-outlined {
   display: inline-block;
+}
+
+/* A single interaction pace across navigation and controls. */
+:is(a, button, input, select, textarea, [role="button"]) {
+  transition-duration: var(--kp-duration-fast);
+  transition-timing-function: var(--kp-ease-out);
+}
+main img {
+  transition:
+    transform 600ms var(--kp-ease-out),
+    filter 350ms var(--kp-ease-out),
+    box-shadow 350ms var(--kp-ease-out);
+}
+.site-header nav > a::after {
+  box-shadow: none;
+}
+.site-header nav > a:hover {
+  text-shadow: none;
+}
+.site-header .nav-dropdown,
+.site-header .nav-dropdown:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--on-background);
+}
+
+@keyframes kp-page-arrive {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+main {
+  animation: kp-page-arrive 440ms var(--kp-ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-on-scroll {
+    opacity: 1;
+    translate: none;
+  }
+  :is(a, button):is(:hover, :active),
+  .hover-card:hover,
+  .brutalist-border:hover img,
+  .comic-border:hover img,
+  .hover-card:hover img {
+    transform: none !important;
+  }
+}
+
+/* Keep the floating theme control clear of the menu's final destination. */
+@media (max-width: 1279px) {
+  body:has(#mobile-navigation:not([inert])) .theme-toggle {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/* Mobile rows use colour feedback without a full-width underline. */
+#mobile-navigation a::after {
+  content: none;
+}
+#mobile-navigation a:hover {
+  color: var(--primary);
+}
+#mobile-navigation .header-branch-cta:hover {
+  color: var(--on-primary);
+}
+
+/* Kharis purple panels retain KP2's print texture and bold frame. */
+.kp-brand-panel {
+  isolation: isolate;
+  background: linear-gradient(125deg, #4c08a8 0%, #630ed4 52%, #3d0591 100%);
+}
+.kp-brand-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgb(255 255 255 / 14%) 0.8px, transparent 1px);
+  background-size: 6px 6px;
+  mask-image: linear-gradient(110deg, rgb(0 0 0 / 20%), #000);
+}
+
+/* Explicit CTA depth takes precedence over older glow and hover utilities. */
+:is(a, button).kp-depth-button {
+  --kp-button-edge: #221039;
+  translate: none !important;
+  scale: none !important;
+  rotate: none !important;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--kp-button-edge) !important;
+  border-radius: 0;
+  box-shadow: 5px 5px 0 var(--kp-button-edge) !important;
+  transform: none !important;
+  transition:
+    transform 200ms var(--kp-ease-out),
+    box-shadow 200ms var(--kp-ease-out),
+    background-color 200ms var(--kp-ease-out),
+    color 200ms var(--kp-ease-out);
+}
+:is(a, button).kp-button-light {
+  background-color: #fff !important;
+  color: #630ed4 !important;
+}
+:is(a, button).kp-button-purple {
+  background-color: #630ed4 !important;
+  color: #fff !important;
+}
+:is(a, button).kp-button-gold {
+  background-color: #ffde59 !important;
+  color: #221b00 !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  :is(a, button).kp-depth-button:hover {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 3px 3px 0 var(--kp-button-edge) !important;
+  }
+  :is(a, button).kp-button-light:hover {
+    background-color: #f2eef7 !important;
+  }
+  :is(a, button).kp-button-purple:hover {
+    background-color: #4c08a8 !important;
+  }
+  :is(a, button).kp-button-gold:hover {
+    background-color: #f5d143 !important;
+  }
+}
+:is(a, button).kp-depth-button:active {
+  transform: translate(5px, 5px) !important;
+  box-shadow: 0 0 0 var(--kp-button-edge) !important;
+}
+:is(a, button).kp-depth-button:focus-visible {
+  outline: 3px solid #ffde59;
+  outline-offset: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(a, button).kp-depth-button:is(:hover, :active) {
+    transform: none !important;
+  }
+}
+
+/* Keep light button ink legible against legacy dark-theme text remapping. */
+.dark :is(a, button).kp-button-light {
+  color: #630ed4 !important;
+}
+.dark :is(a, button).kp-button-gold {
+  color: #221b00 !important;
+}
+:is(a, button).kp-depth-button:focus-visible {
+  outline-color: #630ed4;
+}
+.kp-on-dark :is(a, button):focus-visible,
+.kp-life-hero :is(a, button):focus-visible,
+.kp-mission-hero :is(a, button):focus-visible,
+.dark :is(a, button):focus-visible,
+.kp-brand-panel :is(a, button).kp-depth-button:focus-visible {
+  outline-color: #ffde59;
+}
+
+/* Pale purple keeps interaction cues clear on dark surfaces. */
+.dark :is(input, select, textarea):focus-visible {
+  border-color: var(--primary-fixed);
+  box-shadow: 4px 4px 0 0 var(--primary-fixed);
+}
+.dark #mobile-navigation a:hover {
+  color: var(--primary-fixed);
+}
+.dark .kp-nav-label::after {
+  background-color: var(--primary-fixed);
+}
+@media print {
+  .reveal-on-scroll,
+  .kp-home-intro.reveal-on-scroll .kp-intro-visual,
+  .kp-home-intro.reveal-on-scroll .kp-intro-copy > * {
+    opacity: 1 !important;
+    translate: none !important;
+  }
+  .kp-intro,
+  .theme-toggle {
+    display: none !important;
+  }
 }

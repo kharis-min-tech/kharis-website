@@ -61,7 +61,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
 
           <div className="absolute inset-0 halftone-pattern text-primary/20 pointer-events-none"></div>
           <div className="relative z-10 text-center max-w-4xl">
-            <div className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 brutalist-border font-label-md text-label-md uppercase mb-6 animate-bounce">
+            <div className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 brutalist-border font-label-md text-label-md uppercase mb-6">
               Passionate for God and His Word
             </div>
             <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg text-white mb-4 md:mb-8 tracking-tighter uppercase">
@@ -79,7 +79,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
                 type="button"
                 data-ui="open-dialog"
                 data-dialog="give-online-dialog"
-                className="w-full md:w-auto bg-primary text-on-primary brutalist-border-thick neo-shadow-lg px-12 py-4 font-headline-md text-2xl hover:scale-105 transition-all"
+                className="kp-depth-button kp-button-purple w-full md:w-auto bg-primary text-on-primary brutalist-border-thick neo-shadow-lg px-12 py-4 font-headline-md text-2xl hover:scale-105 transition-all"
               >
                 GIVE ONLINE
               </button>
@@ -315,7 +315,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
         ) : null}
 
         <section className="py-stack-lg px-margin-mobile md:px-margin-desktop text-center bg-white border-t-2 border-black">
-          <div className="max-w-4xl mx-auto py-14 md:py-16 px-6 md:px-12 bg-gradient-to-br from-[#7c3aed] via-[#9333ea] to-[#be185d] brutalist-shadow-lg relative overflow-hidden">
+          <div className="max-w-4xl mx-auto py-10 md:py-12 px-6 md:px-12 kp-brand-panel brutalist-shadow-lg relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute -top-16 -left-16 w-64 h-64 bg-white/10 rounded-full"></div>
               <div className="absolute top-1/3 -right-20 w-72 h-72 bg-white/10 rounded-full"></div>
@@ -324,6 +324,12 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               <div className="absolute -bottom-6 -right-6 w-40 h-40 border-2 border-white/10 rounded-full"></div>
             </div>
             <div className="relative z-10">
+              <img
+                src="/kp2/assets/kharis-logo.png"
+                alt=""
+                aria-hidden="true"
+                className="kp-panel-dove"
+              />
               <span className="font-label-md text-label-md uppercase tracking-[0.3em] text-white/80 mb-6 block">
                 Still deciding?
               </span>
@@ -339,7 +345,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
                   type="button"
                   data-ui="open-dialog"
                   data-dialog="give-online-dialog"
-                  className="inline-block rounded-none bg-white text-[#4e0046] px-12 py-4 font-headline-md text-2xl hover:scale-105 hover:bg-gray-100 transition-all shadow-lg"
+                  className="kp-depth-button kp-button-light inline-block rounded-none bg-white text-[#4c08a8] px-12 py-4 font-headline-md text-2xl hover:scale-105 hover:bg-gray-100 transition-all shadow-lg"
                 >
                   GIVE NOW
                 </button>
@@ -373,7 +379,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
             href={ONLINE_GIVE_URL}
             target="_blank"
             rel="noreferrer"
-            className="block w-full bg-primary text-on-primary text-center py-3 font-label-md uppercase border-2 border-black"
+            className="kp-depth-button kp-button-purple block w-full bg-primary text-on-primary text-center py-3 font-label-md uppercase border-2 border-black"
           >
             Continue to Kharis Giving
           </a>

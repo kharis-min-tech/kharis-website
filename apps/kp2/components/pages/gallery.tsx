@@ -75,7 +75,7 @@ function GalleryPage() {
         </header>
 
         <section className="py-16 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
-          <blockquote className="border-l-8 border-primary bg-surface-container-low p-6 md:p-10 mb-12 brutalist-border">
+          <blockquote className="border-primary bg-surface-container-low p-6 md:p-10 mb-12 brutalist-border">
             <p className="font-headline-md text-2xl md:text-3xl uppercase leading-snug mb-4">
               What it takes to sustain the move of God is a text-driven, gospel-saturated,
               Christ-exalting message.

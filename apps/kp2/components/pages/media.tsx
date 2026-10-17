@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { ScrollReveal } from "@/components/ScrollReveal";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
@@ -89,7 +88,7 @@ const SOCIALS = [
     href: "https://youtube.com/@davidantwi",
     cta: "SUBSCRIBE",
     Icon: YouTubeIcon,
-    band: "bg-error-container text-on-error-container",
+    band: "bg-primary-fixed text-on-primary-fixed",
   },
   {
     label: "TikTok",
@@ -127,10 +126,9 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
   const more = messages.slice(1, 4);
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
-      <ScrollReveal />
       <SiteHeader />
 
-      <header className="relative min-h-[440px] md:min-h-[520px] flex flex-col justify-center items-center bg-on-background text-primary-fixed pt-28 md:pt-32 pb-stack-lg overflow-hidden border-b-4 border-primary">
+      <header className="kp-on-dark relative min-h-[440px] md:min-h-[520px] flex flex-col justify-center items-center bg-on-background text-primary-fixed pt-28 md:pt-32 pb-stack-lg overflow-hidden border-b-4 border-primary">
         <img
           alt="Kharis worship gathering"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
@@ -158,13 +156,13 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
           <div className="flex flex-wrap justify-center gap-3">
             <a
               href="#follow"
-              className="bg-primary text-on-primary font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
+              className="kp-depth-button kp-button-purple bg-primary text-on-primary font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
             >
               FOLLOW US
             </a>
             <a
               href="#listen"
-              className="keep-light font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
+              className="kp-depth-button kp-button-light keep-light font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
             >
               LISTEN TO MESSAGES
             </a>
@@ -173,7 +171,7 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
       </header>
 
       <main className="bg-surface relative">
-        <div className="absolute inset-0 halftone-bg pointer-events-none"></div>
+        <div className="absolute inset-0 halftone-bg opacity-10 pointer-events-none"></div>
 
         {/* Follow us */}
         <section
@@ -181,17 +179,16 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
           className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28"
         >
           <div className="flex items-center gap-4 mb-stack-md">
-            <div className="w-4 h-8 bg-primary"></div>
             <h2 className="font-headline-md text-headline-md uppercase">Follow the movement</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
             {SOCIALS.map(({ label, handle, copy, href, cta, Icon, band, external = true }) => (
-              <a
+              <Link
                 key={label}
                 href={href}
                 {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
-                className="group bg-surface-container border-2 border-black rounded-none neo-shadow hover-press flex flex-col"
+                className="kp-platform-card group bg-surface-container border-2 border-black rounded-none neo-shadow flex flex-col"
               >
                 <div className={`${band} border-b-2 border-black p-6 flex items-center gap-4`}>
                   <Icon className="w-10 h-10 shrink-0 transition-transform duration-300 group-hover:scale-110" />
@@ -209,10 +206,10 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
                     </span>
                   </span>
                 </div>
-              </a>
+              </Link>
             ))}
 
-            <div className="bg-primary text-on-primary border-2 border-black neo-shadow p-6 flex flex-col justify-center">
+            <div className="kp-tag-banner bg-primary text-on-primary border-2 border-black neo-shadow p-6 flex flex-col justify-center">
               <h3 className="font-headline-md text-2xl uppercase mb-2">Tag us</h3>
               <p className="font-body-md text-primary-fixed mb-4">
                 Use <strong>#KharisPhase2</strong> and we might reshare your moment.
@@ -228,7 +225,6 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
           className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28"
         >
           <div className="flex items-center gap-4 mb-stack-md">
-            <div className="w-4 h-8 bg-primary"></div>
             <h2 className="font-headline-md text-headline-md uppercase">
               Messages from our head pastor
             </h2>
@@ -269,7 +265,7 @@ function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: Insta
                 <div className="flex flex-wrap gap-3">
                   <Link
                     href="/#app-stores"
-                    className="bg-primary text-on-primary font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
+                    className="kp-depth-button kp-button-purple bg-primary text-on-primary font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
                   >
                     <span className="material-symbols-outlined">smartphone</span> LISTEN VIA THE APP
                   </Link>

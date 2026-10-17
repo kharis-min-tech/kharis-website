@@ -33,7 +33,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
       <SiteHeader />
 
-      <header className="relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden bg-black pt-24 pb-8 text-white">
+      <header className="kp-life-hero relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden bg-black pt-24 pb-8 text-white">
         <div className="absolute inset-0 opacity-60">
           <div
             className="w-full h-full bg-cover bg-center"
@@ -48,13 +48,13 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
 
         <div className="absolute inset-0 halftone-pattern text-primary opacity-20 pointer-events-none"></div>
         <div className="relative z-10 px-margin-desktop w-full max-w-7xl mx-auto flex flex-col items-start gap-6">
-          <div className="bg-secondary-container text-on-secondary-container px-4 py-1 border-2 border-black inline-block font-label-md text-label-md uppercase -rotate-2 animate-bounce motion-reduce:animate-none">
+          <div className="bg-secondary-container text-on-secondary-container px-4 py-1 border-2 border-black inline-block font-label-md text-label-md uppercase -rotate-2">
             Christ Exalting
           </div>
           <h1 className="font-display-lg text-display-lg max-w-4xl leading-[1] tracking-tighter uppercase mb-4">
             A family church.
             <br />
-            <span className="text-primary-fixed bg-primary px-4 py-2 inline-block skew-x-3">
+            <span className="kp-life-headline text-white bg-primary px-4 py-2 inline-block">
               Faith lived together.
             </span>
           </h1>
@@ -66,13 +66,13 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
           <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-2">
             <Link
               href="/branches"
-              className="bg-primary text-white px-8 py-4 border-4 border-black neo-shadow-lg font-headline-md text-headline-md uppercase hover-press transition-all skew-hover inline-block"
+              className="kp-depth-button kp-button-purple bg-primary text-white px-8 py-4 border-4 border-black neo-shadow-lg font-headline-md text-headline-md uppercase hover-press transition-all skew-hover inline-block"
             >
               Find Your Branch
             </Link>
             <Link
               href="/messages"
-              className="keep-light px-8 py-4 border-4 border-black neo-shadow-lg font-headline-md text-headline-md uppercase hover-press transition-all skew-hover inline-block"
+              className="kp-depth-button kp-button-light keep-light px-8 py-4 border-4 border-black neo-shadow-lg font-headline-md text-headline-md uppercase hover-press transition-all skew-hover inline-block"
             >
               Watch a Message
             </Link>
@@ -136,7 +136,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
                   </ul>
                   <Link
                     href="/events"
-                    className="block w-full mt-10 bg-primary text-white py-4 border-4 border-black neo-shadow hover-press font-headline-md text-headline-md uppercase skew-x-2 text-center"
+                    className="kp-depth-button kp-button-purple block w-full mt-10 bg-primary text-white py-4 border-4 border-black neo-shadow hover-press font-headline-md text-headline-md uppercase skew-x-2 text-center"
                   >
                     See More
                   </Link>

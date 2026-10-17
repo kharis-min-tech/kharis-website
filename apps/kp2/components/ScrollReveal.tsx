@@ -3,91 +3,70 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-/**
- * Progressively reveals page sections as they scroll into view.
- * Purely presentational: adds/removes the `is-revealed` class.
- */
+/** Animate upcoming sections while keeping visible content and keyboard targets readable. */
 export function ScrollReveal() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (motion.matches || !("IntersectionObserver" in window)) return;
 
-    let cancelled = false;
-    let cleanup: (() => void) | undefined;
-
-    // Wait until lazy route boundaries have hydrated before touching DOM nodes
-    // React owns, otherwise React reports a hydration mismatch in the console.
-    const setup = () => {
-      if (cancelled) return;
-
-      const targets = Array.from(document.querySelectorAll<HTMLElement>("main section"));
-      if (!targets.length) return;
-
-      targets.forEach((el, i) => {
-        el.classList.add("reveal-on-scroll");
-        // Every third section wipes in diagonally, alternating direction.
-        if (i % 3 === 2) {
-          el.classList.add((i / 3) % 2 < 1 ? "reveal-diagonal-left" : "reveal-diagonal-right");
-        }
-        el.style.setProperty("--reveal-delay", `${(i % 4) * 70}ms`);
-      });
-
-      let rafId = 0;
-      let ticking = false;
-
-      const reveal = () => {
-        const vh = window.innerHeight;
-        targets.forEach((el) => {
-          if (el.classList.contains("is-revealed")) return;
-          const rect = el.getBoundingClientRect();
-          if (rect.top < vh * 0.92 && rect.bottom > vh * 0.05) {
-            el.classList.add("is-revealed");
-          }
+    const targets = new Set<HTMLElement>();
+    const reveal = (element: HTMLElement) => {
+      element.classList.add("is-revealed");
+      observer.unobserve(element);
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) reveal(entry.target as HTMLElement);
         });
-      };
+      },
+      { rootMargin: "0px 0px -32px 0px", threshold: 0 },
+    );
 
-      const onTick = () => {
-        reveal();
-        ticking = false;
-      };
-
-      const onScroll = () => {
-        if (!ticking) {
-          rafId = requestAnimationFrame(onTick);
-          ticking = true;
-        }
-      };
-
-      reveal();
-      window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", onScroll, { passive: true });
-
-      cleanup = () => {
-        window.removeEventListener("scroll", onScroll);
-        window.removeEventListener("resize", onScroll);
-        cancelAnimationFrame(rafId);
-      };
+    const setup = () => {
+      document.querySelectorAll<HTMLElement>("main section").forEach((element) => {
+        if (targets.has(element)) return;
+        targets.add(element);
+        // Never hide an initial viewport, restored scroll position or hash destination.
+        if (element.getBoundingClientRect().top < window.innerHeight) return;
+        element.classList.add("reveal-on-scroll");
+        observer.observe(element);
+      });
+    };
+    const onFocus = (event: FocusEvent) => {
+      if (!(event.target instanceof Element)) return;
+      targets.forEach((element) => {
+        if (element.contains(event.target as Node)) reveal(element);
+      });
+    };
+    const onMotionChange = () => {
+      if (motion.matches) targets.forEach(reveal);
     };
 
-    // Wait for the page (and its lazy route boundary) to finish loading before
-    // mutating server-rendered DOM, otherwise React logs a hydration mismatch.
-    let setupId = 0;
-    const schedule = () => {
-      setupId = window.setTimeout(setup, 60);
+    // The header signals after its page hydrates. Layout effects alone can run
+    // while a streamed page still contains React-owned server markup.
+    let setupFrame = 0;
+    const onPageReady = () => {
+      if (document.documentElement.dataset.kpPageReady !== pathname) return;
+      cancelAnimationFrame(setupFrame);
+      setupFrame = requestAnimationFrame(setup);
     };
-    if (document.readyState === "complete") {
-      schedule();
-    } else {
-      window.addEventListener("load", schedule, { once: true });
-    }
+    window.addEventListener("kp:page-ready", onPageReady);
+    onPageReady();
+    document.addEventListener("focusin", onFocus);
+    motion.addEventListener("change", onMotionChange);
 
     return () => {
-      cancelled = true;
-      window.removeEventListener("load", schedule);
-      window.clearTimeout(setupId);
-      cleanup?.();
+      observer.disconnect();
+      cancelAnimationFrame(setupFrame);
+      window.removeEventListener("kp:page-ready", onPageReady);
+      document.removeEventListener("focusin", onFocus);
+      motion.removeEventListener("change", onMotionChange);
+      targets.forEach((element) => {
+        element.classList.remove("reveal-on-scroll", "is-revealed");
+      });
     };
   }, [pathname]);
 

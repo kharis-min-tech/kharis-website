@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Anton, Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
+import "./refinements.css";
+import { KpIntro } from "@/components/KpIntro";
 
 const anton = Anton({
   subsets: ["latin"],
@@ -171,13 +173,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en-GB"
+      data-scroll-behavior="smooth"
       className={`${anton.variable} ${hanken.variable} ${bricolage.variable} ${space.variable}`}
       suppressHydrationWarning
     >
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(localStorage.getItem("kharis-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem("kharis-site-theme")??localStorage.getItem("kharis-theme");if(t==="dark")document.documentElement.classList.add("dark");document.documentElement.style.colorScheme=t==="dark"?"dark":"light"}catch(e){}})();`,
           }}
         />
         <link rel="preconnect" href="https://cqgyiqxhpxwasogpdghx.supabase.co" />
@@ -192,8 +195,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <JsonLd data={organizationJsonLd()} />
         <ScrollReveal />
-        {children}
-        <script src="/kp2/ui-boot.js?v=8" defer></script>
+        <KpIntro />
+        <div id="kp-site-content">{children}</div>
+        <script src="/kp2/ui-boot.js?v=9" defer></script>
       </body>
     </html>
   );
