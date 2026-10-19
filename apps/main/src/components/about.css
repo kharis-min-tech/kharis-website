@@ -447,6 +447,14 @@
 .about-page .about-lead__profile:nth-child(2) {
   margin-top: 3rem;
 }
+.about-page .about-lead__profile:nth-child(2) .about-lead__profile-photo {
+  aspect-ratio: 1;
+}
+.about-page .about-lead__profile:nth-child(2) .about-lead__profile-photo img {
+  height: 100%;
+  object-fit: cover;
+  object-position: center 65%;
+}
 .about-page .about-lead__profile:nth-child(2) .about-lead__profile-copy {
   margin-left: 0;
   margin-right: -2rem;
