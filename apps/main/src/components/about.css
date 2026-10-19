@@ -447,6 +447,24 @@
 .about-page .about-lead__profile:nth-child(2) {
   margin-top: 3rem;
 }
+@media (min-width: 860px) {
+  .about-page .about-lead__profile:first-child {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+}
+.about-page .about-lead__profile:first-child .about-lead__profile-photo {
+  aspect-ratio: 4 / 3;
+}
+.about-page .about-lead__profile:first-child .about-lead__profile-photo img {
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+@media (max-width: 859px) {
+  .about-page .about-lead__profile:first-child .about-lead__profile-photo {
+    aspect-ratio: 1;
+  }
+}
 .about-page .about-lead__profile:nth-child(2) .about-lead__profile-photo {
   aspect-ratio: 1;
 }
