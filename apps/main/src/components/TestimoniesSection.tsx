@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "@/components/SiteImage";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
-import { TestimonyFormModal } from "@/components/TestimonyFormModal";
 import type { Testimony } from "@/lib/testimonies";
 
 interface TestimoniesSectionProps {
@@ -30,25 +29,6 @@ const photos = [
 
 export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
-  const [formOpen, setFormOpen] = useState(false);
-
-  const openForm = useCallback(() => setFormOpen(true), []);
-  const closeForm = useCallback(() => {
-    setFormOpen(false);
-    if (window.location.hash === "#share-testimony") {
-      window.history.replaceState({}, "", window.location.pathname + window.location.search);
-    }
-  }, []);
-
-  useEffect(() => {
-    const sync = () => {
-      if (window.location.hash === "#share-testimony") setFormOpen(true);
-    };
-    sync();
-    window.addEventListener("hashchange", sync);
-    return () => window.removeEventListener("hashchange", sync);
-  }, []);
-
   const scrollByCard = (dir: -1 | 1) => {
     const rail = railRef.current;
     if (!rail) return;
@@ -160,19 +140,9 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
                 </button>
               </div>
             ) : null}
-
-            <button type="button" className="btn-testimony" onClick={openForm}>
-              Share Your Testimony
-            </button>
           </div>
-
-          <p className="mt-4 max-w-xl text-center text-sm font-medium text-muted/80 mx-auto">
-            Has Jesus done something in your life? Share it and give Him glory.
-          </p>
         </Reveal>
       </div>
-
-      <TestimonyFormModal open={formOpen} onClose={closeForm} />
     </section>
   );
 }

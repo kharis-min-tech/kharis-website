@@ -28,12 +28,7 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(
-      90deg,
-      rgba(10, 4, 18, 0.72) 0%,
-      rgba(10, 4, 18, 0.34) 42%,
-      rgba(10, 4, 18, 0) 72%
-    ),
+    linear-gradient(90deg, rgba(10, 4, 18, 0.72) 0%, rgba(10, 4, 18, 0.34) 42%, rgba(10, 4, 18, 0) 72%),
     linear-gradient(
       180deg,
       rgba(10, 4, 18, 0.42) 0%,
@@ -118,8 +113,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--story-gap);
-  padding: clamp(2rem, 4vw, 3rem) 0 clamp(2.5rem, 5vw, 4rem);
+  padding: clamp(2rem, 4vw, 3rem) 0 0;
   background: #fff;
+}
+
+/* The last event sits directly on the footer. Element-qualified so it beats the older
+   `.events-page` padding in globals.css whatever order the stylesheets load in. */
+div.events-page {
+  padding-bottom: 0;
 }
 
 .events-stack [hidden] {
@@ -177,10 +178,12 @@
   }
 }
 
+/* Positive layers only: media 0, veil 1, copy 2, toggle 3. With negative z-indexes Safari
+   can paint a playing video (or the zooming photo) over the words until the next repaint. */
 .events-card__media {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -213,7 +216,7 @@
 .events-split__veil {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 1;
   pointer-events: none;
 }
 
@@ -232,6 +235,8 @@
 
 .events-card__copy,
 .events-split__copy {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -413,6 +418,7 @@
 
 .events-card__toggle {
   position: absolute;
+  z-index: 3;
   right: clamp(1rem, 2.5vw, 2.25rem);
   bottom: clamp(1rem, 2.5vw, 2.25rem);
 }
@@ -464,7 +470,7 @@
 
 .events-split__half {
   position: relative;
-  z-index: -2;
+  z-index: 0;
 }
 
 .events-split__photo {
@@ -551,8 +557,7 @@
   justify-content: space-between;
   gap: 1rem;
   min-height: var(--gallery-top);
-  padding: env(safe-area-inset-top, 0px) calc(var(--gallery-gutter) + 3.5rem) 0
-    var(--gallery-gutter);
+  padding: env(safe-area-inset-top, 0px) calc(var(--gallery-gutter) + 3.5rem) 0 var(--gallery-gutter);
 }
 
 .events-gallery__eyebrow {
@@ -825,17 +830,4 @@ html[data-theme="dark"] .events-branch__pick select {
 
 html[data-theme="dark"] .events-branch__pick select:focus-visible {
   outline-color: #fff;
-}
-
-.events-card__video {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.events-card__video.is-playing {
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .events-card__video {
-    transition: none;
-  }
 }

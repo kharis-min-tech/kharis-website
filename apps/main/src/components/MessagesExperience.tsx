@@ -6,8 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   BookOpen,
-  CalendarDays,
-  ChevronDown,
   Compass,
   Cross,
   Flame,
@@ -27,13 +25,7 @@ import { MessagesHero } from "@/components/MessagesHero";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { KHARIS_APP } from "@/lib/kharis-app";
 import { LISTEN_PLATFORMS } from "@/lib/listen-platforms";
-import {
-  MESSAGE_TOPICS,
-  matchesQuery,
-  matchesTopic,
-  messageYear,
-  messageYears,
-} from "@/lib/message-filters";
+import { MESSAGE_TOPICS, matchesQuery, matchesTopic } from "@/lib/message-filters";
 import { buildMessageShelves } from "@/lib/message-shelves";
 import type { MessageVideo } from "@/lib/youtube";
 import "./messages-hub.css";
@@ -88,23 +80,23 @@ const WHY_FAQ = [
   },
   {
     q: "What makes Kharis messages different?",
-    a: "Text-driven, Christ exalting and gospel-saturated",
+    a: "They are Christ-centric, text-driven, and gospel-saturated, with a focus on what the Bible is actually saying and revealing Christ through it, helping you to become a firm, sound believer.",
   },
   {
     q: "Where can I watch?",
-    a: "Watch on this Messages page or Youtube. Prefer audio Listen on the Kharis App, SoundCloud, Apple Podcasts, Spotify etc.",
+    a: "Watch on this Messages page or on YouTube. Prefer audio? Listen on SoundCloud, Apple Podcasts, Spotify, or Amazon Music.",
   },
   {
     q: "How often are new messages added?",
-    a: "New messages are added weekly from Sunday services and series. Browse the rows below for the newest and older archive messages.",
+    a: "New teachings are added weekly from Sunday services and series. Browse the rows below for the newest and older archive messages.",
   },
   {
     q: "Can I go deeper in the Word at home?",
-    a: "Yes. Keep the Word on your lips and in your heart (Joshua 1:8). Replay messages until truth settles, then share what God is saying.",
+    a: "Yes. Keep the Word on your lips and in your heart (Joshua 1:8). Replay teachings until truth settles, then share what God is saying.",
   },
   {
     q: "Is Scripture really for my situation?",
-    a: "\u201CAll Scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness,\u201D 2 Timothy 3:16. \u201CFor the word of God is living and powerful\u201D Hebrews 4:12.",
+    a: "All Scripture is God-breathed and useful for teaching, correcting, and training in righteousness (2 Timothy 3:16). The Word is living and active (Hebrews 4:12).",
   },
 ];
 
@@ -249,25 +241,20 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
   }, [messages, topRow]);
 
   const [topic, setTopic] = useState("all");
-  const [year, setYear] = useState<number | "all">("all");
   const [query, setQuery] = useState("");
   const search = useDeferredValue(query.trim());
-  const years = useMemo(() => messageYears(messages), [messages]);
   const topics = useMemo(
     () => MESSAGE_TOPICS.filter((t) => messages.some((m) => matchesTopic(m, t.id))),
     [messages],
   );
-  const filtering = topic !== "all" || year !== "all" || search !== "";
+  const filtering = topic !== "all" || search !== "";
 
   const filtered = useMemo(() => {
     if (!filtering) return [];
     return messages.filter(
-      (m) =>
-        (topic === "all" || matchesTopic(m, topic)) &&
-        (year === "all" || messageYear(m) === year) &&
-        matchesQuery(m, search),
+      (m) => (topic === "all" || matchesTopic(m, topic)) && matchesQuery(m, search),
     );
-  }, [messages, topic, year, search, filtering]);
+  }, [messages, topic, search, filtering]);
 
   const filteredRows = useMemo(() => {
     const rows: MessageVideo[][] = [];
@@ -279,21 +266,19 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
   const filterHeading = [
     search ? `“${search}”` : null,
     topicLabel ?? (search ? null : "All messages"),
-    year === "all" ? null : String(year),
   ]
     .filter(Boolean)
     .join(" · ");
 
   const clearFilters = () => {
     setTopic("all");
-    setYear("all");
     setQuery("");
   };
 
   useEffect(() => {
     // Results change the page height; keep the scroll-in animations below lined up.
     ScrollTrigger.refresh();
-  }, [topic, year, search]);
+  }, [topic, search]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -442,22 +427,6 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
               enterKeyHint="search"
               autoComplete="off"
             />
-          </label>
-          <label className="msg-filter__year" data-active={year !== "all" || undefined}>
-            <CalendarDays className="msg-filter__icon" strokeWidth={1.9} aria-hidden />
-            <select
-              aria-label="Filter by year"
-              value={year}
-              onChange={(e) => setYear(e.target.value === "all" ? "all" : Number(e.target.value))}
-            >
-              <option value="all">Year</option>
-              {years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="msg-filter__caret" strokeWidth={2} aria-hidden />
           </label>
         </div>
       </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "@/components/SiteImage";
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
@@ -8,6 +8,13 @@ import { EventCategories } from "@/components/EventCategories";
 import { EventsUpcoming } from "@/components/EventsUpcoming";
 import { EVENT_CATEGORIES, matchesEvent, type EventFilter } from "@/data/event-categories";
 import type { ServiceBranch } from "@/lib/service-branches";
+
+const orderedEventCategories = [...EVENT_CATEGORIES].sort((a, b) => {
+  if (a.status !== b.status) return a.status === "upcoming" ? -1 : 1;
+  if (a.id === "praise-night") return -1;
+  if (b.id === "praise-night") return 1;
+  return 0;
+});
 
 type Props = {
   branches: ServiceBranch[];
@@ -30,7 +37,7 @@ export function EventsExperience({ branches }: Props) {
       <header className="events-top">
         <div className="events-top__media">
           <Image
-            src="https://images.kharis.org/site-images/main/4ad6b94f8e2d8cf0/events-hero-banquet.jpg"
+            src="/images/events-hero-banquet.jpg"
             alt="Banquet table set with red roses and candles beneath chandeliers"
             fill
             priority
@@ -46,8 +53,8 @@ export function EventsExperience({ branches }: Props) {
             Gather with <span>Kharis</span>
           </h1>
           <p className="events-top__tag">Come encounter God with us.</p>
-          <Link href="/locations" className="events-top__link k-cta">
-            Find events near you
+          <Link href="#events-next-title" className="events-top__link k-cta">
+            Choose your branch
             <ArrowUpRight aria-hidden className="h-4 w-4" />
           </Link>
         </div>
@@ -63,8 +70,7 @@ export function EventsExperience({ branches }: Props) {
       />
 
       <EventCategories
-        branches={branches}
-        categories={EVENT_CATEGORIES}
+        categories={orderedEventCategories}
         visibleIds={visibleIds}
         onClear={clear}
       />

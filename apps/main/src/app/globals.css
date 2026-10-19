@@ -12761,3 +12761,608 @@ html[data-theme="dark"] .locations-empty a {
     flex-direction: row;
   }
 }
+
+/* Full-screen stacking panels for the existing department content. */
+.life-page--depts .life-detail-nav {
+  display: none;
+}
+
+.life-page--depts .life-dept-bands {
+  position: relative;
+  display: block;
+  overflow: visible;
+  padding: 0;
+}
+
+.life-page--depts .life-dept-band {
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100svh;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  margin: 0;
+  padding: clamp(2rem, 7vw, 7rem);
+  border-radius: 2.4rem 2.4rem 0 0;
+  background: #0a0612;
+}
+
+.life-page--depts .life-dept-band__media {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.life-page--depts .life-dept-band__poster {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.03) brightness(.9) saturate(.92);
+}
+
+.life-page--depts .life-dept-band__media::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(17, 13, 20, .62), rgba(17, 13, 20, .28));
+  pointer-events: none;
+  content: "";
+}
+
+.life-page--depts .life-dept-band__copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0;
+  min-height: calc(100svh - 8rem);
+  flex-direction: column;
+  justify-content: center;
+  width: min(100%, 70rem);
+  margin: 0 auto 0 0;
+  padding: clamp(1rem, 4vw, 4rem);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+}
+
+.life-page--depts .life-dept-band__copy h2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 13ch;
+  margin: 0;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  color: #fff !important;
+  font-size: clamp(2rem, 4.6vw, 3.2rem);
+  font-weight: 750;
+  letter-spacing: -.045em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.life-page--depts .life-dept-band__copy h2::after {
+  width: clamp(3rem, 6vw, 4.5rem);
+  height: .24rem;
+  margin-top: .8rem;
+  background: #ffde59;
+  content: "";
+}
+
+.life-page--depts .life-dept-band__copy p {
+  max-width: 38rem;
+  margin: .85rem 0 0;
+  color: rgba(255, 255, 255, .88) !important;
+  font-size: .98rem;
+  font-weight: 450;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.life-page--depts .life-dept-band__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  align-self: flex-start;
+  min-height: 3rem;
+  margin-top: 1.5rem;
+  padding: .8rem 1.2rem;
+  background: #630ed4;
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.life-page--depts .life-dept-band__cta:hover {
+  transform: translateY(-2px);
+  background: #4c08a8;
+}
+
+.life-page--depts .life-dept-band__cta:focus-visible {
+  outline: 3px solid #ffde59;
+  outline-offset: 3px;
+}
+
+.life-page--depts .life-dept-band__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1.5rem;
+}
+
+.life-page--depts .life-dept-band__actions .life-dept-band__cta {
+  margin-top: 0;
+}
+
+.life-page--depts .life-dept-band__preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  min-height: 3rem;
+  padding: .75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, .85);
+  background: rgba(20, 13, 30, .72);
+  color: #fff;
+  cursor: pointer;
+  font-size: .88rem;
+  font-weight: 750;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.life-page--depts .life-dept-band__preview svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.life-page--depts .life-dept-band__preview:hover {
+  transform: translateY(-2px);
+  background: #630ed4;
+}
+
+.life-page--depts .life-dept-band__preview:focus-visible {
+  outline: 3px solid #ffde59;
+  outline-offset: 3px;
+}
+
+.life-page--depts .life-dept-preview {
+  width: min(56rem, calc(100vw - 2rem));
+  max-width: none;
+  max-height: calc(100svh - 2rem);
+  padding: 0;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, .2);
+  background: #100b18;
+  color: #fff;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .6);
+}
+
+.life-page--depts .life-dept-preview::backdrop {
+  background: rgba(7, 4, 12, .86);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.life-page--depts .life-dept-preview__panel {
+  position: relative;
+  padding: clamp(1rem, 3vw, 1.75rem);
+}
+
+.life-page--depts .life-dept-preview__panel h2 {
+  margin: 0 3rem 1rem 0;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  letter-spacing: -.035em;
+}
+
+.life-page--depts .life-dept-preview__panel video {
+  display: block;
+  width: 100%;
+  max-height: 72svh;
+  background: #050407;
+}
+
+.life-page--depts .life-dept-preview__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .45);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+  cursor: pointer;
+}
+
+.life-page--depts .life-dept-preview__close:hover {
+  background: #630ed4;
+}
+
+.life-page--depts .life-dept-preview__close:focus-visible {
+  outline: 3px solid #ffde59;
+  outline-offset: 3px;
+}
+
+.life-page--depts .life-dept-directory {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem 2rem;
+  width: min(82rem, calc(100% - 2.5rem));
+  margin: clamp(2rem, 5vw, 3.5rem) auto;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  background: var(--bg-soft);
+  color: var(--fg);
+  box-shadow: var(--shadow);
+}
+
+.life-page--depts .life-dept-directory__intro { grid-column: 1; }
+
+.life-page--depts .life-dept-directory__intro > p {
+  margin: 0 0 .45rem;
+  color: var(--purple);
+  font-size: .75rem;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.life-page--depts .life-dept-directory__intro h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 850;
+  letter-spacing: -.04em;
+}
+
+.life-page--depts .life-dept-directory__intro span {
+  display: block;
+  margin-top: .4rem;
+  color: var(--fg-soft);
+  font-weight: 600;
+}
+
+.life-page--depts .life-dept-directory__list {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.life-page--depts .life-dept-directory__list li {
+  padding: .55rem .8rem;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  font-size: .9rem;
+  font-weight: 700;
+}
+
+.life-page--depts .life-dept-directory__link {
+  display: inline-flex;
+  grid-column: 2;
+  grid-row: 1;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  min-height: 3rem;
+  padding: .8rem 1rem;
+  background: var(--purple-fill-deep);
+  color: #fff;
+  font-size: .88rem;
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.life-page--depts .life-dept-directory__link:hover { background: var(--purple-fill); }
+
+.life-page--depts .life-dept-directory__link:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.life-page--depts .life-dept-why {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding: clamp(2.5rem, 5vw, 3.75rem) max(1.25rem, calc((100vw - 82rem) / 2));
+  background:
+    radial-gradient(ellipse at 78% 0%, color-mix(in srgb, var(--purple) 14%, transparent), transparent 38rem),
+    linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 94%, var(--purple)) 100%);
+  color: var(--fg);
+}
+
+.life-page--depts .life-dept-why::before {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: min(82rem, calc(100% - 2.5rem));
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--purple) 75%, transparent) 28%, color-mix(in srgb, var(--yellow) 55%, transparent) 72%, transparent);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.life-page--depts .life-dept-why__header {
+  max-width: 82rem;
+  margin: 0 auto 2.1rem;
+  text-align: left;
+}
+
+.life-page--depts .life-dept-why__header > p {
+  display: inline-block;
+  margin: 0 0 .8rem;
+  padding: 0;
+  color: var(--purple);
+  font-size: .78rem;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+
+.life-page--depts .life-dept-why__header h2 {
+  margin: 0;
+  color: var(--fg);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1.08;
+}
+
+.life-page--depts .life-dept-why__header > span {
+  display: block;
+  margin-top: 1rem;
+  color: var(--fg-soft);
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.life-page--depts .life-dept-why__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+  max-width: 82rem;
+  margin: 0 auto;
+}
+
+.life-page--depts .life-dept-why__card {
+  display: flex;
+  min-height: 20rem;
+  flex-direction: column;
+  padding: 1.4rem;
+  border: 1px solid var(--line);
+  background: var(--card-bg, var(--bg-soft));
+  color: var(--fg);
+  box-shadow: var(--shadow);
+}
+
+@supports (animation-timeline: view()) {
+  .life-page--depts .life-dept-why__header,
+  .life-page--depts .life-dept-why__card {
+    animation: life-why-arrive linear both;
+    animation-timeline: view(block);
+    animation-range: entry 0% entry 85%;
+  }
+
+  .life-page--depts .life-dept-why__card:nth-child(2) { animation-range: entry 5% entry 90%; }
+  .life-page--depts .life-dept-why__card:nth-child(3) { animation-range: entry 10% entry 95%; }
+}
+
+@keyframes life-why-arrive {
+  from { opacity: .45; transform: translateY(1.25rem) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .life-page--depts .life-dept-why__header,
+  .life-page--depts .life-dept-why__card { animation: none !important; }
+}
+
+.life-page--depts .life-dept-why__card--purple {
+  background: var(--purple-fill);
+  color: #fff;
+}
+
+.life-page--depts .life-dept-why__number {
+  margin-bottom: 1.4rem;
+  color: var(--purple);
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -.08em;
+  line-height: .8;
+}
+
+.life-page--depts .life-dept-why__card--purple .life-dept-why__number {
+  color: rgba(255, 255, 255, .72);
+}
+
+.life-page--depts .life-dept-why__card h3 {
+  margin: 0;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.3rem);
+  font-weight: 850;
+  letter-spacing: -.055em;
+  line-height: 1.05;
+}
+
+.life-page--depts .life-dept-why__card > p {
+  margin: 1rem 0 2rem;
+  color: var(--fg-soft);
+  font-size: .98rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.life-page--depts .life-dept-why__verse {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.life-page--depts .life-dept-why__card--purple .life-dept-why__verse {
+  color: rgba(255, 255, 255, .78);
+}
+
+.life-page--depts .life-dept-why__card--purple > p {
+  color: rgba(255, 255, 255, .94);
+}
+
+.life-page--depts .life-dept-branch-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 82rem;
+  margin: clamp(2rem, 5vw, 3rem) auto 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: #faf8ff;
+  color: #1c1c1f;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, .45);
+}
+
+.life-page--depts .life-dept-branch-cta h3 {
+  margin: 0;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.55rem, 3.4vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.1;
+  color: #1c1c1f !important;
+}
+
+.life-page--depts .life-dept-branch-cta p {
+  margin: .55rem 0 0;
+  color: #34313a;
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.life-page--depts .life-dept-branch-cta__link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 3rem;
+  padding: .8rem 1.2rem;
+  border: 2px solid var(--yellow);
+  background: var(--purple-fill-deep);
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.life-page--depts .life-dept-branch-cta__link:hover {
+  background: var(--purple-fill);
+}
+
+.life-page--depts .life-dept-branch-cta__link:focus-visible {
+  outline: 3px solid #211a27;
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .life-page--depts .life-dept-why__grid {
+    grid-template-columns: 1fr;
+    max-width: 38rem;
+  }
+
+  .life-page--depts .life-dept-why__card {
+    min-height: 16rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .life-page--depts .life-dept-directory {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .life-page--depts .life-dept-directory__intro,
+  .life-page--depts .life-dept-directory__list,
+  .life-page--depts .life-dept-directory__link {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .life-page--depts .life-dept-directory__link { justify-self: start; }
+
+  .life-page--depts .life-dept-branch-cta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .life-page--depts .life-dept-more {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+html[data-theme="dark"] .life-page--depts .life-dept-band__copy { background: transparent; }
+
+@supports (animation-timeline: view()) {
+  .life-page--depts .life-dept-band {
+    animation: life-dept-stack-recede linear both;
+    animation-timeline: view(block);
+    animation-range: exit 0% exit 100%;
+    animation-timing-function: cubic-bezier(.2, .7, .2, 1);
+    transform-origin: top center;
+  }
+}
+
+@keyframes life-dept-stack-recede {
+  to { transform: scale(.985); filter: brightness(.42); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .life-page--depts .life-dept-band { animation: none !important; }
+}
+
+@media (max-width: 760px) {
+  .life-page--depts .life-dept-band {
+    min-height: 100svh;
+    padding: 1.25rem;
+    border-radius: 1.35rem 1.35rem 0 0;
+  }
+
+  .life-page--depts .life-dept-band__copy {
+    min-height: calc(100svh - 2.5rem);
+    padding: 1.25rem;
+  }
+
+  .life-page--depts .life-dept-band__copy h2 {
+    font-size: clamp(1.9rem, 8vw, 3.1rem);
+  }
+
+  .life-page--depts .life-dept-band__copy p {
+    margin-top: .85rem;
+    font-size: 1rem;
+  }
+}

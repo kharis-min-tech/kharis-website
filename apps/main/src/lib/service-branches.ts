@@ -1,4 +1,5 @@
 import { BRANCHES_DATA } from "@/data/branchesData";
+import type { BranchEvent } from "@/data/branchesData";
 import { listBranchData, type BranchData, type Service, type Venue } from "@/lib/branches";
 
 /** Where and when one kind of service meets at a branch. */
@@ -10,7 +11,7 @@ export type ServiceVisit = {
   mapsUrl: string;
 };
 
-/** Slim branch shape for the /events service slideshow. */
+/** Branch selection and special-event data used by the Events page. */
 export type ServiceBranch = {
   slug: string;
   name: string;
@@ -19,14 +20,13 @@ export type ServiceBranch = {
   country: string | null;
   sunday: ServiceVisit | null;
   midweek: ServiceVisit | null;
+  upcomingEvents: BranchEvent[];
 };
 
 function staticCountry(slug: string) {
   const b = BRANCHES_DATA[slug];
   if (!b) return null;
-  return b.region === "International"
-    ? (b.fullAddress.split(", ").at(-1) ?? null)
-    : "United Kingdom";
+  return b.region === "International" ? (b.fullAddress.split(", ").at(-1) ?? null) : "United Kingdom";
 }
 
 function formatTime(time: string) {
@@ -75,6 +75,7 @@ function fromSupabase(branch: BranchData): ServiceBranch {
     country: branch.venues.find((v) => v.country)?.country ?? staticCountry(branch.slug),
     sunday: visitFrom(ofType("sunday"), branch.venues),
     midweek: visitFrom(ofType("midweek"), branch.venues),
+    upcomingEvents: BRANCHES_DATA[branch.slug]?.upcomingEvents ?? [],
   };
 }
 
@@ -96,6 +97,7 @@ function fromStatic(): ServiceBranch[] {
       midweek: b.midweek
         ? { ...base, day: b.midweek.day, times: [`${b.midweek.time} ${b.midweek.ampm}`] }
         : null,
+      upcomingEvents: b.upcomingEvents,
     };
   });
 }

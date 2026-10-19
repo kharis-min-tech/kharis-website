@@ -1,19 +1,22 @@
 "use client";
 
-import Image from "@/components/SiteImage";
-import { getImageProps } from "next/image";
+import Image, { getImageProps } from "next/image";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
+import {
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
+  X,
+} from "lucide-react";
 import type { EventCategory, EventMedia, EventPhoto, EventSplit } from "@/data/event-categories";
-import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
-import { useStoredBranch } from "./BranchSelect";
 import "./event-categories.css";
 
-const FOCUSABLE =
-  'button:not([disabled]), [href], video[controls], select, [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'button:not([disabled]), [href], video[controls], select, [tabindex]:not([tabindex="-1"])';
 const galleryEase = [0.2, 0.8, 0.2, 1] as const;
 const GALLERY_IMAGE = { fill: true, quality: 95, sizes: "100vw" } as const;
 /** Fill the stage edge to edge when the photo's shape is within ~10% of it. */
@@ -87,12 +90,7 @@ function StoryModal({
       exit={{ opacity: 0 }}
       transition={{ duration: reduce ? 0.15 : 0.28, ease: galleryEase }}
     >
-      <button
-        type="button"
-        className="events-gallery__close"
-        aria-label="Close gallery"
-        onClick={onClose}
-      >
+      <button type="button" className="events-gallery__close" aria-label="Close gallery" onClick={onClose}>
         <X aria-hidden className="h-5 w-5" />
       </button>
       <motion.div
@@ -176,9 +174,7 @@ function GalleryModal({
   }, [index, reduce]);
 
   const ratio = ratios[photo.src];
-  const cover = Boolean(
-    ratio && stageRatio && Math.abs(Math.log(ratio / stageRatio)) < COVER_TOLERANCE,
-  );
+  const cover = Boolean(ratio && stageRatio && Math.abs(Math.log(ratio / stageRatio)) < COVER_TOLERANCE);
   const offset = reduce ? 0 : 28;
   const slide = {
     enter: (d: number) => ({ x: `${d * offset}%`, opacity: 0 }),
@@ -320,23 +316,21 @@ function ExploreButton({ label, onClick }: { label: string; onClick: () => void 
   );
 }
 
-function eyebrowFor(category: EventCategory, visit: ServiceVisit | null) {
+function eyebrowFor(category: EventCategory) {
   if (category.status === "past") return "Past event · Coming back soon";
-  return visit ? `Every ${visit.day} · ${visit.times.join(" & ")}` : "Upcoming";
+  return "Upcoming special event";
 }
 
 /** One picture (or video) with the event's words and its Explore button on top. */
 function EventCard({
   category,
   media,
-  visit,
   titleId,
   wide,
   onExplore,
 }: {
   category: EventCategory;
   media: EventMedia;
-  visit: ServiceVisit | null;
   titleId: string;
   wide: boolean;
   onExplore: () => void;
@@ -346,16 +340,7 @@ function EventCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [userPlay, setUserPlay] = useState<boolean | null>(null);
   const [inView, setInView] = useState(false);
-  const [largeScreen, setLargeScreen] = useState(true);
-  useEffect(() => {
-    const query = window.matchMedia("(min-width: 1000px)");
-    const update = () => setLargeScreen(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-  // The available background clip is 720p. Keep the sharper photo on large displays.
-  const playing = userPlay ?? (!reduce && !largeScreen);
+  const playing = userPlay ?? !reduce;
   const full = category.layout === "full";
 
   useEffect(() => {
@@ -378,35 +363,24 @@ function EventCard({
   return (
     <div ref={rootRef} className={`events-card events-card--${full ? "full" : "tile"}`}>
       {media.video ? (
-        <>
-          <div className="events-card__media">
-            <Image
-              src={media.poster}
-              alt={media.alt}
-              fill
-              sizes="100vw"
-              className="object-cover"
-              style={media.position ? { objectPosition: media.position } : undefined}
-            />
-          </div>
-          <video
-            ref={videoRef}
-            className={`events-card__media events-card__video${playing ? " is-playing" : ""}`}
-            src={playing && inView ? media.video : undefined}
-            poster={media.poster}
-            muted
-            loop
-            playsInline
-            preload="none"
-            aria-hidden
-          />
-        </>
+        <video
+          ref={videoRef}
+          className="events-card__media"
+          src={media.video}
+          poster={media.poster}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden
+        />
       ) : (
         <div className={`events-card__media${full && !reduce ? " events-card__media--zoom" : ""}`}>
           <Image
             src={media.poster}
             alt={media.alt}
             fill
+            loading="eager"
             quality={95}
             sizes={full || wide ? "100vw" : "(max-width: 759px) 100vw, 50vw"}
             className="object-cover"
@@ -417,7 +391,7 @@ function EventCard({
       <span className="events-card__veil" aria-hidden />
 
       <div className="events-card__copy">
-        <p className="events-card__eyebrow">{eyebrowFor(category, visit)}</p>
+        <p className="events-card__eyebrow">{eyebrowFor(category)}</p>
         <h2 id={titleId} className="events-card__headline">
           {category.headline}
         </h2>
@@ -462,8 +436,9 @@ function EventSplitPanel({
             src={photo.src}
             alt={photo.alt}
             fill
+            loading="eager"
             quality={95}
-            sizes="(max-width: 759px) 100vw, 50vw"
+            sizes="50vw"
             className="object-cover events-split__photo"
             style={
               {
@@ -489,24 +464,15 @@ function EventSplitPanel({
 
 function EventBlock({
   category,
-  branches,
   hidden,
   wide = false,
 }: {
   category: EventCategory;
-  branches: ServiceBranch[];
   hidden: boolean;
   wide?: boolean;
 }) {
-  const branch = useStoredBranch(branches);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const titleId = `${category.id}-title`;
-  const visit =
-    category.status === "upcoming" && branch
-      ? category.service === "midweek"
-        ? branch.midweek
-        : branch.sunday
-      : null;
   const openGallery = () => setGalleryOpen(true);
 
   return (
@@ -517,17 +483,11 @@ function EventBlock({
       hidden={hidden}
     >
       {category.layout === "split" ? (
-        <EventSplitPanel
-          category={category}
-          split={category.split}
-          titleId={titleId}
-          onExplore={openGallery}
-        />
+        <EventSplitPanel category={category} split={category.split} titleId={titleId} onExplore={openGallery} />
       ) : (
         <EventCard
           category={category}
           media={category.media}
-          visit={visit}
           titleId={titleId}
           wide={wide}
           onExplore={openGallery}
@@ -553,22 +513,20 @@ function toRows(categories: EventCategory[]) {
   const rows: EventCategory[][] = [];
   for (const category of categories) {
     const last = rows.at(-1);
-    if (category.layout === "half" && last?.length === 1 && last[0]!.layout === "half")
-      last.push(category);
+    if (category.layout === "half" && last?.length === 1 && last[0]!.layout === "half") last.push(category);
     else rows.push([category]);
   }
   return rows;
 }
 
 type Props = {
-  branches: ServiceBranch[];
   categories: EventCategory[];
   visibleIds: ReadonlySet<string>;
   onClear: () => void;
 };
 
 /** Every event in order; ones outside the current filter stay mounted but hidden. */
-export function EventCategories({ branches, categories, visibleIds, onClear }: Props) {
+export function EventCategories({ categories, visibleIds, onClear }: Props) {
   return (
     <section className="events-stack" aria-label="Kharis events">
       {toRows(categories).map((row) => {
@@ -578,7 +536,6 @@ export function EventCategories({ branches, categories, visibleIds, onClear }: P
             <EventBlock
               key={first.id}
               category={first}
-              branches={branches}
               hidden={!visibleIds.has(first.id)}
             />
           );
@@ -594,7 +551,6 @@ export function EventCategories({ branches, categories, visibleIds, onClear }: P
               <EventBlock
                 key={c.id}
                 category={c}
-                branches={branches}
                 hidden={!visibleIds.has(c.id)}
                 wide={shown === 1}
               />

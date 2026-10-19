@@ -40,17 +40,3 @@ export function matchesQuery(message: MessageVideo, query: string) {
   const title = message.title.toLowerCase();
   return words.every((w) => title.includes(w));
 }
-
-export function messageYear(message: MessageVideo): number | null {
-  return message.publishedAt ? new Date(message.publishedAt).getFullYear() : null;
-}
-
-/** Years that have messages, newest first. */
-export function messageYears(messages: MessageVideo[]): number[] {
-  const years = new Set<number>();
-  for (const m of messages) {
-    const year = messageYear(m);
-    if (year) years.add(year);
-  }
-  return [...years].sort((a, b) => b - a);
-}
