@@ -9624,6 +9624,65 @@ html[data-theme="dark"] .life-modal__dots button.is-on {
   margin-top: 2.75rem;
 }
 
+@media (max-width: 539px) {
+  .site-footer {
+    padding: 2.5rem 1.125rem 1.75rem;
+  }
+
+  .site-footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
+    padding-bottom: 1.75rem;
+    text-align: center;
+  }
+
+  .site-footer__brand > a {
+    display: inline-flex;
+    justify-content: center;
+  }
+
+  .site-footer__tagline {
+    max-width: 19rem;
+    margin: 0.75rem auto 0;
+  }
+
+  .site-footer__col {
+    border-top: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    padding: 1.25rem 0.6rem 1.4rem;
+  }
+
+  .site-footer__heading {
+    margin-bottom: 0.7rem;
+  }
+
+  .site-footer__links {
+    gap: 0.55rem;
+    font-size: 0.875rem;
+  }
+
+  .site-footer__social {
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1.1rem;
+  }
+
+  .site-footer__bottom {
+    border-top: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    gap: 1rem;
+    margin-top: 0.25rem;
+    padding-top: 1.5rem;
+  }
+
+  .site-footer__legal {
+    max-width: 22rem;
+    font-size: 0.7rem;
+  }
+}
+
 /* Branch locations directory and detail pages */
 :root {
   --page-bg: var(--bg);
