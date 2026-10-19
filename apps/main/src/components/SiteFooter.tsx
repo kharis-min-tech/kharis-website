@@ -78,6 +78,11 @@ export function SiteFooter({ tone }: Props) {
                     Volunteer
                   </Link>
                 </li>
+                <li>
+                  <Link href="/#share-testimony" className={linkHover}>
+                    Testimony Form
+                  </Link>
+                </li>
               </ul>
             </div>
             <div className="site-footer__col">

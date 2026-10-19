@@ -1,6 +1,80 @@
 /* Messages hub: hero preview + player, search field, and the Kharis app CTAs. */
 
-/* ---------- Hero: black & white preaching preview over the unchanged poster wall ---------- */
+/* ---------- Hero: autoplaying black & white preaching preview ---------- */
+
+.msg-hub__hero {
+  background: #07040c;
+}
+
+.msg-hero-loading {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: linear-gradient(
+    110deg,
+    rgba(10, 6, 17, 0.94),
+    rgba(31, 15, 51, 0.84),
+    rgba(10, 6, 17, 0.94)
+  );
+  background-size: 220% 100%;
+  color: #fff;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+  animation: msg-hero-loading-sweep 2.8s ease-in-out infinite;
+}
+
+.msg-hero-loading__pulse {
+  width: min(17rem, 64vw);
+  height: 0.3rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.msg-hero-loading__pulse::after {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: #c39aff;
+  content: "";
+  animation: msg-hero-loading-progress 1.5s ease-in-out infinite;
+}
+
+.msg-hub__hero .msg-hub__hero-copy {
+  z-index: 3;
+}
+
+@keyframes msg-hero-loading-sweep {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@keyframes msg-hero-loading-progress {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .msg-hero-loading,
+  .msg-hero-loading__pulse::after {
+    animation: none;
+  }
+}
+
+/* ---------- Hero player and browse controls ---------- */
 
 .msg-hero-preview {
   position: absolute;

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Play, X } from "lucide-react";
 import type { MessageVideo } from "@/lib/youtube";
@@ -58,22 +57,11 @@ function watchSrc(start: number) {
   return `${YT_ORIGIN}/embed/${PREVIEW.id}?${params}`;
 }
 
-/** Reduced motion and data saver keep the poster; the Watch button still works. */
-function previewAllowed() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-  const conn = (
-    navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }
-  ).connection;
-  if (conn?.saveData) return false;
-  return !/(^|-)2g$/.test(conn?.effectiveType ?? "");
-}
-
 type Props = {
-  wall: MessageVideo[];
   messages: MessageVideo[];
 };
 
-export function MessagesHero({ wall, messages }: Props) {
+export function MessagesHero({ messages }: Props) {
   const heroRef = useRef<HTMLElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const watchBtnRef = useRef<HTMLButtonElement>(null);
@@ -87,7 +75,7 @@ export function MessagesHero({ wall, messages }: Props) {
 
   const [allowed, setAllowed] = useState(false);
   const [inView, setInView] = useState(true);
-  /** Video is running under the poster until settled, then shows. */
+  /** Keep the loading treatment over the video until YouTube's transient controls clear. */
   const [warming, setWarming] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [settled, setSettled] = useState(false);
@@ -138,7 +126,8 @@ export function MessagesHero({ wall, messages }: Props) {
   }, []);
 
   useEffect(() => {
-    setAllowed(previewAllowed());
+    // The preview is muted, allowing browsers to autoplay it without a sound gesture.
+    setAllowed(true);
     return () => {
       if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
       if (settleTimer.current) window.clearTimeout(settleTimer.current);
@@ -160,8 +149,7 @@ export function MessagesHero({ wall, messages }: Props) {
     if (!inView) setWatchStart(null);
   }, [inView]);
 
-  // Poster first. While the hero is in view, keep the muted video playing (no 20s cut-off).
-  // Scroll away → poster + pause. Scroll back → poster briefly, then video again.
+  // Keep the muted video playing while visible; the loading treatment masks startup chrome.
   useEffect(() => {
     if (!allowed) return;
     if (!inView || watching) {
@@ -289,23 +277,6 @@ export function MessagesHero({ wall, messages }: Props) {
       data-preview-cut={cut || undefined}
       data-watching={watching || undefined}
     >
-      <div className="msg-hub__wall" aria-hidden>
-        {wall.map((msg, i) => (
-          <div key={`${msg.id}-${i}`} className="msg-hub__wall-cell">
-            <div className="msg-wall-poster">
-              <Image
-                src={msg.thumbnail}
-                alt=""
-                fill
-                className="msg-wall-poster__img"
-                sizes="20vw"
-                priority={i < 4}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
       <div className="msg-hero-preview" aria-hidden inert>
         {allowed && (
           <iframe
@@ -319,6 +290,13 @@ export function MessagesHero({ wall, messages }: Props) {
           />
         )}
       </div>
+
+      {!showPreview && !watching && (
+        <div className="msg-hero-loading" role="status" aria-live="polite">
+          <span className="msg-hero-loading__pulse" aria-hidden="true" />
+          <span>Preparing your message</span>
+        </div>
+      )}
 
       <div className="msg-hub__veil" aria-hidden />
 

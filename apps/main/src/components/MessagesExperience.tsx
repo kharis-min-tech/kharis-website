@@ -44,35 +44,6 @@ const TOPIC_ICONS: Record<string, LucideIcon> = {
   fragrance: Flower,
 };
 
-/** Original Teachings wall posters (same five sermons). mqdefault is 16:9 so no YouTube letterbox bars. */
-const ORIGINAL_WALL_POSTERS: MessageVideo[] = [
-  {
-    id: "KBFfpU0mX2U",
-    title: "A Living Witness For Jesus",
-    thumbnail: "https://i.ytimg.com/vi/KBFfpU0mX2U/mqdefault.jpg",
-  },
-  {
-    id: "6Y15Ja9E2hw",
-    title: "Riding On Divine Assignment",
-    thumbnail: "https://i.ytimg.com/vi/6Y15Ja9E2hw/mqdefault.jpg",
-  },
-  {
-    id: "NgJZ2RmkuXs",
-    title: "He Is God Even In The Storm",
-    thumbnail: "https://i.ytimg.com/vi/NgJZ2RmkuXs/mqdefault.jpg",
-  },
-  {
-    id: "u4vxbcZhmUo",
-    title: "The LIGHT That Changes Everything",
-    thumbnail: "https://i.ytimg.com/vi/u4vxbcZhmUo/mqdefault.jpg",
-  },
-  {
-    id: "pbP3soO9lzg",
-    title: "Inside The Church: Good Men & Actors",
-    thumbnail: "https://i.ytimg.com/vi/pbP3soO9lzg/mqdefault.jpg",
-  },
-];
-
 const WHY_FAQ = [
   {
     q: "Why should I listen to messages?",
@@ -221,14 +192,6 @@ type Props = {
 
 export function MessagesExperience({ messages, latest = [] }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
-
-  const wall = useMemo(() => {
-    const base = [...ORIGINAL_WALL_POSTERS];
-    while (base.length < 9) {
-      base.push(ORIGINAL_WALL_POSTERS[base.length % ORIGINAL_WALL_POSTERS.length]!);
-    }
-    return base.slice(0, 9);
-  }, []);
 
   const topRow = useMemo(() => latest.slice(0, 4), [latest]);
 
@@ -384,7 +347,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         </svg>
       </div>
 
-      <MessagesHero wall={wall} messages={messages} />
+      <MessagesHero messages={messages} />
 
       <section className="msg-row-band">
         <div className="msg-row-band__head">

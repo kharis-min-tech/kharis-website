@@ -1,16 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useRef } from "react";
-import { Sparkles, Users, Heart, Play, X } from "lucide-react";
+import { Sparkles, Users, Heart } from "lucide-react";
 import { Icon } from "@/components/Icon";
+import { LifeDeptList } from "@/components/LifeDeptGrid";
 import { LifeIcon } from "@/components/LifeIcon";
-import { DEPARTMENT_VIDEOS } from "@/data/department-videos";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import {
   LIFE_CATEGORIES,
-  LIFE_DEPARTMENTS,
   LIFE_DEPARTMENTS_URL,
   LIFE_VISIBLE_SLUGS,
   lifeBySlug,
@@ -38,7 +35,7 @@ const KIDS_GROUPS = [
     title: "Transition",
     ages: "12–16 years",
     icon: Heart,
-    image: "/images/young-adults.jpg",
+    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
     color: "#eef6ff",
   },
 ] as const;
@@ -47,110 +44,29 @@ const KIDS_VIDEO_ID = "iXo1fg_PRLM";
 
 const DEPT_BANDS = [
   {
-    title: "Evangelism",
-    body: "Share the good news, welcome conversations, and help people discover a home in the church.",
-    image: "/images/about-mission-outreach-3200.jpg",
+    title: "Worship & Music",
+    body: "Instrumentalists, singers and sound teams who lead the house in praise as an act of service to God.",
+    image: "https://images.kharis.org/site-images/main/9b547f88f3b4d297/worship.jpg",
   },
   {
-    title: "Music",
-    body: "Use your musical gifts to lead the church in worship and praise.",
-    image: "/images/department-music.jpg",
+    title: "Welcome & Care",
+    body: "Ushers, host team, hospitality and welfare: the Kharis welcome from the door to the seat, and care for those in need.",
+    image: "https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg",
   },
   {
-    title: "EasyWorship",
-    body: "Prepare lyrics and visuals that help everyone follow and engage in worship.",
-    image: "/images/department-easyworship.jpg",
+    title: "Kids & Youth",
+    body: "Teaching ages 3–16 with creativity and joy, and walking with young people as they grow in Christ.",
+    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
   },
   {
-    title: "Sound Department",
-    body: "Mix and manage live sound so every voice and instrument can be heard clearly.",
-    image: "/images/department-sound.jpg",
+    title: "Media & Production",
+    body: "Camera, graphics, social and stage production that carry the Word beyond the room.",
+    image: "https://images.kharis.org/site-images/main/ffbe5aca25d25b8c/pastor-stage.jpg",
   },
   {
-    title: "Welcome Team",
-    body: "Help people feel seen and at home from the moment they arrive.",
-    image: "/images/love-greeting.jpg",
-  },
-] as const;
-
-const DEPT_PREVIEW_SOURCES = {
-  Evangelism: DEPARTMENT_VIDEOS.find((video) => video.title === "Evangelism")!.src,
-  Music: DEPARTMENT_VIDEOS.find((video) => video.title === "Music")!.src,
-  EasyWorship: DEPARTMENT_VIDEOS.find((video) => video.title === "Tech Team")!.src,
-  "Sound Department": DEPARTMENT_VIDEOS.find((video) => video.title === "Sound")!.src,
-  "Welcome Team": DEPARTMENT_VIDEOS.find((video) => video.title === "Hospitality")!.src,
-} satisfies Record<(typeof DEPT_BANDS)[number]["title"], string>;
-
-function DepartmentPreviewButton({ title, src }: { title: string; src: string }) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const titleId = `department-preview-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-
-  const openPreview = () => {
-    dialogRef.current?.showModal();
-    void videoRef.current?.play().catch(() => {});
-  };
-
-  const closePreview = () => dialogRef.current?.close();
-
-  const resetPreview = () => {
-    if (!videoRef.current) return;
-    videoRef.current.pause();
-    videoRef.current.currentTime = 0;
-  };
-
-  return (
-    <>
-      <button className="life-dept-band__preview" type="button" onClick={openPreview}>
-        <Play aria-hidden="true" fill="currentColor" />
-        Watch a preview
-      </button>
-      <dialog
-        className="life-dept-preview"
-        ref={dialogRef}
-        aria-labelledby={titleId}
-        onClose={resetPreview}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) closePreview();
-        }}
-      >
-        <div className="life-dept-preview__panel">
-          <button
-            className="life-dept-preview__close"
-            type="button"
-            aria-label="Close preview"
-            onClick={closePreview}
-          >
-            <X aria-hidden="true" />
-          </button>
-          <h2 id={titleId}>{title} preview</h2>
-          <video ref={videoRef} controls autoPlay playsInline preload="none">
-            <source src={src} type="video/mp4" />
-          </video>
-        </div>
-      </dialog>
-    </>
-  );
-}
-
-const WHY_WE_SERVE = [
-  {
-    number: "01",
-    title: "Get busy serving",
-    body: "Jesus came to serve. We serve because we have been served. Get busy serving.",
-    verse: "Matthew 20:28",
-  },
-  {
-    number: "02",
-    title: "Find your place",
-    body: "Every gift belongs in the body. Take your place and become family.",
-    verse: "1 Corinthians 12:12–27",
-  },
-  {
-    number: "03",
-    title: "Work as unto the Lord",
-    body: "Work with all your heart, as working for the Lord. We are passionate about God and His word.",
-    verse: "Colossians 3:23–24",
+    title: "Prayer & Evangelism",
+    body: "Intercession, follow-up and outreach, preaching Christ and establishing new people in the family.",
+    image: "https://images.kharis.org/site-images/main/8440a4a63e4ae020/serve-with-us.jpg",
   },
 ] as const;
 
@@ -274,7 +190,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
         <header className="life-dept-hero">
           <div
             className="life-dept-hero__media"
-            style={{ backgroundImage: "url(/images/about-vision-team-2048.jpg)" }}
+            style={{ backgroundImage: `url(${page.image})` }}
             aria-hidden
           />
           <div className="life-dept-hero__veil" aria-hidden />
@@ -291,88 +207,83 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
           </Reveal>
         </header>
 
-        <section className="life-dept-why" aria-labelledby="life-dept-why-title">
-          <header className="life-dept-why__header">
-            <p>THE HEART BEHIND IT</p>
-            <h2 id="life-dept-why-title">Why we serve</h2>
-            <span>Serving is worship. Respond to grace. Take your place.</span>
-          </header>
-          <div className="life-dept-why__grid">
-            {WHY_WE_SERVE.map((item, i) => (
-              <article
-                className={`life-dept-why__card${i === 1 ? " life-dept-why__card--purple" : ""}`}
-                key={item.number}
-              >
-                <span className="life-dept-why__number">{item.number}</span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-                <span className="life-dept-why__verse">{item.verse}</span>
-              </article>
-            ))}
-          </div>
-        </section>
-
         <section className="life-dept-bands" aria-label="Ways to serve">
-          {DEPT_BANDS.map((band, index) => (
-            <article className="life-dept-band" key={band.title} style={{ zIndex: index + 1 }}>
-              <div className="life-dept-band__media" aria-hidden="true">
-                <Image
-                  className="life-dept-band__poster"
-                  src={band.image}
-                  alt=""
-                  fill
-                  sizes="100vw"
-                />
-              </div>
+          {DEPT_BANDS.map((band, i) => (
+            <Reveal
+              key={band.title}
+              variant="up"
+              className={`life-dept-band${i % 2 === 1 ? " life-dept-band--flip" : ""}`}
+            >
+              <div
+                className="life-dept-band__media"
+                style={{ backgroundImage: `url(${band.image})` }}
+                role="img"
+                aria-label={band.title}
+              />
               <div className="life-dept-band__copy">
                 <h2>{band.title}</h2>
                 <p>{band.body}</p>
-                <div className="life-dept-band__actions">
-                  <DepartmentPreviewButton
-                    title={band.title}
-                    src={DEPT_PREVIEW_SOURCES[band.title]}
-                  />
-                  <Link href="/locations" className="life-dept-band__cta">
-                    Join {band.title}
-                    <Icon name="arrow" className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
               </div>
-            </article>
+            </Reveal>
           ))}
         </section>
 
-        <section className="life-dept-directory" aria-labelledby="life-dept-directory-title">
-          <div className="life-dept-directory__intro">
-            <p>More ways to serve</p>
-            <h2 id="life-dept-directory-title">More teams to explore</h2>
-            <span>There’s a place for every gift and every willing heart.</span>
-          </div>
-          <ul className="life-dept-directory__list">
-            {LIFE_DEPARTMENTS.map((department) => (
-              <li key={department}>{department}</li>
-            ))}
-          </ul>
-          <Link
-            className="life-dept-directory__link"
-            href={LIFE_DEPARTMENTS_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Explore all departments
-            <Icon name="arrow" className="h-4 w-4" />
-          </Link>
-        </section>
+        <div className="life-wrap">
+          <Reveal variant="up" className="life-detail-depts life-detail-depts--wide">
+            <h2 className="life-dept-list__title">Teams you can join</h2>
+            <LifeDeptList />
+          </Reveal>
 
-        <div className="life-dept-branch-cta">
-          <div>
-            <h3>Still not sure where you fit?</h3>
-            <p>Take the quiz and find the team that fits you at your local branch.</p>
-          </div>
-          <a href="https://discover.khar.is/" className="life-dept-branch-cta__link">
-            Take the quiz
-            <Icon name="arrow" className="h-3.5 w-3.5" />
-          </a>
+          <Reveal variant="up" className="life-dept-discover">
+            <h2>Discover your Kharis department</h2>
+            <p>
+              Explore the teams and find where you can serve. If the interactive finder does not
+              load below, open it in a new tab.
+            </p>
+            <div className="life-dept-discover__frame">
+              <iframe
+                title="Discover your Kharis department"
+                src={LIFE_DEPARTMENTS_URL}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <p className="life-dept-discover__note">
+              Need an embeddable code from Ruth if this iframe is blocked. Meanwhile use{" "}
+              <a href={LIFE_DEPARTMENTS_URL} target="_blank" rel="noreferrer">
+                discover.khar.is
+              </a>
+              .
+            </p>
+          </Reveal>
+
+          <Reveal className="life-detail-end">
+            <Link href="/locations" className="life-cta">
+              Find a branch to serve
+              <Icon name="arrow" className="h-3.5 w-3.5" />
+            </Link>
+            <Link href="/life" className="life-cta life-cta--quiet">
+              Back to Kharis Life
+            </Link>
+          </Reveal>
+
+          <nav className="life-detail-nav" aria-label="Kharis Life">
+            {navCats.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={
+                  cat.slug === "children" || cat.slug === "departments"
+                    ? cat.slug === "departments"
+                      ? "/life/departments"
+                      : cat.href
+                    : `/life?open=${cat.slug}`
+                }
+                className={cat.slug === slug ? "is-on" : undefined}
+              >
+                {cat.shortTitle}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     );
