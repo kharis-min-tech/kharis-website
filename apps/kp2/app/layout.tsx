@@ -196,7 +196,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={organizationJsonLd()} />
         <ScrollReveal />
         <KpIntro />
-        <div id="kp-site-content">{children}</div>
+        <div id="kp-site-content" tabIndex={-1}>
+          {children}
+        </div>
         <script src="/kp2/ui-boot.js?v=9" defer></script>
       </body>
     </html>
