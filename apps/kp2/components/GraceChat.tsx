@@ -24,16 +24,27 @@ const CHIPS = [
   { label: "Contact", prompt: "How do I contact the team?" },
 ];
 
+/** Drop characters that would be read as HTML if this string were inserted as markup. */
+function neutralizeHtml(value: string) {
+  return value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 function safeHref(raw: string) {
-  const href = raw.trim();
-  if (href.startsWith("/") && !href.startsWith("//")) return withBasePath(href);
+  let url: URL;
   try {
-    const url = new URL(href);
-    if (url.protocol === "https:") return url.toString();
+    url = new URL(raw.trim(), "https://kharis.org");
   } catch {
     return null;
   }
-  return null;
+  if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+  if (url.username || url.password) return null;
+  const local = url.hostname === "kharis.org" || url.hostname === "www.kharis.org";
+  const href = local
+    ? withBasePath(`${url.pathname}${url.search}${url.hash}`)
+    : url.protocol === "https:"
+      ? url.href
+      : "";
+  return href ? neutralizeHtml(href) : null;
 }
 
 function Reply({ text }: { text: string }) {
@@ -42,12 +53,13 @@ function Reply({ text }: { text: string }) {
     <>
       {chunks.map((chunk, index) => {
         const match = chunk.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
-        if (!match) return <span key={index}>{chunk}</span>;
+        if (!match) return <span key={index}>{neutralizeHtml(chunk)}</span>;
         const href = safeHref(match[2]);
-        if (!href) return <span key={index}>{match[1]}</span>;
+        const label = neutralizeHtml(match[1]);
+        if (!href) return <span key={index}>{label}</span>;
         return (
           <a key={index} href={href}>
-            {match[1]}
+            {label}
           </a>
         );
       })}
