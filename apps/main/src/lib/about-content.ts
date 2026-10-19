@@ -138,7 +138,8 @@ export const ABOUT = {
         id: "awo",
         name: "Pastor Awo Antwi",
         role: "Co-founder & Senior Associate Pastor",
-        image: "/images/leadership/pastor-awo-preaching.jpg",
+        image:
+          "https://images.kharis.org/site-images/main/ef23a725426d6b26/leadership/pastor-awo-preaching.jpg",
         imageWidth: 1365,
         imageHeight: 2048,
         focus: "People, family, and raising the next generation",
