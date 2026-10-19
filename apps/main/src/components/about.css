@@ -361,14 +361,14 @@
   border-left: 0;
 }
 .about-page .about-lead__profile-photo img {
-  transition:
-    filter 0.6s ease,
-    scale 0.8s ease;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: filter 0.6s ease;
   filter: grayscale(1);
 }
 .about-page .about-lead__profile:hover img {
   filter: grayscale(0);
-  scale: 1.025;
 }
 .about-page .about-panel__hero-media {
   transition: filter 0.8s ease;
@@ -438,6 +438,7 @@
   letter-spacing: -0.035em;
 }
 .about-page .about-lead__profile-photo {
+  min-height: 0;
   box-shadow:
     0 3px 6px rgba(25, 15, 40, 0.04),
     0 12px 20px -12px rgba(25, 15, 40, 0.16),
@@ -857,9 +858,6 @@
   max-width: none;
 }
 
-.about-page .about-lead__profile:nth-child(2) .about-lead__profile-photo img {
-  object-position: center top;
-}
 @media (max-width: 759px) {
   .about-page .about-panel__hero--leadership {
     min-height: 18rem;
