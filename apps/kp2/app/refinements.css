@@ -751,7 +751,8 @@ html[data-kp-intro="seen"] .kp-intro {
     font-size: 1.125rem;
   }
   .theme-toggle {
-    right: max(1rem, env(safe-area-inset-right));
+    left: max(1rem, env(safe-area-inset-left));
+    right: auto;
     bottom: max(1rem, env(safe-area-inset-bottom));
     width: 44px;
     height: 44px;

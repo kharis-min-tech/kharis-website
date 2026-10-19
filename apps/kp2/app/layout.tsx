@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Anton, Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 import "./refinements.css";
+import "./grace-chat.css";
+import { GraceChat } from "@/components/GraceChat";
 import { KpIntro } from "@/components/KpIntro";
 
 const anton = Anton({
@@ -197,6 +199,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollReveal />
         <KpIntro />
         <div id="kp-site-content">{children}</div>
+        <GraceChat />
         <script src="/kp2/ui-boot.js?v=9" defer></script>
       </body>
     </html>
