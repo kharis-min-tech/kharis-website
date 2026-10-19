@@ -2,10 +2,7 @@ import { DEPARTMENT_VIDEOS } from "@/data/department-videos";
 
 export const runtime = "edge";
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const isDepartmentVideo = DEPARTMENT_VIDEOS.some((item) =>
     item.src.endsWith(`/api/department-videos/${id}`),

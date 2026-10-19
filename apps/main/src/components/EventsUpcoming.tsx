@@ -67,8 +67,14 @@ function BranchEventTile({ event }: { event: BranchEvent }) {
       </span>
       <span className="events-next__copy">
         <span className="events-next__name">{event.title}</span>
-        <span className="events-next__meta"><Calendar aria-hidden className="events-next__ico" />{event.date} · {event.time}</span>
-        <span className="events-next__meta"><MapPin aria-hidden className="events-next__ico" />{event.location}</span>
+        <span className="events-next__meta">
+          <Calendar aria-hidden className="events-next__ico" />
+          {event.date} · {event.time}
+        </span>
+        <span className="events-next__meta">
+          <MapPin aria-hidden className="events-next__ico" />
+          {event.location}
+        </span>
         <span className="events-next__meta">{event.description}</span>
       </span>
     </article>
@@ -146,12 +152,15 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
         {upcomingEvents.length ? (
           <ul className="events-next__grid">
             {upcomingEvents.map((event) => (
-              <li key={event.id}><BranchEventTile event={event} /></li>
+              <li key={event.id}>
+                <BranchEventTile event={event} />
+              </li>
             ))}
           </ul>
         ) : (
           <p className="events-next__empty" role="status">
-            No branch-specific event dates have been announced for {branch?.name ?? "this branch"} yet. Praise Night is next; date and venue details will be added here once confirmed.
+            No branch-specific event dates have been announced for {branch?.name ?? "this branch"}{" "}
+            yet. Praise Night is next; date and venue details will be added here once confirmed.
           </p>
         )}
 

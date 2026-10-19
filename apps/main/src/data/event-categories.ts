@@ -94,14 +94,40 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     headline: "Kharis Singles Ball",
     subtext: "An evening of elegance, good food and great company.",
     gallery: [
-      { src: "/images/events/singles-ball/ballroom-overview.jpg", alt: "Ballroom with crystal chandeliers, round dinner tables and a pink-lit stage" },
-      { src: "/images/events/singles-ball/couples-dancing.jpg", alt: "Couples in formal wear dancing on the ballroom floor" },
-      { src: "/images/events/singles-ball/stage-panel.jpg", alt: "Three hosts seated on stage with microphones in front of a pink backdrop" },
-      { src: "/images/events/singles-ball/gentlemen-stairs.jpg", alt: "Gentlemen in black tuxedos and bow ties walking down a grand staircase" },
-      { src: "/images/events/singles-ball/ladies-selfie.jpg", alt: "Ladies in evening gowns smiling and posing together for a selfie" },
-      { src: "/images/events/singles-ball/pastor-david.jpg", alt: "Pastor David Antwi at the KM Singles Ball backdrop", position: "50% 20%" },
-      { src: "/images/events/singles-ball/pastor-awo.jpg", alt: "Pastor Awo Antwi at the KM Singles Ball backdrop", position: "50% 20%" },
-      { src: "/images/events-hero-banquet.jpg", alt: "Banquet tables set with red roses and candles" },
+      {
+        src: "/images/events/singles-ball/ballroom-overview.jpg",
+        alt: "Ballroom with crystal chandeliers, round dinner tables and a pink-lit stage",
+      },
+      {
+        src: "/images/events/singles-ball/couples-dancing.jpg",
+        alt: "Couples in formal wear dancing on the ballroom floor",
+      },
+      {
+        src: "/images/events/singles-ball/stage-panel.jpg",
+        alt: "Three hosts seated on stage with microphones in front of a pink backdrop",
+      },
+      {
+        src: "/images/events/singles-ball/gentlemen-stairs.jpg",
+        alt: "Gentlemen in black tuxedos and bow ties walking down a grand staircase",
+      },
+      {
+        src: "/images/events/singles-ball/ladies-selfie.jpg",
+        alt: "Ladies in evening gowns smiling and posing together for a selfie",
+      },
+      {
+        src: "/images/events/singles-ball/pastor-david.jpg",
+        alt: "Pastor David Antwi at the KM Singles Ball backdrop",
+        position: "50% 20%",
+      },
+      {
+        src: "/images/events/singles-ball/pastor-awo.jpg",
+        alt: "Pastor Awo Antwi at the KM Singles Ball backdrop",
+        position: "50% 20%",
+      },
+      {
+        src: "/images/events-hero-banquet.jpg",
+        alt: "Banquet tables set with red roses and candles",
+      },
     ],
   },
   {
@@ -116,8 +142,14 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     headline: "Bring a Soul",
     subtext: "A special service where you can bring someone to church to hear the Word.",
     gallery: [
-      { src: "/images/about-mission-outreach-3200.jpg", alt: "Kharis members sharing the gospel with people in their community" },
-      { src: "/images/hero/outreach-street.jpg", alt: "Outreach team inviting people on a city street" },
+      {
+        src: "/images/about-mission-outreach-3200.jpg",
+        alt: "Kharis members sharing the gospel with people in their community",
+      },
+      {
+        src: "/images/hero/outreach-street.jpg",
+        alt: "Outreach team inviting people on a city street",
+      },
       { src: "/images/about-vision-team-2048.jpg", alt: "Kharis outreach team gathered together" },
     ],
   },
@@ -138,8 +170,14 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         src: "/images/events/family-fun-day-race.jpg",
         alt: "Members in 316 jerseys racing across the court on Family Fun Day",
       },
-      { src: "/images/hero/outreach-community.jpg", alt: "Church members gathered outdoors in a park" },
-      { src: "/images/branch-slide-2.jpg", alt: "Pastor celebrating on stage with the congregation" },
+      {
+        src: "/images/hero/outreach-community.jpg",
+        alt: "Church members gathered outdoors in a park",
+      },
+      {
+        src: "/images/branch-slide-2.jpg",
+        alt: "Pastor celebrating on stage with the congregation",
+      },
       { src: "/images/about-hero-bench-3200.jpg", alt: "Members on a bench outdoors" },
       { src: "/images/hero/impartation-celebration.jpg", alt: "Pastor celebrating with members" },
       { src: "/images/love-greeting.jpg", alt: "Members greeting each other" },
@@ -164,7 +202,11 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         alt: "Singers on stage leading a packed hall in praise",
       },
       { src: "/images/locations-worship-team.jpg", alt: "Worship team singing on stage" },
-      { src: "/images/get-involved-sax.jpg", alt: "Saxophonist playing during worship", position: "50% 30%" },
+      {
+        src: "/images/get-involved-sax.jpg",
+        alt: "Saxophonist playing during worship",
+        position: "50% 30%",
+      },
       { src: "/images/joyful-worship.jpg", alt: "Congregation worshipping with joy" },
       { src: "/images/hero/worship-altar.jpg", alt: "Worship at the front of the hall" },
       { src: "/images/hero/sunday-service-stage.jpg", alt: "Hands raised under stage lights" },
@@ -184,8 +226,14 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     headline: "Jesus Campaign",
     subtext: "Taking the good news of Jesus to the streets of our cities.",
     gallery: [
-      { src: "/images/events/jesus-campaign-street.jpg", alt: "Kharis Jesus Campaign team sharing the gospel on a London street" },
-      { src: "/images/about-vision-team-2048.jpg", alt: "Outreach team posing together in yellow shirts" },
+      {
+        src: "/images/events/jesus-campaign-street.jpg",
+        alt: "Kharis Jesus Campaign team sharing the gospel on a London street",
+      },
+      {
+        src: "/images/about-vision-team-2048.jpg",
+        alt: "Outreach team posing together in yellow shirts",
+      },
       { src: "/images/about-mission-outreach-3200.jpg", alt: "Talking with people on the street" },
       { src: "/images/vision-campaign.jpg", alt: "Crowd in yellow campaign shirts" },
       { src: "/images/about-hero-bench-3200.jpg", alt: "Team members outdoors" },
@@ -210,8 +258,15 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         alt: "Let the Bible Speak team in matching caps and T-shirts",
         position: "50% 25%",
       },
-      { src: "/images/biblical-open-bible.jpg", alt: "Pastor holding an open Bible up high", position: "50% 30%" },
-      { src: "/images/hero/easter-bibles-raised.jpg", alt: "Congregation holding their Bibles up high" },
+      {
+        src: "/images/biblical-open-bible.jpg",
+        alt: "Pastor holding an open Bible up high",
+        position: "50% 30%",
+      },
+      {
+        src: "/images/hero/easter-bibles-raised.jpg",
+        alt: "Congregation holding their Bibles up high",
+      },
       { src: "/images/hero/preaching-open-bible.jpg", alt: "Pastor preaching from an open Bible" },
       { src: "/images/hero/easter-pastor-david.jpg", alt: "Pastor teaching" },
       { src: "/images/hero/sunday-bible-raised.jpg", alt: "Member holding up her Bible" },

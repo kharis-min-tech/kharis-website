@@ -28,7 +28,12 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(10, 4, 18, 0.72) 0%, rgba(10, 4, 18, 0.34) 42%, rgba(10, 4, 18, 0) 72%),
+    linear-gradient(
+      90deg,
+      rgba(10, 4, 18, 0.72) 0%,
+      rgba(10, 4, 18, 0.34) 42%,
+      rgba(10, 4, 18, 0) 72%
+    ),
     linear-gradient(
       180deg,
       rgba(10, 4, 18, 0.42) 0%,
@@ -557,7 +562,8 @@ div.events-page {
   justify-content: space-between;
   gap: 1rem;
   min-height: var(--gallery-top);
-  padding: env(safe-area-inset-top, 0px) calc(var(--gallery-gutter) + 3.5rem) 0 var(--gallery-gutter);
+  padding: env(safe-area-inset-top, 0px) calc(var(--gallery-gutter) + 3.5rem) 0
+    var(--gallery-gutter);
 }
 
 .events-gallery__eyebrow {

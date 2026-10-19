@@ -106,8 +106,9 @@ export function MessagesHero({ wall, messages }: Props) {
   const command = useCallback((func: string, args: unknown[] = []) => {
     const frame = frameRef.current;
     // Skip until the iframe has actually navigated to YouTube (avoids origin mismatch noise).
-    if (!frame?.contentWindow || !frame.src.startsWith(YT_ORIGIN)) return;
+    if (!frame?.contentWindow) return;
     try {
+      if (new URL(frame.src).origin !== YT_ORIGIN) return;
       frame.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), YT_ORIGIN);
     } catch {
       /* iframe not ready */

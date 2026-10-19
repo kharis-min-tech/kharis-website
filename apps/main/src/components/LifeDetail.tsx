@@ -314,11 +314,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
 
         <section className="life-dept-bands" aria-label="Ways to serve">
           {DEPT_BANDS.map((band, index) => (
-            <article
-              className="life-dept-band"
-              key={band.title}
-              style={{ zIndex: index + 1 }}
-            >
+            <article className="life-dept-band" key={band.title} style={{ zIndex: index + 1 }}>
               <div className="life-dept-band__media" aria-hidden="true">
                 <Image
                   className="life-dept-band__poster"
@@ -378,7 +374,6 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
             <Icon name="arrow" className="h-3.5 w-3.5" />
           </a>
         </div>
-
       </div>
     );
   }

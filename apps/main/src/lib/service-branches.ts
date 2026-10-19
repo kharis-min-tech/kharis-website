@@ -26,7 +26,9 @@ export type ServiceBranch = {
 function staticCountry(slug: string) {
   const b = BRANCHES_DATA[slug];
   if (!b) return null;
-  return b.region === "International" ? (b.fullAddress.split(", ").at(-1) ?? null) : "United Kingdom";
+  return b.region === "International"
+    ? (b.fullAddress.split(", ").at(-1) ?? null)
+    : "United Kingdom";
 }
 
 function formatTime(time: string) {
