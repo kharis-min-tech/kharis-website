@@ -14,6 +14,7 @@
   cursor: pointer;
   text-align: left;
   isolation: isolate;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
 .make-matter-banner:focus-visible {
@@ -32,7 +33,7 @@
   letter-spacing: -0.075em;
   line-height: 0.95;
   white-space: nowrap;
-  transition: transform 780ms cubic-bezier(0.76, 0, 0.24, 1);
+  transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .make-matter-banner__photo {
@@ -51,7 +52,24 @@
   z-index: 0;
   object-fit: cover;
   filter: grayscale(1) brightness(0.68);
-  transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
+  clip-path: inset(0 50%);
+  transform: scale(1.16);
+  transition:
+    clip-path 1000ms cubic-bezier(0.76, 0, 0.24, 1),
+    transform 1000ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.make-matter-banner:not(.is-revealed) .make-matter-banner__text--left {
+  transform: translateX(18%);
+}
+
+.make-matter-banner:not(.is-revealed) .make-matter-banner__text--right {
+  transform: translateX(-18%);
+}
+
+.make-matter-banner.is-revealed .make-matter-banner__photo img {
+  clip-path: inset(0);
+  transform: scale(1);
 }
 
 .make-matter-banner:hover .make-matter-banner__text--left,

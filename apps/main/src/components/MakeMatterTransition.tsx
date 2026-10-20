@@ -117,19 +117,39 @@ export function MakeItMatterBanner({
   department?: string;
 }) {
   const navigate = useMakeMatterNavigation();
+  const bannerRef = useRef<HTMLButtonElement>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const banner = bannerRef.current;
+    if (!banner) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setRevealed(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    observer.observe(banner);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <button
-      className="make-matter-banner"
+      ref={bannerRef}
+      className={`make-matter-banner${revealed ? " is-revealed" : ""}`}
       type="button"
       aria-label={`${leftText} ${rightText} Join ${department}`}
       onClick={() => navigate(href, image)}
     >
       <span className="make-matter-banner__text make-matter-banner__text--left">{leftText}</span>
-      <span
-        className="make-matter-banner__photo"
-        style={{ backgroundImage: `url("${image}")` }}
-        aria-hidden="true"
-      >
+      <span className="make-matter-banner__photo" aria-hidden="true">
         <Image src={image} alt="" fill priority sizes="(max-width: 700px) 38vw, 40vw" />
       </span>
       <span className="make-matter-banner__text make-matter-banner__text--right">{rightText}</span>

@@ -178,7 +178,17 @@ export function LifeDepartmentsPage() {
         ))}
       </section>
 
-      <section className="life-dept-matter" aria-label="Join a department">
+      <section className="life-dept-branch-cta" aria-labelledby="life-dept-branch-cta-title">
+        <div className="life-dept-branch-cta__intro">
+          <div>
+            <h3 id="life-dept-branch-cta-title">Still not sure where you fit?</h3>
+            <p>Take the quiz and find the team that fits you at your local branch.</p>
+          </div>
+          <a href="https://discover.khar.is/" className="life-dept-branch-cta__link">
+            Take the quiz
+            <Icon name="arrow" className="h-3.5 w-3.5" />
+          </a>
+        </div>
         <MakeItMatterBanner
           leftText="Make it"
           rightText="Matter."
@@ -187,17 +197,6 @@ export function LifeDepartmentsPage() {
           department="the Welcome Team"
         />
       </section>
-
-      <div className="life-dept-branch-cta">
-        <div>
-          <h3>Still not sure where you fit?</h3>
-          <p>Take the quiz and find the team that fits you at your local branch.</p>
-        </div>
-        <a href="https://discover.khar.is/" className="life-dept-branch-cta__link">
-          Take the quiz
-          <Icon name="arrow" className="h-3.5 w-3.5" />
-        </a>
-      </div>
     </div>
   );
 }
