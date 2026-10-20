@@ -22,7 +22,7 @@ const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const COMING_UP_FALLBACKS = [
   WORSHIP,
   "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
-  "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
+  "/kp2/assets/ghana-flags-celebration.jpg",
   "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
   HERO_WORSHIP,
 ];

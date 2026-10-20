@@ -39,12 +39,12 @@ const GALLERY: GalleryPhoto[] = [
     alt: "Pastor David lifting a red Bible during the service",
   },
   {
-    src: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg",
-    alt: "Young adults together after a Sunday service",
+    src: "/kp2/assets/young-men-smiling.jpg",
+    alt: "Young men smiling together in the congregation during a Sunday service",
   },
   {
-    src: "https://images.kharis.org/site-images/kp2/ca1bcf57dbf80629/community.jpg",
-    alt: "The KP2 church family together",
+    src: "/kp2/assets/choir-and-congregation-worship.jpg",
+    alt: "The choir leading the congregation in worship",
   },
 ];
 

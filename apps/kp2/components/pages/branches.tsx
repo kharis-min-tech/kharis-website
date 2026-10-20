@@ -45,7 +45,7 @@ function milesBetween(aLat: number, aLng: number, bLat: number, bLng: number) {
 function BranchesPage({ branches }: { branches: Branch[] }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [place, setPlace] = useState<MapPlace>("world");
+  const [place, setPlace] = useState<MapPlace>("uk");
   const [openRegions, setOpenRegions] = useState(false);
   const [origin, setOrigin] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);

@@ -469,6 +469,15 @@ html[data-kp-intro="seen"] .kp-intro {
 .kp-app-stores a p:first-child {
   color: var(--on-surface-variant) !important;
 }
+/* The global white-link hover fills these with --primary, so the ink must follow. */
+@media (hover: hover) and (pointer: fine) {
+  .kp-app-stores a:hover p {
+    color: var(--on-primary) !important;
+  }
+  .kp-app-stores a:hover p:first-child {
+    color: color-mix(in srgb, var(--on-primary) 78%, transparent) !important;
+  }
+}
 @media (max-width: 767px) {
   .kp-app-steps {
     grid-template-columns: minmax(0, 1fr);

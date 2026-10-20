@@ -65,6 +65,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/Choir-video.mp4"
+              poster="/kp2/assets/choir-video-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -73,6 +74,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/crowd.mp4"
+              poster="/kp2/assets/crowd-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -81,6 +83,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/choir2.mp4"
+              poster="/kp2/assets/choir2-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -89,6 +92,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/dancing.mp4"
+              poster="/kp2/assets/dancing-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -134,10 +138,10 @@ function Index({
             <div className="kp-intro-visual relative order-2 md:order-1">
               <div className="border-4 border-gray-900 brutalist-shadow overflow-hidden rotate-[-2deg] bg-gray-100">
                 <img
-                  alt="Worship moment at Kharis"
+                  alt="A full hall at a Kharis Phase 2 Sunday service"
                   className="kp-intro-photo w-full object-cover"
                   style={{ height: "clamp(240px, 28vw, 420px)" }}
-                  src="https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/pastor-stage.jpg"
+                  src="/kp2/assets/sunday-service-full-hall.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -208,9 +212,9 @@ function Index({
                 className="group relative min-h-[320px] md:min-h-0 md:row-span-2 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
               >
                 <img
-                  alt="Our mandate: bringing Christ to people"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/c3bfa8102ef6e326/mandate.png"
+                  alt="Taking sermon notes during a Sunday service"
+                  className="absolute inset-0 w-full h-full object-cover object-[60%_center] group-hover:scale-[1.02] transition duration-700"
+                  src="/kp2/assets/sunday-service-sermon-notes.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -236,9 +240,9 @@ function Index({
                 className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
               >
                 <img
-                  alt="Find a Kharis location"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/3f1f49569aefd282/branch-slide-3.jpg"
+                  alt="Two friends smiling as they arrive at church"
+                  className="absolute inset-0 w-full h-full object-cover object-[center_25%] group-hover:scale-[1.02] transition duration-700"
+                  src="/kp2/assets/friends-arriving-at-church.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -261,9 +265,9 @@ function Index({
                 className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
               >
                 <img
-                  alt="Young adults at Kharis"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg"
+                  alt="The congregation celebrating together at a Kharis service"
+                  className="absolute inset-0 w-full h-full object-cover object-[center_25%] group-hover:scale-[1.02] transition duration-700"
+                  src="/kp2/assets/congregation-celebrating.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -286,9 +290,9 @@ function Index({
                 className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
               >
                 <img
-                  alt="Worship night"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
+                  alt="Sharing the gospel with a passer-by on the street"
+                  className="absolute inset-0 w-full h-full object-cover object-[center_30%] group-hover:scale-[1.02] transition duration-700"
+                  src="/kp2/assets/street-evangelism.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -311,9 +315,9 @@ function Index({
                 className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
               >
                 <img
-                  alt="Serve with us"
+                  alt="The KP2 choir ministering on stage"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/8440a4a63e4ae020/serve-with-us.jpg"
+                  src="/kp2/assets/choir-on-stage.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -368,7 +372,7 @@ function Index({
                 <img
                   alt="Pastor David Antwi, Head Pastor of Kharis Phase 2"
                   className="relative w-full aspect-[4/5] object-cover rounded-[2rem] shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500"
-                  src="https://images.kharis.org/site-images/kp2/64154a5197622b53/leadership-pastor-david.jpg"
+                  src="/kp2/assets/pastor-david-smiling.jpg"
                   loading="lazy"
                   decoding="async"
                 />

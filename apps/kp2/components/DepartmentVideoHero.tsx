@@ -181,6 +181,7 @@ export function DepartmentVideoHero() {
                     src={dept.image}
                     alt={`${dept.name} department`}
                     className="h-full w-full object-cover"
+                    style={{ objectPosition: dept.imagePosition }}
                     loading="lazy"
                     decoding="async"
                   />
