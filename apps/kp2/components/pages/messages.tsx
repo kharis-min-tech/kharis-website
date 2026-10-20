@@ -1,23 +1,51 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
-import { YoutubeEmbed } from "@/components/YoutubeEmbed";
-import { ShareVideoButton } from "@/components/ShareVideoButton";
+import { MessageBrowser } from "@/components/MessageBrowser";
+import "@/components/listen-row.css";
 import { MutedHeroVideo } from "@/components/MutedHeroVideo";
-import {
-  displayMessageTitle,
-  formatMessageDate,
-  youtubeWatchUrl,
-  type MessageVideo,
-} from "@/lib/youtube";
+import { displayMessageTitle, youtubeWatchUrl, type MessageVideo } from "@/lib/youtube";
 
 function MessagesPage({ messages }: { messages: MessageVideo[] }) {
   const featured = messages[0];
-  const rest = messages.slice(1);
+  const listenRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = listenRef.current;
+    if (!section) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => {
+      if (reduce.matches) {
+        section.style.setProperty("--listen", "1");
+        return;
+      }
+      const top = section.getBoundingClientRect().top;
+      const start = window.innerHeight * 0.96;
+      const end = window.innerHeight * 0.22;
+      const progress = Math.min(1, Math.max(0, (start - top) / (start - end)));
+      section.style.setProperty("--listen", progress.toFixed(3));
+    };
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    reduce.addEventListener("change", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      reduce.removeEventListener("change", onScroll);
+    };
+  }, []);
 
   return (
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
@@ -56,7 +84,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             {featured ? (
               <div className="flex flex-wrap gap-4">
                 <a
-                  href="#latest-message"
+                  href="#latest-messages"
                   className="kp-depth-button kp-button-purple bg-primary text-white font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press group"
                 >
                   <span
@@ -81,103 +109,15 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
           </div>
         </section>
 
-        {featured ? (
-          <section
-            id="latest-message"
-            className="max-w-7xl mx-auto px-margin-desktop py-16 scroll-mt-24"
-          >
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="font-headline-md text-headline-md uppercase">Latest Message</h2>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-              <div className="lg:col-span-8 bg-surface border-2 border-black neo-shadow-lg overflow-hidden">
-                <div className="aspect-video relative bg-black">
-                  <YoutubeEmbed
-                    id={featured.id}
-                    title={featured.title}
-                    thumbnail={featured.thumbnail}
-                  />
-                </div>
-              </div>
-              <div className="lg:col-span-4 bg-surface-container border-2 border-black neo-shadow p-6 flex flex-col">
-                <h4 className="font-label-md text-primary mb-2">NOW PLAYING</h4>
-                <h3 className="font-headline-md text-3xl uppercase mb-4">
-                  {displayMessageTitle(featured.title)}
-                </h3>
-                <p className="font-body-md text-on-surface-variant mb-6">{featured.title}</p>
-                <div className="space-y-3 mb-6">
-                  {featured.publishedAt ? (
-                    <div className="flex items-center gap-3 font-label-sm text-on-surface">
-                      <span className="material-symbols-outlined text-primary">calendar_today</span>
-                      <span>{formatMessageDate(featured.publishedAt)}</span>
-                    </div>
-                  ) : null}
-                  <div className="flex items-center gap-3 font-label-sm text-on-surface">
-                    <span className="material-symbols-outlined text-primary">person</span>
-                    <span>Pastor David Antwi</span>
-                  </div>
-                </div>
-                <ShareVideoButton
-                  id={featured.id}
-                  title={featured.title}
-                  className="mt-auto w-full bg-primary text-on-primary font-label-md py-3 border-2 border-black neo-shadow hover-press flex items-center justify-center gap-2"
-                />
-              </div>
-            </div>
-          </section>
-        ) : null}
+        <MessageBrowser messages={messages} />
 
-        <section className="max-w-7xl mx-auto px-margin-desktop py-16">
-          {rest.length === 0 ? (
-            <p className="font-body-lg text-on-surface-variant">
-              More messages will appear here as they are published.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {rest.map((msg) => (
-                <a
-                  key={msg.id}
-                  href={youtubeWatchUrl(msg.id)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group border-2 border-black bg-white text-on-background hard-shadow hover:translate-y-[-4px] hover:bg-[#2a2a2a] hover:text-white transition-all"
-                >
-                  <div className="relative aspect-video border-b-2 border-black overflow-hidden">
-                    <img
-                      alt=""
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      src={msg.thumbnail}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex gap-2 mb-3">
-                      <span className="bg-secondary-container text-on-secondary-container text-[10px] font-label-md px-2 py-0.5 border border-black uppercase">
-                        YouTube
-                      </span>
-                    </div>
-                    <h3 className="font-headline-md text-headline-md leading-tight mb-2 uppercase">
-                      {displayMessageTitle(msg.title)}
-                    </h3>
-                    <div className="flex items-center justify-between border-t-2 border-black/10 pt-4">
-                      <span className="font-label-sm text-xs uppercase">Pastor David Antwi</span>
-                      {msg.publishedAt ? (
-                        <span className="font-label-sm text-[10px] text-outline uppercase group-hover:text-white/70">
-                          {formatMessageDate(msg.publishedAt)}
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="bg-surface-container border-y-4 border-black">
+        <section
+          ref={listenRef}
+          className="kp-listen bg-surface-container border-y-4 border-black"
+          data-reveal="self"
+        >
           <div className="max-w-7xl mx-auto px-margin-desktop py-16">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+            <div className="kp-listen__intro flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
                 <span className="inline-block bg-secondary-container text-on-secondary-container border-2 border-black font-label-sm uppercase px-3 py-1 hard-shadow-sm mb-4">
                   Listen Anywhere
@@ -231,23 +171,26 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   muted: "text-white/90",
                 },
               ].map(({ label, copy, cta, href, icon, card, muted }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-                  className={`kp-platform-card group ${card} border-2 border-black rounded-none neo-shadow flex flex-col p-6 no-accent-fill`}
-                >
-                  <span className={`material-symbols-outlined text-4xl mb-4 ${muted}`}>{icon}</span>
-                  <h3 className="font-headline-md text-title-lg uppercase mb-2">{label}</h3>
-                  <p className={`font-body-lg text-body-md flex-1 ${muted}`}>{copy}</p>
-                  <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase">
-                    {cta}
-                    <span className="material-symbols-outlined text-base transition-transform group-hover:translate-x-1">
-                      arrow_forward
+                <div key={label} className="kp-listen__slot">
+                  <Link
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
+                    className={`kp-platform-card group ${card} border-2 border-black rounded-none neo-shadow flex flex-col p-6 no-accent-fill`}
+                  >
+                    <span className={`material-symbols-outlined text-4xl mb-4 ${muted}`}>
+                      {icon}
                     </span>
-                  </span>
-                </Link>
+                    <h3 className="font-headline-md text-title-lg uppercase mb-2">{label}</h3>
+                    <p className={`font-body-lg text-body-md flex-1 ${muted}`}>{copy}</p>
+                    <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase">
+                      {cta}
+                      <span className="material-symbols-outlined text-base transition-transform group-hover:translate-x-1">
+                        arrow_forward
+                      </span>
+                    </span>
+                  </Link>
+                </div>
               ))}
             </div>
           </div>

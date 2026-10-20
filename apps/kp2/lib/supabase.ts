@@ -48,6 +48,73 @@ async function restGet(
   });
 }
 
+async function restPost(
+  url: string,
+  headers: Record<string, string>,
+  payload: string,
+): Promise<{ ok: boolean; status: number; body: string }> {
+  const agent = await tlsAgent();
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      url,
+      {
+        method: "POST",
+        headers: { ...headers, "Content-Length": String(Buffer.byteLength(payload)) },
+        agent,
+      },
+      (res) => {
+        const chunks: Buffer[] = [];
+        res.on("data", (chunk) => chunks.push(chunk as Buffer));
+        res.on("end", () => {
+          resolve({
+            ok: (res.statusCode ?? 500) >= 200 && (res.statusCode ?? 500) < 300,
+            status: res.statusCode ?? 500,
+            body: Buffer.concat(chunks).toString("utf8"),
+          });
+        });
+      },
+    );
+    req.on("error", reject);
+    req.write(payload);
+    req.end();
+  });
+}
+
+/** Inserts one row with a server-only key. Returns false when the key or URL is missing. */
+export async function supabaseInsert(
+  table: string,
+  row: Record<string, unknown>,
+  serverKey: string | undefined,
+): Promise<{ ok: boolean; configured: boolean }> {
+  if (!supabaseUrl || !serverKey) return { ok: false, configured: false };
+
+  const headers = {
+    apikey: serverKey,
+    Authorization: `Bearer ${serverKey}`,
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Prefer: "return=minimal",
+  };
+  const url = `${supabaseUrl}/rest/v1/${table}`;
+  const payload = JSON.stringify(row);
+
+  try {
+    let result: { ok: boolean; status: number; body: string };
+    try {
+      const res = await fetch(url, { method: "POST", headers, body: payload, cache: "no-store" });
+      result = { ok: res.ok, status: res.status, body: await res.text() };
+    } catch (error) {
+      if (!isCertError(error)) throw error;
+      result = await restPost(url, headers, payload);
+    }
+    if (!result.ok) console.error(`Supabase ${table} insert failed:`, result.status, result.body);
+    return { ok: result.ok, configured: true };
+  } catch (error) {
+    console.error(`Supabase ${table} insert request failed:`, error);
+    return { ok: false, configured: true };
+  }
+}
+
 export async function supabaseSelect<T>(
   table: string,
   query: string,

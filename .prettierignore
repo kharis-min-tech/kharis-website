@@ -16,6 +16,7 @@ apps/*/public
 
 # Generated map data (huge, minified; keep as-is, do not reformat)
 apps/main/src/data/*.json
+apps/kp2/data/*.json
 
 # Session scratch (local only; never source)
 .remember/

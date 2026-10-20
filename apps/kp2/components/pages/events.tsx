@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
@@ -9,81 +9,23 @@ import { CATEGORY_ICON, EVENT_CATEGORIES, type ChurchEvent } from "@/lib/events"
 import { eventToCalendarItem, mapsSearchUrl } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { ComicFlip } from "@/components/ComicFlip";
+import { EventsComingUp, EventsHero } from "@/components/EventsTop";
+import { SundayServiceBanner } from "@/components/SundayServiceBanner";
+import { ComicPanels } from "@/components/ComicPanels";
 
 const HERO_WORSHIP =
   "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/events-hero-worship.jpg";
 const WORSHIP = "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg";
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-const SPECIAL_SERVICES = [
-  {
-    day: "BASS",
-    time: "Monthly · Sunday",
-    title: "Bring A Soul Sunday",
-    note: "We fill the room with friends, family and first-timers — a high-energy Sunday built for souls.",
-    image: "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
-  },
-  {
-    day: "Sports Day",
-    time: "Summer",
-    title: "Sports Day",
-    note: "Track, football and full-blown team rivalry — the church family outdoors for a day of games.",
-    image: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
-  },
-  {
-    day: "Praise Night",
-    time: "Seasonal",
-    title: "Praise Night",
-    note: "A night handed over to worship — live praise, testimony and the Word until the room shifts.",
-    image: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
-  },
+const COMING_UP_FALLBACKS = [
+  WORSHIP,
+  "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
+  "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
+  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
+  HERO_WORSHIP,
 ];
-
-function useCountdown(target: string) {
-  const [now, setNow] = useState<number | null>(null);
-
-  useEffect(() => {
-    setNow(Date.now());
-    const id = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  if (now === null) return null;
-  const diff = Math.max(0, new Date(target).getTime() - now);
-  return {
-    days: Math.floor(diff / 86400000),
-    hours: Math.floor((diff / 3600000) % 24),
-    minutes: Math.floor((diff / 60000) % 60),
-    seconds: Math.floor((diff / 1000) % 60),
-  };
-}
-
-function CountdownBlock({ target }: { target: string }) {
-  const c = useCountdown(target);
-  const units = [
-    { label: "Days", value: c?.days },
-    { label: "Hrs", value: c?.hours },
-    { label: "Min", value: c?.minutes },
-    { label: "Sec", value: c?.seconds },
-  ];
-
-  return (
-    <div className="grid grid-cols-4 gap-3">
-      {units.map((u) => (
-        <div
-          key={u.label}
-          className="bg-surface border-2 border-on-background neo-shadow px-2 py-3 text-center"
-        >
-          <span className="block font-display-lg text-headline-lg text-on-background tabular-nums">
-            {u.value === undefined ? "--" : String(u.value).padStart(2, "0")}
-          </span>
-          <span className="block font-label-sm uppercase tracking-widest text-outline">
-            {u.label}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function EventCard({ event }: { event: ChurchEvent }) {
   return (
@@ -140,7 +82,20 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
     [events],
   );
 
-  const featured = sorted.find((e) => e.featured) ?? sorted[0];
+  const sundayService = sorted.find((e) => e.weekly && /sunday/i.test(e.dayLabel));
+  const midweekService = sorted.find((e) => e.weekly && !/sunday|saturday/i.test(e.dayLabel));
+  const comingUp = useMemo(() => {
+    const later = (iso: string, weeks: number) =>
+      iso ? new Date(new Date(iso).getTime() + weeks * WEEK_MS).toISOString() : iso;
+    return sorted
+      .flatMap((e) =>
+        e.weekly
+          ? [0, 1, 2, 3].map((w) => ({ ...e, starts: later(e.starts, w), ends: later(e.ends, w) }))
+          : [e],
+      )
+      .sort((a, b) => new Date(a.starts).getTime() - new Date(b.starts).getTime())
+      .slice(0, 3);
+  }, [sorted]);
   const categories = useMemo(() => {
     const present = new Set(sorted.map((e) => e.category));
     return ["All", ...EVENT_CATEGORIES.filter((c) => present.has(c))];
@@ -162,122 +117,21 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
       <SiteHeader />
 
       <main className="pt-[74px]">
-        {/* HERO */}
-        <section className="relative bg-on-background text-surface py-stack-lg min-h-[60vh] flex flex-col justify-center overflow-hidden border-b-4 border-primary">
-          <img
-            src={HERO_WORSHIP}
-            alt="Kharis Phase 2 congregation worshipping together"
-            className="absolute inset-0 w-full h-full object-cover opacity-25 grayscale"
-            loading="eager"
-            decoding="async"
-          />
-          <div className="absolute inset-0 halftone-overlay opacity-20 pointer-events-none" />
-          <div className="container mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <div className="max-w-4xl">
-              <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-surface mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
-                Experience the Culture
-              </span>
-              <h1 className="font-display-lg text-display-lg mb-4 text-surface-bright">EVENTS</h1>
-              <p className="font-headline-md text-headline-md text-primary-fixed-dim uppercase italic max-w-2xl mb-stack-md">
-                Don&apos;t miss a moment of the movement.
-              </p>
-            </div>
-          </div>
-        </section>
+        <EventsHero image={HERO_WORSHIP} />
 
-        {/* NEXT UP + COUNTDOWN */}
-        {featured ? (
-          <section className="bg-surface-container-low h-screen pt-stack-lg pb-stack-lg border-b-4   border-on-background overflow-hidden">
-            <div className="container mx-auto px-margin-mobile md:px-margin-desktop h-full">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch h-full">
-                <div className="lg:col-span-7 relative border-2 border-on-background neo-shadow-lg overflow-hidden group">
-                  <img
-                    src={featured.image || WORSHIP}
-                    alt={`${featured.title} at Kharis Phase 2`}
-                    className="w-full h-full min-h-[320px] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <span className="absolute top-4 left-4 bg-primary text-on-primary font-label-md px-4 py-2 border-2 border-on-background uppercase neo-shadow">
-                    Next Up
-                  </span>
-                </div>
+        <EventsComingUp events={comingUp} fallbackImages={COMING_UP_FALLBACKS} />
 
-                <div className="lg:col-span-5 flex flex-col gap-stack-md justify-center bg-surface border-2 border-on-background neo-shadow-lg p-stack-md overflow-y-auto">
-                  <div>
-                    <span className="font-label-sm uppercase tracking-widest text-outline">
-                      {featured.dayLabel} · {featured.timeLabel}
-                    </span>
-                    <h2 className="font-headline-lg text-headline-lg uppercase leading-tight text-on-background mt-2">
-                      {featured.title}
-                    </h2>
-                  </div>
-                  <p className="font-body-lg text-body-lg text-on-surface-variant">
-                    {featured.blurb}
-                  </p>
-                  <CountdownBlock target={featured.starts} />
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <PlanVisitButton
-                      item={eventToCalendarItem(featured)}
-                      directionsUrl={mapsSearchUrl(featured.location)}
-                      className="flex-1 bg-primary-container text-on-primary-container font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
-                    >
-                      {featured.cta}
-                    </PlanVisitButton>
-                    <Link
-                      href="/messages"
-                      className="flex-1 bg-surface text-on-background font-headline-md text-headline-md px-6 py-4 border-4 border-on-background neo-shadow neo-button-hover transition-all text-center uppercase"
-                    >
-                      Watch Online
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        ) : null}
+        <SundayServiceBanner
+          when={sundayService ? `Every Sunday · ${sundayService.timeLabel}` : "Every Sunday"}
+        />
 
-        {/* SPECIAL SERVICES */}
-        <section className="bg-surface py-stack-lg">
-          <div className="container mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="mb-stack-lg">
-              <h3 className="font-headline-lg text-headline-lg uppercase text-on-background">
-                Our Special <span className="text-primary underline decoration-4">Events</span>
-              </h3>
-              <p className="font-label-md text-outline uppercase tracking-widest">
-                The moments we mark out through the year
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-              {SPECIAL_SERVICES.map((slot) => (
-                <div
-                  key={slot.title}
-                  className="border-2 border-on-background neo-shadow neo-button-hover transition-all bg-surface overflow-hidden group"
-                >
-                  <div className="aspect-[16/10] overflow-hidden border-b-2 border-on-background">
-                    <img
-                      src={slot.image}
-                      alt={slot.title}
-                      className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <div className="p-stack-md flex flex-col gap-2">
-                    <span className="font-label-sm uppercase tracking-widest text-primary">
-                      {slot.day} · {slot.time}
-                    </span>
-                    <h4 className="font-headline-md text-headline-md uppercase text-on-background">
-                      {slot.title}
-                    </h4>
-                    <p className="font-body-md text-on-surface-variant">{slot.note}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ComicPanels
+          midweekWhen={
+            midweekService
+              ? `Every ${midweekService.dayLabel.replace(/^every\s+/i, "")} · ${midweekService.timeLabel}`
+              : "Every week"
+          }
+        />
 
         {/* WHAT'S ON — filter + search */}
         <section
@@ -378,8 +232,8 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
                 icon: "groups",
                 title: "Bring a friend",
                 copy: "Every gathering is easier with a friend. Invite someone and we'll save you both a seat.",
-                cta: "Find a Fellowship",
-                to: "/fellowships" as const,
+                cta: "See Life",
+                to: "/life" as const,
               },
             ].map((item) => (
               <div

@@ -3,22 +3,18 @@
 import { AppListenSteps } from "@/components/AppListenSteps";
 import { KHARIS_APP } from "@/lib/kharis-app";
 import { AmbientVideo } from "@/components/AmbientVideo";
+import { HeroTitle } from "@/components/HeroTitle";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { TestimonialCarousel, type Testimonial } from "@/components/TestimonialCarousel";
+import { type Testimonial } from "@/components/TestimonialCarousel";
+import { TestimoniesBand } from "@/components/TestimoniesBand";
 import { TestimonyFormModal } from "@/components/TestimonyFormModal";
-import { YoutubeEmbed } from "@/components/YoutubeEmbed";
-import { ShareVideoButton } from "@/components/ShareVideoButton";
-import {
-  displayMessageTitle,
-  formatMessageDate,
-  youtubeWatchUrl,
-  type MessageVideo,
-} from "@/lib/youtube";
+import { LatestMessages } from "@/components/LatestMessages";
+import { type MessageVideo } from "@/lib/youtube";
 
 function Index({
   testimonials,
@@ -27,10 +23,7 @@ function Index({
   testimonials: Testimonial[];
   messages: MessageVideo[];
 }) {
-  const featured = messages[0];
-  const others = messages.slice(1, 5);
   const [formOpen, setFormOpen] = useState(false);
-  const openForm = useCallback(() => setFormOpen(true), []);
   const closeForm = useCallback(() => {
     setFormOpen(false);
     if (window.location.hash === "#share-testimony") {
@@ -109,9 +102,7 @@ function Index({
               Preach Christ Crucified.
             </span>
           </div>
-          <h1 className="font-display-xl text-[44px] sm:text-[60px] md:text-display-xl text-[#e8e0e9] uppercase leading-none drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] z-30 mix-blend-exclusion">
-            THIS IS CHURCH <br /> FOR THIS GENERATION.
-          </h1>
+          <HeroTitle />
           <p className="font-body-lg text-base sm:text-body-lg text-[#e8e0e9] mt-5 md:mt-6 max-w-2xl bg-[#151218]/40 backdrop-blur-md p-4 border border-[#958da1]/30 pointer-events-auto rounded">
             A spirit-filled, revival-seeking church. We are young people serving God with passion,
             gathering to encounter Jesus and live transformed lives.
@@ -266,7 +257,7 @@ function Index({
               </Link>
 
               <Link
-                href="/fellowships"
+                href="/life"
                 className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
               >
                 <img
@@ -279,10 +270,10 @@ function Index({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6">
                   <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    KHARIS HOME
+                    Community
                   </p>
                   <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Kharis Home
+                    Life
                   </h3>
                   <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
                     Explore →
@@ -386,151 +377,29 @@ function Index({
           </div>
         </section>
 
-        <section
+        <TestimoniesBand
           id="testimonies"
-          className="py-16 sm:py-20 lg:py-24 bg-[#f2eef7] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
-        >
-          <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
-              Salvation · Healing · Miracles
-            </span>
-            <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-4 transition-colors duration-300">
-              TESTIMONIES
-            </h2>
-            <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-2xl mb-10 sm:mb-12 lg:mb-16">
-              Salvation and life transformation, healing, and miracles — what God is doing in this
-              house.
-            </p>
-
-            {testimonials.length > 0 ? (
-              <TestimonialCarousel testimonials={testimonials} />
-            ) : (
-              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl">
-                Stories from the family will land here as people share what God is doing.
-              </p>
-            )}
-
-            <div className="flex justify-center sm:justify-end mt-8">
-              <button
-                type="button"
-                id="share-testimony"
-                onClick={openForm}
-                className="kp-depth-button kp-button-purple bg-[#630ed4] !text-white font-label-comic text-label-comic uppercase px-8 py-4 brutalist-border brutalist-shadow"
-              >
-                Share Your Testimony
-              </button>
-            </div>
-          </div>
-        </section>
+          className="border-b-4 border-gray-900"
+          eyebrow="Salvation · Healing · Miracles"
+          title="Testimonies"
+          intro="Salvation and life transformation, healing, and miracles — what God is doing in this house."
+          items={testimonials.map((t) => ({ quote: t.quote, name: t.name, meta: t.location }))}
+        />
 
         <section
-          className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
+          className="relative z-10 bg-white dark:bg-[#151218] border-b-4 border-gray-900 pb-16 sm:pb-20"
           id="media"
         >
-          <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
+          <LatestMessages messages={messages} />
+
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
-              Teachings
-            </span>
-            <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-10 sm:mb-12 lg:mb-16 transition-colors duration-300">
-              LATEST MESSAGES
-            </h2>
-
-            {featured ? (
-              <>
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter gap-6 lg:gap-8 mb-12 lg:mb-16">
-                  <div className="lg:col-span-8 bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow overflow-hidden group transition-colors duration-300">
-                    <div className="aspect-video relative bg-black">
-                      <YoutubeEmbed
-                        id={featured.id}
-                        title={featured.title}
-                        thumbnail={featured.thumbnail}
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
-                        <span className="bg-[#5c532b] text-white font-label-comic text-xs px-2 py-1 mb-2 inline-block border-2 border-gray-900">
-                          NEWEST RELEASE
-                        </span>
-                        <h3 className="font-headline-lg text-white text-2xl uppercase">
-                          {displayMessageTitle(featured.title)}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-4 bg-[#f3f3fb] dark:bg-[#23202a] border-4 border-gray-900 brutalist-shadow p-6 sm:p-8 flex flex-col transition-colors duration-300">
-                    <h4 className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] mb-2 uppercase">
-                      Now Playing
-                    </h4>
-                    <h3 className="font-headline-lg text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-4 transition-colors duration-300">
-                      {displayMessageTitle(featured.title)}
-                    </h3>
-                    <p className="font-body-md text-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
-                      The latest teaching from Pastor David Antwi on YouTube.
-                    </p>
-                    <div className="space-y-3 mb-6">
-                      {featured.publishedAt ? (
-                        <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                          <span className="material-symbols-outlined text-[#630ed4] dark:text-[#d2bbff]">
-                            calendar_today
-                          </span>
-                          <span>{formatMessageDate(featured.publishedAt)}</span>
-                        </div>
-                      ) : null}
-                      <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                        <span className="material-symbols-outlined text-[#630ed4] dark:text-[#d2bbff]">
-                          person
-                        </span>
-                        <span>Pastor David Antwi</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-4 mt-auto">
-                      <ShareVideoButton
-                        id={featured.id}
-                        title={featured.title}
-                        className="flex-1 bg-[#630ed4] text-white font-label-comic text-sm uppercase px-4 py-3 border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-                  {others.map((msg) => (
-                    <a
-                      key={msg.id}
-                      href={youtubeWatchUrl(msg.id)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group transition-colors duration-300"
-                    >
-                      <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
-                        <img
-                          alt=""
-                          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                          src={msg.thumbnail}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                        <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span className="material-symbols-outlined !text-white text-5xl">
-                            play_circle
-                          </span>
-                        </div>
-                      </div>
-                      <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
-                        {displayMessageTitle(msg.title)}
-                      </p>
-                    </a>
-                  ))}
-                </div>
-              </>
-            ) : (
+            {messages.length === 0 ? (
               <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl mb-10">
                 New teachings will land here as they go live on YouTube.
               </p>
-            )}
+            ) : null}
 
-            <div className="flex flex-wrap gap-4 mt-10">
+            <div className="flex flex-wrap gap-4 mt-8">
               <Link
                 href="/messages"
                 className="kp-depth-button kp-button-gold bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"

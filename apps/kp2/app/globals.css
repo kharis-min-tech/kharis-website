@@ -1597,22 +1597,11 @@ main {
 
 /* Keep the floating theme control clear of the menu's final destination. */
 @media (max-width: 1279px) {
-  body:has(#mobile-navigation:not([inert])) .theme-toggle {
+  body:has(.kp-mnav[data-open]) .theme-toggle {
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
   }
-}
-
-/* Mobile rows use colour feedback without a full-width underline. */
-#mobile-navigation a::after {
-  content: none;
-}
-#mobile-navigation a:hover {
-  color: var(--primary);
-}
-#mobile-navigation .header-branch-cta:hover {
-  color: var(--on-primary);
 }
 
 /* Kharis purple panels retain KP2's print texture and bold frame. */
@@ -1714,9 +1703,6 @@ main {
 .dark :is(input, select, textarea):focus-visible {
   border-color: var(--primary-fixed);
   box-shadow: 4px 4px 0 0 var(--primary-fixed);
-}
-.dark #mobile-navigation a:hover {
-  color: var(--primary-fixed);
 }
 .dark .kp-nav-label::after {
   background-color: var(--primary-fixed);

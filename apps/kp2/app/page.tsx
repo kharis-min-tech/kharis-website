@@ -14,7 +14,7 @@ export const metadata = pageMeta({
 export default async function Home() {
   const [testimonials, messages] = await Promise.all([
     getHomeTestimonials(),
-    fetchLatestMessages(5),
+    fetchLatestMessages(4),
   ]);
   return <Page testimonials={testimonials} messages={messages} />;
 }
