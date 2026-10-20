@@ -1,9 +1,8 @@
 .make-matter-banner {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(12rem, 1.2fr) minmax(0, 1fr);
-  grid-template-rows: 1fr;
-  align-items: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: clamp(18rem, 43vw, 39rem);
   overflow: hidden;
@@ -15,6 +14,11 @@
   text-align: left;
   isolation: isolate;
   font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  --door-top-shift: 0%;
+  --door-bottom-shift: 0%;
+  --reveal-opacity: 1;
+  --reveal-text-scale: 1;
+  --reveal-image-scale: 1.12;
 }
 
 .make-matter-banner:focus-visible {
@@ -23,68 +27,58 @@
 }
 
 .make-matter-banner__text {
-  z-index: 1;
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  gap: 0.22em;
+  padding: 1.25rem;
   font-size: clamp(2.25rem, 7vw, 7rem);
   font-weight: 700;
   letter-spacing: -0.075em;
   line-height: 0.95;
   white-space: nowrap;
-  transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
+  opacity: var(--reveal-opacity);
+  transform: scale(var(--reveal-text-scale));
 }
 
 .make-matter-banner__photo {
-  position: relative;
+  position: absolute;
+  z-index: 0;
+  inset: 0;
   display: block;
-  height: 100%;
-  min-height: clamp(18rem, 43vw, 39rem);
-  min-width: 0;
-  overflow: hidden;
-  background-color: #151515;
-  background-position: center;
-  background-size: cover;
+  background: #151515;
 }
 
 .make-matter-banner__photo img {
-  z-index: 0;
   object-fit: cover;
-  filter: grayscale(1) brightness(0.68);
-  clip-path: inset(0 50%);
-  transform: scale(1.16);
-  transition:
-    clip-path 1000ms cubic-bezier(0.76, 0, 0.24, 1),
-    transform 1000ms cubic-bezier(0.76, 0, 0.24, 1);
+  filter: grayscale(1) brightness(0.72);
+  transform: scale(var(--reveal-image-scale));
 }
 
-.make-matter-banner:not(.is-revealed) .make-matter-banner__text--left {
-  transform: translateX(18%);
+.make-matter-banner__door {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: #050505;
 }
 
-.make-matter-banner:not(.is-revealed) .make-matter-banner__text--right {
-  transform: translateX(-18%);
+.make-matter-banner__door--top {
+  top: 0;
+  transform: translateY(var(--door-top-shift));
 }
 
-.make-matter-banner.is-revealed .make-matter-banner__photo img {
-  clip-path: inset(0);
-  transform: scale(1);
-}
-
-.make-matter-banner:hover .make-matter-banner__text--left,
-.make-matter-banner:focus-visible .make-matter-banner__text--left {
-  transform: translateX(-0.45rem);
-}
-
-.make-matter-banner:hover .make-matter-banner__text--right,
-.make-matter-banner:focus-visible .make-matter-banner__text--right {
-  transform: translateX(0.45rem);
+.make-matter-banner__door--bottom {
+  bottom: 0;
+  transform: translateY(var(--door-bottom-shift));
 }
 
 .make-matter-banner:hover .make-matter-banner__photo img,
 .make-matter-banner:focus-visible .make-matter-banner__photo img {
-  transform: scale(1.045);
+  filter: grayscale(1) brightness(0.82);
 }
 
 .make-matter-transition {
@@ -261,11 +255,11 @@
 
 @media (max-width: 700px) {
   .make-matter-banner {
-    grid-template-columns: minmax(0, 0.92fr) minmax(7rem, 0.8fr) minmax(0, 0.92fr);
     min-height: 16rem;
   }
 
   .make-matter-banner__text {
+    gap: 0.16em;
     padding: 0.6rem;
     font-size: clamp(1.8rem, 9vw, 3.5rem);
     white-space: normal;
@@ -292,7 +286,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .make-matter-banner__text,
-  .make-matter-banner__photo img,
   .make-matter-transition,
   .make-matter-transition__panel,
   .make-matter-transition__image,
@@ -305,12 +298,13 @@
     transition-duration: 160ms !important;
   }
 
-  .make-matter-banner:hover .make-matter-banner__text--left,
-  .make-matter-banner:hover .make-matter-banner__text--right,
-  .make-matter-banner:focus-visible .make-matter-banner__text--left,
-  .make-matter-banner:focus-visible .make-matter-banner__text--right,
   .make-matter-banner:hover .make-matter-banner__photo img,
   .make-matter-banner:focus-visible .make-matter-banner__photo img {
     transform: none;
+  }
+
+  .make-matter-banner__door,
+  .make-matter-banner__photo img {
+    transition: none !important;
   }
 }
