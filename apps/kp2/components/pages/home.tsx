@@ -4,6 +4,7 @@ import { AppListenSteps } from "@/components/AppListenSteps";
 import { KHARIS_APP } from "@/lib/kharis-app";
 import { AmbientVideo } from "@/components/AmbientVideo";
 import { HeroTitle } from "@/components/HeroTitle";
+import { KnowKharisComic } from "@/components/KnowKharisComic";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -65,6 +66,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/Choir-video.mp4"
+              poster="/kp2/assets/choir-video-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -73,6 +75,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/crowd.mp4"
+              poster="/kp2/assets/crowd-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -81,6 +84,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/choir2.mp4"
+              poster="/kp2/assets/choir2-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -89,6 +93,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/dancing.mp4"
+              poster="/kp2/assets/dancing-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -134,10 +139,10 @@ function Index({
             <div className="kp-intro-visual relative order-2 md:order-1">
               <div className="border-4 border-gray-900 brutalist-shadow overflow-hidden rotate-[-2deg] bg-gray-100">
                 <img
-                  alt="Worship moment at Kharis"
+                  alt="A full hall at a Kharis Phase 2 Sunday service"
                   className="kp-intro-photo w-full object-cover"
                   style={{ height: "clamp(240px, 28vw, 420px)" }}
-                  src="https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/pastor-stage.jpg"
+                  src="/kp2/assets/sunday-service-full-hall.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -187,152 +192,7 @@ function Index({
           </div>
         </section>
 
-        <section
-          className="py-12 md:py-16 bg-gray-50 relative overflow-hidden border-b-4 border-gray-900"
-          id="departments"
-        >
-          <div className="max-w-7xl mx-auto px-margin-desktop relative z-10">
-            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#630ed4] mb-3">
-              Passionate for God and His Word
-            </p>
-            <h2 className="font-display-xl text-5xl md:text-7xl uppercase text-gray-900 leading-none">
-              GET TO KNOW <span className="text-[#630ed4]">KHARIS</span>
-            </h2>
-            <p className="font-body-lg text-body-lg text-gray-600 mt-4 mb-12">
-              Everything you need, one tap away.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:auto-rows-[220px]">
-              <Link
-                href="/mission"
-                className="group relative min-h-[320px] md:min-h-0 md:row-span-2 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Our mandate: bringing Christ to people"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/c3bfa8102ef6e326/mandate.png"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6 md:p-8">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Who We Are
-                  </p>
-                  <h3 className="font-headline-lg text-3xl md:text-4xl uppercase !text-white">
-                    About Us
-                  </h3>
-                  <p className="font-body-md text-body-md !text-white/85 mt-2 max-w-sm">
-                    Our mandate is to bring Christ to people everywhere.
-                  </p>
-                  <span className="inline-block mt-4 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-
-              <Link
-                href="/branches"
-                className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Find a Kharis location"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/3f1f49569aefd282/branch-slide-3.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Visit Sunday
-                  </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Locations
-                  </h3>
-                  <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-
-              <Link
-                href="/life"
-                className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Young adults at Kharis"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Community
-                  </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Life
-                  </h3>
-                  <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-
-              <Link
-                href="/messages"
-                className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Worship night"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Next Step
-                  </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Become a Believer
-                  </h3>
-                  <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-
-              <Link
-                href="/departments"
-                className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Serve with us"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/8440a4a63e4ae020/serve-with-us.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Serve With Us
-                  </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Get Involved
-                  </h3>
-                  <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </section>
+        <KnowKharisComic />
 
         <section
           className="py-24 bg-[#630ed4] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden"
@@ -368,7 +228,7 @@ function Index({
                 <img
                   alt="Pastor David Antwi, Head Pastor of Kharis Phase 2"
                   className="relative w-full aspect-[4/5] object-cover rounded-[2rem] shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500"
-                  src="https://images.kharis.org/site-images/kp2/64154a5197622b53/leadership-pastor-david.jpg"
+                  src="/kp2/assets/pastor-david-smiling.jpg"
                   loading="lazy"
                   decoding="async"
                 />

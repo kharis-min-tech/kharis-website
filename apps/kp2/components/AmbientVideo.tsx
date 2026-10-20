@@ -3,7 +3,15 @@
 import { useEffect, useRef } from "react";
 
 /** Background footage rests offscreen and when the visitor prefers reduced motion. */
-export function AmbientVideo({ src, className }: { src: string; className?: string }) {
+export function AmbientVideo({
+  src,
+  poster,
+  className,
+}: {
+  src: string;
+  poster: string;
+  className?: string;
+}) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -40,7 +48,7 @@ export function AmbientVideo({ src, className }: { src: string; className?: stri
       loop
       playsInline
       preload="metadata"
-      poster="/kp2/assets/worship.jpg"
+      poster={poster}
       aria-hidden="true"
       className={className}
       src={src}
