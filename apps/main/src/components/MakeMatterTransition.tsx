@@ -118,48 +118,31 @@ export function MakeItMatterBanner({
 }) {
   const navigate = useMakeMatterNavigation();
   const bannerRef = useRef<HTMLButtonElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const banner = bannerRef.current;
     if (!banner) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      banner.style.setProperty("--door-top-shift", "-102%");
-      banner.style.setProperty("--door-bottom-shift", "102%");
-      banner.style.setProperty("--reveal-opacity", "0");
-      banner.style.setProperty("--reveal-text-scale", "0.92");
-      banner.style.setProperty("--reveal-image-scale", "1");
+      setIsOpen(true);
       return;
     }
-
-    let frame = 0;
-    const updateReveal = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const { top, height } = banner.getBoundingClientRect();
-        const travel = window.innerHeight * 0.48 + height;
-        const progress = Math.max(0, Math.min(1, (window.innerHeight - top) / travel));
-        banner.style.setProperty("--door-top-shift", `${progress * -102}%`);
-        banner.style.setProperty("--door-bottom-shift", `${progress * 102}%`);
-        banner.style.setProperty("--reveal-opacity", String(1 - progress));
-        banner.style.setProperty("--reveal-text-scale", String(1 - progress * 0.08));
-        banner.style.setProperty("--reveal-image-scale", String(1.12 - progress * 0.12));
-      });
-    };
-
-    updateReveal();
-    window.addEventListener("scroll", updateReveal, { passive: true });
-    window.addEventListener("resize", updateReveal);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", updateReveal);
-      window.removeEventListener("resize", updateReveal);
-    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setIsOpen(true);
+        observer.disconnect();
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(banner);
+    return () => observer.disconnect();
   }, []);
 
   return (
     <button
       ref={bannerRef}
-      className="make-matter-banner"
+      className={`make-matter-banner${isOpen ? " is-open" : ""}`}
       type="button"
       aria-label={`${leftText} ${rightText} Join ${department}`}
       onClick={() => navigate(href, image)}
@@ -167,9 +150,12 @@ export function MakeItMatterBanner({
       <span className="make-matter-banner__photo" aria-hidden="true">
         <Image src={image} alt="" fill priority sizes="(max-width: 700px) 38vw, 40vw" />
       </span>
-      <span className="make-matter-banner__door make-matter-banner__door--top" aria-hidden="true" />
       <span
-        className="make-matter-banner__door make-matter-banner__door--bottom"
+        className="make-matter-banner__door make-matter-banner__door--left"
+        aria-hidden="true"
+      />
+      <span
+        className="make-matter-banner__door make-matter-banner__door--right"
         aria-hidden="true"
       />
       <span className="make-matter-banner__text">
