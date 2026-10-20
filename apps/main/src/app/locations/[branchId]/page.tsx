@@ -40,14 +40,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const mainVenue = branch.venues?.[0];
-
-  const branchLocation = mainVenue?.city ?? branch.name.replace(/ Branch$/i, "");
-
-  const title = `${branch.name} | Kharis Church ${branchLocation}`;
+  const title = `${branch.name} | Kharis Church`;
 
   const description =
-    branch.short_description ?? branch.description ?? `Visit Kharis Church ${branchLocation}.`;
+    branch.short_description ?? branch.description ?? `Visit Kharis Church ${branch.name}.`;
 
   return {
     title,

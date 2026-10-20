@@ -1,3 +1,4 @@
+import { publicTransportInfo } from "../../../../shared/public-transport";
 import type { BranchData, Venue } from "@/lib/branches";
 
 function clean(value: string | null | undefined) {
@@ -115,7 +116,12 @@ const mainVenue = (branch: BranchData) => sundayVenue(branch);
 /** London’s page shape, with this branch’s name and city. Missing facts stay obviously unfinished. */
 export function presentBranch(branch: BranchData) {
   const venue = mainVenue(branch);
-  const city = clean(venue?.city) || branch.name.replace(/\s*branch$/i, "").trim() || "your city";
+  const city =
+    branchDisplayName(clean(branch.name))
+      .replace(/\s*branch$/i, "")
+      .trim() ||
+    clean(venue?.city) ||
+    "your city";
   const storedDescription = clean(branch.short_description) || clean(branch.description);
   const description = storedDescription || placeholderDescription(city);
   const tagline = clean(branch.hero_subtitle) || "Christians boldly holding their Bible.";
@@ -153,8 +159,10 @@ export function presentBranch(branch: BranchData) {
     address: address || "Address coming soon",
     hasAddress: Boolean(address),
     parking: clean(venue?.parking_info) || "Parking details for this branch will be added soon.",
-    transit:
-      clean(venue?.public_transport_info) || "Travel details for this branch will be added soon.",
+    transit: publicTransportInfo(venue?.public_transport_info),
+    transitDirections: address
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&travelmode=transit`
+      : "",
     lat: hasCoords ? lat : null,
     lng: hasCoords ? lng : null,
   };
