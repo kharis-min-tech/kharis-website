@@ -7,12 +7,11 @@ import { SmoothNavigation } from "@/components/SmoothNavigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SiteIntro } from "@/components/SiteIntro";
 import { SITE_INTRO_BOOTSTRAP } from "@/lib/site-intro";
-import { MakeMatterTransitionProvider } from "@/components/MakeMatterTransition";
 import "./globals.css";
 import "./motion.css";
 import "./mobile.css";
 import "./refresh-overrides.css";
-import "./make-matter.css";
+import "./department-detail.css";
 
 /* Clean Vive / Apple-like type (not bubble Quicksand) */
 const sans = Plus_Jakarta_Sans({
@@ -60,18 +59,16 @@ export default function RootLayout({
         />
       </head>
       <body className={`${sans.className} antialiased`}>
-        <MakeMatterTransitionProvider>
-          <ThemeProvider>
-            <ScrollRestoration />
-            <SmoothNavigation />
-            <SiteIntro />
-            <div id="site-content">
-              {children}
-              <FloatingThemeToggle />
-              <SiteChat />
-            </div>
-          </ThemeProvider>
-        </MakeMatterTransitionProvider>
+        <ThemeProvider>
+          <ScrollRestoration />
+          <SmoothNavigation />
+          <SiteIntro />
+          <div id="site-content">
+            {children}
+            <FloatingThemeToggle />
+            <SiteChat />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

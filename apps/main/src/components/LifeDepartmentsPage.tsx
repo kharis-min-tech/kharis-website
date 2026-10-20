@@ -10,7 +10,6 @@ import { Reveal } from "@/components/Reveal";
 import { DEPARTMENT_VIDEOS } from "@/data/department-videos";
 import { lifeBySlug } from "@/lib/life-content";
 import { DEPARTMENT_PAGES } from "@/data/department-pages";
-import { MakeItMatterBanner, MakeMatterButton } from "@/components/MakeMatterTransition";
 
 const DEPT_BANDS = DEPARTMENT_PAGES;
 
@@ -151,7 +150,7 @@ export function LifeDepartmentsPage() {
                 src={band.image}
                 alt=""
                 fill
-                priority={band.slug === "welcome-team"}
+                priority
                 sizes="100vw"
               />
             </div>
@@ -163,15 +162,14 @@ export function LifeDepartmentsPage() {
                   title={band.title}
                   src={DEPT_PREVIEW_SOURCES[band.title]}
                 />
-                <MakeMatterButton
+                <Link
                   href={`/departments/${band.slug}`}
-                  image={band.image}
-                  ariaLabel={`Join ${band.title}`}
+                  aria-label={`Join ${band.title}`}
                   className="life-dept-band__cta"
                 >
                   Join {band.title}
                   <Icon name="arrow" className="h-3.5 w-3.5" />
-                </MakeMatterButton>
+                </Link>
               </div>
             </div>
           </article>
@@ -189,13 +187,6 @@ export function LifeDepartmentsPage() {
             <Icon name="arrow" className="h-3.5 w-3.5" />
           </a>
         </div>
-        <MakeItMatterBanner
-          leftText="Join a"
-          rightText="department"
-          image="/images/department-welcome.jpg"
-          href="/departments/welcome-team"
-          department="the Welcome Team"
-        />
       </section>
     </div>
   );

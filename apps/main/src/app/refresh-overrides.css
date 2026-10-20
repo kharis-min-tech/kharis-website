@@ -99,6 +99,7 @@
   height: auto;
   border-radius: inherit;
   overflow: hidden;
+  background: #342642;
 }
 
 .life-page--depts .life-dept-band__poster {
@@ -565,17 +566,12 @@
 }
 
 .life-page--depts .life-dept-branch-cta {
-  display: flex;
-  width: 100vw;
-  max-width: none;
-  min-height: 100svh;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(1.5rem, 4vh, 3rem);
-  margin: clamp(2rem, 5vw, 3rem) 0 0 calc(50% - 50vw);
-  padding: clamp(1.5rem, 6vw, 6rem);
+  width: min(82rem, calc(100% - 3rem));
+  margin: clamp(2rem, 5vw, 3rem) auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
   background: #faf8ff;
   color: #1c1c1f;
+  box-shadow: 0.4rem 0.45rem 0 rgba(0, 0, 0, 0.36);
 }
 
 .life-page--depts .life-dept-branch-cta__intro {
@@ -584,19 +580,6 @@
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 0;
-}
-
-.life-page--depts .life-dept-branch-cta .make-matter-banner {
-  flex: 1 1 auto;
-  min-height: clamp(22rem, 62svh, 52rem);
-}
-
-.life-page--depts .life-dept-branch-cta .make-matter-banner__photo {
-  min-height: clamp(22rem, 62svh, 52rem);
-}
-
-.life-page--depts .life-dept-branch-cta .make-matter-banner__text {
-  font-size: clamp(1.65rem, 5.8vw, 5.5rem);
 }
 
 .life-page--depts .life-dept-branch-cta h3 {
@@ -671,33 +654,13 @@
   }
 
   .life-page--depts .life-dept-branch-cta {
-    min-height: 100svh;
-    gap: 1.25rem;
+    width: calc(100% - 2rem);
     padding: 1.25rem;
-  }
-
-  .life-page--depts .life-dept-branch-cta .make-matter-banner {
-    min-height: 58svh;
   }
 
   .life-page--depts .life-dept-branch-cta__intro {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .life-page--depts .life-dept-branch-cta .make-matter-banner {
-    grid-template-columns: minmax(0, 1fr) minmax(5rem, 0.7fr) minmax(0, 1fr);
-    min-height: 11rem;
-  }
-
-  .life-page--depts .life-dept-branch-cta .make-matter-banner__photo {
-    min-height: 58svh;
-  }
-
-  .life-page--depts .life-dept-branch-cta .make-matter-banner__text {
-    padding: 0.5rem;
-    font-size: clamp(1.4rem, 7vw, 2.5rem);
-    letter-spacing: -0.065em;
   }
 
   .life-page--depts .life-dept-more {
@@ -723,7 +686,6 @@ html[data-theme="dark"] .life-page--depts .life-dept-band__copy {
 @keyframes life-dept-stack-recede {
   to {
     transform: scale(0.985);
-    filter: brightness(0.42);
   }
 }
 
