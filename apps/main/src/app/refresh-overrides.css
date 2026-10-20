@@ -565,13 +565,17 @@
 }
 
 .life-page--depts .life-dept-branch-cta {
-  display: block;
-  max-width: 82rem;
-  margin: clamp(2rem, 5vw, 3rem) auto 0;
-  padding: clamp(1.25rem, 3vw, 2rem);
+  display: flex;
+  width: 100vw;
+  max-width: none;
+  min-height: 100svh;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 3rem);
+  margin: clamp(2rem, 5vw, 3rem) 0 0 calc(50% - 50vw);
+  padding: clamp(1.5rem, 6vw, 6rem);
   background: #faf8ff;
   color: #1c1c1f;
-  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.45);
 }
 
 .life-page--depts .life-dept-branch-cta__intro {
@@ -579,15 +583,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+  margin-bottom: 0;
 }
 
 .life-page--depts .life-dept-branch-cta .make-matter-banner {
-  min-height: clamp(13rem, 24vw, 21rem);
+  flex: 1 1 auto;
+  min-height: clamp(22rem, 62svh, 52rem);
 }
 
 .life-page--depts .life-dept-branch-cta .make-matter-banner__photo {
-  min-height: clamp(13rem, 24vw, 21rem);
+  min-height: clamp(22rem, 62svh, 52rem);
 }
 
 .life-page--depts .life-dept-branch-cta .make-matter-banner__text {
@@ -666,8 +671,13 @@
   }
 
   .life-page--depts .life-dept-branch-cta {
-    align-items: flex-start;
-    flex-direction: column;
+    min-height: 100svh;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .life-page--depts .life-dept-branch-cta .make-matter-banner {
+    min-height: 58svh;
   }
 
   .life-page--depts .life-dept-branch-cta__intro {
@@ -681,7 +691,7 @@
   }
 
   .life-page--depts .life-dept-branch-cta .make-matter-banner__photo {
-    min-height: 11rem;
+    min-height: 58svh;
   }
 
   .life-page--depts .life-dept-branch-cta .make-matter-banner__text {

@@ -190,8 +190,8 @@ export function LifeDepartmentsPage() {
           </a>
         </div>
         <MakeItMatterBanner
-          leftText="Make it"
-          rightText="Matter."
+          leftText="Join a"
+          rightText="department"
           image="/images/department-welcome.jpg"
           href="/departments/welcome-team"
           department="the Welcome Team"

@@ -104,8 +104,8 @@
   opacity: 0;
   background: #050505;
   transition:
-    opacity 320ms ease,
-    visibility 0s linear 320ms;
+    opacity 520ms ease,
+    visibility 0s linear 520ms;
 }
 
 .make-matter-transition.is-opening {
@@ -122,7 +122,7 @@
   width: 30%;
   height: 100%;
   background: #050505;
-  transition: transform 780ms cubic-bezier(0.76, 0, 0.24, 1);
+  transition: transform 1400ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .make-matter-transition__panel--left {
@@ -141,15 +141,15 @@
   height: 100%;
   overflow: hidden;
   transition:
-    left 780ms cubic-bezier(0.76, 0, 0.24, 1),
-    width 780ms cubic-bezier(0.76, 0, 0.24, 1);
+    left 1400ms cubic-bezier(0.76, 0, 0.24, 1),
+    width 1400ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .make-matter-transition__image img {
   object-fit: cover;
   filter: grayscale(1) brightness(0.72);
   transform: scale(1.2);
-  transition: transform 780ms cubic-bezier(0.76, 0, 0.24, 1);
+  transition: transform 1400ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .make-matter-transition.is-opening .make-matter-transition__panel--left {
@@ -257,7 +257,7 @@
 .make-matter-transition.is-opening .make-matter-transition__image img,
 .make-matter-transition.is-opening .make-matter-transition__image,
 .make-matter-transition.is-opening .make-matter-transition__panel {
-  transition-duration: 780ms;
+  transition-duration: 1400ms;
 }
 
 .life-page--depts .life-dept-band__cta {

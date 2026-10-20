@@ -25,7 +25,7 @@ export function MakeMatterTransitionProvider({ children }: { children: React.Rea
         router.push(href);
         return;
       }
-      timer.current = setTimeout(() => router.push(href), 780);
+      timer.current = setTimeout(() => router.push(href), 1650);
     },
     [phase, router],
   );
@@ -39,7 +39,7 @@ export function MakeMatterTransitionProvider({ children }: { children: React.Rea
     routeTimer.current = setTimeout(() => {
       setPhase("idle");
       setDestination(null);
-    }, 360);
+    }, 520);
   }, [destination, pathname, phase]);
 
   useEffect(
@@ -144,7 +144,7 @@ export function MakeItMatterBanner({
       ref={bannerRef}
       className={`make-matter-banner${isOpen ? " is-open" : ""}`}
       type="button"
-      aria-label={`${leftText} ${rightText} Join ${department}`}
+      aria-label={`Join ${department}`}
       onClick={() => navigate(href, image)}
     >
       <span className="make-matter-banner__photo" aria-hidden="true">
