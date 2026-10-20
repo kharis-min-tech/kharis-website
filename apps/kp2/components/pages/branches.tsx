@@ -200,7 +200,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-[1536px] px-margin-mobile md:px-margin-desktop pb-20">
+        <section className="mx-auto w-full max-w-[1536px] px-margin-mobile md:px-margin-desktop pt-12 md:pt-16 pb-20">
           <h2 className="mb-8 border-b-4 border-on-background pb-6 font-display-lg text-[28px] uppercase">
             Our branches
           </h2>

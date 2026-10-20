@@ -490,11 +490,151 @@
   color: #151218;
 }
 
-.dark .kp-letter,
-.dark .kp-steps li {
-  box-shadow: 10px 10px 0 #000;
+/* Letter: a dark sheet with lilac ink. Selectors carry .kp-write to beat the
+   global dark `* { color }` rule. */
+.dark .kp-write .kp-letter {
+  border-color: #000;
+  background: #211b29;
+  box-shadow: 10px 10px 0 #7c3aed;
+  color: #e8e0e9;
 }
 
-.dark .kp-steps li {
+.dark .kp-write .kp-letter::before {
+  border-color: #000;
+}
+
+.dark .kp-write :is(.kp-letter__greeting, .kp-letter__line, .kp-letter__tie) {
+  color: #fffdf5;
+}
+
+.dark .kp-write .kp-field {
+  border-bottom-color: #d2bbff;
+  color: #f7be1d;
+  color-scheme: dark;
+}
+
+.dark .kp-write .kp-field::placeholder {
+  color: #9a90a6;
+}
+
+.dark .kp-write .kp-field:hover {
+  background-color: rgba(247, 190, 29, 0.12);
+}
+
+.dark .kp-write .kp-field:focus-visible {
+  border-bottom-color: #f7be1d;
+  background-color: rgba(247, 190, 29, 0.2);
+}
+
+.dark .kp-write .kp-field[aria-invalid="true"] {
+  border-bottom-color: #f87171;
+  background-color: rgba(220, 38, 38, 0.2);
+}
+
+.dark .kp-write .kp-field--select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23d2bbff' stroke-width='2.5'/%3E%3C/svg%3E");
+}
+
+.dark .kp-write .kp-field--select option {
+  background: #211b29;
+  color: #fffdf5;
+}
+
+.dark .kp-write .kp-letter__message textarea {
+  border-color: #000;
+  background-color: #17121c;
+  background-image: linear-gradient(
+    transparent calc(2rem - 1px),
+    rgba(210, 187, 255, 0.14) calc(2rem - 1px)
+  );
+  color: #fffdf5;
   box-shadow: 5px 5px 0 #000;
+}
+
+.dark .kp-write .kp-letter__message textarea::placeholder {
+  color: #9a90a6;
+}
+
+.dark .kp-write .kp-letter__message textarea:focus-visible {
+  box-shadow: 5px 5px 0 #f7be1d;
+}
+
+.dark .kp-write .kp-letter__message textarea[aria-invalid="true"] {
+  border-color: #f87171;
+}
+
+.dark .kp-write .kp-letter__sign,
+.dark .kp-write .kp-letter__sign span,
+.dark .kp-write .kp-letter__send p {
+  color: #ccc3d8;
+}
+
+.dark .kp-write .kp-letter__sign .kp-letter__signature {
+  color: #d2bbff;
+}
+
+.dark .kp-write .kp-letter__button {
+  border-color: #000;
+  color: #fff;
+  box-shadow: 5px 5px 0 #000;
+}
+
+.dark .kp-write .kp-letter__button:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 #000;
+}
+
+.dark .kp-write .kp-letter__errors {
+  border-color: #000;
+  background: #fee2e2;
+}
+
+.dark .kp-write .kp-letter__errors li {
+  color: #7f1d1d;
+}
+
+.dark .kp-write .kp-letter__errors a {
+  color: #630ed4;
+}
+
+.dark .kp-write .kp-letter__thanks,
+.dark .kp-write .kp-letter__thanks :is(p, strong) {
+  color: #fffdf5;
+}
+
+.dark .kp-write .kp-letter__thanks .kp-letter__burst {
+  color: #151218;
+  filter: drop-shadow(4px 4px 0 #7c3aed);
+}
+
+.dark .kp-write .kp-letter__link {
+  color: #d2bbff;
+}
+
+/* Steps */
+.dark .kp-write .kp-write__photo {
+  border-color: #000;
+}
+
+.dark .kp-write .kp-write__photo figcaption {
+  border-color: #000;
+  color: #151218;
+}
+
+.dark .kp-write .kp-steps li {
+  border-color: #000;
+  background: #211b29;
+  box-shadow: 5px 5px 0 #7c3aed;
+}
+
+.dark .kp-write .kp-steps .kp-steps__num {
+  border-color: #000;
+  color: #151218;
+}
+
+.dark .kp-write .kp-steps h3 {
+  color: #fffdf5;
+}
+
+.dark .kp-write .kp-steps p {
+  color: #ccc3d8;
 }
