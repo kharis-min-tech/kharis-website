@@ -13,53 +13,37 @@ function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; bran
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container">
       <SiteHeader />
-      <main className="pt-[74px]">
-        <section className="relative box-border flex min-h-[calc(100svh-74px)] h-auto lg:h-[calc(100dvh-74px)] lg:max-h-[calc(100dvh-74px)] items-center overflow-hidden border-b-4 border-primary bg-on-background px-margin-mobile py-8 text-background md:px-margin-desktop md:py-10">
-          <div className="halftone-bg pointer-events-none absolute inset-0 opacity-25"></div>
-          <div className="absolute top-0 right-0 h-full w-2/3 bg-gradient-to-l from-primary/25 to-transparent"></div>
-          <div className="relative z-10 grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-gutter">
-            <div className="lg:col-span-7">
-              <span className="mb-6 inline-block animate-bounce border-heavy bg-secondary-container px-4 py-1 font-label-md uppercase tracking-widest text-on-secondary-container motion-reduce:animate-none">
-                Feel Free To Reach Out
-              </span>
-              <h1 className="mb-4 font-display-lg text-[48px] uppercase leading-none text-primary-fixed-dim sm:text-[64px] md:text-display-lg">
-                CONTACT US
-              </h1>
-              <p className="mb-8 max-w-xl font-headline-md text-headline-md text-surface-container-low">
-                We are here for you. Whether you have a question, a prayer request, or just want to
-                say hi.
-              </p>
-              <div className="flex gap-4">
-                <div className="h-2 w-12 bg-secondary-container"></div>
-                <div className="h-2 w-12 bg-primary"></div>
-                <div className="h-2 w-12 bg-on-background"></div>
-              </div>
-            </div>
-            <div className="lg:col-span-5">
-              <div className="flex w-full flex-row gap-3 sm:gap-4 lg:ml-auto lg:w-[min(100%,calc((100dvh-10rem)/2))] lg:flex-col">
-                <div className="relative aspect-square flex-1 overflow-hidden rounded-none border-2 border-black brutalist-shadow">
-                  <img
-                    alt="Worship on stage at Kharis"
-                    className="absolute inset-x-0 top-0 h-[200%] w-full max-w-none object-cover object-top"
-                    src="https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
-                    loading="eager"
-                    decoding="async"
-                  />
-                </div>
-                <div className="relative aspect-square flex-1 overflow-hidden rounded-none border-2 border-black brutalist-shadow">
-                  <img
-                    alt="Congregation gathered in the auditorium"
-                    className="absolute inset-x-0 bottom-0 h-[200%] w-full max-w-none object-cover object-bottom"
-                    src="https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
-                    loading="eager"
-                    decoding="async"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+      <header className="kp-media-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
+        <img
+          alt="Three young men in suits smiling together at a Kharis service"
+          className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+          src="/kp2/assets/young-men-in-congregation.jpg"
+          loading="eager"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25 pointer-events-none"></div>
+        <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
+          <p className="font-label-md uppercase tracking-[0.28em] text-white/80 mb-4">
+            Ask · Pray · Say hi
+          </p>
+          <h1 className="font-display-lg uppercase leading-none text-white mb-4">Contact Us</h1>
+          <p className="font-body-lg text-body-lg text-white max-w-md">
+            We are here for you. Whether you have a question, a prayer request, or just want to say
+            hi.
+          </p>
+          <a
+            href="#write"
+            className="kp-depth-button kp-button-gold mt-8 inline-flex items-center gap-2 bg-[#f7be1d] text-[#151218] font-label-comic text-sm uppercase px-7 py-4 border-4 border-[#151218] brutalist-shadow"
+          >
+            Send us a message
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">
+              arrow_downward
+            </span>
+          </a>
+        </div>
+      </header>
 
+      <main>
         <ContactLetter
           branches={branches.map(({ slug, name }) => ({ slug, name }))}
           fallbackEmail={mainCampus?.email || undefined}
