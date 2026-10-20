@@ -41,7 +41,6 @@ const MATERIAL_ICONS = [
   "arrow_forward",
   "auto_awesome",
   "calendar_add_on",
-  "calendar_today",
   "campaign",
   "celebration",
   "check_circle",

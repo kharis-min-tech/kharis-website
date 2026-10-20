@@ -234,6 +234,27 @@
   background: #f7be1d;
 }
 
+.dark .kp-find__tags {
+  border-top-color: #000;
+  background: #151218;
+}
+
+.dark .kp-find__tags a {
+  border-color: #000;
+  background: #211b29;
+  color: #fffdf5;
+}
+
+.dark .kp-find__tags a span {
+  color: #f7be1d;
+}
+
+.dark .kp-find__tags a:is(:hover, :focus-visible),
+.dark .kp-find__tags a:is(:hover, :focus-visible) span {
+  background: #f7be1d;
+  color: #151218;
+}
+
 .kp-find__note {
   margin: 0;
   padding: 0 1rem 0.85rem;

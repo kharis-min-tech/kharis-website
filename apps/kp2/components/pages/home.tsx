@@ -387,35 +387,18 @@ function Index({
         />
 
         <section
-          className="relative z-10 bg-white dark:bg-[#151218] border-b-4 border-gray-900 pb-16 sm:pb-20"
+          className="relative z-10 bg-white dark:bg-[#151218] border-b-4 border-gray-900"
           id="media"
         >
           <LatestMessages messages={messages} />
 
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            {messages.length === 0 ? (
-              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl mb-10">
+          {messages.length === 0 ? (
+            <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pb-16 relative z-10">
+              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl">
                 New teachings will land here as they go live on YouTube.
               </p>
-            ) : null}
-
-            <div className="flex flex-wrap gap-4 mt-8">
-              <Link
-                href="/messages"
-                className="kp-depth-button kp-button-gold bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
-              >
-                Watch More Messages
-              </Link>
-              <a
-                href="https://youtube.com/@davidantwi"
-                target="_blank"
-                rel="noreferrer"
-                className="kp-depth-button kp-button-purple bg-[#1f1c24] text-[#e8e0e9] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
-              >
-                Watch on YouTube
-              </a>
             </div>
-          </div>
+          ) : null}
         </section>
 
         <section

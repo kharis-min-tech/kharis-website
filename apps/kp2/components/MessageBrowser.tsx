@@ -2,41 +2,30 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import { MessageCard } from "@/components/LatestMessages";
-import {
-  MESSAGE_TOPICS,
-  matchesQuery,
-  matchesTopic,
-  messageYear,
-  messageYears,
-} from "@/lib/message-filters";
+import { MESSAGE_TOPICS, matchesQuery, matchesTopic } from "@/lib/message-filters";
 import type { MessageVideo } from "@/lib/youtube";
 
 export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
   const latest = messages.slice(0, 4);
   const [topic, setTopic] = useState("all");
-  const [year, setYear] = useState<number | "all">("all");
   const [query, setQuery] = useState("");
   const search = useDeferredValue(query.trim());
-  const years = useMemo(() => messageYears(messages), [messages]);
   const topics = useMemo(
     () =>
       MESSAGE_TOPICS.filter((item) => messages.some((message) => matchesTopic(message, item.id))),
     [messages],
   );
-  const filtering = topic !== "all" || year !== "all" || search !== "";
+  const filtering = topic !== "all" || search !== "";
   const visible = useMemo(() => {
     const pool = filtering ? messages : messages.slice(4);
     return pool.filter(
       (message) =>
-        (topic === "all" || matchesTopic(message, topic)) &&
-        (year === "all" || messageYear(message) === year) &&
-        matchesQuery(message, search),
+        (topic === "all" || matchesTopic(message, topic)) && matchesQuery(message, search),
     );
-  }, [filtering, messages, search, topic, year]);
+  }, [filtering, messages, search, topic]);
 
   const clear = () => {
     setTopic("all");
-    setYear("all");
     setQuery("");
   };
 
@@ -93,25 +82,6 @@ export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
               autoComplete="off"
             />
           </label>
-          <label className="kp-filters__year">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              calendar_today
-            </span>
-            <select
-              aria-label="Filter by year"
-              value={year}
-              onChange={(event) =>
-                setYear(event.target.value === "all" ? "all" : Number(event.target.value))
-              }
-            >
-              <option value="all">Year</option>
-              {years.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </label>
         </div>
 
         <div className="kp-browse">
@@ -132,7 +102,7 @@ export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
           ) : (
             <div className="kp-browse__empty">
               <h3>No messages match that</h3>
-              <p>Try another topic, year, or a shorter search.</p>
+              <p>Try another topic or a shorter search.</p>
               <button type="button" onClick={clear}>
                 Clear filters
               </button>

@@ -52,23 +52,3 @@ export function matchesQuery(message: MessageVideo, query: string) {
   const title = message.title.toLowerCase();
   return words.every((word) => title.includes(word));
 }
-
-export function messageYear(message: MessageVideo): number | null {
-  if (!message.publishedAt) return null;
-  const year = Number(
-    new Date(message.publishedAt).toLocaleDateString("en-GB", {
-      year: "numeric",
-      timeZone: "Europe/London",
-    }),
-  );
-  return Number.isFinite(year) ? year : null;
-}
-
-export function messageYears(messages: MessageVideo[]) {
-  const years = new Set<number>();
-  for (const message of messages) {
-    const year = messageYear(message);
-    if (year) years.add(year);
-  }
-  return [...years].sort((a, b) => b - a);
-}
