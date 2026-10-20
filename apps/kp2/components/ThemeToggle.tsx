@@ -51,7 +51,7 @@ export function ThemeToggle() {
       <span className="material-symbols-outlined text-base">
         {dark ? "light_mode" : "dark_mode"}
       </span>
-      {dark ? "Light" : "Dark"}
+      <span className="hidden md:inline">{dark ? "Light" : "Dark"}</span>
     </button>
   );
 }
