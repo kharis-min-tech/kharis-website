@@ -530,6 +530,11 @@ html[data-kp-intro="seen"] .kp-intro {
   transform: translate(-50%, -50%);
   object-fit: contain;
 }
+.site-header .kp-header-logo:is(:focus, :focus-visible),
+.kp-mnav .kp-mnav__logo:is(:focus, :focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
 
 @media (max-width: 767px) {
   .site-header .kp-header-logo {

@@ -322,7 +322,7 @@ export function Hero() {
                     aria-hidden={duplicate || undefined}
                   >
                     {slide.type === "video" ? (
-        <video
+                      <video
                         ref={(el) => {
                           if (el) prepVideo(el);
                         }}
@@ -388,12 +388,12 @@ export function Hero() {
             pointerEvents: "auto",
           }}
         >
-            <Link href="/locations" className="btn-primary">
-              Find a Branch
-            </Link>
-            <a href="#messages" className="btn-ghost">
-              Watch Messages
-            </a>
+          <Link href="/locations" className="btn-primary">
+            Find a Branch
+          </Link>
+          <a href="#messages" className="btn-ghost">
+            Watch Messages
+          </a>
         </div>
       </div>
     </section>

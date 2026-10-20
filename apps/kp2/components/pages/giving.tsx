@@ -3,47 +3,13 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
-import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BANK, ONLINE_GIVE_URL, SMS_GIVE } from "@/lib/giving";
 import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import type { GivingTestimony } from "@/lib/testimonies";
-import { TestimonyQuote } from "@/components/TestimonyQuote";
-
-function GivingTestimonyCard({
-  testimony,
-  rotate,
-}: {
-  testimony: GivingTestimony;
-  rotate: string;
-}) {
-  return (
-    <div className="bg-white brutalist-border p-6 sm:p-8 md:p-12 neo-shadow flex flex-col md:flex-row gap-6 md:gap-8 items-start">
-      <div
-        className={`w-32 h-32 md:w-48 md:h-48 brutalist-border-thick shrink-0 bg-cover bg-center transform ${rotate}`}
-        style={{ backgroundImage: `url('${testimony.image}')` }}
-        role="img"
-        aria-label={`${testimony.name} portrait`}
-      />
-      <div className="min-w-0">
-        <span className="material-symbols-outlined text-primary text-4xl mb-2 md:mb-4 block">
-          format_quote
-        </span>
-        <TestimonyQuote
-          quote={testimony.quote}
-          name={testimony.name}
-          meta={testimony.role}
-          className="font-body-lg italic text-on-surface leading-relaxed"
-        />
-        <h4 className="font-headline-md text-2xl uppercase mt-6">— {testimony.name}</h4>
-        <p className="font-label-sm text-primary uppercase">{testimony.role}</p>
-      </div>
-    </div>
-  );
-}
+import { TestimoniesBand } from "@/components/TestimoniesBand";
 
 function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
-  const [testimony, setTestimony] = useState(0);
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
       <SiteHeader />
@@ -338,73 +304,13 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
         </section>
 
         {testimonies.length > 0 ? (
-          <section className="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto overflow-hidden">
-            <div className="mb-stack-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-              <div className="max-w-2xl">
-                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">
-                  Living Testimonies
-                </h2>
-                <p className="font-body-lg text-on-surface-variant">
-                  Real testimonies from the Kharis family.
-                </p>
-              </div>
-              <div className="flex gap-4 md:hidden">
-                <button
-                  type="button"
-                  aria-label="Previous testimony"
-                  onClick={() =>
-                    setTestimony((i) => (i + testimonies.length - 1) % testimonies.length)
-                  }
-                  className="w-12 h-12 brutalist-border flex items-center justify-center neo-shadow bg-white text-black active:active-neo-shadow"
-                >
-                  <span className="material-symbols-outlined">chevron_left</span>
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next testimony"
-                  onClick={() => setTestimony((i) => (i + 1) % testimonies.length)}
-                  className="w-12 h-12 brutalist-border flex items-center justify-center neo-shadow bg-white text-black active:active-neo-shadow"
-                >
-                  <span className="material-symbols-outlined">chevron_right</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Mobile: one testimony at a time. Desktop: both side by side. */}
-            <div className="md:hidden">
-              {testimonies
-                .filter((_, i) => i === testimony)
-                .map((t) => (
-                  <GivingTestimonyCard key={t.name} testimony={t} rotate="-rotate-3" />
-                ))}
-              <div className="mt-6 flex justify-center gap-2">
-                {testimonies.map((t, i) => (
-                  <button
-                    key={t.name}
-                    type="button"
-                    aria-label={`Show testimony ${i + 1}`}
-                    aria-current={i === testimony ? "true" : undefined}
-                    onClick={() => setTestimony(i)}
-                    className="h-11 min-w-11 flex items-center justify-center"
-                  >
-                    <span
-                      className={`block h-3 border-2 border-black transition-all ${i === testimony ? "w-9 bg-primary" : "w-3 bg-transparent"}`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="hidden md:grid md:grid-cols-2 gap-gutter">
-              {testimonies.map((t, i) => (
-                <GivingTestimonyCard
-                  key={t.name}
-                  testimony={t}
-                  rotate={i % 2 === 0 ? "-rotate-3" : "rotate-3"}
-                />
-              ))}
-            </div>
-          </section>
+          <TestimoniesBand
+            id="living-testimonies"
+            eyebrow="Stories"
+            title="Living Testimonies"
+            intro="Real testimonies from the Kharis family."
+            items={testimonies.map((t) => ({ quote: t.quote, name: t.name, meta: t.role }))}
+          />
         ) : null}
 
         <section className="py-stack-lg px-margin-mobile md:px-margin-desktop text-center bg-white border-t-2 border-black">

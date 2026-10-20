@@ -19,28 +19,12 @@ const HERO_WORSHIP =
 const WORSHIP = "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg";
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-const SPECIAL_SERVICES = [
-  {
-    day: "BASS",
-    time: "Monthly · Sunday",
-    title: "Bring A Soul Sunday",
-    note: "We fill the room with friends, family and first-timers — a high-energy Sunday built for souls.",
-    image: "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
-  },
-  {
-    day: "Sports Day",
-    time: "Summer",
-    title: "Sports Day",
-    note: "Track, football and full-blown team rivalry — the church family outdoors for a day of games.",
-    image: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
-  },
-  {
-    day: "Praise Night",
-    time: "Seasonal",
-    title: "Praise Night",
-    note: "A night handed over to worship — live praise, testimony and the Word until the room shifts.",
-    image: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
-  },
+const COMING_UP_FALLBACKS = [
+  WORSHIP,
+  "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
+  "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
+  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
+  HERO_WORSHIP,
 ];
 
 function EventCard({ event }: { event: ChurchEvent }) {
@@ -135,10 +119,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
       <main className="pt-[74px]">
         <EventsHero image={HERO_WORSHIP} />
 
-        <EventsComingUp
-          events={comingUp}
-          fallbackImages={[WORSHIP, ...SPECIAL_SERVICES.map((s) => s.image), HERO_WORSHIP]}
-        />
+        <EventsComingUp events={comingUp} fallbackImages={COMING_UP_FALLBACKS} />
 
         <SundayServiceBanner
           when={sundayService ? `Every Sunday · ${sundayService.timeLabel}` : "Every Sunday"}

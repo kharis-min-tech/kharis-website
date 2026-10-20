@@ -10,7 +10,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { TestimonialCarousel, type Testimonial } from "@/components/TestimonialCarousel";
+import { type Testimonial } from "@/components/TestimonialCarousel";
+import { TestimoniesBand } from "@/components/TestimoniesBand";
 import { TestimonyFormModal } from "@/components/TestimonyFormModal";
 import { LatestMessages } from "@/components/LatestMessages";
 import { type MessageVideo } from "@/lib/youtube";
@@ -23,7 +24,6 @@ function Index({
   messages: MessageVideo[];
 }) {
   const [formOpen, setFormOpen] = useState(false);
-  const openForm = useCallback(() => setFormOpen(true), []);
   const closeForm = useCallback(() => {
     setFormOpen(false);
     if (window.location.hash === "#share-testimony") {
@@ -377,43 +377,14 @@ function Index({
           </div>
         </section>
 
-        <section
+        <TestimoniesBand
           id="testimonies"
-          className="py-16 sm:py-20 lg:py-24 bg-[#f2eef7] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
-        >
-          <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
-              Salvation · Healing · Miracles
-            </span>
-            <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-4 transition-colors duration-300">
-              TESTIMONIES
-            </h2>
-            <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-2xl mb-10 sm:mb-12 lg:mb-16">
-              Salvation and life transformation, healing, and miracles — what God is doing in this
-              house.
-            </p>
-
-            {testimonials.length > 0 ? (
-              <TestimonialCarousel testimonials={testimonials} />
-            ) : (
-              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl">
-                Stories from the family will land here as people share what God is doing.
-              </p>
-            )}
-
-            <div className="flex justify-center sm:justify-end mt-8">
-              <button
-                type="button"
-                id="share-testimony"
-                onClick={openForm}
-                className="kp-depth-button kp-button-purple bg-[#630ed4] !text-white font-label-comic text-label-comic uppercase px-8 py-4 brutalist-border brutalist-shadow"
-              >
-                Share Your Testimony
-              </button>
-            </div>
-          </div>
-        </section>
+          className="border-b-4 border-gray-900"
+          eyebrow="Salvation · Healing · Miracles"
+          title="Testimonies"
+          intro="Salvation and life transformation, healing, and miracles — what God is doing in this house."
+          items={testimonials.map((t) => ({ quote: t.quote, name: t.name, meta: t.location }))}
+        />
 
         <section
           className="relative z-10 bg-white dark:bg-[#151218] border-b-4 border-gray-900 pb-16 sm:pb-20"

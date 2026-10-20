@@ -155,8 +155,11 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
   },
   icons: {
-    icon: "/kp2/favicon-dove.png",
-    apple: "/kp2/favicon-dove.png",
+    icon: [
+      { url: "/kp2/favicon-kp2-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/kp2/favicon-kp2.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/kp2/apple-touch-icon-kp2.png", sizes: "180x180", type: "image/png" },
   },
   robots: {
     index: true,
