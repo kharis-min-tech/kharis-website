@@ -9,34 +9,10 @@ import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal } from "@/components/Reveal";
 import { DEPARTMENT_VIDEOS } from "@/data/department-videos";
 import { lifeBySlug } from "@/lib/life-content";
+import { DEPARTMENT_PAGES } from "@/data/department-pages";
+import { MakeItMatterBanner, MakeMatterButton } from "@/components/MakeMatterTransition";
 
-const DEPT_BANDS = [
-  {
-    title: "Evangelism",
-    body: "Share the good news, welcome conversations, and help people discover a home in the church.",
-    image: "/images/about-mission-outreach-3200.jpg",
-  },
-  {
-    title: "Music",
-    body: "Use your musical gifts to lead the church in worship and praise.",
-    image: "/images/department-music.jpg",
-  },
-  {
-    title: "EasyWorship",
-    body: "Prepare lyrics and visuals that help everyone follow and engage in worship.",
-    image: "/images/department-easyworship.jpg",
-  },
-  {
-    title: "Sound Department",
-    body: "Mix and manage live sound so every voice and instrument can be heard clearly.",
-    image: "/images/department-sound.jpg",
-  },
-  {
-    title: "Welcome Team",
-    body: "Help people feel seen and at home from the moment they arrive.",
-    image: "/images/department-welcome.jpg",
-  },
-] as const;
+const DEPT_BANDS = DEPARTMENT_PAGES;
 
 const DEPT_PREVIEW_SOURCES = {
   Evangelism: DEPARTMENT_VIDEOS.find((video) => video.title === "Evangelism")!.src,
@@ -175,6 +151,7 @@ export function LifeDepartmentsPage() {
                 src={band.image}
                 alt=""
                 fill
+                priority={band.slug === "welcome-team"}
                 sizes="100vw"
               />
             </div>
@@ -186,14 +163,29 @@ export function LifeDepartmentsPage() {
                   title={band.title}
                   src={DEPT_PREVIEW_SOURCES[band.title]}
                 />
-                <Link href="/locations" className="life-dept-band__cta">
+                <MakeMatterButton
+                  href={`/departments/${band.slug}`}
+                  image={band.image}
+                  ariaLabel={`Join ${band.title}`}
+                  className="life-dept-band__cta"
+                >
                   Join {band.title}
                   <Icon name="arrow" className="h-3.5 w-3.5" />
-                </Link>
+                </MakeMatterButton>
               </div>
             </div>
           </article>
         ))}
+      </section>
+
+      <section className="life-dept-matter" aria-label="Join a department">
+        <MakeItMatterBanner
+          leftText="Make it"
+          rightText="Matter."
+          image="/images/department-welcome.jpg"
+          href="/departments/welcome-team"
+          department="the Welcome Team"
+        />
       </section>
 
       <div className="life-dept-branch-cta">
