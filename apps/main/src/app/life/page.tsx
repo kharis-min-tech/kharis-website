@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { LifeExperience } from "@/components/LifeExperience";
+import KharisTunnelHero from "@/components/ui/kharis-tunnel-hero";
 import { findPastorMessage } from "@/lib/youtube";
 
 export default async function LifePage() {
@@ -9,8 +10,11 @@ export default async function LifePage() {
   );
 
   return (
-    <Suspense fallback={null}>
-      <LifeExperience baptismVideoId={baptismMessage?.id} />
-    </Suspense>
+    <>
+      <KharisTunnelHero />
+      <Suspense fallback={null}>
+        <LifeExperience baptismVideoId={baptismMessage?.id} />
+      </Suspense>
+    </>
   );
 }
