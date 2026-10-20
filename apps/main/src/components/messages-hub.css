@@ -15,19 +15,13 @@
   justify-items: center;
   gap: 1rem;
   padding: 2rem;
-  background: linear-gradient(
-    110deg,
-    rgba(10, 6, 17, 0.94),
-    rgba(31, 15, 51, 0.84),
-    rgba(10, 6, 17, 0.94)
-  );
-  background-size: 220% 100%;
+  /* Fully opaque so YouTube's temporary play/pause chrome cannot bleed through. */
+  background: #100a18;
   color: #fff;
   font-size: clamp(0.95rem, 1.5vw, 1.15rem);
   font-weight: 700;
   letter-spacing: 0.02em;
   text-align: center;
-  animation: msg-hero-loading-sweep 2.8s ease-in-out infinite;
 }
 
 .msg-hero-loading__pulse {
@@ -52,12 +46,6 @@
   z-index: 3;
 }
 
-@keyframes msg-hero-loading-sweep {
-  to {
-    background-position: -220% 0;
-  }
-}
-
 @keyframes msg-hero-loading-progress {
   from {
     transform: translateX(-110%);
@@ -68,7 +56,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .msg-hero-loading,
   .msg-hero-loading__pulse::after {
     animation: none;
   }

@@ -11,12 +11,8 @@ const PREVIEW = {
   title: "A Living Witness For Jesus",
 };
 
-/**
- * YouTube flashes a centre pause overlay for ~3s after play starts. Keep the poster
- * up until that clears. Interaction can reveal a little sooner once playback is real.
- */
-const PLAY_SETTLE_MS = 3200;
-const PLAY_SETTLE_INTERACT_MS = 1400;
+/** Keep YouTube's transient start controls covered before revealing the moving preview. */
+const PLAY_SETTLE_MS = 4200;
 /** Matches the crossfade in messages-hub.css; pause only once the video is invisible. */
 const FADE_MS = 320;
 /** Autoplay is sometimes ignored (notably on phones), so keep asking while it should run. */
@@ -70,14 +66,12 @@ export function MessagesHero({ messages }: Props) {
   const pauseTimer = useRef<number | null>(null);
   const playingRef = useRef(false);
   const wantPlay = useRef(false);
-  const playStartedAt = useRef(0);
   const currentTime = useRef(PREVIEW.start);
 
   const [allowed, setAllowed] = useState(false);
   const [inView, setInView] = useState(true);
   /** Keep the loading treatment over the video until YouTube's transient controls clear. */
   const [warming, setWarming] = useState(false);
-  const [playing, setPlaying] = useState(false);
   const [settled, setSettled] = useState(false);
   /** The player stopped on its own: hide at once so YouTube's overlay never fades through. */
   const [cut, setCut] = useState(false);
@@ -174,25 +168,6 @@ export function MessagesHero({ messages }: Props) {
     return () => window.clearInterval(id);
   }, [allowed, command]);
 
-  // First pointer / touch / key: reveal the video sooner once it's actually playing.
-  useEffect(() => {
-    if (!allowed || !warming || settled || watching) return;
-    const early = () => {
-      if (!playingRef.current || !wantPlay.current) return;
-      const elapsed = playStartedAt.current ? performance.now() - playStartedAt.current : 0;
-      const wait = Math.max(0, PLAY_SETTLE_INTERACT_MS - elapsed);
-      scheduleSettle(wait);
-    };
-    window.addEventListener("pointerdown", early, { passive: true });
-    window.addEventListener("touchstart", early, { passive: true });
-    window.addEventListener("keydown", early);
-    return () => {
-      window.removeEventListener("pointerdown", early);
-      window.removeEventListener("touchstart", early);
-      window.removeEventListener("keydown", early);
-    };
-  }, [allowed, warming, settled, watching, scheduleSettle]);
-
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
       if (e.origin !== YT_ORIGIN || e.source !== frameRef.current?.contentWindow) return;
@@ -214,14 +189,12 @@ export function MessagesHero({ messages }: Props) {
       const isPlaying = state === 1;
       if (isPlaying === playingRef.current) return;
       playingRef.current = isPlaying;
-      setPlaying(isPlaying);
       if (settleTimer.current) window.clearTimeout(settleTimer.current);
       if (!isPlaying) {
         setSettled(false);
         setCut(true);
         return;
       }
-      playStartedAt.current = performance.now();
       command("unloadModule", ["captions"]);
       scheduleSettle(PLAY_SETTLE_MS);
     };
@@ -265,8 +238,6 @@ export function MessagesHero({ messages }: Props) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [watching, closePlayer]);
-
-  void playing;
 
   return (
     <section

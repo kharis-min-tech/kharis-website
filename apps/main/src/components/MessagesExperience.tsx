@@ -74,10 +74,9 @@ const WHY_FAQ = [
 /** Curated Pastor David posters for Listen Anywhere (maxres quality, no “God” titles). */
 const LISTEN_DEVICE_POSTERS: MessageVideo[] = [
   {
-    id: "AE2AXoQetmc",
-    title: "The Mystery Of Fasting | David Antwi",
-    thumbnail: "https://i.ytimg.com/vi/AE2AXoQetmc/maxresdefault.jpg",
-    publishedAt: "2019-01-13T00:00:00Z",
+    id: "KBFfpU0mX2U",
+    title: "A Living Witness For Jesus | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/KBFfpU0mX2U/mqdefault.jpg",
   },
   {
     id: "9uYPZYrTHIA",
