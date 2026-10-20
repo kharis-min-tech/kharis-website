@@ -1,20 +1,28 @@
 /* Keep KP2's print language, with quieter spacing and no decorative side rules. */
-.kp-mission-hero {
-  height: auto;
+.kp-mission-hero,
+.kp-media-hero {
+  height: 100svh;
+  min-height: 100svh;
   max-height: none;
-  min-height: min(720px, 85svh);
-  padding-block: 8rem 4rem;
+  box-sizing: border-box;
+  padding-block: 6.5rem 4.5rem;
 }
-.kp-mission-intro {
-  background: transparent;
-  border: 0;
-  padding-inline: 0;
-  color: #fff !important;
-  max-width: 65ch;
-}
-.kp-mission-hero h1 {
+.kp-mission-hero h1,
+.kp-media-hero h1 {
   color: #fff;
-  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-size: clamp(4.5rem, 12vw, 8.5rem);
+  text-shadow: 4px 4px 0 #151218;
+}
+.kp-media-hero h1 {
+  max-width: 7ch;
+  font-size: clamp(4rem, 9vw, 7.25rem);
+  text-shadow: 0 2px 24px rgba(9, 10, 30, 0.35);
+}
+.kp-about-hash {
+  position: relative;
+  top: -6rem;
+  display: block;
+  height: 0;
 }
 .kp-name-card {
   border: 0;
@@ -508,16 +516,16 @@ html[data-kp-intro="seen"] .kp-intro {
 /* The square logo asset has wide transparent margins around the lettering. */
 .site-header .kp-header-logo {
   position: relative;
-  width: 76px;
-  height: 56px;
+  width: 60px;
+  height: 50px;
   overflow: hidden;
 }
 .site-header .kp-header-logo-image {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 104px;
-  height: 104px;
+  width: 80px;
+  height: 80px;
   max-width: none;
   transform: translate(-50%, -50%);
   object-fit: contain;
@@ -525,12 +533,12 @@ html[data-kp-intro="seen"] .kp-intro {
 
 @media (max-width: 767px) {
   .site-header .kp-header-logo {
-    width: 56px;
-    height: 44px;
+    width: 48px;
+    height: 40px;
   }
   .site-header .kp-header-logo-image {
-    width: 76px;
-    height: 76px;
+    width: 64px;
+    height: 64px;
   }
 }
 
@@ -735,7 +743,6 @@ html[data-kp-intro="seen"] .kp-intro {
   .kp-faith-inner p {
     padding: 0.25rem 1rem 1.25rem;
   }
-  .kp-fellowships-hero,
   .kp-messages-hero {
     height: auto;
     min-height: min(720px, 100svh);
@@ -743,12 +750,6 @@ html[data-kp-intro="seen"] .kp-intro {
   }
   .kp-messages-hero > .relative {
     min-height: inherit;
-  }
-  .kp-fellowships-hero .kp-depth-button {
-    width: 100%;
-    justify-content: center;
-    padding-inline: 1rem;
-    font-size: 1.125rem;
   }
   .theme-toggle {
     left: max(1rem, env(safe-area-inset-left));

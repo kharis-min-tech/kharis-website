@@ -7,8 +7,6 @@ const PAGES = [
   ["Governance", "/kp2/governance"],
   ["Departments", "/kp2/departments"],
   ["Life", "/kp2/life"],
-  ["Fellowships", "/kp2/fellowships"],
-  ["Gallery", "/kp2/gallery"],
   ["Events", "/kp2/events"],
   ["Messages", "/kp2/messages"],
   ["Social media", "/kp2/media"],

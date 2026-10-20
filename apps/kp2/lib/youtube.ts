@@ -135,6 +135,59 @@ async function fetchText(url: string, revalidate: number): Promise<string | null
   }
 }
 
+/** YouTube Shorts can run up to 3 minutes. Full teachings are much longer. */
+const SHORTS_MAX_SECONDS = 180;
+
+function parseDuration(iso: string) {
+  const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  return Number(match[1] || 0) * 3600 + Number(match[2] || 0) * 60 + Number(match[3] || 0);
+}
+
+/** Lengths for up to 50 ids. Null when the details call fails, so we don't wipe the list. */
+async function fetchDurations(ids: string[], key: string): Promise<Map<string, number> | null> {
+  const unique = [...new Set(ids)].slice(0, 50);
+  if (!unique.length) return new Map();
+  const params = new URLSearchParams({
+    part: "contentDetails",
+    id: unique.join(","),
+    fields: "items(id,contentDetails/duration)",
+    key,
+  });
+  const body = await fetchText(`https://www.googleapis.com/youtube/v3/videos?${params}`, 3600);
+  if (!body) return null;
+  try {
+    const data = JSON.parse(body) as {
+      items?: Array<{ id?: string; contentDetails?: { duration?: string } }>;
+    };
+    const durations = new Map<string, number>();
+    for (const video of data.items || []) {
+      if (video.id) durations.set(video.id, parseDuration(video.contentDetails?.duration || ""));
+    }
+    return durations;
+  } catch {
+    return null;
+  }
+}
+
+function isShortByLength(seconds: number | undefined, known: boolean) {
+  if (!known || seconds == null) return false;
+  return seconds <= SHORTS_MAX_SECONDS;
+}
+
+async function withoutShorts(messages: MessageVideo[]) {
+  const key = process.env.YOUTUBE_API_KEY;
+  if (!key || messages.length === 0) return messages;
+  const durations = await fetchDurations(
+    messages.map((message) => message.id),
+    key,
+  );
+  if (!durations) return messages;
+  return messages.filter(
+    (message) => !isShortByLength(durations.get(message.id), durations.has(message.id)),
+  );
+}
+
 function mergeMessages(...lists: MessageVideo[][]) {
   const seen = new Set<string>();
   const out: MessageVideo[] = [];
@@ -209,10 +262,17 @@ async function fetchFromApi(limit: number): Promise<MessageVideo[]> {
         }>;
       };
 
-      for (const item of playlist.items || []) {
+      const items = playlist.items || [];
+      const durations = await fetchDurations(
+        items.map((item) => item.contentDetails?.videoId || "").filter(Boolean),
+        key,
+      );
+
+      for (const item of items) {
         const id = item.contentDetails?.videoId;
         const title = item.snippet?.title || "";
         if (!id || !title || isSkippedMessage(title)) continue;
+        if (isShortByLength(durations?.get(id), Boolean(durations?.has(id)))) continue;
         messages.push({
           id,
           title,
@@ -234,8 +294,8 @@ async function fetchFromApi(limit: number): Promise<MessageVideo[]> {
 }
 
 export async function fetchPastorMessages(limit = 24): Promise<MessageVideo[]> {
-  const [api, rss] = await Promise.all([fetchFromApi(limit), fetchFromRss()]);
-  const merged = mergeMessages(api, rss, MESSAGE_FALLBACK);
+  const [api, rss] = await Promise.all([fetchFromApi(Math.max(limit, 24)), fetchFromRss()]);
+  const merged = await withoutShorts(mergeMessages(api, rss, MESSAGE_FALLBACK));
   return merged.slice(0, Math.min(limit, merged.length));
 }
 

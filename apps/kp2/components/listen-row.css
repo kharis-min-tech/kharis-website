@@ -1,0 +1,30 @@
+.kp-listen__intro,
+.kp-listen__slot {
+  --p: clamp(0, (var(--listen, 1) - var(--d, 0)) / 0.34, 1);
+  opacity: var(--p);
+  transform: translateY(calc((1 - var(--p)) * 3.25rem)) rotate(calc((1 - var(--p)) * -2.4deg));
+}
+
+.kp-listen__slot:nth-child(1) {
+  --d: 0.06;
+}
+
+.kp-listen__slot:nth-child(2) {
+  --d: 0.16;
+}
+
+.kp-listen__slot:nth-child(3) {
+  --d: 0.26;
+}
+
+.kp-listen__slot:nth-child(4) {
+  --d: 0.36;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-listen__intro,
+  .kp-listen__slot {
+    opacity: 1;
+    transform: none;
+  }
+}

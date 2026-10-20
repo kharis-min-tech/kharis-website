@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BANK, ONLINE_GIVE_URL, SMS_GIVE } from "@/lib/giving";
+import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import type { GivingTestimony } from "@/lib/testimonies";
 import { TestimonyQuote } from "@/components/TestimonyQuote";
 
@@ -74,15 +75,19 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               sparingly will also reap sparingly, and he who sows bountifully will also reap
               bountifully&rsquo; – 2 Corinthians 9:6.
             </p>
-            <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-              <button
-                type="button"
-                data-ui="open-dialog"
-                data-dialog="give-online-dialog"
-                className="kp-depth-button kp-button-purple w-full md:w-auto bg-primary text-on-primary brutalist-border-thick neo-shadow-lg px-12 py-4 font-headline-md text-2xl hover:scale-105 transition-all"
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-stretch sm:items-center">
+              <a
+                href="#ways"
+                className="kp-depth-button kp-button-gold inline-flex items-center justify-center gap-2 bg-[#f7be1d] text-[#151218] px-8 py-4 font-label-comic text-lg uppercase border-4 border-[#151218] brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
               >
-                GIVE ONLINE
-              </button>
+                Give to your branch
+              </a>
+              <a
+                href="#building"
+                className="kp-depth-button kp-button-light keep-light inline-flex items-center justify-center gap-2 bg-white text-[#4c08a8] px-8 py-4 font-label-comic text-lg uppercase border-4 border-[#151218] brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+              >
+                Build Spurgeon&apos;s Centre
+              </a>
             </div>
           </div>
         </section>
@@ -164,7 +169,10 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
           </div>
         </section>
 
-        <section className="py-stack-lg bg-surface-container-low px-margin-mobile md:px-margin-desktop">
+        <section
+          id="ways"
+          className="py-stack-lg bg-surface-container-low px-margin-mobile md:px-margin-desktop"
+        >
           <div className="max-w-7xl mx-auto text-center mb-stack-lg">
             <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">
               Ways to Give
@@ -175,6 +183,31 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter max-w-7xl mx-auto">
+            <div className="md:col-span-2 bg-[#f7be1d] text-[#151218] brutalist-border-thick p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 group hover:-translate-y-2 transition-transform">
+              <div className="flex items-start gap-6">
+                <div className="w-20 h-20 bg-white/40 rounded-full flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[#151218] text-4xl">
+                    credit_card
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-headline-md text-headline-md uppercase mb-3">Give Online</h3>
+                  <p className="font-body-md max-w-xl">
+                    Give to your branch by card, once or every month, through the secure Kharis
+                    giving portal.
+                  </p>
+                </div>
+              </div>
+              <a
+                href={ONLINE_GIVE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="kp-depth-button kp-button-purple w-full md:w-auto text-center bg-primary text-on-primary border-4 border-[#151218] brutalist-shadow py-3 px-10 font-label-md uppercase tracking-widest"
+              >
+                Give now
+              </a>
+            </div>
+
             <div className="bg-white brutalist-border-thick p-8 md:p-10 flex flex-col group hover:-translate-y-2 transition-transform">
               <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                 <span className="material-symbols-outlined text-primary text-4xl">
@@ -240,6 +273,66 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               >
                 GET THE APP
               </Link>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="building"
+          className="kp-build bg-[#151218] text-white border-y-4 border-black px-margin-mobile md:px-margin-desktop py-stack-lg"
+        >
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <figure className="relative">
+              <div className="absolute inset-0 translate-x-3 translate-y-3 bg-[#f7be1d] border-4 border-black" />
+              <img
+                src={SPURGEONS_CENTRE.image}
+                alt="An artist's impression of the renovated Spurgeon's Centre in South London"
+                loading="lazy"
+                decoding="async"
+                className="relative block w-full aspect-[4/3] object-cover border-4 border-black"
+              />
+              <span className="absolute -top-4 left-4 bg-primary text-white border-2 border-black font-label-sm uppercase px-3 py-1 -rotate-2">
+                Building fund
+              </span>
+            </figure>
+            <div>
+              <h2 className="font-display-lg text-headline-lg-mobile md:text-display-lg uppercase leading-none tracking-tight mb-6">
+                Spurgeon&apos;s <span className="text-[#f7be1d]">Centre</span>
+              </h2>
+              <p className="font-body-lg text-body-lg text-white/85 max-w-xl mb-8">
+                Kharis Church has purchased Spurgeon&apos;s College in South London. We are
+                renovating it to keep training missionaries and sending them into the world, and to
+                strengthen the church in the UK.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <a
+                  href={SPURGEONS_CENTRE.giveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="kp-depth-button kp-button-gold inline-flex items-center justify-center bg-[#f7be1d] text-[#151218] px-8 py-4 font-label-comic text-base uppercase border-4 border-black brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+                >
+                  Give to the building
+                </a>
+                <a
+                  href={SPURGEONS_CENTRE.pledgeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="kp-depth-button kp-button-light keep-light inline-flex items-center justify-center bg-white text-[#4c08a8] px-8 py-4 font-label-comic text-base uppercase border-4 border-black brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+                >
+                  Make a pledge
+                </a>
+              </div>
+              <a
+                href={SPURGEONS_CENTRE.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 font-label-md uppercase text-white/80 underline underline-offset-4 hover:text-[#f7be1d]"
+              >
+                See the project at spurgeonscentre.org
+                <span className="material-symbols-outlined text-base" aria-hidden="true">
+                  open_in_new
+                </span>
+              </a>
             </div>
           </div>
         </section>

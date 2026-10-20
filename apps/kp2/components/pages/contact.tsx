@@ -5,27 +5,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TikTokIcon } from "@/components/TikTokIcon";
+import { ContactLetter } from "@/components/ContactLetter";
 import { TIKTOK_URL } from "@/lib/social";
-import { hasCoords, osmEmbedUrl, type Branch } from "@/lib/branches";
-import type { FormEvent } from "react";
+import { type Branch } from "@/lib/branches";
 
-function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
-  function sendContactMessage(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const name = String(data.get("name") || "").trim();
-    const email = String(data.get("email") || "").trim();
-    const phone = String(data.get("phone") || "").trim();
-    const subjectValue = String(data.get("subject") || "General Inquiry").trim();
-    const message = String(data.get("message") || "").trim();
-    const to = mainCampus?.email;
-    if (!to) return;
-    const phoneLine = phone ? `\nPhone: ${phone}` : "";
-    const subject = encodeURIComponent(subjectValue);
-    const body = encodeURIComponent(`From: ${name}\nEmail: ${email}${phoneLine}\n\n${message}`);
-    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
-  }
-
+function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; branches: Branch[] }) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container">
       <SiteHeader />
@@ -76,170 +60,10 @@ function ContactPage({ mainCampus }: { mainCampus: Branch | null }) {
           </div>
         </section>
 
-        <section className="relative z-10 px-margin-mobile md:px-margin-desktop py-stack-lg grid grid-cols-1 md:grid-cols-12 gap-gutter">
-          <div className="md:col-span-7">
-            <div className="brutalist-border bg-white p-8 brutalist-shadow-lg relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 halftone-bg -mr-12 -mt-12"></div>
-              <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-8 uppercase border-b-2 border-on-background pb-4">
-                Send a Message
-              </h2>
-              <form className="space-y-6" onSubmit={sendContactMessage}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-2">
-                    <label className="font-label-md uppercase">Your Name</label>
-                    <input
-                      className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus"
-                      placeholder="John Doe"
-                      type="text"
-                      name="name"
-                      autoComplete="name"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="font-label-md uppercase">Email Address</label>
-                    <input
-                      className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus"
-                      placeholder="hello@example.com"
-                      type="email"
-                      name="email"
-                      autoComplete="email"
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="font-label-md uppercase">Phone</label>
-                  <input
-                    className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus"
-                    placeholder="+44 20 0000 0000"
-                    type="tel"
-                    name="phone"
-                    autoComplete="tel"
-                    inputMode="tel"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="font-label-md uppercase">Subject</label>
-                  <select
-                    name="subject"
-                    className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus appearance-none"
-                  >
-                    <option>General Inquiry</option>
-                    <option>Prayer Request</option>
-                    <option>Join a Team</option>
-                    <option>Youth Ministry</option>
-                    <option>Giving</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="font-label-md uppercase">Message</label>
-                  <textarea
-                    className="rounded-none brutalist-border p-4 font-body-md bg-background text-on-surface input-focus resize-none"
-                    placeholder="How can we help?"
-                    rows={5}
-                    name="message"
-                  ></textarea>
-                </div>
-                <button
-                  className="w-full md:w-auto px-12 py-5 bg-primary text-on-primary font-headline-md text-2xl brutalist-border brutalist-shadow btn-hover transition-all uppercase"
-                  type="submit"
-                >
-                  Send It!
-                </button>
-              </form>
-            </div>
-          </div>
-
-          <div className="md:col-span-5 space-y-gutter">
-            <div className="brutalist-border brutalist-shadow overflow-hidden aspect-square md:aspect-video relative">
-              <img
-                alt="Community gathering at Kharis"
-                className="w-full h-full object-cover"
-                src="https://images.kharis.org/site-images/kp2/ca1bcf57dbf80629/community.jpg"
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="absolute bottom-4 left-4 bg-secondary-container px-4 py-2 brutalist-border font-label-md">
-                #KHARISFAMILY
-              </div>
-            </div>
-
-            <div className="brutalist-border bg-surface-container-low p-6 brutalist-shadow">
-              <h3 className="font-headline-md text-headline-md mb-4 uppercase">Church Hub</h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <span className="material-symbols-outlined text-primary text-3xl">
-                    location_on
-                  </span>
-                  <div>
-                    <p className="font-label-md uppercase text-secondary">Main KP2 Branch</p>
-                    <p className="font-body-lg">
-                      {mainCampus?.address ?? "Find a KP2 branch near you"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <span className="material-symbols-outlined text-primary text-3xl">schedule</span>
-                  <div>
-                    <p className="font-label-md uppercase text-secondary">Service Times</p>
-                    {mainCampus?.serviceTimes.length ? (
-                      mainCampus.serviceTimes.map((s) => (
-                        <p key={`${s.day}-${s.time}`} className="font-body-lg">
-                          {s.day}: {s.time}
-                          {s.label ? ` (${s.label})` : ""}
-                        </p>
-                      ))
-                    ) : (
-                      <>
-                        <p className="font-body-lg">
-                          Sunday gatherings. Times are on each branch page.
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <span className="material-symbols-outlined text-primary text-3xl">phone</span>
-                  <div>
-                    <p className="font-label-md uppercase text-secondary">Call Us</p>
-                    <p className="font-body-lg">{mainCampus?.phone || "See your branch page"}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {mainCampus && hasCoords(mainCampus) ? (
-              <div className="brutalist-border brutalist-shadow-lg overflow-hidden bg-surface-container-low">
-                <div className="flex items-center justify-between gap-4 border-b-2 border-on-background px-4 py-3">
-                  <span className="font-label-md uppercase flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary">place</span>
-                    Find Us Here
-                  </span>
-                  <a
-                    className="font-label-sm uppercase underline decoration-2 underline-offset-4 hover:text-primary"
-                    href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mainCampus.address)}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Get Directions
-                  </a>
-                </div>
-                <iframe
-                  title="Map of Kharis Phase 2 branch"
-                  src={osmEmbedUrl(mainCampus)}
-                  className="w-full h-72 md:h-80 block border-0"
-                  loading="lazy"
-                ></iframe>
-              </div>
-            ) : (
-              <Link
-                href="/branches"
-                className="block brutalist-border brutalist-shadow bg-surface-container-low p-6 font-label-md uppercase text-center hover:text-primary"
-              >
-                Find a branch
-              </Link>
-            )}
-          </div>
-        </section>
+        <ContactLetter
+          branches={branches.map(({ slug, name }) => ({ slug, name }))}
+          fallbackEmail={mainCampus?.email || undefined}
+        />
 
         <section className="relative z-10 bg-secondary-container border-y-4 border-on-background py-16 px-margin-mobile md:px-margin-desktop">
           <div className="flex flex-col md:flex-row items-center justify-between gap-gutter">

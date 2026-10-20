@@ -1,0 +1,257 @@
+.kp-find {
+  position: relative;
+  background: #110b1a;
+  color: #f3f0f8;
+  border-bottom: 4px solid #f7be1d;
+}
+
+.kp-find__bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+  padding: 1rem 1rem 0;
+}
+
+.kp-find__search {
+  position: relative;
+  flex: 1;
+}
+
+.kp-find__search input {
+  width: 100%;
+  height: 3.25rem;
+  border: 3px solid #151218;
+  background: #fff;
+  color: #151218;
+  padding: 0 2.75rem;
+  font:
+    700 0.95rem/1 "Hanken Grotesk",
+    sans-serif;
+  box-shadow: 4px 4px 0 #151218;
+}
+
+.kp-find__search input::placeholder {
+  color: #6d6578;
+  font-weight: 600;
+}
+
+.kp-find__search .material-symbols-outlined {
+  position: absolute;
+  top: 50%;
+  color: #151218;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.kp-find__search .kp-find__icon {
+  left: 0.8rem;
+}
+
+.kp-find__clear {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  background: transparent;
+  color: #151218;
+  cursor: pointer;
+}
+
+.kp-find__near {
+  flex: none;
+  border: 3px solid #151218;
+  background: #f7be1d;
+  color: #151218;
+  min-width: 8.5rem;
+  padding: 0 1.1rem;
+  font:
+    800 0.85rem/1 "Hanken Grotesk",
+    sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 #151218;
+  cursor: pointer;
+}
+
+.kp-find__near:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.kp-find__stage {
+  position: relative;
+  height: min(640px, 72svh);
+  min-height: 420px;
+}
+
+.kp-find__picker {
+  position: absolute;
+  z-index: 3;
+  top: 1rem;
+  left: 1rem;
+}
+
+.kp-find__picker summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 15rem;
+  padding: 0.7rem 0.9rem;
+  border: 3px solid #151218;
+  background: #2a1848;
+  color: #fff;
+  box-shadow: 4px 4px 0 #151218;
+}
+
+.kp-find__picker summary::-webkit-details-marker {
+  display: none;
+}
+
+.kp-find__picker summary > span:first-child > span {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f7be1d;
+}
+
+.kp-find__picker summary strong {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+}
+
+.kp-find__menu {
+  margin-top: 0.45rem;
+  border: 3px solid #151218;
+  background: #fff;
+  color: #151218;
+  box-shadow: 4px 4px 0 #151218;
+  max-height: 16rem;
+  overflow: auto;
+}
+
+.kp-find__menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 2px solid #151218;
+  background: transparent;
+  padding: 0.75rem 0.9rem;
+  font:
+    800 0.85rem/1.2 "Hanken Grotesk",
+    sans-serif;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.kp-find__menu button[aria-checked="true"],
+.kp-find__menu button:hover {
+  background: #f7be1d;
+}
+
+.kp-find__zoom {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 3px solid #151218;
+  background: #fff;
+  color: #151218;
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 3px 3px 0 #151218;
+  cursor: pointer;
+}
+
+.kp-find__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: default;
+}
+
+.kp-find__tip {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  max-width: 16rem;
+  padding: 0.7rem 0.8rem;
+  border: 3px solid #151218;
+  background: #f7be1d;
+  color: #151218;
+  box-shadow: 4px 4px 0 #151218;
+}
+
+.kp-find__tip strong {
+  display: block;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+}
+
+.kp-find__tip span {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kp-find__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  padding: 1rem;
+  border-top: 3px solid #151218;
+  background: #1a1328;
+}
+
+.kp-find__tags a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 3px solid #151218;
+  background: #fff;
+  color: #151218;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 #f7be1d;
+}
+
+.kp-find__tags a:hover {
+  background: #f7be1d;
+}
+
+.kp-find__note {
+  margin: 0;
+  padding: 0 1rem 0.85rem;
+  color: #f7be1d;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .kp-find__bar {
+    flex-direction: column;
+  }
+
+  .kp-find__near {
+    min-height: 3.25rem;
+  }
+
+  .kp-find__stage {
+    height: 70svh;
+  }
+}
