@@ -280,8 +280,16 @@ html[data-theme="dark"] .branch-page {
     border-bottom-right-radius: 56px;
   }
   .branch-section-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 2rem;
-    gap: 1rem 1.5rem;
+    padding: 0.75rem 0;
+    gap: 0.25rem 1rem;
+  }
+  .branch-section-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
   }
 }
 
@@ -380,4 +388,78 @@ html[data-theme="dark"] .branch-action--primary {
 .branch-service-card .w-20 > span:first-child {
   font-size: 1.3rem;
   white-space: nowrap;
+}
+
+.branch-mobile-disclosure,
+.branch-events__venue {
+  display: none;
+}
+@media (max-width: 767px) {
+  .branch-mobile-disclosure {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 0.75rem;
+    color: var(--branch-accent);
+    font-size: 0.875rem;
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .branch-mobile-disclosure:focus-visible {
+    outline: 2px solid var(--branch-accent);
+    outline-offset: 4px;
+  }
+  .branch-pastor__extended:not(.branch-pastor__extended--open),
+  .branch-events__list:not(.branch-events__list--expanded)
+    > .branch-event:not(.branch-event--preview) {
+    display: none;
+  }
+  .branch-events__heading {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .branch-events__heading h3 {
+    font-size: 1.25rem;
+  }
+  .branch-events__venue {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--branch-muted);
+    font-size: 0.75rem;
+    line-height: 1.6;
+  }
+  .branch-events__venue svg {
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+  .branch-event {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 0.5rem 0.75rem;
+    padding: 0.875rem;
+  }
+  .branch-event__date {
+    width: 48px;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .branch-event__date > span {
+    font-size: 0.55rem;
+  }
+  .branch-event__day {
+    width: 48px;
+    height: 48px;
+  }
+  .branch-event__location {
+    display: none;
+  }
+  .branch-event__rsvp {
+    grid-column: 2;
+    justify-self: start;
+    min-height: 44px;
+    padding: 0.5rem 0;
+  }
 }

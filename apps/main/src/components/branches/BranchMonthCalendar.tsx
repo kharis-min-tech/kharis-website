@@ -39,6 +39,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
   const placeName = city || branch.name;
   const placeAddress = address || "Contact the branch for venue details.";
   const [offset, setOffset] = useState(0);
+  const [showAll, setShowAll] = useState(false);
 
   const viewDate = useMemo(() => {
     const d = new Date();
@@ -76,6 +77,11 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
     return list.sort((a, b) => a.day - b.day);
   }, [branch, viewDate, placeAddress]);
 
+  const upcoming = entries.filter((entry) => offset !== 0 || entry.day >= new Date().getDate());
+  const preview = new Set(
+    (upcoming.length ? upcoming.slice(0, 3) : entries.slice(-3)).map((entry) => entry.key),
+  );
+
   return (
     <section id="events" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
       <div className="mb-10 text-center">
@@ -88,20 +94,26 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
       </div>
 
       <div className="border border-[var(--branch-line)] bg-[var(--branch-card)] p-5 sm:p-8">
-        <div className="mb-6 flex items-center justify-between gap-4">
+        <div className="branch-events__heading mb-6 flex items-center justify-between gap-4">
           <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--branch-ink)]! tracking-tight">
             {monthLabel}
           </h3>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setOffset((o) => o - 1)}
+              onClick={() => {
+                setOffset((o) => o - 1);
+                setShowAll(false);
+              }}
               aria-label="Previous month"
               className="flex h-9 w-9 items-center justify-center border border-white/15 text-[var(--branch-ink)]! transition-colors hover:border-[#e8a33d] hover:text-[var(--branch-accent)] cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
-              onClick={() => setOffset((o) => o + 1)}
+              onClick={() => {
+                setOffset((o) => o + 1);
+                setShowAll(false);
+              }}
               aria-label="Next month"
               className="flex h-9 w-9 items-center justify-center border border-white/15 text-[var(--branch-ink)]! transition-colors hover:border-[#e8a33d] hover:text-[var(--branch-accent)] cursor-pointer"
             >
@@ -110,26 +122,31 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
           </div>
         </div>
 
+        <p className="branch-events__venue">
+          <MapPin size={16} aria-hidden="true" />
+          {placeAddress}
+        </p>
         <motion.div
+          id="branch-month-events"
           key={offset}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="space-y-3"
+          className={`branch-events__list space-y-3${showAll ? " branch-events__list--expanded" : ""}`}
         >
           {entries.length === 0 && (
             <p className="border border-[var(--branch-line)] bg-[var(--branch-inset)] p-6 text-sm font-medium text-[var(--branch-muted)]">
-              Nothing scheduled this month yet — check back soon.
+              Nothing scheduled this month yet. Check back soon.
             </p>
           )}
 
           {entries.map((entry) => (
             <div
               key={entry.key}
-              className="group flex flex-col gap-4 border border-[var(--branch-line)] bg-[var(--branch-inset)] p-4 transition-colors hover:border-[#e8a33d]/40 hover:bg-black/50 sm:flex-row sm:items-center"
+              className={`branch-event${preview.has(entry.key) ? " branch-event--preview" : ""} group flex flex-col gap-4 border border-[var(--branch-line)] bg-[var(--branch-inset)] p-4 transition-colors hover:border-[#e8a33d]/40 hover:bg-[var(--branch-card)] sm:flex-row sm:items-center`}
             >
-              <div className="flex w-full items-center gap-4 sm:w-40">
-                <div className="flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center bg-[#630ed4] text-[var(--branch-ink)]!">
+              <div className="branch-event__date flex w-full items-center gap-4 sm:w-40">
+                <div className="branch-event__day flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center bg-[#630ed4] text-white!">
                   <span className="text-xl font-extrabold leading-none">{entry.day}</span>
                   <span className="text-[10px] font-bold uppercase tracking-wider opacity-80">
                     {viewDate.toLocaleDateString("en-GB", { month: "short" })}
@@ -157,7 +174,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
                     <Clock className="h-3.5 w-3.5 text-[var(--branch-accent)]" />
                     {entry.time}
                   </span>
-                  <span className="flex items-center gap-1.5">
+                  <span className="branch-event__location flex items-center gap-1.5">
                     <MapPin className="h-3.5 w-3.5 text-[var(--branch-accent)]" />
                     {entry.location}
                   </span>
@@ -166,13 +183,24 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
 
               <button
                 onClick={() => onRsvp(entry.title)}
-                className="k-cta flex-shrink-0 bg-[var(--branch-inset)] px-5 py-2.5 text-xs font-bold text-[var(--branch-ink)]! transition-colors hover:bg-[#d4920a] cursor-pointer"
+                className="branch-event__rsvp k-cta flex-shrink-0 bg-[var(--branch-inset)] px-5 py-2.5 text-xs font-bold text-[var(--branch-ink)]! transition-colors hover:bg-[#d4920a] cursor-pointer"
               >
                 I&apos;m Coming
               </button>
             </div>
           ))}
         </motion.div>
+        {entries.length > 3 ? (
+          <button
+            type="button"
+            className="branch-mobile-disclosure"
+            aria-expanded={showAll}
+            aria-controls="branch-month-events"
+            onClick={() => setShowAll((expanded) => !expanded)}
+          >
+            {showAll ? "Show fewer gatherings" : `Show all ${entries.length} gatherings`}
+          </button>
+        ) : null}
       </div>
     </section>
   );

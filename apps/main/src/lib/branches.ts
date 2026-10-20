@@ -221,6 +221,7 @@ export const listBranchData = cache(async (): Promise<BranchData[]> => {
   // Sort services inside each branch
   const branches = (data ?? []).map((branch) => ({
     ...branch,
+    name: branchDisplayName(branch.name),
 
     venues: branch.venues ?? [],
 
@@ -382,6 +383,7 @@ export async function getBranchBySlug(slug: string): Promise<BranchData | null> 
 
   return {
     ...data,
+    name: branchDisplayName(data.name),
 
     venues: data.venues ?? [],
 
