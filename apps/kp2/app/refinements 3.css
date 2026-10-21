@@ -1,0 +1,684 @@
+/* Keep KP2's print language, with quieter spacing and no decorative side rules. */
+.kp-mission-hero {
+  height: auto;
+  max-height: none;
+  min-height: min(720px, 85svh);
+  padding-block: 8rem 4rem;
+}
+.kp-mission-intro {
+  background: transparent;
+  border: 0;
+  padding-inline: 0;
+  color: #fff !important;
+  max-width: 65ch;
+}
+.kp-mission-hero h1 {
+  color: #fff;
+  font-size: clamp(3.5rem, 8vw, 6rem);
+}
+.kp-name-card {
+  border: 0;
+  box-shadow: none;
+}
+.kp-greek-word {
+  font-weight: 500;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.kp-mission-tab {
+  min-height: 100px;
+}
+.kp-mission-options {
+  display: flex;
+  flex-direction: column;
+}
+.kp-mission-options .kp-mission-option {
+  flex: 1;
+  min-height: 88px;
+  padding: 1rem 1.25rem;
+  gap: 0.8rem;
+  transform: none !important;
+  box-shadow: none !important;
+  align-items: center;
+}
+.kp-mission-option > span:last-child {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1.15;
+}
+.kp-mission-detail {
+  align-content: center;
+}
+.kp-animated-height {
+  overflow: hidden;
+  transition: height 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .kp-animated-height {
+    transition: none;
+  }
+}
+.kp-content-enter {
+  animation: kp-content-enter 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes kp-content-enter {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+/* The same expanding grid and fade used for faith answers on the main site. */
+.kp-faith-item {
+  background: var(--surface);
+  border: 2px solid var(--on-background);
+  box-shadow: 5px 5px 0 #221039;
+}
+.kp-faith .kp-faith-question {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  color: var(--on-background);
+  text-align: left;
+  background: transparent;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.kp-faith-item.is-open .kp-faith-question {
+  background: var(--primary-fixed);
+  color: var(--on-primary-fixed);
+}
+.kp-faith-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 350ms ease;
+}
+.kp-faith-item.is-open .kp-faith-answer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.kp-faith-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.kp-faith-inner p {
+  padding: 0.25rem 1.5rem 1.5rem;
+  margin: 0;
+  max-width: 65ch;
+}
+.kp-faith-toggle {
+  display: grid;
+  place-items: center;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border: 2px solid currentColor;
+}
+.kp-faith-toggle span {
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+}
+.kp-faith-toggle span:last-child {
+  rotate: 90deg;
+  transition: rotate 350ms var(--kp-ease-out);
+}
+.is-open .kp-faith-toggle span:last-child {
+  rotate: 0deg;
+}
+/* Consistent depth for every platform, including the purple app tile. */
+main a.kp-platform-card,
+.dark main a.kp-platform-card {
+  box-shadow: 5px 5px 0 #221039;
+  border-color: #221039;
+  transition:
+    transform 200ms var(--kp-ease-out),
+    box-shadow 200ms var(--kp-ease-out);
+}
+main a.kp-platform-card:hover,
+.dark main a.kp-platform-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 #221039;
+}
+.kp-platform-card > div:first-child {
+  min-height: 112px;
+}
+.kp-platform-card > div:first-child > div {
+  min-width: 0;
+}
+.kp-platform-card .font-label-sm {
+  overflow-wrap: anywhere;
+}
+main .kp-tag-banner,
+.dark main .kp-tag-banner {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 5px 5px 0 #221039;
+  border-color: #221039;
+}
+.kp-tag-banner h3,
+.kp-tag-banner p {
+  margin: 0;
+}
+.kp-tag-banner :is(h3, p, strong, span) {
+  color: #fff !important;
+}
+.kp-life-hero {
+  height: auto;
+  min-height: min(800px, 95svh);
+  max-height: none;
+  padding-block: 9rem 5rem;
+}
+.kp-life-hero h1 {
+  font-size: clamp(2.8rem, 5.2vw, 4.8rem);
+  line-height: 1.15;
+}
+.kp-life-headline {
+  border: 2px solid #221039;
+  box-shadow: 5px 5px 0 #221039;
+  margin-top: 0.4rem;
+  animation: kp-content-enter 700ms var(--kp-ease-out) both;
+}
+.kp-life-hero .halftone-pattern {
+  opacity: 0.1;
+}
+.kp-panel-dove {
+  width: 64px;
+  height: 62px;
+  object-fit: contain;
+  margin: 0 auto 1.5rem;
+}
+/* The dove intro uses the existing Kharis artwork and the main site's drawing strokes. */
+html[data-kp-intro="playing"] {
+  overflow: hidden;
+}
+.kp-intro,
+.kp-route-loading {
+  color: #fff;
+  background-color: #4c08a8;
+  background-image:
+    radial-gradient(circle, rgb(255 255 255 / 8%) 1px, transparent 1px),
+    linear-gradient(130deg, #4c08a8, #630ed4 60%, #3d0591);
+  background-size:
+    7px 7px,
+    100% 100%;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+.kp-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  animation: kp-intro-exit 500ms var(--kp-ease-out) 1700ms both;
+}
+html[data-kp-intro="seen"] .kp-intro {
+  display: none;
+}
+.kp-loading-stamp {
+  display: grid;
+  place-items: center;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 2rem;
+  border: 2px solid #fff;
+  box-shadow: 7px 7px 0 #221039;
+  rotate: -3deg;
+  background: #630ed4;
+}
+.kp-loading-dove {
+  width: 112px;
+  height: 112px;
+  rotate: 3deg;
+}
+.kp-dove-stroke {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 22;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: kp-dove-draw 1000ms ease forwards;
+}
+.kp-dove-complete {
+  opacity: 0;
+  animation: kp-dove-complete 200ms ease 1300ms forwards;
+}
+.kp-loading-wordmark {
+  font-family: var(--font-anton), sans-serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.15;
+  color: #fff;
+}
+.kp-loading-wordmark span {
+  color: #ffde59;
+}
+.kp-loading-caption,
+.kp-route-loading > p {
+  font-family: var(--font-space), monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 1rem;
+}
+.kp-intro-skip {
+  position: absolute;
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
+  right: max(1.5rem, env(safe-area-inset-right));
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  font-family: var(--font-space), monospace;
+  font-size: 0.75rem;
+}
+.kp-intro-skip:focus-visible {
+  outline-color: #ffde59;
+}
+.kp-route-loading {
+  min-height: 100svh;
+  padding: 6rem 1.5rem;
+}
+@keyframes kp-dove-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes kp-dove-complete {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes kp-intro-exit {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (max-width: 767px) {
+  .kp-faith .kp-faith-question {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  .kp-faith-question > span:nth-child(2) {
+    font-size: 1.35rem;
+  }
+  .kp-life-hero {
+    padding-block: 7rem 3rem;
+  }
+  .kp-life-hero > .relative {
+    gap: 1.25rem;
+  }
+  .kp-life-hero .kp-life-headline {
+    padding: 0.4rem 0.6rem;
+  }
+  .kp-tag-banner {
+    grid-template-columns: 1fr auto !important;
+    gap: 0.5rem 1rem !important;
+  }
+  .kp-tag-banner p {
+    grid-column: 1;
+  }
+  .kp-tag-banner > span {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kp-content-enter,
+  .kp-life-headline {
+    animation: none;
+  }
+  .kp-faith-answer,
+  .kp-faith-toggle span:last-child {
+    transition: none;
+  }
+  main a.kp-platform-card:hover {
+    transform: none;
+  }
+  .kp-intro {
+    animation: kp-intro-exit 100ms linear 100ms both;
+  }
+  .kp-dove-stroke {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .kp-dove-complete {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.kp-life-hero > .absolute:first-child {
+  animation: kp-life-image 1400ms var(--kp-ease-out) both;
+}
+@keyframes kp-life-image {
+  from {
+    scale: 1.04;
+  }
+  to {
+    scale: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kp-life-hero > .absolute:first-child {
+    animation: none;
+  }
+}
+
+/* Open answers use dark ink on lilac in both themes, including nested labels. */
+.kp-faith .kp-faith-item.is-open .kp-faith-question,
+.kp-faith .kp-faith-item.is-open .kp-faith-question * {
+  color: #25005a !important;
+}
+
+/* App walkthrough follows the main site's corrected sequence and device sizing. */
+.kp-app-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+.kp-app-step {
+  --kp-app-card: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  padding: 1.5rem 1rem 0;
+  background: var(--kp-app-card);
+  border: 2px solid #221039;
+  box-shadow: 5px 5px 0 #221039;
+}
+.dark .kp-app-step {
+  --kp-app-card: #1f1c24;
+}
+.kp-app-step-copy {
+  width: 100%;
+  min-height: 116px;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.kp-app-step .kp-app-step-number {
+  margin: 0 0 0.6rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #630ed4;
+}
+.dark .kp-app-step .kp-app-step-number {
+  color: #d2bbff;
+}
+.kp-app-step h3 {
+  font-size: clamp(1.35rem, 2.3vw, 1.85rem);
+  line-height: 1.2;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.kp-app-step-detail {
+  max-width: 26ch;
+  margin: 0 auto;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--on-surface-variant);
+}
+.kp-app-phone {
+  position: relative;
+  width: min(100%, 235px);
+  margin-top: auto;
+  pointer-events: none;
+}
+#app .kp-app-phone img {
+  transform: none;
+  filter: none;
+}
+.kp-app-phone-fade {
+  position: absolute;
+  inset: auto 0 0;
+  height: 14%;
+  background: linear-gradient(to bottom, transparent, var(--kp-app-card));
+  pointer-events: none;
+}
+/* These store labels retain readable ink in either theme. */
+.kp-app-stores a {
+  min-width: 220px;
+}
+.kp-app-stores a p {
+  color: var(--on-background) !important;
+}
+.kp-app-stores a p:first-child {
+  color: var(--on-surface-variant) !important;
+}
+@media (max-width: 767px) {
+  .kp-app-steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .kp-app-step-copy {
+    min-height: 0;
+  }
+  .kp-app-phone {
+    width: min(100%, 220px);
+  }
+  .kp-app-step h3 {
+    font-size: 1.65rem;
+  }
+  .kp-app-stores a {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* Anchor each navigation highlight to its label, excluding dropdown chevrons. */
+.site-header nav .kp-nav-link::after {
+  content: none;
+  display: none;
+}
+.kp-nav-label {
+  position: relative;
+  display: inline-block;
+  line-height: 20px;
+}
+.kp-nav-label::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -5px;
+  height: 3px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms var(--kp-ease-out);
+}
+.kp-nav-link:is(:hover, :focus-visible, [data-active="true"]) > .kp-nav-label::after {
+  transform: scaleX(1);
+}
+
+/* The square logo asset has wide transparent margins around the lettering. */
+.site-header .kp-header-logo {
+  position: relative;
+  width: 76px;
+  height: 56px;
+  overflow: hidden;
+}
+.site-header .kp-header-logo-image {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 104px;
+  height: 104px;
+  max-width: none;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+}
+
+/* Let the introduction fit its content instead of occupying a whole viewport. */
+.kp-home-intro {
+  padding-block: clamp(2.5rem, 4vw, 3rem);
+}
+.kp-intro-visual,
+.kp-intro-copy > * {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 600ms var(--kp-ease-out),
+    translate 700ms var(--kp-ease-out);
+}
+/* Child reveals preserve the photograph's tilted frame and avoid a double fade. */
+.kp-home-intro.reveal-on-scroll {
+  opacity: 1;
+  translate: none;
+}
+.kp-home-intro.reveal-on-scroll:not(.is-revealed) .kp-intro-visual {
+  opacity: 0;
+  translate: -18px 0;
+}
+.kp-home-intro.reveal-on-scroll:not(.is-revealed) .kp-intro-copy > * {
+  opacity: 0;
+  translate: 0 16px;
+}
+.kp-home-intro.is-revealed .kp-intro-copy > :nth-child(1) {
+  transition-delay: 80ms;
+}
+.kp-home-intro.is-revealed .kp-intro-copy > :nth-child(2) {
+  transition-delay: 140ms;
+}
+.kp-home-intro.is-revealed .kp-intro-copy > :nth-child(3) {
+  transition-delay: 200ms;
+}
+.kp-home-intro.is-revealed .kp-intro-copy > :nth-child(4) {
+  transition-delay: 260ms;
+}
+.kp-home-intro .kp-intro-photo {
+  filter: grayscale(1);
+  transition:
+    filter 500ms var(--kp-ease-out),
+    transform 700ms var(--kp-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .kp-intro-visual:hover .kp-intro-photo {
+    filter: grayscale(0);
+    transform: scale(1.025);
+  }
+}
+@media (max-width: 767px) {
+  .kp-home-intro {
+    padding-block: 2.5rem;
+  }
+  .kp-home-intro > div {
+    gap: 2.5rem !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kp-home-intro .kp-intro-visual,
+  .kp-home-intro .kp-intro-copy > * {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: none !important;
+  }
+  .kp-home-intro .kp-intro-photo {
+    transition: none;
+    transform: none !important;
+  }
+}
+
+/* The branch invitation uses the dove, purple and gold as its identity. */
+.kp-branch-panel,
+.dark .kp-branch-panel {
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem);
+  border: 2px solid #221039;
+  box-shadow: 6px 6px 0 #221039;
+  background: linear-gradient(135deg, #630ed4, #4c08a8 60%, #260650);
+}
+.dark .kp-branch-panel {
+  border-color: rgb(255 255 255 / 20%);
+}
+.kp-branch-panel::before {
+  opacity: 0.45;
+}
+.kp-branch-dove {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 56px;
+  margin: 0 auto 1.25rem;
+  background: url("/kp2/assets/kharis-logo.png") center / contain no-repeat;
+}
+.kp-branch-panel .kp-branch-eyebrow {
+  position: relative;
+  z-index: 1;
+  color: #ffde59;
+  font-family: var(--font-space), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.kp-branch-panel .kp-branch-title {
+  position: relative;
+  z-index: 1;
+  max-width: 18ch;
+  margin: 0 auto 1.25rem;
+  color: #fff !important;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+.kp-branch-panel .kp-branch-title span {
+  display: block;
+  color: #ffde59 !important;
+}
+.kp-branch-panel .kp-branch-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 60ch;
+  margin: 0 auto 1.75rem;
+  color: rgb(255 255 255 / 90%) !important;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.6;
+}
+.kp-branch-actions .kp-depth-button {
+  min-width: 200px;
+}
+@media (max-width: 639px) {
+  .kp-branch-panel .kp-branch-title {
+    max-width: 15ch;
+  }
+  .kp-branch-actions {
+    width: 100%;
+    max-width: 320px;
+    margin-inline: auto;
+  }
+  .kp-branch-actions .kp-depth-button {
+    min-width: 0;
+    width: 100%;
+  }
+}
+.kp-branch-actions .kp-button-gold > span {
+  color: inherit !important;
+  line-height: 1;
+}
+
+.dark .site-header .kp-nav-label::after {
+  background-color: var(--primary-fixed);
+}
+@media (hover: hover) {
+  .kp-faith-question:hover {
+    background: var(--primary-fixed);
+  }
+  .kp-faith .kp-faith-question:hover,
+  .kp-faith .kp-faith-question:hover * {
+    color: #25005a !important;
+  }
+}

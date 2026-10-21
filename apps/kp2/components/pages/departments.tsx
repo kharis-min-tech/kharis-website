@@ -299,7 +299,7 @@ function DepartmentsPage() {
                 </p>
               </div>
               <Link
-                href="/contact"
+                href="/quiz"
                 className="shrink-0 rounded-none border border-on-background/10 bg-primary px-8 py-3 text-sm font-black uppercase tracking-wider text-on-primary text-center transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
               >
                 To the Quiz

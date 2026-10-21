@@ -1,0 +1,339 @@
+/*
+ * Site-wide motion: one timing for every CTA / button, plus the page crossfade.
+ *
+ * Buttons keep their own colours, shapes and hover looks; this file only
+ * decides HOW they move. Timing props use !important because several older
+ * rules (and Tailwind `transition-*` utilities) set their own durations with
+ * higher specificity. Add `k-cta` to any new button to opt in.
+ */
+
+:root {
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 200ms;
+  --dur-page: 440ms;
+  --cta-press-scale: 0.98;
+  --focus-ring-color: var(--purple, #630ed4);
+}
+
+:is(
+  .k-cta,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-give,
+  .btn-testimony,
+  .life-cta,
+  .give-cta,
+  .give-card__cta,
+  .give-copy__btn,
+  .give-amounts__chip,
+  .contact-submit,
+  .contact-vibe__btn,
+  .msg-btn,
+  .msg-filter__chip,
+  .msg-filter__year,
+  .msg-filter-results__clear,
+  .unsure-panel__btn,
+  .apple-slide__cta,
+  .events-feature__btn,
+  .not-found__cta,
+  .gov-incident__cta,
+  .life-chat__fab,
+  .life-chat__send,
+  .life-modal__clip-btn,
+  .floating-theme-toggle,
+  .theme-toggle
+) {
+  transition-property:
+    color, background-color, border-color, outline-color, text-decoration-color, fill, stroke,
+    box-shadow, transform, translate, scale, opacity, filter !important;
+  transition-duration: var(--dur-fast) !important;
+  transition-timing-function: var(--ease-out) !important;
+  transition-delay: 0s !important;
+}
+
+/* Same timing without the press/focus styling, for text links like the header nav. */
+.k-motion {
+  transition-property:
+    color, background-color, border-color, opacity, box-shadow, transform, translate !important;
+  transition-duration: var(--dur-fast) !important;
+  transition-timing-function: var(--ease-out) !important;
+}
+
+/* Pressed: a slight squeeze. `scale` is separate from `transform`, so hover lifts stay. */
+:is(
+    .k-cta,
+    .btn-primary,
+    .btn-secondary,
+    .btn-ghost,
+    .btn-give,
+    .btn-testimony,
+    .life-cta,
+    .give-cta,
+    .give-card__cta,
+    .give-copy__btn,
+    .give-amounts__chip,
+    .contact-submit,
+    .contact-vibe__btn,
+    .msg-btn,
+    .msg-filter__chip,
+    .msg-filter__year,
+    .unsure-panel__btn,
+    .apple-slide__cta,
+    .events-feature__btn,
+    .not-found__cta,
+    .gov-incident__cta,
+    .life-chat__fab,
+    .life-chat__send,
+    .life-modal__clip-btn,
+    .floating-theme-toggle,
+    .theme-toggle
+  ):active:not(:disabled, [aria-disabled="true"]) {
+  scale: var(--cta-press-scale);
+}
+
+/* Default focus ring; zero specificity so buttons with their own ring keep it. */
+:where(
+  .k-cta,
+  .btn-primary,
+  .btn-secondary,
+  .btn-give,
+  .btn-testimony,
+  .life-cta,
+  .give-cta,
+  .give-card__cta,
+  .give-copy__btn,
+  .give-amounts__chip,
+  .contact-submit,
+  .msg-btn,
+  .unsure-panel__btn,
+  .events-feature__btn,
+  .not-found__cta,
+  .life-chat__send,
+  .floating-theme-toggle,
+  .theme-toggle
+):focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 3px;
+}
+
+/* On photos / dark bands a purple ring disappears. */
+:where(.hero-shell, .gov-incident, .apple-slide, [data-theme="dark"])
+  :where(
+    .btn-primary,
+    .btn-ghost,
+    .btn-secondary,
+    .k-cta,
+    .gov-incident__cta,
+    .apple-slide__cta
+  ):focus-visible {
+  outline: 2px solid var(--yellow, #ffde59);
+  outline-offset: 3px;
+}
+
+/* Page-to-page crossfade (see SmoothNavigation.tsx). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-page);
+  animation-timing-function: var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0.01ms;
+    --dur-page: 0.01ms;
+    --cta-press-scale: 1;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Give long directory lists a stable placeholder until they approach the viewport. */
+.locations-group {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+::view-transition-old(root) {
+  pointer-events: none;
+  animation: page-depart 200ms ease-out both;
+}
+::view-transition-new(root) {
+  animation-name: page-arrive;
+}
+@keyframes page-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.route-loading {
+  min-height: 70vh;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+  background: var(--page-bg, #fff);
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8rem;
+}
+.route-loading__bar {
+  width: 10rem;
+  height: 3px;
+  background: var(--purple, #630ed4);
+  transform-origin: left;
+  animation: route-loading-pulse 1s ease-in-out infinite alternate;
+}
+@keyframes route-loading-pulse {
+  from {
+    transform: scaleX(0.25);
+    opacity: 0.4;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-loading__bar {
+    animation: none;
+  }
+}
+
+[data-site-header] {
+  view-transition-name: site-header;
+}
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+}
+::view-transition-group(site-header) {
+  z-index: 2;
+}
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+@keyframes page-depart {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+html[data-navigating="true"]::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: 3px;
+  z-index: 9999;
+  background: linear-gradient(90deg, #630ed4, #ffde59);
+  transform-origin: left;
+  animation: navigation-progress 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes navigation-progress {
+  from {
+    transform: scaleX(0.08);
+  }
+  to {
+    transform: scaleX(0.92);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-navigating="true"]::before {
+    animation: none;
+  }
+}
+
+/* Fast control feedback, then panels, then the next page. */
+:where(button, a, input, select, textarea, summary) {
+  -webkit-tap-highlight-color: transparent;
+}
+:where(button, summary, [role="tab"], [role="menuitemradio"]) {
+  transition:
+    color 160ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 220ms ease;
+}
+:where(input, textarea, select):focus-visible {
+  transition:
+    border-color 160ms ease,
+    box-shadow 220ms ease;
+}
+[data-site-footer] {
+  view-transition-name: site-footer;
+}
+::view-transition-old(site-footer) {
+  animation: page-depart 140ms ease-out both;
+}
+::view-transition-new(site-footer) {
+  animation: page-arrive 360ms var(--ease-out) 90ms both;
+}
+@keyframes content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .route-content {
+    animation: route-fade 380ms var(--ease-out);
+  }
+  html[data-navigating="true"] .route-content {
+    animation: none;
+  }
+  .locations-group li,
+  .msg-filter-results .msg-tile {
+    animation: content-enter 360ms var(--ease-out) both;
+  }
+  .locations-group li:nth-child(2) {
+    animation-delay: 35ms;
+  }
+  .locations-group li:nth-child(3) {
+    animation-delay: 70ms;
+  }
+  .locations-group li:nth-child(n + 4) {
+    animation-delay: 100ms;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+@keyframes route-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

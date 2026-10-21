@@ -13707,3 +13707,20 @@ html[data-theme="dark"] .life-modal--reader,
 html[data-theme="dark"] .life-modal--reader .life-modal__scrim {
   background: #100b17;
 }
+
+/* —— Department Discovery Quiz (/quiz) —— */
+html:not([data-theme="dark"]) .quiz-page h1,
+html:not([data-theme="dark"]) .quiz-page h2,
+html:not([data-theme="dark"]) .quiz-page h3,
+html:not([data-theme="dark"]) .quiz-page h4 {
+  color: #1c1c1f !important;
+  -webkit-text-fill-color: #1c1c1f !important;
+}
+
+html[data-theme="dark"] .quiz-page h1,
+html[data-theme="dark"] .quiz-page h2,
+html[data-theme="dark"] .quiz-page h3,
+html[data-theme="dark"] .quiz-page h4 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
