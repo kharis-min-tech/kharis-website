@@ -525,7 +525,7 @@ export default function DepartmentQuizPage() {
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="kp-depth-button kp-button-light inline-flex items-center gap-1.5 rounded-none border-2 border-black bg-surface-container-high px-5 py-3 font-bold uppercase tracking-wider text-on-surface shadow-[3px_3px_0_0_#000] transition-all hover:bg-surface-variant active:translate-x-0.5 active:translate-y-0.5"
+                      className="kp-depth-button inline-flex items-center gap-2 rounded-none border-2 border-black bg-surface px-5 py-3 font-bold uppercase tracking-wider text-on-surface shadow-[3px_3px_0_0_#000] transition-all hover:bg-surface-variant active:translate-x-0.5 active:translate-y-0.5"
                     >
                       <span className="material-symbols-outlined text-base">arrow_back</span>
                       <span>{t.backButton}</span>
@@ -832,7 +832,7 @@ export default function DepartmentQuizPage() {
                       <button
                         type="button"
                         onClick={handleRestart}
-                        className="kp-depth-button kp-button-light inline-flex items-center justify-center gap-2 rounded-none border-2 border-black bg-surface px-6 py-3 font-headline-md text-sm uppercase tracking-wider text-on-surface"
+                        className="kp-depth-button inline-flex items-center justify-center gap-2 rounded-none border-2 border-black bg-surface px-6 py-3 font-headline-md text-sm uppercase tracking-wider text-on-surface shadow-[3px_3px_0_0_#000] transition-all hover:bg-surface-variant active:translate-x-0.5 active:translate-y-0.5"
                       >
                         <span className="material-symbols-outlined text-base">restart_alt</span>
                         <span>{t.restartButton}</span>
