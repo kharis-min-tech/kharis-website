@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import { Play, X } from "lucide-react";
 import type { MessageVideo } from "@/lib/youtube";
 
@@ -33,8 +40,6 @@ function previewSrc() {
     cc_load_policy: "0",
     disablekb: "1",
     fs: "0",
-    loop: "1",
-    playlist: PREVIEW.id,
     start: String(PREVIEW.start),
     enablejsapi: "1",
     origin: window.location.origin,
@@ -67,6 +72,7 @@ export function MessagesHero({ messages }: Props) {
   const playingRef = useRef(false);
   const wantPlay = useRef(false);
   const currentTime = useRef(PREVIEW.start);
+  const soundOnRef = useRef(false);
 
   const [allowed, setAllowed] = useState(false);
   const [inView, setInView] = useState(true);
@@ -99,8 +105,35 @@ export function MessagesHero({ messages }: Props) {
 
   const resume = useCallback(() => {
     if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
+    if (soundOnRef.current) {
+      command("unMute");
+      command("setVolume", [80]);
+    }
     command("playVideo");
   }, [command]);
+
+  const toggleSound = useCallback(() => {
+    const next = !soundOnRef.current;
+    soundOnRef.current = next;
+    if (next) {
+      resume();
+    } else {
+      command("mute");
+    }
+  }, [command, resume]);
+
+  const onHeroClick = (event: ReactMouseEvent<HTMLElement>) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest("[role='dialog']")) return;
+    toggleSound();
+  };
+
+  const onHeroKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
+    if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " ")) return;
+    event.preventDefault();
+    toggleSound();
+  };
 
   /** Pausing makes YouTube show its play overlay, so only pause once the video is already hidden. */
   const pauseLater = useCallback(
@@ -177,7 +210,7 @@ export function MessagesHero({ messages }: Props) {
       } catch {
         return;
       }
-      if (data.event === "onReady" && wantPlay.current) command("playVideo");
+      if (data.event === "onReady" && wantPlay.current) resume();
       let state: number | undefined;
       if (data.event === "onStateChange" && typeof data.info === "number") state = data.info;
       if (data.event === "infoDelivery" && data.info && typeof data.info === "object") {
@@ -203,7 +236,7 @@ export function MessagesHero({ messages }: Props) {
       window.removeEventListener("message", onMessage);
       if (settleTimer.current) window.clearTimeout(settleTimer.current);
     };
-  }, [command, scheduleSettle]);
+  }, [command, resume, scheduleSettle]);
 
   const onFrameLoad = () => {
     const win = frameRef.current?.contentWindow;
@@ -244,9 +277,13 @@ export function MessagesHero({ messages }: Props) {
       ref={heroRef}
       className="msg-hub__hero"
       aria-label="Kharis messages"
+      tabIndex={0}
       data-preview={showPreview || undefined}
       data-preview-cut={cut || undefined}
       data-watching={watching || undefined}
+      data-loading={(!showPreview && !watching) || undefined}
+      onClick={onHeroClick}
+      onKeyDown={onHeroKeyDown}
     >
       <div className="msg-hero-preview" aria-hidden inert>
         {allowed && (

@@ -118,6 +118,7 @@ function GalleryModal({
   const reduce = useReducedMotion();
   const count = photos.length;
   const [[index, direction], setSlide] = useState<[number, number]>([0, 0]);
+  const [slideshowPlaying, setSlideshowPlaying] = useState(!reduce);
   const [stageRatio, setStageRatio] = useState<number | null>(null);
   const [ratios, setRatios] = useState<Record<string, number>>({});
   const stageRef = useRef<HTMLDivElement>(null);
@@ -125,7 +126,18 @@ function GalleryModal({
   const stripPlaced = useRef(false);
   const photo = photos[index]!;
 
-  const step = (delta: number) => setSlide(([i]) => [(i + delta + count) % count, delta]);
+  useEffect(() => {
+    if (!slideshowPlaying || count < 2) return;
+    const timer = window.setInterval(() => {
+      setSlide(([i]) => [(i + 1) % count, 1]);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [count, slideshowPlaying]);
+
+  const step = (delta: number) => {
+    setSlideshowPlaying(false);
+    setSlide(([i]) => [(i + delta + count) % count, delta]);
+  };
 
   useEffect(() => {
     if (count < 2) return;
@@ -205,14 +217,31 @@ function GalleryModal({
           <p className="events-gallery__eyebrow">Gallery</p>
           <h2 className="events-gallery__title">{title}</h2>
         </div>
-        <p className="events-gallery__count">
-          <span aria-hidden>
-            {index + 1} / {count}
-          </span>
-          <span className="sr-only" aria-live="polite">
-            Photo {index + 1} of {count}: {photo.alt}
-          </span>
-        </p>
+        <div className="events-gallery__top-actions">
+          <p className="events-gallery__count">
+            <span aria-hidden>
+              {index + 1} / {count}
+            </span>
+            <span className="sr-only" aria-live="polite">
+              Photo {index + 1} of {count}: {photo.alt}
+            </span>
+          </p>
+          {count > 1 ? (
+            <button
+              type="button"
+              className="events-gallery__autoplay"
+              aria-label={slideshowPlaying ? "Pause slideshow" : "Play slideshow"}
+              aria-pressed={slideshowPlaying}
+              onClick={() => setSlideshowPlaying((playing) => !playing)}
+            >
+              {slideshowPlaying ? (
+                <Pause aria-hidden className="h-4 w-4" fill="currentColor" strokeWidth={0} />
+              ) : (
+                <Play aria-hidden className="h-4 w-4" fill="currentColor" strokeWidth={0} />
+              )}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div ref={stageRef} className="events-gallery__stage">
@@ -285,6 +314,7 @@ function GalleryModal({
               aria-label={`Show photo ${i + 1} of ${count}`}
               aria-current={i === index ? "true" : undefined}
               onClick={() => {
+                setSlideshowPlaying(false);
                 if (i !== index) setSlide([i, Math.sign(i - index)]);
               }}
             >

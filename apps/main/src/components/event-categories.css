@@ -595,6 +595,45 @@ div.events-page {
   color: rgba(255, 255, 255, 0.72);
 }
 
+.events-gallery__top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.events-gallery__autoplay {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.events-gallery__autoplay:hover,
+.events-gallery__autoplay:focus-visible {
+  border-color: #fff;
+  background: #fff;
+  color: #140b22;
+}
+
+.events-gallery__autoplay:focus-visible {
+  outline: 2px solid #ffde59;
+  outline-offset: 2px;
+}
+
+.events-gallery__autoplay:active {
+  transform: scale(0.94);
+}
+
 .events-gallery__close,
 .events-gallery__arrow {
   display: grid;

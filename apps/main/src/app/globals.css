@@ -42,6 +42,13 @@
 
 * {
   box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 html {
@@ -3565,8 +3572,50 @@ h6 {
 }
 
 .msg-devices__screen--tv {
+  display: flex;
+  flex-direction: column;
   aspect-ratio: 16 / 9;
   border-radius: 0;
+}
+
+.msg-devices__tv-feature {
+  position: relative;
+  flex: 1 1 70%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.msg-devices__tv-up-next {
+  display: grid;
+  flex: 0 0 30%;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 0.6rem;
+  background: #090710;
+}
+
+.msg-devices__tv-up-next > span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: clamp(0.35rem, 0.7vw, 0.52rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.msg-devices__tv-posters {
+  display: grid;
+  height: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.msg-devices__tv-poster {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background: #221d29;
 }
 
 .msg-devices__tv-mark {
@@ -8885,10 +8934,16 @@ html[data-theme="dark"] .life-chat__nudge-no {
   aspect-ratio: 16 / 9;
   border-radius: 0;
   overflow: hidden;
+  cursor: pointer;
   background: #08040d;
   box-shadow:
     0 16px 36px rgba(0, 0, 0, 0.38),
     0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.life-modal__clip:focus-visible {
+  outline: 3px solid #c99a33;
+  outline-offset: 4px;
 }
 
 .life-modal__poster {
@@ -9287,6 +9342,780 @@ html[data-theme="dark"] .life-modal__dots button.is-on {
   flex-wrap: wrap;
   gap: 0.65rem;
   margin-top: 0.25rem;
+}
+
+/* Full-screen editorial reading flow for Life teaching details. */
+.life-modal--reader {
+  z-index: 40;
+  display: block;
+  padding: 4.5rem 0 0;
+  background: #f5f1e8;
+}
+
+.life-modal--reader .life-modal__scrim {
+  z-index: 0;
+  background: #f5f1e8;
+  backdrop-filter: none;
+}
+
+.life-reader {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f5f1e8;
+  color: #1d1b20;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+.life-reader__toolbar {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  display: flex;
+  min-height: 4.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(29, 27, 32, 0.14);
+  background: rgba(245, 241, 232, 0.96);
+  padding: 0.75rem clamp(1.25rem, 4vw, 4rem);
+  backdrop-filter: blur(12px);
+}
+
+.life-reader :is(h1, h2, h3, h4, h5, h6) {
+  -webkit-text-fill-color: currentColor !important;
+}
+
+.life-reader__toolbar > p,
+.life-reader__toolbar button {
+  margin: 0;
+  color: #4b474e;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.life-reader__toolbar > p span {
+  margin-inline: 0.35rem;
+  color: #c99a33;
+}
+
+.life-reader__toolbar button {
+  display: inline-flex;
+  min-height: 2.7rem;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+}
+
+.life-reader__toolbar button:hover,
+.life-reader__toolbar button:focus-visible {
+  border-color: #5b2bd1;
+  color: #1d1b20;
+}
+
+.life-reader__toolbar button:focus-visible,
+.life-reader__secondary-link:focus-visible {
+  outline: 2px solid #c99a33;
+  outline-offset: 3px;
+}
+
+.life-reader__scroller {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  scrollbar-color: rgba(91, 43, 209, 0.52) #f5f1e8;
+}
+
+.life-reader__chapter {
+  display: grid;
+  width: min(100%, 96rem);
+  min-height: min(82vh, 52rem);
+  grid-template-columns: minmax(14rem, 0.82fr) minmax(0, 1.18fr);
+  align-items: center;
+  gap: clamp(2rem, 8vw, 8rem);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 10vh, 8rem) clamp(1.5rem, 8vw, 8rem);
+}
+
+.life-reader__chapter-label {
+  align-self: center;
+}
+
+.life-reader__chapter-label > span {
+  display: block;
+  margin-bottom: 1.4rem;
+  color: #5b2bd1;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.16em;
+}
+
+.life-reader__chapter-label > p,
+.life-reader__video-heading > p,
+.life-reader__end > p,
+.life-reader__quote-label {
+  margin: 0 0 0.55rem;
+  color: #77737a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+html:not([data-theme="dark"]) .life-reader__chapter-label > p,
+html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
+  color: #5b5660;
+}
+
+.life-reader__chapter-label h2,
+.life-reader__chapter-label h3 {
+  max-width: 8ch;
+  margin: 0;
+  color: #211d24;
+  font-size: clamp(3.25rem, 8vw, 7.5rem);
+  font-weight: 900;
+  letter-spacing: -0.085em;
+  line-height: 0.82;
+}
+
+.life-reader__chapter-label h3 {
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  line-height: 0.91;
+}
+
+.life-reader__lead,
+.life-reader__copy,
+.life-reader__section-copy > p {
+  max-width: 54rem;
+  margin: 0;
+  color: #4b474e;
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  font-weight: 550;
+  letter-spacing: -0.015em;
+  line-height: 1.7;
+}
+
+.life-reader__video-chapter {
+  display: grid;
+  width: 100%;
+  min-height: 78vh;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  align-items: end;
+  gap: 1.3rem clamp(1.5rem, 5vw, 5rem);
+  margin: 0;
+  padding: clamp(4rem, 9vh, 7rem) clamp(1.5rem, 8vw, 8rem);
+  background: #201a27;
+  color: #f5f1e8;
+}
+
+.life-reader__video-heading {
+  grid-column: 1 / -1;
+}
+
+.life-reader__video-heading > p {
+  color: #d3a94e;
+}
+
+.life-reader__video-heading h3 {
+  margin: 0;
+  max-width: 24ch;
+  color: #f5f1e8;
+  font-size: clamp(1.8rem, 3.6vw, 3.1rem);
+  font-weight: 900;
+  letter-spacing: -0.075em;
+  line-height: 0.95;
+}
+
+.life-reader__video-frame {
+  min-width: 0;
+  width: min(100%, 62rem);
+  margin-inline: auto;
+}
+
+.life-reader__video-frame .life-modal__clip {
+  box-shadow: none;
+}
+
+.life-reader__video-frame .life-modal__video--yt {
+  filter: grayscale(1);
+}
+
+.life-reader__video-caption {
+  max-width: 29rem;
+  margin: 0;
+  color: #e7e0ec;
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  font-weight: 550;
+  letter-spacing: -0.015em;
+  line-height: 1.7;
+}
+
+.life-reader__quote-chapter {
+  display: flex;
+  width: min(100%, 96rem);
+  min-height: 70vh;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  padding: clamp(4.5rem, 10vh, 8rem) clamp(1.5rem, 12vw, 12rem);
+}
+
+.life-reader__quote-label {
+  color: #5b2bd1;
+}
+
+.life-reader__quote-chapter blockquote {
+  max-width: 68rem;
+  margin: 0;
+  color: #1d1b20;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.3;
+}
+
+.life-reader__journey {
+  display: grid;
+  width: min(100%, 86rem);
+  grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vh, 7rem) clamp(1.5rem, 7vw, 7rem);
+  padding-bottom: clamp(14rem, 21vh, 20rem);
+}
+
+.life-reader__journey--fasting-preview {
+  position: relative;
+  isolation: isolate;
+}
+
+.life-reader__fasting-backdrop-track {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  left: 50%;
+  width: 100vw;
+  height: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.life-reader__journey-heading {
+  position: sticky;
+  z-index: 2;
+  top: 12vh;
+  align-self: start;
+  padding-top: 0.25rem;
+}
+
+.life-reader__journey-heading-stage > span {
+  display: block;
+  margin-bottom: 1.25rem;
+  color: #5b2bd1;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.16em;
+}
+
+.life-reader__journey-heading-stage > p {
+  margin: 0 0 0.65rem;
+  color: #77737a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.life-reader__journey-heading h3 {
+  max-width: 8ch;
+  margin: 0;
+  color: #211d24;
+  font-size: clamp(2.75rem, 5vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: -0.085em;
+  line-height: 0.88;
+  overflow-wrap: anywhere;
+}
+
+.life-reader__journey-copy {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  max-width: 54rem;
+  padding-top: 0.1rem;
+}
+
+.life-reader__fasting-backdrop {
+  position: sticky;
+  z-index: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  margin: 0;
+  overflow: hidden;
+  background: #100b17;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.life-reader__fasting-image,
+.life-reader__fasting-scrim {
+  position: absolute;
+  inset: 0;
+}
+
+.life-reader__fasting-image img {
+  object-fit: cover;
+  object-position: center 52%;
+}
+
+.life-reader__fasting-image.is-monochrome img {
+  filter: grayscale(1);
+}
+
+.life-reader__fasting-scrim {
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(10, 7, 15, 0.52), rgba(10, 7, 15, 0.3)),
+    linear-gradient(0deg, rgba(10, 7, 15, 0.48), transparent 58%);
+}
+
+.life-reader__journey-current {
+  position: sticky;
+  z-index: 2;
+  top: 12vh;
+  height: 70vh;
+  min-height: 30rem;
+  overflow: hidden;
+  display: block;
+  padding: 0.25rem 0 1rem;
+  background: #f5f1e8;
+  isolation: isolate;
+}
+
+.life-reader__journey--fasting-preview .life-reader__journey-current {
+  z-index: 2;
+  background: transparent;
+  pointer-events: none;
+}
+
+.life-reader__journey--fasting-preview .life-reader__journey-current p,
+.life-reader__journey--fasting-preview .life-reader__journey-current ul {
+  color: #fff;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.3);
+}
+
+.life-reader__journey--fasting-preview .life-reader__journey-heading-stage > p {
+  color: #fff;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.72);
+}
+
+.life-reader__journey--fasting-preview .life-reader__journey-heading-stage > span {
+  color: #d0adff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.75);
+}
+
+.life-reader__journey--fasting-preview .life-reader__journey-heading h3 {
+  color: #fff;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.48);
+}
+
+.life-reader__journey-rail {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  will-change: transform;
+}
+
+.life-reader__journey-passage {
+  display: flex;
+  min-height: 70vh;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.life-reader__journey-current p {
+  margin: 0;
+  color: #4b474e;
+  font-size: clamp(1.4rem, 2.15vw, 2rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.42;
+}
+
+.life-reader__journey-current ul {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1.25rem 0 0;
+  padding-left: 1.2rem;
+  color: #4b474e;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.life-reader__journey-current li::marker {
+  color: #c99a33;
+}
+
+.life-reader__journey-markers {
+  position: relative;
+}
+
+.life-reader__journey-marker {
+  height: 70vh;
+  min-height: 30rem;
+}
+
+.life-reader__journey-current li::marker {
+  color: #c99a33;
+}
+
+.life-reader__section-copy > p {
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  font-weight: 550;
+  letter-spacing: -0.015em;
+  line-height: 1.7;
+}
+
+.life-reader__section-copy ul {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1.5rem 0 0;
+  padding-left: 1.2rem;
+  color: #4b474e;
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  line-height: 1.55;
+}
+
+.life-reader__section-copy li::marker {
+  color: #c99a33;
+}
+
+.life-reader__end {
+  display: flex;
+  min-height: 64vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.2rem;
+  padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 12vw, 12rem);
+  border-top: 1px solid rgba(29, 27, 32, 0.14);
+}
+
+.life-reader__end > p {
+  color: #5b2bd1;
+}
+
+.life-reader__end .life-refresh__button {
+  border-color: #5b2bd1;
+  background: #5b2bd1;
+  color: #fff;
+}
+
+.life-reader__end .life-refresh__button:hover,
+.life-reader__end .life-refresh__button:focus-visible {
+  border-color: #4820ad;
+  background: #4820ad;
+  color: #fff;
+}
+
+.life-reader__end .life-refresh__button:focus-visible {
+  outline: 3px solid #c5a7f5;
+  outline-offset: 4px;
+}
+
+.life-reader__end h3 {
+  max-width: 12ch;
+  margin: 0 0 0.8rem;
+  color: #1d1b20;
+  font-size: clamp(2.5rem, 6vw, 5.2rem);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  line-height: 0.9;
+}
+
+.life-reader__family {
+  display: grid;
+  width: min(100%, 68rem);
+  gap: clamp(1rem, 2.4vh, 1.6rem);
+}
+
+.life-reader__family-kicker {
+  margin: 0;
+  color: #5b2bd1;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.17em;
+}
+
+.life-reader__family h3 {
+  max-width: none;
+  margin: 0;
+  color: #1d1b20;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(2.6rem, 6vw, 5.2rem);
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  line-height: 0.95;
+  -webkit-text-fill-color: currentColor;
+}
+
+.life-reader__family-copy {
+  max-width: 38rem;
+  margin: 0;
+  color: #5b5660;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-weight: 550;
+  line-height: 1.6;
+}
+
+.life-reader__family-step {
+  display: grid;
+  width: min(100%, 38rem);
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+
+.life-reader__family-step > label {
+  color: #5b2bd1;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.life-reader__family-step > input {
+  width: 100%;
+  min-height: 3.7rem;
+  border: 1px solid rgba(91, 43, 209, 0.38);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.46);
+  color: #1d1b20;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+}
+
+.life-reader__family-step > input:focus-visible {
+  border: 2px solid #5b2bd1;
+  outline: none;
+}
+
+.life-reader__family-step > input[aria-invalid="true"] {
+  border-color: #b42318;
+  color: #8a1c13;
+}
+
+.life-reader__family-step > input[aria-invalid="true"]:focus-visible {
+  border-width: 2px;
+  outline: 2px solid rgba(180, 35, 24, 0.22);
+  outline-offset: 2px;
+}
+
+.life-reader__family-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.life-reader__family-back {
+  min-height: 3rem;
+  border: 0;
+  background: transparent;
+  color: #5b5660;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.life-reader__family-back:focus-visible {
+  outline: 2px solid #c99a33;
+  outline-offset: 3px;
+}
+
+.life-reader__family-success {
+  color: #1d1b20;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 700;
+}
+
+.life-reader__family-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.life-reader__secondary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b474e;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-underline-offset: 0.25em;
+}
+
+@media (max-width: 760px) {
+  .life-reader__toolbar {
+    min-height: 4rem;
+    padding-inline: 1rem;
+  }
+
+  .life-reader__toolbar > p,
+  .life-reader__toolbar button {
+    font-size: 0.62rem;
+  }
+
+  .life-reader__chapter {
+    min-height: 72svh;
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 2rem;
+    padding: 4rem 1.25rem;
+  }
+
+  .life-reader__chapter-label h2 {
+    font-size: clamp(3.75rem, 17vw, 6rem);
+  }
+
+  .life-reader__chapter-label h3 {
+    font-size: clamp(2.2rem, 9vw, 3.3rem);
+  }
+
+  .life-reader__chapter-label > span {
+    margin-bottom: 0.8rem;
+  }
+
+  .life-reader__lead,
+  .life-reader__copy,
+  .life-reader__section-copy > p {
+    font-size: clamp(1.05rem, 4.8vw, 1.25rem);
+    line-height: 1.65;
+  }
+
+  .life-reader__video-chapter {
+    min-height: 72svh;
+    grid-template-columns: 1fr;
+    align-content: center;
+    padding: 4rem 1.25rem;
+  }
+
+  .life-reader__video-heading {
+    grid-column: 1;
+  }
+
+  .life-reader__quote-chapter {
+    min-height: 68svh;
+    padding: 4rem 1.25rem;
+  }
+
+  .life-reader__quote-chapter blockquote {
+    font-size: clamp(1.55rem, 6.5vw, 2.2rem);
+  }
+
+  .life-reader__journey {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 3.75rem 1.25rem 2rem;
+    padding-bottom: max(12rem, 21svh);
+  }
+
+  .life-reader__journey-heading {
+    position: sticky;
+    z-index: 2;
+    top: 0;
+    margin: 0 -1.25rem;
+    padding: 1rem 1.25rem 1.15rem;
+    background: #f5f1e8;
+  }
+
+  .life-reader__journey--fasting-preview .life-reader__journey-heading {
+    background: transparent;
+  }
+
+  .life-reader__journey-heading-stage > span {
+    display: inline-block;
+    margin: 0 0.65rem 0 0;
+  }
+
+  .life-reader__journey-heading-stage > p {
+    display: inline-block;
+    margin: 0;
+  }
+
+  .life-reader__journey-heading h3 {
+    max-width: 18ch;
+    font-size: clamp(2rem, 7vw, 2.75rem);
+    line-height: 0.96;
+  }
+
+  .life-reader__journey-current {
+    top: 7rem;
+    height: 70svh;
+    min-height: 28rem;
+    background: #f5f1e8;
+  }
+
+  .life-reader__fasting-backdrop {
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+  }
+
+  .life-reader__journey-passage {
+    min-height: 70svh;
+  }
+
+  .life-reader__journey-current p {
+    font-size: clamp(1.18rem, 5vw, 1.45rem);
+    line-height: 1.5;
+  }
+
+  .life-reader__journey-marker {
+    height: 70svh;
+    min-height: 28rem;
+  }
+
+  .life-reader__end {
+    min-height: 52svh;
+    padding: 4rem 1.25rem;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1000px) {
+  .life-reader__journey-heading h3 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .life-reader__scroller {
+    scroll-behavior: auto;
+  }
+
+  .life-reader__journey-rail {
+    will-change: auto;
+  }
 }
 
 /* Children ministry page */
@@ -12760,4 +13589,121 @@ html[data-theme="dark"] .locations-empty a {
     left: 0.75rem;
     flex-direction: row;
   }
+}
+
+html[data-theme="dark"] .life-reader {
+  background: #100b17;
+  color: #f4eff8;
+}
+
+html[data-theme="dark"] .life-reader__toolbar {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(16, 11, 23, 0.96);
+}
+
+html[data-theme="dark"] .life-reader__toolbar > p,
+html[data-theme="dark"] .life-reader__toolbar button,
+html[data-theme="dark"] .life-reader__lead,
+html[data-theme="dark"] .life-reader__copy,
+html[data-theme="dark"] .life-reader__section-copy > p,
+html[data-theme="dark"] .life-reader__quote-chapter blockquote,
+html[data-theme="dark"] .life-reader__end h3 {
+  color: #f4eff8;
+}
+
+html[data-theme="dark"] .life-reader__chapter-label h2,
+html[data-theme="dark"] .life-reader__chapter-label h3,
+html[data-theme="dark"] .life-reader__journey-heading h3 {
+  color: #c4b7d2;
+}
+
+html[data-theme="dark"] .life-reader__family h3,
+html[data-theme="dark"] .life-reader__family-success {
+  color: #f4eff8;
+  -webkit-text-fill-color: currentColor;
+}
+
+html[data-theme="dark"] .life-reader__family-copy,
+html[data-theme="dark"] .life-reader__family-back {
+  color: #c7bdcf;
+}
+
+html[data-theme="dark"] .life-reader__family-kicker,
+html[data-theme="dark"] .life-reader__family-step > label {
+  color: #c5a7f5;
+}
+
+html[data-theme="dark"] .life-reader__family-step > input {
+  border-color: rgba(197, 167, 245, 0.62);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f4eff8;
+}
+
+html[data-theme="dark"] .life-reader__family-step > input:focus-visible {
+  border-color: #c5a7f5;
+  outline: none;
+}
+
+html[data-theme="dark"] .life-reader__family-step > input[aria-invalid="true"] {
+  border-color: #ff8c83;
+  color: #fff;
+}
+
+html[data-theme="dark"] .life-reader__family-step > input[aria-invalid="true"]:focus-visible {
+  outline: 2px solid rgba(255, 140, 131, 0.35);
+}
+
+html[data-theme="dark"] .life-reader__chapter-label > p,
+html[data-theme="dark"] .life-reader__journey-heading-stage > p,
+html[data-theme="dark"] .life-reader__end > p,
+html[data-theme="dark"] .life-reader__secondary-link {
+  color: #c7bdcf;
+}
+
+html[data-theme="dark"] .life-reader__journey-current p,
+html[data-theme="dark"] .life-reader__journey-current ul {
+  color: #eee8f2;
+}
+
+html[data-theme="dark"] .life-reader__journey-current {
+  background: #100b17;
+}
+
+html[data-theme="dark"] .life-reader__journey--fasting-preview .life-reader__journey-current {
+  background: transparent;
+}
+
+html[data-theme="dark"] .life-reader__journey--fasting-preview .life-reader__journey-heading {
+  background: transparent;
+}
+
+html[data-theme="dark"] .life-reader__journey-heading-stage > span {
+  color: #a982f0;
+}
+
+html:not([data-theme="dark"]) .life-reader__journey--fasting-preview .life-reader__journey-heading-stage > p,
+html[data-theme="dark"] .life-reader__journey--fasting-preview .life-reader__journey-heading-stage > p {
+  color: #fff;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.95);
+}
+
+html:not([data-theme="dark"]) .life-reader__journey--fasting-preview .life-reader__journey-heading-stage > span,
+html[data-theme="dark"] .life-reader__journey--fasting-preview .life-reader__journey-heading-stage > span {
+  color: #d0adff;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.95);
+}
+
+html:not([data-theme="dark"]) .life-reader__journey--fasting-preview .life-reader__journey-heading h3,
+html[data-theme="dark"] .life-reader__journey--fasting-preview .life-reader__journey-heading h3 {
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.62);
+}
+
+html[data-theme="dark"] .life-reader__journey-heading {
+  background: #100b17;
+}
+
+html[data-theme="dark"] .life-modal--reader,
+html[data-theme="dark"] .life-modal--reader .life-modal__scrim {
+  background: #100b17;
 }

@@ -37,7 +37,7 @@ ${ABOUT.faith.map((f) => `- ${f.title}: ${f.body}`).join("\n")}
 ${LIFE_HERO.body}
 Membership: ${LIFE_MEMBERSHIP_URL}
 Departments: ${LIFE_DEPARTMENTS.join(", ")}
-Join the family: people looking for community or a church home should find their local branch at /locations ("Join the family" on the Life page).
+Plan a visit: people looking for community or a church home should find their local branch at /locations ("Plan a visit" on the Life page).
 `);
 
   for (const cat of LIFE_CATEGORIES.filter((c) => LIFE_VISIBLE_SLUGS.has(c.slug))) {
@@ -112,7 +112,7 @@ When suggesting the app, output [[APP_DOWNLOAD]] to show App Store and Google Pl
 `);
 
   parts.push(`## Site pages
-- /locations: find a branch and join the family
+- /locations: find a branch and plan a visit
 - /life: Kharis Life (baptism, fasting, children's ministry, serving in a department)
 - /messages: Pastor David's messages
 - /give: giving

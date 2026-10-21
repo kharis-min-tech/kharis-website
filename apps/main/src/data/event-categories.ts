@@ -198,20 +198,29 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     subtext: "A whole night set apart for praise and worship.",
     gallery: [
       {
-        src: "/images/events/praise-night-stage.jpg",
-        alt: "Singers on stage leading a packed hall in praise",
+        src: "/images/events/praise-night/0I1A0489.jpg",
+        alt: "Church leaders celebrating together on stage during Praise Night",
       },
-      { src: "/images/locations-worship-team.jpg", alt: "Worship team singing on stage" },
       {
-        src: "/images/get-involved-sax.jpg",
-        alt: "Saxophonist playing during worship",
-        position: "50% 30%",
+        src: "/images/events/praise-night/601A8340.jpg",
+        alt: "Praise team leading worship with hands raised",
       },
-      { src: "/images/joyful-worship.jpg", alt: "Congregation worshipping with joy" },
-      { src: "/images/hero/worship-altar.jpg", alt: "Worship at the front of the hall" },
-      { src: "/images/hero/sunday-service-stage.jpg", alt: "Hands raised under stage lights" },
-      { src: "/images/branch-slide-2.jpg", alt: "Celebration on stage" },
-      { src: "/images/worship.jpg", alt: "Worshippers with hands raised" },
+      {
+        src: "/images/events/praise-night/0I1A0873.jpg",
+        alt: "Pastor speaking to a packed Praise Night gathering",
+      },
+      {
+        src: "/images/events/praise-night/DSC08530.jpg",
+        alt: "Church members celebrating together on the Praise Night stage",
+      },
+      {
+        src: "/images/events/praise-night/601A8152.jpg",
+        alt: "Young church members sharing a joyful moment together",
+      },
+      {
+        src: "/images/events/praise-night/DSC08221.jpg",
+        alt: "Church members celebrating together after a gathering",
+      },
     ],
   },
   {
