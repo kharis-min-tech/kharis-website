@@ -130,7 +130,8 @@ export function MessagesHero({ messages }: Props) {
   };
 
   const onHeroKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
-    if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " ")) return;
+    if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " "))
+      return;
     event.preventDefault();
     toggleSound();
   };

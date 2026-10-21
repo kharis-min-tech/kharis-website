@@ -4,7 +4,15 @@ import Link from "next/link";
 import { ArrowLeft, ExternalLink, Volume2, VolumeX } from "lucide-react";
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { Icon } from "@/components/Icon";
 import Image from "@/components/SiteImage";
 import { type LifeCategory } from "@/lib/life-content";
@@ -153,7 +161,11 @@ function LifeSlideVideo({
           aria-label={muted ? "Turn on video sound" : "Mute video"}
           onClick={toggleSound}
         >
-          {muted ? <VolumeX aria-hidden className="h-4 w-4" /> : <Volume2 aria-hidden className="h-4 w-4" />}
+          {muted ? (
+            <VolumeX aria-hidden className="h-4 w-4" />
+          ) : (
+            <Volume2 aria-hidden className="h-4 w-4" />
+          )}
           <span>{muted ? "Sound off" : "Sound on"}</span>
         </button>
         {!isFile ? (
@@ -186,17 +198,25 @@ function LifeScrollJourney({
   const journeyRef = useRef<HTMLElement>(null);
   const stages: { title: string; label: string; body: string; items?: readonly string[] }[] = [
     ...(category.intro
-      ? [{
-          title: category.title,
-          label: "THE HEART OF IT",
-          body:
-            category.slug === "baptism"
-              ? category.intro
-                  .replace("Baptism is a public declaration a person makes to identify with ", "A public declaration a person makes to identify with ")
-                  .replace(" While baptism doesn’t grant you salvation, that comes by faith alone.", " It doesn’t grant salvation, which comes by faith alone.")
-                  .replace(" Jesus commanded believers to get baptised.", "")
-              : category.intro,
-        }]
+      ? [
+          {
+            title: category.title,
+            label: "THE HEART OF IT",
+            body:
+              category.slug === "baptism"
+                ? category.intro
+                    .replace(
+                      "Baptism is a public declaration a person makes to identify with ",
+                      "A public declaration a person makes to identify with ",
+                    )
+                    .replace(
+                      " While baptism doesn’t grant you salvation, that comes by faith alone.",
+                      " It doesn’t grant salvation, which comes by faith alone.",
+                    )
+                    .replace(" Jesus commanded believers to get baptised.", "")
+                : category.intro,
+          },
+        ]
       : []),
     ...(category.quote
       ? [{ title: "Scripture", label: category.quote.source, body: `“${category.quote.text}”` }]
@@ -232,30 +252,43 @@ function LifeScrollJourney({
 
   useMotionValueEvent(stagePosition, "change", (position) => {
     const next = Math.max(0, Math.min(lastStage, Math.round(position)));
-    setActiveStage((current) => current === next ? current : next);
+    setActiveStage((current) => (current === next ? current : next));
   });
 
   if (!stages.length) return null;
   const current = stages[Math.min(activeStage, stages.length - 1)];
   return (
-    <section ref={journeyRef} className={`life-reader__journey${category.slug === "fasting" ? " life-reader__journey--fasting-preview" : ""}`} aria-label={`${category.title} teaching`}>
+    <section
+      ref={journeyRef}
+      className={`life-reader__journey${category.slug === "fasting" ? " life-reader__journey--fasting-preview" : ""}`}
+      aria-label={`${category.title} teaching`}
+    >
       {category.slug === "fasting" ? (
         <div className="life-reader__fasting-backdrop-track" aria-hidden="false">
           <FastingBackgroundPreview />
         </div>
       ) : null}
       <div className="life-reader__journey-heading" aria-live="polite">
-          <motion.div className="life-reader__journey-heading-stage" style={{ opacity: headingOpacity }}>
-            <span>{String(activeStage + 1).padStart(2, "0")}</span>
-            <p>{current.label}</p>
-            <h3 id={titleId}>{current.title}.</h3>
-          </motion.div>
+        <motion.div
+          className="life-reader__journey-heading-stage"
+          style={{ opacity: headingOpacity }}
+        >
+          <span>{String(activeStage + 1).padStart(2, "0")}</span>
+          <p>{current.label}</p>
+          <h3 id={titleId}>{current.title}.</h3>
+        </motion.div>
       </div>
       <div className="life-reader__journey-copy">
         <div className="life-reader__journey-current" aria-live="polite">
           <motion.div className="life-reader__journey-rail" style={{ y: railY }}>
             {stages.map((stage, index) => (
-              <JourneyPassage key={`${stage.title}-${index}`} stage={stage} index={index} journeyPosition={journeyPosition} reduce={reduce} />
+              <JourneyPassage
+                key={`${stage.title}-${index}`}
+                stage={stage}
+                index={index}
+                journeyPosition={journeyPosition}
+                reduce={reduce}
+              />
             ))}
           </motion.div>
         </div>
@@ -291,7 +324,9 @@ function JourneyPassage({
       <p>{stage.body}</p>
       {stage.items?.length ? (
         <ul>
-          {stage.items.map((item) => <li key={item}>{item}</li>)}
+          {stage.items.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
         </ul>
       ) : null}
     </motion.div>
@@ -400,12 +435,8 @@ export function LifeDetailModal({ category, onClose }: Props) {
     setFollowupStep(2);
   };
 
-  const ctaHref = isDepartments
-      ? "/life/departments"
-      : (category?.cta.href ?? "/life");
-  const ctaLabel = isDepartments
-      ? "Join a department"
-      : (category?.cta.label ?? "Learn more");
+  const ctaHref = isDepartments ? "/life/departments" : (category?.cta.href ?? "/life");
+  const ctaLabel = isDepartments ? "Join a department" : (category?.cta.label ?? "Learn more");
 
   return createPortal(
     <AnimatePresence>
@@ -527,7 +558,9 @@ export function LifeDetailModal({ category, onClose }: Props) {
                             exit={reduce ? undefined : { opacity: 0, y: -10 }}
                             transition={revealTransition(0.32)}
                           >
-                            <label htmlFor="baptism-followup-name">First, what&apos;s your name?</label>
+                            <label htmlFor="baptism-followup-name">
+                              First, what&apos;s your name?
+                            </label>
                             <input
                               id="baptism-followup-name"
                               type="text"
@@ -555,7 +588,10 @@ export function LifeDetailModal({ category, onClose }: Props) {
                             exit={reduce ? undefined : { opacity: 0, y: -10 }}
                             transition={revealTransition(0.32)}
                           >
-                            <label htmlFor="baptism-followup-email">Nice to meet you, {name.trim().split(/\s+/)[0]}. Where can we reach you?</label>
+                            <label htmlFor="baptism-followup-email">
+                              Nice to meet you, {name.trim().split(/\s+/)[0]}. Where can we reach
+                              you?
+                            </label>
                             <input
                               id="baptism-followup-email"
                               type="email"
@@ -564,7 +600,9 @@ export function LifeDetailModal({ category, onClose }: Props) {
                               required
                               placeholder="Your email address"
                               value={email}
-                              aria-invalid={emailAttempted && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())}
+                              aria-invalid={
+                                emailAttempted && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+                              }
                               aria-describedby={error ? "baptism-followup-error" : undefined}
                               onChange={(e) => {
                                 setEmail(e.target.value);
@@ -572,10 +610,18 @@ export function LifeDetailModal({ category, onClose }: Props) {
                               }}
                             />
                             <div className="life-reader__family-actions">
-                              <button type="button" className="life-reader__family-back" onClick={() => setFollowupStep(1)}>
+                              <button
+                                type="button"
+                                className="life-reader__family-back"
+                                onClick={() => setFollowupStep(1)}
+                              >
                                 Back
                               </button>
-                              <button type="submit" className="life-refresh__button" disabled={busy}>
+                              <button
+                                type="submit"
+                                className="life-refresh__button"
+                                disabled={busy}
+                              >
                                 {busy ? "SENDING…" : "SEND MY DETAILS"}
                                 <Icon name="arrow" className="h-4 w-4" />
                               </button>
@@ -584,7 +630,15 @@ export function LifeDetailModal({ category, onClose }: Props) {
                         )}
                       </AnimatePresence>
                     )}
-                    {error ? <p id="baptism-followup-error" className="life-reader__family-error" role="alert">{error}</p> : null}
+                    {error ? (
+                      <p
+                        id="baptism-followup-error"
+                        className="life-reader__family-error"
+                        role="alert"
+                      >
+                        {error}
+                      </p>
+                    ) : null}
                   </motion.div>
                 ) : (
                   <>
@@ -602,11 +656,7 @@ export function LifeDetailModal({ category, onClose }: Props) {
                       viewport={{ once: false, amount: 0.4 }}
                       transition={revealTransition(0.85, 0.16)}
                     >
-                      <Link
-                        href={ctaHref}
-                        className="life-refresh__button"
-                        onClick={onClose}
-                      >
+                      <Link href={ctaHref} className="life-refresh__button" onClick={onClose}>
                         {ctaLabel.toUpperCase()}
                         <Icon name="arrow" className="h-4 w-4" />
                       </Link>

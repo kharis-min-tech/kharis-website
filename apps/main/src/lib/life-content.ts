@@ -35,8 +35,7 @@ export const LIFE_KGROUP_EMAIL = "kgroup@kharis.org";
 /** Baptism illustration used in the Life preview and detail hero. */
 export const LIFE_BAPTISM_IMAGE = "/images/baptism-illustration.jpeg";
 
-export const LIFE_SERVE_IMAGE =
-  "/images/life-departments.jpg";
+export const LIFE_SERVE_IMAGE = "/images/life-departments.jpg";
 
 export const LIFE_CHILDREN_IMAGE = "/images/life-children.jpg";
 
