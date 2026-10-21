@@ -228,7 +228,7 @@ function EventFilters({ filter, query, resultCount, onFilter, onQuery }: FilterP
 }
 
 /** Upcoming squares that don't belong to the chosen service fade back. */
-const DIMMED: Partial<Record<EventFilter, string[]>> = {
+const DIMMED: Partial<Record<EventFilter | "sunday" | "midweek", string[]>> = {
   sunday: ["midweek"],
   midweek: ["this-sunday", "next-sunday"],
 };

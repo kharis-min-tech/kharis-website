@@ -1,6 +1,75 @@
 /* Messages hub: hero preview + player, search field, and the Kharis app CTAs. */
 
-/* ---------- Hero: black & white preaching preview over the unchanged poster wall ---------- */
+/* ---------- Hero: autoplaying black & white preaching preview ---------- */
+
+.msg-hub__hero {
+  background: #07040c;
+}
+
+.msg-hero-loading {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  /* Fully opaque so YouTube's temporary play/pause chrome cannot bleed through. */
+  background: #100a18;
+  color: #fff;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.msg-hero-loading__pulse {
+  width: min(17rem, 64vw);
+  height: 0.3rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.msg-hero-loading__pulse::after {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: #c39aff;
+  content: "";
+  animation: msg-hero-loading-progress 1.5s ease-in-out infinite;
+}
+
+.msg-hub__hero .msg-hub__hero-copy {
+  z-index: 3;
+  transition:
+    opacity 180ms ease,
+    visibility 0s linear;
+}
+
+.msg-hub__hero[data-loading] .msg-hub__hero-copy {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes msg-hero-loading-progress {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .msg-hero-loading__pulse::after {
+    animation: none;
+  }
+}
+
+/* ---------- Hero player and browse controls ---------- */
 
 .msg-hero-preview {
   position: absolute;
@@ -21,11 +90,16 @@
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 600ms var(--ease-out),
+    opacity 320ms var(--ease-out),
     visibility 0s;
 }
 
-/* 16:9 player scaled to cover the hero; a little extra scale trims YouTube's edge chrome. */
+/* The player stalled or paused on its own: hide at once so YouTube's overlay never fades through. */
+.msg-hub__hero[data-preview-cut] .msg-hero-preview {
+  transition: none;
+}
+
+/* 16:9 player scaled to cover the hero; the extra 20% pushes YouTube's title bar and edge chrome out of view. */
 .msg-hero-preview__frame {
   position: absolute;
   top: 50%;
@@ -33,7 +107,7 @@
   width: max(100cqw, calc(100cqh * 16 / 9));
   height: max(100cqh, calc(100cqw * 9 / 16));
   border: 0;
-  transform: translate(-50%, -50%) scale(1.12);
+  transform: translate(-50%, -50%) scale(1.2);
   filter: grayscale(1) contrast(1.12) brightness(0.92);
   pointer-events: none;
 }
@@ -239,20 +313,30 @@ html[data-theme="light"] .msg-filter__search input::placeholder {
   color: var(--muted);
 }
 
-/* Phones: search gets its own full-width row above the swipeable topics. */
-@media (max-width: 767px) {
-  .msg-filter__inner {
-    flex-wrap: wrap;
-  }
+/* Chips never scroll out of sight: short of room, search drops to its own line and the chips wrap. */
+.msg-filter .msg-filter__inner {
+  flex-wrap: wrap;
+  row-gap: 0.6rem;
+}
 
+.msg-filter__inner .msg-filter__topics {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.msg-filter__inner .msg-filter__search {
+  margin-left: auto;
+}
+
+/* Below desktop: search gets the first row, topic chips wrap underneath. */
+@media (max-width: 1023px) {
   .msg-filter__inner .msg-filter__topics {
-    flex: 1 1 0;
+    order: 1;
+    flex: 1 1 100%;
   }
 
-  .msg-filter__search {
-    order: -1;
+  .msg-filter__inner .msg-filter__search {
     flex: 1 1 100%;
-    margin-left: var(--msg-gutter);
   }
 }
 

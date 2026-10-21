@@ -501,9 +501,10 @@ function EventBlock({
   const branch = useStoredBranch(branches);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const titleId = `${category.id}-title`;
+  const service = (category as EventCategory & { service?: "sunday" | "midweek" }).service;
   const visit =
     category.status === "upcoming" && branch
-      ? category.service === "midweek"
+      ? service === "midweek"
         ? branch.midweek
         : branch.sunday
       : null;

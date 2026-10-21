@@ -50,27 +50,15 @@
 .events-next__word {
   display: inline-block;
   white-space: nowrap;
-  overflow: clip;
-  vertical-align: bottom;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
-}
-
-.events-next__word > span {
-  display: inline-block;
-  transition:
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 550ms ease-out;
 }
 
 .events-next__title.is-armed .events-next__word > span {
   opacity: 0;
-  transform: translateY(105%);
 }
 
-.events-next__title.is-revealed .events-next__word > span {
+.events-next__title.is-typed .events-next__word > span {
   opacity: 1;
-  transform: translateY(0);
+  transition: opacity 1ms linear;
 }
 
 .events-next__grid {
@@ -79,6 +67,16 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.events-next__empty {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.2rem;
+  border-left: 3px solid #7c3ac8;
+  background: #f4effa;
+  color: #342641;
+  font-weight: 650;
+  line-height: 1.55;
 }
 
 @media (min-width: 560px) {
@@ -210,66 +208,12 @@
   text-underline-offset: 0.25em;
 }
 
-.events-next__tile--find {
-  background: #140b22;
-}
-
-.events-next__find-veil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    160deg,
-    rgba(99, 14, 212, 0.72) 0%,
-    rgba(61, 10, 133, 0.74) 50%,
-    rgba(20, 11, 34, 0.92) 100%
-  );
-}
-
-.events-next__find-globe {
-  position: absolute;
-  top: -18%;
-  right: -28%;
-  width: 95%;
-  height: auto;
-  opacity: 0.7;
-  pointer-events: none;
-  user-select: none;
-}
-
-.events-next__find-pin {
-  position: absolute;
-  top: clamp(1rem, 1.8vw, 1.35rem);
-  left: clamp(1rem, 1.8vw, 1.35rem);
-  width: clamp(2.75rem, 4vw, 3.5rem);
-  height: clamp(2.75rem, 4vw, 3.5rem);
-  color: #ffde59;
-  transition: transform calc(var(--dur-fast) * 3) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .events-next__tile--find:hover .events-next__find-pin {
-    transform: translateY(-4px);
-  }
-}
-
-.events-next__tile--find .events-next__name {
-  font-size: clamp(1.5rem, 2.2vw, 1.9rem);
-  line-height: 1.05;
-}
-
-.events-next__find-copy {
-  font-size: 0.95rem;
-  font-weight: 600;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.88);
-}
-
 .events-next__grid > li > .events-next__tile {
   transition: opacity var(--dur-page) var(--ease-out);
 }
 
-.events-next__grid > li.is-dim > .events-next__tile {
-  opacity: 0.35;
+.events-next__grid > li > article.events-next__tile {
+  cursor: default;
 }
 
 /* Filter chips + search for the events below */
@@ -389,8 +333,6 @@
 @media (prefers-reduced-motion: reduce) {
   .events-next__title .events-next__word > span {
     opacity: 1;
-    transform: none;
-    transition: none;
   }
 }
 

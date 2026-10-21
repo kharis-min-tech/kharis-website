@@ -16,6 +16,78 @@ const TOPICS = new Set([
 const MAX_TICKET = 64;
 const MAX_TRANSCRIPT = 6000;
 
+type LocalContactRecord = {
+  id: string;
+  created_at: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string | null;
+  topic: string;
+  branch: string | null;
+  message: string;
+  workspace: "kharis";
+  status: "new";
+};
+
+let localContactWriteQueue: Promise<void> = Promise.resolve();
+
+/** Development-only persistence for previews without configured Supabase credentials. */
+function saveLocalContact(record: LocalContactRecord): Promise<void> {
+  const save = localContactWriteQueue.then(async () => {
+    const [{ mkdir, readFile, rename, writeFile }, { dirname, join }] = await Promise.all([
+      import("node:fs/promises"),
+      import("node:path"),
+    ]);
+    const file = join(process.cwd(), ".local-data", "contact-messages.json");
+    await mkdir(dirname(file), { recursive: true });
+
+    let records: LocalContactRecord[] = [];
+    try {
+      records = JSON.parse(await readFile(file, "utf8")) as LocalContactRecord[];
+      if (!Array.isArray(records)) throw new Error("Local contact store is not an array.");
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+
+    const temporaryFile = `${file}.${record.id}.tmp`;
+    await writeFile(temporaryFile, JSON.stringify([...records, record], null, 2) + "\n", {
+      encoding: "utf8",
+      mode: 0o600,
+    });
+    await rename(temporaryFile, file);
+  });
+
+  localContactWriteQueue = save.then(
+    () => undefined,
+    () => undefined,
+  );
+  return save;
+}
+
+async function localContactResponse(
+  input: Omit<LocalContactRecord, "id" | "created_at" | "workspace" | "status">,
+) {
+  const [{ randomUUID }] = await Promise.all([import("node:crypto")]);
+  const id = randomUUID();
+  try {
+    await saveLocalContact({
+      ...input,
+      id,
+      created_at: new Date().toISOString(),
+      workspace: "kharis",
+      status: "new",
+    });
+  } catch (error) {
+    console.error("Local development contact save error:", error);
+    return NextResponse.json(
+      { ok: false, error: "Unable to save your message locally. Please try again." },
+      { status: 500 },
+    );
+  }
+  return NextResponse.json({ ok: true, id, storage: "local-development" });
+}
+
 function sanitizeTicket(raw: unknown): string {
   const t = String(raw ?? "")
     .trim()
@@ -89,57 +161,97 @@ export async function POST(request: Request) {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
+    if (process.env.NODE_ENV === "development") {
+      return localContactResponse({
+        first_name: first,
+        last_name: last,
+        email,
+        phone: phone || null,
+        topic,
+        branch: branch || null,
+        message,
+      });
+    }
+
     console.error("Missing Supabase server environment variables");
     return NextResponse.json({ ok: false, error: "Server configuration error." }, { status: 500 });
   }
 
-  const supabase = createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  });
-
   // File the message under the branch in the directory, and in the KP2 inbox for KP2 branches.
-  const { data: branchRows } = await supabase.from("branches").select("id, name, workspace");
-  const filed = resolveBranch((branchRows ?? []) as BranchRow[], data.branchId, branch);
+  try {
+    const supabase = createClient(supabaseUrl, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+    const { data: branchRows } = await supabase.from("branches").select("id, name, workspace");
+    const filed = resolveBranch((branchRows ?? []) as BranchRow[], data.branchId, branch);
 
-  const { data: row, error } = await supabase
-    .from("contact_messages")
-    .insert({
-      first_name: first,
-      last_name: last,
-      email,
-      phone: phone || null,
-      topic,
-      branch_id: filed.branch_id,
-      branch_name: filed.branch_name,
-      message,
-      workspace: filed.workspace,
-      status: "new",
-    })
-    .select("id")
-    .single();
+    const { data: row, error } = await supabase
+      .from("contact_messages")
+      .insert({
+        first_name: first,
+        last_name: last,
+        email,
+        phone: phone || null,
+        topic,
+        branch: filed.branch_name,
+        message,
+        workspace: filed.workspace,
+        status: "new",
+      })
+      .select("id")
+      .single();
 
-  if (error) {
-    console.error("Supabase contact insert error:", error);
+    if (error) {
+      console.error("Supabase contact insert error:", error);
+      if (process.env.NODE_ENV === "development") {
+        return localContactResponse({
+          first_name: first,
+          last_name: last,
+          email,
+          phone: phone || null,
+          topic,
+          branch: filed.branch_name,
+          message,
+        });
+      }
+      return NextResponse.json(
+        { ok: false, error: "Unable to send your message. Please try again." },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({
+      ok: true,
+      id: row.id,
+      received: {
+        first,
+        last,
+        email,
+        phone,
+        topic,
+        branch: filed.branch_name,
+        messageLength: message.length,
+      },
+    });
+  } catch (error) {
+    console.error("Supabase contact request failed:", error);
+    if (process.env.NODE_ENV === "development") {
+      return localContactResponse({
+        first_name: first,
+        last_name: last,
+        email,
+        phone: phone || null,
+        topic,
+        branch: branch || null,
+        message,
+      });
+    }
     return NextResponse.json(
       { ok: false, error: "Unable to send your message. Please try again." },
       { status: 500 },
     );
   }
-
-  return NextResponse.json({
-    ok: true,
-    id: row.id,
-    received: {
-      first,
-      last,
-      email,
-      phone,
-      topic,
-      branch: filed.branch_name,
-      messageLength: message.length,
-    },
-  });
 }
