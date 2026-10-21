@@ -36,11 +36,10 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
       <header className="kp-life-hero relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden bg-black pt-24 pb-8 text-white">
         <div className="absolute inset-0 opacity-60">
           <div
-            className="w-full h-full bg-cover bg-center"
-            data-alt="Young adults at Kharis Life"
+            className="w-full h-full bg-cover bg-[center_30%]"
+            data-alt="The congregation celebrating and pointing joyfully at a KP2 service"
             style={{
-              backgroundImage:
-                "url('https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg')",
+              backgroundImage: "url('/kp2/assets/congregation-celebrating.jpg')",
             }}
           ></div>
         </div>

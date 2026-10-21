@@ -1,0 +1,51 @@
+@keyframes kp-follow-fly {
+  from {
+    opacity: 0;
+    transform: translateY(3.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .kp-follow:not(.is-in) .kp-follow__title,
+  .kp-follow:not(.is-in) .kp-follow__slot {
+    opacity: 0;
+    transform: translateY(3.25rem);
+  }
+
+  .kp-follow.is-in .kp-follow__title,
+  .kp-follow.is-in .kp-follow__slot {
+    animation: kp-follow-fly 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .kp-follow.is-in .kp-follow__slot:nth-child(1) {
+    animation-delay: 0.06s;
+  }
+
+  .kp-follow.is-in .kp-follow__slot:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .kp-follow.is-in .kp-follow__slot:nth-child(3) {
+    animation-delay: 0.18s;
+  }
+
+  .kp-follow.is-in .kp-follow__slot:nth-child(4) {
+    animation-delay: 0.26s;
+  }
+
+  .kp-follow.is-in .kp-follow__slot:nth-child(5) {
+    animation-delay: 0.32s;
+  }
+
+  .kp-follow.is-in .kp-follow__slot:nth-child(6) {
+    animation-delay: 0.38s;
+  }
+
+  .kp-follow.is-in .kp-follow__slot:nth-child(7) {
+    animation-delay: 0.46s;
+  }
+}

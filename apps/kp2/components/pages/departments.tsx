@@ -40,12 +40,13 @@ function DepartmentCard({ dept }: { dept: Department }) {
         <img
           alt={dept.name}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          style={{ objectPosition: dept.imagePosition }}
           src={dept.image}
           loading="lazy"
           decoding="async"
         />
         <span
-          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider text-on-background ${dept.accent} rounded-none border border-on-background/10`}
+          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border border-on-background/10`}
         >
           <span className="material-symbols-outlined text-sm" aria-hidden="true">
             {dept.icon}
@@ -121,6 +122,7 @@ function DepartmentsPage() {
                   <img
                     alt={dept.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    style={{ objectPosition: dept.imagePosition }}
                     src={dept.image}
                     loading="lazy"
                     decoding="async"
@@ -243,7 +245,7 @@ function DepartmentsPage() {
           <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent" />
           <div className="relative z-10 mx-auto max-w-5xl">
             <div className="mb-12 text-center">
-              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
+              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest text-[#151218]">
                 The heart behind it
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase text-primary-fixed-dim">

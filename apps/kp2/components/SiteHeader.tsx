@@ -2,13 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { MobileMenu, type MobileNavItem } from "@/components/MobileMenu";
 
-type NavItem = {
-  label: string;
-  to: string;
-  children?: { label: string; to: string; blurb: string }[];
-};
+type NavItem = MobileNavItem;
 
 const NAV_ITEMS: NavItem[] = [
   { label: "HOME", to: "/" },
@@ -26,8 +23,6 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "DEPARTMENTS", to: "/departments", blurb: "Find a place to serve" },
       { label: "LIFE", to: "/life", blurb: "Groups & branch life" },
-      { label: "FELLOWSHIPS", to: "/fellowships", blurb: "Find your fellowship" },
-      { label: "GALLERY", to: "/gallery", blurb: "Moments from the house" },
     ],
   },
   { label: "EVENTS", to: "/events" },
@@ -36,7 +31,7 @@ const NAV_ITEMS: NavItem[] = [
     to: "/messages",
     children: [
       { label: "MESSAGES", to: "/messages", blurb: "Recent sermons" },
-      { label: "SOCIAL MEDIA", to: "/media", blurb: "Photos & gallery" },
+      { label: "SOCIAL MEDIA", to: "/media", blurb: "Follow the feeds" },
     ],
   },
   { label: "GIVE", to: "/giving" },
@@ -71,12 +66,15 @@ export function SiteHeader() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const mobileRef = useRef<HTMLDivElement>(null);
 
-  const closeMobile = () => {
-    setOpen(false);
-    if (open) toggleRef.current?.focus();
-  };
+  const wasOpen = useRef(false);
+
+  const closeMobile = useCallback(() => setOpen(false), []);
+
+  useEffect(() => {
+    if (wasOpen.current && !open) toggleRef.current?.focus({ preventScroll: true });
+    wasOpen.current = open;
+  }, [open]);
 
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 1280px)");
@@ -86,30 +84,6 @@ export function SiteHeader() {
     desktop.addEventListener("change", onResize);
     return () => desktop.removeEventListener("change", onResize);
   }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setOpen(false);
-        toggleRef.current?.focus();
-      }
-      if (event.key === "Tab") {
-        const links = mobileRef.current?.querySelectorAll<HTMLAnchorElement>("a[href]");
-        const last = links?.[links.length - 1];
-        if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          toggleRef.current?.focus();
-        } else if (event.shiftKey && document.activeElement === toggleRef.current) {
-          event.preventDefault();
-          last?.focus();
-        }
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open]);
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -237,75 +211,28 @@ export function SiteHeader() {
           <button
             type="button"
             ref={toggleRef}
-            aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-label="Open menu"
             aria-controls="mobile-navigation"
             aria-expanded={open}
-            className="xl:hidden min-h-11 min-w-11 flex items-center justify-center text-on-background transition-colors duration-200 hover:text-primary"
-            onClick={() => setOpen((v) => !v)}
+            className="kp-menu-toggle xl:hidden"
+            onClick={() => setOpen(true)}
           >
-            <span className="material-symbols-outlined text-[32px]">{open ? "close" : "menu"}</span>
+            <span>Menu</span>
+            <span className="material-symbols-outlined" aria-hidden="true">
+              menu
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <div
-        id="mobile-navigation"
-        ref={mobileRef}
-        inert={!open}
-        className={`xl:hidden grid overflow-hidden transition-[grid-template-rows,opacity] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-        }`}
-      >
-        <div className="min-h-0 overflow-hidden">
-          <div
-            className={`border-t-2 border-on-background bg-surface-container-lowest px-4 md:px-6 py-6 flex flex-col gap-1 max-h-[calc(100dvh-74px)] overflow-y-auto transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "translate-y-0" : "-translate-y-3"}`}
-          >
-            {NAV_ITEMS.flatMap((item) =>
-              item.children
-                ? [
-                    <Link
-                      key={item.label}
-                      href={item.to}
-                      onClick={closeMobile}
-                      className="font-body-md text-[11px] font-bold uppercase tracking-[0.2em] text-on-surface-variant pt-4 pb-1 transition-colors duration-150 hover:text-primary"
-                    >
-                      {item.label}
-                    </Link>,
-                    ...item.children.map((child) => (
-                      <Link
-                        key={child.to}
-                        href={child.to}
-                        aria-current={pathname === child.to ? "page" : undefined}
-                        onClick={closeMobile}
-                        className="py-3 px-3 font-body-md text-sm font-bold uppercase tracking-wide text-on-background transition-colors duration-150 relative after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-                      >
-                        {child.label}
-                      </Link>
-                    )),
-                  ]
-                : [
-                    <Link
-                      key={item.to}
-                      href={item.to}
-                      aria-current={pathname === item.to ? "page" : undefined}
-                      onClick={closeMobile}
-                      className="py-3 px-3 font-body-md text-sm font-bold uppercase tracking-wide text-on-background transition-colors duration-150 relative after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
-                    >
-                      {item.label}
-                    </Link>,
-                  ],
-            )}
-            <Link
-              href="/branches"
-              onClick={closeMobile}
-              className="kp-depth-button kp-button-purple header-branch-cta mt-4 bg-primary !text-on-primary font-body-md text-sm font-bold uppercase tracking-wide px-6 py-4 brutalist-border brutalist-shadow text-center transition-colors duration-200 hover:bg-primary-container"
-            >
-              Find a Branch
-            </Link>
-          </div>
-        </div>
-      </div>
+      <MobileMenu
+        open={open}
+        onClose={closeMobile}
+        items={NAV_ITEMS}
+        logo={KP2_LOGO}
+        isActive={isActive}
+        isCurrent={(to) => pathname === to}
+      />
     </header>
   );
 }

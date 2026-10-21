@@ -13,5 +13,5 @@ export const metadata = pageMeta({
 
 export default async function Contact() {
   const branches = await listBranches();
-  return <Page mainCampus={branches[0] ?? null} />;
+  return <Page mainCampus={branches[0] ?? null} branches={branches} />;
 }

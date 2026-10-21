@@ -1,0 +1,382 @@
+.kp-panels {
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(0.75rem, 2.5vw, 2.5rem) clamp(2.5rem, 5vw, 4rem);
+  background: #fdf8ec;
+  border-bottom: 4px solid #151218;
+}
+
+.kp-panels__narration {
+  position: relative;
+  z-index: 3;
+  display: table;
+  max-width: calc(100% - 2rem);
+  margin: 0 0 -1.1rem 1.25rem;
+  padding: 0.5rem 0.9rem;
+  background: #f7be1d;
+  color: #151218;
+  border: 3px solid #151218;
+  box-shadow: 4px 4px 0 #151218;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  rotate: -1.5deg;
+}
+
+/* Desktop: one comic page. Each cell covers the whole page and is cut to its panel shape,
+   so neighbouring edges share the same zigzag gutter lines. */
+.kp-panels__page {
+  --gutter-half: 6px;
+  --page-pad: 14px;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  min-height: 34rem;
+  max-height: 58rem;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #fffdf5;
+  background-image: radial-gradient(rgba(21, 18, 24, 0.16) 1.3px, transparent 1.4px);
+  background-size: 9px 9px;
+  border: 4px solid #151218;
+  box-shadow: 10px 10px 0 #151218;
+}
+
+.kp-panels__grid {
+  position: absolute;
+  inset: var(--page-pad);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kp-panels__cell {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  filter: drop-shadow(3px 0 0 #151218) drop-shadow(-3px 0 0 #151218) drop-shadow(0 3px 0 #151218)
+    drop-shadow(0 -3px 0 #151218);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: calc(var(--i, 0) * 110ms);
+}
+
+.kp-panels__page.is-armed .kp-panels__cell {
+  opacity: 0;
+  transform: scale(0.94) rotate(-1deg);
+}
+
+.kp-panels__cell--a {
+  --clip: polygon(
+    0 0,
+    calc(53% - var(--gutter-half)) 0,
+    calc(47% - var(--gutter-half)) calc(48% - var(--gutter-half)),
+    0 calc(54% - var(--gutter-half))
+  );
+  --bx: 0%;
+  --by: 0%;
+  --bw: 53%;
+  --bh: 54%;
+  --sx: 0%;
+  --sy: 0%;
+  --sw: 47%;
+  --sh: 48%;
+}
+
+.kp-panels__cell--b {
+  --clip: polygon(
+    calc(53% + var(--gutter-half)) 0,
+    100% 0,
+    100% calc(54% - var(--gutter-half)),
+    calc(47% + var(--gutter-half)) calc(48% - var(--gutter-half))
+  );
+  --bx: 47%;
+  --by: 0%;
+  --bw: 53%;
+  --bh: 54%;
+  --sx: 53%;
+  --sy: 0%;
+  --sw: 47%;
+  --sh: 48%;
+}
+
+.kp-panels__cell--c {
+  --clip: polygon(
+    0 calc(54% + var(--gutter-half)),
+    calc(47% - var(--gutter-half)) calc(48% + var(--gutter-half)),
+    calc(53% - var(--gutter-half)) 100%,
+    0 100%
+  );
+  --bx: 0%;
+  --by: 48%;
+  --bw: 53%;
+  --bh: 52%;
+  --sx: 0%;
+  --sy: 54%;
+  --sw: 47%;
+  --sh: 46%;
+}
+
+.kp-panels__cell--d {
+  --clip: polygon(
+    calc(47% + var(--gutter-half)) calc(48% + var(--gutter-half)),
+    100% calc(54% + var(--gutter-half)),
+    100% 100%,
+    calc(53% + var(--gutter-half)) 100%
+  );
+  --bx: 47%;
+  --by: 48%;
+  --bw: 53%;
+  --bh: 52%;
+  --sx: 53%;
+  --sy: 54%;
+  --sw: 47%;
+  --sh: 46%;
+}
+
+.kp-panels__panel {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+  clip-path: var(--clip);
+  background: #151218;
+  transition: transform 0.25s ease;
+}
+
+.kp-panels__cell:hover .kp-panels__panel,
+.kp-panels__cell:focus-within .kp-panels__panel {
+  transform: translate(-4px, -4px);
+}
+
+.kp-panels__media {
+  position: absolute;
+  left: var(--bx);
+  top: var(--by);
+  width: var(--bw);
+  height: var(--bh);
+  overflow: hidden;
+}
+
+.kp-panels__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.35) contrast(1.05);
+  transition:
+    filter 0.6s ease,
+    scale 0.8s ease;
+}
+
+.kp-panels__cell:hover .kp-panels__media img {
+  filter: grayscale(0) contrast(1.05);
+  scale: 1.05;
+}
+
+.kp-panels__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgba(21, 10, 38, 0.9) 0%, rgba(21, 10, 38, 0.35) 45%, transparent 70%),
+    radial-gradient(rgba(0, 0, 0, 0.18) 1.2px, transparent 1.3px) 0 0 / 7px 7px;
+}
+
+.kp-panels__safe {
+  position: absolute;
+  left: var(--sx);
+  top: var(--sy);
+  width: var(--sw);
+  height: var(--sh);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: clamp(1rem, 2.2vw, 1.9rem);
+  color: #fff;
+}
+
+.kp-panels__caption {
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  background: #fffdf5;
+  color: #151218;
+  border: 3px solid #151218;
+  box-shadow: 3px 3px 0 #151218;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(0.72rem, 1.1vw, 0.85rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.kp-panels__cell--a .kp-panels__caption {
+  background: #f7be1d;
+}
+
+.kp-panels__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.kp-panels__title {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.9rem, 3.4vw, 3.2rem);
+  font-weight: 400;
+  line-height: 0.98;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 4px 4px 0 #151218;
+}
+
+.kp-panels__sub {
+  margin: 0.55rem 0 0;
+  max-width: 28rem;
+  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.kp-panels__explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.7rem 1.2rem;
+  background: #151218;
+  color: #fff;
+  border: 3px solid #fff;
+  box-shadow: 4px 4px 0 #f7be1d;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.92rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.kp-panels__explore .material-symbols-outlined {
+  font-size: 1.05rem;
+}
+
+.kp-panels__explore:hover,
+.kp-panels__explore:focus-visible {
+  background: #f7be1d;
+  color: #151218;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #151218;
+}
+
+.kp-panels__explore:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Phones: panels stack, each with slanted top/bottom edges that zigzag down the page. */
+@media (max-width: 759px) {
+  .kp-panels__page {
+    --stack-h: 25rem;
+    --slant: 6%;
+    aspect-ratio: auto;
+    min-height: 0;
+    max-height: none;
+    padding: 12px;
+  }
+
+  .kp-panels__grid {
+    position: static;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kp-panels__cell {
+    position: relative;
+    inset: auto;
+    height: var(--stack-h);
+    --bx: 0%;
+    --by: 0%;
+    --bw: 100%;
+    --bh: 100%;
+    --sx: 0%;
+    --sy: 0%;
+    --sw: 100%;
+    --sh: 100%;
+  }
+
+  .kp-panels__cell + .kp-panels__cell {
+    margin-top: calc(10px - var(--stack-h) * 0.06);
+  }
+
+  .kp-panels__cell--a {
+    --clip: polygon(0 0, 100% 0, 100% 100%, 0 94%);
+  }
+
+  .kp-panels__cell--b {
+    --clip: polygon(0 0, 100% 6%, 100% 94%, 0 100%);
+  }
+
+  .kp-panels__cell--c {
+    --clip: polygon(0 6%, 100% 0, 100% 100%, 0 94%);
+  }
+
+  .kp-panels__cell--d {
+    --clip: polygon(0 0, 100% 6%, 100% 100%, 0 100%);
+  }
+
+  .kp-panels__safe {
+    padding: 2.5rem 1.25rem 2.75rem;
+  }
+}
+
+.dark .kp-panels {
+  background: #151218;
+  border-color: #000;
+}
+
+.dark .kp-panels__page {
+  background-color: #1f1a26;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1.3px, transparent 1.4px);
+  border-color: #000;
+  box-shadow: 10px 10px 0 #000;
+}
+
+.dark .kp-panels .kp-panels__narration,
+.dark .kp-panels .kp-panels__caption {
+  color: #151218;
+}
+
+.dark .kp-panels .kp-panels__title,
+.dark .kp-panels .kp-panels__explore {
+  color: #fff;
+}
+
+.dark .kp-panels .kp-panels__sub {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.dark .kp-panels .kp-panels__explore:hover,
+.dark .kp-panels .kp-panels__explore:focus-visible {
+  color: #151218;
+}
+
+.dark .kp-panels .kp-panels__explore * {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-panels__cell,
+  .kp-panels__panel,
+  .kp-panels__media img,
+  .kp-panels__explore {
+    transition: none;
+  }
+
+  .kp-panels__cell:hover .kp-panels__media img {
+    scale: 1;
+  }
+}

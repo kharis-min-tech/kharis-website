@@ -1,0 +1,149 @@
+.studio-grace {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 40;
+}
+
+.studio-grace__fab {
+  display: inline-flex;
+  height: 3.25rem;
+  width: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0;
+  box-shadow: 0 12px 30px rgba(99, 14, 212, 0.28);
+  cursor: pointer;
+}
+
+.studio-grace__panel {
+  display: flex;
+  width: min(22rem, calc(100vw - 2rem));
+  height: min(32rem, calc(100vh - 7rem));
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: 0 18px 50px rgba(40, 10, 80, 0.16);
+}
+
+.studio-grace__head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 0.9rem;
+}
+
+.studio-grace__mark {
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 800;
+}
+
+.studio-grace__head p {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+
+.studio-grace__close {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.studio-grace__log {
+  flex: 1;
+  overflow: auto;
+  padding: 0.85rem;
+}
+
+.studio-grace__bubble {
+  margin-bottom: 0.65rem;
+  max-width: 95%;
+  white-space: pre-wrap;
+  border-radius: 0.9rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.studio-grace__bubble--assistant {
+  background: var(--muted);
+}
+
+.studio-grace__bubble--user {
+  margin-left: auto;
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.studio-grace__bubble a {
+  color: var(--gold);
+  font-weight: 800;
+}
+
+.studio-grace__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.studio-grace__chips button,
+.studio-grace__form button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--foreground);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.studio-grace__form button {
+  border: 0;
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.studio-grace__error {
+  margin: 0 0.85rem 0.4rem;
+  color: var(--destructive);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.studio-grace__form {
+  display: flex;
+  gap: 0.4rem;
+  border-top: 1px solid var(--border);
+  padding: 0.7rem;
+}
+
+.studio-grace__form input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--background);
+  color: var(--foreground);
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+}

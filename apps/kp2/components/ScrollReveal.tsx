@@ -27,7 +27,7 @@ export function ScrollReveal() {
 
     const setup = () => {
       document.querySelectorAll<HTMLElement>("main section").forEach((element) => {
-        if (targets.has(element)) return;
+        if (targets.has(element) || element.dataset.reveal === "self") return;
         targets.add(element);
         // Never hide an initial viewport, restored scroll position or hash destination.
         if (element.getBoundingClientRect().top < window.innerHeight) return;

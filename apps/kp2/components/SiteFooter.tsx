@@ -38,7 +38,6 @@ const COLUMNS: FooterColumn[] = [
     links: [
       { label: "Find a Branch", to: "/branches" },
       { label: "Life", to: "/life" },
-      { label: "Gallery", to: "/gallery" },
       { label: "Events", to: "/events" },
       { label: "Messages", to: "/messages" },
     ],
