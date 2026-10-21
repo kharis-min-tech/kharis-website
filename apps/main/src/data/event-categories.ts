@@ -187,7 +187,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "praise-night",
     label: "Praise Night",
-    status: "upcoming",
+    status: "past",
     layout: "half",
     media: {
       poster: "/images/events/praise-night-stage.jpg",
