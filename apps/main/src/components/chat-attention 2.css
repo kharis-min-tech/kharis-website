@@ -1,0 +1,231 @@
+/* Grace launcher attention cue: pop-in on first paint, then a bouncing ball (with a ground
+   shadow and a short "Need help?" bubble) for people who keep scrolling. Uses the separate
+   `translate` / `scale` properties so the launcher's own hover `transform` and press `scale`
+   keep working. */
+.chat-attn__shadow,
+.chat-attn__bubble {
+  --cue-edge: max(1.15rem, env(safe-area-inset-right, 0px));
+  --cue-foot: max(1.15rem, env(safe-area-inset-bottom, 0px));
+  position: fixed;
+  z-index: 44;
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .chat-attn__shadow,
+  .chat-attn__bubble {
+    --cue-edge: max(1rem, env(safe-area-inset-right, 0px));
+    --cue-foot: max(1rem, env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.life-chat__fab.chat-attn--pop {
+  animation: chat-attn-pop 560ms cubic-bezier(0.34, 1.56, 0.64, 1) 400ms both;
+}
+
+@keyframes chat-attn-pop {
+  0% {
+    scale: 0;
+    opacity: 0;
+  }
+  55% {
+    scale: 1.1;
+    opacity: 1;
+  }
+  78% {
+    scale: 0.97;
+  }
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+.life-chat__fab.chat-attn--bounce {
+  transform-origin: 50% 100%;
+  animation: chat-attn-bounce 1400ms linear both;
+}
+
+/* Three decaying hops: squash on take-off and landing, stretch on the way up. */
+@keyframes chat-attn-bounce {
+  0% {
+    translate: 0 0;
+    scale: 1 1;
+    animation-timing-function: ease-out;
+  }
+  7% {
+    translate: 0 0;
+    scale: 1.12 0.88;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  29% {
+    translate: 0 -38px;
+    scale: 0.96 1.05;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.4);
+  }
+  46% {
+    translate: 0 0;
+    scale: 1.14 0.86;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  61% {
+    translate: 0 -18px;
+    scale: 0.98 1.02;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.4);
+  }
+  73% {
+    translate: 0 0;
+    scale: 1.08 0.92;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  83% {
+    translate: 0 -7px;
+    scale: 1 1;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.4);
+  }
+  92% {
+    translate: 0 0;
+    scale: 1.03 0.97;
+    animation-timing-function: ease-out;
+  }
+  100% {
+    translate: 0 0;
+    scale: 1 1;
+  }
+}
+
+/* Soft ground shadow under the ball: shrinks and fades as it rises. */
+.chat-attn__shadow {
+  right: var(--cue-edge);
+  bottom: calc(var(--cue-foot) - 9px);
+  width: 56px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(40, 8, 90, 0.38), rgba(40, 8, 90, 0));
+  opacity: 0;
+}
+
+.chat-attn__shadow.is-on {
+  animation: chat-attn-shadow 1400ms linear both;
+}
+
+@keyframes chat-attn-shadow {
+  0% {
+    opacity: 0.6;
+    scale: 1;
+    animation-timing-function: ease-out;
+  }
+  7% {
+    opacity: 0.9;
+    scale: 1.15 1;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  29% {
+    opacity: 0.25;
+    scale: 0.55 0.7;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.4);
+  }
+  46% {
+    opacity: 0.95;
+    scale: 1.2 1;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  61% {
+    opacity: 0.45;
+    scale: 0.75 0.8;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.4);
+  }
+  73% {
+    opacity: 0.85;
+    scale: 1.1 1;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  83% {
+    opacity: 0.6;
+    scale: 0.9 0.9;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.4);
+  }
+  92% {
+    opacity: 0.75;
+    scale: 1.04 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1;
+  }
+}
+
+/* "Need help?" speech bubble to the left of the launcher. */
+.chat-attn__bubble {
+  right: calc(var(--cue-edge) + 56px + 12px);
+  bottom: calc(var(--cue-foot) + 12px);
+  z-index: 45;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0;
+  background: #fff;
+  color: #630ed4;
+  border: 1px solid rgba(99, 14, 212, 0.16);
+  box-shadow: 0 10px 26px rgba(20, 10, 24, 0.16);
+  font-size: 0.86rem;
+  font-weight: 750;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  translate: 10px 0;
+  scale: 0.9;
+  transform-origin: 100% 50%;
+  transition:
+    opacity 240ms ease,
+    translate 320ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    scale 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.chat-attn__bubble::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  width: 9px;
+  height: 9px;
+  margin-top: -4.5px;
+  background: inherit;
+  border-top: 1px solid rgba(99, 14, 212, 0.16);
+  border-right: 1px solid rgba(99, 14, 212, 0.16);
+  rotate: 45deg;
+}
+
+.chat-attn__bubble.is-on {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+  transition-delay: 250ms;
+}
+
+html[data-theme="dark"] .chat-attn__bubble {
+  background: #1d1622;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+
+html[data-theme="dark"] .chat-attn__bubble::after {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+html[data-theme="dark"] .chat-attn__shadow {
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .life-chat__fab.chat-attn--pop,
+  .life-chat__fab.chat-attn--bounce,
+  .chat-attn__shadow.is-on {
+    animation: none;
+  }
+
+  .chat-attn__bubble {
+    translate: none;
+    scale: none;
+    transition: opacity 300ms ease;
+  }
+}

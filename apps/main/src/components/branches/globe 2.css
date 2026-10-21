@@ -1,0 +1,408 @@
+.location-globe {
+  color: #fff;
+  background: #0c0814;
+  border: 1px solid #b99ad833;
+  overflow: hidden;
+  min-width: 0;
+}
+.location-globe__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.location-globe__toolbar label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #d8c6ed;
+}
+.location-globe__toolbar select {
+  background: #241634;
+  color: white;
+  border: 1px solid #a98ac366;
+  padding: 0.65rem;
+  font: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.location-globe__toolbar button {
+  font-size: 0.7rem;
+  color: #d8c6ed;
+  padding: 0.6rem;
+  border: 1px solid #a98ac344;
+}
+.location-globe__scene {
+  position: relative;
+  height: clamp(340px, 42vw, 560px);
+  overflow: hidden;
+}
+.location-globe canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.location-globe__welcome {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 3rem 1.5rem 1.5rem;
+  background: linear-gradient(transparent, #0c0814 90%);
+  pointer-events: none;
+  animation: globe-welcome 0.7s ease both;
+}
+.location-globe__welcome p {
+  color: #ffde59;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.65rem;
+}
+.location-globe__welcome h2 {
+  color: #fff;
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  line-height: 1.15;
+  margin: 0.5rem 0;
+}
+.location-globe__welcome span {
+  font-size: 0.8rem;
+  color: #d8c6ed;
+}
+.location-globe__branches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1.5rem 1.5rem;
+}
+.location-globe__branches button {
+  border: 1px solid #b99ad844;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.7rem;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.location-globe__branches button:hover {
+  background: #49236a;
+  border-color: #ffde59;
+}
+.location-globe :is(button, select):focus-visible {
+  outline: 2px solid #ffde59;
+  outline-offset: 3px;
+}
+@keyframes globe-welcome {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .location-globe__welcome {
+    animation: none;
+  }
+}
+
+.location-globe__welcome--journey {
+  animation: globe-arrival-settle 2.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.location-globe__welcome--journey > p {
+  animation: globe-word-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+.location-globe__word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.location-globe__welcome h2 .location-globe__word {
+  display: inline-block;
+  font: inherit;
+  animation: globe-word-reveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.location-globe__welcome h2 .location-globe__word--intro {
+  animation-delay: 0.12s;
+}
+.location-globe__welcome h2 .location-globe__word--country {
+  color: #ffde59;
+  animation-delay: 0.38s;
+}
+.location-globe__welcome--journey .location-globe__detail {
+  display: block;
+  animation: globe-word-reveal 0.8s ease 1.9s both;
+}
+@keyframes globe-word-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+@keyframes globe-arrival-settle {
+  0%,
+  35% {
+    transform: translateY(-80px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .location-globe__welcome--journey,
+  .location-globe__welcome--journey > p,
+  .location-globe__welcome h2 .location-globe__word,
+  .location-globe__welcome--journey .location-globe__detail {
+    animation: none;
+  }
+}
+
+.location-globe__welcome h2 .location-globe__word-mask {
+  font: inherit;
+  color: inherit;
+}
+
+.location-globe__zoom {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.location-globe__zoom button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: #fff;
+  background: #180f2ce6;
+  border: 1px solid #b99ad866;
+  transition: background 0.2s;
+}
+.location-globe__zoom button:hover:not(:disabled) {
+  background: #49236a;
+}
+.location-globe__zoom button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.location-globe__toolbar {
+  z-index: 5;
+  align-items: center;
+}
+.globe-picker {
+  position: relative;
+  min-width: min(260px, 100%);
+}
+.globe-picker summary {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  color: #fff;
+  border: 1px solid #b99ad84d;
+  background: linear-gradient(120deg, #332048, #1b1228);
+  border-radius: 14px;
+  cursor: pointer;
+  list-style: none;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.globe-picker summary::-webkit-details-marker {
+  display: none;
+}
+.globe-picker summary:hover,
+.globe-picker[open] summary {
+  border-color: #ffde5980;
+  box-shadow: 0 0 0 3px #ffde590a;
+}
+.globe-picker summary:focus-visible {
+  outline: 2px solid #ffde59;
+  outline-offset: 4px;
+}
+.globe-picker__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #ffde59;
+  background: #ffde590c;
+}
+.globe-picker__text {
+  display: grid;
+  gap: 0.2rem;
+  flex: 1;
+}
+.globe-picker__text > span {
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #bda9d1;
+}
+.globe-picker__text strong {
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+.globe-picker__chevron {
+  color: #c5addc;
+  transition: transform 0.25s;
+}
+.globe-picker[open] .globe-picker__chevron {
+  transform: rotate(180deg);
+}
+.globe-picker__menu {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 0;
+  width: max(100%, 290px);
+  max-width: calc(100vw - 4rem);
+  padding: 0.45rem;
+  background: #191025f5;
+  border: 1px solid #b99ad844;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px #0008;
+  backdrop-filter: blur(16px);
+  animation: globe-menu-in 0.2s ease-out both;
+}
+.globe-picker__menu button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 0.7rem;
+  text-align: left;
+  border: 0;
+  border-radius: 10px;
+  color: #f5edff;
+  background: transparent;
+  transition: background 0.15s;
+}
+.globe-picker__menu button:hover,
+.globe-picker__menu button:focus-visible {
+  background: #a980d41a;
+}
+.globe-picker__menu button[aria-checked="true"] {
+  background: #ffde590d;
+  color: #ffde59;
+}
+.globe-picker__menu button > span:first-child {
+  display: grid;
+  gap: 0.2rem;
+  flex: 1;
+}
+.globe-picker__menu strong {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.globe-picker__menu small {
+  color: #aa94bf;
+  font-size: 0.66rem;
+}
+.globe-picker__option-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: #bda9d1;
+}
+.globe-hover {
+  position: absolute;
+  z-index: 3;
+  width: 220px;
+  padding: 1rem 1.1rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2b1a3ef5, #130c20f5);
+  border: 1px solid #d6b0ff45;
+  border-radius: 16px;
+  box-shadow:
+    0 16px 40px #0006,
+    0 0 28px #b478ff12;
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+  animation: globe-menu-in 0.2s ease-out both;
+}
+.globe-hover__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #d3b4ef;
+  font-size: 0.56rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.globe-hover > strong {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 1.15rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+.globe-hover__action {
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid #ffffff10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffde59;
+  font-size: 0.66rem;
+}
+@keyframes globe-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@media (max-width: 440px) {
+  .globe-picker {
+    min-width: 0;
+    flex: 1;
+  }
+  .globe-picker summary {
+    padding: 0.7rem;
+    gap: 0.5rem;
+  }
+  .globe-picker__icon {
+    display: none;
+  }
+  .location-globe__toolbar {
+    gap: 0.65rem;
+    padding: 1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .globe-picker__menu,
+  .globe-hover {
+    animation: none;
+  }
+  .globe-picker__chevron {
+    transition: none;
+  }
+}
+
+.globe-hover {
+  user-select: none;
+}
