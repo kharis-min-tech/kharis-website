@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
-import "@/components/follow-row.css";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SocialStack, type SocialPlatform } from "@/components/SocialStack";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { INSTAGRAM_PROFILE_URL } from "@/lib/instagram";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { TIKTOK_HANDLE, TIKTOK_URL } from "@/lib/social";
+import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
+import { TypedText } from "@/components/TypedText";
 
 /* ---------------- brand icons ---------------- */
 
@@ -56,7 +57,7 @@ function AppIcon({ className = "" }: { className?: string }) {
 
 /* ---------------- data ---------------- */
 
-const SOCIALS = [
+const SOCIALS: SocialPlatform[] = [
   {
     label: "Kharis App",
     handle: "iOS & Android",
@@ -117,45 +118,24 @@ const SOCIALS = [
 /* ---------------- page ---------------- */
 
 function MediaPage() {
-  const followRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const section = followRef.current;
-    if (!section) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      section.classList.add("is-in");
-      return;
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        section.classList.add("is-in");
-        observer.disconnect();
-      },
-      { threshold: 0.22 },
-    );
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
+    <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-clip">
       <SiteHeader />
 
       <header className="kp-media-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
-        <img
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center"
+        <ParallaxHeroImage
           src="https://images.kharis.org/site-images/main/e01fad6602636193/about-outreach-hero.jpg"
-          loading="eager"
-          decoding="async"
+          alt=""
+          className="object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25 pointer-events-none"></div>
         <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
           <p className="font-label-md uppercase tracking-[0.28em] text-white/80 mb-4">
             Follow · Watch · Listen
           </p>
-          <h1 className="font-display-lg uppercase leading-none text-white mb-4">Social Media</h1>
+          <h1 className="font-display-lg uppercase leading-none text-white mb-4">
+            <TypedText text="Social Media" />
+          </h1>
           <p className="font-body-lg text-body-lg text-white max-w-md">
             Everywhere Kharis lives online.
           </p>
@@ -174,56 +154,7 @@ function MediaPage() {
       <main className="bg-surface relative">
         <div className="absolute inset-0 halftone-bg opacity-10 pointer-events-none"></div>
 
-        {/* Follow us */}
-        <section
-          ref={followRef}
-          id="follow"
-          data-reveal="self"
-          className="kp-follow container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28"
-        >
-          <div className="kp-follow__title flex items-center gap-4 mb-stack-md">
-            <h2 className="font-headline-md text-headline-md uppercase">Follow the movement</h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-gutter">
-            {SOCIALS.map(({ label, handle, copy, href, cta, Icon, band, external = true }) => (
-              <div key={label} className="kp-follow__slot h-full">
-                <Link
-                  href={href}
-                  {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
-                  className="kp-platform-card group bg-surface-container border-2 border-black rounded-none neo-shadow flex flex-col h-full"
-                >
-                  <div className={`${band} border-b-2 border-black p-6 flex items-center gap-4`}>
-                    <Icon className="w-10 h-10 shrink-0 transition-transform duration-300 group-hover:scale-110" />
-                    <div>
-                      <h3 className="font-headline-md text-2xl uppercase leading-none">{label}</h3>
-                      <p className="font-label-sm opacity-80">{handle}</p>
-                    </div>
-                  </div>
-                  <div className="p-6 flex-1 flex flex-col">
-                    <p className="font-body-md text-on-surface-variant mb-6">{copy}</p>
-                    <span className="mt-auto font-label-md text-primary flex items-center gap-2">
-                      {cta}
-                      <span className="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1">
-                        arrow_forward
-                      </span>
-                    </span>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-
-          <div className="kp-follow__slot mt-gutter" style={{ animationDelay: "0.46s" }}>
-            <div className="kp-tag-banner bg-primary text-on-primary border-2 border-black neo-shadow p-6 flex flex-col justify-center">
-              <h3 className="font-headline-md text-2xl uppercase mb-2">Tag us</h3>
-              <p className="font-body-md text-primary-fixed mb-4">
-                Use <strong>#KharisPhase2</strong> and we might reshare your moment.
-              </p>
-              <span className="material-symbols-outlined text-4xl">campaign</span>
-            </div>
-          </div>
-        </section>
+        <SocialStack platforms={SOCIALS} />
 
         <NewsletterSignup
           title="Stay in the loop"

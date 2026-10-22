@@ -1,0 +1,38 @@
+.kp-typed {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+
+.kp-typed__sizer {
+  visibility: hidden;
+}
+
+.kp-typed__live {
+  position: absolute;
+  inset: 0;
+}
+
+.kp-typed__caret {
+  display: inline-block;
+  width: 0.07em;
+  height: 0.78em;
+  margin-left: 0.08em;
+  vertical-align: -0.04em;
+  background: #f7be1d;
+  box-shadow: 2px 2px 0 #151218;
+  animation: kp-typed-caret 0.85s steps(1) infinite;
+}
+
+@keyframes kp-typed-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-typed__caret {
+    animation: none;
+  }
+}

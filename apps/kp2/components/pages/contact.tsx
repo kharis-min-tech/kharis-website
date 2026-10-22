@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { ContactLetter } from "@/components/ContactLetter";
+import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
 import { TIKTOK_URL } from "@/lib/social";
 import { type Branch } from "@/lib/branches";
 
@@ -14,12 +15,10 @@ function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; bran
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container">
       <SiteHeader />
       <header className="kp-media-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
-        <img
-          alt="Three young men in suits smiling together at a Kharis service"
-          className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+        <ParallaxHeroImage
           src="/kp2/assets/young-men-in-congregation.jpg"
-          loading="eager"
-          decoding="async"
+          alt="Three young men in suits smiling together at a Kharis service"
+          className="object-[center_30%]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25 pointer-events-none"></div>
         <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">

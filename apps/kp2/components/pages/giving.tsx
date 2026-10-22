@@ -8,6 +8,8 @@ import { BANK, ONLINE_GIVE_URL, SMS_GIVE } from "@/lib/giving";
 import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import type { GivingTestimony } from "@/lib/testimonies";
 import { TestimoniesBand } from "@/components/TestimoniesBand";
+import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
+import { TypedText } from "@/components/TypedText";
 
 function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
   return (
@@ -15,16 +17,11 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
       <SiteHeader />
       <main className="pt-[74px]">
         <section className="relative box-border h-[calc(100svh-74px)] max-h-[calc(100svh-74px)] flex items-center justify-center bg-black overflow-hidden px-margin-mobile md:px-margin-desktop py-8">
-          <div className="absolute inset-0 opacity-40">
-            <div
-              className="w-full h-full bg-cover bg-center"
-              data-alt="Kharis vision campaign"
-              style={{
-                backgroundImage:
-                  "url('https://images.kharis.org/site-images/kp2/91479ba234a71277/vision-campaign.jpg')",
-              }}
-            ></div>
-          </div>
+          <ParallaxHeroImage
+            src="https://images.kharis.org/site-images/kp2/91479ba234a71277/vision-campaign.jpg"
+            alt="Kharis vision campaign"
+            className="object-center opacity-40"
+          />
 
           <div className="absolute inset-0 halftone-pattern text-primary/20 pointer-events-none"></div>
           <div className="relative z-10 text-center max-w-4xl">
@@ -32,8 +29,9 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               Passionate for God and His Word
             </div>
             <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg text-white mb-4 md:mb-8 tracking-tighter uppercase">
-              Your Generosity <br />
-              <span className="text-secondary-fixed">Powers the Mission</span>
+              <TypedText text="Your Generosity" />
+              <br />
+              <TypedText text="Powers the Mission" delay={1200} className="text-secondary-fixed" />
             </h1>
             <p className="font-body-lg text-body-lg text-white/80 mb-10 max-w-2xl mx-auto">
               Giving tithes and offerings are biblical principles and part of our worship. In most
@@ -58,79 +56,87 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
           </div>
         </section>
 
-        <section className="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-white">
-          <div className="mb-stack-lg max-w-3xl">
-            <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">
-              Why We Give
-            </h2>
-            <div className="h-2 w-32 bg-primary brutalist-border mb-4"></div>
-            <blockquote className="font-body-lg text-body-lg text-on-surface italic leading-relaxed mb-3">
-              &ldquo;Whoever sows sparingly will also reap sparingly, and whoever sows generously
-              will also reap generously.&rdquo;
-            </blockquote>
-            <p className="font-label-md uppercase tracking-widest text-primary">
-              2 Corinthians 9:6
-            </p>
-            <p className="font-body-lg text-body-lg text-on-surface-variant mt-4">
-              Giving is worship. We sow because God gave first — and every seed fuels the mission of
-              Kharis.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-            <div className="bg-surface-container-low brutalist-border p-8 neo-shadow relative overflow-hidden group">
-              <div className="absolute top-0 right-0 halftone-pattern w-32 h-32 text-primary opacity-20"></div>
-              <span className="material-symbols-outlined text-primary text-5xl mb-4">
-                volunteer_activism
-              </span>
-              <h3 className="font-headline-md text-headline-md uppercase mb-4">
-                Worship &amp; Obedience
-              </h3>
-              <p className="text-on-surface-variant font-body-md">
-                We give because God gave first. Our offerings are a response to His grace and a step
-                of faith.
+        <section className="bg-background py-stack-lg px-margin-mobile md:px-margin-desktop">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-stack-lg max-w-3xl">
+              <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">
+                Why We Give
+              </h2>
+              <div className="h-2 w-32 bg-primary brutalist-border mb-4"></div>
+              <blockquote className="font-body-lg text-body-lg text-on-surface italic leading-relaxed mb-3">
+                &ldquo;Whoever sows sparingly will also reap sparingly, and whoever sows generously
+                will also reap generously.&rdquo;
+              </blockquote>
+              <p className="font-label-md uppercase tracking-widest text-primary">
+                2 Corinthians 9:6
+              </p>
+              <p className="font-body-lg text-body-lg text-on-surface-variant mt-4">
+                Giving is worship. We sow because God gave first — and every seed fuels the mission
+                of Kharis.
               </p>
             </div>
-
-            <div className="bg-secondary-container brutalist-border p-8 neo-shadow relative group">
-              <span className="material-symbols-outlined text-on-secondary-container text-5xl mb-4">
-                favorite
-              </span>
-              <h3 className="font-headline-md text-headline-md uppercase mb-4">Care for People</h3>
-              <p className="text-on-secondary-container font-body-md">
-                Generosity meets real needs in our community — from food support to mentorship and
-                crisis relief.
-              </p>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/20 rounded-full blur-2xl"></div>
-            </div>
-
-            <div className="bg-white brutalist-border p-8 neo-shadow">
-              <span className="material-symbols-outlined text-primary text-5xl mb-4">groups_2</span>
-              <h3 className="font-headline-md text-headline-md uppercase mb-4">Build Community</h3>
-              <p className="text-on-surface-variant font-body-md">
-                Every gift helps create spaces where people can belong, grow, and discover their
-                purpose.
-              </p>
-            </div>
-
-            <div className="bg-surface-container-highest brutalist-border p-8 neo-shadow flex flex-col justify-between">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+              <div className="bg-surface-container-low brutalist-border p-8 neo-shadow relative overflow-hidden group">
+                <div className="absolute top-0 right-0 halftone-pattern w-32 h-32 text-primary opacity-20"></div>
                 <span className="material-symbols-outlined text-primary text-5xl mb-4">
-                  auto_awesome
+                  volunteer_activism
                 </span>
                 <h3 className="font-headline-md text-headline-md uppercase mb-4">
-                  Advance the Mission
+                  Worship &amp; Obedience
                 </h3>
-                <p className="text-on-surface-variant font-body-md mb-6">
-                  From local outreach to media and new branches, giving sends the message of Kharis
-                  further.
+                <p className="text-on-surface-variant font-body-md">
+                  We give because God gave first. Our offerings are a response to His grace and a
+                  step of faith.
                 </p>
               </div>
-              <Link
-                href="/mission"
-                className="text-primary font-label-md uppercase flex items-center gap-2 group-hover:translate-x-2 transition-transform"
-              >
-                Learn more <span className="material-symbols-outlined">arrow_forward</span>
-              </Link>
+
+              <div className="bg-secondary-container brutalist-border p-8 neo-shadow relative group">
+                <span className="material-symbols-outlined text-on-secondary-container text-5xl mb-4">
+                  favorite
+                </span>
+                <h3 className="font-headline-md text-headline-md uppercase mb-4">
+                  Care for People
+                </h3>
+                <p className="text-on-secondary-container font-body-md">
+                  Generosity meets real needs in our community — from food support to mentorship and
+                  crisis relief.
+                </p>
+                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/20 rounded-full blur-2xl"></div>
+              </div>
+
+              <div className="bg-white brutalist-border p-8 neo-shadow">
+                <span className="material-symbols-outlined text-primary text-5xl mb-4">
+                  groups_2
+                </span>
+                <h3 className="font-headline-md text-headline-md uppercase mb-4">
+                  Build Community
+                </h3>
+                <p className="text-on-surface-variant font-body-md">
+                  Every gift helps create spaces where people can belong, grow, and discover their
+                  purpose.
+                </p>
+              </div>
+
+              <div className="bg-surface-container-highest brutalist-border p-8 neo-shadow flex flex-col justify-between">
+                <div>
+                  <span className="material-symbols-outlined text-primary text-5xl mb-4">
+                    auto_awesome
+                  </span>
+                  <h3 className="font-headline-md text-headline-md uppercase mb-4">
+                    Advance the Mission
+                  </h3>
+                  <p className="text-on-surface-variant font-body-md mb-6">
+                    From local outreach to media and new branches, giving sends the message of
+                    Kharis further.
+                  </p>
+                </div>
+                <Link
+                  href="/mission"
+                  className="text-primary font-label-md uppercase flex items-center gap-2 group-hover:translate-x-2 transition-transform"
+                >
+                  Learn more <span className="material-symbols-outlined">arrow_forward</span>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
