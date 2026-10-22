@@ -1,8 +1,10 @@
 import { expect, it } from "vitest";
 import { getImgProps } from "next/dist/shared/lib/get-img-props";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
+import { imageConfigDefault, prepareImageConfig } from "next/dist/shared/lib/image-config";
 import defaultLoader from "next/dist/shared/lib/image-loader";
 import nextConfig from "../../next.config";
+
+const imgConf = prepareImageConfig({ ...imageConfigDefault, ...nextConfig.images });
 
 it("accepts the branch carousel's quality for Cloudflare pictures", () => {
   const { props } = getImgProps(
@@ -13,7 +15,7 @@ it("accepts the branch carousel's quality for Cloudflare pictures", () => {
       height: 480,
       quality: 90,
     },
-    { defaultLoader, imgConf: { ...imageConfigDefault, ...nextConfig.images } },
+    { defaultLoader, imgConf },
   );
   expect(props.src).toContain("q=90");
 });
@@ -28,7 +30,7 @@ it("delivers full-width high-resolution candidates at the site's default photo q
   });
   const { props } = getImgProps(element.props, {
     defaultLoader,
-    imgConf: { ...imageConfigDefault, ...nextConfig.images },
+    imgConf,
   });
   expect(props.src).toContain("q=95");
   expect(props.srcSet).toContain("3840w");
