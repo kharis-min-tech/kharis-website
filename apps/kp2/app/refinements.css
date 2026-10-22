@@ -846,3 +846,22 @@ html[data-kp-intro="seen"] .kp-intro {
     color: #25005a !important;
   }
 }
+
+/* Each dividing line casts a soft shadow onto the sheet underneath. */
+.site-header::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  height: 14px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(21 18 24 / 20%), transparent);
+}
+
+:is(main, .kp-branch-page) > :is(section, header) + :is(section, header),
+:is(section, header) + main > :first-child,
+footer {
+  box-shadow: inset 0 12px 16px -8px rgb(21 18 24 / 28%);
+}
