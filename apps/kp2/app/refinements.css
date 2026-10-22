@@ -239,6 +239,22 @@ main .kp-tag-banner,
 .kp-life-hero .halftone-pattern {
   opacity: 0.1;
 }
+/* Hard offset reads as the split between upcoming events and Stay Connected.
+   Dark mode uses the light ink, because a black slab disappears on the dark page. */
+.kp-life-events {
+  box-shadow: 0 -8px 0 0 #151218;
+}
+.dark .kp-life-events {
+  box-shadow: 0 -8px 0 0 var(--on-surface);
+}
+@media (min-width: 768px) {
+  .kp-life-events {
+    box-shadow: 8px 0 0 0 #151218;
+  }
+  .dark .kp-life-events {
+    box-shadow: 8px 0 0 0 var(--on-surface);
+  }
+}
 .kp-panel-dove {
   width: 64px;
   height: 62px;

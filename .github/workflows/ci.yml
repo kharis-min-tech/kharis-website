@@ -71,8 +71,8 @@ jobs:
       - name: Unit tests
         run: npm test
       # Blocks only on CRITICAL vulnerabilities in production deps. High/moderate
-      # and dev-only issues come through weekly Dependabot PRs instead. Tighten
-      # to --audit-level=high once the current Next.js advisories are bumped.
+      # and dev-only issues come through weekly Dependabot PRs instead. Next is
+      # pinned to 16.4.2, which clears the current critical advisories.
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=critical
 

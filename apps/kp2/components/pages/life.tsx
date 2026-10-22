@@ -89,66 +89,58 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
         <section className="py-stack-lg px-margin-desktop max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
             <div className="md:col-span-5 order-2 md:order-1">
-              <div className="relative z-10">
-                <ScrollDrift
-                  className="pointer-events-none absolute -top-14 -left-12 -z-10"
-                  travel={130}
-                >
-                  <div className="h-36 w-36 rounded-full border-4 border-black bg-secondary-container halftone-pattern" />
-                </ScrollDrift>
-                <div className="bg-white border-4 border-black p-8 neo-shadow relative z-10 rotate-1">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-primary flex items-center justify-center border-2 border-black">
-                      <span
-                        className="material-symbols-outlined text-white"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        event
-                      </span>
-                    </div>
-                    <h3 className="font-headline-md text-headline-md uppercase">Upcoming Events</h3>
+              <div className="kp-life-events p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-primary flex items-center justify-center border-2 border-black">
+                    <span
+                      className="material-symbols-outlined text-white"
+                      style={{ fontVariationSettings: "'FILL' 1" }}
+                    >
+                      event
+                    </span>
                   </div>
-                  <ul className="space-y-6">
-                    {upcoming.length === 0 ? (
-                      <li className="font-body-md text-on-surface-variant">
-                        No upcoming events just yet. Check the events page for the latest.
-                      </li>
-                    ) : (
-                      upcoming.map((event, i) => (
-                        <li key={event.slug} className="flex gap-4 items-start group">
-                          <div className="font-label-md text-label-md text-primary w-14 pt-1 uppercase shrink-0">
-                            {socialDate(event.starts)}
-                          </div>
-                          <div
-                            className={`flex-1 ${i > 0 ? "border-t-2 border-outline-variant pt-4" : ""}`}
-                          >
-                            <h4 className="font-body-lg text-body-lg font-bold group-hover:text-primary transition-colors">
-                              <Link href="/events">{event.title}</Link>
-                            </h4>
-                            <p className="font-body-md text-body-md text-on-surface-variant">
-                              {socialBlurb(event.blurb)}
-                            </p>
-                            <PlanVisitButton
-                              item={eventToCalendarItem(event)}
-                              className="mt-2 inline-flex items-center gap-1 font-label-md text-[11px] uppercase tracking-widest text-primary"
-                            >
-                              <span className="material-symbols-outlined text-base">
-                                calendar_add_on
-                              </span>
-                              Remind me
-                            </PlanVisitButton>
-                          </div>
-                        </li>
-                      ))
-                    )}
-                  </ul>
-                  <Link
-                    href="/events"
-                    className="kp-depth-button kp-button-purple block w-full mt-10 bg-primary text-white py-4 border-4 border-black neo-shadow hover-press font-headline-md text-headline-md uppercase skew-x-2 text-center"
-                  >
-                    See More
-                  </Link>
+                  <h3 className="font-headline-md text-headline-md uppercase">Upcoming Events</h3>
                 </div>
+                <ul className="space-y-6">
+                  {upcoming.length === 0 ? (
+                    <li className="font-body-md text-on-surface-variant">
+                      No upcoming events just yet. Check the events page for the latest.
+                    </li>
+                  ) : (
+                    upcoming.map((event, i) => (
+                      <li key={event.slug} className="flex gap-4 items-start group">
+                        <div className="font-label-md text-label-md text-primary w-14 pt-1 uppercase shrink-0">
+                          {socialDate(event.starts)}
+                        </div>
+                        <div
+                          className={`flex-1 ${i > 0 ? "border-t-2 border-outline-variant pt-4" : ""}`}
+                        >
+                          <h4 className="font-body-lg text-body-lg font-bold group-hover:text-primary transition-colors">
+                            <Link href="/events">{event.title}</Link>
+                          </h4>
+                          <p className="font-body-md text-body-md text-on-surface-variant">
+                            {socialBlurb(event.blurb)}
+                          </p>
+                          <PlanVisitButton
+                            item={eventToCalendarItem(event)}
+                            className="mt-2 inline-flex items-center gap-1 font-label-md text-[11px] uppercase tracking-widest text-primary"
+                          >
+                            <span className="material-symbols-outlined text-base">
+                              calendar_add_on
+                            </span>
+                            Remind me
+                          </PlanVisitButton>
+                        </div>
+                      </li>
+                    ))
+                  )}
+                </ul>
+                <Link
+                  href="/events"
+                  className="kp-depth-button kp-button-purple block w-full mt-10 bg-primary text-white py-4 border-4 border-black neo-shadow hover-press font-headline-md text-headline-md uppercase skew-x-2 text-center"
+                >
+                  See More
+                </Link>
               </div>
             </div>
             <div className="md:col-span-7 order-1 md:order-2">
