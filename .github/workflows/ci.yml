@@ -6,6 +6,11 @@ name: ci
 # jobs are path-filtered (a skipped job does not fail the aggregator). This is
 # the fix for the "required check stays pending" trap noted in the deploy
 # workflows.
+#
+# Next 16 runs `next build` on Turbopack. Every app job below passes `--webpack`
+# instead. That is the engine OpenNext uses for Cloudflare, and a plain
+# `next build` fails when an app has a webpack() hook (KP2) or when Turbopack
+# cannot resolve next/font/google in CI. Do not drop the flag.
 on:
   pull_request:
   push:
@@ -91,8 +96,9 @@ jobs:
         run: npx eslint
       - name: Typecheck
         run: npx tsc --noEmit
+      # Next 16 defaults `next build` to Turbopack. Ship and verify with webpack.
       - name: Build
-        run: npx next build
+        run: npx next build --webpack
 
   kp2:
     needs: changes
