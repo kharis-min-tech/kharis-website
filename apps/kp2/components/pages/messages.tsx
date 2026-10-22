@@ -79,7 +79,10 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
         <MessageBrowser messages={messages} />
         <MessagesAppStrip />
 
-        <section className="kp-listen bg-surface-container border-y-4 border-black" data-reveal="self">
+        <section
+          className="kp-listen bg-surface-container border-y-4 border-black"
+          data-reveal="self"
+        >
           <div className="max-w-7xl mx-auto px-margin-desktop py-16">
             <div className="kp-listen__intro flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
