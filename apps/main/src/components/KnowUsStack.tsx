@@ -114,9 +114,7 @@ export function KnowUsStack() {
                     <span className="know-card__safe">
                       <span className="know-card__copy">
                         <span className="know-card__name">{card.title}</span>
-                        {card.blurb ? (
-                          <span className="know-card__blurb">{card.blurb}</span>
-                        ) : null}
+                        {card.blurb ? <span className="know-card__blurb">{card.blurb}</span> : null}
                         <span className="know-card__go">
                           Explore
                           <svg
