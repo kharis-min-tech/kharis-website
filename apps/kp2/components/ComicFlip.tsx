@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useRef } from "react";
 import "./comic-flip.css";
 
 const LTBS =
@@ -10,69 +7,10 @@ const DAVID =
 const AWO =
   "https://images.kharis.org/site-images/main/8daac0c4ad9423bc/events/singles-ball/pastor-awo.jpg";
 
-const HEADER = 74;
-
 export function ComicFlip() {
-  const trackRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const sheetRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    const stage = stageRef.current;
-    const sheet = sheetRef.current;
-    if (!track || !stage || !sheet) return;
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduce.matches) {
-      stage.dataset.pin = "top";
-      return;
-    }
-
-    let frame = 0;
-    const update = () => {
-      const stageH = window.innerHeight - HEADER;
-      const rect = track.getBoundingClientRect();
-      let progress = 0;
-      if (rect.top > HEADER) {
-        stage.dataset.pin = "top";
-      } else if (rect.bottom < HEADER + stageH) {
-        stage.dataset.pin = "bottom";
-        progress = 1;
-      } else {
-        stage.dataset.pin = "fixed";
-        const total = Math.max(1, rect.height - stageH);
-        progress = Math.min(1, Math.max(0, (HEADER - rect.top) / total));
-      }
-      const angle = progress * 180;
-      const shade = String(Math.sin((angle * Math.PI) / 180) * 0.7);
-      sheet.style.transform = `rotateY(${-angle}deg)`;
-      sheet.style.setProperty("--shade", shade);
-      stage.style.setProperty("--shade", shade);
-    };
-
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
   return (
-    <section
-      ref={trackRef}
-      className="kp-flip"
-      aria-label="Let the Bible Speak and the Singles Ball"
-    >
-      <div ref={stageRef} className="kp-flip__stage" data-pin="top">
+    <section className="kp-flip" aria-label="Let the Bible Speak and the Singles Ball">
+      <div className="kp-flip__stage">
         <span className="kp-flip__spine" aria-hidden="true" />
         <div className="kp-flip__book">
           <article className="kp-flip__face kp-flip__face--under">
@@ -102,7 +40,7 @@ export function ComicFlip() {
             </div>
           </article>
 
-          <div ref={sheetRef} className="kp-flip__sheet">
+          <div className="kp-flip__sheet">
             <article className="kp-flip__face">
               <div className="kp-flip__photo">
                 <img
@@ -115,12 +53,6 @@ export function ComicFlip() {
               <span className="kp-flip__shade" aria-hidden="true" />
               <span className="kp-flip__num" aria-hidden="true">
                 01
-              </span>
-              <span className="kp-flip__hint">
-                Scroll to turn
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  arrow_downward
-                </span>
               </span>
               <div className="kp-flip__copy">
                 <p className="kp-flip__eyebrow">Past event · Coming back soon</p>

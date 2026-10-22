@@ -78,9 +78,19 @@ export function MutedHeroVideo({
   const wrapRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const [live, setLive] = useState(false);
+  // Phones stay on the still. The iframe is wide, heavy, and what knocks the copy out of line.
+  const [posterOnly, setPosterOnly] = useState(true);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const query = window.matchMedia("(max-width: 767px), (prefers-reduced-motion: reduce)");
+    const update = () => setPosterOnly(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (posterOnly) return;
 
     const wrap = wrapRef.current;
     if (!wrap) return;
@@ -146,27 +156,29 @@ export function MutedHeroVideo({
       playerRef.current = null;
       mount.remove();
     };
-  }, [id, title]);
+  }, [id, title, posterOnly]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-on-background">
+    <div className="absolute inset-0 overflow-hidden bg-on-background max-md:relative max-md:inset-auto max-md:h-auto max-md:min-h-0 max-md:flex-1">
       <img
         src={thumbnail}
         alt=""
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+        className={`absolute inset-0 h-full w-full object-cover object-[center_30%] transition-opacity duration-700 ${
           live ? "opacity-0" : "opacity-100"
         }`}
       />
-      <div
-        className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
-          live ? "opacity-100" : "opacity-0"
-        }`}
-        aria-hidden={!live}
-      >
-        <div className="absolute left-1/2 top-1/2 aspect-video h-[56.25vw] w-[177.78%] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 [&>iframe]:h-full [&>iframe]:w-full">
-          <div ref={wrapRef} className="h-full w-full [&>iframe]:h-full [&>iframe]:w-full" />
+      {posterOnly ? null : (
+        <div
+          className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
+            live ? "opacity-100" : "opacity-0"
+          }`}
+          aria-hidden={!live}
+        >
+          <div className="absolute left-1/2 top-1/2 aspect-video h-[56.25vw] w-[177.78%] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 [&>iframe]:h-full [&>iframe]:w-full">
+            <div ref={wrapRef} className="h-full w-full [&>iframe]:h-full [&>iframe]:w-full" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

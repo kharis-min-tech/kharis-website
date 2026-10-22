@@ -292,6 +292,7 @@
   body {
     max-width: 100%;
     overflow-x: hidden;
+    overflow-x: clip;
   }
   body {
     background-color: var(--background);
@@ -1478,11 +1479,13 @@ a:hover > .material-symbols-outlined {
   }
 }
 
-/* Never let a decorative sticker or shadow create sideways scroll. */
+/* Never let a decorative sticker or shadow create sideways scroll. `clip` (unlike `hidden`)
+   doesn't turn body into a scroll container, which would stop position: sticky working. */
 html,
 body {
   max-width: 100%;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Comfortable tap targets on touch devices. */

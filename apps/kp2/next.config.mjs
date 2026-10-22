@@ -3,6 +3,14 @@ const nextConfig = {
   // KP2 is served at kharis.org/kp2. Next derives asset and route URLs
   // from this, so /kp2/_next/* resolves without a separate assetPrefix.
   basePath: "/kp2",
+  // Next 16 builds with Turbopack by default. The webpack hook is only a
+  // local dev escape hatch, so an empty Turbopack config keeps that build valid.
+  turbopack: {},
+  webpack: (config, { dev }) => {
+    // The filesystem cache fills a nearly full disk and the dev server then 500s.
+    if (dev && process.env.KP2_NO_WEBPACK_CACHE === "1") config.cache = false;
+    return config;
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 7,

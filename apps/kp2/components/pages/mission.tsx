@@ -8,6 +8,8 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { AnimatedHeight } from "@/components/AnimatedHeight";
 import { FaithAccordion } from "@/components/FaithAccordion";
 import "@/components/leadership.css";
+import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
+import { TypedText } from "@/components/TypedText";
 import "@/components/mission-pillars.css";
 
 const ABOUT_HERO =
@@ -493,21 +495,19 @@ function LeadershipContent() {
 
 function AboutPage() {
   return (
-    <div className="kp-mission-page bg-background text-on-surface font-body-md overflow-x-hidden">
+    <div className="kp-mission-page bg-background text-on-surface font-body-md overflow-x-clip">
       <SiteHeader />
 
       <section className="kp-mission-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
-        <img
-          src={ABOUT_HERO}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-[center_40%]"
-        />
+        <ParallaxHeroImage src={ABOUT_HERO} alt="" className="object-[center_40%]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25"></div>
         <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
           <p className="font-label-md uppercase tracking-[0.28em] text-[#f7be1d] mb-4">
             Kharis Phase 2
           </p>
-          <h1 className="font-display-lg uppercase leading-none text-white mb-4">Kharis</h1>
+          <h1 className="font-display-lg uppercase leading-none text-white mb-4">
+            <TypedText text="Kharis" />
+          </h1>
           <p className="font-body-lg text-body-lg text-white max-w-md">
             Changing the world with a touch of His grace.
           </p>
