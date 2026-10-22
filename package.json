@@ -25,13 +25,11 @@
     "node": ">=22"
   },
   "comments": {
-    "overrides.next": "Pin Next to 16.4.2 across the whole tree. 16.3.8 was held back because Next 16.4.0 split preview props into preview-props.json and OpenNext crashed every dynamic route (opennextjs-cloudflare#1355). @opennextjs/cloudflare 1.20.13 includes that fix and peers with next >=16.4.1. 16.4.2 is the release that clears the critical Next.js advisories. @node-minify/core still pins glob 10.3.3 (GHSA-5j98-mcp5-4vw2); the nested override moves that copy to 10.5.0."
+    "overrides.next": "Pin Next to 16.4.2 across the whole tree. 16.3.8 was held back because Next 16.4.0 split preview props into preview-props.json and OpenNext crashed every dynamic route (opennextjs-cloudflare#1355). @opennextjs/cloudflare 1.20.13 includes that fix and peers with next >=16.4.1. 16.4.2 is the release that clears the critical Next.js advisories. glob@10.3.3 is the copy @node-minify/core pins (GHSA-5j98-mcp5-4vw2); that request is overridden to 10.5.0 without moving the glob 13 used by OpenNext."
   },
   "overrides": {
     "next": "16.4.2",
-    "@node-minify/core": {
-      "glob": "10.5.0"
-    }
+    "glob@10.3.3": "10.5.0"
   },
   "devDependencies": {
     "eslint-config-prettier": "^10.1.8",
