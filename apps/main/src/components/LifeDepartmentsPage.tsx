@@ -64,7 +64,7 @@ function DepartmentPreviewButton({ title, src }: { title: string; src: string })
             <X aria-hidden="true" />
           </button>
           <h2 id={titleId}>{title} preview</h2>
-          <video ref={videoRef} controls autoPlay playsInline preload="none">
+          <video ref={videoRef} controls playsInline preload="none">
             <source src={src} type="video/mp4" />
           </video>
         </div>
