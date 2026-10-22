@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatedHeight } from "@/components/AnimatedHeight";
+import { TypedText } from "@/components/TypedText";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -11,7 +12,7 @@ import {
   QUIZ_BRANCHES,
   QUIZ_LANGUAGES,
   QUIZ_PRIVACY_CONTENT,
-  QUIZ_SLIDESHOW_IMAGES,
+  QUIZ_HERO_IMAGES,
   QUIZ_TRANSLATIONS,
   UPCOMING_LANGUAGES,
   type QuizOption,
@@ -21,7 +22,6 @@ import {
 export default function DepartmentQuizPage() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
   const [screen, setScreen] = useState<"start" | "quiz" | "result">("start");
-  const [activeSlide, setActiveSlide] = useState(0);
 
   // User input state
   const [branch, setBranch] = useState("");
@@ -42,21 +42,20 @@ export default function DepartmentQuizPage() {
 
   // Privacy modal state
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [heroSlide, setHeroSlide] = useState(0);
 
   const quizCardRef = useRef<HTMLDivElement | null>(null);
 
-  const t = useMemo(() => QUIZ_TRANSLATIONS[lang] ?? QUIZ_TRANSLATIONS.en, [lang]);
-  const privacyData = useMemo(() => QUIZ_PRIVACY_CONTENT[lang] ?? QUIZ_PRIVACY_CONTENT.en, [lang]);
-
-  // Background slideshow rotation (respects prefers-reduced-motion)
   useEffect(() => {
-    if (typeof window === "undefined" || QUIZ_SLIDESHOW_IMAGES.length <= 1) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const timer = window.setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % QUIZ_SLIDESHOW_IMAGES.length);
-    }, 5000);
+      setHeroSlide((current) => (current + 1) % QUIZ_HERO_IMAGES.length);
+    }, 4500);
     return () => window.clearInterval(timer);
   }, []);
+
+  const t = useMemo(() => QUIZ_TRANSLATIONS[lang] ?? QUIZ_TRANSLATIONS.en, [lang]);
+  const privacyData = useMemo(() => QUIZ_PRIVACY_CONTENT[lang] ?? QUIZ_PRIVACY_CONTENT.en, [lang]);
 
   // Validation
   const validateStart = useCallback(() => {
@@ -225,87 +224,63 @@ export default function DepartmentQuizPage() {
     <div className="min-h-screen bg-background font-body-md text-on-background selection:bg-secondary-container">
       <SiteHeader />
 
-      <main className="pt-20">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden border-b-4 border-primary bg-on-background px-margin-mobile py-12 text-background md:px-margin-desktop md:py-20">
-          {/* Cross-fading department photo slideshow */}
-          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-            {QUIZ_SLIDESHOW_IMAGES.map((src, idx) => (
-              <div
-                key={src}
-                className={`absolute inset-0 bg-cover bg-center grayscale transition-opacity duration-1000 ease-in-out ${
-                  idx === activeSlide ? "opacity-25" : "opacity-0"
-                }`}
-                style={{ backgroundImage: `url(${src})` }}
-              />
-            ))}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-primary/30" />
-          </div>
-          <div className="halftone-bg pointer-events-none absolute inset-0 opacity-25" />
-          <div className="absolute top-0 right-0 h-full w-2/3 bg-gradient-to-l from-primary/25 to-transparent pointer-events-none" />
-
-          <div className="relative z-10 mx-auto max-w-5xl kp-content-enter">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <span className="inline-flex items-center gap-2 border-heavy bg-secondary-container px-4 py-1.5 font-label-md uppercase tracking-widest text-on-secondary-container">
-                <span className="material-symbols-outlined text-base" aria-hidden="true">
-                  psychology_alt
-                </span>
-                {t.badge}
+      <header className="kp-quiz-hero relative box-border w-full border-b-4 border-primary bg-[#151218] text-white">
+        <div className="absolute inset-0 overflow-hidden">
+          {QUIZ_HERO_IMAGES.map((image, index) => (
+            <img
+              key={image.src}
+              src={image.src}
+              alt={index === heroSlide ? image.alt : ""}
+              className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-1000 ${
+                index === heroSlide ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ))}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#151218]/88 via-[#151218]/40 to-[#151218]/20" />
+        </div>
+        <div className="relative z-20 mx-auto flex w-full max-w-5xl flex-col px-margin-mobile md:px-margin-desktop">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            <span className="inline-flex items-center gap-2 border-2 border-black bg-[#f7be1d] px-4 py-1.5 font-label-md uppercase tracking-widest text-[#151218]">
+              <span className="material-symbols-outlined text-base" aria-hidden="true">
+                psychology_alt
               </span>
-
-              {/* Language Selector */}
-              <div className="flex items-center gap-2">
-                <label htmlFor="language-select" className="sr-only">
-                  Language
-                </label>
-                <div className="relative inline-block">
-                  <select
-                    id="language-select"
-                    value={lang}
-                    onChange={(e) => setLang(e.target.value as SupportedLanguage)}
-                    className="min-h-11 appearance-none rounded-none border-2 border-black bg-surface px-3.5 py-2 pr-9 font-label-md text-xs font-bold uppercase tracking-wide text-on-surface shadow-[3px_3px_0_0_#000] transition-all hover:bg-surface-variant focus:outline-none cursor-pointer"
-                  >
-                    {QUIZ_LANGUAGES.map((item) => (
-                      <option key={item.code} value={item.code}>
-                        {item.flag} {item.label}
-                      </option>
-                    ))}
-                    <option disabled>────────────</option>
-                    {UPCOMING_LANGUAGES.map((item) => (
-                      <option key={item.code} value={item.code} disabled>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                  <span className="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-sm text-on-surface">
-                    arrow_drop_down
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <h1
-              className="font-display-lg leading-none uppercase text-primary-fixed-dim"
-              style={{ fontSize: "clamp(2.2rem, 1.4rem + 4.5vw, 4rem)" }}
-            >
-              {t.title}
-            </h1>
-
-            <p
-              className="mt-4 max-w-2xl font-headline-md text-surface-container-low"
-              style={{ fontSize: "clamp(1rem, 0.9rem + 0.5vw, 1.35rem)" }}
-            >
-              {t.subtitle}
-            </p>
-
-            <div className="mt-8 flex gap-3">
-              <div className="h-2 w-12 bg-secondary-container" />
-              <div className="h-2 w-12 bg-primary" />
-              <div className="h-2 w-12 bg-surface" />
+              {t.badge}
+            </span>
+            <div className="relative inline-block">
+              <label htmlFor="language-select" className="sr-only">
+                Language
+              </label>
+              <select
+                id="language-select"
+                value={lang}
+                onChange={(e) => setLang(e.target.value as SupportedLanguage)}
+                className="min-h-11 cursor-pointer appearance-none border-2 border-black bg-white px-3.5 py-2 pr-9 font-label-md text-xs font-bold uppercase tracking-wide text-[#151218] shadow-[3px_3px_0_0_#000] focus:outline-none"
+              >
+                {QUIZ_LANGUAGES.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.flag} {item.label}
+                  </option>
+                ))}
+                <option disabled>────────────</option>
+                {UPCOMING_LANGUAGES.map((item) => (
+                  <option key={item.code} value={item.code} disabled>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+              <span className="material-symbols-outlined pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 text-sm text-[#151218]">
+                arrow_drop_down
+              </span>
             </div>
           </div>
-        </section>
+          <h1 className="font-display-lg uppercase">
+            <TypedText key={lang} text={t.title} />
+          </h1>
+          <p className="mt-5 max-w-xl font-body-lg text-base text-white md:text-lg">{t.subtitle}</p>
+        </div>
+      </header>
 
+      <main>
         {/* Quiz Flow Card Section */}
         <section
           ref={quizCardRef}

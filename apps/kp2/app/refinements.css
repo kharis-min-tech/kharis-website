@@ -27,6 +27,34 @@
   font-size: clamp(4rem, 9vw, 7.25rem);
   text-shadow: 0 2px 24px rgba(9, 10, 30, 0.35);
 }
+.kp-quiz-hero {
+  display: flex;
+  align-items: flex-end;
+  box-sizing: border-box;
+  height: 100svh;
+  min-height: 100svh;
+  padding-block: 6.75rem 4rem;
+}
+.kp-quiz-hero h1 {
+  max-width: 11ch;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.75rem, 6.4vw, 5.75rem);
+  line-height: 0.95;
+  text-wrap: balance;
+  text-shadow: 0 2px 24px rgba(9, 10, 30, 0.45);
+}
+@media (max-width: 767px) {
+  .kp-quiz-hero {
+    height: auto;
+    min-height: calc(100svh - 74px);
+    margin-top: 74px;
+    padding-block: 2.5rem 3.25rem;
+  }
+  .kp-quiz-hero h1 {
+    font-size: clamp(2.6rem, 12vw, 3.6rem);
+  }
+}
 .kp-about-hash {
   position: relative;
   top: -6rem;

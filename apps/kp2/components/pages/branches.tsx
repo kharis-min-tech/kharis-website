@@ -7,8 +7,12 @@ import { ComicMap, type MapPlace } from "@/components/ComicMap";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { hasCoords, midweekSummary, sundaySummary, type Branch } from "@/lib/branches";
+import { hasCoords, mapsQuery, splitServices, type Branch } from "@/lib/branches";
+import { mapsDirectionsUrl } from "@/lib/calendar";
 import "@/components/comic-map.css";
+import "@/components/branch-cards.css";
+
+const BRANCH_MARK = "https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png";
 
 function searchText(branch: Branch) {
   return [branch.name, branch.city, branch.region, branch.address, branch.postcode, ...branch.tags]
@@ -224,88 +228,75 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
 
           <div id="kp-branch-list" className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {visible.map((branch) => {
-              const midweek = midweekSummary(branch);
+              const { sunday, midweek } = splitServices(branch.services);
+              const sun = sunday[0] ?? branch.serviceTimes[0];
+              const mid = midweek[0];
               const miles =
                 origin && hasCoords(branch)
                   ? milesBetween(origin.lat, origin.lng, branch.lat, branch.lng)
                   : null;
+              const address = [branch.address, branch.postcode].filter(Boolean).join(", ");
               return (
-                <article
-                  key={branch.slug}
-                  className="group flex flex-col justify-between overflow-hidden brutalist-border brutalist-shadow bg-surface-container-lowest transition-colors"
-                >
-                  <Link href={`/branches/${branch.slug}`} className="text-left w-full">
-                    <div className="relative h-52 overflow-hidden bg-on-background">
-                      {branch.image ? (
-                        <img
-                          src={branch.image}
-                          alt={branch.name}
-                          loading="lazy"
-                          className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : null}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                      <span className="absolute left-3 top-3 bg-primary text-on-primary px-3 py-1 font-body-md text-[10px] font-bold uppercase tracking-wider">
-                        {branch.region}
+                <article key={branch.slug} className="kp-branch-card">
+                  <Link
+                    href={`/branches/${branch.slug}`}
+                    className="kp-branch-card__media"
+                    tabIndex={-1}
+                    aria-hidden
+                  >
+                    {branch.image ? (
+                      <img src={branch.image} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      <span className="kp-branch-card__fallback">
+                        <img src={BRANCH_MARK} alt="" />
+                        <span>{branch.city || branch.name}</span>
                       </span>
-                      {miles != null ? (
-                        <span className="absolute right-3 top-3 bg-secondary-container text-on-secondary-container px-3 py-1 font-body-md text-[10px] font-bold uppercase tracking-wider">
-                          {miles < 1 ? "<1 mi" : `${Math.round(miles)} mi`}
-                        </span>
-                      ) : null}
-                      {nearest?.slug === branch.slug ? (
-                        <span className="absolute right-3 bottom-16 bg-primary text-on-primary px-3 py-1 font-body-md text-[10px] font-bold uppercase tracking-wider">
-                          Closest to you
-                        </span>
-                      ) : null}
-                      <div className="absolute bottom-3 left-3 right-3 text-white">
-                        <h3 className="font-display-lg text-[24px] uppercase leading-snug">
-                          {branch.name}
-                        </h3>
-                        <p className="mt-0.5 flex items-center gap-1 font-body-md text-[12px] text-white/90">
-                          <span className="material-symbols-outlined text-[16px] text-secondary-container">
-                            location_on
-                          </span>
-                          {branch.address}
-                        </p>
-                      </div>
-                    </div>
+                    )}
                   </Link>
-
-                  <div className="space-y-4 p-6">
-                    <p className="line-clamp-2 font-body-md text-[13px] leading-relaxed text-on-surface-variant">
-                      {branch.blurb}
+                  <div className="kp-branch-card__body">
+                    <p className="kp-branch-card__label">
+                      {[
+                        "KP2",
+                        miles != null
+                          ? miles < 1
+                            ? "<1 mi away"
+                            : `${Math.round(miles)} mi away`
+                          : "",
+                        nearest?.slug === branch.slug ? "Closest" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </p>
-                    <div className="divide-y-2 divide-on-background/10 overflow-hidden border-2 border-on-background/15 bg-background">
-                      <div className="flex items-center gap-2 px-3.5 py-3">
-                        <span className="material-symbols-outlined text-[18px] text-primary">
-                          schedule
-                        </span>
-                        <span className="font-body-md text-[12px] font-bold">
-                          {sundaySummary(branch)}
-                        </span>
-                      </div>
-                      {midweek ? (
-                        <div className="flex items-center gap-2 px-3.5 py-3">
-                          <span className="material-symbols-outlined shrink-0 text-[18px] text-primary">
-                            event
-                          </span>
-                          <span className="min-w-0 font-body-md text-[12px] font-bold">
-                            {midweek}
-                          </span>
-                        </div>
-                      ) : null}
+                    <h3 className="kp-branch-card__name">
+                      <Link href={`/branches/${branch.slug}`}>{branch.name}</Link>
+                    </h3>
+                    {address ? <p className="kp-branch-card__address">{address}</p> : null}
+                    <p className="kp-branch-card__sunday">
+                      <span>{sun?.day || "Sunday"}</span>
+                      {sun?.time || "Times coming soon"}
+                    </p>
+                    {mid ? (
+                      <p className="kp-branch-card__also">
+                        {mid.day} {mid.time}
+                        {mid.label ? ` · ${mid.label}` : " · Midweek service"}
+                      </p>
+                    ) : null}
+                    <div className="kp-branch-card__actions">
+                      <Link
+                        href={`/branches/${branch.slug}`}
+                        className="kp-branch-card__visit no-accent-fill"
+                      >
+                        Plan your visit
+                      </Link>
+                      <a
+                        href={mapsDirectionsUrl(mapsQuery(branch))}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="kp-branch-card__directions no-accent-fill"
+                      >
+                        Directions
+                      </a>
                     </div>
-                  </div>
-
-                  <div className="border-t-2 border-on-background/15 p-6 pt-4">
-                    <Link
-                      href={`/branches/${branch.slug}`}
-                      className="flex w-full items-center justify-center gap-2 border-2 border-on-background bg-primary px-5 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-on-primary"
-                    >
-                      Explore {branch.city}
-                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                    </Link>
                   </div>
                 </article>
               );

@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { ContactLetter } from "@/components/ContactLetter";
 import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
+import { TypedText } from "@/components/TypedText";
 import { TIKTOK_URL } from "@/lib/social";
 import { type Branch } from "@/lib/branches";
 
@@ -25,7 +26,9 @@ function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; bran
           <p className="font-label-md uppercase tracking-[0.28em] text-white/80 mb-4">
             Ask · Pray · Say hi
           </p>
-          <h1 className="font-display-lg uppercase leading-none text-white mb-4">Contact Us</h1>
+          <h1 className="font-display-lg uppercase leading-none text-white mb-4">
+            <TypedText text="Contact Us" />
+          </h1>
           <p className="font-body-lg text-body-lg text-white max-w-md">
             We are here for you. Whether you have a question, a prayer request, or just want to say
             hi.

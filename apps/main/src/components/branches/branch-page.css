@@ -219,6 +219,12 @@ html[data-theme="dark"] .branch-page {
 .branch-pastor__name {
   color: var(--branch-yellow);
 }
+.branch-gallery-empty {
+  position: relative;
+  min-height: 16rem;
+  aspect-ratio: 21 / 8;
+  overflow: hidden;
+}
 .branch-page .text-\[\#e8a33d\],
 .branch-page .text-\[\#d4920a\] {
   color: var(--branch-yellow);
