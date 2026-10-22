@@ -1,13 +1,14 @@
 .kp-flip {
   position: relative;
-  height: calc(100svh - 74px + 170vh);
+  height: auto;
   background: #110b1a;
   border-bottom: 4px solid #f7be1d;
 }
 
 .kp-flip__stage {
-  height: calc(100svh - 74px);
-  overflow: hidden;
+  position: static;
+  height: auto;
+  overflow: visible;
   background:
     radial-gradient(circle at 12px 12px, rgba(210, 187, 255, 0.16) 1.5px, transparent 1.6px) 0 0 /
       22px 22px,
@@ -37,9 +38,11 @@
 }
 
 .kp-flip__book {
-  position: absolute;
-  inset: 0.85rem 0.85rem 0.85rem 1.35rem;
-  perspective: 4600px;
+  position: static;
+  display: grid;
+  gap: 0.85rem;
+  padding: 0.85rem;
+  perspective: none;
 }
 
 .kp-flip__spine {
@@ -55,22 +58,18 @@
 }
 
 .kp-flip__sheet {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  transform-style: preserve-3d;
-  transform-origin: left center;
-  will-change: transform;
+  position: static;
+  display: grid;
+  gap: 0.85rem;
+  transform: none;
 }
 
 .kp-flip__face {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  min-height: 78svh;
   overflow: hidden;
   border: 4px solid #151218;
   background: #151218;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .kp-flip__face--under::after {
@@ -80,6 +79,21 @@
   background: linear-gradient(90deg, rgba(17, 11, 26, 0.55), transparent 46%);
   opacity: var(--shade, 0);
   pointer-events: none;
+}
+
+.kp-flip__sheet {
+  order: 1;
+}
+
+.kp-flip__face--under {
+  order: 2;
+}
+
+.kp-flip__spine,
+.kp-flip__hint,
+.kp-flip__shade,
+.kp-flip__face--back {
+  display: none;
 }
 
 .kp-flip__face--back {

@@ -9622,6 +9622,114 @@ html[data-theme="dark"] .life-modal__dots button.is-on {
   align-items: center;
   gap: 1.25rem;
   margin-top: 2.75rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--line);
+}
+
+.site-footer--dark .site-footer__bottom {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.site-footer__policies {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem 0.75rem;
+}
+
+.site-footer__policy {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.05rem;
+  color: var(--purple);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.site-footer__policy--note {
+  color: var(--orange-ink);
+}
+
+.site-footer__policy::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0.55rem;
+  left: 0;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+}
+
+.site-footer__policy:hover::after,
+.site-footer__policy:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.site-footer__policy:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 3px;
+}
+
+.site-footer__policy-mark {
+  width: 0.42rem;
+  height: 0.42rem;
+  flex: none;
+  background: var(--yellow);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--purple) 14%, transparent);
+  transform: rotate(45deg);
+}
+
+.site-footer--dark .site-footer__policy {
+  color: #d7c6ff;
+}
+
+.site-footer--dark .site-footer__policy--note {
+  color: var(--yellow);
+}
+
+.site-footer--dark .site-footer__policy:focus-visible {
+  outline-color: var(--yellow);
+}
+
+.site-footer--dark .site-footer__policy-mark {
+  box-shadow: 0 0 0 4px rgba(255, 222, 89, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer__policy::after {
+    transition: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .site-footer__bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1.5rem 2rem;
+  }
+
+  .site-footer__legal {
+    text-align: left;
+  }
+
+  .site-footer__policies {
+    justify-self: center;
+  }
+
+  .site-footer__bottom .evangelical-alliance {
+    justify-self: end;
+  }
 }
 
 /* Branch locations directory and detail pages */

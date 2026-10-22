@@ -153,17 +153,20 @@ export function RevealItem({
   className = "",
   variant = "up",
   distance = 48,
+  id,
 }: {
   children: ReactNode;
   className?: string;
   variant?: RevealVariant;
   distance?: number;
+  id?: string;
 }) {
   const reduce = useReducedMotion();
   const variants = makeVariants(variant, distance);
 
   return (
     <motion.div
+      id={id}
       className={className}
       variants={variants}
       transition={reduce ? { duration: 0 } : { duration: 0.9, ease }}

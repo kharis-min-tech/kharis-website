@@ -9,7 +9,7 @@ const eaLogoDark = "https://images.kharis.org/site-images/kp2/8d53006577293048/e
 type FooterColumn = {
   title: string;
   titleColor: string;
-  links: { label: string; to: string; href?: boolean }[];
+  links: { label: string; to: string }[];
 };
 
 const COLUMNS: FooterColumn[] = [
@@ -17,36 +17,27 @@ const COLUMNS: FooterColumn[] = [
     title: "About",
     titleColor: "text-primary",
     links: [
-      { label: "About Us", to: "/mission" },
+      { label: "Mission", to: "/mission" },
       { label: "Governance", to: "/governance" },
-      { label: "Contact Us", to: "/contact" },
+      { label: "Contact", to: "/contact" },
     ],
   },
   {
     title: "Get Involved",
     titleColor: "text-on-background",
-    links: [
-      { label: "Become a member", to: "https://kharis.org/", href: true },
-      { label: "Volunteer", to: "/departments" },
-      { label: "Testimony Form", to: "/#share-testimony" },
-    ],
+    links: [{ label: "Volunteer at Kharis", to: "/departments" }],
   },
   {
     title: "Join Us",
     titleColor: "text-primary",
-    links: [
-      { label: "Find a Branch", to: "/branches" },
-      { label: "Life", to: "/life" },
-      { label: "Events", to: "/events" },
-      { label: "Messages", to: "/messages" },
-    ],
+    links: [{ label: "Find a Location", to: "/branches" }],
   },
   {
     title: "Finance",
     titleColor: "text-on-background",
     links: [
       { label: "Giving", to: "/giving" },
-      { label: "Media", to: "/media" },
+      { label: "Building Fund", to: "/giving#building" },
     ],
   },
 ];
@@ -111,15 +102,9 @@ export function SiteFooter() {
             <ul className="space-y-2 font-body-md text-on-surface-variant">
               {col.links.map((link) => (
                 <li key={link.label}>
-                  {link.href ? (
-                    <a className={footerLinkClass} href={link.to}>
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link className={footerLinkClass} href={link.to}>
-                      {link.label}
-                    </Link>
-                  )}
+                  <Link className={footerLinkClass} href={link.to}>
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -150,8 +135,34 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="text-center mt-6 pb-8 font-body-md text-xs text-on-surface-variant px-margin-mobile md:px-margin-desktop uppercase tracking-wide">
-        © 2026 Kharis Ministries | All Rights Reserved | Charity Number 1139291
+      <div className="relative z-10 mt-8 border-t-4 border-[#151218] bg-[#151218] text-[#fffdf5]">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-margin-mobile py-5 md:flex-row md:px-margin-desktop">
+          <p className="text-center font-body-md text-xs uppercase tracking-wide md:text-left">
+            © 2026 Kharis Ministries
+            <span className="mx-2 text-[#f7be1d]" aria-hidden="true">
+              |
+            </span>
+            All rights reserved
+            <span className="mx-2 text-[#f7be1d]" aria-hidden="true">
+              |
+            </span>
+            Charity number 1139291
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/governance#disclaimer"
+              className="no-accent-fill inline-flex -rotate-2 border-[3px] border-[#151218] bg-[#f7be1d] px-3 py-1 font-headline-md text-sm uppercase tracking-wide text-[#151218] shadow-[3px_3px_0_#f7be1d] transition-transform hover:-translate-y-0.5 hover:rotate-0"
+            >
+              Disclaimer
+            </Link>
+            <Link
+              href="/governance#privacy"
+              className="no-accent-fill inline-flex rotate-1 border-[3px] border-[#fffdf5] bg-[#630ed4] px-3 py-1 font-headline-md text-sm uppercase tracking-wide text-white shadow-[3px_3px_0_#fffdf5] transition-transform hover:-translate-y-0.5 hover:rotate-0"
+            >
+              Privacy Policy
+            </Link>
+          </div>
+        </div>
       </div>
     </footer>
   );

@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { MessagesWhy } from "@/components/MessagesWhy";
+import { MessagesAppStrip } from "@/components/MessagesAppStrip";
 import { MessageBrowser } from "@/components/MessageBrowser";
 import "@/components/listen-row.css";
 import { MutedHeroVideo } from "@/components/MutedHeroVideo";
@@ -13,45 +14,12 @@ import { displayMessageTitle, youtubeWatchUrl, type MessageVideo } from "@/lib/y
 
 function MessagesPage({ messages }: { messages: MessageVideo[] }) {
   const featured = messages[0];
-  const listenRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const section = listenRef.current;
-    if (!section) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => {
-      if (reduce.matches) {
-        section.style.setProperty("--listen", "1");
-        return;
-      }
-      const top = section.getBoundingClientRect().top;
-      const start = window.innerHeight * 0.96;
-      const end = window.innerHeight * 0.22;
-      const progress = Math.min(1, Math.max(0, (start - top) / (start - end)));
-      section.style.setProperty("--listen", progress.toFixed(3));
-    };
-    let frame = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    reduce.addEventListener("change", onScroll);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      reduce.removeEventListener("change", onScroll);
-    };
-  }, []);
 
   return (
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
       <SiteHeader />
       <main>
-        <section className="kp-messages-hero relative box-border w-full h-svh max-h-svh overflow-hidden bg-on-background border-b-4 border-black">
+        <section className="kp-messages-hero relative box-border mt-[74px] flex h-[calc(100svh-74px)] max-h-[calc(100svh-74px)] w-full flex-col overflow-hidden border-b-4 border-black bg-on-background md:mt-0 md:block md:h-svh md:max-h-svh">
           {featured ? (
             <MutedHeroVideo
               id={featured.id}
@@ -66,25 +34,25 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
               }}
             />
           )}
-          <div className="absolute inset-0 hero-gradient pointer-events-none" />
-          <div className="absolute inset-0 halftone-pattern text-white/5 pointer-events-none" />
-          <div className="relative z-10 h-full flex flex-col justify-end px-margin-mobile md:px-margin-desktop pt-24 pb-8 md:pb-10 max-w-7xl mx-auto">
-            <div className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-black mb-6 uppercase w-fit">
+          <div className="pointer-events-none absolute inset-0 hero-gradient max-md:hidden" />
+          <div className="pointer-events-none absolute inset-0 halftone-pattern text-white/5 max-md:hidden" />
+          <div className="relative z-10 mx-auto flex h-auto w-full min-w-0 max-w-7xl flex-col justify-end px-margin-mobile pb-8 pt-6 md:h-full md:px-margin-desktop md:pb-10 md:pt-24">
+            <div className="mb-5 inline-block w-fit max-w-full border-2 border-black bg-secondary-container px-4 py-1 font-label-md uppercase text-on-secondary-container md:mb-6">
               Hunger &amp; Zeal for God
             </div>
-            <h1 className="font-display-lg text-display-lg text-white leading-none uppercase mb-4 tracking-tighter">
+            <h1 className="mb-4 max-w-full break-words font-display-lg text-[1.75rem] uppercase leading-[0.95] tracking-tight text-white md:text-display-lg md:leading-none md:tracking-tighter">
               {featured ? displayMessageTitle(featured.title) : "Messages"}
             </h1>
-            <p className="font-body-lg text-body-lg text-white/80 max-w-2xl mb-8">
+            <p className="mb-6 max-w-2xl font-body-lg text-base leading-relaxed text-white/80 md:mb-8 md:text-body-lg">
               {featured
                 ? "Your hunger and zeal for God is your greatest advantage as a believer. Watch the newest teaching from Pastor David Antwi here or on YouTube."
                 : "Your hunger and zeal for God is your greatest advantage as a believer. Teachings from Pastor David Antwi will appear here as they go live."}
             </p>
             {featured ? (
-              <div className="flex flex-wrap gap-4">
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4">
                 <a
                   href="#latest-messages"
-                  className="kp-depth-button kp-button-purple bg-primary text-white font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press group"
+                  className="kp-depth-button kp-button-purple group flex w-full items-center justify-center gap-3 border-2 border-black bg-primary px-8 py-4 font-headline-md text-white hard-shadow btn-press sm:w-auto"
                 >
                   <span
                     className="material-symbols-outlined"
@@ -98,7 +66,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   href={youtubeWatchUrl(featured.id)}
                   target="_blank"
                   rel="noreferrer"
-                  className="kp-depth-button kp-button-light keep-light font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press"
+                  className="kp-depth-button kp-button-light keep-light flex w-full items-center justify-center gap-3 border-2 border-black px-8 py-4 font-headline-md hard-shadow btn-press sm:w-auto"
                 >
                   <span className="material-symbols-outlined">smart_display</span>
                   YOUTUBE
@@ -109,12 +77,9 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
         </section>
 
         <MessageBrowser messages={messages} />
+        <MessagesAppStrip />
 
-        <section
-          ref={listenRef}
-          className="kp-listen bg-surface-container border-y-4 border-black"
-          data-reveal="self"
-        >
+        <section className="kp-listen bg-surface-container border-y-4 border-black" data-reveal="self">
           <div className="max-w-7xl mx-auto px-margin-desktop py-16">
             <div className="kp-listen__intro flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>

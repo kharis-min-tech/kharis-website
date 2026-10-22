@@ -171,11 +171,26 @@
   cursor: pointer;
 }
 
+.kp-find__zoom:not(:disabled):hover {
+  background: #f7be1d;
+}
+
+.kp-find__zoom:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .kp-find__canvas {
   width: 100%;
   height: 100%;
   display: block;
-  cursor: default;
+  touch-action: none;
+  cursor: grab;
+  overscroll-behavior: none;
+}
+
+.kp-find__canvas.is-grabbing {
+  cursor: grabbing;
 }
 
 .kp-find__tip {
