@@ -48,9 +48,15 @@ export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps
       </div>
 
       {images.length === 0 ? (
-        <p className="text-center text-sm font-medium text-[var(--branch-muted)]">
-          Photos for this branch will show here after they are added in Content Studio.
-        </p>
+        <div className="branch-gallery-empty">
+          <div className="branch-card__fallback">
+            <img
+              src="https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png"
+              alt=""
+            />
+            <span>Kharis {city}</span>
+          </div>
+        </div>
       ) : (
         <div className="relative">
           <div

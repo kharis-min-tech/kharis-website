@@ -117,7 +117,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
       <SiteHeader />
 
       <main className="pt-[74px]">
-        <EventsHero image={HERO_WORSHIP} />
+        <EventsHero image="/kp2/assets/friends-arriving-at-church.jpg" />
 
         <EventsComingUp events={comingUp} fallbackImages={COMING_UP_FALLBACKS} />
 

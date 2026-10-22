@@ -25,7 +25,10 @@ const COLUMNS: FooterColumn[] = [
   {
     title: "Get Involved",
     titleColor: "text-on-background",
-    links: [{ label: "Volunteer at Kharis", to: "/departments" }],
+    links: [
+      { label: "Volunteer at Kharis", to: "/departments" },
+      { label: "Departmental Quiz", to: "/quiz" },
+    ],
   },
   {
     title: "Join Us",

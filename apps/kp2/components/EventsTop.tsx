@@ -38,7 +38,7 @@ export function EventsHero({ image }: { image: string }) {
     <header className="kp-ev-hero">
       <img
         src={image}
-        alt="Kharis Phase 2 congregation worshipping together"
+        alt="Two friends arriving at a Kharis gathering"
         className="kp-ev-hero__img"
         loading="eager"
         decoding="async"

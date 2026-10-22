@@ -16,12 +16,16 @@ export type QuizDepartment = {
   video: string;
 };
 
-export const QUIZ_SLIDESHOW_IMAGES = [
-  "https://images.kharis.org/site-images/kp2/8440a4a63e4ae020/serve-with-us.jpg",
-  "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg",
-  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/K-music-img.jpg",
-  "https://images.kharis.org/site-images/kp2/4cdb8d19355fced2/K-drama-img.jpg",
-  "https://images.kharis.org/site-images/kp2/d6b67a1d5d3003b0/events-sunday-service.jpg",
+export const QUIZ_HERO_IMAGES = [
+  { src: "/kp2/assets/choir-on-stage.jpg", alt: "The choir singing together on stage" },
+  {
+    src: "/kp2/assets/congregation-celebrating.jpg",
+    alt: "People celebrating together in worship",
+  },
+  { src: "/kp2/assets/celebration-duet.jpg", alt: "Two singers leading a song on stage" },
+  { src: "/kp2/assets/two-sides-of-the-cross-drama.jpg", alt: "A drama performed on stage" },
+  { src: "/kp2/assets/street-evangelism.jpg", alt: "People sharing the gospel on the street" },
+  { src: "/kp2/assets/woman-in-prayer.jpg", alt: "A woman praying during a service" },
 ] as const;
 
 export type QuizTranslation = {
