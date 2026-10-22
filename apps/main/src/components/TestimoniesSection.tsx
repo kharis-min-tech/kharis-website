@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "@/components/SiteImage";
-import { useRef } from "react";
+import { type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import type { Testimony } from "@/lib/testimonies";
@@ -9,6 +9,7 @@ import type { Testimony } from "@/lib/testimonies";
 interface TestimoniesSectionProps {
   testimonies: Testimony[];
 }
+
 const photos = [
   {
     src: "https://images.kharis.org/site-images/main/79c0eac25d6bc370/testimony-sharing.jpg",
@@ -27,27 +28,110 @@ const photos = [
   },
 ];
 
+function excerpt(text: string, limit = 240) {
+  const clean = text
+    .trim()
+    .replace(/^["“]+|["”]+$/g, "")
+    .trim();
+  return clean.length > limit ? `${clean.slice(0, limit - 3).trimEnd()}…` : clean;
+}
+
 export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
+  const [selected, setSelected] = useState<{ item: Testimony; accentIndex: number } | null>(null);
+  const dragRef = useRef({
+    active: false,
+    moved: false,
+    startX: 0,
+    startScroll: 0,
+    pointerId: -1,
+  });
+
+  useEffect(() => {
+    if (!selected) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selected]);
+
   const scrollByCard = (dir: -1 | 1) => {
     const rail = railRef.current;
     if (!rail) return;
     const card = rail.querySelector<HTMLElement>(".testimony-card");
-    const step = (card?.offsetWidth ?? 300) + 16;
+    const gap =
+      parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap || "16") || 16;
+    const step = (card?.offsetWidth ?? 300) + gap;
     const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
-    const next = rail.scrollLeft + dir * step;
+    if (maxScroll <= 2) return;
     const edge = 8;
 
-    if (dir === 1 && next >= maxScroll - edge) {
-      rail.scrollTo({ left: 0, behavior: "smooth" });
-      return;
-    }
-    if (dir === -1 && next <= edge) {
-      rail.scrollTo({ left: maxScroll, behavior: "smooth" });
+    if (dir === 1) {
+      if (rail.scrollLeft >= maxScroll - edge) {
+        rail.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        rail.scrollTo({ left: Math.min(maxScroll, rail.scrollLeft + step), behavior: "smooth" });
+      }
       return;
     }
 
-    rail.scrollBy({ left: dir * step, behavior: "smooth" });
+    if (rail.scrollLeft <= edge) {
+      rail.scrollTo({ left: maxScroll, behavior: "smooth" });
+    } else {
+      rail.scrollTo({ left: Math.max(0, rail.scrollLeft - step), behavior: "smooth" });
+    }
+  };
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch" || e.button !== 0) return;
+    const rail = railRef.current;
+    if (!rail) return;
+    dragRef.current = {
+      active: true,
+      moved: false,
+      startX: e.clientX,
+      startScroll: rail.scrollLeft,
+      pointerId: e.pointerId,
+    };
+  };
+
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const state = dragRef.current;
+    const rail = railRef.current;
+    if (!state.active || !rail) return;
+    const dx = e.clientX - state.startX;
+    if (!state.moved && Math.abs(dx) > 6) {
+      state.moved = true;
+      rail.setPointerCapture?.(e.pointerId);
+      rail.style.scrollSnapType = "none";
+      rail.style.scrollBehavior = "auto";
+    }
+    if (state.moved) {
+      rail.scrollLeft = state.startScroll - dx;
+    }
+  };
+
+  const endPointerDrag = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const state = dragRef.current;
+    const rail = railRef.current;
+    if (!state.active) return;
+    state.active = false;
+    if (rail && state.moved) {
+      if (rail.hasPointerCapture?.(e.pointerId)) {
+        rail.releasePointerCapture(e.pointerId);
+      }
+      rail.style.scrollSnapType = "";
+      rail.style.scrollBehavior = "";
+      window.setTimeout(() => {
+        dragRef.current.moved = false;
+      }, 60);
+    }
+  };
+
+  const openCard = (item: Testimony, accentIndex: number) => {
+    if (dragRef.current.moved) return;
+    setSelected({ item, accentIndex });
   };
 
   return (
@@ -87,33 +171,65 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
               </div>
 
               <div className="testimony-viewport">
-                <div ref={railRef} className="testimony-rail">
-                  {testimonies.map((item, i) => (
-                    <article
-                      key={`${item.name}-${i}`}
-                      className={`testimony-card testimony-card--${(i % 5) + 1}`}
-                    >
-                      <span className="testimony-card__wall" aria-hidden />
-                      <div className="testimony-card__ornament" aria-hidden>
-                        <svg className="testimony-card__marks" viewBox="0 0 72 48" fill="none">
-                          <path
-                            d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </div>
-                      <p className="testimony-card__quote">
-                        {item.short_description?.trim() ||
-                          (item.description.length > 280
-                            ? `${item.description.slice(0, 277).trimEnd()}…`
-                            : item.description)}
-                      </p>
-                      <div className="testimony-card__meta">
-                        <strong>{item.name}</strong>
-                        <span>{item.branch_name}</span>
-                      </div>
-                    </article>
-                  ))}
+                <div
+                  ref={railRef}
+                  className="testimony-rail"
+                  onPointerDown={onPointerDown}
+                  onPointerMove={onPointerMove}
+                  onPointerUp={endPointerDrag}
+                  onPointerCancel={endPointerDrag}
+                >
+                  {testimonies.map((item, i) => {
+                    const accentIndex = (i % 5) + 1;
+                    const shortText = item.short_description?.trim() || "";
+                    const fullText = (item.description || "").trim();
+                    const hasDistinctBody =
+                      Boolean(shortText && fullText) &&
+                      shortText.toLowerCase() !== fullText.toLowerCase();
+                    const previewQuote = hasDistinctBody
+                      ? excerpt(fullText, 210)
+                      : excerpt(fullText || shortText, 260);
+
+                    return (
+                      <article
+                        key={`${item.name}-${i}`}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`Read full testimony from ${item.name}`}
+                        onClick={() => openCard(item, accentIndex)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            openCard(item, accentIndex);
+                          }
+                        }}
+                        className={`testimony-card testimony-card--clickable testimony-card--${accentIndex}`}
+                      >
+                        <span className="testimony-card__wall" aria-hidden />
+                        <div className="testimony-card__ornament" aria-hidden>
+                          <svg className="testimony-card__marks" viewBox="0 0 72 48" fill="none">
+                            <path
+                              d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </div>
+                        {hasDistinctBody ? (
+                          <h3 className="testimony-card__title">{shortText}</h3>
+                        ) : null}
+                        <p className="testimony-card__quote">{previewQuote}</p>
+                        <div className="testimony-card__footer">
+                          <div className="testimony-card__meta">
+                            <strong>{item.name}</strong>
+                            <span>{item.branch_name}</span>
+                          </div>
+                          <span className="testimony-card__read">
+                            Read full story <Icon name="arrow" className="h-3.5 w-3.5" />
+                          </span>
+                        </div>
+                      </article>
+                    );
+                  })}
                 </div>
               </div>
             </>
@@ -143,6 +259,59 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
           </div>
         </Reveal>
       </div>
+
+      {selected ? (
+        <div
+          className="testimony-modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="testimony-modal-title"
+          onClick={() => setSelected(null)}
+        >
+          <div
+            className={`testimony-modal testimony-card--${selected.accentIndex}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="testimony-modal__close"
+              aria-label="Close testimony"
+              onClick={() => setSelected(null)}
+            >
+              ×
+            </button>
+            <div className="testimony-card__ornament" aria-hidden>
+              <svg className="testimony-card__marks" viewBox="0 0 72 48" fill="none">
+                <path
+                  d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+            {selected.item.short_description?.trim() ? (
+              <h3 id="testimony-modal-title" className="testimony-modal__title">
+                {selected.item.short_description.trim()}
+              </h3>
+            ) : (
+              <h3 id="testimony-modal-title" className="sr-only">
+                Testimony from {selected.item.name}
+              </h3>
+            )}
+            <div className="testimony-modal__body">
+              {(selected.item.description?.trim() || selected.item.short_description?.trim() || "")
+                .split(/\n{2,}|\r\n\r\n/)
+                .filter(Boolean)
+                .map((para, idx) => (
+                  <p key={idx}>{para.trim()}</p>
+                ))}
+            </div>
+            <div className="testimony-modal__meta">
+              <strong>{selected.item.name}</strong>
+              {selected.item.branch_name ? <span>{selected.item.branch_name}</span> : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

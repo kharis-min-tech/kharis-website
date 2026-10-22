@@ -468,14 +468,21 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
             />
           </div>
           <div className="gv-build__copy">
-            <p className="gv-eyebrow">Building fund</p>
+            <p className="gv-eyebrow">Spurgeon&apos;s Centre</p>
             <h2 id="building-title">
-              Spurgeon&apos;s <span className="gv-yellow">Centre</span>
+              We&rsquo;ve purchased <span className="gv-yellow">our new home</span>
             </h2>
             <p>
-              Kharis Church has purchased Spurgeon&apos;s College in South London. We are renovating
-              it to keep training missionaries and sending them into the world, and to strengthen
-              the church in the UK.
+              We are excited to announce that we have officially acquired our own facility that was
+              formerly Spurgeon&rsquo;s College.
+            </p>
+            <p>
+              Now begins the exciting work restoring and developing this facility into a home for
+              advancing the gospel.
+            </p>
+            <p>
+              If you would like to partner with us and give towards this project, you can do so
+              using the link below.
             </p>
             <div className="btn-pair">
               <a

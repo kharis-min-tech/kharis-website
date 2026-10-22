@@ -5,6 +5,7 @@ import { TestimonyQuote } from "@/components/TestimonyQuote";
 
 export type Testimonial = {
   quote: string;
+  title?: string;
   name: string;
   location: string;
   color: string;
