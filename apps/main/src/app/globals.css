@@ -197,6 +197,23 @@ h6 {
   color: #fff !important;
 }
 
+/* About Us a bit wider so mandate “IT’S” isn’t cropped */
+.know-grid {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .know-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .know-grid {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
 .know-about .know-card img {
   object-fit: cover;
   object-position: left 18%;
@@ -13087,276 +13104,22 @@ html[data-theme="dark"] .btn-secondary:hover {
   color: var(--purple);
 }
 
-/* Family / Get to Know Kharis section (aligned with KP2 layout & clarity) */
-.know-intro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.75rem 2rem;
-}
-
-.know-narration {
-  display: inline-block;
-  margin: 0 0 0.85rem;
-  padding: 0.42rem 0.85rem;
-  background: #f7be1d;
-  color: #151218;
-  border: 2.5px solid #151218;
-  box-shadow: 4px 4px 0 #151218;
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: clamp(0.75rem, 1.15vw, 0.88rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transform: rotate(-1.2deg);
-}
-
-.know-title {
-  margin: 0;
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: clamp(2.35rem, 5.2vw, 4.35rem);
-  font-weight: 900;
-  line-height: 0.96;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: var(--fg);
-}
-
-.know-lede {
-  margin: 0;
-  max-width: 24rem;
-  font-size: clamp(0.98rem, 1.25vw, 1.12rem);
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.know-page {
-  position: relative;
-  display: flex;
-  min-height: 31rem;
-  padding: 14px;
-  background-color: #fffdf7;
-  border: 3px solid #151218;
-  box-shadow: 8px 8px 0 #151218;
-}
-
-.know-grid {
-  flex: 1 1 auto;
-  display: grid;
-  grid-template-columns: 38fr 31fr 31fr;
-  grid-template-rows: repeat(2, minmax(260px, 1fr));
-  gap: 12px;
-  width: 100%;
-}
-
-.know-cell {
-  position: relative;
-  min-height: 0;
-}
-
-.know-cell--featured {
-  grid-row: span 2;
-}
-
+/* Family cards */
 .know-card {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 260px;
-  overflow: hidden;
-  background: #151218;
-  border: 2.5px solid #151218;
-  color: #fff;
-  text-decoration: none;
-  outline: none;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  box-shadow:
+    0 6px 0 rgba(28, 10, 70, 0.14),
+    0 22px 40px rgba(28, 10, 70, 0.18);
 }
 
-.know-cell--featured .know-card {
-  min-height: 532px;
-}
-
-.know-cell:hover .know-card,
-.know-cell:focus-within .know-card {
-  transform: translate(-4px, -4px);
-  box-shadow: 4px 4px 0 #151218;
-}
-
-.know-card:focus-visible {
-  border-color: #f7be1d;
-}
-
-.know-card__media {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.know-card__img {
-  transition:
-    transform 0.7s ease,
-    filter 0.5s ease;
-}
-
-.know-cell:hover .know-card__img,
-.know-cell:focus-within .know-card__img {
-  transform: scale(1.04);
-}
-
-.know-card__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    0deg,
-    rgba(19, 9, 36, 0.92) 0%,
-    rgba(19, 9, 36, 0.42) 45%,
-    transparent 72%
-  );
-}
-
-.know-card__safe {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: clamp(1rem, 1.8vw, 1.65rem);
-  text-align: left;
-}
-
-.know-card__copy {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.know-card__name {
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  color: #fff;
-  text-shadow: 3px 3px 0 #151218;
-}
-
-.know-cell--featured .know-card__name {
-  font-size: clamp(2rem, 3.5vw, 3.25rem);
-}
-
-.know-card__blurb {
-  margin-top: 0.55rem;
-  max-width: 22rem;
-  font-size: clamp(0.92rem, 1.15vw, 1.04rem);
-  font-weight: 600;
-  line-height: 1.42;
-  color: rgba(255, 255, 255, 0.94);
-}
-
-.know-card__go {
+.know-card__cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  margin-top: 0.85rem;
-  padding: 0.5rem 0.95rem;
-  background: #151218;
-  color: #fff;
-  border: 2.5px solid #fff;
-  box-shadow: 4px 4px 0 #f7be1d;
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: 0.8rem;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.know-card__go-icon {
-  width: 0.95rem;
-  height: 0.95rem;
-  flex-shrink: 0;
-}
-
-.know-cell:hover .know-card__go,
-.know-cell:focus-within .know-card__go {
-  background: #f7be1d;
-  color: #151218;
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #151218;
-}
-
-@media (max-width: 900px) {
-  .know-page {
-    min-height: 0;
-    padding: 12px;
-  }
-
-  .know-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: 22rem;
-    grid-auto-rows: 17.5rem;
-    gap: 10px;
-  }
-
-  .know-cell--featured {
-    grid-row: auto;
-  }
-
-  .know-cell--featured .know-card {
-    min-height: 22rem;
-  }
-
-  .know-card {
-    min-height: 17.5rem;
-  }
-
-  .know-card__safe {
-    padding: 1.25rem;
-  }
-}
-
-html[data-theme="dark"] .know-page {
-  background-color: #1f1a26;
-  border-color: #000;
-  box-shadow: 8px 8px 0 #000;
-}
-
-html[data-theme="dark"] .know-card {
-  border-color: #000;
-}
-
-html[data-theme="dark"] .know-cell:hover .know-card,
-html[data-theme="dark"] .know-cell:focus-within .know-card {
-  box-shadow: 4px 4px 0 #000;
-}
-
-html[data-theme="dark"] .know-title {
-  color: #fff;
-}
-
-html[data-theme="dark"] .know-lede {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-html[data-theme="dark"] .know-narration {
-  color: #151218;
-}
-
-html[data-theme="dark"] .know-cell:hover .know-card__go,
-html[data-theme="dark"] .know-cell:focus-within .know-card__go {
-  color: #151218;
+  color: var(--yellow);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
 }
 
 /* Latest messages */
