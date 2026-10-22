@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { branchDisplayName, directionsUrl, sundayVenue, venueAddress } from "./branch-display";
+import {
+  branchDisplayName,
+  directionsUrl,
+  presentBranch,
+  sundayVenue,
+  venueAddress,
+} from "./branch-display";
 
 const venue = (fields: Partial<Parameters<typeof venueAddress>[0] & object>) => ({
   id: "v",
@@ -8,6 +14,10 @@ const venue = (fields: Partial<Parameters<typeof venueAddress>[0] & object>) => 
   address_line2: null,
   city: null,
   postcode: null,
+  country: null,
+  parking_info: null,
+  public_transport_info: null,
+  directions_text: null,
   latitude: null,
   longitude: null,
   ...fields,
@@ -122,5 +132,56 @@ describe("branchDisplayName", () => {
   it("fixes the Chelmsford spelling and leaves other names alone", () => {
     expect(branchDisplayName("Chelmesford")).toBe("Chelmsford");
     expect(branchDisplayName("KP2 London")).toBe("KP2 London");
+  });
+});
+
+const branchFixture = (): import("./branches").BranchData => ({
+  id: "croydon",
+  name: "Croydon",
+  slug: "croydon",
+  subtitle: null,
+  short_description: null,
+  description: null,
+  hero_image_url: null,
+  hero_subtitle: null,
+  gradient_start: null,
+  gradient_end: null,
+  pastor_name: null,
+  pastor_image_url: null,
+  pastor_bio: null,
+  pastor_role: null,
+  contact_email: null,
+  contact_phone: null,
+  instagram: null,
+  sort_order: 0,
+  is_active: true,
+  venues: [venue({ city: "London", address_line1: "Maberley Road", postcode: "SE19 2JH" })],
+  services: [],
+  gallery: [],
+});
+
+describe("branch page place names", () => {
+  it.each([
+    ["Accra", "Achimota", "Accra"],
+    ["Chatham", "Rochester", "Chatham"],
+    ["Chelmesford", "Chelmsford", "Chelmsford"],
+    ["Manchester", "Salford", "Manchester"],
+    ["KP2 Romford", "London", "KP2 Romford"],
+  ])("uses %s rather than its venue city %s", (name, city, expected) => {
+    const branch = branchFixture();
+    expect(presentBranch({ ...branch, name, venues: [venue({ city })] }).city).toBe(expected);
+  });
+
+  it("does not publish copied station claims on a branch page", () => {
+    const branch = branchFixture();
+    branch.venues[0].public_transport_info =
+      "The venue is approximately five minutes from Brighton Station.";
+    expect(presentBranch(branch).transit).not.toContain("Brighton Station");
+  });
+
+  it("uses Croydon for branch content even when its venue city is London", () => {
+    const view = presentBranch(branchFixture());
+    expect(view.city).toBe("Croydon");
+    expect(view.address).toBe("Maberley Road, London, SE19 2JH");
   });
 });

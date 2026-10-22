@@ -79,6 +79,11 @@ export function SiteFooter({ tone }: Props) {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/quiz" className={linkHover}>
+                    Department Quiz
+                  </Link>
+                </li>
+                <li>
                   <Link href="/#share-testimony" className={linkHover}>
                     Testimony Form
                   </Link>

@@ -30,6 +30,7 @@ export function MessagesDeviceCluster({ messages }: Props) {
   if (!messages.length) return null;
 
   const tv = pick(messages, 0);
+  const tvUpNext = [1, 2, 3].map((i) => pick(messages, i));
   const laptopHero = pick(messages, 1);
   const picks = [0, 1, 2, 3].map((i) => pick(messages, i + 1));
   const tablet = pick(messages, 2);
@@ -41,16 +42,38 @@ export function MessagesDeviceCluster({ messages }: Props) {
       <div className="msg-devices__tv">
         <div className="msg-devices__tv-bezel">
           <div className="msg-devices__screen msg-devices__screen--tv">
-            <Image
-              src={tv.thumbnail}
-              alt=""
-              fill
-              className={FIT}
-              sizes="(max-width: 900px) 92vw, 640px"
-            />
-            <div className="msg-devices__tv-mark">kharis</div>
-            <div className="msg-devices__tv-copy">
-              <p>{cleanTitle(tv.title)}</p>
+            <div className="msg-devices__tv-feature">
+              <Image
+                src={tv.thumbnail}
+                alt=""
+                fill
+                className={FIT}
+                sizes="(max-width: 900px) 92vw, 640px"
+              />
+              <div className="msg-devices__tv-mark">kharis</div>
+              <div className="msg-devices__tv-copy">
+                <p>{cleanTitle(tv.title)}</p>
+              </div>
+            </div>
+            <div className="msg-devices__tv-up-next">
+              <span>Up next</span>
+              <div className="msg-devices__tv-posters">
+                {tvUpNext.map((message) => (
+                  <div
+                    key={message.id}
+                    className="msg-devices__tv-poster"
+                    title={cleanTitle(message.title)}
+                  >
+                    <Image
+                      src={message.thumbnail}
+                      alt=""
+                      fill
+                      className={FIT}
+                      sizes="(max-width: 900px) 22vw, 150px"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

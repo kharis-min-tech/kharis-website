@@ -131,12 +131,15 @@ export function BranchMap({
     setHovered(null);
   }, [destination.id, zoomMultiplier]);
   const worldAngle = useRef(0);
+  const manualCenter = useRef<{ lat: number; lng: number } | null>(null);
+  const drag = useRef<{ id: number; x: number; y: number; moved: boolean } | null>(null);
+  const suppressClick = useRef(false);
+  useEffect(() => {
+    manualCenter.current = null;
+  }, [cameraCountry, origin]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const camera = useRef({ lat: 35, lng: -2, zoom: 1 });
   const pins = useMemo(() => branches, [branches]);
-  const visible = pins.filter(
-    (pin) => destination.id === "world" || pin.country === destination.id,
-  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -176,6 +179,7 @@ export function BranchMap({
       }
       const elapsed = Math.min((time - (last || time)) / 1000, 0.1);
       last = time;
+      if (manualCenter.current) Object.assign(target, manualCenter.current);
       const c = camera.current;
       const ease = motion.matches ? 1 : 1 - Math.exp(-elapsed * 5);
       const delta = ((target.lng - c.lng + 540) % 360) - 180;
@@ -189,6 +193,7 @@ export function BranchMap({
         !hoveredSlug.current
       ) {
         target.lng += elapsed * 3;
+        if (manualCenter.current) manualCenter.current.lng = target.lng;
         worldAngle.current += elapsed * 3;
         c.lng = target.lng;
       } else {
@@ -419,7 +424,53 @@ export function BranchMap({
         <canvas
           ref={canvasRef}
           aria-hidden="true"
+          onPointerDown={(event) => {
+            if (!event.isPrimary || event.button !== 0) return;
+            drag.current = {
+              id: event.pointerId,
+              x: event.clientX,
+              y: event.clientY,
+              moved: false,
+            };
+            suppressClick.current = false;
+            event.currentTarget.setPointerCapture(event.pointerId);
+          }}
+          onPointerUp={(event) => {
+            if (drag.current?.id !== event.pointerId) return;
+            suppressClick.current = drag.current.moved;
+            drag.current = null;
+            event.currentTarget.releasePointerCapture(event.pointerId);
+            event.currentTarget.style.cursor = "grab";
+          }}
+          onPointerCancel={() => {
+            drag.current = null;
+            suppressClick.current = true;
+          }}
+          onLostPointerCapture={() => {
+            drag.current = null;
+          }}
           onPointerMove={(event) => {
+            const gesture = drag.current;
+            if (gesture?.id === event.pointerId) {
+              const dx = event.clientX - gesture.x;
+              const dy = event.clientY - gesture.y;
+              if (!gesture.moved && Math.hypot(dx, dy) < 5) return;
+              gesture.moved = true;
+              gesture.x = event.clientX;
+              gesture.y = event.clientY;
+              const scale = 180 / (event.currentTarget.clientWidth * camera.current.zoom);
+              manualCenter.current = {
+                lat: Math.max(-85, Math.min(85, camera.current.lat + dy * scale)),
+                lng: camera.current.lng - dx * scale,
+              };
+              Object.assign(camera.current, manualCenter.current);
+              setPaused(true);
+              hoveredSlug.current = null;
+              setHovered(null);
+              event.currentTarget.style.cursor = "grabbing";
+              redraw.current?.();
+              return;
+            }
             const rect = event.currentTarget.getBoundingClientRect();
             const pin = hitPins.current.find(
               (pin) =>
@@ -428,7 +479,7 @@ export function BranchMap({
                   pin.y - (event.clientY - rect.top),
                 ) < 14,
             );
-            event.currentTarget.style.cursor = pin ? "pointer" : "default";
+            event.currentTarget.style.cursor = pin ? "pointer" : "grab";
             event.currentTarget.removeAttribute("title");
             if (event.pointerType === "touch") return;
             if (hoveredSlug.current !== (pin?.slug ?? null)) {
@@ -443,6 +494,10 @@ export function BranchMap({
             redraw.current?.();
           }}
           onClick={(event) => {
+            if (suppressClick.current) {
+              suppressClick.current = false;
+              return;
+            }
             const rect = event.currentTarget.getBoundingClientRect();
             const pin = hitPins.current.find(
               (pin) =>
@@ -509,19 +564,6 @@ export function BranchMap({
               : "Explore our global family. Branch details are temporarily unavailable."}
           </span>
         </div>
-      </div>
-      <div className="location-globe__branches" aria-label="Explore a branch">
-        {visible.map((pin) => (
-          <button
-            key={pin.slug}
-            type="button"
-            onClick={() =>
-              onSelectBranch ? onSelectBranch(pin.slug) : router.push(`/locations/${pin.slug}`)
-            }
-          >
-            {pin.name} <span aria-hidden="true">↗</span>
-          </button>
-        ))}
       </div>
     </section>
   );

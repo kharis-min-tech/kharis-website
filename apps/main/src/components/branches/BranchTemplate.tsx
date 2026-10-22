@@ -5,17 +5,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import SiteImage from "@/components/SiteImage";
 import "./branch-page.css";
-import {
-  Clock,
-  Navigation,
-  ChevronRight,
-  Plus,
-  Minus,
-  ArrowRight,
-  Car,
-  Train,
-  Play,
-} from "lucide-react";
+import { Clock, Navigation, ChevronRight, Plus, Minus, ArrowRight, Car, Train } from "lucide-react";
 import type { BranchData } from "@/lib/branches";
 import { presentBranch } from "@/lib/branch-display";
 import PlanVisitModal from "@/components/PlanVisitModal";
@@ -25,6 +15,8 @@ import BranchGallery from "@/components/branches/BranchGallery";
 import BranchMonthCalendar from "@/components/branches/BranchMonthCalendar";
 import BranchContactForm from "@/components/branches/BranchContactForm";
 import BranchMediaModal from "@/components/branches/BranchMediaModal";
+
+import { branchIntroductions } from "@/data/branch-introductions";
 
 interface BranchTemplateProps {
   branchData: BranchData;
@@ -50,6 +42,7 @@ function formatServiceTime(time?: string | null) {
 export function BranchTemplate({ branchData, extraSections }: BranchTemplateProps) {
   const currentBranch = branchData;
   const view = presentBranch(currentBranch);
+  const introduction = branchIntroductions[currentBranch.slug];
 
   const sundayServices = (currentBranch.services ?? [])
     .filter((service) => service.is_active && service.type?.toLowerCase() === "sunday")
@@ -62,6 +55,7 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
   const galleryImages = view.gallery;
 
   const [zoomLevel, setZoomLevel] = useState(15);
+  const [welcomeExpanded, setWelcomeExpanded] = useState(false);
 
   const lat = view.lat;
   const lng = view.lng;
@@ -399,8 +393,14 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                   {view.pastorRole} {view.pastorKnown ? `· ${view.pastorName}` : ""}
                 </p>
 
-                <div className="space-y-4">
-                  {view.welcome.map((para, i) => (
+                <p className="text-base font-medium leading-relaxed text-[var(--branch-soft)]">
+                  {view.welcome[0]}
+                </p>
+                <div
+                  id="branch-full-welcome"
+                  className={`branch-pastor__extended space-y-4${welcomeExpanded ? " branch-pastor__extended--open" : ""}`}
+                >
+                  {view.welcome.slice(1).map((para, i) => (
                     <p
                       key={i}
                       className="text-base font-medium leading-relaxed text-[var(--branch-soft)]"
@@ -408,51 +408,47 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                       {para}
                     </p>
                   ))}
+                  <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-[var(--branch-ink)]">
+                    &ldquo;{view.quote}&rdquo;
+                  </blockquote>
                 </div>
-
-                <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-[var(--branch-ink)]">
-                  &ldquo;{view.quote}&rdquo;
-                </blockquote>
+                <button
+                  type="button"
+                  className="branch-mobile-disclosure"
+                  aria-expanded={welcomeExpanded}
+                  aria-controls="branch-full-welcome"
+                  onClick={() => setWelcomeExpanded((expanded) => !expanded)}
+                >
+                  {welcomeExpanded ? "Show less" : "Read the full welcome"}
+                </button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* FEATURED MESSAGE / VIDEO SECTION */}
-        <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-          <div className="mb-10 text-center">
-            <div className="inline-flex items-center gap-1.5 border border-[var(--branch-line)] bg-[var(--branch-inset)] px-3.5 py-1 text-xs font-bold text-[var(--branch-accent)] mb-3">
-              <span>Watch</span>
+        {introduction ? (
+          <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
+            <div className="mb-10 text-center">
+              <p className="eyebrow mb-3">Meet our branch</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
+                Welcome to {currentBranch.name}
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
-              The Word for your week
-            </h2>
-          </div>
-
-          <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
-            <Link
-              href="/messages"
-              className="group relative block aspect-video w-full cursor-pointer text-left"
-            >
-              {view.hero ? (
-                <img
-                  src={view.hero}
-                  alt={`Kharis ${view.city} worship`}
-                  className="absolute inset-0 h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
-                />
-              ) : null}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-              <div className="branch-on-photo absolute inset-0 flex flex-col items-center justify-center gap-5">
-                <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#630ed4] text-[var(--branch-ink)] shadow-2xl transition-transform duration-300 group-hover:scale-110">
-                  <Play className="ml-1 h-8 w-8 fill-current" />
-                </span>
-                <span className="text-sm font-extrabold uppercase tracking-wider text-[var(--branch-ink)]">
-                  Explore messages
-                </span>
-              </div>
-            </Link>
-          </div>
-        </section>
+            <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
+              <video
+                className="block aspect-video w-full"
+                src={introduction.src}
+                poster={introduction.poster}
+                controls
+                playsInline
+                preload="none"
+                aria-label={`${currentBranch.name} branch introduction`}
+              >
+                <a href={introduction.src}>Watch our branch introduction video</a>
+              </video>
+            </div>
+          </section>
+        ) : null}
 
         {/* GALLERY */}
         <BranchGallery
@@ -499,6 +495,16 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                 <p className="text-sm text-[var(--branch-soft)] font-medium leading-relaxed">
                   {view.transit}
                 </p>
+                {view.transitDirections ? (
+                  <a
+                    href={view.transitDirections}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center text-sm font-bold text-[var(--branch-accent)] underline underline-offset-4"
+                  >
+                    Public transport directions
+                  </a>
+                ) : null}
               </div>
             </div>
           </div>

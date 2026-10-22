@@ -1,3 +1,4 @@
+import { publicTransportInfo } from "../../../shared/public-transport";
 import { withBasePath } from "@/lib/base-path";
 import { SITE_WORKSPACE } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
@@ -115,8 +116,6 @@ const LOCAL_SLIDES = [
 const FALLBACK_PASTOR =
   "https://images.kharis.org/site-images/kp2/64154a5197622b53/leadership-pastor-david.jpg";
 const DEFAULT_PARKING = "Public parking is available near the venue.";
-const DEFAULT_TRANSIT =
-  "The venue is reachable by public transport. Check local bus and rail times before you travel.";
 
 function formatTime(time?: string | null): string {
   if (!time) return "";
@@ -334,7 +333,7 @@ function toBranch(row: BranchRow, gallery: string[]): Branch {
     gallery,
     givingLink: row.giving_link,
     parkingInfo: mainVenue?.parking_info || DEFAULT_PARKING,
-    transitInfo: mainVenue?.public_transport_info || DEFAULT_TRANSIT,
+    transitInfo: publicTransportInfo(mainVenue?.public_transport_info),
   };
 }
 

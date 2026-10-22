@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { ContactLetter } from "@/components/ContactLetter";
+import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
 import { TIKTOK_URL } from "@/lib/social";
 import { type Branch } from "@/lib/branches";
 

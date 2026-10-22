@@ -10,6 +10,8 @@ import { SITE_INTRO_BOOTSTRAP } from "@/lib/site-intro";
 import "./globals.css";
 import "./motion.css";
 import "./mobile.css";
+import "./refresh-overrides.css";
+import "./department-detail.css";
 
 /* Clean Vive / Apple-like type (not bubble Quicksand) */
 const sans = Plus_Jakarta_Sans({

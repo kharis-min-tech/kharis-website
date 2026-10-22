@@ -32,18 +32,18 @@ export const LIFE_MEMBERSHIP_URL = "https://kharis.org/";
 export const LIFE_DEPARTMENTS_URL = "http://discover.khar.is/";
 export const LIFE_KGROUP_EMAIL = "kgroup@kharis.org";
 
-/** Calm water surface — baptism card and detail hero. */
-export const LIFE_BAPTISM_IMAGE =
-  "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=1200&q=80";
+/** Baptism illustration used in the Life preview and detail hero. */
+export const LIFE_BAPTISM_IMAGE = "/images/baptism-illustration.jpeg";
 
-export const LIFE_SERVE_IMAGE =
-  "https://images.kharis.org/site-images/main/8440a4a63e4ae020/serve-with-us.jpg";
+export const LIFE_SERVE_IMAGE = "/images/life-departments.jpg";
+
+export const LIFE_CHILDREN_IMAGE = "/images/life-children.jpg";
 
 export const LIFE_HERO = {
   eyebrow: "Community first",
   title: "Kharis Life",
   body: "The Christian life is a one-another life. Believe, become, and belong. Grow in the Word, find your people, and live out your faith in the Kharis family.",
-  sticky: "Join the family. We’re better together.",
+  sticky: "Plan a visit. We’d love to meet you.",
   banner: "A one-another life. Belong here",
   quoteSource: "David Antwi",
   image: "https://images.kharis.org/site-images/main/074fce9dca42072a/branch-slide-4.jpg",
@@ -108,7 +108,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     href: "/life/baptism",
     card: "A public declaration that you identify with Jesus Christ’s death, burial and resurrection, walking in newness of life.",
     image: LIFE_BAPTISM_IMAGE,
-    imageAlt: "Calm water, a picture of baptism and new life in Christ",
+    imageAlt: "Illustration of two people being baptised beneath a dove",
     tone: "cream",
     layout: "photo",
     icon: "droplets",
@@ -129,13 +129,13 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
       },
     ],
     next: "fasting",
-    cta: { label: "Join the family", href: "/life?open=baptism&followup=1" },
+    cta: { label: "Talk with us about baptism", href: "/life?open=baptism&followup=1" },
   },
   {
     slug: "fasting",
     title: "Fasting",
     shortTitle: "Fasting",
-    badge: "Prayer",
+    badge: "Fasting",
     href: "/life/fasting",
     card: "We abstain from food to signal dependence on God, fasting joined with prayer, as a church family seeking His purpose.",
     image: "https://images.kharis.org/site-images/main/ffbe5aca25d25b8c/pastor-stage.jpg",
@@ -212,8 +212,8 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     badge: "Kids",
     href: "/life/children",
     card: "Fun, vibrant, and full of life. We partner with parents to help children discover who God is through Bible teaching, worship, and friendship.",
-    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
-    imageAlt: "Young people growing up in the Kharis family",
+    image: LIFE_CHILDREN_IMAGE,
+    imageAlt: "Children reading a Bible together",
     tone: "gold",
     layout: "blend",
     icon: "sparkles",

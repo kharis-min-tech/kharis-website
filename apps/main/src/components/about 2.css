@@ -1,0 +1,878 @@
+.about-page .about-hero__veil {
+  background: rgba(13, 5, 27, 0.55);
+}
+.about-page .about-stage__banner {
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.about-page .about-stage__banner > .about-wall {
+  display: none;
+}
+.about-page .about-stage__title {
+  color: var(--fg);
+}
+.about-page .about-panel__hero-copy :is(h3, .about-panel__eyebrow) {
+  color: #fff;
+}
+.about-page .about-panel__hero-copy h3 {
+  white-space: normal;
+}
+.about-page .about-jump__link {
+  cursor: pointer;
+}
+.about-page .about-jump__icon {
+  border-radius: 0;
+  background: transparent;
+}
+.about-page .about-faith-band {
+  background: var(--bg-soft);
+}
+.about-page .about-lead__story-glow {
+  display: none;
+}
+.about-page :is(.about-lead__story-body, .about-lead__story-kicker) {
+  color: #fff;
+}
+.about-page :is(button, a):focus-visible {
+  outline: 3px solid var(--yellow, #ffde59);
+  outline-offset: 4px;
+}
+
+.about-page .about-ety {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  overflow: clip;
+}
+.about-page .about-ety__grid {
+  gap: 0;
+}
+.about-page .about-ety__card {
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 5vw, 5rem);
+  border-left: 0;
+  border-top: 4px solid var(--purple);
+}
+.about-page .about-ety__card + .about-ety__card {
+  border-left: 1px solid var(--line);
+}
+.about-page .about-ety__blurb-wrap {
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 5vw, 5rem);
+}
+.about-page .about-ety__blurb {
+  margin: 0;
+}
+
+.about-page .about-jump__link {
+  background: var(--bg);
+  border: 0;
+  border-bottom: 2px solid var(--line);
+  box-shadow: none;
+}
+.about-page .about-jump__link.is-active {
+  color: var(--fg);
+  border-bottom-color: var(--purple);
+  box-shadow: none;
+}
+.about-page .about-jump__link.is-active .about-jump__hint {
+  color: var(--fg-soft);
+}
+.about-page .about-jump__link.is-active .about-jump__icon {
+  background: transparent;
+  color: var(--purple);
+}
+.about-page .about-panel__hero {
+  background: #18171a;
+}
+.about-page .about-panel__hero-media {
+  background: url("https://images.kharis.org/site-images/main/11577f5e512c33cd/about-mission-outreach.jpg")
+    center 45% / cover no-repeat;
+  filter: grayscale(1);
+}
+.about-page .about-panel__hero-media > svg {
+  display: none;
+}
+.about-page .about-panel__hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 9, 13, 0.56);
+}
+.about-page .about-panel__hero-copy {
+  padding-block: 2.5rem;
+}
+.about-page .about-panel__hero-copy .about-panel__eyebrow {
+  color: var(--yellow, #ffde59);
+}
+
+.about-page .about-panel__lead {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 70ch;
+}
+.about-page .about-panel__body {
+  min-width: 0;
+}
+
+.about-page .about-panel__pillars {
+  gap: 0;
+}
+.about-page .about-panel__pillar,
+.about-page .about-panel__pillar.is-active {
+  background: transparent;
+  color: var(--fg);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 1.15rem 0.9rem;
+}
+.about-page .about-panel__pillar.is-active {
+  border-left-color: var(--purple);
+}
+.about-page .about-panel__pillar-icon {
+  display: none;
+}
+.about-page .about-panel__focus {
+  background: transparent;
+  color: var(--fg);
+  box-shadow: none;
+  padding: 1rem 0 1rem clamp(1.25rem, 3vw, 2.5rem);
+}
+.about-page .about-panel__focus :is(h4, p, blockquote) {
+  color: var(--fg);
+}
+.about-page .about-panel__focus .about-panel__focus-kicker {
+  color: var(--purple);
+}
+.about-page .about-panel__focus blockquote {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  padding-top: 0.75rem;
+}
+@media (max-width: 759px) {
+  .about-page .about-panel__focus {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 1.5rem 0;
+  }
+}
+
+.about-page .about-panel__pillar.is-active .about-panel__pillar-title {
+  color: var(--fg);
+}
+
+.about-page .about-stage__banner {
+  border: 0;
+}
+.about-page .about-stage__title {
+  text-align: left;
+  letter-spacing: -0.065em;
+  line-height: 0.95;
+}
+.about-page .about-stage__title > span {
+  color: var(--purple);
+}
+.about-page .about-stage__banner-inner {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+}
+.about-page .about-jump--stage {
+  max-width: none;
+  padding: 0 clamp(1.25rem, 5vw, 5rem) 2rem;
+}
+.about-page .about-jump__link {
+  min-height: 10rem;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-content: start;
+  align-items: start;
+  gap: 0.9rem;
+  padding: 1.25rem clamp(0.9rem, 2vw, 1.75rem);
+  border: 0;
+  border-bottom: 2px solid var(--line);
+  box-shadow: none;
+}
+.about-page .about-jump__link.is-active {
+  background: transparent;
+  border-bottom-color: var(--purple);
+  box-shadow: none;
+}
+.about-page .about-jump__icon {
+  display: none;
+}
+.about-page .about-jump__chapter-number {
+  font-size: 0.75rem;
+  color: var(--purple);
+  letter-spacing: 0.12em;
+}
+.about-page .about-jump__label {
+  font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+}
+.about-page .about-stage__canvas {
+  max-width: none;
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+}
+.about-page .about-stage__panel {
+  box-shadow: none;
+  border: 0;
+}
+.about-page .about-panel__hero {
+  min-height: clamp(23rem, 48vw, 38rem);
+}
+.about-page .about-panel__hero-copy {
+  padding: clamp(1.5rem, 5vw, 4rem);
+}
+.about-page .about-panel__hero-copy h3 {
+  font-size: clamp(2.1rem, 5vw, 4.7rem);
+  max-width: 21ch;
+}
+.about-page .about-panel__lead {
+  line-height: 1.5;
+}
+.about-page .about-panel__split {
+  margin-top: 3rem;
+}
+.about-page .about-faith-band {
+  margin-top: 3rem;
+  padding-block: clamp(3rem, 7vw, 7rem);
+}
+.about-page .about-faith-band .about-section__title {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  letter-spacing: -0.05em;
+  max-width: 12ch;
+  line-height: 1;
+}
+@media (max-width: 759px) {
+  .about-page .about-jump__row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+  .about-page .about-jump__hint {
+    display: none;
+  }
+  .about-page .about-jump__link {
+    min-height: 8rem;
+    grid-template-rows: auto 1fr;
+    padding: 1rem 0.65rem;
+  }
+  .about-page .about-jump__label {
+    font-size: 1rem;
+  }
+}
+.about-page .about-stage__banner-inner {
+  display: block;
+  width: 100%;
+}
+
+.about-page .about-stage__canvas {
+  padding-bottom: 2rem;
+}
+.about-page .about-panel__hero {
+  overflow: visible;
+  isolation: isolate;
+  margin-right: clamp(0.75rem, 2vw, 2rem);
+  margin-bottom: 0;
+}
+.about-page .about-panel__hero::before {
+  content: "";
+  position: absolute;
+  inset: 1.25rem -1.25rem -1.25rem 1.25rem;
+  z-index: -1;
+}
+.about-page .about-panel__hero-media {
+  inset: 0;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -22px rgba(15, 10, 23, 0.45);
+}
+.about-page .about-panel__hero-copy {
+  padding-bottom: clamp(5rem, 9vw, 8rem);
+}
+.about-page .about-panel__body {
+  position: relative;
+  z-index: 2;
+  margin: -3rem 0 0 clamp(1rem, 7vw, 7rem);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  background: var(--bg);
+  box-shadow: 0 20px 55px -30px rgba(15, 10, 23, 0.3);
+}
+.about-page .about-jump__link {
+  transition:
+    transform 0.3s ease,
+    text-shadow 0.3s ease;
+}
+.about-page .about-jump__link:hover {
+  text-shadow: 0 5px 16px rgba(35, 10, 60, 0.13);
+}
+@media (max-width: 759px) {
+  .about-page .about-panel__hero::before {
+    inset: 0.65rem -0.65rem -0.65rem 0.65rem;
+  }
+  .about-page .about-panel__body {
+    margin-left: 0.75rem;
+    margin-top: -2rem;
+    padding: 1.5rem 1.1rem;
+  }
+  .about-page .about-panel__hero-copy {
+    padding-bottom: 4rem;
+  }
+}
+
+.about-page .about-stage__title {
+  font-size: clamp(2.5rem, 5.5vw, 5rem);
+}
+.about-page .about-stage__banner {
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+.about-page .about-panel__pillar,
+.about-page .about-panel__pillar.is-active {
+  border-left: 0;
+}
+.about-page .about-panel__pillar.is-active .about-panel__pillar-num {
+  color: var(--fg);
+}
+.about-page .about-panel__pillar.is-active .about-panel__pillar-title {
+  text-decoration: underline;
+  text-underline-offset: 0.4em;
+}
+.about-page .about-panel__hero::before {
+  border: 0;
+  background: var(--bg-soft);
+}
+.about-page .about-panel__body {
+  border-top: 0;
+}
+.about-page :is(button, .about-lead__story-cta) {
+  border-radius: 0;
+}
+.about-page .about-ety__blurb {
+  max-width: none;
+  width: 100%;
+  font-size: clamp(1.1rem, 1.8vw, 1.65rem);
+  line-height: 1.6;
+  text-wrap: balance;
+  font-weight: 500;
+}
+
+.about-page .about-panel__hero--leadership .about-panel__hero-media {
+  background-image: url("https://images.kharis.org/site-images/main/61b5f617ef58872c/about-pastors-portrait.jpg");
+}
+.about-page .about-panel__focus {
+  border-left: 0;
+}
+.about-page .about-lead__profile-photo img {
+  transition:
+    filter 0.6s ease,
+    scale 0.8s ease;
+  filter: grayscale(1);
+}
+.about-page .about-lead__profile:hover img {
+  filter: grayscale(0);
+  scale: 1.025;
+}
+.about-page .about-panel__hero-media {
+  transition: filter 0.8s ease;
+}
+.about-page .about-panel__hero:hover .about-panel__hero-media {
+  filter: grayscale(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-page .about-lead__profile-photo img,
+  .about-page .about-panel__hero-media {
+    transition: none;
+  }
+  .about-page .about-lead__profile:hover img {
+    scale: 1;
+  }
+}
+.about-page .about-panel__hero-media {
+  background-size: cover;
+}
+.about-page .about-panel__hero--leadership .about-panel__hero-media {
+  background-position: center top;
+}
+
+.about-page .about-hero__brand,
+.about-page .about-panel__hero-copy h3 {
+  text-shadow:
+    0 1px 1px rgba(7, 4, 12, 0.35),
+    0 4px 10px rgba(7, 4, 12, 0.25),
+    0 12px 28px rgba(7, 4, 12, 0.16);
+}
+.about-page .about-stage__title,
+.about-page .about-faith-band .about-section__title {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7),
+    0 5px 12px rgba(30, 19, 40, 0.08);
+  font-weight: 700;
+}
+.about-page .about-panel__lead {
+  font-size: clamp(1.15rem, 1.75vw, 1.5rem);
+  font-weight: 500;
+}
+.about-page .about-panel__focus h4 {
+  font-size: clamp(1.6rem, 2.5vw, 2.35rem);
+  letter-spacing: -0.035em;
+}
+.about-page .about-panel__focus blockquote {
+  font-size: clamp(1.3rem, 2.3vw, 1.8rem);
+  line-height: 1.5;
+}
+.about-page .about-lead__profile {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+}
+.about-page .about-lead__profile-copy {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+  margin-left: -2rem;
+  padding: clamp(1.5rem, 3vw, 3rem);
+  box-shadow: 0 12px 24px -20px rgba(25, 15, 40, 0.3);
+}
+.about-page .about-lead__profile-copy h4 {
+  color: var(--fg);
+  font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+.about-page .about-lead__profile-photo {
+  box-shadow:
+    0 3px 6px rgba(25, 15, 40, 0.04),
+    0 12px 20px -12px rgba(25, 15, 40, 0.16),
+    0 24px 40px -24px rgba(25, 15, 40, 0.22);
+}
+.about-page .about-lead__profile:nth-child(2) {
+  margin-top: 3rem;
+}
+.about-page .about-lead__profile:nth-child(2) .about-lead__profile-copy {
+  margin-left: 0;
+  margin-right: -2rem;
+}
+@media (max-width: 860px) {
+  .about-page .about-lead__profile-copy,
+  .about-page .about-lead__profile:nth-child(2) .about-lead__profile-copy {
+    margin: -1rem 0.5rem 0;
+    padding: 1.5rem 1rem;
+  }
+}
+
+.about-page .about-headline-window {
+  display: inline-block;
+  overflow: clip;
+  vertical-align: bottom;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+  margin-right: 0.22em;
+}
+.about-page .about-headline-phrase {
+  display: inline-block;
+}
+.about-page .about-panel__hero-copy h3 {
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+.about-page .about-panel__eyebrow {
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+}
+.about-page .about-lead__profile-focus {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.about-page .about-lead__profile-blurb {
+  font-weight: 400;
+  line-height: 1.75;
+}
+@media (max-width: 759px) {
+  .about-page .about-headline-window {
+    display: inline;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+  }
+  .about-page .about-headline-phrase {
+    display: inline;
+  }
+}
+
+.about-page
+  :is(
+    .about-stage__title,
+    .about-section__title,
+    .about-lead__profile-copy h4,
+    .about-panel__focus h4
+  ) {
+  position: relative;
+  text-shadow:
+    0 1px 0 rgba(21, 14, 30, 0.08),
+    0 2px 1px rgba(21, 14, 30, 0.06),
+    0 5px 4px rgba(21, 14, 30, 0.05),
+    0 10px 12px rgba(21, 14, 30, 0.07);
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    text-shadow 0.3s ease;
+}
+.about-page
+  :is(
+    .about-stage__title,
+    .about-section__title,
+    .about-lead__profile-copy h4,
+    .about-panel__focus h4
+  ):hover {
+  transform: translateY(-3px);
+  text-shadow:
+    0 1px 0 rgba(21, 14, 30, 0.08),
+    0 3px 2px rgba(21, 14, 30, 0.06),
+    0 8px 7px rgba(21, 14, 30, 0.06),
+    0 16px 18px rgba(21, 14, 30, 0.08);
+}
+.about-page .about-panel__hero-copy h3,
+.about-page .about-hero__brand {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.35),
+    0 2px 1px rgba(0, 0, 0, 0.25),
+    0 5px 5px rgba(0, 0, 0, 0.18),
+    0 12px 20px rgba(0, 0, 0, 0.185);
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-page
+    :is(
+      .about-stage__title,
+      .about-section__title,
+      .about-lead__profile-copy h4,
+      .about-panel__focus h4
+    ) {
+    transition: none;
+  }
+  .about-page
+    :is(
+      .about-stage__title,
+      .about-section__title,
+      .about-lead__profile-copy h4,
+      .about-panel__focus h4
+    ):hover {
+    transform: none;
+  }
+}
+.about-page .about-stage__panel {
+  overflow: visible;
+}
+.about-page {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.about-page .about-panel__focus .about-panel__verse {
+  display: inline-block;
+}
+.about-page .about-vision-themes h3 {
+  margin: 0.75rem 0 1.25rem;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  max-width: 32ch;
+}
+.about-page .about-vision-themes__grid {
+  display: grid;
+}
+.about-page .about-vision-theme summary {
+  list-style: none;
+  cursor: pointer;
+  flex-direction: column;
+}
+.about-page .about-vision-theme summary::-webkit-details-marker {
+  display: none;
+}
+.about-page .about-vision-theme summary svg {
+  transition: transform 0.25s ease;
+}
+.about-page .about-vision-theme summary:hover svg {
+  transform: translateY(-4px);
+}
+.about-page .about-vision-theme summary:focus-visible {
+  outline: 2px solid #ffde59;
+  outline-offset: 6px;
+}
+.about-page .about-vision-theme > p {
+  margin: 1rem 0 0;
+}
+@media (max-width: 1000px) {
+  .about-page .about-vision-themes__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .about-page .about-vision-themes__grid {
+    gap: 2rem 1.25rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-page .about-vision-theme summary svg {
+    transition: none;
+  }
+  .about-page .about-vision-theme summary:hover svg {
+    transform: none;
+  }
+}
+
+.about-page .about-panel__focus .about-panel__verse {
+  color: #9a7500 !important;
+  background: transparent;
+  padding: 0;
+}
+.about-page .about-vision-themes {
+  background: transparent;
+  color: var(--fg);
+}
+.about-page .about-vision-themes h3 {
+  color: var(--fg);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+}
+.about-page .about-vision-themes .about-panel__eyebrow {
+  color: var(--purple);
+}
+.about-page .about-vision-theme > p {
+  color: var(--fg-soft);
+}
+.about-page .about-vision-theme summary:focus-visible {
+  outline-color: var(--purple);
+}
+@media (prefers-color-scheme: dark) {
+  html[data-theme="dark"] .about-page .about-panel__focus .about-panel__verse,
+  html[data-theme="dark"] .about-page .about-vision-theme summary svg {
+    color: #ffde59 !important;
+  }
+}
+
+.about-page .about-panel__hero--vision .about-panel__hero-media {
+  background-image: url("https://images.kharis.org/site-images/main/a080e8123b487573/vision-church-family.jpg");
+  background-position: center 40%;
+}
+.about-page .about-vision-themes .about-panel__hero-copy h3 {
+  color: #fff;
+}
+.about-page .about-vision-themes .about-panel__hero-copy .about-panel__eyebrow {
+  color: #ffde59;
+}
+.about-page .about-vision-themes__content {
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+.about-page .about-vision-themes__intro {
+  color: var(--purple);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 1.5rem;
+}
+.about-page .about-vision-themes__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+}
+.about-page .about-vision-theme {
+  padding: 1.5rem 0;
+}
+.about-page .about-vision-theme summary {
+  display: grid;
+  grid-template-columns: 2rem 1fr 1rem;
+  align-items: start;
+  gap: 1rem;
+}
+.about-page .about-vision-theme summary svg {
+  width: 1.8rem;
+  height: 1.8rem;
+  color: var(--purple);
+}
+.about-page .about-vision-theme summary span {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.about-page .about-vision-theme__toggle {
+  color: var(--muted);
+  transition: transform 0.25s ease;
+}
+.about-page .about-vision-theme[open] .about-vision-theme__toggle {
+  transform: rotate(45deg);
+}
+.about-page .about-vision-theme > p {
+  margin-left: 3rem;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+@media (max-width: 700px) {
+  .about-page .about-vision-themes__grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-page .about-vision-theme__toggle {
+    transition: none;
+  }
+}
+.about-page .about-vision-themes .about-panel__hero-copy h3 {
+  font-size: clamp(2.1rem, 5vw, 4.7rem);
+  max-width: 21ch;
+  line-height: 1.08;
+}
+
+.about-page .about-lead__story {
+  grid-template-columns: 0.45fr 1fr;
+  gap: 1.5rem clamp(2rem, 5vw, 5rem);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+.about-page .about-lead__story-body {
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.75;
+  margin: 0;
+}
+.about-page .about-lead__story-body p:last-child {
+  margin-bottom: 0;
+}
+.about-page .about-lead__story-action {
+  grid-column: 2;
+}
+.about-page .about-lead__story-cta {
+  border-radius: 0;
+}
+@media (max-width: 800px) {
+  .about-page .about-lead__story {
+    grid-template-columns: 1fr;
+  }
+  .about-page .about-lead__story-action {
+    grid-column: 1;
+  }
+}
+
+.about-page .about-lead__story {
+  display: block;
+  background: #2a104b;
+  color: #fff;
+  position: relative;
+}
+.about-page .about-lead__story-kicker {
+  color: #ffde59;
+  margin: 0 0 2rem;
+}
+.about-page .about-lead__story-body {
+  max-width: none;
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  color: #fff;
+}
+.about-page .about-lead__story-beat h4 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.5rem, 2.3vw, 2.15rem);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: #fff;
+}
+.about-page .about-lead__story-beat:first-child h4 {
+  color: #ffde59;
+}
+.about-page .about-lead__story-body p {
+  font-weight: 400;
+  color: #f2edf7;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+}
+.about-page .about-lead__story-action {
+  margin-top: 2rem;
+}
+.about-page .about-lead__story-cta {
+  background: #fff;
+  color: #2a104b;
+}
+@media (max-width: 850px) {
+  .about-page .about-lead__story-body {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .about-page .about-lead__story-body p {
+    max-width: 60ch;
+  }
+}
+
+.about-page .about-panel__body,
+.about-page .about-lead__story {
+  margin-left: clamp(1rem, 4vw, 3.5rem);
+  margin-right: clamp(1rem, 4vw, 3.5rem);
+  padding-left: clamp(1.5rem, 3vw, 2.5rem);
+  padding-right: clamp(1.5rem, 3vw, 2.5rem);
+}
+.about-page .about-panel__body {
+  margin-top: -3rem;
+}
+.about-page .about-lead__story {
+  margin-top: 2rem;
+}
+.about-page .about-lead__profile-copy,
+.about-page .about-lead__profile:nth-child(2) .about-lead__profile-copy {
+  margin-left: 0;
+  margin-right: 0;
+}
+.about-page .about-lead__story-body {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 850px) {
+  .about-page .about-lead__story-body {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 759px) {
+  .about-page .about-panel__body,
+  .about-page .about-lead__story {
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+  .about-page .about-panel__body {
+    margin-top: -2rem;
+  }
+}
+
+.about-page
+  :is(
+    .about-panel__lead,
+    .about-panel__focus > p:not(.about-panel__focus-kicker):not(.about-panel__verse),
+    .about-lead__profile-focus,
+    .about-lead__profile-blurb,
+    .about-lead__story-body p,
+    .about-vision-theme > p
+  ) {
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: normal;
+}
+.about-page .about-lead__profile-focus {
+  font-weight: 600;
+}
+.about-page .about-lead__story-body p {
+  max-width: none;
+}
+
+.about-page .about-lead__profile:nth-child(2) .about-lead__profile-photo img {
+  object-position: center top;
+}
+@media (max-width: 759px) {
+  .about-page .about-panel__hero--leadership {
+    min-height: 18rem;
+  }
+}
+
+@media (min-width: 760px) {
+  .about-page .about-panel__hero--leadership .about-panel__hero-copy {
+    align-self: start;
+    max-width: 45%;
+    padding: clamp(1.5rem, 3vw, 3rem);
+  }
+  .about-page .about-panel__hero--leadership .about-panel__hero-copy h3 {
+    font-size: clamp(2rem, 2.6vw, 3rem);
+  }
+}
