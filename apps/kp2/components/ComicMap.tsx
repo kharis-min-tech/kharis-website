@@ -471,6 +471,9 @@ export function ComicMap({
             moved.current = false;
             return;
           }
+          const pin = pinAt(event);
+          if (pin) onSelect(pin.slug);
+        }}
       />
       {tip ? (
         <div
