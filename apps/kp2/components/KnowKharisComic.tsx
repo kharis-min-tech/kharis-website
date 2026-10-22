@@ -60,7 +60,7 @@ export function KnowKharisComic() {
         <div>
           <p className="kp-know__narration">Passionate for God and His Word…</p>
           <h2 id="kp-know-title" className="kp-know__title">
-            Get to know <span>Kharis</span>
+            Get to know <span>Kharis Phase 2</span>
           </h2>
         </div>
         <p className="kp-know__lede">Everything you need, one tap away.</p>
