@@ -38,7 +38,7 @@
 .kp-know__title {
   margin: 0;
   font-family: var(--font-anton), "Anton", sans-serif;
-  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
   font-weight: 400;
   line-height: 0.95;
   text-transform: uppercase;

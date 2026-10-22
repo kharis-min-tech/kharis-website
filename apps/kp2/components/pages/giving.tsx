@@ -263,13 +263,22 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
             </figure>
             <div>
               <h2 className="font-display-lg text-headline-lg-mobile md:text-display-lg uppercase leading-none tracking-tight mb-6">
-                Spurgeon&apos;s <span className="text-[#f7be1d]">Centre</span>
+                We&rsquo;ve purchased <span className="text-[#f7be1d]">our new home</span>
               </h2>
-              <p className="font-body-lg text-body-lg text-white/85 max-w-xl mb-8">
-                Kharis Church has purchased Spurgeon&apos;s College in South London. We are
-                renovating it to keep training missionaries and sending them into the world, and to
-                strengthen the church in the UK.
-              </p>
+              <div className="font-body-lg text-body-lg text-white/85 max-w-xl mb-8 space-y-4">
+                <p>
+                  We are excited to announce that we have officially acquired our own facility that
+                  was formerly Spurgeon&rsquo;s College.
+                </p>
+                <p>
+                  Now begins the exciting work restoring and developing this facility into a home
+                  for advancing the gospel.
+                </p>
+                <p>
+                  If you would like to partner with us and give towards this project, you can do so
+                  using the link below.
+                </p>
+              </div>
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
                 <a
                   href={SPURGEONS_CENTRE.giveUrl}

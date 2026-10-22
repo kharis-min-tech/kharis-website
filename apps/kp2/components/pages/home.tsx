@@ -243,7 +243,12 @@ function Index({
           eyebrow="Salvation · Healing · Miracles"
           title="Testimonies"
           intro="Salvation and life transformation, healing, and miracles — what God is doing in this house."
-          items={testimonials.map((t) => ({ quote: t.quote, name: t.name, meta: t.location }))}
+          items={testimonials.map((t) => ({
+            quote: t.quote,
+            title: t.title,
+            name: t.name,
+            meta: t.location,
+          }))}
         />
 
         <section
