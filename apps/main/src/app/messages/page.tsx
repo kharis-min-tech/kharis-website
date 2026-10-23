@@ -5,6 +5,10 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { fetchLatestMessages, fetchPastorMessages } from "@/lib/youtube";
 
+// Pre-render the Messages hub and refresh it in the background so visitors aren't
+// waiting for multiple YouTube API calls on every uncached page request.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Messages | Kharis Church",
   description:
