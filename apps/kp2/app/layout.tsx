@@ -94,6 +94,7 @@ const MATERIAL_ICONS = [
   "near_me",
   "north_east",
   "open_in_new",
+  "pause",
   "person",
   "phone",
   "photo_camera",

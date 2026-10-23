@@ -46,7 +46,7 @@ function DepartmentCard({ dept }: { dept: Department }) {
           decoding="async"
         />
         <span
-          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border border-on-background/10`}
+          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border-2 border-[#151218]`}
         >
           <span className="material-symbols-outlined text-sm" aria-hidden="true">
             {dept.icon}
@@ -133,7 +133,7 @@ function DepartmentsPage() {
                 </div>
                 <div className="flex flex-1 flex-col p-6">
                   <span
-                    className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border border-on-background/10`}
+                    className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border-2 border-[#151218]`}
                   >
                     <span className="material-symbols-outlined text-sm" aria-hidden="true">
                       {dept.icon}
