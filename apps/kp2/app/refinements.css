@@ -1115,6 +1115,10 @@ html[data-kp-turn="on"] .kp-turn__stamp {
 }
 
 /* Phone layouts keep the print styling while giving content room to wrap. */
+.kp-home-hero__still {
+  display: none;
+}
+
 @media (max-width: 767px) {
   html {
     scroll-padding-top: 90px;
@@ -1122,6 +1126,27 @@ html[data-kp-turn="on"] .kp-turn__stamp {
   .kp-home-hero {
     height: auto;
     min-height: min(680px, calc(100svh - 74px));
+  }
+  .kp-home-hero__mosaic {
+    display: none;
+  }
+  .kp-home-hero__still {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+  }
+  .kp-home-hero__veil {
+    background: linear-gradient(
+      180deg,
+      rgb(21 18 24 / 22%) 0%,
+      rgb(21 18 24 / 58%) 46%,
+      rgb(21 18 24 / 74%) 100%
+    );
   }
   .kp-home-hero-copy {
     position: relative;

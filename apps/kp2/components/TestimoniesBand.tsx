@@ -62,7 +62,6 @@ export function TestimoniesBand({
   const [selected, setSelected] = useState<{ item: TestimonyItem; accentIndex: number } | null>(
     null,
   );
-  const [selectedPhoto, setSelectedPhoto] = useState<{ src: string; alt: string } | null>(null);
   const dragRef = useRef({
     active: false,
     moved: false,
@@ -72,16 +71,13 @@ export function TestimoniesBand({
   });
 
   useEffect(() => {
-    if (!selected && !selectedPhoto) return;
+    if (!selected) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setSelected(null);
-        setSelectedPhoto(null);
-      }
+      if (e.key === "Escape") setSelected(null);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [selected, selectedPhoto]);
+  }, [selected]);
 
   const scrollByCard = (dir: -1 | 1) => {
     const rail = railRef.current;
@@ -178,21 +174,7 @@ export function TestimoniesBand({
 
         <div className="kp-tst__photos">
           {PHOTOS.map((photo, i) => (
-            <figure
-              key={photo.src}
-              className="kp-tst__photo kp-tst__photo--clickable"
-              style={{ "--i": i } as CSSProperties}
-              role="button"
-              tabIndex={0}
-              aria-label={`View full photo: ${photo.alt}`}
-              onClick={() => setSelectedPhoto(photo)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setSelectedPhoto(photo);
-                }
-              }}
-            >
+            <figure key={photo.src} className="kp-tst__photo" style={{ "--i": i } as CSSProperties}>
               <img
                 src={photo.src}
                 alt={photo.alt}
@@ -200,9 +182,6 @@ export function TestimoniesBand({
                 decoding="async"
                 style={{ objectPosition: photo.position }}
               />
-              <span className="kp-tst__photo-badge" aria-hidden="true">
-                <span className="material-symbols-outlined">zoom_in</span>
-              </span>
             </figure>
           ))}
         </div>
@@ -347,35 +326,6 @@ export function TestimoniesBand({
               <strong>{selected.item.name}</strong>
               <span>{selected.item.meta}</span>
             </div>
-          </div>
-        </div>
-      ) : null}
-
-      {selectedPhoto ? (
-        <div
-          className="kp-tst__modal-backdrop kp-tst__photo-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={selectedPhoto.alt}
-          onClick={() => setSelectedPhoto(null)}
-        >
-          <div className="kp-tst__photo-lightbox-inner" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="kp-tst__modal-close kp-tst__photo-lightbox-close"
-              aria-label="Close photo"
-              onClick={() => setSelectedPhoto(null)}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M5 5l14 14M19 5 5 19" />
-              </svg>
-            </button>
-            <img
-              src={selectedPhoto.src}
-              alt={selectedPhoto.alt}
-              className="kp-tst__photo-lightbox-img"
-            />
-            <p className="kp-tst__photo-lightbox-caption">{selectedPhoto.alt}</p>
           </div>
         </div>
       ) : null}
