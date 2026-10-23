@@ -324,11 +324,44 @@ div.events-page {
   text-align: center;
 }
 
+.events-stack__empty-mark {
+  display: grid;
+  width: 3.25rem;
+  height: 3.25rem;
+  place-items: center;
+  border: 1px solid rgba(99, 14, 212, 0.2);
+  border-radius: 50%;
+  background: #f4effa;
+  color: #630ed4;
+}
+
+.events-stack__empty-mark svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
 .events-stack__empty p {
   margin: 0;
   font-size: 1.05rem;
   font-weight: 600;
   color: #52525b;
+}
+
+.events-stack__empty-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.events-stack__empty .events-stack__empty-title {
+  color: var(--fg);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 800;
+}
+
+.events-stack__empty .events-stack__empty-description {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .events-stack__clear {
@@ -845,6 +878,12 @@ html[data-theme="dark"] .events-stack {
 
 html[data-theme="dark"] .events-stack__empty p {
   color: var(--muted);
+}
+
+html[data-theme="dark"] .events-stack__empty-mark {
+  border-color: rgba(193, 154, 255, 0.28);
+  background: #24172f;
+  color: #d0a8ff;
 }
 
 html[data-theme="dark"] .events-stack__clear {

@@ -70,13 +70,76 @@
 }
 
 .events-next__empty {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   margin: 0 0 1.25rem;
-  padding: 1rem 1.2rem;
-  border-left: 3px solid #7c3ac8;
-  background: #f4effa;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid rgba(99, 14, 212, 0.16);
+  border-left: 4px solid #630ed4;
+  background: linear-gradient(105deg, #f7f2ff, #fbf9ff 68%, #fff);
   color: #342641;
-  font-weight: 650;
-  line-height: 1.55;
+}
+
+.events-next__empty-mark {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #630ed4;
+  color: #fff;
+}
+
+.events-next__empty-mark svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.events-next__empty-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.events-next__empty-kicker,
+.events-next__empty-note {
+  margin: 0;
+}
+
+.events-next__empty-kicker {
+  color: #30213e;
+  font-weight: 800;
+}
+
+.events-next__empty-note {
+  margin-top: 0.25rem;
+  color: #655a70;
+  line-height: 1.5;
+}
+
+.events-next__empty-check {
+  flex: 0 0 auto;
+  color: #630ed4;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .events-next__empty {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .events-next__empty-copy {
+    flex-basis: calc(100% - 4rem);
+  }
+
+  .events-next__empty-check {
+    margin-left: 4rem;
+  }
 }
 .events-next__empty a {
   color: #630ed4;
@@ -347,6 +410,25 @@ html[data-theme="dark"] .events-next {
 
 html[data-theme="dark"] .events-next__eyebrow {
   color: #a98be6;
+}
+
+html[data-theme="dark"] .events-next__empty {
+  border-color: rgba(193, 154, 255, 0.25);
+  border-left-color: #a568f0;
+  background: linear-gradient(105deg, #1b1225, #17111e 68%, #130f18);
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .events-next__empty-kicker {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .events-next__empty-note {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .events-next__empty-check {
+  color: #d0a8ff;
 }
 
 html[data-theme="dark"] .events-next__tile:focus-visible {
