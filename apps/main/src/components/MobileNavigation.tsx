@@ -14,7 +14,6 @@ import "./mobile-navigation.css";
 const primary = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Locations", href: "/locations" },
   { label: "Events", href: "/events" },
   { label: "Messages", href: "/messages" },
   { label: "Life at Kharis", href: "/life" },

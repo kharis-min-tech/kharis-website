@@ -1,18 +1,14 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { ChatIcon } from "@/components/ChatIcon";
 import { markChatOpened, useChatAttention } from "@/components/useChatAttention";
 import "./chat-attention.css";
 
 const loadChat = () => import("@/components/LifeChatbot");
 
-const LifeChatbot = dynamic(() => loadChat().then((m) => m.LifeChatbot), {
-  ssr: false,
-  loading: () => <Launcher busy />,
-});
+const LifeChatbot = lazy(() => loadChat().then((m) => ({ default: m.LifeChatbot })));
 
 function Launcher({
   busy = false,
@@ -65,6 +61,7 @@ export function SiteChat() {
   const pathname = usePathname();
   const onLife = pathname === "/life";
   const [requested, setRequested] = useState(false);
+  const [phoneStartSheet, setPhoneStartSheet] = useState(false);
   const [loaded, setLoaded] = useState(onLife);
   const [opened, setOpened] = useState(false);
   // Once the chat has loaded it stays mounted, so leaving Life keeps the conversation.
@@ -90,6 +87,7 @@ export function SiteChat() {
           onOpen={() => {
             markOpened();
             setRequested(true);
+            setPhoneStartSheet(window.matchMedia("(max-width: 639px)").matches);
           }}
         />
       </>
@@ -98,12 +96,16 @@ export function SiteChat() {
   return (
     <>
       {cue}
-      <LifeChatbot
-        nudge={onLife && !requested}
-        startOpen={requested}
-        fabClassName={fabClass}
-        onOpen={markOpened}
-      />
+      <Suspense fallback={<Launcher busy />}>
+        <LifeChatbot
+          nudge={onLife && !requested && !phoneStartSheet}
+          startOpen={requested && !phoneStartSheet}
+          startSheet={phoneStartSheet}
+          onStartSheetClose={() => setPhoneStartSheet(false)}
+          fabClassName={fabClass}
+          onOpen={markOpened}
+        />
+      </Suspense>
     </>
   );
 }

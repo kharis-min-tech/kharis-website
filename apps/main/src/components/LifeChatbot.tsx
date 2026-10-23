@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { AudioLines, MapPin, MessageSquareText, Search, X } from "lucide-react";
 import { ChatIcon } from "@/components/ChatIcon";
 import { ChatMarkdown } from "@/components/ChatMarkdown";
 import { Icon } from "@/components/Icon";
@@ -208,16 +209,21 @@ function AppDownloadButtons() {
 export function LifeChatbot({
   nudge = true,
   startOpen = false,
+  startSheet = false,
+  onStartSheetClose,
   fabClassName = "",
   onOpen,
 }: {
   nudge?: boolean;
   startOpen?: boolean;
+  startSheet?: boolean;
+  onStartSheetClose?: () => void;
   /** Extra launcher classes, e.g. the site-wide bounce cue. */
   fabClassName?: string;
   onOpen?: () => void;
 }) {
   const [open, setOpen] = useState(startOpen);
+  const [startSheetOpen, setStartSheetOpen] = useState(startSheet);
   const [launcherReady, setLauncherReady] = useState(!nudge || startOpen);
   const [nudgeOpen, setNudgeOpen] = useState(false);
   const [nudgeDismissed, setNudgeDismissed] = useState(!nudge || startOpen);
@@ -264,17 +270,44 @@ export function LifeChatbot({
     window.requestAnimationFrame(() => fabRef.current?.focus());
   };
 
-  useEffect(() => {
-    if (!open) return;
-    const t = window.setTimeout(() => {
-      const target = panelRef.current?.querySelector<HTMLElement>(
-        ".life-chat__option:not(:disabled), #life-chat-input:not(:disabled), .life-chat__x",
+  const closeStartSheet = () => {
+    setStartSheetOpen(false);
+    onStartSheetClose?.();
+    window.requestAnimationFrame(() => fabRef.current?.focus());
+  };
+
+  const chooseStart = (choice: "chat" | "messages" | "branches") => {
+    setStartSheetOpen(false);
+    onStartSheetClose?.();
+    setOpen(true);
+    setUnread(false);
+    setNudgeOpen(false);
+    setNudgeDismissed(true);
+    onOpen?.();
+    if (choice === "messages" || choice === "branches") {
+      setComposerOpen(true);
+      setInput(
+        choice === "messages"
+          ? "Can you help me find a message?"
+          : "Can you help me find a Kharis branch?",
       );
+    }
+  };
+
+  useEffect(() => {
+    if (!open && !startSheetOpen) return;
+    const t = window.setTimeout(() => {
+      const target = startSheetOpen
+        ? document.querySelector<HTMLElement>(".life-chat-start__choice")
+        : panelRef.current?.querySelector<HTMLElement>(
+            ".life-chat__option:not(:disabled), #life-chat-input:not(:disabled), .life-chat__x",
+          );
       target?.focus();
     }, 60);
     const onKey = (e: globalThis.KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      setOpen(false);
+      if (startSheetOpen) closeStartSheet();
+      else setOpen(false);
       window.requestAnimationFrame(() => fabRef.current?.focus());
     };
     document.addEventListener("keydown", onKey);
@@ -282,7 +315,7 @@ export function LifeChatbot({
       window.clearTimeout(t);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, startSheetOpen]);
 
   useEffect(() => {
     if (!open) return;
@@ -299,13 +332,13 @@ export function LifeChatbot({
 
   useEffect(() => {
     // Only the phone sheet covers the page; the desktop popup leaves it scrollable.
-    if (!open || !window.matchMedia("(max-width: 639px)").matches) return;
+    if ((!open && !startSheetOpen) || !window.matchMedia("(max-width: 639px)").matches) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [open]);
+  }, [open, startSheetOpen]);
 
   const openChat = () => {
     setOpen(true);
@@ -578,7 +611,12 @@ export function LifeChatbot({
           aria-label={open ? "Close chat" : "Open chat with Grace"}
           onClick={() => {
             if (open) closeChat();
-            else openChat();
+            else if (window.matchMedia("(max-width: 639px)").matches) {
+              setStartSheetOpen(true);
+              setNudgeOpen(false);
+              setNudgeDismissed(true);
+              onOpen?.();
+            } else openChat();
           }}
         >
           {open ? (
@@ -596,6 +634,75 @@ export function LifeChatbot({
           )}
           {unread && !open ? <span className="life-chat__badge" aria-label="New reply" /> : null}
         </button>
+      ) : null}
+
+      {startSheetOpen ? (
+        <div
+          className="life-chat-start"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeStartSheet();
+          }}
+        >
+          <div className="life-chat-start__scrim" />
+          <section
+            className="life-chat-start__sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="life-chat-start-title"
+          >
+            <span className="life-chat-start__handle" aria-hidden="true" />
+            <button
+              type="button"
+              className="life-chat-start__close"
+              aria-label="Close"
+              onClick={closeStartSheet}
+            >
+              <X size={19} aria-hidden="true" />
+            </button>
+            <div className="life-chat-start__intro">
+              <span className="life-chat-start__badge">
+                <AudioLines size={14} aria-hidden /> Grace can help
+              </span>
+              <h2 id="life-chat-start-title">How would you like to start?</h2>
+            </div>
+            <div className="life-chat-start__choices">
+              <button
+                className="life-chat-start__choice"
+                type="button"
+                onClick={() => chooseStart("chat")}
+              >
+                <span>
+                  <MessageSquareText size={18} aria-hidden />
+                </span>
+                <strong>Ask Grace</strong>
+                <i>Get help with Kharis</i>
+              </button>
+              <button
+                className="life-chat-start__choice"
+                type="button"
+                onClick={() => chooseStart("messages")}
+              >
+                <span>
+                  <Search size={18} aria-hidden />
+                </span>
+                <strong>Find a message</strong>
+                <i>Explore teaching from Pastor David</i>
+              </button>
+              <button
+                className="life-chat-start__choice"
+                type="button"
+                onClick={() => chooseStart("branches")}
+              >
+                <span>
+                  <MapPin size={18} aria-hidden />
+                </span>
+                <strong>Find a branch</strong>
+                <i>Find a church location near you</i>
+              </button>
+            </div>
+          </section>
+        </div>
       ) : null}
 
       <div
@@ -733,7 +840,7 @@ export function LifeChatbot({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder="Type your message…"
+              placeholder="Search your message and ask anything…"
               autoComplete="off"
               disabled={busy}
             />
