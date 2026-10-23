@@ -9,6 +9,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Icon } from "@/components/Icon";
 import { KP2_URL } from "@/lib/kp2";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
+import { getHeaderOverlay, subscribeHeaderOverlay } from "@/lib/header-overlay";
 
 const aboutChildren = [
   { label: "About Us", href: "/about" },
@@ -74,14 +75,28 @@ export function SiteHeader({ tone = "auto" }: Props) {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [aboutOpen]);
 
-  const onDark = siteDark ? true : forceLight ? false : forceDark ? !open : !scrolled && !open;
-  const solid = siteDark
+  /* A pinned full-screen section can request a clear header with light text (see header-overlay). */
+  const overlay =
+    useSyncExternalStore(subscribeHeaderOverlay, getHeaderOverlay, () => false) && !open;
+
+  const onDark = overlay
     ? true
-    : forceLight
+    : siteDark
       ? true
-      : forceDark
-        ? scrolled || open
-        : scrolled || open;
+      : forceLight
+        ? false
+        : forceDark
+          ? !open
+          : !scrolled && !open;
+  const solid = overlay
+    ? false
+    : siteDark
+      ? true
+      : forceLight
+        ? true
+        : forceDark
+          ? scrolled || open
+          : scrolled || open;
 
   const linkTone = (active: boolean) =>
     `k-motion inline-flex h-10 cursor-pointer items-center text-[13px] leading-none font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${

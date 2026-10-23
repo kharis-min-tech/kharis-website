@@ -7,7 +7,7 @@ import { Icon } from "@/components/Icon";
 import { LIFE_MEMBERSHIP_URL } from "@/lib/life-content";
 import { lifeBySlug, type LifeSlug } from "@/lib/life-content";
 import { LifeDetailModal } from "@/components/LifeDetailModal";
-import { BelongList } from "@/components/BelongList";
+import { BelongStory } from "@/components/BelongStory";
 import "./life-refresh.css";
 
 function CloserPanel() {
@@ -174,17 +174,7 @@ export function LifeExperience() {
         </p>
       </section>
 
-      <section className="life-refresh-belong" aria-labelledby="life-refresh-belong-title">
-        <header className="life-refresh-belong__intro">
-          <p className="life-refresh__eyebrow">A ONE-ANOTHER LIFE</p>
-          <h2 id="life-refresh-belong-title">Belong in the family</h2>
-          <p>
-            Kharis is a family where you can grow in your relationship with Jesus, fellowship with
-            other Christ-like believers and discover your place in God&apos;s house.
-          </p>
-        </header>
-        <BelongList onLearnMore={openModal} />
-      </section>
+      <BelongStory onLearnMore={openModal} />
 
       <CloserPanel />
       <LifeDetailModal category={modalCategory} onClose={closeModal} />
