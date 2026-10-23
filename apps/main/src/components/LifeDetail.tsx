@@ -297,6 +297,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
               </p>
               <Link
                 href="/quiz"
+                data-no-smooth-nav
                 className="life-cta !bg-[#fd7f20] hover:!bg-[#ff933f] !text-white !border-0 shadow-[0_12px_32px_rgba(253,127,32,0.38)]"
               >
                 Start Department Quiz

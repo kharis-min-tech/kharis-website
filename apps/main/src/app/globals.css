@@ -1216,6 +1216,54 @@ h6 {
   background: linear-gradient(180deg, #faf8ff 0%, #f1ecff 48%, #ebe4ff 100%);
 }
 
+html[data-theme="dark"] .testimony-band {
+  background: linear-gradient(180deg, #120b1d 0%, #180d27 48%, #211136 100%);
+}
+
+html[data-theme="dark"] .testimony-viewport::before {
+  background: linear-gradient(90deg, #180d27 10%, transparent 100%);
+}
+
+html[data-theme="dark"] .testimony-viewport::after {
+  background: linear-gradient(270deg, #180d27 10%, transparent 100%);
+}
+
+html[data-theme="dark"] .testimony-card {
+  border-color: rgba(196, 166, 255, 0.2);
+  background: #241735;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="dark"] .testimony-card--1,
+html[data-theme="dark"] .testimony-card--2,
+html[data-theme="dark"] .testimony-card--3,
+html[data-theme="dark"] .testimony-card--4,
+html[data-theme="dark"] .testimony-card--5 {
+  background: #241735;
+}
+
+html[data-theme="dark"] .testimony-card__wall {
+  opacity: 0.28;
+}
+
+html[data-theme="dark"] .testimony-card__title,
+html[data-theme="dark"] .testimony-card__meta strong {
+  color: #fff !important;
+}
+
+html[data-theme="dark"] .testimony-card__quote {
+  color: #eee7f8;
+}
+
+html[data-theme="dark"] .testimony-card__footer {
+  border-top-color: rgba(238, 231, 248, 0.22);
+}
+
+html[data-theme="dark"] .testimony-card__meta span,
+html[data-theme="dark"] .testimony-card__read {
+  color: color-mix(in srgb, var(--testimony-accent, #c4a6ff) 58%, white);
+}
+
 .testimony-viewport {
   position: relative;
   overflow: hidden;
