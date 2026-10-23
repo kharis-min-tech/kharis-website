@@ -16,11 +16,11 @@ const PHOTOS = [
   {
     src: "/kp2/assets/testimony-1.jpg",
     alt: "Sharing a testimony at Kharis Phase 2",
-    position: "center 15%",
+    position: "center top",
   },
   {
     src: "/kp2/assets/testimony-2.jpg",
-    alt: "Fellowship and joy at Kharis Phase 2",
+    alt: "Praising God and giving thanks at Kharis Phase 2",
     position: "center 25%",
   },
   {
