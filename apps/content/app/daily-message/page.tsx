@@ -14,6 +14,7 @@ import { lookupSermons, searchSermons } from "@/lib/sermon-search";
 import type { CatalogueSermon } from "@/lib/sermon-catalogue";
 import type { DailyMessageRow } from "@/lib/types";
 import { useWorkspaceId } from "@/lib/workspace-context";
+import { cn } from "@/lib/utils";
 
 function todayIso() {
   const now = new Date();
@@ -110,13 +111,21 @@ export default function DailyMessagePage() {
 
   async function onSave(event: React.FormEvent) {
     event.preventDefault();
+    if (!workspace) return;
     if (!picked) {
       toast.error("Choose a sermon from the catalogue.");
       return;
     }
     setSaving(true);
     try {
-      await saveDailyMessage({ id: editingId, date, sermonId: picked.id, note });
+      await saveDailyMessage({
+        id: editingId,
+        date,
+        sermonId: picked.id,
+        sermonTitle: picked.title,
+        note,
+        workspace,
+      });
       remember([picked]);
       toast.success(editingId ? "Message updated" : "Message scheduled");
       setEditingId(undefined);
@@ -178,48 +187,19 @@ export default function DailyMessagePage() {
           value={date}
           onChange={(event) => setDate(event.target.value)}
         />
-        <div>
-          <Label htmlFor="sermon-search">Sermon</Label>
-          <Input
-            id="sermon-search"
-            value={query}
-            placeholder="Search title, speaker or scripture"
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          {picked ? (
-            <p className="mt-2 rounded-lg border border-border bg-card px-3 py-2 text-sm">
-              <span className="font-medium">{picked.title}</span>
-              <span className="mt-0.5 block text-muted-foreground">
-                {sermonLine(picked) || picked.id}
-              </span>
-            </p>
-          ) : (
-            <p className="mt-1 text-xs text-muted-foreground">
-              Search the sermon catalogue, then pick one.
-            </p>
-          )}
-          {searching ? <p className="mt-2 text-xs text-muted-foreground">Searching…</p> : null}
-          {results.length > 0 ? (
-            <ul className="mt-2 max-h-64 overflow-auto rounded-lg border border-border">
-              {results.map((sermon) => (
-                <li key={sermon.id}>
-                  <button
-                    type="button"
-                    className="w-full px-3 py-2 text-left text-sm hover:bg-accent"
-                    onClick={() => {
-                      setPicked(sermon);
-                      setQuery("");
-                      setResults([]);
-                    }}
-                  >
-                    <span className="block font-medium">{sermon.title}</span>
-                    <span className="block text-muted-foreground">{sermonLine(sermon)}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
+        <SermonPicker
+          query={query}
+          onQuery={setQuery}
+          searching={searching}
+          results={results}
+          picked={picked}
+          onPick={(sermon) => {
+            setPicked(sermon);
+            setQuery("");
+            setResults([]);
+          }}
+          onClear={() => setPicked(null)}
+        />
         <AreaField label="Note" value={note} onChange={(event) => setNote(event.target.value)} />
         <div className="flex gap-2">
           <Button type="submit" disabled={saving}>
@@ -267,6 +247,92 @@ export default function DailyMessagePage() {
   );
 }
 
+function SermonPicker({
+  query,
+  onQuery,
+  searching,
+  results,
+  picked,
+  onPick,
+  onClear,
+}: {
+  query: string;
+  onQuery: (value: string) => void;
+  searching: boolean;
+  results: CatalogueSermon[];
+  picked: CatalogueSermon | null;
+  onPick: (sermon: CatalogueSermon) => void;
+  onClear: () => void;
+}) {
+  const needle = query.trim();
+  return (
+    <div>
+      <Label htmlFor="sermon-search">Sermon</Label>
+      {picked ? (
+        <div className="mb-3 rounded-xl border border-primary/40 bg-primary/5 p-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="font-medium">{picked.title}</p>
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                {sermonLine(picked) || "From the sermon catalogue"}
+              </p>
+            </div>
+            <Button type="button" variant="outline" size="sm" onClick={onClear}>
+              Change
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <p className="mb-2 text-xs text-muted-foreground">
+          Search the catalogue by title, speaker, or scripture, then choose a sermon.
+        </p>
+      )}
+      <Input
+        id="sermon-search"
+        value={query}
+        placeholder="Search title, speaker or scripture"
+        onChange={(event) => onQuery(event.target.value)}
+      />
+      {searching ? (
+        <p className="mt-2 text-xs text-muted-foreground">Searching the catalogue…</p>
+      ) : null}
+      {!searching && needle.length >= 2 && results.length === 0 ? (
+        <p className="mt-2 text-sm text-muted-foreground">No sermons match “{needle}”.</p>
+      ) : null}
+      {results.length > 0 ? (
+        <ul className="mt-2 max-h-80 overflow-auto rounded-xl border border-border bg-card">
+          {results.map((sermon) => {
+            const selected = picked?.id === sermon.id;
+            return (
+              <li key={sermon.id} className="border-b border-border last:border-b-0">
+                <button
+                  type="button"
+                  className={cn(
+                    "w-full px-3 py-3 text-left transition-colors hover:bg-accent",
+                    selected && "bg-primary/10",
+                  )}
+                  onClick={() => onPick(sermon)}
+                >
+                  <span className="block font-medium">{sermon.title}</span>
+                  <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                    {sermon.speaker ? <span>{sermon.speaker}</span> : null}
+                    {sermon.date ? <span>{sermon.date}</span> : null}
+                    {sermon.scripture ? (
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-foreground">
+                        {sermon.scripture}
+                      </span>
+                    ) : null}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
 function MessageGroup({
   title,
   rows,
@@ -290,8 +356,13 @@ function MessageGroup({
           {rows.map((row) => (
             <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
               <div className="min-w-0 flex-1">
-                <p className="font-medium">{row.date.slice(0, 10)}</p>
-                <p className="truncate text-sm text-muted-foreground">{titleFor(row.sermon_id)}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {row.date.slice(0, 10)}
+                </p>
+                <p className="truncate font-medium">{titleFor(row.sermon_id)}</p>
+                {row.note ? (
+                  <p className="truncate text-sm text-muted-foreground">{row.note}</p>
+                ) : null}
               </div>
               <Button variant="outline" size="sm" onClick={() => onEdit(row)}>
                 Edit
