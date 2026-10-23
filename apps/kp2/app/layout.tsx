@@ -223,7 +223,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollReveal />
         <KpIntro />
         <PageTurn />
-        <div id="kp-site-content">{children}</div>
+        <div id="kp-site-content" tabIndex={-1}>
+          {children}
+        </div>
         <GraceChat />
         <script src="/kp2/ui-boot.js?v=9" defer></script>
       </body>
