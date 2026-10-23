@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
@@ -17,8 +19,8 @@ function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; bran
       <SiteHeader />
       <header className="kp-media-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
         <ParallaxHeroImage
-          src="/kp2/assets/young-men-in-congregation.jpg"
-          alt="Three young men in suits smiling together at a Kharis service"
+          src={KP2_PHOTOS.welcomeGroup.src}
+          alt={KP2_PHOTOS.welcomeGroup.alt}
           className="object-[center_30%]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25 pointer-events-none"></div>

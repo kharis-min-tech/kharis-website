@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -12,8 +14,7 @@ import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
 import { TypedText } from "@/components/TypedText";
 import "@/components/mission-pillars.css";
 
-const ABOUT_HERO =
-  "https://images.kharis.org/site-images/main/e01fad6602636193/about-outreach-hero.jpg";
+const ABOUT_HERO = KP2_PHOTOS.serviceCongregation.src;
 
 const CHAPTERS = ["mission", "vision", "leadership"] as const;
 
@@ -290,8 +291,7 @@ function WhoWeAreBecoming() {
   );
 }
 
-const VISION_HERO =
-  "https://images.kharis.org/site-images/main/a080e8123b487573/vision-church-family.jpg";
+const VISION_HERO = KP2_PHOTOS.serviceHall.src;
 
 const VISION_THEMES = [
   {

@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
 import type { ChurchEvent } from "@/lib/events";
@@ -38,7 +40,7 @@ export function EventsHero({ image }: { image: string }) {
     <header className="kp-ev-hero">
       <img
         src={image}
-        alt="Two friends arriving at a Kharis gathering"
+        alt="The KP2 choir leading worship"
         className="kp-ev-hero__img"
         loading="eager"
         decoding="async"
@@ -110,13 +112,16 @@ function dateParts(iso: string) {
   };
 }
 
-export function EventsComingUp({
-  events,
-  fallbackImages,
-}: {
-  events: ChurchEvent[];
-  fallbackImages: string[];
-}) {
+const EVENT_PHOTOS: Record<ChurchEvent["category"], string> = {
+  Weekly: KP2_PHOTOS.serviceTeaching.src,
+  Conference: KP2_PHOTOS.serviceHall.src,
+  Worship: KP2_PHOTOS.servicePraise.src,
+  Fellowship: KP2_PHOTOS.serviceTogether.src,
+  Outreach: KP2_PHOTOS.outreachConversation.src,
+  Social: KP2_PHOTOS.serviceTogether.src,
+};
+
+export function EventsComingUp({ events }: { events: ChurchEvent[] }) {
   const [gridRef, phase] = useRevealOnView<HTMLUListElement>(0.15);
 
   return (
@@ -128,8 +133,7 @@ export function EventsComingUp({
         <ul ref={gridRef} className={`kp-ev-next__grid is-${phase}`}>
           {events.map((event, i) => {
             const { month, day, short } = dateParts(event.starts);
-            const repeat = events.findIndex((e) => e.slug === event.slug) !== i;
-            const fallback = fallbackImages[i % fallbackImages.length];
+            const fallback = EVENT_PHOTOS[event.category];
             return (
               <li key={`${event.slug}-${event.starts}`} style={{ ["--i" as string]: i }}>
                 <PlanVisitButton
@@ -139,7 +143,7 @@ export function EventsComingUp({
                   aria-label={`${event.title}, ${short} ${event.timeLabel}. Add to calendar`}
                 >
                   <img
-                    src={(!repeat && event.image) || fallback}
+                    src={event.image || fallback}
                     alt=""
                     loading="lazy"
                     decoding="async"
@@ -179,7 +183,7 @@ export function EventsComingUp({
           <li style={{ ["--i" as string]: events.length }}>
             <Link href="/branches" className="kp-ev-next__tile kp-ev-next__tile--find">
               <img
-                src="/kp2/assets/sunday-service-full-hall.jpg"
+                src={KP2_PHOTOS.serviceHall.src}
                 alt=""
                 loading="lazy"
                 decoding="async"

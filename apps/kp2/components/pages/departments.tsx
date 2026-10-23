@@ -38,7 +38,7 @@ function DepartmentCard({ dept }: { dept: Department }) {
     <div className="group flex flex-col overflow-hidden rounded-none border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]">
       <div className="relative h-44 overflow-hidden border-b-2 border-black">
         <img
-          alt={dept.name}
+          alt={dept.imageAlt ?? dept.name}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           style={{ objectPosition: dept.imagePosition }}
           src={dept.image}
@@ -120,7 +120,7 @@ function DepartmentsPage() {
               >
                 <div className="relative h-52 overflow-hidden border-b-2 border-black">
                   <img
-                    alt={dept.name}
+                    alt={dept.imageAlt ?? dept.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     style={{ objectPosition: dept.imagePosition }}
                     src={dept.image}

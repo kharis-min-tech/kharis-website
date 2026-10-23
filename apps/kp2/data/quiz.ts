@@ -1,3 +1,4 @@
+import { KP2_PHOTOS } from "@/lib/photography";
 export type QuizOption = {
   label: string;
   departments: string[];
@@ -17,15 +18,15 @@ export type QuizDepartment = {
 };
 
 export const QUIZ_HERO_IMAGES = [
-  { src: "/kp2/assets/choir-on-stage.jpg", alt: "The choir singing together on stage" },
+  { src: KP2_PHOTOS.serviceChoir.src, alt: "The choir singing together on stage" },
   {
-    src: "/kp2/assets/congregation-celebrating.jpg",
-    alt: "People celebrating together in worship",
+    src: KP2_PHOTOS.serviceTogether.src,
+    alt: KP2_PHOTOS.serviceTogether.alt,
   },
-  { src: "/kp2/assets/celebration-duet.jpg", alt: "Two singers leading a song on stage" },
-  { src: "/kp2/assets/two-sides-of-the-cross-drama.jpg", alt: "A drama performed on stage" },
-  { src: "/kp2/assets/street-evangelism.jpg", alt: "People sharing the gospel on the street" },
-  { src: "/kp2/assets/woman-in-prayer.jpg", alt: "A woman praying during a service" },
+  { src: KP2_PHOTOS.serviceDuet.src, alt: KP2_PHOTOS.serviceDuet.alt },
+  { src: KP2_PHOTOS.bassDrama.src, alt: KP2_PHOTOS.bassDrama.alt },
+  { src: KP2_PHOTOS.outreachConversation.src, alt: KP2_PHOTOS.outreachConversation.alt },
+  { src: KP2_PHOTOS.servicePrayer.src, alt: KP2_PHOTOS.servicePrayer.alt },
 ] as const;
 
 export type QuizTranslation = {

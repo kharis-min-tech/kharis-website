@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { AppListenSteps } from "@/components/AppListenSteps";
 import { KHARIS_APP } from "@/lib/kharis-app";
 import { AmbientVideo } from "@/components/AmbientVideo";
@@ -166,7 +168,7 @@ function Index({
                   alt="A full hall at a Kharis Phase 2 Sunday service"
                   className="kp-intro-photo w-full object-cover"
                   style={{ height: "clamp(240px, 28vw, 420px)" }}
-                  src="/kp2/assets/sunday-service-full-hall.jpg"
+                  src={KP2_PHOTOS.serviceHall.src}
                   loading="lazy"
                   decoding="async"
                 />

@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import Link from "next/link";
 import { useRevealOnView } from "@/components/EventsTop";
 import "./know-kharis.css";
@@ -18,35 +20,35 @@ const PANELS: Panel[] = [
     href: "/mission",
     title: "About Us",
     blurb: "Our mandate is to bring Christ to people everywhere.",
-    src: "/kp2/assets/sunday-service-sermon-notes.jpg",
+    src: KP2_PHOTOS.serviceNotes.src,
     alt: "Taking sermon notes during a Sunday service",
     position: "60% 50%",
   },
   {
     href: "/branches",
     title: "Locations",
-    src: "/kp2/assets/friends-arriving-at-church.jpg",
-    alt: "Two friends smiling as they arrive at church",
+    src: KP2_PHOTOS.welcomeGroup.src,
+    alt: KP2_PHOTOS.welcomeGroup.alt,
     position: "50% 25%",
   },
   {
     href: "/life",
     title: "Life",
-    src: "/kp2/assets/congregation-celebrating.jpg",
-    alt: "The congregation celebrating together at a Kharis service",
+    src: KP2_PHOTOS.serviceTogether.src,
+    alt: KP2_PHOTOS.serviceTogether.alt,
     position: "50% 25%",
   },
   {
     href: "/messages",
     title: "Become a Believer",
-    src: "/kp2/assets/street-evangelism.jpg",
-    alt: "Sharing the gospel with a passer-by on the street",
+    src: KP2_PHOTOS.outreachConversation.src,
+    alt: KP2_PHOTOS.outreachConversation.alt,
     position: "50% 30%",
   },
   {
     href: "/departments",
     title: "Get Involved",
-    src: "/kp2/assets/choir-on-stage.jpg",
+    src: KP2_PHOTOS.serviceChoir.src,
     alt: "The KP2 choir ministering on stage",
   },
 ];

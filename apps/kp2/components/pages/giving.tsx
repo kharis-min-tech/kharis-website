@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
@@ -18,8 +20,8 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
       <main className="pt-[74px]">
         <section className="relative box-border h-[calc(100svh-74px)] max-h-[calc(100svh-74px)] flex items-center justify-center bg-black overflow-hidden px-margin-mobile md:px-margin-desktop py-8">
           <ParallaxHeroImage
-            src="https://images.kharis.org/site-images/kp2/91479ba234a71277/vision-campaign.jpg"
-            alt="Kharis vision campaign"
+            src={KP2_PHOTOS.outreachTeam.src}
+            alt={KP2_PHOTOS.outreachTeam.alt}
             className="object-center opacity-40"
           />
 

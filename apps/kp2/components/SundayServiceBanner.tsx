@@ -1,51 +1,24 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { useCallback, useState } from "react";
 import { ComicGallery, type GalleryPhoto } from "@/components/ComicGallery";
 import { useRevealOnView } from "@/components/EventsTop";
 import "./sunday-service.css";
 
-const POSTER: GalleryPhoto = {
-  src: "https://images.kharis.org/site-images/main/72df91d4341c5b55/events/sunday-pastor-open-bible.jpg",
-  alt: "Pastor David holding an open Bible during a Sunday service",
-  position: "50% 28%",
-};
+const POSTER: GalleryPhoto = KP2_PHOTOS.serviceTeaching;
 
 const GALLERY: GalleryPhoto[] = [
-  {
-    src: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/events-hero-worship.jpg",
-    alt: "KP2 congregation worshipping with hands raised",
-  },
-  {
-    src: "https://images.kharis.org/site-images/main/fd4b6a19fbb8f4d3/events/sunday-worship-hands.jpg",
-    alt: "Woman worshipping with both hands raised during a Sunday service",
-    position: "82% center",
-  },
-  {
-    src: "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg",
-    alt: "Worship on a Sunday at KP2",
-  },
+  KP2_PHOTOS.serviceChoir,
+  KP2_PHOTOS.serviceWorship,
+  KP2_PHOTOS.servicePrayer,
   POSTER,
-  {
-    src: "https://images.kharis.org/site-images/main/0698b74918b21fe0/hero/sunday-bible-raised.jpg",
-    alt: "Church member smiling and holding up her Bible during the service",
-  },
-  {
-    src: "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
-    alt: "Bring A Soul Sunday at KP2",
-  },
-  {
-    src: "https://images.kharis.org/site-images/main/ecbd1d3145041d85/events/sunday-pastor-bible-raised.jpg",
-    alt: "Pastor David lifting a red Bible during the service",
-  },
-  {
-    src: "/kp2/assets/young-men-smiling.jpg",
-    alt: "Young men smiling together in the congregation during a Sunday service",
-  },
-  {
-    src: "/kp2/assets/choir-and-congregation-worship.jpg",
-    alt: "The choir leading the congregation in worship",
-  },
+  KP2_PHOTOS.serviceBible,
+  KP2_PHOTOS.servicePraise,
+  KP2_PHOTOS.serviceCongregation,
+  KP2_PHOTOS.serviceSaxophone,
+  KP2_PHOTOS.serviceNotes,
 ];
 
 export function SundayServiceBanner({ when }: { when: string }) {

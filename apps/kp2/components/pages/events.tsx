@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -15,18 +17,7 @@ import { SundayServiceBanner } from "@/components/SundayServiceBanner";
 import { ComicPanels } from "@/components/ComicPanels";
 import { VisitInstead } from "@/components/VisitInstead";
 
-const HERO_WORSHIP =
-  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/events-hero-worship.jpg";
-const WORSHIP = "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg";
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-
-const COMING_UP_FALLBACKS = [
-  WORSHIP,
-  "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
-  "/kp2/assets/ghana-flags-celebration.jpg",
-  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
-  HERO_WORSHIP,
-];
 
 function EventCard({ event }: { event: ChurchEvent }) {
   return (
@@ -118,9 +109,9 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
       <SiteHeader />
 
       <main className="pt-[74px]">
-        <EventsHero image="/kp2/assets/friends-arriving-at-church.jpg" />
+        <EventsHero image={KP2_PHOTOS.serviceChoir.src} />
 
-        <EventsComingUp events={comingUp} fallbackImages={COMING_UP_FALLBACKS} />
+        <EventsComingUp events={comingUp} />
 
         <SundayServiceBanner
           when={sundayService ? `Every Sunday · ${sundayService.timeLabel}` : "Every Sunday"}
