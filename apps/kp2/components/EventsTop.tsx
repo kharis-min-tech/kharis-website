@@ -178,6 +178,14 @@ export function EventsComingUp({
 
           <li style={{ ["--i" as string]: events.length }}>
             <Link href="/branches" className="kp-ev-next__tile kp-ev-next__tile--find">
+              <img
+                src="/kp2/assets/sunday-service-full-hall.jpg"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="kp-ev-next__img"
+              />
+              <span className="kp-ev-next__veil" aria-hidden="true" />
               <span className="kp-ev-next__pin material-symbols-outlined" aria-hidden="true">
                 location_on
               </span>

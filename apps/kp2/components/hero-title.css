@@ -160,6 +160,14 @@
   }
 }
 
+/* iPad portrait sits under the desktop type size, so the second line stays on the screen. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .kp-home-hero .kp-hero-title {
+    font-size: clamp(2.35rem, 5.4vw, 3.25rem);
+    line-height: 0.95;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kp-hero-type__caret {
     display: none;

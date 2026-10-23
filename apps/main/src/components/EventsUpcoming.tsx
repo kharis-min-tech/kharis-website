@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Calendar, MapPin, Search } from "lucide-react";
 import { EVENT_FILTERS, type EventFilter } from "@/data/event-categories";
@@ -159,8 +160,8 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
           </ul>
         ) : (
           <p className="events-next__empty" role="status">
-            No branch-specific event dates have been announced for {branch?.name ?? "this branch"}{" "}
-            yet. Praise Night is next; date and venue details will be added here once confirmed.
+            No extra dates are listed for {branch?.name ?? "this branch"} yet. Sunday service is the
+            weekly gathering. <Link href="/locations">Find a location</Link> and come this Sunday.
           </p>
         )}
 

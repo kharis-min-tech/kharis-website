@@ -63,7 +63,7 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
                 Why We Give
               </h2>
               <div className="h-2 w-32 bg-primary brutalist-border mb-4"></div>
-              <blockquote className="font-body-lg text-body-lg text-on-surface italic leading-relaxed mb-3">
+              <blockquote className="font-body-lg text-body-lg text-on-surface leading-relaxed mb-3">
                 &ldquo;Whoever sows sparingly will also reap sparingly, and whoever sows generously
                 will also reap generously.&rdquo;
               </blockquote>

@@ -8,7 +8,7 @@ export default function SermonsPage() {
   return (
     <CrudPage<SermonRow>
       title="Sermons"
-      description="The shared sermon library. Daily messages pick from published and unpublished sermons."
+      description="Studio sermon records for the websites. The mobile app plays a separate catalogue. Schedule those under Mobile App, Daily Message."
       loadKey="sermons"
       fields={[
         { key: "title", label: "Title", kind: "text" },

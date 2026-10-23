@@ -50,7 +50,7 @@ function GovernancePage() {
 
       {/* Policy grid */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
           {POLICIES.map((policy) => (
             <div
               id={policy.id}

@@ -254,7 +254,20 @@
 
 @media (min-width: 768px) {
   .kp-tst__card {
-    flex-basis: calc((100% - 2.5rem) / 2.75);
+    flex-basis: calc((100% - 1.25rem) / 2);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .kp-tst__photos {
+    padding: 0.35rem 0.25rem 0.85rem;
+  }
+
+  .kp-tst__photo,
+  .kp-tst__photo:nth-child(2),
+  .kp-tst__photo:nth-child(3) {
+    transform: none;
+    box-shadow: 5px 5px 0 #151218;
   }
 }
 
@@ -377,19 +390,34 @@
   right: 1.15rem;
   display: grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
   border: 3px solid #151218;
   background: #f7be1d;
   color: #151218;
   box-shadow: 3px 3px 0 #151218;
-  font-family: var(--font-anton), "Anton", sans-serif;
-  font-size: 1.4rem;
-  line-height: 1;
+  line-height: 0;
   cursor: pointer;
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
+}
+
+.kp-tst__modal-close svg {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.kp-tst__modal-close path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.75;
+  stroke-linecap: square;
 }
 
 .kp-tst__modal-close:hover {

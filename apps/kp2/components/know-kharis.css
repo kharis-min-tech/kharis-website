@@ -229,6 +229,30 @@
   box-shadow: 6px 6px 0 #151218;
 }
 
+/* iPad portrait: a full-width About panel, then a 2 by 2. */
+@media (min-width: 760px) and (max-width: 1023px) {
+  .kp-know {
+    min-height: 0;
+  }
+
+  .kp-know__page {
+    min-height: 0;
+  }
+
+  .kp-know__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+    grid-auto-rows: 16rem;
+    gap: 12px;
+  }
+
+  .kp-know__cell--a {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 20rem;
+  }
+}
+
 /* Phones: panels stack down the page. */
 @media (max-width: 759px) {
   .kp-know {
