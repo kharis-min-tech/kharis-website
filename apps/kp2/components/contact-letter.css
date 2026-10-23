@@ -266,9 +266,11 @@
   background: #7c3aed;
   color: #fff;
   padding: 0.95rem 1.75rem;
-  font-family: var(--font-anton), sans-serif;
-  font-size: 1.15rem;
-  letter-spacing: 0.04em;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
   text-transform: uppercase;
   box-shadow: 5px 5px 0 #151218;
   cursor: pointer;

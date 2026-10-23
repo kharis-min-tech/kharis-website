@@ -252,9 +252,11 @@
   color: #2a104b;
   border: 3px solid #151218;
   box-shadow: 5px 5px 0 #151218;
-  font-family: var(--font-anton), "Anton", sans-serif;
-  font-size: 0.95rem;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
   letter-spacing: 0.05em;
+  line-height: 1.15;
   text-transform: uppercase;
   text-decoration: none;
   transition:
