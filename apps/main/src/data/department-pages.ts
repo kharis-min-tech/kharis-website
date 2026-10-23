@@ -13,13 +13,13 @@ export const DEPARTMENT_PAGES = [
   },
   {
     slug: "easyworship",
-    title: "EasyWorship",
+    title: "Live Visuals",
     image: "/images/department-easyworship.jpg",
     body: "Prepare lyrics and visuals that help everyone follow and engage in worship.",
   },
   {
     slug: "sound-department",
-    title: "Sound Department",
+    title: "Sound",
     image: "/images/department-sound.jpg",
     body: "Mix and manage live sound so every voice and instrument can be heard clearly.",
   },

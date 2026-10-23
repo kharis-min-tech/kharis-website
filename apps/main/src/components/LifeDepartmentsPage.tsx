@@ -16,8 +16,8 @@ const DEPT_BANDS = DEPARTMENT_PAGES;
 const DEPT_PREVIEW_SOURCES = {
   Evangelism: DEPARTMENT_VIDEOS.find((video) => video.title === "Evangelism")!.src,
   Music: DEPARTMENT_VIDEOS.find((video) => video.title === "Music")!.src,
-  EasyWorship: DEPARTMENT_VIDEOS.find((video) => video.title === "Tech Team")!.src,
-  "Sound Department": DEPARTMENT_VIDEOS.find((video) => video.title === "Sound")!.src,
+  "Live Visuals": DEPARTMENT_VIDEOS.find((video) => video.title === "Tech Team")!.src,
+  Sound: DEPARTMENT_VIDEOS.find((video) => video.title === "Sound")!.src,
   "Welcome Team": DEPARTMENT_VIDEOS.find((video) => video.title === "Hospitality")!.src,
 } satisfies Record<(typeof DEPT_BANDS)[number]["title"], string>;
 
