@@ -235,10 +235,24 @@ export function SiteHeader({ tone = "auto" }: Props) {
             }`}
             onClick={() => setOpen((v) => !v)}
           >
-            <svg className="mobile-menu-toggle__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--top" d="M4 6h16" />
-              <path className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--middle" d="M4 12h16" />
-              <path className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--bottom" d="M4 18h16" />
+            <svg
+              className="mobile-menu-toggle__icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--top"
+                d="M4 6h16"
+              />
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--middle"
+                d="M4 12h16"
+              />
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--bottom"
+                d="M4 18h16"
+              />
             </svg>
           </button>
         </div>

@@ -100,7 +100,9 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
               <span className="life-kids-editorial-hero__tag">Ages 3–16</span>
             </div>
             <Reveal variant="blur" className="life-kids-editorial-hero__copy">
-              <Link href="/life" className="life-crumb">Kharis Life</Link>
+              <Link href="/life" className="life-crumb">
+                Kharis Life
+              </Link>
               <p className="life-hero__eyebrow">{page.badge}</p>
               <h1>{page.title}</h1>
               <p className="life-kids-editorial-hero__lead">{page.intro}</p>
@@ -116,9 +118,18 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
               <h2>A welcoming place to discover God at every age.</h2>
             </div>
             <div className="life-kids-values__items">
-              <div><span>01</span><p>Bible stories and teaching</p></div>
-              <div><span>02</span><p>Worship and prayer</p></div>
-              <div><span>03</span><p>Activities and friendships</p></div>
+              <div>
+                <span>01</span>
+                <p>Bible stories and teaching</p>
+              </div>
+              <div>
+                <span>02</span>
+                <p>Worship and prayer</p>
+              </div>
+              <div>
+                <span>03</span>
+                <p>Activities and friendships</p>
+              </div>
             </div>
           </section>
 
@@ -126,7 +137,10 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
             <Reveal variant="up" className="life-kids-showcase__intro">
               <p className="life-hero__eyebrow">Growing together</p>
               <h2>Every stage has a place.</h2>
-              <p>Children are welcomed into an age group shaped around where they are in their journey of faith.</p>
+              <p>
+                Children are welcomed into an age group shaped around where they are in their
+                journey of faith.
+              </p>
             </Reveal>
 
             <div className="life-kids-showcase__list">
@@ -152,7 +166,9 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
                       <span className="life-kids-row__ages">{meta?.ages}</span>
                     </div>
                     <div className="life-kids-row__copy">
-                      <span className="life-kids-row__step">0{i + 1} <span> / 03</span></span>
+                      <span className="life-kids-row__step">
+                        0{i + 1} <span> / 03</span>
+                      </span>
                       <IconComp className="life-kids-row__ico" aria-hidden />
                       <h3>{section.title}</h3>
                       <p>{section.body}</p>

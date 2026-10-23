@@ -138,7 +138,9 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  transition: color 220ms ease, transform 220ms ease;
+  transition:
+    color 220ms ease,
+    transform 220ms ease;
 }
 .mobile-menu-toggle:hover {
   background: transparent;
@@ -154,7 +156,9 @@
   stroke-width: 1.8;
   stroke-linecap: round;
   transform-box: view-box;
-  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 180ms ease;
+  transition:
+    transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 180ms ease;
 }
 .mobile-menu-toggle__stroke--top {
   transform-origin: 12px 6px;

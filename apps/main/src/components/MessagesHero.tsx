@@ -130,7 +130,8 @@ export function MessagesHero({ messages }: Props) {
   const secondTyped = Math.max(0, typed - HEADLINE_FIRST.length);
   const secondLine = `${HEADLINE_SECOND_PREFIX}${HEADLINE_LAST_WORD}`.slice(0, secondTyped);
   const typingFirstLine = !reducedMotion && typed < HEADLINE_FIRST.length;
-  const typingSecondLine = !reducedMotion && typed >= HEADLINE_FIRST.length && typed < HEADLINE_LENGTH;
+  const typingSecondLine =
+    !reducedMotion && typed >= HEADLINE_FIRST.length && typed < HEADLINE_LENGTH;
 
   const command = useCallback((func: string, args: unknown[] = []) => {
     const frame = frameRef.current;

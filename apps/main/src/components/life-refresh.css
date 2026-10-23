@@ -344,7 +344,9 @@
   padding: 0.65rem 0.1rem;
   text-align: left;
   letter-spacing: normal;
-  transition: border-color 220ms ease, color 220ms ease;
+  transition:
+    border-color 220ms ease,
+    color 220ms ease;
   margin-top: auto;
 }
 
@@ -401,7 +403,10 @@
   border-radius: 50%;
   background: color-mix(in srgb, var(--life-purple) 10%, transparent);
   color: var(--life-purple);
-  transition: background-color 220ms ease, color 220ms ease, transform 300ms ease;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    transform 300ms ease;
 }
 
 .life-belong__action:hover .life-belong__action-icon,

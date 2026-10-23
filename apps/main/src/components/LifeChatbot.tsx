@@ -661,21 +661,44 @@ export function LifeChatbot({
               <X size={19} aria-hidden="true" />
             </button>
             <div className="life-chat-start__intro">
-              <span className="life-chat-start__badge"><AudioLines size={14} aria-hidden /> Grace can help</span>
+              <span className="life-chat-start__badge">
+                <AudioLines size={14} aria-hidden /> Grace can help
+              </span>
               <h2 id="life-chat-start-title">How would you like to start?</h2>
             </div>
             <div className="life-chat-start__choices">
-              <button className="life-chat-start__choice" type="button" onClick={() => chooseStart("chat")}>
-                <span><MessageSquareText size={18} aria-hidden /></span>
-                <strong>Ask Grace</strong><i>Get help with Kharis</i>
+              <button
+                className="life-chat-start__choice"
+                type="button"
+                onClick={() => chooseStart("chat")}
+              >
+                <span>
+                  <MessageSquareText size={18} aria-hidden />
+                </span>
+                <strong>Ask Grace</strong>
+                <i>Get help with Kharis</i>
               </button>
-              <button className="life-chat-start__choice" type="button" onClick={() => chooseStart("messages")}>
-                <span><Search size={18} aria-hidden /></span>
-                <strong>Find a message</strong><i>Explore teaching from Pastor David</i>
+              <button
+                className="life-chat-start__choice"
+                type="button"
+                onClick={() => chooseStart("messages")}
+              >
+                <span>
+                  <Search size={18} aria-hidden />
+                </span>
+                <strong>Find a message</strong>
+                <i>Explore teaching from Pastor David</i>
               </button>
-              <button className="life-chat-start__choice" type="button" onClick={() => chooseStart("branches")}>
-                <span><MapPin size={18} aria-hidden /></span>
-                <strong>Find a branch</strong><i>Find a church location near you</i>
+              <button
+                className="life-chat-start__choice"
+                type="button"
+                onClick={() => chooseStart("branches")}
+              >
+                <span>
+                  <MapPin size={18} aria-hidden />
+                </span>
+                <strong>Find a branch</strong>
+                <i>Find a church location near you</i>
               </button>
             </div>
           </section>

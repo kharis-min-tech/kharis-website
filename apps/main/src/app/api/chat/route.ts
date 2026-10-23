@@ -389,7 +389,10 @@ async function offlineGraceReply(question: string) {
       // Keep the rest of Grace's offline guidance available when the video catalogue is down.
     }
     const terms = normalized
-      .replace(/pastor david|message|sermon|teaching|preach|recommend|find|show|me|please|can you|help|with/gi, " ")
+      .replace(
+        /pastor david|message|sermon|teaching|preach|recommend|find|show|me|please|can you|help|with/gi,
+        " ",
+      )
       .split(/\s+/)
       .filter((term) => term.length > 2);
     const matches = terms.length
@@ -416,24 +419,28 @@ async function offlineGraceReply(question: string) {
   if (/branch|location|near me|address|service time/.test(normalized)) {
     return {
       ok: true,
-      reply: "I can point you to a Kharis location. Visit [Find a Branch](/locations) to see the available branches and service information.",
+      reply:
+        "I can point you to a Kharis location. Visit [Find a Branch](/locations) to see the available branches and service information.",
     };
   }
   if (/children|kids|child|youth|teen/.test(normalized)) {
     return {
       ok: true,
-      reply: "Kharis Kids supports children aged 3–16 through age-group teaching, worship, prayer, activities, and friendship. Read about the [Children’s department](/life/children).",
+      reply:
+        "Kharis Kids supports children aged 3–16 through age-group teaching, worship, prayer, activities, and friendship. Read about the [Children’s department](/life/children).",
     };
   }
   if (/life|baptis|fast|serv|department/.test(normalized)) {
     return {
       ok: true,
-      reply: "Explore [Life at Kharis](/life) for the ministry pathways, or see [ways to serve](/life/departments).",
+      reply:
+        "Explore [Life at Kharis](/life) for the ministry pathways, or see [ways to serve](/life/departments).",
     };
   }
   return {
     ok: true,
-    reply: "I can still help you find your way around Kharis. Try the [messages library](/messages), [find a branch](/locations), or [contact the team](/contact).",
+    reply:
+      "I can still help you find your way around Kharis. Try the [messages library](/messages), [find a branch](/locations), or [contact the team](/contact).",
   };
 }
 

@@ -8719,7 +8719,10 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   color: #2a2331;
   background: #f5f4f6;
   text-align: left;
-  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
 }
 
 .life-chat-start__choice:hover,
@@ -8756,13 +8759,23 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 @keyframes life-chat-start-fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes life-chat-start-rise {
-  from { opacity: 0; transform: translateY(28px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 html[data-theme="dark"] .life-chat-start__sheet {
@@ -8795,7 +8808,9 @@ html[data-theme="dark"] .life-chat-start__choice i {
 }
 
 @media (min-width: 640px) {
-  .life-chat-start { display: none; }
+  .life-chat-start {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -10018,8 +10033,13 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
 }
 
 @keyframes life-reader-scroll-nudge {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

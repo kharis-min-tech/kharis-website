@@ -108,7 +108,9 @@ function ActionLink({
       >
         <span className="life-belong__action-copy">
           <span className="life-belong__action-label">LEARN MORE</span>
-          <span className="life-belong__action-hint">Explore the {item.title.toLowerCase()} story</span>
+          <span className="life-belong__action-hint">
+            Explore the {item.title.toLowerCase()} story
+          </span>
         </span>
         <span className="life-belong__action-icon" aria-hidden="true">
           <Icon name="arrow" className="h-4 w-4" />
@@ -124,7 +126,9 @@ function ActionLink({
     >
       <span className="life-belong__action-copy">
         <span className="life-belong__action-label">LEARN MORE</span>
-        <span className="life-belong__action-hint">Explore the {item.title.toLowerCase()} story</span>
+        <span className="life-belong__action-hint">
+          Explore the {item.title.toLowerCase()} story
+        </span>
       </span>
       <span className="life-belong__action-icon" aria-hidden="true">
         <Icon name="arrow" className="h-4 w-4" />
