@@ -12,14 +12,14 @@ export const DEPARTMENT_PAGES = [
     body: "Use your musical gifts to lead the church in worship and praise.",
   },
   {
-    slug: "easyworship",
-    title: "EasyWorship",
+    slug: "live-visuals",
+    title: "Live Visuals",
     image: "/images/department-easyworship.jpg",
     body: "Prepare lyrics and visuals that help everyone follow and engage in worship.",
   },
   {
-    slug: "sound-department",
-    title: "Sound Department",
+    slug: "sound",
+    title: "Sound",
     image: "/images/department-sound.jpg",
     body: "Mix and manage live sound so every voice and instrument can be heard clearly.",
   },

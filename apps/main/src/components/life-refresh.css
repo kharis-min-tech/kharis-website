@@ -331,7 +331,97 @@
 }
 
 .life-belong__action {
+  position: relative;
+  display: inline-flex;
+  min-height: 3.6rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--life-ink) 20%, transparent);
+  background: transparent;
+  color: var(--life-ink);
+  padding: 0.65rem 0.1rem;
+  text-align: left;
+  letter-spacing: normal;
+  transition:
+    border-color 220ms ease,
+    color 220ms ease;
   margin-top: auto;
+}
+
+.life-belong__action::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--life-purple);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.life-belong__action:hover,
+.life-belong__action:focus-visible {
+  border-color: var(--life-purple);
+  background: transparent;
+  color: var(--life-purple);
+  transform: none;
+}
+
+.life-belong__action:hover::after,
+.life-belong__action:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.life-belong__action-copy {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.life-belong__action-label {
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.life-belong__action-hint {
+  color: #716d75;
+  font-size: 0.76rem;
+  font-weight: 550;
+  letter-spacing: 0;
+}
+
+.life-belong__action-icon {
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--life-purple) 10%, transparent);
+  color: var(--life-purple);
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    transform 300ms ease;
+}
+
+.life-belong__action:hover .life-belong__action-icon,
+.life-belong__action:focus-visible .life-belong__action-icon {
+  background: var(--life-purple);
+  color: #fff;
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .life-belong__action,
+  .life-belong__action::after,
+  .life-belong__action-icon {
+    transition-duration: 0.01ms;
+  }
 }
 
 .life-belong__type-panel {

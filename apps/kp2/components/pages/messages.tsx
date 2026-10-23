@@ -19,7 +19,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
       <SiteHeader />
       <main>
-        <section className="kp-messages-hero relative box-border mt-[74px] flex h-[calc(100svh-74px)] max-h-[calc(100svh-74px)] w-full flex-col overflow-hidden border-b-4 border-black bg-on-background md:mt-0 md:block md:h-svh md:max-h-svh">
+        <section className="kp-messages-hero relative box-border mt-[74px] flex w-full flex-col overflow-hidden border-b-4 border-black bg-on-background xl:mt-0 xl:block xl:h-svh xl:max-h-svh">
           {featured ? (
             <MutedHeroVideo
               id={featured.id}
@@ -34,9 +34,9 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
               }}
             />
           )}
-          <div className="pointer-events-none absolute inset-0 hero-gradient max-md:hidden" />
-          <div className="pointer-events-none absolute inset-0 halftone-pattern text-white/5 max-md:hidden" />
-          <div className="relative z-10 mx-auto flex h-auto w-full min-w-0 max-w-7xl flex-col justify-end px-margin-mobile pb-8 pt-6 md:h-full md:px-margin-desktop md:pb-10 md:pt-24">
+          <div className="pointer-events-none absolute inset-0 hero-gradient max-xl:hidden" />
+          <div className="pointer-events-none absolute inset-0 halftone-pattern text-white/5 max-xl:hidden" />
+          <div className="relative z-10 mx-auto flex h-auto w-full min-w-0 max-w-7xl flex-col justify-end px-margin-mobile pb-8 pt-6 xl:h-full xl:px-margin-desktop xl:pb-10 xl:pt-24">
             <div className="mb-5 inline-block w-fit max-w-full border-2 border-black bg-secondary-container px-4 py-1 font-label-md uppercase text-on-secondary-container md:mb-6">
               Hunger &amp; Zeal for God
             </div>
@@ -99,7 +99,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                 Kharis app.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-gutter">
               {[
                 {
                   label: "Kharis App",

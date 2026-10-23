@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { YoutubeEmbed } from "@/components/YoutubeEmbed";
+import { VisitInstead } from "@/components/VisitInstead";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
@@ -370,7 +371,7 @@ function BranchPage({
               </div>
             </div>
 
-            <h1 className="mb-5 font-display-lg text-[1.85rem] uppercase leading-[1.05] sm:mb-6 sm:text-5xl md:text-6xl">
+            <h1 className="mb-5 font-display-lg text-[1.85rem] uppercase leading-[1.05] sm:mb-6 sm:text-5xl lg:text-6xl">
               Welcome to <span className="block text-secondary-container">{branch.name}</span>
             </h1>
 
@@ -799,17 +800,29 @@ function BranchPage({
               </div>
             ))}
             {campusEvents.length === 0 ? (
-              <div className="md:col-span-2 p-8 brutalist-border bg-surface-container-lowest">
-                <p className="font-display-lg text-[22px] uppercase mb-2">More dates soon</p>
-                <p className="font-body-md text-on-surface-variant mb-4">
-                  Check the events page for gatherings across Kharis Phase 2.
-                </p>
-                <Link
-                  href="/events"
-                  className="inline-block bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border"
+              <div className="md:col-span-2">
+                <VisitInstead
+                  title="Sunday is the gathering"
+                  action={
+                    <div className="mt-6 flex flex-wrap justify-center gap-3">
+                      <Link
+                        href="#services"
+                        className="kp-depth-button kp-button-purple kp-empty-panel__cta !mt-0"
+                      >
+                        Sunday service
+                      </Link>
+                      <Link
+                        href="/branches"
+                        className="kp-depth-button kp-button-gold kp-empty-panel__cta !mt-0"
+                      >
+                        Find a branch
+                      </Link>
+                    </div>
+                  }
                 >
-                  View events
-                </Link>
+                  Nothing else is dated for {branch.city} yet. Come to Sunday service, or find
+                  another branch.
+                </VisitInstead>
               </div>
             ) : null}
           </div>
@@ -998,21 +1011,30 @@ function BranchPage({
                 See all
               </Link>
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {others.slice(0, 3).map((item) => (
                 <Link
                   key={item.slug}
                   href={`/branches/${item.slug}`}
                   className="group overflow-hidden brutalist-border brutalist-shadow bg-surface-container-lowest block"
                 >
-                  <div className="relative h-40 overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    <span className="absolute left-3 top-3 bg-primary text-on-primary font-body-md text-[10px] font-bold uppercase tracking-wider px-3 py-1">
+                  <div className="relative h-40 overflow-hidden bg-[#150934]">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <span className="kp-branch-card__fallback">
+                        <img src={BRANCH_MARK} alt="" />
+                        <span>{item.city || item.name}</span>
+                      </span>
+                    )}
+                    {item.image ? (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    ) : null}
+                    <span className="absolute left-3 top-3 z-10 bg-primary text-on-primary font-body-md text-[10px] font-bold uppercase tracking-wider px-3 py-1">
                       {item.region}
                     </span>
                   </div>

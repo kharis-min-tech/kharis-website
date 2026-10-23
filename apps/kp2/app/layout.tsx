@@ -94,6 +94,7 @@ const MATERIAL_ICONS = [
   "near_me",
   "north_east",
   "open_in_new",
+  "pause",
   "person",
   "phone",
   "photo_camera",
@@ -131,6 +132,7 @@ const MATERIAL_ICONS = [
   "waving_hand",
   "zoom_in",
 ].join(",");
+import { PageTurn } from "@/components/PageTurn";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { JsonLd } from "@/components/JsonLd";
 import { organizationJsonLd, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteUrl } from "@/lib/seo";
@@ -221,7 +223,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={organizationJsonLd()} />
         <ScrollReveal />
         <KpIntro />
-        <div id="kp-site-content">{children}</div>
+        <PageTurn />
+        <div id="kp-site-content" tabIndex={-1}>
+          {children}
+        </div>
         <GraceChat />
         <script src="/kp2/ui-boot.js?v=9" defer></script>
       </body>

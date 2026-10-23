@@ -1,9 +1,11 @@
 "use client";
 
 import {
+  BookMarked,
   BookOpen,
   Calendar,
   Inbox,
+  Library,
   LogOut,
   Megaphone,
   Menu,
@@ -38,6 +40,8 @@ const ICONS: Record<string, LucideIcon> = {
   "/daily": BookOpen,
   "/daily-message": SunMedium,
   "/daily-prayers": BookOpen,
+  "/bible": BookMarked,
+  "/sermon-library": Library,
   "/live": Radio,
   "/featured-video": Video,
 };

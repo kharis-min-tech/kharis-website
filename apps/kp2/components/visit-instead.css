@@ -1,0 +1,92 @@
+.kp-empty-panel {
+  margin-inline: auto;
+  max-width: 36rem;
+  border: 4px solid #151218;
+  background: #fffdf5;
+  box-shadow: 8px 8px 0 #151218;
+  padding: 2rem 1.5rem 1.75rem;
+  text-align: center;
+}
+
+.kp-empty-panel__mark {
+  display: grid;
+  place-items: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  margin: 0 auto 1.1rem;
+  border: 4px solid #151218;
+  background: #f7be1d;
+  box-shadow: 4px 4px 0 #151218;
+  color: #151218;
+}
+
+.kp-empty-panel__mark .material-symbols-outlined {
+  font-size: 2.1rem;
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 700,
+    "GRAD" 0,
+    "opsz" 48;
+}
+
+.kp-empty-panel__title {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  font-weight: 400;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #151218;
+}
+
+.kp-empty-panel__copy {
+  margin: 0.8rem auto 0;
+  max-width: 28rem;
+  font-family: var(--font-hanken), "Hanken Grotesk", sans-serif;
+  font-weight: 500;
+  color: #3f3a46;
+}
+
+.kp-empty-panel__cta {
+  margin-top: 1.35rem;
+  display: inline-block;
+  padding: 0.9rem 1.35rem;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.dark .kp-empty-panel {
+  border-color: #000;
+  background: #211b29;
+  box-shadow: 8px 8px 0 #7c3aed;
+}
+
+.dark .kp-empty-panel__mark {
+  border-color: #000;
+  background: #f7be1d;
+  box-shadow: 4px 4px 0 #7c3aed;
+}
+
+.dark .kp-empty-panel__title,
+.dark .kp-empty-panel__copy {
+  color: #fffdf5;
+}
+
+.dark .kp-empty-panel :is(a, button).kp-depth-button,
+.dark .kp-empty-panel :is(a, button).kp-depth-button:hover,
+.dark .kp-empty-panel :is(a, button).kp-depth-button:active {
+  border-color: #000 !important;
+  box-shadow: 5px 5px 0 #7c3aed !important;
+}
+
+.dark .kp-empty-panel :is(a, button).kp-depth-button:hover {
+  box-shadow: 3px 3px 0 #7c3aed !important;
+}
+
+.dark .kp-empty-panel :is(a, button).kp-depth-button:active {
+  box-shadow: 0 0 0 #7c3aed !important;
+}

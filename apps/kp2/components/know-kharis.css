@@ -206,9 +206,11 @@
   color: #fff;
   border: 3px solid #fff;
   box-shadow: 4px 4px 0 #f7be1d;
-  font-family: var(--font-anton), "Anton", sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
   text-transform: uppercase;
   transition:
     transform 0.2s ease,
@@ -227,6 +229,30 @@
   color: #151218;
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 #151218;
+}
+
+/* iPad portrait: a full-width About panel, then a 2 by 2. */
+@media (min-width: 760px) and (max-width: 1023px) {
+  .kp-know {
+    min-height: 0;
+  }
+
+  .kp-know__page {
+    min-height: 0;
+  }
+
+  .kp-know__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+    grid-auto-rows: 16rem;
+    gap: 12px;
+  }
+
+  .kp-know__cell--a {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 20rem;
+  }
 }
 
 /* Phones: panels stack down the page. */

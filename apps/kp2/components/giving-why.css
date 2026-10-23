@@ -48,9 +48,9 @@
 
 .kp-give-why__caption p {
   margin: 0;
-  font-family: var(--font-body, inherit);
+  font-family: var(--font-hanken), "Hanken Grotesk", sans-serif;
   font-size: clamp(1rem, 1.6vw, 1.15rem);
-  font-style: italic;
+  font-style: normal;
   line-height: 1.45;
   color: #151218;
 }
@@ -155,10 +155,11 @@
   color: #fff;
   border: 3px solid #151218;
   box-shadow: 4px 4px 0 #151218;
-  font-family: var(--font-anton), "Anton", sans-serif;
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
-  line-height: 1;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
   text-decoration: none;
   text-transform: uppercase;
 }

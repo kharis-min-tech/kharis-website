@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { Calendar, MapPin, Search } from "lucide-react";
+import { Calendar, CalendarDays, MapPin, Search } from "lucide-react";
 import { EVENT_FILTERS, type EventFilter } from "@/data/event-categories";
 import { formatEventDateNum, formatEventMonthShort } from "@/lib/events-content";
 import type { BranchEvent } from "@/data/branchesData";
@@ -158,10 +158,20 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
             ))}
           </ul>
         ) : (
-          <p className="events-next__empty" role="status">
-            No branch-specific event dates have been announced for {branch?.name ?? "this branch"}{" "}
-            yet. Praise Night is next; date and venue details will be added here once confirmed.
-          </p>
+          <div className="events-next__empty" role="status">
+            <span className="events-next__empty-mark" aria-hidden>
+              <CalendarDays />
+            </span>
+            <div className="events-next__empty-copy">
+              <p className="events-next__empty-kicker">
+                {branch ? `No upcoming events for ${branch.name}` : "No upcoming events just yet"}
+              </p>
+              <p className="events-next__empty-note">
+                When a new date is confirmed, the event and all its details will appear here.
+              </p>
+            </div>
+            <span className="events-next__empty-check">Check back soon</span>
+          </div>
         )}
 
         <EventFilters {...filters} />

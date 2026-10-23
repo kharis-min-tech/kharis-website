@@ -4,8 +4,22 @@ import Image, { getImageProps } from "next/image";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
-import type { EventCategory, EventMedia, EventPhoto, EventSplit } from "@/data/event-categories";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
+  X,
+} from "lucide-react";
+import type {
+  EventCategory,
+  EventFilter,
+  EventMedia,
+  EventPhoto,
+  EventSplit,
+} from "@/data/event-categories";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import "./event-categories.css";
 
@@ -349,6 +363,7 @@ function ExploreButton({ label, onClick }: { label: string; onClick: () => void 
 
 function eyebrowFor(category: EventCategory) {
   if (category.status === "past") return "Past event · Coming back soon";
+  if (category.status === "spotlight") return "Event spotlight";
   return "Upcoming special event";
 }
 
@@ -559,11 +574,13 @@ function toRows(categories: EventCategory[]) {
 type Props = {
   categories: EventCategory[];
   visibleIds: ReadonlySet<string>;
+  filter: EventFilter;
+  query: string;
   onClear: () => void;
 };
 
 /** Every event in order; ones outside the current filter stay mounted but hidden. */
-export function EventCategories({ categories, visibleIds, onClear }: Props) {
+export function EventCategories({ categories, visibleIds, filter, query, onClear }: Props) {
   return (
     <section className="events-stack" aria-label="Kharis events">
       {toRows(categories).map((row) => {
@@ -592,9 +609,23 @@ export function EventCategories({ categories, visibleIds, onClear }: Props) {
 
       {visibleIds.size === 0 ? (
         <div className="events-stack__empty" role="status">
-          <p>No events match</p>
+          <span className="events-stack__empty-mark" aria-hidden>
+            <CalendarDays />
+          </span>
+          <div className="events-stack__empty-copy">
+            <p className="events-stack__empty-title">
+              {filter === "upcoming" && !query.trim()
+                ? "No upcoming events"
+                : "No events match your search"}
+            </p>
+            <p className="events-stack__empty-description">
+              {filter === "upcoming" && !query.trim()
+                ? "When new dates are announced, upcoming events will appear here."
+                : "Try another search or clear the filters to browse every event."}
+            </p>
+          </div>
           <button type="button" className="events-stack__clear" onClick={onClear}>
-            Clear
+            {filter === "upcoming" && !query.trim() ? "View all events" : "Clear filters"}
           </button>
         </div>
       ) : null}

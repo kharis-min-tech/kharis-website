@@ -9,12 +9,13 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { type Testimonial } from "@/components/TestimonialCarousel";
 import { TestimoniesBand } from "@/components/TestimoniesBand";
 import { TestimonyFormModal } from "@/components/TestimonyFormModal";
 import { LatestMessages } from "@/components/LatestMessages";
+import { VisitInstead } from "@/components/VisitInstead";
 import { type MessageVideo } from "@/lib/youtube";
 
 function Index({
@@ -25,6 +26,8 @@ function Index({
   messages: MessageVideo[];
 }) {
   const [formOpen, setFormOpen] = useState(false);
+  const introRef = useRef<HTMLElement>(null);
+  const [introMotion, setIntroMotion] = useState<"rest" | "ready" | "in">("rest");
   const closeForm = useCallback(() => {
     setFormOpen(false);
     if (window.location.hash === "#share-testimony") {
@@ -56,13 +59,30 @@ function Index({
     };
   }, []);
 
+  useEffect(() => {
+    const section = introRef.current;
+    if (!section || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setIntroMotion("ready");
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setIntroMotion("in");
+        observer.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="bg-white text-gray-900 font-body-md overflow-x-hidden pt-[74px]">
       <SiteHeader />
 
       <header className="kp-home-hero kp-on-dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
-        <div className="absolute inset-0 grid grid-cols-2 md:flex md:flex-row w-full h-full z-0">
-          <div className="relative col-span-2 md:flex-1 group overflow-hidden border-b-2 md:border-b-0 md:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
+        <img className="kp-home-hero__still" src="/kp2/assets/crowd-poster.jpg" alt="" />
+        <div className="kp-home-hero__mosaic absolute inset-0 grid grid-cols-2 lg:flex lg:flex-row w-full h-full z-0">
+          <div className="relative col-span-2 lg:flex-1 group overflow-hidden border-b-2 lg:border-b-0 lg:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/Choir-video.mp4"
@@ -71,7 +91,7 @@ function Index({
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
-          <div className="relative md:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#deb7ff]/10">
+          <div className="relative lg:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#deb7ff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/crowd.mp4"
@@ -80,7 +100,7 @@ function Index({
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
-          <div className="relative md:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#f7be1d]/10">
+          <div className="relative lg:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#f7be1d]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/choir2.mp4"
@@ -89,7 +109,7 @@ function Index({
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
-          <div className="relative hidden md:block md:flex-1 group overflow-hidden halftone-bg text-[#eaddff]/10">
+          <div className="relative hidden lg:block lg:flex-1 group overflow-hidden halftone-bg text-[#eaddff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/dancing.mp4"
@@ -99,7 +119,7 @@ function Index({
           </div>
         </div>
 
-        <div className="absolute inset-0 z-20 bg-[#151218]/55 md:bg-transparent"></div>
+        <div className="kp-home-hero__veil absolute inset-0 z-20 bg-[#151218]/55 md:bg-transparent"></div>
 
         <div className="kp-home-hero-copy absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none px-margin-mobile md:px-margin-desktop text-center mt-0 md:mt-[-10vh]">
           <div className="bg-[#f7be1d] px-4 sm:px-6 py-2 sm:py-3 mb-5 md:mb-8 pointer-events-auto shadow-[4px_4px_0px_0px_rgba(19,16,22,1)] border-2 border-[#151218] rotate-[-2deg] max-w-full">
@@ -131,7 +151,11 @@ function Index({
       <main className="relative z-20 overflow-hidden bg-white">
         <div className="halftone-bg absolute inset-0 pointer-events-none text-gray-200 opacity-50"></div>
 
-        <section className="kp-home-intro flex items-center px-margin-mobile md:px-margin-desktop relative z-10 overflow-hidden">
+        <section
+          ref={introRef}
+          data-reveal="self"
+          className={`kp-home-intro relative z-10 flex items-center px-margin-mobile md:px-margin-desktop${introMotion === "ready" ? " is-armed" : ""}${introMotion === "in" ? " is-revealed" : ""}`}
+        >
           <div
             className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 items-center"
             style={{ gap: "clamp(1.5rem, 4vw, 4rem)" }}
@@ -181,7 +205,7 @@ function Index({
                 authority, and Christ is the centre of our lives.
               </p>
               <p
-                className="font-body-lg text-gray-600 italic max-w-2xl"
+                className="font-body-lg text-gray-600 max-w-2xl"
                 style={{
                   fontSize: "clamp(1rem, 1.45vw, 1.6rem)",
                 }}
@@ -205,7 +229,7 @@ function Index({
                 <span className="inline-block bg-[#f7be1d] text-gray-900 px-4 py-2 font-label-comic text-xs uppercase tracking-widest brutalist-shadow mb-6">
                   From the Pastor
                 </span>
-                <h2 className="font-display-xl text-5xl md:text-7xl text-white leading-none uppercase mb-6">
+                <h2 className="font-display-xl text-5xl lg:text-7xl text-white leading-none uppercase mb-6">
                   A WORD FROM <span className="text-[#f7be1d]">OUR HEAD PASTOR</span>
                 </h2>
                 <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-4 max-w-lg">
@@ -259,9 +283,27 @@ function Index({
 
           {messages.length === 0 ? (
             <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pb-16 relative z-10">
-              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl">
-                New teachings will land here as they go live on YouTube.
-              </p>
+              <VisitInstead
+                title="No teachings just yet"
+                action={
+                  <div className="mt-6 flex flex-wrap justify-center gap-3">
+                    <Link
+                      href="/events#kp-sun-title"
+                      className="kp-depth-button kp-button-purple kp-empty-panel__cta !mt-0"
+                    >
+                      Sunday service
+                    </Link>
+                    <Link
+                      href="/branches"
+                      className="kp-depth-button kp-button-gold kp-empty-panel__cta !mt-0"
+                    >
+                      Find a branch
+                    </Link>
+                  </div>
+                }
+              >
+                Sunday service is where the Word is preached. Find a branch and come this week.
+              </VisitInstead>
             </div>
           ) : null}
         </section>

@@ -55,6 +55,125 @@
     font-size: clamp(2.6rem, 12vw, 3.6rem);
   }
 }
+/* Departments hero sits under the fixed header, so the stage fills the rest of the screen. */
+.kp-dept-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  min-height: calc(100svh - 74px);
+  padding-block: 2.75rem 1.75rem;
+}
+.kp-dept-hero h1,
+.kp-dept-hero p {
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(9, 10, 30, 0.72);
+}
+.dark .kp-dept-hero h1,
+.dark .kp-dept-hero p {
+  color: #fff !important;
+}
+.kp-dept-hero h1 {
+  max-width: 11ch;
+  margin: 0;
+  font-size: clamp(2.75rem, 6.4vw, 5.75rem);
+  line-height: 0.95;
+  text-wrap: balance;
+}
+.kp-dept-chip {
+  border: 2px solid #151218;
+  background: rgba(255, 253, 245, 0.94);
+  color: #151218;
+}
+.kp-dept-chip.is-active,
+.kp-dept-chip:hover {
+  background: #f7be1d;
+  color: #151218;
+}
+.dark .kp-dept-chip,
+.dark .kp-dept-chip.is-active,
+.dark .kp-dept-chip:hover {
+  border-color: #151218;
+  color: #151218 !important;
+}
+.dark .kp-dept-chip {
+  background: #fffdf5;
+}
+.dark .kp-dept-chip.is-active,
+.dark .kp-dept-chip:hover {
+  background: #f7be1d;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .kp-home-hero-copy {
+    padding-bottom: 18vh;
+  }
+
+  .kp-intro-photo {
+    height: 22rem !important;
+  }
+
+  .kp-home-intro {
+    padding-block: 3.5rem;
+  }
+
+  .kp-dept-hero {
+    min-height: 44rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .kp-dept-hero {
+    padding-block: 2rem 1.5rem;
+  }
+  .kp-dept-hero h1 {
+    font-size: clamp(2.6rem, 12vw, 3.6rem);
+  }
+}
+/* The poster stays full-bleed. The video covers it only while it is playing. */
+.kp-dept-hero__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.kp-dept-hero__stage video {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.kp-dept-hero__stage video.is-playing {
+  opacity: 1;
+}
+.kp-dept-hero__play-slot {
+  position: relative;
+  z-index: 20;
+  display: grid;
+  flex: 1 1 auto;
+  place-items: center;
+  min-height: 9rem;
+  padding: 0.5rem 1rem 1.25rem;
+}
+.kp-dept-hero__play {
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 3px solid #151218;
+  background: #f7be1d;
+  color: #151218;
+  box-shadow: 6px 6px 0 #151218;
+  cursor: pointer;
+}
+.dark .kp-dept-hero__play,
+.dark .kp-dept-hero__play .material-symbols-outlined {
+  background: #f7be1d;
+  color: #151218 !important;
+}
 .kp-about-hash {
   position: relative;
   top: -6rem;
@@ -72,6 +191,32 @@
 }
 .kp-mission-tab {
   min-height: 100px;
+  min-width: 0;
+}
+
+@media (max-width: 1279px) {
+  button.kp-mission-tab {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    padding: 1rem;
+  }
+
+  .kp-mission-tab > span:not(:last-child) {
+    align-self: flex-start;
+  }
+
+  .kp-mission-tab > span:last-child {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .kp-mission-tab .text-headline-md {
+    font-size: clamp(1.15rem, 2.6vw, 1.55rem);
+    line-height: 1.05;
+    overflow-wrap: break-word;
+  }
 }
 .kp-mission-options {
   display: flex;
@@ -239,21 +384,19 @@ main .kp-tag-banner,
 .kp-life-hero .halftone-pattern {
   opacity: 0.1;
 }
-/* Hard offset reads as the split between upcoming events and Stay Connected.
-   Dark mode uses the light ink, because a black slab disappears on the dark page. */
-.kp-life-events {
-  box-shadow: 0 -8px 0 0 #151218;
+/* Cream social posters keep dark ink. A dark-mode rule paints every
+   descendant of .bg-background with the light on-surface colour. */
+.kp-life-social,
+.dark .kp-life-social,
+.dark .kp-life-social :is(.font-headline-md, .font-label-sm, svg) {
+  color: #151218 !important;
 }
-.dark .kp-life-events {
-  box-shadow: 0 -8px 0 0 var(--on-surface);
-}
-@media (min-width: 768px) {
-  .kp-life-events {
-    box-shadow: 8px 0 0 0 #151218;
-  }
-  .dark .kp-life-events {
-    box-shadow: 8px 0 0 0 var(--on-surface);
-  }
+.kp-life-social svg,
+.kp-life-social svg *,
+.dark .kp-life-social svg,
+.dark .kp-life-social svg * {
+  color: #151218 !important;
+  fill: #151218 !important;
 }
 .kp-panel-dove {
   width: 64px;
@@ -341,12 +484,24 @@ html[data-kp-intro="seen"] .kp-intro {
   right: max(1.5rem, env(safe-area-inset-right));
   min-height: 44px;
   padding: 0.5rem 1rem;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
   color: #fff;
-  font-family: var(--font-space), monospace;
-  font-size: 0.75rem;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  text-transform: uppercase;
 }
-.kp-intro-skip:focus-visible {
-  outline-color: #ffde59;
+.kp-intro-skip:focus,
+.kp-intro-skip:focus-visible,
+.dark .kp-intro-skip:focus-visible {
+  outline: none;
+  border: 0;
+  box-shadow: none;
 }
 .kp-route-loading {
   min-height: 100svh;
@@ -425,6 +580,158 @@ html[data-kp-intro="seen"] .kp-intro {
   .kp-dove-complete {
     animation: none;
     opacity: 1;
+  }
+  .kp-turn {
+    display: none !important;
+  }
+}
+
+/* Comic panels slap across the screen between pages, then clear. */
+.kp-turn {
+  position: fixed;
+  inset: 0;
+  z-index: 1040;
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden;
+}
+html[data-kp-intro="playing"] .kp-turn {
+  display: none;
+}
+html[data-kp-turn="on"] .kp-turn {
+  visibility: visible;
+}
+.kp-turn__band {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 38%;
+  border-bottom: 4px solid #151218;
+  transform: translateX(-104%);
+}
+.kp-turn__band:nth-child(1) {
+  top: 0;
+  background-color: #f7be1d;
+  background-image: radial-gradient(circle, rgb(21 18 24 / 16%) 1.15px, transparent 1.25px);
+  background-size: 9px 9px;
+}
+.kp-turn__band:nth-child(2) {
+  top: 31%;
+  height: 40%;
+  background-color: #630ed4;
+  background-image: radial-gradient(circle, rgb(255 255 255 / 14%) 1.15px, transparent 1.25px);
+  background-size: 9px 9px;
+  border-bottom-color: #151218;
+  transform: translateX(104%);
+}
+.kp-turn__band:nth-child(3) {
+  top: 66%;
+  height: 34%;
+  background: #151218;
+  border-bottom: 0;
+  border-top: 4px solid #f7be1d;
+}
+html[data-kp-turn="on"] .kp-turn__band {
+  animation: kp-turn-across 760ms cubic-bezier(0.76, 0, 0.18, 1) both;
+}
+html[data-kp-turn="on"] .kp-turn__band:nth-child(2) {
+  animation-name: kp-turn-across-reverse;
+  animation-delay: 70ms;
+}
+html[data-kp-turn="on"] .kp-turn__band:nth-child(3) {
+  animation-delay: 120ms;
+}
+.kp-turn__stamp,
+.dark .kp-turn__stamp,
+.dark .kp-turn__stamp * {
+  color: #151218 !important;
+}
+.kp-turn__stamp {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  margin: 0;
+  translate: -50% -50%;
+  padding: 0.85rem 1.35rem 0.75rem;
+  background: #ffde59;
+  border: 3px solid #151218;
+  box-shadow: 7px 7px 0 #151218;
+  text-align: center;
+  rotate: -2deg;
+  opacity: 0;
+}
+.kp-turn__stamp span {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-family: var(--font-space), monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.kp-turn__stamp strong {
+  display: block;
+  font-family: var(--font-anton), sans-serif;
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+html[data-kp-turn="on"] .kp-turn__stamp {
+  animation: kp-turn-stamp 860ms linear both;
+}
+@keyframes kp-turn-across {
+  0% {
+    transform: translateX(-104%);
+  }
+  42% {
+    transform: translateX(0);
+  }
+  58% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(104%);
+  }
+}
+@keyframes kp-turn-across-reverse {
+  0% {
+    transform: translateX(104%);
+  }
+  42% {
+    transform: translateX(0);
+  }
+  58% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-104%);
+  }
+}
+@keyframes kp-turn-stamp {
+  0%,
+  28% {
+    opacity: 0;
+    scale: 0.82;
+    rotate: -8deg;
+  }
+  42%,
+  62% {
+    opacity: 1;
+    scale: 1;
+    rotate: -2deg;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.06;
+    rotate: 4deg;
+  }
+}
+@media print {
+  .kp-turn {
+    display: none !important;
   }
 }
 
@@ -620,37 +927,59 @@ html[data-kp-intro="seen"] .kp-intro {
   padding-block: clamp(2.5rem, 4vw, 3rem);
 }
 .kp-intro-visual,
-.kp-intro-copy > * {
+.kp-intro-copy {
   opacity: 1;
-  translate: 0 0;
-  transition:
-    opacity 600ms var(--kp-ease-out),
-    translate 700ms var(--kp-ease-out);
+  transform: none;
 }
-/* Child reveals preserve the photograph's tilted frame and avoid a double fade. */
 .kp-home-intro.reveal-on-scroll {
   opacity: 1;
   translate: none;
 }
-.kp-home-intro.reveal-on-scroll:not(.is-revealed) .kp-intro-visual {
+.kp-home-intro.is-armed .kp-intro-visual {
   opacity: 0;
-  translate: -18px 0;
+  transform: translateX(-1.5rem) rotate(-9deg);
+  transform-origin: 8% 90%;
 }
-.kp-home-intro.reveal-on-scroll:not(.is-revealed) .kp-intro-copy > * {
+.kp-home-intro.is-armed .kp-intro-copy {
   opacity: 0;
-  translate: 0 16px;
+  transform: translateX(1.35rem) rotate(4deg);
+  transform-origin: 90% 12%;
 }
-.kp-home-intro.is-revealed .kp-intro-copy > :nth-child(1) {
-  transition-delay: 80ms;
+.kp-home-intro.is-revealed .kp-intro-visual {
+  transform-origin: 8% 90%;
+  animation: kp-intro-swing-photo 1.2s ease-in-out both;
 }
-.kp-home-intro.is-revealed .kp-intro-copy > :nth-child(2) {
-  transition-delay: 140ms;
+.kp-home-intro.is-revealed .kp-intro-copy {
+  transform-origin: 90% 12%;
+  animation: kp-intro-swing-copy 1.2s 180ms ease-in-out both;
 }
-.kp-home-intro.is-revealed .kp-intro-copy > :nth-child(3) {
-  transition-delay: 200ms;
+@keyframes kp-intro-swing-photo {
+  0% {
+    opacity: 0;
+    transform: translateX(-1.5rem) rotate(-9deg);
+  }
+  58% {
+    opacity: 1;
+    transform: translateX(0.35rem) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
 }
-.kp-home-intro.is-revealed .kp-intro-copy > :nth-child(4) {
-  transition-delay: 260ms;
+@keyframes kp-intro-swing-copy {
+  0% {
+    opacity: 0;
+    transform: translateX(1.35rem) rotate(4deg);
+  }
+  62% {
+    opacity: 1;
+    transform: translateX(-0.25rem) rotate(-1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
 }
 .kp-home-intro .kp-intro-photo {
   filter: grayscale(1);
@@ -671,17 +1000,36 @@ html[data-kp-intro="seen"] .kp-intro {
   .kp-home-intro > div {
     gap: 2.5rem !important;
   }
+  .kp-home-intro.is-armed .kp-intro-visual,
+  .kp-home-intro.is-revealed .kp-intro-visual {
+    transform-origin: 50% 70%;
+  }
+  .kp-home-intro.is-armed .kp-intro-copy,
+  .kp-home-intro.is-revealed .kp-intro-copy {
+    transform-origin: 50% 30%;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .kp-home-intro .kp-intro-visual,
+  .kp-home-intro .kp-intro-copy,
   .kp-home-intro .kp-intro-copy > * {
     opacity: 1 !important;
     translate: none !important;
+    transform: none !important;
+    animation: none !important;
     transition: none !important;
   }
   .kp-home-intro .kp-intro-photo {
     transition: none;
     transform: none !important;
+  }
+}
+@media print {
+  .kp-home-intro .kp-intro-visual,
+  .kp-home-intro .kp-intro-copy {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
   }
 }
 
@@ -767,6 +1115,10 @@ html[data-kp-intro="seen"] .kp-intro {
 }
 
 /* Phone layouts keep the print styling while giving content room to wrap. */
+.kp-home-hero__still {
+  display: none;
+}
+
 @media (max-width: 767px) {
   html {
     scroll-padding-top: 90px;
@@ -774,6 +1126,27 @@ html[data-kp-intro="seen"] .kp-intro {
   .kp-home-hero {
     height: auto;
     min-height: min(680px, calc(100svh - 74px));
+  }
+  .kp-home-hero__mosaic {
+    display: none;
+  }
+  .kp-home-hero__still {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+  }
+  .kp-home-hero__veil {
+    background: linear-gradient(
+      180deg,
+      rgb(21 18 24 / 22%) 0%,
+      rgb(21 18 24 / 58%) 46%,
+      rgb(21 18 24 / 74%) 100%
+    );
   }
   .kp-home-hero-copy {
     position: relative;
@@ -819,9 +1192,9 @@ html[data-kp-intro="seen"] .kp-intro {
   .kp-messages-hero {
     display: flex;
     flex-direction: column;
-    height: calc(100svh - 74px);
+    height: auto;
     min-height: 0;
-    max-height: calc(100svh - 74px);
+    max-height: none;
   }
   .kp-messages-hero > .relative {
     flex: none;
@@ -853,6 +1226,25 @@ html[data-kp-intro="seen"] .kp-intro {
     padding-bottom: calc(4rem + env(safe-area-inset-bottom));
   }
 }
+
+/* iPad and phone show the whole sermon poster, then the title underneath. */
+@media (max-width: 1279px) {
+  .kp-messages-hero {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+  }
+  .kp-msg-hero__media {
+    width: 100%;
+    max-height: none;
+    aspect-ratio: 16 / 9;
+  }
+  .kp-msg-hero__media img {
+    object-fit: cover;
+    object-position: center;
+  }
+}
 @media (hover: hover) {
   .kp-faith-question:hover {
     background: var(--primary-fixed);
@@ -880,4 +1272,54 @@ html[data-kp-intro="seen"] .kp-intro {
 :is(section, header) + main > :first-child,
 footer {
   box-shadow: inset 0 12px 16px -8px rgb(21 18 24 / 28%);
+}
+
+/* One label style for every action: Bricolage, 14px, bold, spaced capitals.
+   Store badges and headings inside a button keep their own type. */
+:is(a, button).kp-depth-button,
+:is(a, button).btn-neo,
+:is(a, button).font-headline-md.uppercase,
+main :is(a, button).font-body-md.uppercase,
+.kp-branch-card__actions a,
+.kp-panels__explore,
+.kp-ev-hero__cta,
+.kp-ev-next__go,
+.kp-know__go,
+.kp-letter__button,
+.kp-stack__cta,
+.kp-sun__explore,
+.kp-lead__cta,
+.kp-mnav__cta,
+.kp-give-why__more,
+.kp-find__near,
+.kp-menu-toggle,
+.kp-browse__count button,
+.kp-browse__empty button,
+.kp-intro-skip {
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  line-height: 1.15 !important;
+  text-transform: uppercase !important;
+}
+
+:is(a, button).kp-depth-button :is(p, h2, h3, h4).font-headline-lg,
+:is(a, button).kp-depth-button :is(p, h2, h3, h4).font-display-lg {
+  font-family: var(--font-anton), "Anton", sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  letter-spacing: normal !important;
+  line-height: 1.15 !important;
+  text-transform: none !important;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined" !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  letter-spacing: normal !important;
+  line-height: 1 !important;
+  text-transform: none !important;
 }

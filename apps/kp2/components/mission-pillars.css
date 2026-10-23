@@ -200,10 +200,10 @@
   margin: 0;
   padding: 0;
   border: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-hanken), "Hanken Grotesk", sans-serif;
   font-size: clamp(1.3rem, 2.2vw, 1.75rem);
-  font-style: italic;
-  font-weight: 400;
+  font-style: normal;
+  font-weight: 500;
   line-height: 1.45;
   color: #151218;
 }

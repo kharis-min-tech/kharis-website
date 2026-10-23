@@ -13,6 +13,7 @@ import { ComicFlip } from "@/components/ComicFlip";
 import { EventsComingUp, EventsHero } from "@/components/EventsTop";
 import { SundayServiceBanner } from "@/components/SundayServiceBanner";
 import { ComicPanels } from "@/components/ComicPanels";
+import { VisitInstead } from "@/components/VisitInstead";
 
 const HERO_WORSHIP =
   "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/events-hero-worship.jpg";
@@ -186,32 +187,34 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
             </div>
 
             {filtered.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
                 {filtered.map((event) => (
                   <EventCard key={event.slug} event={event} />
                 ))}
               </div>
+            ) : sorted.length === 0 ? (
+              <VisitInstead title="Nothing is on the diary yet">
+                Services happen at a branch. Find a location and come this Sunday.
+              </VisitInstead>
             ) : (
-              <div className="border-2 border-dashed border-on-background bg-surface p-stack-lg text-center">
-                <span className="material-symbols-outlined text-5xl text-outline">event_busy</span>
-                <h4 className="font-headline-md text-headline-md uppercase mt-4 text-on-background">
-                  Nothing matches that yet
-                </h4>
-                <p className="font-body-md text-on-surface-variant mt-2">
-                  Try another category or clear your search — there&apos;s always something
-                  happening.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQuery("");
-                    setActiveCategory("All");
-                  }}
-                  className="mt-stack-md inline-block bg-primary text-on-primary font-label-md uppercase px-6 py-3 border-2 border-on-background neo-shadow neo-button-hover transition-all"
-                >
-                  Reset Filters
-                </button>
-              </div>
+              <VisitInstead
+                title="Nothing matches that yet"
+                icon="event_busy"
+                action={
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuery("");
+                      setActiveCategory("All");
+                    }}
+                    className="kp-depth-button kp-button-gold kp-empty-panel__cta"
+                  >
+                    Reset filters
+                  </button>
+                }
+              >
+                Try another category or clear your search.
+              </VisitInstead>
             )}
           </div>
         </section>
