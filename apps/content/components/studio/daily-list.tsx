@@ -2,6 +2,7 @@
 
 import { CrudPage } from "@/components/studio/crud-page";
 import { PickWorkspace } from "@/components/studio/pick-workspace";
+import { readingHint } from "@/lib/bible-reference";
 import { deleteDaily, listDaily, saveDaily } from "@/lib/content-repo";
 import type { DailyEntryRow, DailyKind } from "@/lib/types";
 import { useWorkspaceId } from "@/lib/workspace-context";
@@ -26,7 +27,13 @@ export function DailyList({
       fields={[
         { key: "date", label: "Date", kind: "date" },
         { key: "title", label: "Title", kind: "text" },
-        { key: "reference", label: "Reference", kind: "text", placeholder: "John 1:1" },
+        {
+          key: "reference",
+          label: "Reference",
+          kind: "text",
+          placeholder: "John 3:16",
+          ...(kind === "reading" ? { detail: readingHint } : {}),
+        },
         { key: "body", label: "Body", kind: "textarea" },
       ]}
       load={() => listDaily(workspace, kind)}

@@ -16,6 +16,7 @@ export type Field =
       label: string;
       kind: "text" | "textarea" | "date" | "url" | "time";
       placeholder?: string;
+      detail?: (value: string) => string;
     }
   | { key: string; label: string; kind: "select"; options: { value: string; label: string }[] }
   | { key: string; label: string; kind: "toggle" }
@@ -258,6 +259,9 @@ function FieldControl({
           onChange={(event) => onChange(event.target.value)}
         />
       )}
+      {"detail" in field && field.detail ? (
+        <p className="mt-1 text-xs text-muted-foreground">{field.detail(value)}</p>
+      ) : null}
     </div>
   );
 }

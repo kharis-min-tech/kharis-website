@@ -226,7 +226,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
             </div>
           ) : null}
 
-          <div id="kp-branch-list" className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div id="kp-branch-list" className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
             {visible.map((branch) => {
               const { sunday, midweek } = splitServices(branch.services);
               const sun = sunday[0] ?? branch.serviceTimes[0];

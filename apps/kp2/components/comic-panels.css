@@ -277,6 +277,58 @@
   outline-offset: 3px;
 }
 
+/* iPad, both ways: each panel fills its own tile. The wide comic page returns on a laptop. */
+@media (min-width: 760px) and (max-width: 1279px) {
+  .kp-panels__page {
+    aspect-ratio: auto;
+    min-height: 0;
+    max-height: none;
+    padding: 14px;
+  }
+
+  .kp-panels__grid {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .kp-panels__cell,
+  .kp-panels__cell--a,
+  .kp-panels__cell--b,
+  .kp-panels__cell--c,
+  .kp-panels__cell--d {
+    position: relative;
+    inset: auto;
+    height: 22rem;
+    margin: 0;
+    filter: none;
+    --clip: inset(0);
+    --bx: 0%;
+    --by: 0%;
+    --bw: 100%;
+    --bh: 100%;
+    --sx: 0%;
+    --sy: 0%;
+    --sw: 100%;
+    --sh: 100%;
+  }
+
+  .kp-panels__panel {
+    clip-path: none;
+  }
+
+  .kp-panels__title,
+  .kp-panels__sub {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .kp-panels__title {
+    font-size: clamp(1.45rem, 2.6vw, 2.15rem);
+  }
+}
+
 /* Phones: panels stack, each with slanted top/bottom edges that zigzag down the page. */
 @media (max-width: 759px) {
   .kp-panels__page {

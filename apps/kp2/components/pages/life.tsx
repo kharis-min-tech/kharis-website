@@ -86,131 +86,146 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
       <main className="relative z-20">
         {/* Fellowship section removed */}
 
-        <section className="py-stack-lg px-margin-desktop max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-            <div className="md:col-span-5 order-2 md:order-1">
-              <div className="kp-life-events p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-primary flex items-center justify-center border-2 border-black">
+        <section className="border-b-4 border-black bg-background px-margin-desktop py-stack-lg">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <div className="mb-4 inline-block bg-primary-container px-3 py-1 font-label-md text-label-md uppercase text-on-primary-container">
+                  The diary
+                </div>
+                <h2 className="font-display-lg text-headline-lg uppercase leading-[0.9]">
+                  Upcoming events
+                </h2>
+              </div>
+              {upcoming.length > 0 ? (
+                <Link
+                  href="/events"
+                  className="kp-depth-button kp-button-gold border-4 border-black bg-[#f7be1d] px-6 py-3 font-headline-md uppercase text-[#151218]"
+                >
+                  See more
+                </Link>
+              ) : null}
+            </div>
+            {upcoming.length === 0 ? (
+              <div className="flex flex-col gap-6 border-4 border-black bg-white p-6 neo-shadow md:flex-row md:items-center md:justify-between md:p-8">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center border-2 border-black bg-primary">
                     <span
-                      className="material-symbols-outlined text-white"
+                      className="material-symbols-outlined text-3xl text-white"
                       style={{ fontVariationSettings: "'FILL' 1" }}
+                      aria-hidden="true"
                     >
                       event
                     </span>
                   </div>
-                  <h3 className="font-headline-md text-headline-md uppercase">Upcoming Events</h3>
+                  <p className="font-body-lg text-body-lg text-on-surface">
+                    Nothing is dated just yet. Come this Sunday.
+                  </p>
                 </div>
-                <ul className="space-y-6">
-                  {upcoming.length === 0 ? (
-                    <li className="font-body-md text-on-surface-variant">
-                      No upcoming events just yet. Check the events page for the latest.
-                    </li>
-                  ) : (
-                    upcoming.map((event, i) => (
-                      <li key={event.slug} className="flex gap-4 items-start group">
-                        <div className="font-label-md text-label-md text-primary w-14 pt-1 uppercase shrink-0">
-                          {socialDate(event.starts)}
-                        </div>
-                        <div
-                          className={`flex-1 ${i > 0 ? "border-t-2 border-outline-variant pt-4" : ""}`}
-                        >
-                          <h4 className="font-body-lg text-body-lg font-bold group-hover:text-primary transition-colors">
-                            <Link href="/events">{event.title}</Link>
-                          </h4>
-                          <p className="font-body-md text-body-md text-on-surface-variant">
-                            {socialBlurb(event.blurb)}
-                          </p>
-                          <PlanVisitButton
-                            item={eventToCalendarItem(event)}
-                            className="mt-2 inline-flex items-center gap-1 font-label-md text-[11px] uppercase tracking-widest text-primary"
-                          >
-                            <span className="material-symbols-outlined text-base">
-                              calendar_add_on
-                            </span>
-                            Remind me
-                          </PlanVisitButton>
-                        </div>
-                      </li>
-                    ))
-                  )}
-                </ul>
                 <Link
-                  href="/events"
-                  className="kp-depth-button kp-button-purple block w-full mt-10 bg-primary text-white py-4 border-4 border-black neo-shadow hover-press font-headline-md text-headline-md uppercase skew-x-2 text-center"
+                  href="/branches"
+                  className="kp-depth-button kp-button-gold shrink-0 border-4 border-black bg-[#f7be1d] px-7 py-4 text-center font-headline-md uppercase text-[#151218]"
                 >
-                  See More
+                  Find a branch
                 </Link>
               </div>
-            </div>
-            <div className="md:col-span-7 order-1 md:order-2">
-              <div className="p-8">
-                <div className="inline-block bg-primary-container text-on-primary-container px-3 py-1 font-label-md text-label-md uppercase mb-6">
-                  Stay Connected
-                </div>
-                <h2 className="font-display-lg text-headline-lg uppercase leading-[0.9] mb-8">
-                  Stay connected <br />
-                  <span className="text-primary italic">beyond Sunday</span>
-                </h2>
-                <p className="font-body-lg text-body-lg text-on-surface mb-8">
-                  We are passionate about God and His word. Get daily inspiration, community
-                  highlights, and event updates, then get busy serving. This is a kingdom culture
-                  that does not stop when Sunday ends.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <a
-                    className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-secondary-container transition-colors neo-shadow group"
-                    href="https://instagram.com/kharisphasetwo"
-                    target="_blank"
-                    rel="noreferrer"
+            ) : (
+              <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {upcoming.map((event) => (
+                  <li
+                    key={event.slug}
+                    className="flex flex-col border-4 border-black bg-white p-5 neo-shadow"
                   >
-                    <span className="material-symbols-outlined text-4xl shrink-0">
-                      photo_camera
-                    </span>
-                    <div className="min-w-0">
-                      <p className="font-label-md text-label-md uppercase">Instagram</p>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-secondary-container break-all">
-                        @kharisphasetwo
-                      </p>
-                    </div>
-                  </a>
-                  <a
-                    className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-primary hover:text-white transition-colors neo-shadow group"
-                    href="https://youtube.com/@davidantwi"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <span className="material-symbols-outlined text-4xl shrink-0">
-                      video_library
-                    </span>
-                    <div className="min-w-0">
-                      <p className="font-label-md text-label-md uppercase">YouTube</p>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-white/80 break-all">
-                        @davidantwi
-                      </p>
-                    </div>
-                  </a>
-                  <a
-                    className="flex items-center gap-3 border-4 border-black p-4 bg-white hover:bg-secondary-container transition-colors neo-shadow group"
-                    href={TIKTOK_URL}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <TikTokIcon className="w-9 h-9 shrink-0" />
-                    <div className="min-w-0">
-                      <p className="font-label-md text-label-md uppercase">TikTok</p>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-secondary-container break-all">
-                        {TIKTOK_HANDLE}
-                      </p>
-                    </div>
-                  </a>
-                </div>
-              </div>
+                    <p className="font-label-md text-label-md uppercase text-primary">
+                      {socialDate(event.starts)}
+                    </p>
+                    <h3 className="mt-2 font-headline-md text-headline-md uppercase leading-none">
+                      <Link href="/events">{event.title}</Link>
+                    </h3>
+                    <p className="mt-3 font-body-md text-on-surface-variant">
+                      {socialBlurb(event.blurb)}
+                    </p>
+                    <PlanVisitButton
+                      item={eventToCalendarItem(event)}
+                      className="mt-auto inline-flex items-center gap-1 pt-4 font-label-md text-[11px] uppercase tracking-widest text-primary"
+                    >
+                      <span className="material-symbols-outlined text-base">calendar_add_on</span>
+                      Remind me
+                    </PlanVisitButton>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+
+        <section className="border-b-4 border-black bg-[#151218] px-margin-desktop py-stack-lg text-white">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="mb-3 font-display-lg text-headline-lg uppercase leading-[0.9]">
+              Stay connected
+            </h2>
+            <p className="mb-8 max-w-2xl font-body-lg text-body-lg text-white/80">
+              Daily inspiration, community highlights, and event updates. The family keeps going
+              when Sunday ends.
+            </p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <a
+                className="kp-life-social flex flex-col gap-4 border-4 border-[#151218] bg-[#fffdf5] p-5 shadow-[6px_6px_0_#f7be1d] transition-colors hover:bg-[#f7be1d]"
+                href="https://instagram.com/kharisphasetwo"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="flex h-14 w-14 items-center justify-center border-2 border-black bg-primary text-white">
+                  <span className="material-symbols-outlined text-3xl" aria-hidden="true">
+                    photo_camera
+                  </span>
+                </span>
+                <span>
+                  <span className="block font-headline-md text-headline-md uppercase leading-none">
+                    Instagram
+                  </span>
+                  <span className="mt-2 block font-label-sm text-label-sm">@kharisphasetwo</span>
+                </span>
+              </a>
+              <a
+                className="kp-life-social flex flex-col gap-4 border-4 border-[#151218] bg-[#fffdf5] p-5 shadow-[6px_6px_0_#f7be1d] transition-colors hover:bg-[#f7be1d]"
+                href="https://youtube.com/@davidantwi"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="flex h-14 w-14 items-center justify-center border-2 border-black bg-primary text-white">
+                  <span className="material-symbols-outlined text-3xl" aria-hidden="true">
+                    video_library
+                  </span>
+                </span>
+                <span>
+                  <span className="block font-headline-md text-headline-md uppercase leading-none">
+                    YouTube
+                  </span>
+                  <span className="mt-2 block font-label-sm text-label-sm">@davidantwi</span>
+                </span>
+              </a>
+              <a
+                className="kp-life-social flex flex-col gap-4 border-4 border-[#151218] bg-[#fffdf5] p-5 shadow-[6px_6px_0_#f7be1d] transition-colors hover:bg-[#f7be1d]"
+                href={TIKTOK_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="flex h-14 w-14 items-center justify-center border-2 border-[#151218] bg-[#fffdf5]">
+                  <TikTokIcon className="h-8 w-8" />
+                </span>
+                <span>
+                  <span className="block font-headline-md text-headline-md uppercase leading-none">
+                    TikTok
+                  </span>
+                  <span className="mt-2 block font-label-sm text-label-sm">{TIKTOK_HANDLE}</span>
+                </span>
+              </a>
             </div>
           </div>
         </section>
 
-        <section className="kp-life-serve bg-background px-margin-desktop pb-stack-lg pt-10 md:pt-4">
+        <section className="kp-life-serve bg-background px-margin-desktop py-stack-lg">
           <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-gutter md:grid-cols-12">
             <div className="order-2 md:order-2 md:col-span-5">
               <div className="relative z-10">
@@ -255,7 +270,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
                 </div>
                 <h2 className="mb-8 font-display-lg text-headline-lg uppercase leading-[0.9]">
                   Find your place <br />
-                  <span className="italic text-primary">in the family</span>
+                  <span className="text-primary">in the family</span>
                 </h2>
                 <p className="mb-8 font-body-lg text-body-lg text-on-surface">
                   Sunday gathers us. The departments are where the family gets to work — singing,
