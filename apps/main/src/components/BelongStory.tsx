@@ -2,14 +2,12 @@
 "use client";
 
 import {
-  animate,
   motion,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
-  type AnimationPlaybackControls,
   type MotionValue,
 } from "framer-motion";
 import Link from "next/link";
@@ -17,6 +15,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from "re
 import Image from "@/components/SiteImage";
 import { Icon } from "@/components/Icon";
 import { setHeaderOverlay } from "@/lib/header-overlay";
+import { glidePageTo } from "@/lib/page-snap";
 import "./belong-story.css";
 
 type StoryItem = {
@@ -82,10 +81,6 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
 /** Inertia on the scrubbed progress: a touch over-damped so content glides in and settles without bounce. */
 const SCRUB_SPRING = { stiffness: 90, damping: 22, mass: 1 };
-/** Eased glide for pill clicks and the scroll-end settle. */
-const GLIDE_EASE = [0.65, 0, 0.35, 1] as const;
-/** When scrolling stops between frames, glide to the nearest one after this pause. */
-const SETTLE_DELAY_MS = 160;
 /** Fixed site header height (h-[4.5rem]); the header stays clear until the section passes under it. */
 const HEADER_HEIGHT_PX = 72;
 
@@ -155,6 +150,27 @@ function ActionLink({
   );
 }
 
+function StoryTab({
+  item,
+  active,
+  onSelect,
+}: {
+  item: StoryItem;
+  active: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="belong-story__tab"
+      aria-current={active ? "step" : undefined}
+      onClick={onSelect}
+    >
+      <span className="belong-story__tab-title">{item.title}</span>
+    </button>
+  );
+}
+
 function StoryText({
   item,
   index,
@@ -198,8 +214,7 @@ function StoryText({
 
 export function BelongStory({ onLearnMore }: { onLearnMore: (id: "baptism" | "fasting") => void }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const glideRef = useRef<AnimationPlaybackControls | null>(null);
-  const pillsRef = useRef<HTMLElement>(null);
+  const tabsRef = useRef<HTMLElement>(null);
   const reduce = Boolean(useReducedMotion());
   const [active, setActive] = useState(0);
 
@@ -212,12 +227,12 @@ export function BelongStory({ onLearnMore }: { onLearnMore: (id: "baptism" | "fa
     setActive((current) => (current === next ? current : next));
   });
 
-  /* On phones the pill row swipes sideways; keep the active pill in view. */
+  /* On phones the tab row swipes sideways; keep the active tab in view. */
   useEffect(() => {
-    const row = pillsRef.current;
-    const pill = row?.children[active] as HTMLElement | undefined;
-    if (!row || !pill || row.scrollWidth <= row.clientWidth) return;
-    row.scrollTo({ left: pill.offsetLeft - 16, behavior: reduce ? "instant" : "smooth" });
+    const row = tabsRef.current;
+    const tab = row?.children[active] as HTMLElement | undefined;
+    if (!row || !tab || row.scrollWidth <= row.clientWidth) return;
+    row.scrollTo({ left: tab.offsetLeft - 16, behavior: reduce ? "instant" : "smooth" });
   }, [active, reduce]);
 
   /** Page scroll position at which the timeline shows frame `index` exactly. */
@@ -228,82 +243,42 @@ export function BelongStory({ onLearnMore }: { onLearnMore: (id: "baptism" | "fa
     return top + frameProgress(index) * (section.offsetHeight - window.innerHeight);
   }, []);
 
-  const stopGlide = useCallback(() => {
-    glideRef.current?.stop();
-    glideRef.current = null;
-  }, []);
-
-  const glideTo = useCallback(
-    (target: number, settle = false) => {
-      stopGlide();
-      const from = window.scrollY;
-      const distance = Math.abs(target - from);
-      if (distance < 2) return;
-      if (reduce) {
-        window.scrollTo({ top: target, behavior: "instant" });
-        return;
-      }
-      const screens = distance / window.innerHeight;
-      const duration = settle
-        ? Math.min(0.9, 0.45 + screens * 0.6)
-        : Math.min(1.6, 0.75 + screens * 0.3);
-      /* Drive the page directly (html has scroll-behavior: smooth, so each step must be instant). */
-      glideRef.current = animate(from, target, {
-        duration,
-        ease: GLIDE_EASE,
-        onUpdate: (value) => window.scrollTo({ top: value, behavior: "instant" }),
-        onComplete: () => {
-          glideRef.current = null;
-        },
-      });
+  /* Tab clicks glide to the step's exact frame (page-snap owns snapping between frames). */
+  const goToFrame = useCallback(
+    (index: number) => {
+      const target = frameScrollY(index);
+      if (reduce) window.scrollTo({ top: target, behavior: "instant" });
+      else glidePageTo(target);
     },
-    [reduce, stopGlide],
+    [frameScrollY, reduce],
   );
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
-    let settleTimer = 0;
 
     const onScroll = () => {
       const rect = section.getBoundingClientRect();
-      setHeaderOverlay(rect.top <= 0.5 && rect.bottom > HEADER_HEIGHT_PX);
-
-      window.clearTimeout(settleTimer);
-      if (reduce || glideRef.current) return;
-      /* Scroll snap: once scrolling stops while pinned between frames, glide to the nearest frame. */
-      settleTimer = window.setTimeout(() => {
-        const r = section.getBoundingClientRect();
-        const pinned = r.top <= 0.5 && r.bottom >= window.innerHeight - 0.5;
-        if (glideRef.current || !pinned) return;
-        const span = section.offsetHeight - window.innerHeight;
-        const nearest = Math.round(clamp01(-r.top / span) * (COUNT - 1));
-        glideTo(frameScrollY(nearest), true);
-      }, SETTLE_DELAY_MS);
+      /* Clear while pinned; dark glass while it scrolls away beneath the header. */
+      const pinnedNow = rect.top <= 0.5 && rect.bottom >= window.innerHeight - 0.5;
+      const underHeader = rect.top <= 0.5 && rect.bottom > HEADER_HEIGHT_PX;
+      setHeaderOverlay("belong-story", pinnedNow ? "clear" : underHeader ? "dark" : null);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    /* Any manual input takes over from a glide in progress. */
-    window.addEventListener("wheel", stopGlide, { passive: true });
-    window.addEventListener("touchstart", stopGlide, { passive: true });
-    window.addEventListener("keydown", stopGlide);
     onScroll();
     return () => {
-      window.clearTimeout(settleTimer);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("wheel", stopGlide);
-      window.removeEventListener("touchstart", stopGlide);
-      window.removeEventListener("keydown", stopGlide);
-      stopGlide();
-      setHeaderOverlay(false);
+      setHeaderOverlay("belong-story", null);
     };
-  }, [frameScrollY, glideTo, reduce, stopGlide]);
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       className="belong-story"
       aria-labelledby="belong-story-title"
+      data-snap={`frames:${COUNT}`}
       style={{ "--belong-steps": COUNT } as CSSProperties}
     >
       <div className="belong-story__pin">
@@ -328,22 +303,14 @@ export function BelongStory({ onLearnMore }: { onLearnMore: (id: "baptism" | "fa
               Kharis is a family where you can grow in your relationship with Jesus, fellowship with
               other Christ-like believers and discover your place in God&apos;s house.
             </p>
-            <nav
-              ref={pillsRef}
-              className="belong-story__pills"
-              aria-label="Ways to belong at Kharis"
-            >
+            <nav ref={tabsRef} className="belong-story__tabs" aria-label="Ways to belong at Kharis">
               {ITEMS.map((item, index) => (
-                <button
+                <StoryTab
                   key={item.id}
-                  type="button"
-                  className="belong-story__pill"
-                  aria-current={active === index ? "step" : undefined}
-                  onClick={() => glideTo(frameScrollY(index))}
-                >
-                  <span>{item.tag}</span>
-                  {item.title}
-                </button>
+                  item={item}
+                  active={active === index}
+                  onSelect={() => goToFrame(index)}
+                />
               ))}
             </nav>
           </header>

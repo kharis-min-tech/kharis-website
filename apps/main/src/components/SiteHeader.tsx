@@ -75,9 +75,10 @@ export function SiteHeader({ tone = "auto" }: Props) {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [aboutOpen]);
 
-  /* A pinned full-screen section can request a clear header with light text (see header-overlay). */
-  const overlay =
-    useSyncExternalStore(subscribeHeaderOverlay, getHeaderOverlay, () => false) && !open;
+  /* Sections underneath can request a clear or dark header with light text (see header-overlay). */
+  const overlayMode = useSyncExternalStore(subscribeHeaderOverlay, getHeaderOverlay, () => null);
+  const overlay = overlayMode !== null && !open;
+  const overlayDark = overlay && overlayMode === "dark";
 
   const onDark = overlay
     ? true
@@ -89,7 +90,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
           ? !open
           : !scrolled && !open;
   const solid = overlay
-    ? false
+    ? overlayDark
     : siteDark
       ? true
       : forceLight
@@ -118,7 +119,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
       data-smooth-nav
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-400 ${
         solid
-          ? forceDark
+          ? forceDark || overlayDark
             ? "border-b border-white/10 bg-[#0a0612]/90 shadow-sm backdrop-blur-xl"
             : "border-b border-line bg-white/92 shadow-sm backdrop-blur-xl"
           : "border-b border-transparent bg-transparent"

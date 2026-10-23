@@ -10,7 +10,7 @@
   height: calc(100vh * var(--belong-steps));
   height: calc(100svh * var(--belong-steps));
   /* Full-bleed: break out of the padded .life-refresh column. */
-  margin: clamp(5rem, 10vw, 9rem) calc(50% - 50vw);
+  margin: 0 calc(50% - 50vw);
   background: var(--belong-ink);
   color: #fff;
 }
@@ -52,7 +52,7 @@
   z-index: 5;
   display: grid;
   height: 100%;
-  /* minmax(0, 1fr) stops the swipeable pill row from widening the column past the screen. */
+  /* minmax(0, 1fr) stops the swipeable tab row from widening the column past the screen. */
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   padding: 6.75rem max(1.25rem, calc((100vw - 78rem) / 2)) 2.4rem;
@@ -94,65 +94,63 @@
   line-height: 1.6;
 }
 
-.belong-story__pills {
+/* Step buttons: square bordered boxes that lift on hover; the active step fills gold. */
+.belong-story__tabs {
   display: flex;
-  /* Wider than the text column so all four fit on one row; pills are frosted where they meet the photo. */
+  /* Wider than the text column so all four fit on one row; boxes are frosted over the photo. */
   width: max-content;
   max-width: calc(100vw - 2.5rem);
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
 }
 
-.belong-story__pill {
-  display: inline-flex;
+.belong-story__tab {
+  position: relative;
+  display: flex;
   flex: none;
   align-items: center;
-  gap: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.06);
   color: #fff;
-  padding: 0.55rem 0.95rem;
+  padding: 0.6rem 0.95rem;
   font: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1.2;
+  text-align: left;
   cursor: pointer;
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   transition:
-    background-color 320ms ease,
-    border-color 320ms ease,
-    color 320ms ease,
+    background-color 280ms ease,
+    border-color 280ms ease,
+    color 280ms ease,
+    box-shadow 280ms ease,
     transform 200ms ease;
 }
 
-.belong-story__pill span {
-  color: var(--belong-gold);
-  font-size: 0.6rem;
-  font-weight: 850;
-  letter-spacing: 0.14em;
-  transition: color 320ms ease;
+.belong-story__tab:hover {
+  border-color: var(--belong-gold);
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
 }
 
-.belong-story__pill:hover {
-  background: rgba(255, 255, 255, 0.14);
-  transform: translateY(-1px);
-}
-
-.belong-story__pill[aria-current] {
-  border-color: #fff;
-  background: #fff;
+.belong-story__tab[aria-current] {
+  border-color: var(--belong-gold);
+  background: var(--belong-gold);
   color: var(--belong-ink);
+  box-shadow: 0 14px 32px -16px rgba(226, 187, 98, 0.75);
 }
 
-.belong-story__pill[aria-current] span {
-  color: var(--life-purple, #5b2bd1);
+.belong-story__tab-title {
+  font-size: 0.95rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
-.belong-story__pill:focus-visible {
-  outline: 3px solid var(--belong-gold);
+.belong-story__tab:focus-visible {
+  outline: 3px solid #fff;
   outline-offset: 3px;
 }
 
@@ -167,6 +165,8 @@
   grid-area: 1 / 1;
   align-self: end;
   max-width: 32rem;
+  border-left: 3px solid var(--belong-gold);
+  padding-left: clamp(1rem, 1.6vw, 1.4rem);
   will-change: opacity, transform;
 }
 
@@ -228,11 +228,11 @@
 .belong-story__track i {
   position: absolute;
   top: 50%;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.35);
-  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--belong-ink);
+  background: rgba(255, 255, 255, 0.4);
+  transform: translate(-50%, -50%) rotate(45deg);
   transition: background-color 320ms ease;
 }
 
@@ -291,7 +291,7 @@
     display: none;
   }
 
-  .belong-story__pills {
+  .belong-story__tabs {
     width: auto;
     max-width: none;
     flex-wrap: nowrap;
@@ -301,7 +301,7 @@
     scrollbar-width: none;
   }
 
-  .belong-story__pills::-webkit-scrollbar {
+  .belong-story__tabs::-webkit-scrollbar {
     display: none;
   }
 
