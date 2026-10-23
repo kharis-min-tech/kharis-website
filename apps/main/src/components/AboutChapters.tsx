@@ -347,8 +347,9 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
                 <Image
                   src={pastor.image}
                   alt={pastor.name}
-                  fill
-                  className="object-cover object-[center_40%]"
+                  width={pastor.imageWidth}
+                  height={pastor.imageHeight}
+                  className="about-lead__photo"
                   sizes="(max-width: 860px) 100vw, 40vw"
                 />
               </div>
