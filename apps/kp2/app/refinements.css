@@ -1192,9 +1192,9 @@ html[data-kp-turn="on"] .kp-turn__stamp {
   .kp-messages-hero {
     display: flex;
     flex-direction: column;
-    height: calc(100svh - 74px);
+    height: auto;
     min-height: 0;
-    max-height: calc(100svh - 74px);
+    max-height: none;
   }
   .kp-messages-hero > .relative {
     flex: none;
@@ -1224,6 +1224,25 @@ html[data-kp-turn="on"] .kp-turn__stamp {
   }
   footer {
     padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* iPad and phone show the whole sermon poster, then the title underneath. */
+@media (max-width: 1279px) {
+  .kp-messages-hero {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+  }
+  .kp-msg-hero__media {
+    width: 100%;
+    max-height: none;
+    aspect-ratio: 16 / 9;
+  }
+  .kp-msg-hero__media img {
+    object-fit: cover;
+    object-position: center;
   }
 }
 @media (hover: hover) {
@@ -1286,8 +1305,21 @@ main :is(a, button).font-body-md.uppercase,
 }
 
 :is(a, button).kp-depth-button :is(p, h2, h3, h4).font-headline-lg,
-:is(a, button).kp-depth-button :is(p, h2, h3, h4).font-display-lg,
-.material-symbols-outlined {
+:is(a, button).kp-depth-button :is(p, h2, h3, h4).font-display-lg {
+  font-family: var(--font-anton), "Anton", sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
   letter-spacing: normal !important;
+  line-height: 1.15 !important;
+  text-transform: none !important;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined" !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  letter-spacing: normal !important;
+  line-height: 1 !important;
   text-transform: none !important;
 }
