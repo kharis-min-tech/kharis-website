@@ -1,3 +1,4 @@
+import { describeReadingReference } from "@/lib/bible-reference";
 import { fail, getSupabase } from "@/lib/supabase";
 import type {
   ContactMessage,
@@ -215,6 +216,10 @@ export async function listDaily(workspace: WorkspaceId, kind: DailyKind) {
 
 export async function saveDaily(row: Omit<DailyEntryRow, "id"> & { id?: string }) {
   if (!row.title?.trim()) throw new Error("Add a title.");
+  if (row.kind === "reading" && row.reference?.trim()) {
+    const check = describeReadingReference(row.reference);
+    if (!check.ok) throw new Error(check.message);
+  }
   const payload = {
     workspace: row.workspace,
     kind: row.kind,

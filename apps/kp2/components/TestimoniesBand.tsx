@@ -295,7 +295,9 @@ export function TestimoniesBand({
               aria-label="Close testimony"
               onClick={() => setSelected(null)}
             >
-              ×
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M5 5l14 14M19 5 5 19" />
+              </svg>
             </button>
             <svg className="kp-tst__marks" viewBox="0 0 72 48" fill="none" aria-hidden="true">
               <path

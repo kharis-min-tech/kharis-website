@@ -32,6 +32,8 @@ const appNav: StudioNavItem[] = [
   { href: "/daily", label: "Daily Reading" },
   { href: "/daily-message", label: "Daily Message" },
   { href: "/daily-prayers", label: "Daily Prayers" },
+  { href: "/bible", label: "Bible" },
+  { href: "/sermon-library", label: "Sermon library" },
   { href: "/live", label: "Live" },
 ];
 
@@ -61,7 +63,7 @@ export const WORKSPACES: StudioWorkspace[] = [
     id: "app",
     name: "Mobile App",
     description:
-      "App events, announcements, daily reading, daily messages, daily prayers, and live stream.",
+      "App events, announcements, daily reading, daily messages, daily prayers, Bible references, the sermon library, and live stream.",
     nav: appNav,
   },
   {

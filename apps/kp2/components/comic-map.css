@@ -25,7 +25,8 @@
   color: #151218;
   padding: 0 2.75rem;
   font:
-    700 0.95rem/1 "Hanken Grotesk",
+    700 0.95rem/1 var(--font-hanken),
+    "Hanken Grotesk",
     sans-serif;
   box-shadow: 4px 4px 0 #151218;
 }
@@ -68,7 +69,8 @@
   min-width: 8.5rem;
   padding: 0 1.1rem;
   font:
-    800 0.85rem/1 "Hanken Grotesk",
+    800 0.85rem/1 var(--font-hanken),
+    "Hanken Grotesk",
     sans-serif;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -147,7 +149,8 @@
   background: transparent;
   padding: 0.75rem 0.9rem;
   font:
-    800 0.85rem/1.2 "Hanken Grotesk",
+    800 0.85rem/1.2 var(--font-hanken),
+    "Hanken Grotesk",
     sans-serif;
   text-transform: uppercase;
   cursor: pointer;

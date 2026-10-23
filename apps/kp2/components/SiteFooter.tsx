@@ -55,7 +55,7 @@ export function SiteFooter() {
         aria-hidden="true"
       ></div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-gutter gap-y-10 px-margin-mobile md:px-margin-desktop py-14 max-w-7xl mx-auto relative z-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-gutter gap-y-10 px-margin-mobile md:px-margin-desktop py-14 max-w-7xl mx-auto relative z-10">
         {/* Brand */}
         <div className="col-span-2 md:col-span-3 lg:col-span-2 space-y-4">
           <div className="font-display-xl text-4xl md:text-5xl text-primary tracking-tighter leading-none">

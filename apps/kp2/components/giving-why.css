@@ -48,9 +48,9 @@
 
 .kp-give-why__caption p {
   margin: 0;
-  font-family: var(--font-body, inherit);
+  font-family: var(--font-hanken), "Hanken Grotesk", sans-serif;
   font-size: clamp(1rem, 1.6vw, 1.15rem);
-  font-style: italic;
+  font-style: normal;
   line-height: 1.45;
   color: #151218;
 }

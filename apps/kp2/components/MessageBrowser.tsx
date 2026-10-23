@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import { MessageCard } from "@/components/LatestMessages";
+import { VisitInstead } from "@/components/VisitInstead";
 import { MESSAGE_TOPICS, matchesQuery, matchesTopic } from "@/lib/message-filters";
 import type { MessageVideo } from "@/lib/youtube";
 
@@ -29,7 +30,19 @@ export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
     setQuery("");
   };
 
-  if (latest.length === 0) return null;
+  if (latest.length === 0) {
+    return (
+      <section className="kp-latest" id="latest-messages" aria-label="Latest messages">
+        <div className="kp-latest__inner">
+          <h2 className="kp-latest__title">Latest messages</h2>
+          <VisitInstead title="No messages just yet">
+            Teachings show up here after they are preached. Until then, find a branch and come to
+            Sunday service.
+          </VisitInstead>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="kp-latest" id="latest-messages" aria-label="Latest messages">

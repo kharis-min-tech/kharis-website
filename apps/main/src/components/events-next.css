@@ -78,6 +78,11 @@
   font-weight: 650;
   line-height: 1.55;
 }
+.events-next__empty a {
+  color: #630ed4;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
 
 @media (min-width: 560px) {
   .events-next__grid {

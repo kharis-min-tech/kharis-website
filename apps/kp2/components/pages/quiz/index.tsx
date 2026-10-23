@@ -451,7 +451,7 @@ export default function DepartmentQuizPage() {
                       >
                         auto_stories
                       </span>
-                      <p className="font-body-md text-xs sm:text-sm italic text-on-surface-variant leading-relaxed">
+                      <p className="font-body-md text-xs sm:text-sm text-on-surface-variant leading-relaxed">
                         {t.questions[currentQuestion].s}
                       </p>
                     </div>
@@ -574,7 +574,7 @@ export default function DepartmentQuizPage() {
                         <span className="material-symbols-outlined text-base text-primary shrink-0">
                           format_quote
                         </span>
-                        <p className="font-body-md text-xs sm:text-sm italic text-on-surface-variant">
+                        <p className="font-body-md text-xs sm:text-sm text-on-surface-variant">
                           {t.departments[topThree[0]].scripture}
                         </p>
                       </div>
@@ -643,7 +643,7 @@ export default function DepartmentQuizPage() {
                               {dept.desc}
                             </p>
 
-                            <p className="text-xs italic text-on-surface-variant/80 border-l-2 border-secondary pl-2 mb-4">
+                            <p className="font-body-md text-xs text-on-surface-variant/80 border-l-2 border-secondary pl-2 mb-4">
                               {dept.scripture}
                             </p>
                           </div>
@@ -756,7 +756,7 @@ export default function DepartmentQuizPage() {
                                 {isExpanded && (
                                   <div className="kp-content-enter border-t border-black/20 bg-surface-container-lowest p-4 text-xs sm:text-sm text-on-surface-variant space-y-3">
                                     <p className="leading-relaxed">{dept.desc}</p>
-                                    <p className="italic text-on-surface-variant/80 border-l-2 border-primary pl-2">
+                                    <p className="font-body-md text-on-surface-variant/80 border-l-2 border-primary pl-2">
                                       {dept.scripture}
                                     </p>
 
@@ -916,7 +916,7 @@ export default function DepartmentQuizPage() {
                 </div>
               ))}
 
-              <p className="text-center text-xs italic text-on-surface-variant/70 pt-4 border-t border-black/20">
+              <p className="text-center font-label-md text-xs text-on-surface-variant/70 pt-4 border-t border-black/20">
                 {privacyData.lastUpdated}
               </p>
             </div>

@@ -112,7 +112,7 @@ function DepartmentsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {FEATURED.map((dept, i) => (
               <div
                 key={dept.name}
@@ -240,9 +240,7 @@ function DepartmentsPage() {
         </section>
 
         {/* Why serve God */}
-        <section className="relative overflow-hidden border-t-4 border-black bg-on-background text-background px-margin-mobile py-stack-lg md:px-margin-desktop">
-          <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25" />
-          <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent" />
+        <section className="relative overflow-hidden border-t-4 border-black bg-gradient-to-b from-[#3a2158] via-[#221532] to-[#141018] px-margin-mobile py-stack-lg text-white md:px-margin-desktop">
           <div className="relative z-10 mx-auto max-w-5xl">
             <div className="mb-12 text-center">
               <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest text-[#151218]">
@@ -251,12 +249,12 @@ function DepartmentsPage() {
               <h2 className="font-display-lg text-headline-lg leading-none uppercase text-primary-fixed-dim">
                 Why We Serve
               </h2>
-              <p className="mx-auto mt-3 max-w-xl text-sm text-surface-container-low">
+              <p className="mx-auto mt-3 max-w-xl text-sm text-white/80">
                 Serving is worship. Respond to grace. Take your place. Get busy serving.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {WHY_SERVE.map((w, i) => (
                 <div
                   key={w.title}
