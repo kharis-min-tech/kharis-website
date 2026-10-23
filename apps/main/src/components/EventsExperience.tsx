@@ -9,8 +9,10 @@ import { EventsUpcoming } from "@/components/EventsUpcoming";
 import { EVENT_CATEGORIES, matchesEvent, type EventFilter } from "@/data/event-categories";
 import type { ServiceBranch } from "@/lib/service-branches";
 
+const eventStatusOrder = { upcoming: 0, spotlight: 1, past: 2 } as const;
+
 const orderedEventCategories = [...EVENT_CATEGORIES].sort((a, b) => {
-  if (a.status !== b.status) return a.status === "upcoming" ? -1 : 1;
+  if (a.status !== b.status) return eventStatusOrder[a.status] - eventStatusOrder[b.status];
   if (a.id === "praise-night") return -1;
   if (b.id === "praise-night") return 1;
   return 0;
@@ -72,6 +74,8 @@ export function EventsExperience({ branches }: Props) {
       <EventCategories
         categories={orderedEventCategories}
         visibleIds={visibleIds}
+        filter={filter}
+        query={query}
         onClear={clear}
       />
     </div>

@@ -79,13 +79,13 @@ export function SiteFooter({ tone }: Props) {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/quiz" className={linkHover}>
+                  <Link href="/quiz" data-no-smooth-nav className={linkHover}>
                     Department Quiz
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#share-testimony" className={linkHover}>
-                    Testimony Form
+                  <Link href="/#testimonies" className={linkHover}>
+                    Read testimonies
                   </Link>
                 </li>
               </ul>

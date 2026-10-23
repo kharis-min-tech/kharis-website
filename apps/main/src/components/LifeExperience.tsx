@@ -1,14 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import Image from "@/components/SiteImage";
-import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { LIFE_MEMBERSHIP_URL } from "@/lib/life-content";
 import { lifeBySlug, type LifeSlug } from "@/lib/life-content";
 import { LifeDetailModal } from "@/components/LifeDetailModal";
-import { BelongList } from "@/components/BelongList";
+import { BelongStory } from "@/components/BelongStory";
+import { CommunityDoors } from "@/components/CommunityDoors";
+import { LifeCloserMarquee } from "@/components/LifeCloserMarquee";
+import { useReducedMotion } from "framer-motion";
+import { usePageSnap } from "@/lib/page-snap";
 import "./life-refresh.css";
+import "./life-alone.css";
 
 function CloserPanel() {
   const [email, setEmail] = useState("");
@@ -59,59 +62,69 @@ function CloserPanel() {
   };
 
   return (
-    <section className="life-refresh-closer" aria-labelledby="life-refresh-closer-title">
-      <div className="life-refresh-closer__copy">
-        <h2 id="life-refresh-closer-title">DON&apos;T DO LIFE ALONE</h2>
-        <p>
+    <section className="life-alone" aria-labelledby="life-refresh-closer-title">
+      {/* The marquee repeats the headline for show; screen readers get it once from the h2. */}
+      <h2 id="life-refresh-closer-title" className="sr-only">
+        Don&apos;t do life alone
+      </h2>
+      <LifeCloserMarquee text="DON'T DO LIFE ALONE" />
+
+      <div className="life-alone__row">
+        <p className="life-alone__copy">
           Whether you are ready for baptism, wanting to serve in the house, or looking for a place
           to belong, there is space for you here.
         </p>
-      </div>
-      {sent ? (
-        <p className="life-refresh-closer__success" role="status">
-          {savedLocally
-            ? "Thanks for reaching out. Someone from your local Kharis branch will be in touch soon."
-            : "Thank you. We'll connect you with a local branch."}
-        </p>
-      ) : (
-        <form className="life-refresh-closer__form" onSubmit={onSubmit} noValidate>
-          <label className="sr-only" htmlFor="life-refresh-email">
-            Your email address
-          </label>
-          <input
-            id="life-refresh-email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="Your email address"
-            value={email}
-            aria-invalid={emailAttempted && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())}
-            aria-describedby={error ? "life-refresh-email-error" : undefined}
-            onChange={(event) => {
-              setEmail(event.target.value);
-              if (error) setError("");
-            }}
-          />
-          <button type="submit" className="life-refresh__button" disabled={busy}>
-            {busy ? "Sending…" : "GET PLUGGED IN"}
-            <Icon name="arrow" className="h-4 w-4" />
-          </button>
-          {error ? (
-            <p id="life-refresh-email-error" className="life-refresh-closer__error" role="alert">
-              {error}
+        <div className="life-alone__action">
+          {sent ? (
+            <p className="life-alone__success" role="status">
+              {savedLocally
+                ? "Thanks for reaching out. Someone from your local Kharis branch will be in touch soon."
+                : "Thank you. We'll connect you with a local branch."}
             </p>
-          ) : null}
-        </form>
-      )}
-      <p className="life-refresh-closer__note">
-        We&apos;ll connect you with a local branch, or{" "}
-        <a href={LIFE_MEMBERSHIP_URL}>BECOME A MEMBER</a> when you&apos;re ready.
-      </p>
+          ) : (
+            <form className="life-alone__form" onSubmit={onSubmit} noValidate>
+              <label className="sr-only" htmlFor="life-refresh-email">
+                Your email address
+              </label>
+              <input
+                id="life-refresh-email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="Your email address"
+                value={email}
+                aria-invalid={emailAttempted && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())}
+                aria-describedby={error ? "life-refresh-email-error" : undefined}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  if (error) setError("");
+                }}
+              />
+              <button type="submit" className="life-alone__button" disabled={busy}>
+                {busy ? "Sending…" : "GET PLUGGED IN"}
+                <Icon name="arrow" className="h-4 w-4" />
+              </button>
+              {error ? (
+                <p id="life-refresh-email-error" className="life-alone__error" role="alert">
+                  {error}
+                </p>
+              ) : null}
+            </form>
+          )}
+          <p className="life-alone__note">
+            We&apos;ll connect you with a local branch, or{" "}
+            <a href={LIFE_MEMBERSHIP_URL}>BECOME A MEMBER</a> when you&apos;re ready.
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
 
 export function LifeExperience() {
+  /* Snap between the page's scroll stages (sections declare points with data-snap). */
+  const reduceMotion = useReducedMotion();
+  usePageSnap(!reduceMotion);
   const [modalSlug, setModalSlug] = useState<LifeSlug | null>(null);
 
   useEffect(() => {
@@ -144,47 +157,9 @@ export function LifeExperience() {
 
   return (
     <div className="life-refresh">
-      <section className="life-refresh-hero" aria-labelledby="life-refresh-title">
-        <div className="life-refresh-hero__copy">
-          <p className="life-refresh__eyebrow">COMMUNITY FIRST</p>
-          <h1 id="life-refresh-title">KHARIS LIFE</h1>
-          <p className="life-refresh-hero__body">
-            The Christian life is a one-another life. Believe, become, and belong. Grow in the Word,
-            find your people, and live out your faith in the Kharis family.
-          </p>
-          <Link href="/locations" className="life-refresh__button">
-            PLAN A VISIT <Icon name="arrow" className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="life-refresh-hero__visual">
-          <div className="life-refresh-hero__photo">
-            <Image
-              src="/images/join-family-community.jpg"
-              alt="The Kharis congregation gathered together"
-              fill
-              priority
-              sizes="(max-width: 760px) 100vw, 54vw"
-              className="object-cover object-[center_58%]"
-            />
-          </div>
-          <p className="life-refresh-hero__sticker">PLAN A VISIT. WE&apos;D LOVE TO MEET YOU.</p>
-        </div>
-        <p className="life-refresh-hero__strip">
-          A ONE-ANOTHER LIFE. BELONG HERE, <span>David Antwi</span>
-        </p>
-      </section>
+      <CommunityDoors />
 
-      <section className="life-refresh-belong" aria-labelledby="life-refresh-belong-title">
-        <header className="life-refresh-belong__intro">
-          <p className="life-refresh__eyebrow">A ONE-ANOTHER LIFE</p>
-          <h2 id="life-refresh-belong-title">Belong in the family</h2>
-          <p>
-            Kharis is a family where you can grow in your relationship with Jesus, fellowship with
-            other Christ-like believers and discover your place in God&apos;s house.
-          </p>
-        </header>
-        <BelongList onLearnMore={openModal} />
-      </section>
+      <BelongStory onLearnMore={openModal} />
 
       <CloserPanel />
       <LifeDetailModal category={modalCategory} onClose={closeModal} />

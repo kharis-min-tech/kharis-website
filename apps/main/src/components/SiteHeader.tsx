@@ -1,6 +1,5 @@
 "use client";
 
-import { Menu } from "lucide-react";
 import { MobileNavigation } from "@/components/MobileNavigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,6 +8,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Icon } from "@/components/Icon";
 import { KP2_URL } from "@/lib/kp2";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
+import { getHeaderOverlay, subscribeHeaderOverlay } from "@/lib/header-overlay";
 
 const aboutChildren = [
   { label: "About Us", href: "/about" },
@@ -73,14 +73,29 @@ export function SiteHeader({ tone = "auto" }: Props) {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [aboutOpen]);
 
-  const onDark = siteDark ? true : forceLight ? false : forceDark ? !open : !scrolled && !open;
-  const solid = siteDark
+  /* Sections underneath can request a clear or dark header with light text (see header-overlay). */
+  const overlayMode = useSyncExternalStore(subscribeHeaderOverlay, getHeaderOverlay, () => null);
+  const overlay = overlayMode !== null && !open;
+  const overlayDark = overlay && overlayMode === "dark";
+
+  const onDark = overlay
     ? true
-    : forceLight
+    : siteDark
       ? true
-      : forceDark
-        ? scrolled || open
-        : scrolled || open;
+      : forceLight
+        ? false
+        : forceDark
+          ? !open
+          : !scrolled && !open;
+  const solid = overlay
+    ? overlayDark
+    : siteDark
+      ? true
+      : forceLight
+        ? true
+        : forceDark
+          ? scrolled || open
+          : scrolled || open;
 
   const linkTone = (active: boolean) =>
     `k-motion inline-flex h-10 cursor-pointer items-center text-[13px] leading-none font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
@@ -102,7 +117,7 @@ export function SiteHeader({ tone = "auto" }: Props) {
       data-smooth-nav
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-400 ${
         solid
-          ? forceDark
+          ? forceDark || overlayDark
             ? "border-b border-white/10 bg-[#0a0612]/90 shadow-sm backdrop-blur-xl"
             : "border-b border-line bg-white/92 shadow-sm backdrop-blur-xl"
           : "border-b border-transparent bg-transparent"
@@ -228,16 +243,33 @@ export function SiteHeader({ tone = "auto" }: Props) {
           </Link>
           <button
             type="button"
-            aria-label="Open menu"
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-controls={open ? "mobile-navigation" : undefined}
             aria-expanded={open}
-            className={`mobile-menu-toggle cursor-pointer border lg:hidden ${
-              onDark || (forceDark && !open) ? "border-white/35 text-white" : "border-line text-fg"
+            className={`mobile-menu-toggle cursor-pointer lg:hidden${open ? " is-open" : ""} ${
+              onDark || (forceDark && !open) ? "text-white" : "text-fg"
             }`}
             onClick={() => setOpen((v) => !v)}
           >
-            <span>Menu</span>
-            <Menu size={18} strokeWidth={1.6} aria-hidden="true" />
+            <svg
+              className="mobile-menu-toggle__icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--top"
+                d="M4 6h16"
+              />
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--middle"
+                d="M4 12h16"
+              />
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--bottom"
+                d="M4 18h16"
+              />
+            </svg>
           </button>
         </div>
       </div>

@@ -15,7 +15,7 @@
  * venues belong in branch event records; never invent dates for past events.
  */
 
-export type EventCategoryStatus = "upcoming" | "past";
+export type EventCategoryStatus = "upcoming" | "spotlight" | "past";
 
 export type EventPhoto = {
   src: string;
@@ -133,7 +133,8 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   {
     id: "bring-a-soul-sunday",
     label: "BASS Sunday",
-    status: "upcoming",
+    // Keep this evergreen gathering in the event archive, but don't imply it has a confirmed date.
+    status: "spotlight",
     layout: "half",
     media: {
       poster: "/images/about-mission-outreach-3200.jpg",
@@ -175,13 +176,37 @@ export const EVENT_CATEGORIES: EventCategory[] = [
         alt: "Church members gathered outdoors in a park",
       },
       {
-        src: "/images/branch-slide-2.jpg",
-        alt: "Pastor celebrating on stage with the congregation",
+        src: "/images/events/family-fun-day/_PG_1869.jpg",
+        alt: "A family fun day race taking place on an outdoor court",
       },
-      { src: "/images/about-hero-bench-3200.jpg", alt: "Members on a bench outdoors" },
-      { src: "/images/hero/impartation-celebration.jpg", alt: "Pastor celebrating with members" },
-      { src: "/images/love-greeting.jpg", alt: "Members greeting each other" },
-      { src: "/images/young-adults.jpg", alt: "Young adults together" },
+      {
+        src: "/images/events/family-fun-day/_PG_1683.jpg",
+        alt: "Family Fun Day guests playing a giant Jenga game outdoors",
+      },
+      {
+        src: "/images/events/family-fun-day/601A7539.jpg",
+        alt: "The event production team working beneath a canopy beside the court",
+      },
+      {
+        src: "/images/events/family-fun-day/601A7542-2-Edit.jpg",
+        alt: "Church members playing table tennis outdoors",
+      },
+      {
+        src: "/images/events/family-fun-day/601A7675.jpg",
+        alt: "Two guests playing a board game together at Family Fun Day",
+      },
+      {
+        src: "/images/events/family-fun-day/601A8071.jpg",
+        alt: "Friends posing together after a football game on the outdoor court",
+      },
+      {
+        src: "/images/events/family-fun-day/601A8114.jpg",
+        alt: "Guests lining up for an outdoor Family Fun Day activity",
+      },
+      {
+        src: "/images/events/family-fun-day/601A8296.jpg",
+        alt: "Guests competing in a tug of war on the outdoor court",
+      },
     ],
   },
   {
@@ -236,17 +261,33 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     subtext: "Taking the good news of Jesus to the streets of our cities.",
     gallery: [
       {
-        src: "/images/events/jesus-campaign-street.jpg",
-        alt: "Kharis Jesus Campaign team sharing the gospel on a London street",
+        src: "/images/events/jesus-campaign/DSC01335.jpg",
+        alt: "Kharis women singing together outdoors during a community outreach",
       },
       {
-        src: "/images/about-vision-team-2048.jpg",
-        alt: "Outreach team posing together in yellow shirts",
+        src: "/images/events/jesus-campaign/DSC01341.jpg",
+        alt: "A group of Kharis members worshipping together beneath the trees",
       },
-      { src: "/images/about-mission-outreach-3200.jpg", alt: "Talking with people on the street" },
-      { src: "/images/vision-campaign.jpg", alt: "Crowd in yellow campaign shirts" },
-      { src: "/images/about-hero-bench-3200.jpg", alt: "Team members outdoors" },
-      { src: "/images/hero/outreach-community.jpg", alt: "Team gathered in a park" },
+      {
+        src: "/images/events/jesus-campaign/DSC01495.jpg",
+        alt: "Kharis members speaking with people outside Brixton station",
+      },
+      {
+        src: "/images/events/jesus-campaign/DSC01558.jpg",
+        alt: "Three women praying together on a London street",
+      },
+      {
+        src: "/images/events/jesus-campaign/DSC01614.jpg",
+        alt: "A Kharis member talking with a woman during street outreach",
+      },
+      {
+        src: "/images/events/jesus-campaign/DSC01715.jpg",
+        alt: "A crowd singing and celebrating together at an outdoor gathering",
+      },
+      {
+        src: "/images/events/jesus-campaign/DSC01878.jpg",
+        alt: "Kharis members gathered together after their community outreach",
+      },
     ],
   },
   {
@@ -260,26 +301,32 @@ export const EVENT_CATEGORIES: EventCategory[] = [
       position: "50% 0%",
     },
     headline: "Let the Bible Speak",
-    subtext: "A conference of teaching that roots us in Scripture.",
+    subtext: "A conference of teaching that roots us in Scripture, held during our trip to Ghana.",
     gallery: [
       {
-        src: "/images/events/ltbs-team-caps.jpg",
-        alt: "Let the Bible Speak team in matching caps and T-shirts",
-        position: "50% 25%",
+        src: "/images/events/let-the-bible-speak/_PG_0228.jpg",
+        alt: "Let the Bible Speak conference delegates waiting together at an airport",
       },
       {
-        src: "/images/biblical-open-bible.jpg",
-        alt: "Pastor holding an open Bible up high",
-        position: "50% 30%",
+        src: "/images/events/let-the-bible-speak/_PG_1631.jpg",
+        alt: "Conference team celebrating together beside a Let the Bible Speak banner",
       },
       {
-        src: "/images/hero/easter-bibles-raised.jpg",
-        alt: "Congregation holding their Bibles up high",
+        src: "/images/events/let-the-bible-speak/_PG_1838.jpg",
+        alt: "A conference volunteer sharing a Bible message with a woman at an outdoor market",
       },
-      { src: "/images/hero/preaching-open-bible.jpg", alt: "Pastor preaching from an open Bible" },
-      { src: "/images/hero/easter-pastor-david.jpg", alt: "Pastor teaching" },
-      { src: "/images/hero/sunday-bible-raised.jpg", alt: "Member holding up her Bible" },
-      { src: "/images/pastor-stage.jpg", alt: "Pastor on stage" },
+      {
+        src: "/images/events/let-the-bible-speak/_PG_4210-2.jpg",
+        alt: "Pastor David holding a red Bible on the Let the Bible Speak conference stage",
+      },
+      {
+        src: "/images/events/let-the-bible-speak/_PG_6844.jpg",
+        alt: "Three speakers seated together for a conference discussion on stage",
+      },
+      {
+        src: "/images/events/let-the-bible-speak/0I1A5753.jpg",
+        alt: "Let the Bible Speak team skating together along a city street",
+      },
     ],
   },
 ];

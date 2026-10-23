@@ -1,0 +1,218 @@
+/* Life page "Community First": split-door reveal (CommunityDoors.tsx). */
+
+.life-doors {
+  --doors-cream: var(--life-cream, #f5f1e8);
+  --doors-ink: var(--life-ink, #1d1b20);
+  --doors-gold: var(--life-gold, #c99a33);
+  --doors-gap: clamp(0.5rem, 1.3vw, 1.4rem);
+  position: relative;
+  width: 100vw;
+  /* ~1.6 screens of pinned scroll: doors part, then the copy settles while the photo keeps pushing in. */
+  height: 260vh;
+  height: 260svh;
+  /* Full-bleed and flush under the tunnel: cancel .life-refresh's top padding and side gutters. */
+  margin: calc(-1 * clamp(5.75rem, 9vw, 8rem)) calc(50% - 50vw) 0;
+  background: #120a1c;
+}
+
+.life-doors__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.life-doors__photo {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.life-doors__top-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(18, 10, 28, 0.72),
+    rgba(18, 10, 28, 0.2) 22%,
+    transparent 34%
+  );
+}
+
+/* Settles the photo into the dark Belong section below and carries the revealed copy. */
+.life-doors__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(18, 10, 28, 0.95) 0%,
+    rgba(18, 10, 28, 0.78) 40%,
+    rgba(18, 10, 28, 0.42) 72%,
+    rgba(18, 10, 28, 0.3) 100%
+  );
+}
+
+/* Revealed copy: bottom-left over the photo. */
+.life-doors__copy {
+  position: absolute;
+  right: max(1.25rem, calc((100vw - 78rem) / 2));
+  bottom: clamp(2.5rem, 7vh, 4.5rem);
+  left: max(1.25rem, calc((100vw - 78rem) / 2));
+  z-index: 2;
+  max-width: 40rem;
+  color: #fff;
+  will-change: opacity, transform;
+}
+
+/* Keyboard users reaching the button before the doors open still see it. */
+.life-doors__copy:focus-within {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.life-refresh .life-doors__copy h1 {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+.life-doors__copy h1 {
+  margin: 0;
+  font-size: clamp(3.4rem, 8.5vw, 7.5rem);
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  line-height: 0.88;
+}
+
+.life-doors__body {
+  max-width: 34rem;
+  margin: 1.25rem 0 1.6rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  font-weight: 550;
+  line-height: 1.6;
+}
+
+.life-doors__eyebrow {
+  display: block;
+  margin: 0 0 0.75rem;
+  color: var(--belong-gold, #e2bb62);
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+}
+
+/* The two doors. Each carries half the title, set tight against the seam. */
+.life-doors__door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 4.5rem;
+  background: var(--doors-cream);
+  will-change: transform;
+}
+
+.life-doors__door--left {
+  left: 0;
+  align-items: flex-end;
+  padding-right: var(--doors-gap);
+  text-align: right;
+  box-shadow: 22px 0 46px -18px rgba(18, 10, 28, 0.5);
+}
+
+.life-doors__door--right {
+  right: 0;
+  align-items: flex-start;
+  padding-left: var(--doors-gap);
+  text-align: left;
+  box-shadow: -22px 0 46px -18px rgba(18, 10, 28, 0.5);
+}
+
+.life-doors__words {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+}
+
+.life-doors__door .life-doors__eyebrow {
+  color: var(--life-purple, #5b2bd1);
+}
+
+.life-doors__title {
+  color: var(--doors-ink);
+  font-size: clamp(3rem, 11.5vw, 12.5rem);
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  line-height: 0.86;
+}
+
+.life-doors__quote {
+  position: absolute;
+  bottom: clamp(1.5rem, 4vh, 2.5rem);
+  color: var(--doors-ink);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.life-doors__door--left .life-doors__quote {
+  right: var(--doors-gap);
+}
+
+.life-doors__door--right .life-doors__quote {
+  left: var(--doors-gap);
+}
+
+/* Gold seam where the doors meet. */
+.life-doors__seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--doors-gold);
+}
+
+.life-doors__door--left .life-doors__seam {
+  right: 0;
+}
+
+.life-doors__door--right .life-doors__seam {
+  left: 0;
+}
+
+@media (max-width: 767px) {
+  .life-doors__title {
+    font-size: clamp(2.4rem, 11vw, 4rem);
+  }
+
+  .life-doors__door .life-doors__eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+  }
+
+  .life-doors__quote {
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+  }
+
+  .life-doors__copy {
+    right: 1rem;
+    bottom: 1.75rem;
+    left: 1rem;
+  }
+
+  .life-doors__copy h1 {
+    font-size: clamp(2.9rem, 15vw, 4.2rem);
+  }
+
+  .life-doors__body {
+    margin: 0.9rem 0 1.2rem;
+    font-size: 0.98rem;
+  }
+}

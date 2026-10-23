@@ -18,13 +18,19 @@ const PREVIEW = {
   title: "A Living Witness For Jesus",
 };
 
-/** Keep YouTube's transient start controls covered before revealing the moving preview. */
+/** Keep YouTube's transient start controls covered until playback is stable. */
 const PLAY_SETTLE_MS = 4200;
 /** Matches the crossfade in messages-hub.css; pause only once the video is invisible. */
 const FADE_MS = 320;
 /** Autoplay is sometimes ignored (notably on phones), so keep asking while it should run. */
 const PLAY_RETRY_MS = 2500;
 const MIN_VISIBLE_RATIO = 0.35;
+const HEADLINE_FIRST = "Teachings that";
+const HEADLINE_SECOND_PREFIX = "feed your ";
+const HEADLINE_LAST_WORD = "spirit.";
+const HEADLINE_HOLD_AT = HEADLINE_FIRST.length + HEADLINE_SECOND_PREFIX.length;
+const HEADLINE_LENGTH = HEADLINE_HOLD_AT + HEADLINE_LAST_WORD.length;
+const HEADLINE_TYPE_MS = 100;
 
 const YT_ORIGIN = "https://www.youtube-nocookie.com";
 
@@ -76,7 +82,10 @@ export function MessagesHero({ messages }: Props) {
 
   const [allowed, setAllowed] = useState(false);
   const [inView, setInView] = useState(true);
-  /** Keep the loading treatment over the video until YouTube's transient controls clear. */
+  const [typed, setTyped] = useState(0);
+  const [typingStarted, setTypingStarted] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  /** Keep the preview hidden until YouTube's transient controls clear. */
   const [warming, setWarming] = useState(false);
   const [settled, setSettled] = useState(false);
   /** The player stopped on its own: hide at once so YouTube's overlay never fades through. */
@@ -90,6 +99,39 @@ export function MessagesHero({ messages }: Props) {
       .find((m) => m.id === PREVIEW.id)
       ?.title.split("|")[0]
       ?.trim() || PREVIEW.title;
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncMotion = () => setReducedMotion(motionQuery.matches);
+    syncMotion();
+    motionQuery.addEventListener("change", syncMotion);
+    const startTimer = window.setTimeout(() => setTypingStarted(true), 500);
+    return () => {
+      motionQuery.removeEventListener("change", syncMotion);
+      window.clearTimeout(startTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setTyped(HEADLINE_LENGTH);
+      return;
+    }
+    const typeLimit = settled ? HEADLINE_LENGTH : HEADLINE_HOLD_AT;
+    if (!typingStarted || typed >= typeLimit) return;
+    const timer = window.setTimeout(
+      () => setTyped((current) => Math.min(typeLimit, current + 1)),
+      HEADLINE_TYPE_MS,
+    );
+    return () => window.clearTimeout(timer);
+  }, [reducedMotion, settled, typed, typingStarted]);
+
+  const firstLine = HEADLINE_FIRST.slice(0, Math.min(typed, HEADLINE_FIRST.length));
+  const secondTyped = Math.max(0, typed - HEADLINE_FIRST.length);
+  const secondLine = `${HEADLINE_SECOND_PREFIX}${HEADLINE_LAST_WORD}`.slice(0, secondTyped);
+  const typingFirstLine = !reducedMotion && typed < HEADLINE_FIRST.length;
+  const typingSecondLine =
+    !reducedMotion && typed >= HEADLINE_FIRST.length && typed < HEADLINE_LENGTH;
 
   const command = useCallback((func: string, args: unknown[] = []) => {
     const frame = frameRef.current;
@@ -177,7 +219,7 @@ export function MessagesHero({ messages }: Props) {
     if (!inView) setWatchStart(null);
   }, [inView]);
 
-  // Keep the muted video playing while visible; the loading treatment masks startup chrome.
+  // Keep the muted video playing while visible; the preview stays hidden until startup chrome clears.
   useEffect(() => {
     if (!allowed) return;
     if (!inView || watching) {
@@ -220,6 +262,12 @@ export function MessagesHero({ messages }: Props) {
         if (typeof info.currentTime === "number") currentTime.current = info.currentTime;
       }
       if (state === undefined) return;
+      // YouTube reports buffering while it is already playing. Keep the settled
+      // frame visible through that brief stall so the hero never flashes black.
+      if (state === 3 && settled) {
+        playingRef.current = false;
+        return;
+      }
       const isPlaying = state === 1;
       if (isPlaying === playingRef.current) return;
       playingRef.current = isPlaying;
@@ -237,7 +285,7 @@ export function MessagesHero({ messages }: Props) {
       window.removeEventListener("message", onMessage);
       if (settleTimer.current) window.clearTimeout(settleTimer.current);
     };
-  }, [command, resume, scheduleSettle]);
+  }, [command, resume, scheduleSettle, settled]);
 
   const onFrameLoad = () => {
     const win = frameRef.current?.contentWindow;
@@ -282,7 +330,6 @@ export function MessagesHero({ messages }: Props) {
       data-preview={showPreview || undefined}
       data-preview-cut={cut || undefined}
       data-watching={watching || undefined}
-      data-loading={(!showPreview && !watching) || undefined}
       onClick={onHeroClick}
       onKeyDown={onHeroKeyDown}
     >
@@ -300,21 +347,19 @@ export function MessagesHero({ messages }: Props) {
         )}
       </div>
 
-      {!showPreview && !watching && (
-        <div className="msg-hero-loading" role="status" aria-live="polite">
-          <span className="msg-hero-loading__pulse" aria-hidden="true" />
-          <span>Preparing your message</span>
-        </div>
-      )}
-
       <div className="msg-hub__veil" aria-hidden />
 
       <div className="msg-hub__hero-copy">
         <p className="msg-hub__eyebrow">Kharis Messages</p>
-        <h1 className="msg-hub__title">
-          Teachings that
-          <br />
-          <span>feed your faith.</span>
+        <h1 className="msg-hub__title" aria-label="Teachings that feed your spirit.">
+          <span className="msg-hub__title-line" aria-hidden="true">
+            {firstLine}
+            {typingFirstLine && <span className="msg-hub__typing-caret" />}
+          </span>
+          <span className="msg-hub__title-line" aria-hidden="true">
+            {secondLine}
+            {typingSecondLine && <span className="msg-hub__typing-caret" />}
+          </span>
         </h1>
         <div className="msg-hero-watch-wrap">
           <button

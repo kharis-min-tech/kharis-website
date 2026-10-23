@@ -82,7 +82,7 @@ export function MutedHeroVideo({
   const [posterOnly, setPosterOnly] = useState(true);
 
   useEffect(() => {
-    const query = window.matchMedia("(max-width: 767px), (prefers-reduced-motion: reduce)");
+    const query = window.matchMedia("(max-width: 1279px), (prefers-reduced-motion: reduce)");
     const update = () => setPosterOnly(query.matches);
     update();
     query.addEventListener("change", update);
@@ -159,11 +159,11 @@ export function MutedHeroVideo({
   }, [id, title, posterOnly]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-on-background max-md:relative max-md:inset-auto max-md:h-auto max-md:min-h-0 max-md:flex-1">
+    <div className="kp-msg-hero__media relative aspect-video w-full shrink-0 overflow-hidden bg-on-background xl:absolute xl:inset-0 xl:aspect-auto">
       <img
         src={thumbnail}
         alt=""
-        className={`absolute inset-0 h-full w-full object-cover object-[center_30%] transition-opacity duration-700 ${
+        className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 xl:object-[center_30%] ${
           live ? "opacity-0" : "opacity-100"
         }`}
       />

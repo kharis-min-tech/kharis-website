@@ -379,12 +379,73 @@ function jsonError(error: string, status: number) {
   });
 }
 
+async function offlineGraceReply(question: string) {
+  const normalized = question.toLowerCase();
+  if (/message|sermon|teaching|preach|pastor david/.test(normalized)) {
+    let catalog: MessageVideo[] = [];
+    try {
+      catalog = await fetchPastorMessages(60);
+    } catch {
+      // Keep the rest of Grace's offline guidance available when the video catalogue is down.
+    }
+    const terms = normalized
+      .replace(
+        /pastor david|message|sermon|teaching|preach|recommend|find|show|me|please|can you|help|with/gi,
+        " ",
+      )
+      .split(/\s+/)
+      .filter((term) => term.length > 2);
+    const matches = terms.length
+      ? catalog.filter((item) => terms.some((term) => item.title.toLowerCase().includes(term)))
+      : [];
+    const videos = (matches.length ? matches : catalog).slice(0, 3);
+    return {
+      ok: true,
+      reply: videos.length
+        ? "Here are a few teachings from Pastor David to explore. You can also search the full messages library."
+        : "You can explore and search Pastor David’s teaching in the [messages library](/messages).",
+      ...(videos.length
+        ? {
+            cards: videos.map((video) => ({
+              id: video.id,
+              title: video.title,
+              url: `https://www.youtube.com/watch?v=${video.id}`,
+              thumbnail: video.thumbnail || `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`,
+            })),
+          }
+        : {}),
+    };
+  }
+  if (/branch|location|near me|address|service time/.test(normalized)) {
+    return {
+      ok: true,
+      reply:
+        "I can point you to a Kharis location. Visit [Find a Branch](/locations) to see the available branches and service information.",
+    };
+  }
+  if (/children|kids|child|youth|teen/.test(normalized)) {
+    return {
+      ok: true,
+      reply:
+        "Kharis Kids supports children aged 3–16 through age-group teaching, worship, prayer, activities, and friendship. Read about the [Children’s department](/life/children).",
+    };
+  }
+  if (/life|baptis|fast|serv|department/.test(normalized)) {
+    return {
+      ok: true,
+      reply:
+        "Explore [Life at Kharis](/life) for the ministry pathways, or see [ways to serve](/life/departments).",
+    };
+  }
+  return {
+    ok: true,
+    reply:
+      "I can still help you find your way around Kharis. Try the [messages library](/messages), [find a branch](/locations), or [contact the team](/contact).",
+  };
+}
+
 export async function POST(request: Request) {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return jsonError("Chat is not configured yet.", 503);
-  }
-
   let body: unknown;
   try {
     body = await request.json();
@@ -400,6 +461,14 @@ export async function POST(request: Request) {
   const contents = toGeminiContents(messages);
   if (!contents.length) {
     return jsonError("Please send a message.", 400);
+  }
+
+  if (!apiKey) {
+    const result = await offlineGraceReply(messages[messages.length - 1].content);
+    return new Response(JSON.stringify(result), {
+      status: 200,
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+    });
   }
 
   let siteContext: string;

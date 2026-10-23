@@ -22,11 +22,11 @@ export const ABOUT = {
     },
     {
       title: "Jesus Christ",
-      body: "Jesus Christ is the Son of God. He lived a sinless human life, conceived of the Holy Spirit, born of the virgin Mary, and offered Himself as the perfect sacrifice for the sins of all people by dying on a cross. He rose from the dead after three days, ascended to Heaven’s glory, and will return again to reign as King of Kings and Lord of Lords.",
+      body: "Jesus Christ is the Son of God. He lived a sinless human life, conceived of the Holy Spirit, born of the virgin Mary, and offered Himself as the perfect sacrifice for the sins of all people by dying on a cross. He rose from the dead after three days to demonstrate His power over sin and death. He ascended to Heaven’s glory and will return again someday to earth to reign as King of Kings and Lord of Lords.",
     },
     {
       title: "The Holy Spirit",
-      body: "The Holy Spirit is present in the world to make people aware of their need for Jesus Christ. He also lives in every Christian from the moment of salvation and provides power for living.",
+      body: "The Holy Spirit is present in the world to make people aware of their need for Jesus Christ. He also lives in every Christian from the moment of salvation. He provides the Christian with power for living.",
     },
     {
       title: "The Bible",
@@ -42,11 +42,11 @@ export const ABOUT = {
     },
     {
       title: "Eternal security",
-      body: "Because God gives us eternal life through Jesus Christ, the true believer is secure in that salvation for eternity. Salvation is maintained by the grace and power of God, not by the self-effort of the Christian.",
+      body: "Because God gives us eternal life through Jesus Christ, the true believer is secure in that salvation for eternity. Salvation is maintained by the grace and power of God, not by the self-effort of the Christian. It is the grace and keeping power of God that gives us this security.",
     },
     {
       title: "Life after death",
-      body: "There is life after death. People were created to exist forever. We believe in the resurrection of the body and the final judgement.",
+      body: "There is life after death, people were created to exist forever. We believe in the resurrection of the body, the final judgement.",
     },
   ],
   mission: {
@@ -128,6 +128,8 @@ export const ABOUT = {
         role: "Founder & Lead Pastor",
         image:
           "https://images.kharis.org/site-images/main/e666a073b590b3ff/leadership/pastor-david-sunday.jpg",
+        imageWidth: 1800,
+        imageHeight: 1199,
         focus: "Teaching the Word and establishing believers in their faith",
         blurb:
           "Pastor David co-founded Kharis in 2003. He leads with a deep love for Scripture, teaching and serving so people encounter God in a living way and grow as disciples of Christ.",
@@ -135,9 +137,11 @@ export const ABOUT = {
       {
         id: "awo",
         name: "Pastor Awo Antwi",
-        role: "Co-founder & Pastor",
+        role: "Co-founder & Senior Associate Pastor",
         image:
-          "https://images.kharis.org/site-images/main/7acafe42a978e2ea/leadership/pastor-awo-portrait.jpg",
+          "https://images.kharis.org/site-images/main/ef23a725426d6b26/leadership/pastor-awo-preaching.jpg",
+        imageWidth: 1365,
+        imageHeight: 2048,
         focus: "People, family, and raising the next generation",
         blurb:
           "Pastor Awo co-founded Kharis with Pastor David and helped establish Kharis Phase 2 for students and young people. She serves with care, strength and a heart for the church family.",

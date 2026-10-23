@@ -74,7 +74,7 @@
 .kp-tst__photo {
   position: relative;
   margin: 0;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   border: 4px solid #151218;
   background: #2a104b;
@@ -82,7 +82,7 @@
   transform: rotate(-1.2deg);
   transition:
     opacity 0.6s ease,
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.25s ease;
   transition-delay: calc(var(--i, 0) * 0.12s);
 }
@@ -119,8 +119,8 @@
   transition: transform 0.7s ease;
 }
 
-.kp-tst__photo:hover img {
-  transform: scale(1.04);
+.kp-tst__photo:first-child img {
+  transform-origin: center top;
 }
 
 .kp-tst__inner.is-armed .kp-tst__photo {
