@@ -8,7 +8,7 @@ import { Icon } from "@/components/Icon";
 import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal } from "@/components/Reveal";
 import { DEPARTMENT_VIDEOS } from "@/data/department-videos";
-import { lifeBySlug } from "@/lib/life-content";
+import { LIFE_DEPARTMENTS_URL, lifeBySlug } from "@/lib/life-content";
 import { DEPARTMENT_PAGES } from "@/data/department-pages";
 
 const DEPT_BANDS = DEPARTMENT_PAGES;
@@ -182,10 +182,10 @@ export function LifeDepartmentsPage() {
             <h3 id="life-dept-branch-cta-title">Still not sure where you fit?</h3>
             <p>Take the quiz and find the team that fits you at your local branch.</p>
           </div>
-          <a href="https://discover.khar.is/" className="life-dept-branch-cta__link">
+          <Link href={LIFE_DEPARTMENTS_URL} className="life-dept-branch-cta__link">
             Take the quiz
             <Icon name="arrow" className="h-3.5 w-3.5" />
-          </a>
+          </Link>
         </div>
       </section>
     </div>
