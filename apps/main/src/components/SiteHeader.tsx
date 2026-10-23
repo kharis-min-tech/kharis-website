@@ -1,6 +1,5 @@
 "use client";
 
-import { Menu } from "lucide-react";
 import { MobileNavigation } from "@/components/MobileNavigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -25,7 +24,6 @@ type NavLink = {
 const links: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about", children: aboutChildren },
-  { label: "Locations", href: "/locations" },
   { label: "KP2", href: KP2_URL },
   { label: "Events", href: "/events" },
   { label: "Messages", href: "/messages" },
@@ -245,16 +243,33 @@ export function SiteHeader({ tone = "auto" }: Props) {
           </Link>
           <button
             type="button"
-            aria-label="Open menu"
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-controls={open ? "mobile-navigation" : undefined}
             aria-expanded={open}
-            className={`mobile-menu-toggle cursor-pointer border lg:hidden ${
-              onDark || (forceDark && !open) ? "border-white/35 text-white" : "border-line text-fg"
+            className={`mobile-menu-toggle cursor-pointer lg:hidden${open ? " is-open" : ""} ${
+              onDark || (forceDark && !open) ? "text-white" : "text-fg"
             }`}
             onClick={() => setOpen((v) => !v)}
           >
-            <span>Menu</span>
-            <Menu size={18} strokeWidth={1.6} aria-hidden="true" />
+            <svg
+              className="mobile-menu-toggle__icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--top"
+                d="M4 6h16"
+              />
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--middle"
+                d="M4 12h16"
+              />
+              <path
+                className="mobile-menu-toggle__stroke mobile-menu-toggle__stroke--bottom"
+                d="M4 18h16"
+              />
+            </svg>
           </button>
         </div>
       </div>

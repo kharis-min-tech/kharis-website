@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Volume2, VolumeX } from "lucide-react";
+import { ArrowLeft, ChevronDown, ExternalLink, Volume2, VolumeX } from "lucide-react";
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -276,6 +276,21 @@ function LifeScrollJourney({
           <span>{String(activeStage + 1).padStart(2, "0")}</span>
           <p>{current.label}</p>
           <h3 id={titleId}>{current.title}.</h3>
+          {activeStage === 0 ? (
+            <button
+              type="button"
+              className="life-reader__scroll-cue"
+              onClick={() =>
+                readerScrollRef.current?.scrollBy({
+                  top: Math.round(window.innerHeight * 0.68),
+                  behavior: reduce ? "instant" : "smooth",
+                })
+              }
+            >
+              <span>SCROLL TO EXPLORE</span>
+              <ChevronDown aria-hidden className="h-4 w-4" />
+            </button>
+          ) : null}
         </motion.div>
       </div>
       <div className="life-reader__journey-copy">

@@ -1018,14 +1018,23 @@ function BranchPage({
                   href={`/branches/${item.slug}`}
                   className="group overflow-hidden brutalist-border brutalist-shadow bg-surface-container-lowest block"
                 >
-                  <div className="relative h-40 overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    <span className="absolute left-3 top-3 bg-primary text-on-primary font-body-md text-[10px] font-bold uppercase tracking-wider px-3 py-1">
+                  <div className="relative h-40 overflow-hidden bg-[#150934]">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <span className="kp-branch-card__fallback">
+                        <img src={BRANCH_MARK} alt="" />
+                        <span>{item.city || item.name}</span>
+                      </span>
+                    )}
+                    {item.image ? (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    ) : null}
+                    <span className="absolute left-3 top-3 z-10 bg-primary text-on-primary font-body-md text-[10px] font-bold uppercase tracking-wider px-3 py-1">
                       {item.region}
                     </span>
                   </div>

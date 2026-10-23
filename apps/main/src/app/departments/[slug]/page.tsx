@@ -1,14 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { DEPARTMENT_PAGES } from "@/data/department-pages";
 
+const LEGACY_SLUGS: Record<string, string> = {
+  easyworship: "live-visuals",
+  "sound-department": "sound",
+};
+
 export function generateStaticParams() {
-  return DEPARTMENT_PAGES.map(({ slug }) => ({ slug }));
+  return [
+    ...DEPARTMENT_PAGES.map(({ slug }) => ({ slug })),
+    ...Object.keys(LEGACY_SLUGS).map((slug) => ({ slug })),
+  ];
 }
 
 export default async function DepartmentPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const canonicalSlug = LEGACY_SLUGS[slug];
+  if (canonicalSlug) permanentRedirect(`/departments/${canonicalSlug}`);
   const department = DEPARTMENT_PAGES.find((item) => item.slug === slug);
   if (!department) notFound();
 
