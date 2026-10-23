@@ -251,13 +251,18 @@ export async function saveDailyMessage(row: {
   id?: string;
   date: string;
   sermonId: string;
+  sermonTitle?: string;
   note: string;
+  workspace: WorkspaceId;
 }) {
   if (!row.date) throw new Error("Choose a date.");
   if (!row.sermonId) throw new Error("Choose a sermon.");
   const payload = {
     date: row.date,
+    day: row.date,
+    workspace: row.workspace,
     sermon_id: row.sermonId,
+    sermon_title: row.sermonTitle?.trim() || null,
     note: row.note.trim() || null,
     ...(row.id ? { id: row.id } : {}),
   };

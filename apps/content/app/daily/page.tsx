@@ -7,7 +7,7 @@ export default function DailyReadingPage() {
     <DailyList
       kind="reading"
       title="Daily reading"
-      description="Reading for the mobile app. The reference is what the phone opens in the Bible reader. Passage text comes from YouVersion, so it is not stored here."
+      description="Pick a book and chapter for the phone. YouVersion sends the verse text to the reader, so it is not stored here. Verses are optional."
     />
   );
 }

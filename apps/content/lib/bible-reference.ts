@@ -168,9 +168,16 @@ function labelFor(book: Book, chapter: number, verseStart: number | null, verseE
   return `${book.name} ${chapter}:${verseStart}-${verseEnd}`;
 }
 
-function parsePart(
-  input: string,
-): { ok: true; label: string; book: string } | { ok: false; message: string } {
+function parsePart(input: string):
+  | {
+      ok: true;
+      label: string;
+      book: string;
+      chapter: number;
+      verseStart: number | null;
+      verseEnd: number | null;
+    }
+  | { ok: false; message: string } {
   const text = normalize(input);
   if (!text) return { ok: false, message: "Type a reference, like John 3:16." };
   const match = REFERENCE.exec(text);
@@ -215,7 +222,59 @@ function parsePart(
   if (verseEnd != null && verseStart != null && verseEnd < verseStart) {
     return { ok: false, message: "That verse range runs backwards. Try John 3:16-18." };
   }
-  return { ok: true, label: labelFor(book, chapter, verseStart, verseEnd), book: book.name };
+  return {
+    ok: true,
+    label: labelFor(book, chapter, verseStart, verseEnd),
+    book: book.name,
+    chapter,
+    verseStart,
+    verseEnd,
+  };
+}
+
+export type BibleBook = {
+  name: string;
+  chapters: number;
+  testament: "Old Testament" | "New Testament";
+};
+
+export function bibleBooks(): BibleBook[] {
+  return BOOKS.map((book, index) => ({
+    name: book.name,
+    chapters: book.chapters,
+    testament: index < 39 ? "Old Testament" : "New Testament",
+  }));
+}
+
+export type PassagePick = {
+  book: string;
+  chapter: number;
+  verseStart: number | null;
+  verseEnd: number | null;
+};
+
+/** One stored reference, read back into the book and chapter picker. */
+export function passageFromReference(input: string): PassagePick | null {
+  const first = input.split(/;|\n|\s+and\s+/i)[0]?.trim() ?? "";
+  if (!first) return null;
+  const parsed = parsePart(first);
+  if (!parsed.ok) return null;
+  return {
+    book: parsed.book,
+    chapter: parsed.chapter,
+    verseStart: parsed.verseStart,
+    verseEnd: parsed.verseEnd,
+  };
+}
+
+/** The reference string the phone opens from a book, chapter, and optional verses. */
+export function referenceFromPassage(pick: PassagePick) {
+  const book = BOOKS.find((item) => item.name === pick.book) ?? BOOKS[42];
+  if (!book) return "John 1";
+  const chapter = Math.min(Math.max(1, pick.chapter), book.chapters);
+  const label = labelFor(book, chapter, pick.verseStart, pick.verseEnd);
+  const check = describeReadingReference(label);
+  return check.ok ? (check.passages[0] ?? label) : label;
 }
 
 /** The passages the mobile reader opens from a Daily Reading reference. */
