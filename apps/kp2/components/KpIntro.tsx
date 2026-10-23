@@ -64,7 +64,7 @@ export function KpIntro() {
         !overlayRef.current?.contains(previous) &&
         !previous.closest("[inert]")
           ? previous
-          : document.querySelector<HTMLAnchorElement>(".kp-header-logo");
+          : content;
       target?.focus({ preventScroll: true });
     }
     setVisible(false);
