@@ -6,6 +6,11 @@ name: ci
 # jobs are path-filtered (a skipped job does not fail the aggregator). This is
 # the fix for the "required check stays pending" trap noted in the deploy
 # workflows.
+#
+# Next 16 runs `next build` on Turbopack. Every app job below passes `--webpack`
+# instead. That is the engine OpenNext uses for Cloudflare, and a plain
+# `next build` fails when an app has a webpack() hook (KP2) or when Turbopack
+# cannot resolve next/font/google in CI. Do not drop the flag.
 on:
   pull_request:
   push:
@@ -66,8 +71,8 @@ jobs:
       - name: Unit tests
         run: npm test
       # Blocks only on CRITICAL vulnerabilities in production deps. High/moderate
-      # and dev-only issues come through weekly Dependabot PRs instead. Tighten
-      # to --audit-level=high once the current Next.js advisories are bumped.
+      # and dev-only issues come through weekly Dependabot PRs instead. Next is
+      # pinned to 16.4.2, which clears the current critical advisories.
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=critical
 
@@ -91,8 +96,9 @@ jobs:
         run: npx eslint
       - name: Typecheck
         run: npx tsc --noEmit
+      # Next 16 defaults `next build` to Turbopack. Ship and verify with webpack.
       - name: Build
-        run: npx next build
+        run: npx next build --webpack
 
   kp2:
     needs: changes
@@ -114,8 +120,12 @@ jobs:
         run: npx eslint
       - name: Typecheck
         run: npx tsc --noEmit
+      # Webpack, not Turbopack: this is the engine OpenNext uses for the
+      # Cloudflare deploy, and Turbopack production builds can fail to resolve
+      # next/font/google in CI. The empty turbopack config in next.config.mjs
+      # only lets a default `next build` get past Next 16's config check.
       - name: Build
-        run: npx next build
+        run: npx next build --webpack
 
   main:
     needs: changes
@@ -141,13 +151,12 @@ jobs:
         working-directory: .
       - name: Lint
         run: npx eslint
-      # Webpack build, NOT --turbopack: this is the engine the Cloudflare deploy
-      # runs through opennextjs-cloudflare, and Turbopack production builds
-      # intermittently fail to resolve next/font/google in CI (the internal
-      # "@vercel/turbopack-next/internal/font/google/font" module). Both engines
-      # build cleanly locally; the gate should match what actually ships.
+      # Webpack, not Turbopack: Next 16 defaults `next build` to Turbopack, but
+      # the Cloudflare deploy runs through opennextjs-cloudflare on webpack, and
+      # Turbopack production builds intermittently fail to resolve
+      # next/font/google in CI.
       - name: Build
-        run: npx next build
+        run: npx next build --webpack
       - name: Typecheck ratchet
         shell: bash
         run: |

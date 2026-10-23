@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ImageDrop } from "@/components/studio/image-drop";
+import { PassagePicker } from "@/components/studio/passage-picker";
 import { PageHeader } from "@/components/studio/page-header";
 import { Panel } from "@/components/studio/panel";
 import { Button } from "@/components/ui/button";
@@ -16,10 +17,12 @@ export type Field =
       label: string;
       kind: "text" | "textarea" | "date" | "url" | "time";
       placeholder?: string;
+      detail?: (value: string) => string;
     }
   | { key: string; label: string; kind: "select"; options: { value: string; label: string }[] }
   | { key: string; label: string; kind: "toggle" }
-  | { key: string; label: string; kind: "image"; folder: string };
+  | { key: string; label: string; kind: "image"; folder: string }
+  | { key: string; label: string; kind: "passage" };
 
 export type Draft = Record<string, string>;
 
@@ -236,6 +239,9 @@ function FieldControl({
       <ImageDrop label={field.label} folder={field.folder} value={value} onChange={onChange} />
     );
   }
+  if (field.kind === "passage") {
+    return <PassagePicker value={value} onChange={onChange} />;
+  }
   return (
     <div>
       <Label htmlFor={field.key}>{field.label}</Label>
@@ -258,6 +264,9 @@ function FieldControl({
           onChange={(event) => onChange(event.target.value)}
         />
       )}
+      {"detail" in field && field.detail ? (
+        <p className="mt-1 text-xs text-muted-foreground">{field.detail(value)}</p>
+      ) : null}
     </div>
   );
 }

@@ -124,7 +124,7 @@ export function LotGallery({
             <p className="inline-flex items-center gap-2 rounded-full border border-amber/40 bg-amber/15 px-3 py-1 font-label-md text-[11px] uppercase tracking-[0.2em] text-amber mb-4">
               {kicker}
             </p>
-            <h2 className="font-display-xl text-[40px] sm:text-5xl md:text-7xl uppercase leading-[0.9]">
+            <h2 className="font-display-xl text-[40px] sm:text-5xl lg:text-7xl uppercase leading-[0.9]">
               {heading}{" "}
               <span className="bg-gradient-to-r from-amber via-magenta to-[#d2bbff] bg-clip-text text-transparent">
                 in motion
@@ -145,7 +145,7 @@ export function LotGallery({
           </a>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[minmax(180px,auto)] gap-3 md:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 auto-rows-[minmax(180px,auto)] gap-3 md:gap-4">
           {LOT_CLIPS.map((clip, index) => (
             <button
               key={clip.src}

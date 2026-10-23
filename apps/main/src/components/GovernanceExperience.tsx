@@ -20,7 +20,7 @@ export function GovernanceExperience() {
       <section className="gov-policies" aria-label="Policy documents">
         <RevealStagger className="gov-policies__grid" stagger={0.1}>
           {GOVERNANCE.policies.map((policy) => (
-            <RevealItem key={policy.id} className="gov-policy">
+            <RevealItem key={policy.id} id={policy.id} className="gov-policy">
               <span className="gov-policy__icon">
                 <ContentIcon name={policy.icon} className="h-10 w-10" />
               </span>

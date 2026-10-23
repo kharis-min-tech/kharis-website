@@ -6,18 +6,21 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 const POLICIES = [
   {
+    id: "safeguarding",
     icon: "shield_person",
     title: "Safeguarding Policy",
     description:
       "How we protect children, young people and adults at risk across every Kharis gathering and activity.",
   },
   {
+    id: "privacy",
     icon: "lock",
     title: "Privacy Policy",
     description:
       "How we collect, use and look after personal information when you engage with Kharis Ministries.",
   },
   {
+    id: "disclaimer",
     icon: "info",
     title: "Website Disclaimer",
     description:
@@ -47,11 +50,12 @@ function GovernancePage() {
 
       {/* Policy grid */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
           {POLICIES.map((policy) => (
             <div
+              id={policy.id}
               key={policy.title}
-              className="bg-surface-container-lowest rounded-none border-2 border-black brutalist-shadow p-8 transition-all group hover:-translate-y-1"
+              className="scroll-mt-28 bg-surface-container-lowest rounded-none border-2 border-black brutalist-shadow p-8 transition-all group hover:-translate-y-1"
             >
               <div className="w-16 h-16 bg-[#f2eef7] dark:bg-[#2a2430] border-heavy rounded-none flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
                 <span

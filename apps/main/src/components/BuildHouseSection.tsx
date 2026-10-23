@@ -24,13 +24,22 @@ export function BuildHouseSection() {
             Spurgeon&apos;s Centre
           </p>
           <h2 className="section-title mt-3 !text-[clamp(2rem,4.6vw,3.4rem)] !text-white">
-            Continuing the legacy of Christianity in the UK.
+            We&rsquo;ve purchased our new home
           </h2>
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-white/90 md:text-xl md:leading-relaxed">
-            Kharis Church has purchased Spurgeon&apos;s College in South London. We are renovating
-            it to keep training missionaries and sending them into the world, and to strengthen the
-            church in the UK.
-          </p>
+          <div className="mx-auto mt-6 max-w-3xl space-y-5 text-lg leading-relaxed text-white/90 md:text-xl md:leading-relaxed">
+            <p>
+              We are excited to announce that we have officially acquired our own facility that was
+              formerly Spurgeon&rsquo;s College.
+            </p>
+            <p>
+              Now begins the exciting work restoring and developing this facility into a home for
+              advancing the gospel.
+            </p>
+            <p>
+              If you would like to partner with us and give towards this project, you can do so
+              using the link below.
+            </p>
+          </div>
           <div className="btn-pair mt-10">
             <a
               href={SPURGEONS_CENTRE.giveUrl}

@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { AdminShell } from "@/components/studio/admin-shell";
+import { GraceChat } from "@/components/studio/grace-chat";
 import { Mark } from "@/components/studio/mark";
 import { SignIn } from "@/components/studio/sign-in";
 import { getSupabase } from "@/lib/supabase";
@@ -51,6 +52,7 @@ export function StudioFrame({ children }: { children: React.ReactNode }) {
   return (
     <Suspense fallback={<BootScreen />}>
       <AdminShell email={user.email ?? "Signed in"}>{children}</AdminShell>
+      <GraceChat />
     </Suspense>
   );
 }

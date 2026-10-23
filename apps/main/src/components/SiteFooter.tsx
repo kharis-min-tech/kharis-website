@@ -79,6 +79,11 @@ export function SiteFooter({ tone }: Props) {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/quiz" className={linkHover}>
+                    Department Quiz
+                  </Link>
+                </li>
+                <li>
                   <Link href="/#share-testimony" className={linkHover}>
                     Testimony Form
                   </Link>
@@ -193,6 +198,18 @@ export function SiteFooter({ tone }: Props) {
             <p className={`site-footer__legal ${dark ? "text-white/60" : "text-muted"}`}>
               2026 Kharis Ministries | All Rights Reserved | Charity Number 1139291
             </p>
+            <nav className="site-footer__policies" aria-label="Policies">
+              <Link href="/governance#privacy" className="site-footer__policy">
+                Privacy Policy
+              </Link>
+              <span className="site-footer__policy-mark" aria-hidden="true" />
+              <Link
+                href="/governance#disclaimer"
+                className="site-footer__policy site-footer__policy--note"
+              >
+                Disclaimer
+              </Link>
+            </nav>
             <EvangelicalAllianceMark />
           </div>
         </div>

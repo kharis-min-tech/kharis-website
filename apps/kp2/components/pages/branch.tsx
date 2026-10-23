@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { YoutubeEmbed } from "@/components/YoutubeEmbed";
+import { VisitInstead } from "@/components/VisitInstead";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
@@ -22,6 +23,9 @@ import {
 } from "@/lib/calendar";
 import type { ChurchEvent } from "@/lib/events";
 import { displayMessageTitle, formatMessageDate, type MessageVideo } from "@/lib/youtube";
+import "@/components/branch-cards.css";
+
+const BRANCH_MARK = "https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png";
 
 const GALLERY_FALLBACKS = [
   "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg",
@@ -287,10 +291,10 @@ function BranchPage({
     <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
       <SiteHeader />
 
-      <main className="pt-[74px]">
+      <main className="kp-branch-page pt-[74px]">
         {/* Hero */}
-        <section className="relative flex w-full min-h-0 items-center justify-center px-4 pt-6 pb-8 sm:min-h-[65vh] sm:px-5 sm:pt-10 sm:pb-16 md:px-8 max-w-[1536px] mx-auto">
-          <div className="absolute inset-x-4 top-6 bottom-4 z-0 overflow-hidden brutalist-border sm:inset-x-5 sm:top-10 sm:bottom-8 md:inset-x-8">
+        <section className="kp-branch-hero relative flex w-full min-h-0 items-center justify-center px-4 pt-6 pb-8 sm:px-5 sm:pt-8 sm:pb-10 md:min-h-[32rem] md:px-8 lg:min-h-[65vh] max-w-[1536px] mx-auto">
+          <div className="kp-branch-hero-fallback absolute inset-x-4 top-6 bottom-4 z-0 overflow-hidden brutalist-border sm:inset-x-5 sm:top-10 sm:bottom-8 md:inset-x-8">
             {branch.image ? (
               <img
                 src={branch.image}
@@ -300,16 +304,18 @@ function BranchPage({
                 className="absolute inset-0 h-full w-full object-cover"
               />
             ) : null}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
+            <div
+              className={`absolute inset-0 ${branch.image ? "bg-gradient-to-t from-black/80 via-black/35 to-black/25" : "bg-gradient-to-t from-[#12041f]/45 via-transparent to-transparent"}`}
+            />
           </div>
 
           <div className="relative z-10 flex w-full max-w-4xl flex-col items-center px-3 pt-12 pb-8 text-center text-white sm:px-6 sm:pt-16 sm:pb-12">
             <div className="mb-8 flex flex-col items-center gap-3 sm:mb-6 sm:flex-row sm:flex-wrap sm:justify-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-md border-2 border-white/30">
-                <span className="material-symbols-outlined text-[18px] text-secondary-container">
+              <div className="inline-flex max-w-full items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-md border-2 border-white/30">
+                <span className="material-symbols-outlined shrink-0 text-[18px] text-secondary-container">
                   location_on
                 </span>
-                <span className="font-body-md text-[12px] font-bold uppercase tracking-wider">
+                <span className="font-body-md text-[12px] font-bold uppercase tracking-wider text-balance">
                   Kharis Phase 2 · {branch.city} Branch
                 </span>
               </div>
@@ -365,7 +371,7 @@ function BranchPage({
               </div>
             </div>
 
-            <h1 className="mb-5 font-display-lg text-[1.85rem] uppercase leading-[1.05] sm:mb-6 sm:text-5xl md:text-6xl">
+            <h1 className="mb-5 font-display-lg text-[1.85rem] uppercase leading-[1.05] sm:mb-6 sm:text-5xl lg:text-6xl">
               Welcome to <span className="block text-secondary-container">{branch.name}</span>
             </h1>
 
@@ -373,7 +379,7 @@ function BranchPage({
               {branch.description}
             </p>
 
-            <div className="flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:w-auto sm:flex-row sm:gap-4">
+            <div className="kp-branch-actions">
               {nextVisit ? (
                 <PlanVisitButton
                   item={nextVisit}
@@ -425,30 +431,43 @@ function BranchPage({
           </div>
         </section>
 
-        {branch.pastorImage ? (
-          <section className="px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto pb-4">
-            <div className="grid items-center gap-6 bg-surface-container-lowest brutalist-border brutalist-shadow p-5 sm:grid-cols-[220px_1fr] sm:p-6">
-              <img
-                src={branch.pastorImage}
-                alt={branch.pastor}
-                className="aspect-[4/5] w-full object-cover brutalist-border"
-              />
-              <div>
-                <p className="font-body-md text-[12px] font-bold uppercase tracking-wider text-primary">
-                  {branch.pastorRole || "Pastor"}
-                </p>
-                <h2 className="mt-2 font-display-lg text-[32px] uppercase leading-none">
-                  {branch.pastor}
-                </h2>
-                {branch.pastorBio ? (
-                  <p className="mt-4 max-w-xl font-body-md text-body-md leading-relaxed text-on-surface-variant">
-                    {branch.pastorBio}
-                  </p>
-                ) : null}
-              </div>
+        <section
+          className="px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto py-10"
+          aria-labelledby="branch-pastor-heading"
+        >
+          <div className="kp-pastor">
+            <div className="kp-pastor__photo">
+              {branch.pastorImage ? (
+                <img
+                  src={branch.pastorImage}
+                  alt={branch.pastor === "Coming soon" ? "" : branch.pastor}
+                  className="kp-pastor__portrait"
+                />
+              ) : (
+                <span className="kp-branch-card__fallback">
+                  <img src={BRANCH_MARK} alt="" />
+                  <span>{branch.city || branch.name}</span>
+                </span>
+              )}
             </div>
-          </section>
-        ) : null}
+            <div className="kp-pastor__words">
+              <p className="kp-pastor__kicker">
+                {branch.pastor === "Coming soon"
+                  ? branch.city
+                  : [branch.pastorRole || "Pastor", branch.city].filter(Boolean).join(" · ")}
+              </p>
+              <h2 id="branch-pastor-heading" className="kp-pastor__name">
+                {branch.pastor === "Coming soon" ? branch.name : branch.pastor}
+              </h2>
+              <span className="kp-pastor__rule" aria-hidden="true" />
+              <p className="kp-pastor__bio">
+                {branch.pastor === "Coming soon"
+                  ? `You are welcome at ${branch.name}. Come and gather with us in ${branch.city}.`
+                  : branch.pastorBio}
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Join us this Sunday */}
         <section
@@ -565,7 +584,7 @@ function BranchPage({
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t-2 border-on-background/15 flex justify-between items-center gap-3 bg-background p-4">
+                <div className="kp-service-note mt-8 border-t-2 border-on-background/15 flex justify-between items-center gap-3 bg-background p-4">
                   <div className="flex items-center gap-2">
                     <span className="relative flex h-3 w-3">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
@@ -589,9 +608,9 @@ function BranchPage({
             </div>
 
             <div className="lg:col-span-7">
-              <div className="bg-surface-container-lowest brutalist-border brutalist-shadow p-3 h-[500px] relative overflow-hidden">
-                {mapSrc ? (
-                  <div className="absolute inset-3 overflow-hidden">
+              <div className="kp-branch-map bg-surface-container-lowest brutalist-border brutalist-shadow p-3">
+                <div className="kp-branch-map__frame">
+                  {mapSrc ? (
                     <iframe
                       title={`Map of ${branch.name}`}
                       src={mapSrc}
@@ -599,38 +618,17 @@ function BranchPage({
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                     />
-                  </div>
-                ) : branch.image ? (
-                  <img
-                    src={branch.image}
-                    alt={branch.name}
-                    className="absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] object-cover"
-                  />
-                ) : (
-                  <div className="absolute inset-3 bg-surface-container" />
-                )}
-
-                <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
-                  <div className="bg-surface-container-lowest/95 backdrop-blur-md p-4 max-w-xs pointer-events-auto brutalist-border">
-                    <h4 className="font-display-lg text-[18px] uppercase mb-1">{branch.name}</h4>
-                    <p className="font-body-md text-[12px] text-on-surface-variant mb-3 leading-snug">
-                      {[branch.address, branch.postcode].filter(Boolean).join(", ")}
-                    </p>
-                    {directions ? (
-                      <a
-                        href={directions}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-primary text-[12px] font-bold uppercase"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">near_me</span>
-                        Get directions
-                      </a>
-                    ) : null}
-                  </div>
-
+                  ) : branch.image ? (
+                    <img
+                      src={branch.image}
+                      alt={branch.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-surface-container" />
+                  )}
                   {hasCoords(branch) ? (
-                    <div className="flex flex-col gap-2 pointer-events-auto">
+                    <div className="kp-branch-map__zoom">
                       <button
                         type="button"
                         onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
@@ -648,6 +646,23 @@ function BranchPage({
                         <span className="material-symbols-outlined">remove</span>
                       </button>
                     </div>
+                  ) : null}
+                </div>
+                <div className="kp-branch-map__card bg-surface-container-lowest/95 backdrop-blur-md brutalist-border">
+                  <h4 className="font-display-lg text-[18px] uppercase mb-1">{branch.name}</h4>
+                  <p className="font-body-md text-[12px] text-on-surface-variant mb-3 leading-snug">
+                    {[branch.address, branch.postcode].filter(Boolean).join(", ")}
+                  </p>
+                  {directions ? (
+                    <a
+                      href={directions}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 text-primary text-[12px] font-bold uppercase"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">near_me</span>
+                      Get directions
+                    </a>
                   ) : null}
                 </div>
               </div>
@@ -729,9 +744,12 @@ function BranchPage({
           {gallery.length ? (
             <GalleryCarousel images={gallery} city={branch.city} onOpen={setGalleryIndex} />
           ) : (
-            <p className="text-center font-body-md text-[14px] text-on-surface-variant">
-              Photos for this branch will show here after they are added in Content Studio.
-            </p>
+            <div className="kp-branch-empty">
+              <span className="kp-branch-card__fallback">
+                <img src={BRANCH_MARK} alt="" />
+                <span>{branch.name}</span>
+              </span>
+            </div>
           )}
         </section>
 
@@ -782,17 +800,29 @@ function BranchPage({
               </div>
             ))}
             {campusEvents.length === 0 ? (
-              <div className="md:col-span-2 p-8 brutalist-border bg-surface-container-lowest">
-                <p className="font-display-lg text-[22px] uppercase mb-2">More dates soon</p>
-                <p className="font-body-md text-on-surface-variant mb-4">
-                  Check the events page for gatherings across Kharis Phase 2.
-                </p>
-                <Link
-                  href="/events"
-                  className="inline-block bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border"
+              <div className="md:col-span-2">
+                <VisitInstead
+                  title="Sunday is the gathering"
+                  action={
+                    <div className="mt-6 flex flex-wrap justify-center gap-3">
+                      <Link
+                        href="#services"
+                        className="kp-depth-button kp-button-purple kp-empty-panel__cta !mt-0"
+                      >
+                        Sunday service
+                      </Link>
+                      <Link
+                        href="/branches"
+                        className="kp-depth-button kp-button-gold kp-empty-panel__cta !mt-0"
+                      >
+                        Find a branch
+                      </Link>
+                    </div>
+                  }
                 >
-                  View events
-                </Link>
+                  Nothing else is dated for {branch.city} yet. Come to Sunday service, or find
+                  another branch.
+                </VisitInstead>
               </div>
             ) : null}
           </div>
@@ -981,7 +1011,7 @@ function BranchPage({
                 See all
               </Link>
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {others.slice(0, 3).map((item) => (
                 <Link
                   key={item.slug}

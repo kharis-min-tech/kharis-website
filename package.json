@@ -25,10 +25,10 @@
     "node": ">=22"
   },
   "comments": {
-    "overrides.next": "Pin Next to 16.3.8 across the whole tree (apps + the @opennextjs/cloudflare peer). Next 16.4.0 moves preview props into a standalone .next/server/preview-props.json that the adapter's manifest-inlining glob doesn't bundle, so every route throws 'Unexpected loadManifest(/.next/server/preview-props.json)' (1101) at runtime. See opennextjs/opennextjs-cloudflare#1355. Remove once a released adapter includes PR #1356."
+    "overrides.next": "Pin Next to 16.4.2 across the whole tree. 16.3.8 was held back because Next 16.4.0 split preview props into preview-props.json and OpenNext crashed every dynamic route (opennextjs-cloudflare#1355). @opennextjs/cloudflare 1.20.13 includes that fix and peers with next >=16.4.1. 16.4.2 is the release that clears the critical Next.js advisories the quality gate blocks on."
   },
   "overrides": {
-    "next": "16.3.8"
+    "next": "16.4.2"
   },
   "devDependencies": {
     "eslint-config-prettier": "^10.1.8",

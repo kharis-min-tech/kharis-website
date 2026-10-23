@@ -1,0 +1,184 @@
+.kp-hero-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #e8e0e9;
+  text-shadow:
+    0 4px 0 #151218,
+    0 10px 18px rgba(0, 0, 0, 0.55);
+}
+
+.kp-hero-title__line,
+.kp-hero-title__phrase {
+  display: block;
+  min-height: 1.05em;
+}
+
+.kp-hero-type {
+  position: relative;
+  display: inline-block;
+  width: max-content;
+}
+
+.kp-hero-type__sizer {
+  visibility: hidden;
+}
+
+.kp-hero-type__live {
+  position: absolute;
+  inset: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.kp-hero-type__caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.82em;
+  margin-left: 0.06em;
+  vertical-align: -0.02em;
+  background: #f7be1d;
+  animation: kp-hero-caret 0.9s steps(1) infinite;
+}
+
+.kp-hero-phrase {
+  display: inline-block;
+  color: #f7be1d;
+  white-space: nowrap;
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease,
+    filter 0.55s ease;
+}
+
+.kp-hero-phrase--reserve {
+  visibility: hidden;
+}
+
+.kp-hero-phrase.is-out {
+  animation: none;
+  opacity: 0;
+  transform: translateY(-0.18em);
+  filter: blur(6px);
+}
+
+.kp-hero-phrase--fade-up {
+  animation: kp-hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kp-hero-phrase--blur-in {
+  animation: kp-hero-blur-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kp-hero-phrase--tracking {
+  animation: kp-hero-tracking 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kp-hero-phrase__word {
+  display: inline-block;
+  animation: kp-hero-word-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kp-hero-phrase--wipe {
+  animation: kp-hero-wipe 1s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes kp-hero-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes kp-hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.45em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kp-hero-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@keyframes kp-hero-tracking {
+  from {
+    opacity: 0;
+    letter-spacing: 0.22em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: -0.02em;
+  }
+}
+
+@keyframes kp-hero-word-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.6em) rotate(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kp-hero-wipe {
+  from {
+    opacity: 0.4;
+    clip-path: inset(0 100% 0 0);
+    transform: translateX(-0.25em);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .kp-hero-title {
+    text-shadow:
+      0 3px 0 #151218,
+      0 8px 14px rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* iPad portrait sits under the desktop type size, so the second line stays on the screen. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .kp-home-hero .kp-hero-title {
+    font-size: clamp(2.35rem, 5.4vw, 3.25rem);
+    line-height: 0.95;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-hero-type__caret {
+    display: none;
+  }
+
+  .kp-hero-phrase,
+  .kp-hero-phrase__word {
+    animation: none;
+    transition: none;
+    filter: none;
+    transform: none;
+    opacity: 1;
+  }
+}

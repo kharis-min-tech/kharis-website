@@ -40,12 +40,13 @@ function DepartmentCard({ dept }: { dept: Department }) {
         <img
           alt={dept.name}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          style={{ objectPosition: dept.imagePosition }}
           src={dept.image}
           loading="lazy"
           decoding="async"
         />
         <span
-          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider text-on-background ${dept.accent} rounded-none border border-on-background/10`}
+          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border border-on-background/10`}
         >
           <span className="material-symbols-outlined text-sm" aria-hidden="true">
             {dept.icon}
@@ -111,7 +112,7 @@ function DepartmentsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {FEATURED.map((dept, i) => (
               <div
                 key={dept.name}
@@ -121,6 +122,7 @@ function DepartmentsPage() {
                   <img
                     alt={dept.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    style={{ objectPosition: dept.imagePosition }}
                     src={dept.image}
                     loading="lazy"
                     decoding="async"
@@ -238,23 +240,21 @@ function DepartmentsPage() {
         </section>
 
         {/* Why serve God */}
-        <section className="relative overflow-hidden border-t-4 border-black bg-on-background text-background px-margin-mobile py-stack-lg md:px-margin-desktop">
-          <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25" />
-          <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent" />
+        <section className="relative overflow-hidden border-t-4 border-black bg-gradient-to-b from-[#3a2158] via-[#221532] to-[#141018] px-margin-mobile py-stack-lg text-white md:px-margin-desktop">
           <div className="relative z-10 mx-auto max-w-5xl">
             <div className="mb-12 text-center">
-              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
+              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest text-[#151218]">
                 The heart behind it
               </span>
               <h2 className="font-display-lg text-headline-lg leading-none uppercase text-primary-fixed-dim">
                 Why We Serve
               </h2>
-              <p className="mx-auto mt-3 max-w-xl text-sm text-surface-container-low">
+              <p className="mx-auto mt-3 max-w-xl text-sm text-white/80">
                 Serving is worship. Respond to grace. Take your place. Get busy serving.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {WHY_SERVE.map((w, i) => (
                 <div
                   key={w.title}
@@ -297,7 +297,7 @@ function DepartmentsPage() {
                 </p>
               </div>
               <Link
-                href="/contact"
+                href="/quiz"
                 className="shrink-0 rounded-none border border-on-background/10 bg-primary px-8 py-3 text-sm font-black uppercase tracking-wider text-on-primary text-center transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
               >
                 To the Quiz

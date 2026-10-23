@@ -3,9 +3,19 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState, type CSSProperties } from "react";
 import { AnimatedHeight } from "@/components/AnimatedHeight";
 import { FaithAccordion } from "@/components/FaithAccordion";
+import "@/components/leadership.css";
+import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
+import { TypedText } from "@/components/TypedText";
+import "@/components/mission-pillars.css";
+
+const ABOUT_HERO =
+  "https://images.kharis.org/site-images/main/e01fad6602636193/about-outreach-hero.jpg";
+
+const CHAPTERS = ["mission", "vision", "leadership"] as const;
 
 const MAIN_TABS = [
   {
@@ -15,23 +25,23 @@ const MAIN_TABS = [
     icon: "favorite",
     headline: "Influence society with the reality of God's love",
     body: "We are a friendly, caring and exciting family church that seeks to influence our society with the reality of God's love and the reliability of His principles by ministering to the spiritual, physical, social and emotional needs of people who care to experience God in a dynamic and a living way.",
-    eyebrow: "How We Fulfil Our Mission Statement",
+    eyebrow: "Our Mission",
     items: [
       {
         num: "01",
         title: "Discipleship",
         icon: "menu_book",
         desc: "The heart of Christianity is the making of disciples.",
-        ref: "MATT 28:19 (KJV)",
+        ref: "Matthew 28:19 (KJV)",
         scripture:
-          "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost",
+          "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost.",
       },
       {
         num: "02",
         title: "Care",
         icon: "volunteer_activism",
         desc: "Everyone is important and everyone deserves to be loved, cared for and supported as they pursue the right course in life.",
-        ref: "ROMANS 12:9 (KJV)",
+        ref: "Romans 12:9 (KJV)",
         scripture:
           "Let love be without dissimulation. Abhor that which is evil; cleave to that which is good.",
       },
@@ -40,7 +50,7 @@ const MAIN_TABS = [
         title: "Outreach",
         icon: "public",
         desc: "Jesus reached out to us and gave us the responsibility for reaching out to others with His love.",
-        ref: "MARK 16:15 (KJV)",
+        ref: "Mark 16:15 (KJV)",
         scripture:
           "And he said unto them, Go ye into all the world, and preach the gospel to every creature.",
       },
@@ -49,7 +59,7 @@ const MAIN_TABS = [
         title: "Leadership Development",
         icon: "groups",
         desc: "Everybody has the potential to lead. We have the responsibility to raise Godly leaders who will rise up to influence their society with the principles of The Kingdom of God.",
-        ref: "PROV 29:2 (KJV)",
+        ref: "Proverbs 29:2 (KJV)",
         scripture:
           "When the righteous are in authority, the people rejoice: but when the wicked beareth rule, the people mourn.",
       },
@@ -60,9 +70,19 @@ const MAIN_TABS = [
     label: "Our Vision",
     sub: "Where we are going",
     icon: "auto_awesome",
-    eyebrow: "Our Vision Statement",
+    eyebrow: "Our Vision",
     headline: "Changing the world with a touch of His Grace",
     body: "The Kharis we see:",
+    items: [],
+  },
+  {
+    id: "leadership",
+    label: "Our Leadership",
+    sub: "Who leads us",
+    icon: "groups",
+    eyebrow: "Lead Pastors",
+    headline: "Pastors David & Awo Antwi",
+    body: "Founders of Kharis, and of Kharis Phase 2.",
     items: [],
   },
 ];
@@ -71,10 +91,39 @@ function WhoWeAreBecoming() {
   const [mainTab, setMainTab] = useState(0);
   const [subTab, setSubTab] = useState(0);
   const tab = MAIN_TABS[mainTab]!;
-  const item = tab.items[subTab]!;
+  const item = tab.items[subTab];
+  const bannerPhoto =
+    tab.id === "leadership" ? PASTORS_PORTRAIT : tab.id === "vision" ? VISION_HERO : null;
+
+  useEffect(() => {
+    const sync = () => {
+      const hash = window.location.hash.replace("#", "");
+      const index = CHAPTERS.indexOf(hash as (typeof CHAPTERS)[number]);
+      if (index >= 0) {
+        setMainTab(index);
+        setSubTab(0);
+      }
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, []);
+
+  const selectChapter = (index: number) => {
+    setMainTab(index);
+    setSubTab(0);
+    const id = MAIN_TABS[index]?.id;
+    if (id) window.history.replaceState({}, "", `#${id}`);
+  };
 
   return (
-    <section className="py-12 md:py-16 px-margin-mobile md:px-margin-desktop relative overflow-hidden bg-background">
+    <section
+      id="who-we-are"
+      className="py-12 md:py-16 px-margin-mobile md:px-margin-desktop relative overflow-hidden bg-background"
+    >
+      <span id="mission" className="kp-about-hash" />
+      <span id="vision" className="kp-about-hash" />
+      <span id="leadership" className="kp-about-hash" />
       {/* backdrop */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96  bg-primary/10 blur-3xl"></div>
@@ -82,24 +131,40 @@ function WhoWeAreBecoming() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div className="text-center mb-8">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-on-background mb-6 uppercase tracking-widest">
-            Passionate for God and His Word
-          </span>
+        <div className="mb-8">
           <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-background uppercase leading-none">
-            Who we are becoming
+            Who we are
           </h2>
         </div>
 
         {/* Main tabs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-7">
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-7"
+          role="tablist"
+          aria-label="Who we are"
+        >
           {MAIN_TABS.map((t, i) => (
             <button
               key={t.id}
-              aria-pressed={mainTab === i}
-              onClick={() => {
-                setMainTab(i);
-                setSubTab(0);
+              id={`about-tab-${t.id}`}
+              role="tab"
+              aria-selected={mainTab === i}
+              aria-controls={`about-panel-${t.id}`}
+              tabIndex={mainTab === i ? 0 : -1}
+              onClick={() => selectChapter(i)}
+              onKeyDown={(event) => {
+                const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
+                if (!keys.includes(event.key)) return;
+                event.preventDefault();
+                const next =
+                  event.key === "Home"
+                    ? 0
+                    : event.key === "End"
+                      ? MAIN_TABS.length - 1
+                      : (i + (event.key === "ArrowRight" ? 1 : -1) + MAIN_TABS.length) %
+                        MAIN_TABS.length;
+                selectChapter(next);
+                document.getElementById(`about-tab-${MAIN_TABS[next]!.id}`)?.focus();
               }}
               className={`kp-mission-tab no-accent-fill text-left p-6 rounded-none border-2 border-black brutalist-shadow transition-all duration-200 flex items-start gap-4 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
                 mainTab === i
@@ -107,6 +172,9 @@ function WhoWeAreBecoming() {
                   : "bg-surface text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
               }`}
             >
+              <span className="font-display-lg text-2xl leading-none opacity-70">
+                {String(i + 1).padStart(2, "0")}
+              </span>
               <span
                 className={`w-12 h-12 shrink-0 border-2 border-current flex items-center justify-center ${mainTab === i ? "bg-white/15" : "bg-primary/10"}`}
               >
@@ -131,13 +199,29 @@ function WhoWeAreBecoming() {
         </div>
 
         {/* Content area */}
-        <div className="bg-surface rounded-none border-2 border-black brutalist-shadow-lg overflow-hidden">
+        <div
+          id={`about-panel-${tab.id}`}
+          role="tabpanel"
+          aria-labelledby={`about-tab-${tab.id}`}
+          className="bg-surface rounded-none border-2 border-black brutalist-shadow-lg overflow-hidden"
+        >
           <AnimatedHeight>
             {/* Content header */}
             <div
               key={tab.id}
-              className="kp-content-enter kp-mission-banner bg-primary px-6 md:px-10 py-8 md:py-10 relative overflow-hidden"
+              className={`kp-content-enter kp-mission-banner bg-primary px-6 md:px-10 py-8 md:py-10 relative overflow-hidden${
+                bannerPhoto ? " kp-lead-hero" : ""
+              }${tab.id === "vision" ? " kp-vision-hero" : ""}`}
             >
+              {bannerPhoto ? (
+                <img
+                  src={bannerPhoto}
+                  alt=""
+                  aria-hidden="true"
+                  decoding="async"
+                  className="kp-lead-hero__photo"
+                />
+              ) : null}
               <div className="absolute top-0 right-0 w-40 h-40  bg-white/10 -mr-10 -mt-10"></div>
               <span className="relative z-10 font-label-md text-white/80 uppercase tracking-[0.2em] block mb-3">
                 {tab.eyebrow || "How we fulfil it"}
@@ -145,70 +229,60 @@ function WhoWeAreBecoming() {
               <h3 className="relative z-10 font-display-xl text-3xl md:text-5xl text-white uppercase leading-tight max-w-3xl">
                 {tab.headline}
               </h3>
-              <p className="relative z-10 font-body-lg text-body-lg text-white/90 mt-4 max-w-3xl">
-                {tab.body}
-              </p>
+              {tab.id === "leadership" ? (
+                <p className="relative z-10 font-body-lg text-body-lg text-white/90 mt-4 max-w-3xl">
+                  {tab.body}
+                </p>
+              ) : null}
             </div>
 
             {tab.id === "vision" ? (
               <VisionContent />
-            ) : (
-              <div className="kp-content-enter grid grid-cols-1 lg:grid-cols-12">
-                {/* Left: vertical list */}
-                <div className="kp-mission-options lg:col-span-5 bg-background">
-                  {tab.items.map((it, i) => (
-                    <button
-                      key={it.title}
-                      aria-pressed={subTab === i}
-                      onClick={() => setSubTab(i)}
-                      className={`kp-mission-option no-accent-fill w-full text-left flex items-center gap-4 px-6 md:px-8 py-5 border-b-2 border-on-background last:border-b-0 transition-colors duration-200 relative ${
-                        subTab === i
-                          ? "bg-primary-fixed-dim text-on-primary-fixed"
-                          : "bg-transparent text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
-                      }`}
-                    >
-                      <span
-                        className={`font-display-lg text-2xl md:text-3xl ${subTab === i ? "text-primary" : "text-on-surface-variant"}`}
+            ) : tab.id === "leadership" ? (
+              <LeadershipContent />
+            ) : item ? (
+              <div className="kp-content-enter kp-pillars">
+                <p className="kp-pillars__lead">{tab.body}</p>
+                <div className="kp-pillars__split">
+                  <div
+                    className="kp-pillars__list"
+                    role="group"
+                    aria-label="How we fulfil our mission"
+                  >
+                    {tab.items.map((it, i) => (
+                      <button
+                        key={it.title}
+                        type="button"
+                        aria-pressed={subTab === i}
+                        onClick={() => setSubTab(i)}
+                        className={`kp-pillars__item no-accent-fill${subTab === i ? " is-active" : ""}`}
                       >
-                        {it.num}
-                      </span>
-                      <span className="w-10 h-10 shrink-0 border-2 border-current flex items-center justify-center">
-                        <span className="material-symbols-outlined" data-weight="fill">
-                          {it.icon}
+                        <span className="kp-pillars__label">
+                          <span className="kp-pillars__num">{it.num}</span>
+                          <span className="kp-pillars__title">{it.title}</span>
                         </span>
-                      </span>
-                      <span className="font-headline-md text-headline-md uppercase">
-                        {it.title}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Right: detail card */}
-                <div
-                  key={item.title}
-                  className="kp-content-enter kp-mission-detail lg:col-span-7 bg-surface p-6 md:p-8"
-                >
-                  <span className="font-label-md text-primary uppercase tracking-[0.2em] block mb-4">
-                    {tab.eyebrow || "How we fulfil it"}
-                  </span>
-                  <h4 className="font-display-xl text-4xl md:text-5xl text-on-background uppercase mb-5">
-                    {item.title}
-                  </h4>
-                  <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
-                    {item.desc}
-                  </p>
-                  <div className="rounded-none border-2 border-black bg-secondary-container p-6">
-                    <span className="font-label-md text-on-secondary-container uppercase tracking-[0.2em] block mb-3">
-                      {item.ref}
-                    </span>
-                    <p className="font-body-lg text-body-lg italic text-on-secondary-container leading-relaxed">
-                      &quot;{item.scripture}&quot;
-                    </p>
+                        <span
+                          className="material-symbols-outlined kp-pillars__arrow"
+                          aria-hidden="true"
+                        >
+                          arrow_forward
+                        </span>
+                      </button>
+                    ))}
                   </div>
+
+                  <article key={item.title} className="kp-pillars__focus">
+                    <p className="kp-pillars__kicker">How we fulfil it</p>
+                    <h4 className="kp-pillars__heading">{item.title}</h4>
+                    <p className="kp-pillars__desc">{item.desc}</p>
+                    <figure className="kp-pillars__bubble">
+                      <figcaption className="kp-pillars__ref">{item.ref}</figcaption>
+                      <blockquote>{item.scripture}</blockquote>
+                    </figure>
+                  </article>
                 </div>
               </div>
-            )}
+            ) : null}
           </AnimatedHeight>
         </div>
       </div>
@@ -216,47 +290,80 @@ function WhoWeAreBecoming() {
   );
 }
 
-const VISION_PILLARS = ["Christ Centred", "Purpose Driven", "People Developing", "Disciple Making"];
+const VISION_HERO =
+  "https://images.kharis.org/site-images/main/a080e8123b487573/vision-church-family.jpg";
 
-const VISION_STATEMENTS = [
-  "Is exciting and full of life. It is a church that is both numerically large and spiritually deep",
-  "Is non-religious, naturally supernatural, and incredibly fun to be in. It's a church of renowned character and integrity. A church whose number one priority is to glorify God and share the Good News of Jesus Christ with a lost world",
-  "Is attractive, confident, victorious and overcoming. We see a church whose powerful proclamation and awesome worship are broadcast to the nations by every modern means possible",
-  "Equips, enables, empowers and releases ordinary people to live extraordinary lives. Helping them discover the gifts and talents God gave them",
-  "Is a deeply committed, loving, caring family amongst whom the lonely and the broken find refuge, new hope and belonging",
-  "Is a church of strong and effective small groups",
-  "Sends out missionaries and church workers around the world, strengthening every member for a personal life mission in the world",
+const VISION_THEMES = [
+  {
+    icon: "church",
+    theme: "Christ-centred, purpose-driven and disciple-making",
+    point: "Is Christ Centred, Purpose Driven, People Developing and Disciple Making.",
+  },
+  {
+    icon: "auto_awesome",
+    theme: "Full of life, large and spiritually deep",
+    point:
+      "Is exciting and full of life. It is a church that is both numerically large and spiritually deep.",
+  },
+  {
+    icon: "local_fire_department",
+    theme: "Naturally supernatural, glorifying God",
+    point:
+      "Is non-religious, naturally supernatural, and incredibly fun to be in. It’s a church of renowned character and integrity. A church whose number one priority is to glorify God and share the Good News of Jesus Christ with a lost world.",
+  },
+  {
+    icon: "podcasts",
+    theme: "Proclamation and worship to the nations",
+    point:
+      "Is attractive, confident, victorious and overcoming. We see a church whose powerful proclamation and awesome worship are broadcast to the nations by every modern means possible.",
+  },
+  {
+    icon: "redeem",
+    theme: "Ordinary people, extraordinary lives",
+    point:
+      "Equips, enables, empowers and releases ordinary people to live extraordinary lives. Helping them discover the gifts and talents God gave them.",
+  },
+  {
+    icon: "home",
+    theme: "A caring family, refuge and belonging",
+    point:
+      "Is a deeply committed, loving, caring family amongst whom the lonely and the broken find refuge, new hope and belonging.",
+  },
+  {
+    icon: "groups",
+    theme: "Strong, effective small groups",
+    point: "Is a church of strong and effective small groups.",
+  },
+  {
+    icon: "flight",
+    theme: "Missionaries sent, every member equipped",
+    point:
+      "Sends out missionaries and church workers around the world, strengthening every member for a personal life mission in the world.",
+  },
 ];
 
 function VisionContent() {
   return (
-    <div className="kp-content-enter bg-background p-6 md:p-10 lg:p-12">
-      <div className="flex flex-wrap gap-3 mb-10">
-        {VISION_PILLARS.map((pillar) => (
-          <span
-            key={pillar}
-            className="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container rounded-none border-2 border-black brutalist-shadow px-4 py-2 font-headline-md text-headline-md uppercase tracking-wide"
+    <div className="kp-content-enter kp-vision">
+      <p className="kp-vision__intro">The Kharis we see:</p>
+      <div className="kp-vision__grid">
+        {VISION_THEMES.map((item, i) => (
+          <details
+            key={item.theme}
+            className="kp-vision__theme"
+            style={{ "--i": i } as CSSProperties}
           >
-            <span className="material-symbols-outlined text-primary" data-weight="fill">
-              check_circle
-            </span>
-            {pillar}
-          </span>
-        ))}
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {VISION_STATEMENTS.map((statement, i) => (
-          <div
-            key={i}
-            className="bg-surface rounded-none border-2 border-black brutalist-shadow p-6"
-          >
-            <span className="font-display-lg text-2xl text-primary block mb-3">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              {statement}
-            </p>
-          </div>
+            <summary>
+              <span className="material-symbols-outlined kp-vision__icon" aria-hidden="true">
+                {item.icon}
+              </span>
+              <span className="kp-vision__label">
+                <span>{item.theme}</span>
+              </span>
+              <span className="kp-vision__toggle" aria-hidden="true" />
+            </summary>
+            <p className="kp-vision__point">{item.point}</p>
+          </details>
         ))}
       </div>
     </div>
@@ -302,122 +409,108 @@ function StatementOfFaith() {
   return <FaithAccordion statements={FAITH_STATEMENTS} />;
 }
 
-const PASTORS_TOGETHER =
-  "https://images.kharis.org/site-images/kp2/9804bc45d0e21f85/leadership-pastors-together.jpg";
-const PASTOR_DAVID =
-  "https://images.kharis.org/site-images/kp2/64154a5197622b53/leadership-pastor-david.jpg";
-const PASTOR_AWO =
-  "https://images.kharis.org/site-images/kp2/4db8231b19f778f9/leadership-pastor-awo.jpg";
+const PASTORS_PORTRAIT =
+  "https://images.kharis.org/site-images/main/61b5f617ef58872c/about-pastors-portrait.jpg";
 
-function OurLeadership() {
+const PASTORS = [
+  {
+    id: "david",
+    name: "Pastor David Antwi",
+    role: "Founder & Lead Pastor",
+    image:
+      "https://images.kharis.org/site-images/main/e666a073b590b3ff/leadership/pastor-david-sunday.jpg",
+    focus: "Teaching the Word and establishing believers in their faith",
+    blurb:
+      "Pastor David co-founded Kharis in 2003. He leads with a deep love for Scripture, teaching and serving so people encounter God in a living way and grow as disciples of Christ.",
+  },
+  {
+    id: "awo",
+    name: "Pastor Awo Antwi",
+    role: "Co-founder & Pastor",
+    image:
+      "https://images.kharis.org/site-images/main/7acafe42a978e2ea/leadership/pastor-awo-portrait.jpg",
+    focus: "People, family, and raising the next generation",
+    blurb:
+      "Pastor Awo co-founded Kharis with Pastor David and helped establish Kharis Phase 2 for students and young people. She serves with care, strength and a heart for the church family.",
+  },
+];
+
+const PASTORS_STORY = [
+  {
+    title: "Founded in 2003",
+    body: "Pastor David and Awo founded Kharis in 2003, a multifaceted ministry headquartered in London, United Kingdom, with several branches worldwide. Together, they also founded Kharis Phase 2, our students’ and young people’s services. Kharis also has a presence on university campuses across the UK.",
+  },
+  {
+    title: "The Word at the centre",
+    body: "Their love for the Word of God is evident in how they lead, teach, and serve. Their greatest desire is to see believers established in their faith, local churches strengthened, and ultimately, for revival to sweep through the nations.",
+  },
+  {
+    title: "A life together",
+    body: "They have been married for over 20 years and are blessed with two wonderful children.",
+  },
+];
+
+function LeadershipContent() {
   return (
-    <section className="relative py-12 md:py-16 px-margin-mobile md:px-margin-desktop bg-surface border-y-4 border-on-background overflow-hidden">
-      <div className="halftone-bg absolute inset-0 pointer-events-none opacity-10 text-on-background"></div>
-      <div className="absolute -top-32 -left-24 w-[28rem] h-[28rem]  bg-primary/10 blur-3xl pointer-events-none"></div>
-
-      <div className="relative z-10 max-w-6xl mx-auto">
-        {/* Heading */}
-        <div className="flex flex-col md:flex-row md:items-end gap-6 mb-12 md:mb-16">
-          <span
-            aria-hidden="true"
-            className="font-display-xl text-6xl md:text-8xl leading-none text-primary/25 select-none"
-          >
-            02
-          </span>
-          <div>
-            <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 rounded-none border-2 border-black mb-4 uppercase tracking-widest">
-              Leadership
-            </span>
-            <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-background uppercase leading-none">
-              Our Leadership
-            </h2>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* Image composition */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative rounded-none border-2 border-black brutalist-shadow-lg overflow-hidden group">
-              <img
-                src={PASTORS_TOGETHER}
-                alt="Pastors David and Awo Antwi"
-                loading="lazy"
-                decoding="async"
-                className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 border-4 border-primary opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+    <div className="kp-content-enter kp-lead">
+      <div className="kp-lead__profiles">
+        {PASTORS.map((pastor) => (
+          <article key={pastor.id} className="kp-lead__profile">
+            <div className="kp-lead__photo">
+              <img src={pastor.image} alt={pastor.name} loading="lazy" decoding="async" />
             </div>
-            <div className="flex gap-4 mt-4 md:mt-0 md:absolute md:-bottom-10 md:right-0 md:translate-x-6">
-              {[
-                { src: PASTOR_DAVID, alt: "Pastor David Antwi" },
-                { src: PASTOR_AWO, alt: "Pastor Awo Antwi" },
-              ].map((p) => (
-                <img
-                  key={p.alt}
-                  src={p.src}
-                  alt={p.alt}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-24 h-24 md:w-28 md:h-28 object-cover rounded-none border-2 border-black brutalist-shadow bg-surface"
-                />
-              ))}
+            <div className="kp-lead__card">
+              <p className="kp-lead__role">{pastor.role}</p>
+              <h4 className="kp-lead__name">{pastor.name}</h4>
+              <p className="kp-lead__focus">{pastor.focus}</p>
+              <p className="kp-lead__blurb">{pastor.blurb}</p>
             </div>
-          </div>
-
-          {/* Text */}
-          <div className="lg:col-span-7 bg-background rounded-none border-2 border-black brutalist-shadow-lg p-6 md:p-10 mt-12 md:mt-16 lg:mt-0">
-            <h3 className="font-display-xl text-3xl md:text-5xl text-on-background uppercase leading-tight mb-2">
-              Pastors David &amp; Awo Antwi
-            </h3>
-            <p className="font-label-md text-primary uppercase tracking-[0.2em] mb-6">
-              Lead Pastors
-            </p>
-            <div className="w-16 h-1.5 bg-primary mb-6"></div>
-            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Pastor David and Awo founded Kharis in 2003, a multifaceted ministry headquartered in
-              London, United Kingdom, with several branches worldwide. Together, they also founded
-              Kharis Phase 2 our students&apos; and young people&apos;s services. Kharis also has a
-              presence on university campuses across the UK. Their love for the Word of God is
-              evident in how they lead, teach, and serve. Their greatest desire is to see believers
-              established in their faith, local churches strengthened, and ultimately, for revival
-              to sweep through the nations. They have been married for over 20 years and are blessed
-              with two wonderful children.
-            </p>
-          </div>
-        </div>
+          </article>
+        ))}
       </div>
-    </section>
+
+      <div className="kp-lead__story">
+        <p className="kp-lead__kicker">Their story</p>
+        <div className="kp-lead__beats">
+          {PASTORS_STORY.map((beat, i) => (
+            <div key={beat.title} className="kp-lead__beat">
+              <span className="kp-lead__beat-num" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h4>{beat.title}</h4>
+              <p>{beat.body}</p>
+            </div>
+          ))}
+        </div>
+        <Link href="/life" className="kp-lead__cta">
+          Explore KP2 Life
+          <span className="material-symbols-outlined" aria-hidden="true">
+            arrow_forward
+          </span>
+        </Link>
+      </div>
+    </div>
   );
 }
 
 function AboutPage() {
   return (
-    <div className="kp-mission-page bg-background text-on-surface font-body-md overflow-x-hidden">
+    <div className="kp-mission-page bg-background text-on-surface font-body-md overflow-x-clip">
       <SiteHeader />
 
-      <section className="kp-mission-hero relative box-border flex h-svh max-h-svh w-full items-center justify-center overflow-hidden border-b-4 border-primary bg-on-background pt-24 pb-8 text-background">
-        <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25"></div>
-        <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent"></div>
-        <div className="relative z-20 text-center px-margin-mobile md:px-margin-desktop max-w-5xl">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest">
-            Preach Christ Crucified.
-          </span>
-          <h1 className="font-display-lg text-headline-lg md:text-display-lg text-primary-fixed-dim uppercase leading-none mb-4">
-            Who We Are
-          </h1>
-          <p className="font-body-lg text-body-lg text-white kp-mission-intro max-w-2xl mx-auto mb-8 font-medium px-6 py-4">
-            Kharis (χάρις) is the Greek word for Grace. While ministering to the total person, we
-            seek to deepen people&apos;s commitment to God and to spiritual values such as holiness,
-            prayer, evangelism, Christ-centred living, Bible study and fellowship.
+      <section className="kp-mission-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
+        <ParallaxHeroImage src={ABOUT_HERO} alt="" className="object-[center_40%]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25"></div>
+        <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
+          <p className="font-label-md uppercase tracking-[0.28em] text-[#f7be1d] mb-4">
+            Kharis Phase 2
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="#kharis-name"
-              className="kp-depth-button kp-button-purple bg-primary text-on-primary font-headline-md px-8 py-4 border-heavier neo-shadow-lg hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-2"
-            >
-              OUR STORY <span className="material-symbols-outlined">arrow_forward</span>
-            </a>
-          </div>
+          <h1 className="font-display-lg uppercase leading-none text-white mb-4">
+            <TypedText text="Kharis" />
+          </h1>
+          <p className="font-body-lg text-body-lg text-white max-w-md">
+            Changing the world with a touch of His grace.
+          </p>
         </div>
       </section>
 
@@ -451,12 +544,15 @@ function AboutPage() {
                 </p>
               </div>
             </div>
+            <p className="font-body-lg text-on-surface-variant max-w-3xl mt-8 md:mt-10 leading-relaxed">
+              While ministering to the total person, we seek to deepen people&apos;s commitment to
+              God and to spiritual values such as holiness, prayer, evangelism, Christ-centred
+              living, Bible study and fellowship.
+            </p>
           </div>
         </section>
 
         <WhoWeAreBecoming />
-
-        <OurLeadership />
 
         <StatementOfFaith />
       </main>

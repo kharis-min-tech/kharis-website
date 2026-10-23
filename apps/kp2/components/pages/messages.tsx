@@ -5,25 +5,21 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
-import { YoutubeEmbed } from "@/components/YoutubeEmbed";
-import { ShareVideoButton } from "@/components/ShareVideoButton";
+import { MessagesWhy } from "@/components/MessagesWhy";
+import { MessagesAppStrip } from "@/components/MessagesAppStrip";
+import { MessageBrowser } from "@/components/MessageBrowser";
+import "@/components/listen-row.css";
 import { MutedHeroVideo } from "@/components/MutedHeroVideo";
-import {
-  displayMessageTitle,
-  formatMessageDate,
-  youtubeWatchUrl,
-  type MessageVideo,
-} from "@/lib/youtube";
+import { displayMessageTitle, youtubeWatchUrl, type MessageVideo } from "@/lib/youtube";
 
 function MessagesPage({ messages }: { messages: MessageVideo[] }) {
   const featured = messages[0];
-  const rest = messages.slice(1);
 
   return (
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
       <SiteHeader />
       <main>
-        <section className="kp-messages-hero relative box-border w-full h-svh max-h-svh overflow-hidden bg-on-background border-b-4 border-black">
+        <section className="kp-messages-hero relative box-border mt-[74px] flex h-[calc(100svh-74px)] max-h-[calc(100svh-74px)] w-full flex-col overflow-hidden border-b-4 border-black bg-on-background md:mt-0 md:block md:h-svh md:max-h-svh">
           {featured ? (
             <MutedHeroVideo
               id={featured.id}
@@ -34,30 +30,29 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             <div
               className="absolute inset-0 bg-cover bg-center opacity-60"
               style={{
-                backgroundImage:
-                  "url('https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/pastor-stage.jpg')",
+                backgroundImage: "url('/kp2/assets/pastor-david-at-pulpit.jpg')",
               }}
             />
           )}
-          <div className="absolute inset-0 hero-gradient pointer-events-none" />
-          <div className="absolute inset-0 halftone-pattern text-white/5 pointer-events-none" />
-          <div className="relative z-10 h-full flex flex-col justify-end px-margin-mobile md:px-margin-desktop pt-24 pb-8 md:pb-10 max-w-7xl mx-auto">
-            <div className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-2 border-black mb-6 uppercase w-fit">
+          <div className="pointer-events-none absolute inset-0 hero-gradient max-md:hidden" />
+          <div className="pointer-events-none absolute inset-0 halftone-pattern text-white/5 max-md:hidden" />
+          <div className="relative z-10 mx-auto flex h-auto w-full min-w-0 max-w-7xl flex-col justify-end px-margin-mobile pb-8 pt-6 md:h-full md:px-margin-desktop md:pb-10 md:pt-24">
+            <div className="mb-5 inline-block w-fit max-w-full border-2 border-black bg-secondary-container px-4 py-1 font-label-md uppercase text-on-secondary-container md:mb-6">
               Hunger &amp; Zeal for God
             </div>
-            <h1 className="font-display-lg text-display-lg text-white leading-none uppercase mb-4 tracking-tighter">
+            <h1 className="mb-4 max-w-full break-words font-display-lg text-[1.75rem] uppercase leading-[0.95] tracking-tight text-white md:text-display-lg md:leading-none md:tracking-tighter">
               {featured ? displayMessageTitle(featured.title) : "Messages"}
             </h1>
-            <p className="font-body-lg text-body-lg text-white/80 max-w-2xl mb-8">
+            <p className="mb-6 max-w-2xl font-body-lg text-base leading-relaxed text-white/80 md:mb-8 md:text-body-lg">
               {featured
                 ? "Your hunger and zeal for God is your greatest advantage as a believer. Watch the newest teaching from Pastor David Antwi here or on YouTube."
                 : "Your hunger and zeal for God is your greatest advantage as a believer. Teachings from Pastor David Antwi will appear here as they go live."}
             </p>
             {featured ? (
-              <div className="flex flex-wrap gap-4">
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4">
                 <a
-                  href="#latest-message"
-                  className="kp-depth-button kp-button-purple bg-primary text-white font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press group"
+                  href="#latest-messages"
+                  className="kp-depth-button kp-button-purple group flex w-full items-center justify-center gap-3 border-2 border-black bg-primary px-8 py-4 font-headline-md text-white hard-shadow btn-press sm:w-auto"
                 >
                   <span
                     className="material-symbols-outlined"
@@ -71,7 +66,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   href={youtubeWatchUrl(featured.id)}
                   target="_blank"
                   rel="noreferrer"
-                  className="kp-depth-button kp-button-light keep-light font-headline-md px-8 py-4 border-2 border-black hard-shadow flex items-center gap-3 btn-press"
+                  className="kp-depth-button kp-button-light keep-light flex w-full items-center justify-center gap-3 border-2 border-black px-8 py-4 font-headline-md hard-shadow btn-press sm:w-auto"
                 >
                   <span className="material-symbols-outlined">smart_display</span>
                   YOUTUBE
@@ -81,103 +76,15 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
           </div>
         </section>
 
-        {featured ? (
-          <section
-            id="latest-message"
-            className="max-w-7xl mx-auto px-margin-desktop py-16 scroll-mt-24"
-          >
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="font-headline-md text-headline-md uppercase">Latest Message</h2>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-              <div className="lg:col-span-8 bg-surface border-2 border-black neo-shadow-lg overflow-hidden">
-                <div className="aspect-video relative bg-black">
-                  <YoutubeEmbed
-                    id={featured.id}
-                    title={featured.title}
-                    thumbnail={featured.thumbnail}
-                  />
-                </div>
-              </div>
-              <div className="lg:col-span-4 bg-surface-container border-2 border-black neo-shadow p-6 flex flex-col">
-                <h4 className="font-label-md text-primary mb-2">NOW PLAYING</h4>
-                <h3 className="font-headline-md text-3xl uppercase mb-4">
-                  {displayMessageTitle(featured.title)}
-                </h3>
-                <p className="font-body-md text-on-surface-variant mb-6">{featured.title}</p>
-                <div className="space-y-3 mb-6">
-                  {featured.publishedAt ? (
-                    <div className="flex items-center gap-3 font-label-sm text-on-surface">
-                      <span className="material-symbols-outlined text-primary">calendar_today</span>
-                      <span>{formatMessageDate(featured.publishedAt)}</span>
-                    </div>
-                  ) : null}
-                  <div className="flex items-center gap-3 font-label-sm text-on-surface">
-                    <span className="material-symbols-outlined text-primary">person</span>
-                    <span>Pastor David Antwi</span>
-                  </div>
-                </div>
-                <ShareVideoButton
-                  id={featured.id}
-                  title={featured.title}
-                  className="mt-auto w-full bg-primary text-on-primary font-label-md py-3 border-2 border-black neo-shadow hover-press flex items-center justify-center gap-2"
-                />
-              </div>
-            </div>
-          </section>
-        ) : null}
+        <MessageBrowser messages={messages} />
+        <MessagesAppStrip />
 
-        <section className="max-w-7xl mx-auto px-margin-desktop py-16">
-          {rest.length === 0 ? (
-            <p className="font-body-lg text-on-surface-variant">
-              More messages will appear here as they are published.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {rest.map((msg) => (
-                <a
-                  key={msg.id}
-                  href={youtubeWatchUrl(msg.id)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group border-2 border-black bg-white text-on-background hard-shadow hover:translate-y-[-4px] hover:bg-[#2a2a2a] hover:text-white transition-all"
-                >
-                  <div className="relative aspect-video border-b-2 border-black overflow-hidden">
-                    <img
-                      alt=""
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      src={msg.thumbnail}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex gap-2 mb-3">
-                      <span className="bg-secondary-container text-on-secondary-container text-[10px] font-label-md px-2 py-0.5 border border-black uppercase">
-                        YouTube
-                      </span>
-                    </div>
-                    <h3 className="font-headline-md text-headline-md leading-tight mb-2 uppercase">
-                      {displayMessageTitle(msg.title)}
-                    </h3>
-                    <div className="flex items-center justify-between border-t-2 border-black/10 pt-4">
-                      <span className="font-label-sm text-xs uppercase">Pastor David Antwi</span>
-                      {msg.publishedAt ? (
-                        <span className="font-label-sm text-[10px] text-outline uppercase group-hover:text-white/70">
-                          {formatMessageDate(msg.publishedAt)}
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="bg-surface-container border-y-4 border-black">
+        <section
+          className="kp-listen bg-surface-container border-y-4 border-black"
+          data-reveal="self"
+        >
           <div className="max-w-7xl mx-auto px-margin-desktop py-16">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+            <div className="kp-listen__intro flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
                 <span className="inline-block bg-secondary-container text-on-secondary-container border-2 border-black font-label-sm uppercase px-3 py-1 hard-shadow-sm mb-4">
                   Listen Anywhere
@@ -192,7 +99,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                 Kharis app.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-gutter">
               {[
                 {
                   label: "Kharis App",
@@ -231,23 +138,26 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   muted: "text-white/90",
                 },
               ].map(({ label, copy, cta, href, icon, card, muted }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-                  className={`kp-platform-card group ${card} border-2 border-black rounded-none neo-shadow flex flex-col p-6 no-accent-fill`}
-                >
-                  <span className={`material-symbols-outlined text-4xl mb-4 ${muted}`}>{icon}</span>
-                  <h3 className="font-headline-md text-title-lg uppercase mb-2">{label}</h3>
-                  <p className={`font-body-lg text-body-md flex-1 ${muted}`}>{copy}</p>
-                  <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase">
-                    {cta}
-                    <span className="material-symbols-outlined text-base transition-transform group-hover:translate-x-1">
-                      arrow_forward
+                <div key={label} className="kp-listen__slot">
+                  <Link
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
+                    className={`kp-platform-card group ${card} border-2 border-black rounded-none neo-shadow flex flex-col p-6 no-accent-fill`}
+                  >
+                    <span className={`material-symbols-outlined text-4xl mb-4 ${muted}`}>
+                      {icon}
                     </span>
-                  </span>
-                </Link>
+                    <h3 className="font-headline-md text-title-lg uppercase mb-2">{label}</h3>
+                    <p className={`font-body-lg text-body-md flex-1 ${muted}`}>{copy}</p>
+                    <span className="mt-6 inline-flex items-center gap-2 font-label-sm uppercase">
+                      {cta}
+                      <span className="material-symbols-outlined text-base transition-transform group-hover:translate-x-1">
+                        arrow_forward
+                      </span>
+                    </span>
+                  </Link>
+                </div>
               ))}
             </div>
           </div>

@@ -3,22 +3,20 @@
 import { AppListenSteps } from "@/components/AppListenSteps";
 import { KHARIS_APP } from "@/lib/kharis-app";
 import { AmbientVideo } from "@/components/AmbientVideo";
+import { HeroTitle } from "@/components/HeroTitle";
+import { KnowKharisComic } from "@/components/KnowKharisComic";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { TestimonialCarousel, type Testimonial } from "@/components/TestimonialCarousel";
+import { type Testimonial } from "@/components/TestimonialCarousel";
+import { TestimoniesBand } from "@/components/TestimoniesBand";
 import { TestimonyFormModal } from "@/components/TestimonyFormModal";
-import { YoutubeEmbed } from "@/components/YoutubeEmbed";
-import { ShareVideoButton } from "@/components/ShareVideoButton";
-import {
-  displayMessageTitle,
-  formatMessageDate,
-  youtubeWatchUrl,
-  type MessageVideo,
-} from "@/lib/youtube";
+import { LatestMessages } from "@/components/LatestMessages";
+import { VisitInstead } from "@/components/VisitInstead";
+import { type MessageVideo } from "@/lib/youtube";
 
 function Index({
   testimonials,
@@ -27,10 +25,9 @@ function Index({
   testimonials: Testimonial[];
   messages: MessageVideo[];
 }) {
-  const featured = messages[0];
-  const others = messages.slice(1, 5);
   const [formOpen, setFormOpen] = useState(false);
-  const openForm = useCallback(() => setFormOpen(true), []);
+  const introRef = useRef<HTMLElement>(null);
+  const [introMotion, setIntroMotion] = useState<"rest" | "ready" | "in">("rest");
   const closeForm = useCallback(() => {
     setFormOpen(false);
     if (window.location.hash === "#share-testimony") {
@@ -62,46 +59,67 @@ function Index({
     };
   }, []);
 
+  useEffect(() => {
+    const section = introRef.current;
+    if (!section || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setIntroMotion("ready");
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setIntroMotion("in");
+        observer.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="bg-white text-gray-900 font-body-md overflow-x-hidden pt-[74px]">
       <SiteHeader />
 
       <header className="kp-home-hero kp-on-dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
-        <div className="absolute inset-0 grid grid-cols-2 md:flex md:flex-row w-full h-full z-0">
-          <div className="relative col-span-2 md:flex-1 group overflow-hidden border-b-2 md:border-b-0 md:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
+        <img className="kp-home-hero__still" src="/kp2/assets/crowd-poster.jpg" alt="" />
+        <div className="kp-home-hero__mosaic absolute inset-0 grid grid-cols-2 lg:flex lg:flex-row w-full h-full z-0">
+          <div className="relative col-span-2 lg:flex-1 group overflow-hidden border-b-2 lg:border-b-0 lg:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/Choir-video.mp4"
+              poster="/kp2/assets/choir-video-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
-          <div className="relative md:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#deb7ff]/10">
+          <div className="relative lg:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#deb7ff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/crowd.mp4"
+              poster="/kp2/assets/crowd-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
-          <div className="relative md:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#f7be1d]/10">
+          <div className="relative lg:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#f7be1d]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/choir2.mp4"
+              poster="/kp2/assets/choir2-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
 
-          <div className="relative hidden md:block md:flex-1 group overflow-hidden halftone-bg text-[#eaddff]/10">
+          <div className="relative hidden lg:block lg:flex-1 group overflow-hidden halftone-bg text-[#eaddff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/dancing.mp4"
+              poster="/kp2/assets/dancing-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
         </div>
 
-        <div className="absolute inset-0 z-20 bg-[#151218]/55 md:bg-transparent"></div>
+        <div className="kp-home-hero__veil absolute inset-0 z-20 bg-[#151218]/55 md:bg-transparent"></div>
 
         <div className="kp-home-hero-copy absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none px-margin-mobile md:px-margin-desktop text-center mt-0 md:mt-[-10vh]">
           <div className="bg-[#f7be1d] px-4 sm:px-6 py-2 sm:py-3 mb-5 md:mb-8 pointer-events-auto shadow-[4px_4px_0px_0px_rgba(19,16,22,1)] border-2 border-[#151218] rotate-[-2deg] max-w-full">
@@ -109,9 +127,7 @@ function Index({
               Preach Christ Crucified.
             </span>
           </div>
-          <h1 className="font-display-xl text-[44px] sm:text-[60px] md:text-display-xl text-[#e8e0e9] uppercase leading-none drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] z-30 mix-blend-exclusion">
-            THIS IS CHURCH <br /> FOR THIS GENERATION.
-          </h1>
+          <HeroTitle />
           <p className="font-body-lg text-base sm:text-body-lg text-[#e8e0e9] mt-5 md:mt-6 max-w-2xl bg-[#151218]/40 backdrop-blur-md p-4 border border-[#958da1]/30 pointer-events-auto rounded">
             A spirit-filled, revival-seeking church. We are young people serving God with passion,
             gathering to encounter Jesus and live transformed lives.
@@ -135,7 +151,11 @@ function Index({
       <main className="relative z-20 overflow-hidden bg-white">
         <div className="halftone-bg absolute inset-0 pointer-events-none text-gray-200 opacity-50"></div>
 
-        <section className="kp-home-intro flex items-center px-margin-mobile md:px-margin-desktop relative z-10 overflow-hidden">
+        <section
+          ref={introRef}
+          data-reveal="self"
+          className={`kp-home-intro relative z-10 flex items-center px-margin-mobile md:px-margin-desktop${introMotion === "ready" ? " is-armed" : ""}${introMotion === "in" ? " is-revealed" : ""}`}
+        >
           <div
             className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 items-center"
             style={{ gap: "clamp(1.5rem, 4vw, 4rem)" }}
@@ -143,10 +163,10 @@ function Index({
             <div className="kp-intro-visual relative order-2 md:order-1">
               <div className="border-4 border-gray-900 brutalist-shadow overflow-hidden rotate-[-2deg] bg-gray-100">
                 <img
-                  alt="Worship moment at Kharis"
+                  alt="A full hall at a Kharis Phase 2 Sunday service"
                   className="kp-intro-photo w-full object-cover"
                   style={{ height: "clamp(240px, 28vw, 420px)" }}
-                  src="https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/pastor-stage.jpg"
+                  src="/kp2/assets/sunday-service-full-hall.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -185,7 +205,7 @@ function Index({
                 authority, and Christ is the centre of our lives.
               </p>
               <p
-                className="font-body-lg text-gray-600 italic max-w-2xl"
+                className="font-body-lg text-gray-600 max-w-2xl"
                 style={{
                   fontSize: "clamp(1rem, 1.45vw, 1.6rem)",
                 }}
@@ -196,152 +216,7 @@ function Index({
           </div>
         </section>
 
-        <section
-          className="py-12 md:py-16 bg-gray-50 relative overflow-hidden border-b-4 border-gray-900"
-          id="departments"
-        >
-          <div className="max-w-7xl mx-auto px-margin-desktop relative z-10">
-            <p className="font-label-comic text-xs tracking-[0.2em] uppercase text-[#630ed4] mb-3">
-              Passionate for God and His Word
-            </p>
-            <h2 className="font-display-xl text-5xl md:text-7xl uppercase text-gray-900 leading-none">
-              GET TO KNOW <span className="text-[#630ed4]">KHARIS</span>
-            </h2>
-            <p className="font-body-lg text-body-lg text-gray-600 mt-4 mb-12">
-              Everything you need, one tap away.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:auto-rows-[220px]">
-              <Link
-                href="/mission"
-                className="group relative min-h-[320px] md:min-h-0 md:row-span-2 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Our mandate: bringing Christ to people"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/c3bfa8102ef6e326/mandate.png"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6 md:p-8">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Who We Are
-                  </p>
-                  <h3 className="font-headline-lg text-3xl md:text-4xl uppercase !text-white">
-                    About Us
-                  </h3>
-                  <p className="font-body-md text-body-md !text-white/85 mt-2 max-w-sm">
-                    Our mandate is to bring Christ to people everywhere.
-                  </p>
-                  <span className="inline-block mt-4 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-
-              <Link
-                href="/branches"
-                className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Find a Kharis location"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/3f1f49569aefd282/branch-slide-3.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Visit Sunday
-                  </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Locations
-                  </h3>
-                  <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-
-              <Link
-                href="/fellowships"
-                className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Young adults at Kharis"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    KHARIS HOME
-                  </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Kharis Home
-                  </h3>
-                  <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-
-              <Link
-                href="/messages"
-                className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Worship night"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Next Step
-                  </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Become a Believer
-                  </h3>
-                  <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-
-              <Link
-                href="/departments"
-                className="group relative min-h-[220px] md:min-h-0 overflow-hidden comic-border brutalist-shadow brutalist-shadow-hover transition-all bg-gray-900"
-              >
-                <img
-                  alt="Serve with us"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition duration-700"
-                  src="https://images.kharis.org/site-images/kp2/8440a4a63e4ae020/serve-with-us.jpg"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-label-comic text-xs tracking-[0.2em] uppercase !text-white/80 mb-1">
-                    Serve With Us
-                  </p>
-                  <h3 className="font-headline-lg text-2xl md:text-3xl uppercase !text-white">
-                    Get Involved
-                  </h3>
-                  <span className="inline-block mt-2 font-label-comic text-sm uppercase !text-[#f7be1d] group-hover:translate-x-2 transition-transform">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </section>
+        <KnowKharisComic />
 
         <section
           className="py-24 bg-[#630ed4] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden"
@@ -354,7 +229,7 @@ function Index({
                 <span className="inline-block bg-[#f7be1d] text-gray-900 px-4 py-2 font-label-comic text-xs uppercase tracking-widest brutalist-shadow mb-6">
                   From the Pastor
                 </span>
-                <h2 className="font-display-xl text-5xl md:text-7xl text-white leading-none uppercase mb-6">
+                <h2 className="font-display-xl text-5xl lg:text-7xl text-white leading-none uppercase mb-6">
                   A WORD FROM <span className="text-[#f7be1d]">OUR HEAD PASTOR</span>
                 </h2>
                 <p className="font-body-lg text-body-lg text-gray-100 dark:text-[#ccc3d8] mb-4 max-w-lg">
@@ -377,7 +252,7 @@ function Index({
                 <img
                   alt="Pastor David Antwi, Head Pastor of Kharis Phase 2"
                   className="relative w-full aspect-[4/5] object-cover rounded-[2rem] shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500"
-                  src="https://images.kharis.org/site-images/kp2/64154a5197622b53/leadership-pastor-david.jpg"
+                  src="/kp2/assets/pastor-david-smiling.jpg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -386,167 +261,51 @@ function Index({
           </div>
         </section>
 
-        <section
+        <TestimoniesBand
           id="testimonies"
-          className="py-16 sm:py-20 lg:py-24 bg-[#f2eef7] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
-        >
-          <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
-              Salvation · Healing · Miracles
-            </span>
-            <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-4 transition-colors duration-300">
-              TESTIMONIES
-            </h2>
-            <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-2xl mb-10 sm:mb-12 lg:mb-16">
-              Salvation and life transformation, healing, and miracles — what God is doing in this
-              house.
-            </p>
-
-            {testimonials.length > 0 ? (
-              <TestimonialCarousel testimonials={testimonials} />
-            ) : (
-              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl">
-                Stories from the family will land here as people share what God is doing.
-              </p>
-            )}
-
-            <div className="flex justify-center sm:justify-end mt-8">
-              <button
-                type="button"
-                id="share-testimony"
-                onClick={openForm}
-                className="kp-depth-button kp-button-purple bg-[#630ed4] !text-white font-label-comic text-label-comic uppercase px-8 py-4 brutalist-border brutalist-shadow"
-              >
-                Share Your Testimony
-              </button>
-            </div>
-          </div>
-        </section>
+          className="border-b-4 border-gray-900"
+          eyebrow="Salvation · Healing · Miracles"
+          title="Testimonies"
+          intro="Salvation and life transformation, healing, and miracles — what God is doing in this house."
+          items={testimonials.map((t) => ({
+            quote: t.quote,
+            title: t.title,
+            name: t.name,
+            meta: t.location,
+          }))}
+        />
 
         <section
-          className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
+          className="relative z-10 bg-white dark:bg-[#151218] border-b-4 border-gray-900"
           id="media"
         >
-          <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
-              Teachings
-            </span>
-            <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-10 sm:mb-12 lg:mb-16 transition-colors duration-300">
-              LATEST MESSAGES
-            </h2>
+          <LatestMessages messages={messages} />
 
-            {featured ? (
-              <>
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter gap-6 lg:gap-8 mb-12 lg:mb-16">
-                  <div className="lg:col-span-8 bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow overflow-hidden group transition-colors duration-300">
-                    <div className="aspect-video relative bg-black">
-                      <YoutubeEmbed
-                        id={featured.id}
-                        title={featured.title}
-                        thumbnail={featured.thumbnail}
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
-                        <span className="bg-[#5c532b] text-white font-label-comic text-xs px-2 py-1 mb-2 inline-block border-2 border-gray-900">
-                          NEWEST RELEASE
-                        </span>
-                        <h3 className="font-headline-lg text-white text-2xl uppercase">
-                          {displayMessageTitle(featured.title)}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-4 bg-[#f3f3fb] dark:bg-[#23202a] border-4 border-gray-900 brutalist-shadow p-6 sm:p-8 flex flex-col transition-colors duration-300">
-                    <h4 className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] mb-2 uppercase">
-                      Now Playing
-                    </h4>
-                    <h3 className="font-headline-lg text-3xl uppercase text-gray-900 dark:text-[#e8e0e9] mb-4 transition-colors duration-300">
-                      {displayMessageTitle(featured.title)}
-                    </h3>
-                    <p className="font-body-md text-body-md text-gray-600 dark:text-[#ccc3d8] mb-6 transition-colors duration-300">
-                      The latest teaching from Pastor David Antwi on YouTube.
-                    </p>
-                    <div className="space-y-3 mb-6">
-                      {featured.publishedAt ? (
-                        <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                          <span className="material-symbols-outlined text-[#630ed4] dark:text-[#d2bbff]">
-                            calendar_today
-                          </span>
-                          <span>{formatMessageDate(featured.publishedAt)}</span>
-                        </div>
-                      ) : null}
-                      <div className="flex items-center gap-3 font-label-comic text-xs uppercase tracking-wider text-gray-800 dark:text-[#ece6f0]">
-                        <span className="material-symbols-outlined text-[#630ed4] dark:text-[#d2bbff]">
-                          person
-                        </span>
-                        <span>Pastor David Antwi</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-4 mt-auto">
-                      <ShareVideoButton
-                        id={featured.id}
-                        title={featured.title}
-                        className="flex-1 bg-[#630ed4] text-white font-label-comic text-sm uppercase px-4 py-3 border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all flex items-center justify-center gap-2"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-                  {others.map((msg) => (
-                    <a
-                      key={msg.id}
-                      href={youtubeWatchUrl(msg.id)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="bg-white dark:bg-[#1f1c24] comic-border brutalist-shadow hover:-translate-y-1 transition-transform overflow-hidden group transition-colors duration-300"
+          {messages.length === 0 ? (
+            <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pb-16 relative z-10">
+              <VisitInstead
+                title="No teachings just yet"
+                action={
+                  <div className="mt-6 flex flex-wrap justify-center gap-3">
+                    <Link
+                      href="/events#kp-sun-title"
+                      className="kp-depth-button kp-button-purple kp-empty-panel__cta !mt-0"
                     >
-                      <div className="aspect-video relative overflow-hidden border-b-4 border-gray-900">
-                        <img
-                          alt=""
-                          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                          src={msg.thumbnail}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                        <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span className="material-symbols-outlined !text-white text-5xl">
-                            play_circle
-                          </span>
-                        </div>
-                      </div>
-                      <p className="p-4 font-body-md text-sm text-gray-900 dark:text-[#e8e0e9] leading-snug transition-colors duration-300">
-                        {displayMessageTitle(msg.title)}
-                      </p>
-                    </a>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <p className="font-body-lg text-gray-600 dark:text-[#ccc3d8] max-w-xl mb-10">
-                New teachings will land here as they go live on YouTube.
-              </p>
-            )}
-
-            <div className="flex flex-wrap gap-4 mt-10">
-              <Link
-                href="/messages"
-                className="kp-depth-button kp-button-gold bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+                      Sunday service
+                    </Link>
+                    <Link
+                      href="/branches"
+                      className="kp-depth-button kp-button-gold kp-empty-panel__cta !mt-0"
+                    >
+                      Find a branch
+                    </Link>
+                  </div>
+                }
               >
-                Watch More Messages
-              </Link>
-              <a
-                href="https://youtube.com/@davidantwi"
-                target="_blank"
-                rel="noreferrer"
-                className="kp-depth-button kp-button-purple bg-[#1f1c24] text-[#e8e0e9] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
-              >
-                Watch on YouTube
-              </a>
+                Sunday service is where the Word is preached. Find a branch and come this week.
+              </VisitInstead>
             </div>
-          </div>
+          ) : null}
         </section>
 
         <section

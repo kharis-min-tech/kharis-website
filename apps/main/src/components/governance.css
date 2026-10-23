@@ -59,6 +59,7 @@
   gap: 0;
 }
 .gov-page .gov-policy {
+  scroll-margin-top: 6.25rem;
   display: grid;
   align-items: start;
   min-height: 0;
@@ -71,6 +72,10 @@
   transform: none;
   box-shadow: none;
   border-color: var(--line);
+}
+.gov-page .gov-policy:target {
+  background: color-mix(in srgb, var(--purple) 8%, transparent);
+  box-shadow: inset 3px 0 0 var(--purple);
 }
 .gov-page .gov-policy__number {
   color: var(--muted);

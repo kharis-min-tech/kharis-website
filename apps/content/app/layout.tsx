@@ -3,6 +3,7 @@ import { StudioFrame } from "@/components/studio/studio-frame";
 import { StudioToaster } from "@/components/studio/toaster";
 import { ThemeToggle } from "@/components/studio/theme-toggle";
 import "./globals.css";
+import "./grace-chat.css";
 
 export const metadata: Metadata = {
   title: {

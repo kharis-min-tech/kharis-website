@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { TypedText } from "@/components/TypedText";
 import { DEPARTMENTS } from "@/data/departments";
 
 // Add a department video by adding one line here.
@@ -53,154 +55,119 @@ export function DepartmentVideoHero() {
     setPlaying(false);
   }, [visibleName]);
 
-  return (
-    <section className="relative overflow-hidden border-b-4 border-primary bg-on-background text-background px-margin-mobile py-16 md:px-margin-desktop md:py-24">
-      <div className="halftone-bg absolute inset-0 pointer-events-none opacity-25" />
-      <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/25 to-transparent" />
-      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        {/* Left column */}
-        <div className="min-w-0">
-          <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest animate-bounce motion-reduce:animate-none">
-            Get busy serving!
-          </span>
-          <h1
-            className="font-display-lg mb-4 leading-none text-primary-fixed-dim"
-            style={{ fontSize: "clamp(2.5rem, 1.4rem + 5vw, 4rem)" }}
-          >
-            DEPARTMENTS
-          </h1>
-          <p
-            className="font-headline-md max-w-2xl text-surface-container-low"
-            style={{ fontSize: "clamp(1rem, 0.9rem + 0.8vw, 1.5rem)" }}
-          >
-            Find where your gift meets the mission. Get busy serving.
-          </p>
-          <div className="mt-8 flex gap-4">
-            <div className="h-2 w-12 bg-secondary-container" />
-            <div className="h-2 w-12 bg-primary" />
-            <div className="h-2 w-12 bg-surface" />
-          </div>
+  function togglePlay() {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      void v.play();
+    } else {
+      v.pause();
+    }
+  }
 
-          {/* Selector strip */}
-          <div className="relative mt-8 -mr-margin-mobile md:mr-0">
-            <div
-              ref={stripRef}
-              className="no-scrollbar flex flex-nowrap gap-3 overflow-x-auto pb-2 pr-10"
-              role="group"
-              aria-label="Choose a department video"
-            >
-              {DEPARTMENTS.map((d) => {
-                const isActive = d.name === activeName;
-                const hasVideo = Boolean(DEPARTMENT_VIDEOS[d.name]);
-                return (
-                  <button
-                    key={d.name}
-                    ref={(el) => {
-                      btnRefs.current[d.name] = el;
-                    }}
-                    type="button"
-                    aria-pressed={isActive}
-                    aria-label={`Show ${d.name} video`}
-                    onClick={() => select(d.name)}
-                    className={`shrink-0 inline-flex items-center gap-2 border-2 border-black font-black uppercase tracking-wider transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-                      isActive
-                        ? "bg-primary text-on-primary shadow-[4px_4px_0_0_#000]"
-                        : "bg-transparent text-surface hover:bg-primary hover:text-on-primary"
-                    }`}
-                    style={{
-                      fontSize: "clamp(0.7rem, 0.62rem + 0.4vw, 1rem)",
-                      padding:
-                        "clamp(0.5rem, 0.42rem + 0.35vw, 0.8rem) clamp(0.8rem, 0.65rem + 0.5vw, 1.2rem)",
-                    }}
-                  >
-                    {hasVideo && (
-                      <span
-                        className="h-2 w-2 shrink-0 rounded-full bg-primary-fixed-dim"
-                        aria-hidden="true"
-                      />
-                    )}
-                    {d.name}
-                  </button>
-                );
-              })}
-            </div>
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-on-background to-transparent"
+  return (
+    <section className="kp-dept-hero relative overflow-hidden border-b-4 border-primary bg-[#151218] text-white">
+      <div
+        className={`absolute inset-0 transition-opacity duration-300 ${faded ? "opacity-0" : "opacity-100"}`}
+      >
+        <img
+          src={dept.image}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: dept.imagePosition ?? "center" }}
+        />
+        {src ? (
+          <div className="kp-dept-hero__stage">
+            <video
+              key={dept.name}
+              ref={videoRef}
+              className={playing ? "is-playing" : undefined}
+              src={src}
+              poster={dept.image}
+              playsInline
+              preload="metadata"
+              title={`${dept.name} department video`}
+              aria-label={`${dept.name} department video`}
+              onPlay={() => setPlaying(true)}
+              onPause={() => setPlaying(false)}
+              onEnded={() => setPlaying(false)}
             />
           </div>
-        </div>
+        ) : null}
+      </div>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#151218]/88 via-[#151218]/45 to-[#151218]/25" />
 
-        {/* Video frame */}
-        <div className="w-full max-w-[min(100%,22rem)] mx-auto lg:max-w-[26rem]">
-          <div
-            className="group relative w-full max-h-[70svh] overflow-hidden border-4 border-primary bg-on-background shadow-[10px_10px_0_0_var(--primary)] transition-shadow duration-300 hover:shadow-[10px_10px_30px_0_var(--primary)]"
-            style={{ aspectRatio: "9 / 16" }}
+      {src ? (
+        <div className="kp-dept-hero__play-slot">
+          <button
+            type="button"
+            aria-label={playing ? `Pause ${dept.name} video` : `Play ${dept.name} video`}
+            onClick={togglePlay}
+            className="kp-dept-hero__play"
           >
-            <div
-              className={`absolute inset-0 transition-opacity duration-300 ${
-                faded ? "opacity-0" : "opacity-100"
-              }`}
-            >
-              {src ? (
-                <>
-                  <video
-                    key={dept.name}
-                    ref={videoRef}
-                    className="h-full w-full object-cover"
-                    src={src}
-                    poster={dept.image}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    title={`${dept.name} department video`}
-                    aria-label={`${dept.name} department video`}
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    onEnded={() => setPlaying(false)}
-                  />
-                  <button
-                    type="button"
-                    aria-label={`Play ${dept.name} video`}
-                    onClick={() => videoRef.current?.play()}
-                    tabIndex={playing ? -1 : 0}
-                    className={`absolute inset-x-0 top-0 bottom-16 grid place-items-center bg-black/45 transition-opacity duration-300 ${
-                      playing ? "pointer-events-none opacity-0" : "opacity-100"
-                    }`}
-                  >
-                    <span className="grid h-20 w-20 place-items-center rounded-none border-4 border-black bg-primary text-on-primary shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
-                      <span className="material-symbols-outlined text-4xl" aria-hidden="true">
-                        play_arrow
-                      </span>
-                    </span>
-                  </button>
-                </>
-              ) : (
-                <div className="relative h-full w-full">
-                  <img
-                    src={dept.image}
-                    alt={`${dept.name} department`}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-black/50 to-primary/30" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
-                    <span className="grid h-20 w-20 place-items-center rounded-none border-4 border-surface/40 text-surface/50">
-                      <span className="material-symbols-outlined text-4xl" aria-hidden="true">
-                        play_arrow
-                      </span>
-                    </span>
-                    <h2 className="font-headline-md text-headline-md leading-none text-surface">
-                      {dept.name}
-                    </h2>
-                    <span className="border-2 border-surface/50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-surface/80">
-                      Video coming soon
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
+            <span className="material-symbols-outlined text-4xl" aria-hidden="true">
+              {playing ? "pause" : "play_arrow"}
+            </span>
+          </button>
+        </div>
+      ) : null}
+
+      <div className="relative z-10 mx-auto mt-auto flex w-full max-w-7xl flex-col px-margin-mobile pointer-events-none md:px-margin-desktop">
+        <Link
+          href="/quiz"
+          className="pointer-events-auto mb-6 inline-flex w-fit items-center gap-2 border-2 border-black bg-[#f7be1d] px-4 py-1.5 font-label-md uppercase tracking-widest text-[#151218]"
+        >
+          <span className="material-symbols-outlined text-base" aria-hidden="true">
+            psychology_alt
+          </span>
+          Department Discovery Quiz
+        </Link>
+        <h1 className="font-display-lg uppercase">
+          <TypedText text="Find Your Kharis Department" />
+        </h1>
+        <p className="mt-5 max-w-xl font-body-lg text-base text-white md:text-lg">
+          Find where your gift meets the mission. Get busy serving.
+        </p>
+
+        <div className="relative mt-8 pointer-events-auto">
+          <div
+            ref={stripRef}
+            className="no-scrollbar flex flex-nowrap gap-3 overflow-x-auto pb-1 pr-20"
+            role="group"
+            aria-label="Choose a department video"
+          >
+            {DEPARTMENTS.map((d) => {
+              const isActive = d.name === activeName;
+              const hasVideo = Boolean(DEPARTMENT_VIDEOS[d.name]);
+              return (
+                <button
+                  key={d.name}
+                  ref={(el) => {
+                    btnRefs.current[d.name] = el;
+                  }}
+                  type="button"
+                  aria-pressed={isActive}
+                  aria-label={`Show ${d.name} video`}
+                  onClick={() => select(d.name)}
+                  className={`kp-dept-chip inline-flex shrink-0 items-center gap-2 font-black uppercase tracking-wider transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f7be1d] ${
+                    isActive ? "is-active shadow-[4px_4px_0_0_#000]" : ""
+                  }`}
+                  style={{
+                    fontSize: "clamp(0.7rem, 0.62rem + 0.4vw, 0.95rem)",
+                    padding:
+                      "clamp(0.45rem, 0.4rem + 0.2vw, 0.65rem) clamp(0.75rem, 0.6rem + 0.4vw, 1.05rem)",
+                  }}
+                >
+                  {hasVideo ? (
+                    <span
+                      className="h-2 w-2 shrink-0 rounded-full bg-[#630ed4]"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  {d.name}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

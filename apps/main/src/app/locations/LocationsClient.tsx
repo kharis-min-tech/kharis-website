@@ -34,12 +34,6 @@ function milesBetween(a: Origin, b: Origin) {
   return 3958.8 * 2 * Math.asin(Math.sqrt(h));
 }
 
-/** "the United Kingdom, Ghana and Sierra Leone" */
-function listCountries(countries: string[]) {
-  const names = countries.map((c) => (c === "United Kingdom" ? "the United Kingdom" : c));
-  return names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : names[0];
-}
-
 export function LocationsClient({ items, full }: Props) {
   const router = useSmoothRouter();
   const [query, setQuery] = useState("");
@@ -141,22 +135,14 @@ export function LocationsClient({ items, full }: Props) {
         <div className="locations-hero__intro">
           <p className="locations-hero__eyebrow">Locations</p>
           <h1 className="locations-hero__title">Many branches. One family.</h1>
-          <p className="locations-hero__lead">
-            {items.length ? (
-              <>
-                Find your Kharis family across {listCountries(countries)}. Every branch meets this
-                Sunday.
-              </>
-            ) : (
-              "Our branch directory is temporarily unavailable. You can still explore the globe or contact us to find your Kharis family."
-            )}
-          </p>
+          <p className="locations-hero__lead">Your Kharis family across the world</p>
 
           <form
             role="search"
             className="locations-search"
             onSubmit={(e) => {
               e.preventDefault();
+              e.currentTarget.querySelector("input")?.blur();
               document.getElementById("branches")?.scrollIntoView({ behavior: "smooth" });
             }}
           >

@@ -1,0 +1,407 @@
+.kp-mnav {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+
+.kp-mnav[data-open] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.2s ease;
+}
+
+.kp-mnav__sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: env(safe-area-inset-top) 1.25rem max(1.25rem, env(safe-area-inset-bottom));
+  background-color: #fff8e6;
+  background-image: radial-gradient(rgba(124, 58, 237, 0.16) 1.6px, transparent 1.7px);
+  background-size: 18px 18px;
+  color: #151218;
+  transform: translateY(-16px);
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kp-mnav[data-open] .kp-mnav__sheet {
+  transform: none;
+}
+
+.kp-mnav__brand {
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  align-items: center;
+  flex-shrink: 0;
+  min-height: 84px;
+  border-bottom: 3px solid #151218;
+}
+
+.kp-mnav__logo {
+  grid-column: 2;
+  justify-self: center;
+  position: relative;
+  width: 56px;
+  height: 46px;
+  overflow: hidden;
+}
+
+.kp-mnav__logo img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 74px;
+  height: 74px;
+  max-width: none;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+}
+
+.kp-mnav__close {
+  grid-column: 3;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 3px solid #151218;
+  background: #f7be1d;
+  color: #151218;
+  box-shadow: 4px 4px 0 #151218;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.kp-mnav__close:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #151218;
+}
+
+.kp-mnav__close .material-symbols-outlined {
+  font-size: 28px;
+}
+
+.kp-mnav__links {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.5rem 0;
+}
+
+.kp-mnav__item {
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(14px) rotate(-1deg);
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(0.06s + var(--i, 0) * 0.04s);
+}
+
+.kp-mnav[data-open] .kp-mnav__item {
+  opacity: 1;
+  transform: none;
+}
+
+.kp-mnav__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 52px;
+  border: 3px solid transparent;
+  background: transparent;
+  padding: 0.1rem 0.7rem;
+  font-family: var(--font-anton), sans-serif;
+  font-size: clamp(1.6rem, 8vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #151218;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.kp-mnav__link:hover {
+  border-color: #151218;
+  background: #f7be1d;
+  color: #151218;
+  box-shadow: 4px 4px 0 #151218;
+}
+
+.kp-mnav__link[aria-current="page"],
+.kp-mnav__parent[data-active] {
+  border-color: #151218;
+  background: #7c3aed;
+  color: #fff;
+  box-shadow: 4px 4px 0 #151218;
+  transform: rotate(-1.5deg);
+}
+
+.kp-mnav__parent .material-symbols-outlined {
+  font-size: 0.8em;
+  transition: transform 0.22s ease;
+}
+
+.kp-mnav__parent[aria-expanded="true"] .material-symbols-outlined {
+  transform: rotate(180deg);
+}
+
+.kp-mnav__sub {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kp-mnav__sub[data-open] {
+  grid-template-rows: 1fr;
+}
+
+.kp-mnav__sub-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 0.5rem;
+}
+
+.kp-mnav__sub[data-open] .kp-mnav__sub-inner {
+  padding: 0.75rem 0.5rem 0.9rem;
+}
+
+.kp-mnav__child {
+  display: grid;
+  gap: 0.1rem;
+  width: min(18rem, 100%);
+  border: 2px solid #151218;
+  background: #fff;
+  padding: 0.55rem 1rem;
+  color: #151218;
+  box-shadow: 3px 3px 0 #151218;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.kp-mnav__child:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #151218;
+}
+
+.kp-mnav__child[aria-current="page"] {
+  background: #f7be1d;
+}
+
+.kp-mnav__child strong {
+  font-family: var(--font-space), monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.kp-mnav__child span {
+  font-family: var(--font-hanken), sans-serif;
+  font-size: 0.85rem;
+  color: #4a4256;
+}
+
+.kp-mnav__bottom {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  border-top: 3px solid #151218;
+  padding-top: 1.1rem;
+}
+
+.kp-mnav__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: min(22rem, 100%);
+  border: 3px solid #151218;
+  background: #7c3aed;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: #fff;
+  box-shadow: 5px 5px 0 #151218;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.kp-mnav__cta:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 #151218;
+}
+
+.kp-mnav__secondary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 1.25rem;
+}
+
+.kp-mnav__secondary a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-space), monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #4a4256;
+}
+
+.kp-mnav__secondary a:hover {
+  color: #630ed4;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.kp-mnav :is(a, button):focus-visible {
+  outline: 3px solid #7c3aed;
+  outline-offset: 3px;
+}
+
+.kp-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  border: 2px solid #151218;
+  background: #fff;
+  padding: 0 0.75rem;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: #151218;
+  box-shadow: 3px 3px 0 #151218;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.kp-menu-toggle:hover {
+  background: #f7be1d;
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #151218;
+}
+
+.kp-menu-toggle .material-symbols-outlined {
+  font-size: 20px;
+}
+
+@media (max-height: 700px) {
+  .kp-mnav__brand {
+    min-height: 68px;
+  }
+
+  .kp-mnav__links {
+    gap: 0.15rem;
+    padding: 0.75rem 0;
+  }
+
+  .kp-mnav__link {
+    min-height: 44px;
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .kp-mnav,
+  .kp-menu-toggle {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-mnav,
+  .kp-mnav__sheet,
+  .kp-mnav__item,
+  .kp-mnav__sub {
+    transition: none;
+  }
+
+  .kp-mnav__sheet,
+  .kp-mnav__item {
+    transform: none;
+  }
+}
+
+.dark .kp-mnav__sheet {
+  background-color: #151218;
+  background-image: radial-gradient(rgba(210, 187, 255, 0.14) 1.6px, transparent 1.7px);
+  color: #fff;
+}
+
+.dark .kp-mnav__brand,
+.dark .kp-mnav__bottom {
+  border-color: #3a3142;
+}
+
+.dark .kp-mnav__link {
+  color: #fff;
+}
+
+.dark .kp-mnav__link:hover {
+  color: #151218;
+}
+
+.dark .kp-mnav__link:hover,
+.dark .kp-mnav__link[aria-current="page"],
+.dark .kp-mnav__parent[data-active],
+.dark .kp-mnav__close,
+.dark .kp-mnav__cta,
+.dark .kp-mnav__child {
+  border-color: #000;
+  box-shadow: 4px 4px 0 #000;
+}
+
+.dark .kp-mnav__secondary a {
+  color: #cfc6dc;
+}
+
+.dark .kp-menu-toggle {
+  border-color: #fff;
+  background: #151218;
+  color: #fff;
+  box-shadow: 3px 3px 0 #7c3aed;
+}
+
+.dark .kp-menu-toggle:hover {
+  background: #f7be1d;
+  color: #151218;
+}

@@ -3,61 +3,25 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
-import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BANK, ONLINE_GIVE_URL, SMS_GIVE } from "@/lib/giving";
+import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import type { GivingTestimony } from "@/lib/testimonies";
-import { TestimonyQuote } from "@/components/TestimonyQuote";
-
-function GivingTestimonyCard({
-  testimony,
-  rotate,
-}: {
-  testimony: GivingTestimony;
-  rotate: string;
-}) {
-  return (
-    <div className="bg-white brutalist-border p-6 sm:p-8 md:p-12 neo-shadow flex flex-col md:flex-row gap-6 md:gap-8 items-start">
-      <div
-        className={`w-32 h-32 md:w-48 md:h-48 brutalist-border-thick shrink-0 bg-cover bg-center transform ${rotate}`}
-        style={{ backgroundImage: `url('${testimony.image}')` }}
-        role="img"
-        aria-label={`${testimony.name} portrait`}
-      />
-      <div className="min-w-0">
-        <span className="material-symbols-outlined text-primary text-4xl mb-2 md:mb-4 block">
-          format_quote
-        </span>
-        <TestimonyQuote
-          quote={testimony.quote}
-          name={testimony.name}
-          meta={testimony.role}
-          className="font-body-lg italic text-on-surface leading-relaxed"
-        />
-        <h4 className="font-headline-md text-2xl uppercase mt-6">— {testimony.name}</h4>
-        <p className="font-label-sm text-primary uppercase">{testimony.role}</p>
-      </div>
-    </div>
-  );
-}
+import { TestimoniesBand } from "@/components/TestimoniesBand";
+import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
+import { TypedText } from "@/components/TypedText";
 
 function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
-  const [testimony, setTestimony] = useState(0);
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
       <SiteHeader />
       <main className="pt-[74px]">
         <section className="relative box-border h-[calc(100svh-74px)] max-h-[calc(100svh-74px)] flex items-center justify-center bg-black overflow-hidden px-margin-mobile md:px-margin-desktop py-8">
-          <div className="absolute inset-0 opacity-40">
-            <div
-              className="w-full h-full bg-cover bg-center"
-              data-alt="Kharis vision campaign"
-              style={{
-                backgroundImage:
-                  "url('https://images.kharis.org/site-images/kp2/91479ba234a71277/vision-campaign.jpg')",
-              }}
-            ></div>
-          </div>
+          <ParallaxHeroImage
+            src="https://images.kharis.org/site-images/kp2/91479ba234a71277/vision-campaign.jpg"
+            alt="Kharis vision campaign"
+            className="object-center opacity-40"
+          />
 
           <div className="absolute inset-0 halftone-pattern text-primary/20 pointer-events-none"></div>
           <div className="relative z-10 text-center max-w-4xl">
@@ -65,8 +29,9 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               Passionate for God and His Word
             </div>
             <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg text-white mb-4 md:mb-8 tracking-tighter uppercase">
-              Your Generosity <br />
-              <span className="text-secondary-fixed">Powers the Mission</span>
+              <TypedText text="Your Generosity" />
+              <br />
+              <TypedText text="Powers the Mission" delay={1200} className="text-secondary-fixed" />
             </h1>
             <p className="font-body-lg text-body-lg text-white/80 mb-10 max-w-2xl mx-auto">
               Giving tithes and offerings are biblical principles and part of our worship. In most
@@ -74,97 +39,112 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               sparingly will also reap sparingly, and he who sows bountifully will also reap
               bountifully&rsquo; – 2 Corinthians 9:6.
             </p>
-            <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-              <button
-                type="button"
-                data-ui="open-dialog"
-                data-dialog="give-online-dialog"
-                className="kp-depth-button kp-button-purple w-full md:w-auto bg-primary text-on-primary brutalist-border-thick neo-shadow-lg px-12 py-4 font-headline-md text-2xl hover:scale-105 transition-all"
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-stretch sm:items-center">
+              <a
+                href="#ways"
+                className="kp-depth-button kp-button-gold inline-flex items-center justify-center gap-2 bg-[#f7be1d] text-[#151218] px-8 py-4 font-label-comic text-lg uppercase border-4 border-[#151218] brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
               >
-                GIVE ONLINE
-              </button>
+                Give to your branch
+              </a>
+              <a
+                href="#building"
+                className="kp-depth-button kp-button-light keep-light inline-flex items-center justify-center gap-2 bg-white text-[#4c08a8] px-8 py-4 font-label-comic text-lg uppercase border-4 border-[#151218] brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+              >
+                Build Spurgeon&apos;s Centre
+              </a>
             </div>
           </div>
         </section>
 
-        <section className="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-white">
-          <div className="mb-stack-lg max-w-3xl">
-            <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">
-              Why We Give
-            </h2>
-            <div className="h-2 w-32 bg-primary brutalist-border mb-4"></div>
-            <blockquote className="font-body-lg text-body-lg text-on-surface italic leading-relaxed mb-3">
-              &ldquo;Whoever sows sparingly will also reap sparingly, and whoever sows generously
-              will also reap generously.&rdquo;
-            </blockquote>
-            <p className="font-label-md uppercase tracking-widest text-primary">
-              2 Corinthians 9:6
-            </p>
-            <p className="font-body-lg text-body-lg text-on-surface-variant mt-4">
-              Giving is worship. We sow because God gave first — and every seed fuels the mission of
-              Kharis.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-            <div className="bg-surface-container-low brutalist-border p-8 neo-shadow relative overflow-hidden group">
-              <div className="absolute top-0 right-0 halftone-pattern w-32 h-32 text-primary opacity-20"></div>
-              <span className="material-symbols-outlined text-primary text-5xl mb-4">
-                volunteer_activism
-              </span>
-              <h3 className="font-headline-md text-headline-md uppercase mb-4">
-                Worship &amp; Obedience
-              </h3>
-              <p className="text-on-surface-variant font-body-md">
-                We give because God gave first. Our offerings are a response to His grace and a step
-                of faith.
+        <section className="bg-background py-stack-lg px-margin-mobile md:px-margin-desktop">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-stack-lg max-w-3xl">
+              <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">
+                Why We Give
+              </h2>
+              <div className="h-2 w-32 bg-primary brutalist-border mb-4"></div>
+              <blockquote className="font-body-lg text-body-lg text-on-surface leading-relaxed mb-3">
+                &ldquo;Whoever sows sparingly will also reap sparingly, and whoever sows generously
+                will also reap generously.&rdquo;
+              </blockquote>
+              <p className="font-label-md uppercase tracking-widest text-primary">
+                2 Corinthians 9:6
+              </p>
+              <p className="font-body-lg text-body-lg text-on-surface-variant mt-4">
+                Giving is worship. We sow because God gave first — and every seed fuels the mission
+                of Kharis.
               </p>
             </div>
-
-            <div className="bg-secondary-container brutalist-border p-8 neo-shadow relative group">
-              <span className="material-symbols-outlined text-on-secondary-container text-5xl mb-4">
-                favorite
-              </span>
-              <h3 className="font-headline-md text-headline-md uppercase mb-4">Care for People</h3>
-              <p className="text-on-secondary-container font-body-md">
-                Generosity meets real needs in our community — from food support to mentorship and
-                crisis relief.
-              </p>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/20 rounded-full blur-2xl"></div>
-            </div>
-
-            <div className="bg-white brutalist-border p-8 neo-shadow">
-              <span className="material-symbols-outlined text-primary text-5xl mb-4">groups_2</span>
-              <h3 className="font-headline-md text-headline-md uppercase mb-4">Build Community</h3>
-              <p className="text-on-surface-variant font-body-md">
-                Every gift helps create spaces where people can belong, grow, and discover their
-                purpose.
-              </p>
-            </div>
-
-            <div className="bg-surface-container-highest brutalist-border p-8 neo-shadow flex flex-col justify-between">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+              <div className="bg-surface-container-low brutalist-border p-8 neo-shadow relative overflow-hidden group">
+                <div className="absolute top-0 right-0 halftone-pattern w-32 h-32 text-primary opacity-20"></div>
                 <span className="material-symbols-outlined text-primary text-5xl mb-4">
-                  auto_awesome
+                  volunteer_activism
                 </span>
                 <h3 className="font-headline-md text-headline-md uppercase mb-4">
-                  Advance the Mission
+                  Worship &amp; Obedience
                 </h3>
-                <p className="text-on-surface-variant font-body-md mb-6">
-                  From local outreach to media and new branches, giving sends the message of Kharis
-                  further.
+                <p className="text-on-surface-variant font-body-md">
+                  We give because God gave first. Our offerings are a response to His grace and a
+                  step of faith.
                 </p>
               </div>
-              <Link
-                href="/mission"
-                className="text-primary font-label-md uppercase flex items-center gap-2 group-hover:translate-x-2 transition-transform"
-              >
-                Learn more <span className="material-symbols-outlined">arrow_forward</span>
-              </Link>
+
+              <div className="bg-secondary-container brutalist-border p-8 neo-shadow relative group">
+                <span className="material-symbols-outlined text-on-secondary-container text-5xl mb-4">
+                  favorite
+                </span>
+                <h3 className="font-headline-md text-headline-md uppercase mb-4">
+                  Care for People
+                </h3>
+                <p className="text-on-secondary-container font-body-md">
+                  Generosity meets real needs in our community — from food support to mentorship and
+                  crisis relief.
+                </p>
+                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/20 rounded-full blur-2xl"></div>
+              </div>
+
+              <div className="bg-white brutalist-border p-8 neo-shadow">
+                <span className="material-symbols-outlined text-primary text-5xl mb-4">
+                  groups_2
+                </span>
+                <h3 className="font-headline-md text-headline-md uppercase mb-4">
+                  Build Community
+                </h3>
+                <p className="text-on-surface-variant font-body-md">
+                  Every gift helps create spaces where people can belong, grow, and discover their
+                  purpose.
+                </p>
+              </div>
+
+              <div className="bg-surface-container-highest brutalist-border p-8 neo-shadow flex flex-col justify-between">
+                <div>
+                  <span className="material-symbols-outlined text-primary text-5xl mb-4">
+                    auto_awesome
+                  </span>
+                  <h3 className="font-headline-md text-headline-md uppercase mb-4">
+                    Advance the Mission
+                  </h3>
+                  <p className="text-on-surface-variant font-body-md mb-6">
+                    From local outreach to media and new branches, giving sends the message of
+                    Kharis further.
+                  </p>
+                </div>
+                <Link
+                  href="/mission"
+                  className="text-primary font-label-md uppercase flex items-center gap-2 group-hover:translate-x-2 transition-transform"
+                >
+                  Learn more <span className="material-symbols-outlined">arrow_forward</span>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="py-stack-lg bg-surface-container-low px-margin-mobile md:px-margin-desktop">
+        <section
+          id="ways"
+          className="py-stack-lg bg-surface-container-low px-margin-mobile md:px-margin-desktop"
+        >
           <div className="max-w-7xl mx-auto text-center mb-stack-lg">
             <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">
               Ways to Give
@@ -175,6 +155,31 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter max-w-7xl mx-auto">
+            <div className="md:col-span-2 bg-[#f7be1d] text-[#151218] brutalist-border-thick p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 group hover:-translate-y-2 transition-transform">
+              <div className="flex items-start gap-6">
+                <div className="w-20 h-20 bg-white/40 rounded-full flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[#151218] text-4xl">
+                    credit_card
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-headline-md text-headline-md uppercase mb-3">Give Online</h3>
+                  <p className="font-body-md max-w-xl">
+                    Give to your branch by card, once or every month, through the secure Kharis
+                    giving portal.
+                  </p>
+                </div>
+              </div>
+              <a
+                href={ONLINE_GIVE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="kp-depth-button kp-button-purple w-full md:w-auto text-center bg-primary text-on-primary border-4 border-[#151218] brutalist-shadow py-3 px-10 font-label-md uppercase tracking-widest"
+              >
+                Give now
+              </a>
+            </div>
+
             <div className="bg-white brutalist-border-thick p-8 md:p-10 flex flex-col group hover:-translate-y-2 transition-transform">
               <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                 <span className="material-symbols-outlined text-primary text-4xl">
@@ -244,74 +249,83 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
           </div>
         </section>
 
-        {testimonies.length > 0 ? (
-          <section className="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto overflow-hidden">
-            <div className="mb-stack-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-              <div className="max-w-2xl">
-                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase mb-4">
-                  Living Testimonies
-                </h2>
-                <p className="font-body-lg text-on-surface-variant">
-                  Real testimonies from the Kharis family.
+        <section
+          id="building"
+          className="kp-build bg-[#151218] text-white border-y-4 border-black px-margin-mobile md:px-margin-desktop py-stack-lg"
+        >
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <figure className="relative">
+              <div className="absolute inset-0 translate-x-3 translate-y-3 bg-[#f7be1d] border-4 border-black" />
+              <img
+                src={SPURGEONS_CENTRE.image}
+                alt="An artist's impression of the renovated Spurgeon's Centre in South London"
+                loading="lazy"
+                decoding="async"
+                className="relative block w-full aspect-[4/3] object-cover border-4 border-black"
+              />
+              <span className="absolute -top-4 left-4 bg-primary text-white border-2 border-black font-label-sm uppercase px-3 py-1 -rotate-2">
+                Building fund
+              </span>
+            </figure>
+            <div>
+              <h2 className="font-display-lg text-headline-lg-mobile md:text-display-lg uppercase leading-none tracking-tight mb-6">
+                We&rsquo;ve purchased <span className="text-[#f7be1d]">our new home</span>
+              </h2>
+              <div className="font-body-lg text-body-lg text-white/85 max-w-xl mb-8 space-y-4">
+                <p>
+                  We are excited to announce that we have officially acquired our own facility that
+                  was formerly Spurgeon&rsquo;s College.
+                </p>
+                <p>
+                  Now begins the exciting work restoring and developing this facility into a home
+                  for advancing the gospel.
+                </p>
+                <p>
+                  If you would like to partner with us and give towards this project, you can do so
+                  using the link below.
                 </p>
               </div>
-              <div className="flex gap-4 md:hidden">
-                <button
-                  type="button"
-                  aria-label="Previous testimony"
-                  onClick={() =>
-                    setTestimony((i) => (i + testimonies.length - 1) % testimonies.length)
-                  }
-                  className="w-12 h-12 brutalist-border flex items-center justify-center neo-shadow bg-white text-black active:active-neo-shadow"
+              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <a
+                  href={SPURGEONS_CENTRE.giveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="kp-depth-button kp-button-gold inline-flex items-center justify-center bg-[#f7be1d] text-[#151218] px-8 py-4 font-label-comic text-base uppercase border-4 border-black brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
                 >
-                  <span className="material-symbols-outlined">chevron_left</span>
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next testimony"
-                  onClick={() => setTestimony((i) => (i + 1) % testimonies.length)}
-                  className="w-12 h-12 brutalist-border flex items-center justify-center neo-shadow bg-white text-black active:active-neo-shadow"
+                  Give to the building
+                </a>
+                <a
+                  href={SPURGEONS_CENTRE.pledgeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="kp-depth-button kp-button-light keep-light inline-flex items-center justify-center bg-white text-[#4c08a8] px-8 py-4 font-label-comic text-base uppercase border-4 border-black brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
                 >
-                  <span className="material-symbols-outlined">chevron_right</span>
-                </button>
+                  Make a pledge
+                </a>
               </div>
+              <a
+                href={SPURGEONS_CENTRE.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 font-label-md uppercase text-white/80 underline underline-offset-4 hover:text-[#f7be1d]"
+              >
+                See the project at spurgeonscentre.org
+                <span className="material-symbols-outlined text-base" aria-hidden="true">
+                  open_in_new
+                </span>
+              </a>
             </div>
+          </div>
+        </section>
 
-            {/* Mobile: one testimony at a time. Desktop: both side by side. */}
-            <div className="md:hidden">
-              {testimonies
-                .filter((_, i) => i === testimony)
-                .map((t) => (
-                  <GivingTestimonyCard key={t.name} testimony={t} rotate="-rotate-3" />
-                ))}
-              <div className="mt-6 flex justify-center gap-2">
-                {testimonies.map((t, i) => (
-                  <button
-                    key={t.name}
-                    type="button"
-                    aria-label={`Show testimony ${i + 1}`}
-                    aria-current={i === testimony ? "true" : undefined}
-                    onClick={() => setTestimony(i)}
-                    className="h-11 min-w-11 flex items-center justify-center"
-                  >
-                    <span
-                      className={`block h-3 border-2 border-black transition-all ${i === testimony ? "w-9 bg-primary" : "w-3 bg-transparent"}`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="hidden md:grid md:grid-cols-2 gap-gutter">
-              {testimonies.map((t, i) => (
-                <GivingTestimonyCard
-                  key={t.name}
-                  testimony={t}
-                  rotate={i % 2 === 0 ? "-rotate-3" : "rotate-3"}
-                />
-              ))}
-            </div>
-          </section>
+        {testimonies.length > 0 ? (
+          <TestimoniesBand
+            id="living-testimonies"
+            eyebrow="Stories"
+            title="Living Testimonies"
+            intro="Real testimonies from the Kharis family."
+            items={testimonies.map((t) => ({ quote: t.quote, name: t.name, meta: t.role }))}
+          />
         ) : null}
 
         <section className="py-stack-lg px-margin-mobile md:px-margin-desktop text-center bg-white border-t-2 border-black">

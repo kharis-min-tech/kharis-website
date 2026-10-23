@@ -1,15 +1,12 @@
 "use client";
 
-import Image from "@/components/SiteImage";
-import { getImageProps } from "next/image";
+import Image, { getImageProps } from "next/image";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
 import type { EventCategory, EventMedia, EventPhoto, EventSplit } from "@/data/event-categories";
-import type { ServiceBranch, ServiceVisit } from "@/lib/service-branches";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
-import { useStoredBranch } from "./BranchSelect";
 import "./event-categories.css";
 
 const FOCUSABLE =
@@ -121,6 +118,7 @@ function GalleryModal({
   const reduce = useReducedMotion();
   const count = photos.length;
   const [[index, direction], setSlide] = useState<[number, number]>([0, 0]);
+  const [slideshowPlaying, setSlideshowPlaying] = useState(!reduce);
   const [stageRatio, setStageRatio] = useState<number | null>(null);
   const [ratios, setRatios] = useState<Record<string, number>>({});
   const stageRef = useRef<HTMLDivElement>(null);
@@ -128,7 +126,18 @@ function GalleryModal({
   const stripPlaced = useRef(false);
   const photo = photos[index]!;
 
-  const step = (delta: number) => setSlide(([i]) => [(i + delta + count) % count, delta]);
+  useEffect(() => {
+    if (!slideshowPlaying || count < 2) return;
+    const timer = window.setInterval(() => {
+      setSlide(([i]) => [(i + 1) % count, 1]);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [count, slideshowPlaying]);
+
+  const step = (delta: number) => {
+    setSlideshowPlaying(false);
+    setSlide(([i]) => [(i + delta + count) % count, delta]);
+  };
 
   useEffect(() => {
     if (count < 2) return;
@@ -208,14 +217,31 @@ function GalleryModal({
           <p className="events-gallery__eyebrow">Gallery</p>
           <h2 className="events-gallery__title">{title}</h2>
         </div>
-        <p className="events-gallery__count">
-          <span aria-hidden>
-            {index + 1} / {count}
-          </span>
-          <span className="sr-only" aria-live="polite">
-            Photo {index + 1} of {count}: {photo.alt}
-          </span>
-        </p>
+        <div className="events-gallery__top-actions">
+          <p className="events-gallery__count">
+            <span aria-hidden>
+              {index + 1} / {count}
+            </span>
+            <span className="sr-only" aria-live="polite">
+              Photo {index + 1} of {count}: {photo.alt}
+            </span>
+          </p>
+          {count > 1 ? (
+            <button
+              type="button"
+              className="events-gallery__autoplay"
+              aria-label={slideshowPlaying ? "Pause slideshow" : "Play slideshow"}
+              aria-pressed={slideshowPlaying}
+              onClick={() => setSlideshowPlaying((playing) => !playing)}
+            >
+              {slideshowPlaying ? (
+                <Pause aria-hidden className="h-4 w-4" fill="currentColor" strokeWidth={0} />
+              ) : (
+                <Play aria-hidden className="h-4 w-4" fill="currentColor" strokeWidth={0} />
+              )}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div ref={stageRef} className="events-gallery__stage">
@@ -288,6 +314,7 @@ function GalleryModal({
               aria-label={`Show photo ${i + 1} of ${count}`}
               aria-current={i === index ? "true" : undefined}
               onClick={() => {
+                setSlideshowPlaying(false);
                 if (i !== index) setSlide([i, Math.sign(i - index)]);
               }}
             >
@@ -320,23 +347,21 @@ function ExploreButton({ label, onClick }: { label: string; onClick: () => void 
   );
 }
 
-function eyebrowFor(category: EventCategory, visit: ServiceVisit | null) {
+function eyebrowFor(category: EventCategory) {
   if (category.status === "past") return "Past event · Coming back soon";
-  return visit ? `Every ${visit.day} · ${visit.times.join(" & ")}` : "Upcoming";
+  return "Upcoming special event";
 }
 
 /** One picture (or video) with the event's words and its Explore button on top. */
 function EventCard({
   category,
   media,
-  visit,
   titleId,
   wide,
   onExplore,
 }: {
   category: EventCategory;
   media: EventMedia;
-  visit: ServiceVisit | null;
   titleId: string;
   wide: boolean;
   onExplore: () => void;
@@ -346,16 +371,7 @@ function EventCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [userPlay, setUserPlay] = useState<boolean | null>(null);
   const [inView, setInView] = useState(false);
-  const [largeScreen, setLargeScreen] = useState(true);
-  useEffect(() => {
-    const query = window.matchMedia("(min-width: 1000px)");
-    const update = () => setLargeScreen(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-  // The available background clip is 720p. Keep the sharper photo on large displays.
-  const playing = userPlay ?? (!reduce && !largeScreen);
+  const playing = userPlay ?? !reduce;
   const full = category.layout === "full";
 
   useEffect(() => {
@@ -378,35 +394,24 @@ function EventCard({
   return (
     <div ref={rootRef} className={`events-card events-card--${full ? "full" : "tile"}`}>
       {media.video ? (
-        <>
-          <div className="events-card__media">
-            <Image
-              src={media.poster}
-              alt={media.alt}
-              fill
-              sizes="100vw"
-              className="object-cover"
-              style={media.position ? { objectPosition: media.position } : undefined}
-            />
-          </div>
-          <video
-            ref={videoRef}
-            className={`events-card__media events-card__video${playing ? " is-playing" : ""}`}
-            src={playing && inView ? media.video : undefined}
-            poster={media.poster}
-            muted
-            loop
-            playsInline
-            preload="none"
-            aria-hidden
-          />
-        </>
+        <video
+          ref={videoRef}
+          className="events-card__media"
+          src={media.video}
+          poster={media.poster}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden
+        />
       ) : (
         <div className={`events-card__media${full && !reduce ? " events-card__media--zoom" : ""}`}>
           <Image
             src={media.poster}
             alt={media.alt}
             fill
+            loading="eager"
             quality={95}
             sizes={full || wide ? "100vw" : "(max-width: 759px) 100vw, 50vw"}
             className="object-cover"
@@ -417,7 +422,7 @@ function EventCard({
       <span className="events-card__veil" aria-hidden />
 
       <div className="events-card__copy">
-        <p className="events-card__eyebrow">{eyebrowFor(category, visit)}</p>
+        <p className="events-card__eyebrow">{eyebrowFor(category)}</p>
         <h2 id={titleId} className="events-card__headline">
           {category.headline}
         </h2>
@@ -462,8 +467,9 @@ function EventSplitPanel({
             src={photo.src}
             alt={photo.alt}
             fill
+            loading="eager"
             quality={95}
-            sizes="(max-width: 759px) 100vw, 50vw"
+            sizes="50vw"
             className="object-cover events-split__photo"
             style={
               {
@@ -489,24 +495,15 @@ function EventSplitPanel({
 
 function EventBlock({
   category,
-  branches,
   hidden,
   wide = false,
 }: {
   category: EventCategory;
-  branches: ServiceBranch[];
   hidden: boolean;
   wide?: boolean;
 }) {
-  const branch = useStoredBranch(branches);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const titleId = `${category.id}-title`;
-  const visit =
-    category.status === "upcoming" && branch
-      ? category.service === "midweek"
-        ? branch.midweek
-        : branch.sunday
-      : null;
   const openGallery = () => setGalleryOpen(true);
 
   return (
@@ -527,7 +524,6 @@ function EventBlock({
         <EventCard
           category={category}
           media={category.media}
-          visit={visit}
           titleId={titleId}
           wide={wide}
           onExplore={openGallery}
@@ -561,27 +557,19 @@ function toRows(categories: EventCategory[]) {
 }
 
 type Props = {
-  branches: ServiceBranch[];
   categories: EventCategory[];
   visibleIds: ReadonlySet<string>;
   onClear: () => void;
 };
 
 /** Every event in order; ones outside the current filter stay mounted but hidden. */
-export function EventCategories({ branches, categories, visibleIds, onClear }: Props) {
+export function EventCategories({ categories, visibleIds, onClear }: Props) {
   return (
     <section className="events-stack" aria-label="Kharis events">
       {toRows(categories).map((row) => {
         const first = row[0]!;
         if (first.layout !== "half") {
-          return (
-            <EventBlock
-              key={first.id}
-              category={first}
-              branches={branches}
-              hidden={!visibleIds.has(first.id)}
-            />
-          );
+          return <EventBlock key={first.id} category={first} hidden={!visibleIds.has(first.id)} />;
         }
         const shown = row.filter((c) => visibleIds.has(c.id)).length;
         return (
@@ -594,7 +582,6 @@ export function EventCategories({ branches, categories, visibleIds, onClear }: P
               <EventBlock
                 key={c.id}
                 category={c}
-                branches={branches}
                 hidden={!visibleIds.has(c.id)}
                 wide={shown === 1}
               />

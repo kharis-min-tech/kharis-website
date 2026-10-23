@@ -3,19 +3,15 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SocialStack, type SocialPlatform } from "@/components/SocialStack";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
-import { YoutubeEmbed } from "@/components/YoutubeEmbed";
-import {
-  displayMessageTitle,
-  formatMessageDate,
-  youtubeWatchUrl,
-  type MessageVideo,
-} from "@/lib/youtube";
-import { INSTAGRAM_PROFILE_URL, type InstagramPost } from "@/lib/instagram";
+import { INSTAGRAM_PROFILE_URL } from "@/lib/instagram";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { TIKTOK_HANDLE, TIKTOK_URL } from "@/lib/social";
+import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
+import { TypedText } from "@/components/TypedText";
 
 /* ---------------- brand icons ---------------- */
 
@@ -61,7 +57,7 @@ function AppIcon({ className = "" }: { className?: string }) {
 
 /* ---------------- data ---------------- */
 
-const SOCIALS = [
+const SOCIALS: SocialPlatform[] = [
   {
     label: "Kharis App",
     handle: "iOS & Android",
@@ -121,216 +117,48 @@ const SOCIALS = [
 
 /* ---------------- page ---------------- */
 
-function MediaPage({ messages, posts }: { messages: MessageVideo[]; posts: InstagramPost[] }) {
-  const featured = messages[0];
-  const more = messages.slice(1, 4);
+function MediaPage() {
   return (
-    <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
+    <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-clip">
       <SiteHeader />
 
-      <header className="kp-on-dark relative min-h-[440px] md:min-h-[520px] flex flex-col justify-center items-center bg-on-background text-primary-fixed pt-28 md:pt-32 pb-stack-lg overflow-hidden border-b-4 border-primary">
-        <img
-          alt="Kharis worship gathering"
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-          src={
-            posts[0]?.image ||
-            "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg"
-          }
-          loading="eager"
-          decoding="async"
+      <header className="kp-media-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
+        <ParallaxHeroImage
+          src="https://images.kharis.org/site-images/main/e01fad6602636193/about-outreach-hero.jpg"
+          alt=""
+          className="object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 pointer-events-none"></div>
-        <div className="absolute inset-0 pointer-events-none"></div>
-
-        <div className="container mx-auto px-margin-mobile relative z-10 text-center">
-          <span className="inline-block bg-secondary-container text-on-background font-label-sm px-3 py-1 border-2 border-black -rotate-2 mb-4">
-            FOLLOW · WATCH · LISTEN
-          </span>
-          <h1 className="font-display-lg text-6xl md:text-[72px] text-primary-fixed uppercase tracking-tight mb-4">
-            SOCIALS &amp; MEDIA
-          </h1>
-          <p className="font-body-lg text-primary-fixed-dim max-w-xl mx-auto mb-stack-md">
-            Everywhere Kharis lives online. Follow the feeds, and tune into messages from our head
-            pastor on YouTube, Spotify and SoundCloud, or listen in the app.
+        <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25 pointer-events-none"></div>
+        <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
+          <p className="font-label-md uppercase tracking-[0.28em] text-white/80 mb-4">
+            Follow · Watch · Listen
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <a
-              href="#follow"
-              className="kp-depth-button kp-button-purple bg-primary text-on-primary font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
-            >
-              FOLLOW US
-            </a>
-            <a
-              href="#listen"
-              className="kp-depth-button kp-button-light keep-light font-label-md px-8 py-4 border-2 border-black neo-shadow hover-press"
-            >
-              LISTEN TO MESSAGES
-            </a>
-          </div>
+          <h1 className="font-display-lg uppercase leading-none text-white mb-4">
+            <TypedText text="Social Media" />
+          </h1>
+          <p className="font-body-lg text-body-lg text-white max-w-md">
+            Everywhere Kharis lives online.
+          </p>
+          <Link
+            href="/messages"
+            className="kp-depth-button kp-button-gold mt-8 inline-flex items-center gap-2 bg-[#f7be1d] text-[#151218] font-label-comic text-sm uppercase px-7 py-4 border-4 border-[#151218] brutalist-shadow"
+          >
+            Watch messages
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">
+              arrow_forward
+            </span>
+          </Link>
         </div>
       </header>
 
       <main className="bg-surface relative">
         <div className="absolute inset-0 halftone-bg opacity-10 pointer-events-none"></div>
 
-        {/* Follow us */}
-        <section
-          id="follow"
-          className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28"
-        >
-          <div className="flex items-center gap-4 mb-stack-md">
-            <h2 className="font-headline-md text-headline-md uppercase">Follow the movement</h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {SOCIALS.map(({ label, handle, copy, href, cta, Icon, band, external = true }) => (
-              <Link
-                key={label}
-                href={href}
-                {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
-                className="kp-platform-card group bg-surface-container border-2 border-black rounded-none neo-shadow flex flex-col"
-              >
-                <div className={`${band} border-b-2 border-black p-6 flex items-center gap-4`}>
-                  <Icon className="w-10 h-10 shrink-0 transition-transform duration-300 group-hover:scale-110" />
-                  <div>
-                    <h3 className="font-headline-md text-2xl uppercase leading-none">{label}</h3>
-                    <p className="font-label-sm opacity-80">{handle}</p>
-                  </div>
-                </div>
-                <div className="p-6 flex-1 flex flex-col">
-                  <p className="font-body-md text-on-surface-variant mb-6">{copy}</p>
-                  <span className="mt-auto font-label-md text-primary flex items-center gap-2">
-                    {cta}
-                    <span className="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1">
-                      arrow_forward
-                    </span>
-                  </span>
-                </div>
-              </Link>
-            ))}
-
-            <div className="kp-tag-banner bg-primary text-on-primary border-2 border-black neo-shadow p-6 flex flex-col justify-center">
-              <h3 className="font-headline-md text-2xl uppercase mb-2">Tag us</h3>
-              <p className="font-body-md text-primary-fixed mb-4">
-                Use <strong>#KharisPhase2</strong> and we might reshare your moment.
-              </p>
-              <span className="material-symbols-outlined text-4xl">campaign</span>
-            </div>
-          </div>
-        </section>
-
-        {/* Listen to the pastor */}
-        <section
-          id="listen"
-          className="container mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 scroll-mt-28"
-        >
-          <div className="flex items-center gap-4 mb-stack-md">
-            <h2 className="font-headline-md text-headline-md uppercase">
-              Messages from our head pastor
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-            <div className="lg:col-span-7 bg-surface border-2 border-black neo-shadow-lg overflow-hidden group">
-              <div className="aspect-video relative bg-black">
-                {featured ? (
-                  <YoutubeEmbed
-                    id={featured.id}
-                    title={featured.title}
-                    thumbnail={featured.thumbnail}
-                  />
-                ) : (
-                  <img
-                    alt="Senior Pastor preaching"
-                    className="absolute inset-0 w-full h-full object-cover opacity-80"
-                    src="https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/pastor-stage.jpg"
-                  />
-                )}
-                {featured ? (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
-                    <span className="bg-secondary text-on-secondary font-label-sm px-2 py-1 mb-2 inline-block border border-black">
-                      NEWEST RELEASE
-                    </span>
-                    <h3 className="font-headline-md text-white text-2xl uppercase">
-                      {displayMessageTitle(featured.title)}
-                    </h3>
-                  </div>
-                ) : null}
-              </div>
-              <div className="p-6 border-t-2 border-black">
-                <p className="font-body-md text-on-surface-variant mb-6">
-                  Preached by Pastor David Antwi. Watch the full message on YouTube, or take the
-                  audio with you on Spotify and SoundCloud.
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <Link
-                    href="/#app-stores"
-                    className="kp-depth-button kp-button-purple bg-primary text-on-primary font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
-                  >
-                    <span className="material-symbols-outlined">smartphone</span> LISTEN VIA THE APP
-                  </Link>
-                  <a
-                    href={
-                      featured ? youtubeWatchUrl(featured.id) : "https://youtube.com/@davidantwi"
-                    }
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="bg-error-container text-on-error-container font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
-                  >
-                    <YouTubeIcon className="w-5 h-5" /> WATCH
-                  </a>
-                  <a
-                    href="https://open.spotify.com/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="bg-tertiary-container text-on-tertiary-container font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
-                  >
-                    <SpotifyIcon className="w-5 h-5" /> SPOTIFY
-                  </a>
-                  <a
-                    href="https://soundcloud.com/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="bg-surface-container-highest text-on-surface font-label-md px-6 py-3 border-2 border-black neo-shadow hover-press flex items-center gap-2"
-                  >
-                    <SoundCloudIcon className="w-5 h-5" /> SOUNDCLOUD
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 flex flex-col gap-gutter">
-              {more.map((ep) => (
-                <article
-                  key={ep.id}
-                  className="bg-surface-container border-2 border-black neo-shadow hover-press p-6 flex-1"
-                >
-                  <h4 className="font-label-md text-primary mb-1">
-                    {ep.publishedAt ? formatMessageDate(ep.publishedAt) : "Latest teaching"}
-                  </h4>
-                  <h3 className="font-headline-md text-2xl uppercase mb-2">
-                    {displayMessageTitle(ep.title)}
-                  </h3>
-                  <div className="flex gap-2">
-                    <a
-                      href={youtubeWatchUrl(ep.id)}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      aria-label={`Watch ${ep.title} on YouTube`}
-                      className="w-11 h-11 bg-surface border-2 border-black flex items-center justify-center hover:bg-error-container transition-colors"
-                    >
-                      <YouTubeIcon className="w-5 h-5" />
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+        <SocialStack platforms={SOCIALS} />
 
         <NewsletterSignup
-          title="Never Miss a Word"
-          copy="Get an email when a new message drops on YouTube, Spotify or SoundCloud."
+          title="Stay in the loop"
+          copy="Get updates from Kharis Phase 2 in your inbox."
           placeholder="Your email address"
           className="bg-primary text-on-primary"
           copyClassName="text-primary-fixed"
