@@ -29,7 +29,7 @@ export type LifeCategory = {
 };
 
 export const LIFE_MEMBERSHIP_URL = "https://kharis.org/";
-export const LIFE_DEPARTMENTS_URL = "http://discover.khar.is/";
+export const LIFE_DEPARTMENTS_URL = "/quiz";
 export const LIFE_KGROUP_EMAIL = "kgroup@kharis.org";
 
 /** Baptism illustration used in the Life preview and detail hero. */

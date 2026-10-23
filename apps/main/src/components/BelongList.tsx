@@ -103,17 +103,32 @@ function ActionLink({
       <button
         type="button"
         className="life-refresh__button life-belong__action"
+        aria-label={`Learn more about ${item.title}`}
         onClick={() => onLearnMore(id)}
       >
-        LEARN MORE
-        <Icon name="arrow" className="h-4 w-4" />
+        <span className="life-belong__action-copy">
+          <span className="life-belong__action-label">LEARN MORE</span>
+          <span className="life-belong__action-hint">Explore the {item.title.toLowerCase()} story</span>
+        </span>
+        <span className="life-belong__action-icon" aria-hidden="true">
+          <Icon name="arrow" className="h-4 w-4" />
+        </span>
       </button>
     );
   }
   return (
-    <Link href={item.href} className="life-refresh__button life-belong__action">
-      LEARN MORE
-      <Icon name="arrow" className="h-4 w-4" />
+    <Link
+      href={item.href}
+      className="life-refresh__button life-belong__action"
+      aria-label={`Learn more about ${item.title}`}
+    >
+      <span className="life-belong__action-copy">
+        <span className="life-belong__action-label">LEARN MORE</span>
+        <span className="life-belong__action-hint">Explore the {item.title.toLowerCase()} story</span>
+      </span>
+      <span className="life-belong__action-icon" aria-hidden="true">
+        <Icon name="arrow" className="h-4 w-4" />
+      </span>
     </Link>
   );
 }

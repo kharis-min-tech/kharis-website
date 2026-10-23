@@ -5,8 +5,8 @@
   --menu-line: #e9e3ee;
   --menu-accent: #630ed4;
   position: fixed;
-  inset: 0;
-  z-index: 110;
+  inset: 4.5rem 0 0;
+  z-index: 49;
   color: var(--menu-fg);
 }
 .mobile-nav--dark {
@@ -26,12 +26,12 @@
 }
 .mobile-nav__sheet {
   position: relative;
-  height: 100dvh;
+  height: calc(100dvh - 4.5rem);
   overflow-y: auto;
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  padding: env(safe-area-inset-top) 1.5rem max(1rem, env(safe-area-inset-bottom));
+  padding: 1rem 1.5rem max(1rem, env(safe-area-inset-bottom));
   background: var(--menu-bg);
 }
 .mobile-nav__brand-row {
@@ -40,6 +40,11 @@
   align-items: center;
   flex-shrink: 0;
   min-height: 92px;
+}
+
+/* Keep the fixed header's toggle visible so its hamburger can become the close icon. */
+.mobile-nav__brand-row {
+  display: none;
 }
 .mobile-nav__brand-row > a {
   grid-column: 2;
@@ -123,15 +128,58 @@
   outline-offset: 4px;
 }
 .mobile-menu-toggle {
-  display: inline-flex;
+  display: inline-grid;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-  min-width: 86px;
+  width: 46px;
+  min-width: 46px;
   min-height: 44px;
+  padding: 0;
+  border: 0;
   border-radius: 0;
-  font-size: 0.72rem;
-  font-weight: 600;
+  background: transparent;
+  transition: color 220ms ease, transform 220ms ease;
+}
+.mobile-menu-toggle:hover {
+  background: transparent;
+  transform: scale(1.04);
+}
+.mobile-menu-toggle__icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.mobile-menu-toggle__stroke {
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  transform-box: view-box;
+  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 180ms ease;
+}
+.mobile-menu-toggle__stroke--top {
+  transform-origin: 12px 6px;
+}
+.mobile-menu-toggle__stroke--middle {
+  transform-origin: 12px 12px;
+}
+.mobile-menu-toggle__stroke--bottom {
+  transform-origin: 12px 18px;
+}
+.mobile-menu-toggle.is-open .mobile-menu-toggle__stroke--top {
+  transform: translateY(6px) rotate(45deg);
+}
+.mobile-menu-toggle.is-open .mobile-menu-toggle__stroke--middle {
+  opacity: 0;
+  transform: scaleX(0.2);
+}
+.mobile-menu-toggle.is-open .mobile-menu-toggle__stroke--bottom {
+  transform: translateY(-6px) rotate(-45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-toggle,
+  .mobile-menu-toggle__stroke {
+    transition-duration: 0.01ms;
+  }
 }
 @media (min-width: 1024px) {
   .mobile-nav,
