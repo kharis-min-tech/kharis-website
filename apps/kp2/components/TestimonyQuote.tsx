@@ -61,7 +61,7 @@ export function TestimonyQuote({
 
   const modal = (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 pt-24 bg-on-background/70"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-on-background/70"
       onClick={() => toggle(false)}
       role="presentation"
     >
@@ -69,19 +69,27 @@ export function TestimonyQuote({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white dark:bg-[#1f1c24] brutalist-border brutalist-shadow-lg p-6 sm:p-8"
+        className="relative overflow-y-auto bg-white dark:bg-[#1f1c24] brutalist-border brutalist-shadow-lg p-5 sm:p-7"
+        style={{
+          width: "min(42rem, calc(100vw - 2rem))",
+          maxHeight: "min(78vh, 44rem)",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={() => toggle(false)}
-          className="absolute top-3 right-3 w-11 h-11 flex items-center justify-center brutalist-border bg-secondary-container"
+          className="absolute z-10 flex h-11 w-11 items-center justify-center brutalist-border bg-secondary-container"
+          style={{ top: "0.75rem", right: "0.75rem" }}
           aria-label="Close testimony"
         >
           <span className="material-symbols-outlined">close</span>
         </button>
         <span className="material-symbols-outlined text-primary text-4xl">format_quote</span>
-        <p className="font-body-lg text-on-surface leading-relaxed mt-2 whitespace-pre-wrap pr-10">
+        <p
+          className="font-body-lg text-on-surface leading-relaxed mt-2 whitespace-pre-wrap pr-12"
+          style={{ fontSize: "clamp(1rem, 2.2vw, 1.2rem)" }}
+        >
           {quote.replace(/^["“]|["”]$/g, "")}
         </p>
         <h3 id={titleId} className="font-headline-md text-2xl uppercase mt-6">

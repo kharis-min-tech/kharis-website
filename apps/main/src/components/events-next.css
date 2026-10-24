@@ -12,7 +12,7 @@
 .events-next__head {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem 2rem;
   margin-bottom: clamp(1rem, 2.4vw, 1.5rem);
@@ -23,6 +23,7 @@
 }
 
 .events-next__pick.events-branch__pick {
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.4rem 0.75rem;
 }

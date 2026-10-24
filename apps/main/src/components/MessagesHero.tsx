@@ -8,7 +8,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import { Play, X } from "lucide-react";
+import { Play, Volume2, VolumeX, X } from "lucide-react";
 import type { MessageVideo } from "@/lib/youtube";
 
 /** Pastor David on camera, mid-sermon, in a message that is also on the poster wall. */
@@ -91,6 +91,7 @@ export function MessagesHero({ messages }: Props) {
   /** The player stopped on its own: hide at once so YouTube's overlay never fades through. */
   const [cut, setCut] = useState(false);
   const [watchStart, setWatchStart] = useState<number | null>(null);
+  const [soundOn, setSoundOn] = useState(false);
 
   const watching = watchStart !== null;
   const showPreview = allowed && warming && settled && inView && !watching;
@@ -157,6 +158,7 @@ export function MessagesHero({ messages }: Props) {
   const toggleSound = useCallback(() => {
     const next = !soundOnRef.current;
     soundOnRef.current = next;
+    setSoundOn(next);
     if (next) {
       resume();
     } else {
@@ -371,6 +373,20 @@ export function MessagesHero({ messages }: Props) {
           >
             <Play className="msg-hero-watch__icon" strokeWidth={2.2} aria-hidden />
             Watch message
+          </button>
+          <button
+            type="button"
+            className="msg-hero-sound"
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleSound();
+            }}
+            aria-label={soundOn ? "Turn preview sound off" : "Turn preview sound on"}
+            aria-pressed={soundOn}
+            title={soundOn ? "Sound on" : "Sound off"}
+          >
+            {soundOn ? <Volume2 aria-hidden /> : <VolumeX aria-hidden />}
+            <span>Sound {soundOn ? "on" : "off"}</span>
           </button>
         </div>
       </div>
