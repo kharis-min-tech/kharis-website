@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 /** Animate upcoming sections while keeping visible content and keyboard targets readable. */
 export function ScrollReveal() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "/";
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -27,7 +27,8 @@ export function ScrollReveal() {
 
     const setup = () => {
       document.querySelectorAll<HTMLElement>("main section").forEach((element) => {
-        if (targets.has(element) || element.dataset.reveal === "self") return;
+        if (!element.isConnected || targets.has(element) || element.dataset.reveal === "self")
+          return;
         targets.add(element);
         // Never hide an initial viewport, restored scroll position or hash destination.
         if (element.getBoundingClientRect().top < window.innerHeight) return;
@@ -64,9 +65,6 @@ export function ScrollReveal() {
       window.removeEventListener("kp:page-ready", onPageReady);
       document.removeEventListener("focusin", onFocus);
       motion.removeEventListener("change", onMotionChange);
-      targets.forEach((element) => {
-        element.classList.remove("reveal-on-scroll", "is-revealed");
-      });
     };
   }, [pathname]);
 

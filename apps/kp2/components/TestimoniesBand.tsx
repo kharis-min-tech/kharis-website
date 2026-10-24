@@ -19,14 +19,14 @@ const PHOTOS = [
     position: "center top",
   },
   {
-    src: "/kp2/assets/testimony-2.jpg",
-    alt: "Praising God and giving thanks at Kharis Phase 2",
-    position: "center 25%",
-  },
-  {
     src: "/kp2/assets/testimony-3.jpg",
     alt: "Giving glory to God in testimony at Kharis Phase 2",
     position: "center 20%",
+  },
+  {
+    src: "/kp2/assets/testimony-2.jpg",
+    alt: "Praising God and giving thanks at Kharis Phase 2",
+    position: "center 25%",
   },
 ];
 

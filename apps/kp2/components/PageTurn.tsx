@@ -64,14 +64,14 @@ export function PageTurn() {
   const seen = useRef(currentPath);
   const playedFor = useRef<string | null>(null);
   const timer = useRef(0);
-  const wordRef = useRef<HTMLElement>(null);
 
   const play = useCallback((nextPath: string) => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (document.documentElement.dataset.kpIntro === "playing") return;
     const label = labelFor(nextPath);
+    // React owns this text. Writing textContent here detaches that node and
+    // the next page commit throws, which is the "didn't load" screen.
     setStamp(label);
-    if (wordRef.current) wordRef.current.textContent = label;
     const root = document.documentElement;
     delete root.dataset.kpTurn;
     void root.offsetWidth;
@@ -119,7 +119,7 @@ export function PageTurn() {
       <span className="kp-turn__band" />
       <p className="kp-turn__stamp">
         <span>Next panel</span>
-        <strong ref={wordRef}>{stamp}</strong>
+        <strong>{stamp}</strong>
       </p>
     </div>
   );
