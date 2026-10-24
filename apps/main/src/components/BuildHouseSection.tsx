@@ -3,18 +3,38 @@
 import { Reveal } from "@/components/Reveal";
 import { Parallax } from "@/components/Parallax";
 import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
+import { useEffect, useState } from "react";
+
+const SPURGEONS_IMAGES = [
+  "https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg",
+  "/images/home/spurgeons-acquisition.jpg",
+];
 
 export function BuildHouseSection() {
+  const [activeImage, setActiveImage] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % SPURGEONS_IMAGES.length);
+    }, 3000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
     <section id="give" className="give-shell relative min-h-[58vh] overflow-hidden">
       <Parallax className="absolute inset-0" speed={60} scaleFrom={1.18} scaleTo={1.02}>
-        <div
-          className="absolute inset-0 h-[120%] w-full -translate-y-[8%] bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url(https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg)",
-          }}
-        />
+        {SPURGEONS_IMAGES.map((image, index) => (
+          <div
+            key={image}
+            aria-hidden="true"
+            className="absolute inset-0 h-[120%] w-full -translate-y-[8%] bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${image})`,
+              opacity: activeImage === index ? 1 : 0,
+              transition: "opacity 900ms ease-in-out",
+            }}
+          />
+        ))}
       </Parallax>
       <div className="absolute inset-0 bg-[#170733]/72" />
 
