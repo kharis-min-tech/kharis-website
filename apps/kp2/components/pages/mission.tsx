@@ -428,7 +428,7 @@ const PASTORS = [
     name: "Pastor Awo Antwi",
     role: "Co-founder & Pastor",
     image:
-      "https://images.kharis.org/site-images/main/7acafe42a978e2ea/leadership/pastor-awo-portrait.jpg",
+      "https://images.kharis.org/site-images/main/ef23a725426d6b26/leadership/pastor-awo-preaching.jpg",
     focus: "People, family, and raising the next generation",
     blurb:
       "Pastor Awo co-founded Kharis with Pastor David and helped establish Kharis Phase 2 for students and young people. She serves with care, strength and a heart for the church family.",

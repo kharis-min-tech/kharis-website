@@ -58,3 +58,8 @@ Recording thumbnails should continue to represent the linked recording. App scre
 - Verified Sunday/midweek/outreach gallery controls, Escape dismissal and focus restoration, plus mobile navigation dismissal. Local preview remains on port 3019.
 - Local branch only. No push, publication or deployment.
 
+
+## Caption and leadership follow-up
+
+- Home Locations now uses the KP2 hall photograph to show the venue. About Us uses the KP2 community group photograph. Life, Become a Believer and Get Involved retain photographs showing community, gospel outreach and service respectively.
+- Updated Pastor Awo's leadership photograph to the same preaching image used by the main site (`main/ef23a725426d6b26/leadership/pastor-awo-preaching.jpg`). Verified the image loads and the desktop crop preserves the subject.
