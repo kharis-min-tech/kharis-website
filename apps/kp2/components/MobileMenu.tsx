@@ -13,7 +13,7 @@ export type MobileNavItem = {
 };
 
 const SECONDARY = [
-  { label: "Kharis Church", href: "https://kharis.org/" },
+  { label: "Kharis Main", href: "https://kharis.org/" },
   { label: "Instagram", href: INSTAGRAM_URL },
   { label: "YouTube", href: YOUTUBE_URL },
   { label: "TikTok", href: TIKTOK_URL },

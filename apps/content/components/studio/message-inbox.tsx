@@ -10,6 +10,7 @@ import { Input, Select } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { confirmDelete } from "@/lib/confirm";
 import { deleteMessage, listMessages, setMessageStatus } from "@/lib/content-repo";
+import { messageSource } from "@/lib/message-source";
 import type { ContactMessage, ContactStatus } from "@/lib/types";
 import { formatWhen } from "@/lib/utils";
 import { useWorkspaceId } from "@/lib/workspace-context";
@@ -95,7 +96,7 @@ export function MessageInbox() {
         description={
           fresh
             ? `${fresh} new in this view.`
-            : "Contact form inbox. Reply opens the visitor's email."
+            : "Contact form inbox. Each message is marked Main site or KP2. Reply opens the visitor's email."
         }
       />
       <div className="mb-4 flex flex-wrap gap-2">
@@ -148,6 +149,16 @@ export function MessageInbox() {
           {visible.map((row) => {
             const open = openId === row.id;
             const subject = encodeURIComponent(`Re: ${row.topic}`);
+            const source = messageSource(row.message, row.workspace);
+            const inbox =
+              row.workspace === "kp2"
+                ? "KP2 inbox"
+                : row.workspace === "kharis"
+                  ? "Main inbox"
+                  : row.workspace;
+            const sameInbox =
+              (source === "KP2" && row.workspace === "kp2") ||
+              (source === "Main site" && row.workspace === "kharis");
             return (
               <li key={row.id} className="rounded-xl border border-border bg-card p-4">
                 <button
@@ -164,7 +175,8 @@ export function MessageInbox() {
                     </span>
                   </span>
                   <Badge tone={row.status === "new" ? "default" : "muted"}>{row.status}</Badge>
-                  <Badge tone="accent">{row.workspace}</Badge>
+                  {source ? <Badge tone="accent">{source}</Badge> : null}
+                  {sameInbox ? null : <Badge tone="muted">{inbox}</Badge>}
                 </button>
                 {open ? (
                   <div className="mt-3 space-y-3">

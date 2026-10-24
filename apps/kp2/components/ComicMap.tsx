@@ -104,6 +104,32 @@ function trace(ctx: CanvasRenderingContext2D, rings: Ring[], frame: Frame) {
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 16;
 
+const REGIONS: Record<MapPlace, { name: string; lat: number; lng: number }[]> = {
+  world: [
+    { name: "United Kingdom", lat: 54.5, lng: -2.6 },
+    { name: "Ghana", lat: 7.9, lng: -1.2 },
+    { name: "Sierra Leone", lat: 8.6, lng: -11.8 },
+  ],
+  uk: [
+    { name: "Scotland", lat: 56.8, lng: -4.2 },
+    { name: "England", lat: 54.0, lng: -1.7 },
+    { name: "Wales", lat: 52.15, lng: -3.75 },
+    { name: "N. Ireland", lat: 54.6, lng: -6.35 },
+  ],
+  ghana: [
+    { name: "Accra", lat: 5.6, lng: -0.19 },
+    { name: "Kumasi", lat: 6.7, lng: -1.62 },
+  ],
+  "sierra-leone": [{ name: "Freetown", lat: 8.48, lng: -13.23 }],
+};
+
+function overlaps(
+  a: { x: number; y: number; w: number; h: number },
+  b: { x: number; y: number; w: number; h: number },
+) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
 function drawPin(ctx: CanvasRenderingContext2D, x: number, y: number, hot: boolean) {
   const radius = hot ? 8 : 6;
   ctx.fillStyle = "#151218";
@@ -230,12 +256,50 @@ export function ComicMap({
       ctx.lineWidth = isWorld ? 2 : 4;
       ctx.stroke();
 
+      const family = getComputedStyle(canvas).fontFamily || '"Hanken Grotesk", sans-serif';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = `700 12px ${family}`;
+      ctx.fillStyle = "rgba(59, 36, 8, 0.72)";
+      for (const region of REGIONS[place]) {
+        const point = project(region.lng, region.lat, frame);
+        if (point.x < 24 || point.y < 20 || point.x > width - 24 || point.y > height - 20) continue;
+        ctx.fillText(region.name.toUpperCase(), point.x, point.y);
+      }
+
       hits.current = [];
       for (const pin of pins) {
         const point = project(pin.lng, pin.lat, frame);
         if (point.x < 0 || point.y < 0 || point.x > width || point.y > height) continue;
         hits.current.push({ ...pin, ...point });
         drawPin(ctx, point.x, point.y, hot.current === pin.slug);
+      }
+
+      ctx.font = `800 13px ${family}`;
+      ctx.textAlign = "left";
+      ctx.lineJoin = "round";
+      const placed: { x: number; y: number; w: number; h: number }[] = [];
+      for (const pin of [...hits.current].sort((a, b) => a.y - b.y || a.x - b.x)) {
+        const text = pin.name.replace(/^KP2\s+/i, "").toUpperCase();
+        const textWidth = ctx.measureText(text).width;
+        let x = pin.x + 14;
+        let y = pin.y;
+        if (x + textWidth > width - 72) x = Math.max(8, pin.x - 14 - textWidth);
+        let box = { x, y: y - 9, w: textWidth + 6, h: 18 };
+        for (
+          let attempt = 0;
+          attempt < 5 && placed.some((other) => overlaps(box, other));
+          attempt++
+        ) {
+          y += 18;
+          box = { x, y: y - 9, w: textWidth + 6, h: 18 };
+        }
+        placed.push(box);
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = "#fffdf5";
+        ctx.strokeText(text, x, y);
+        ctx.fillStyle = "#151218";
+        ctx.fillText(text, x, y);
       }
     };
 
