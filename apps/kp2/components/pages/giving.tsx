@@ -156,41 +156,46 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               encrypted.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter max-w-7xl mx-auto">
-            <div className="md:col-span-2 bg-[#f7be1d] text-[#151218] brutalist-border-thick p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 group hover:-translate-y-2 transition-transform">
-              <div className="flex items-start gap-6">
-                <div className="w-20 h-20 bg-white/40 rounded-full flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-[#151218] text-4xl">
-                    credit_card
-                  </span>
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-headline-md uppercase mb-3">Give Online</h3>
-                  <p className="font-body-md max-w-xl">
-                    Give to your branch by card, once or every month, through the secure Kharis
-                    giving portal.
-                  </p>
-                </div>
+          <div className="grid grid-cols-1 items-stretch gap-gutter max-w-7xl mx-auto md:grid-cols-2">
+            <div
+              data-giving-method="online"
+              className="flex min-w-0 flex-col border-4 border-black bg-[#f7be1d] p-6 text-[#151218] md:p-10"
+            >
+              <div className="mb-6 flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-white/40">
+                <span className="material-symbols-outlined text-4xl" aria-hidden="true">
+                  credit_card
+                </span>
               </div>
+              <h3 className="mb-6 font-headline-md text-headline-md uppercase">Give Online</h3>
+              <p className="flex-1 font-body-md">
+                Give to your branch by card, once or every month, through the secure Kharis giving
+                portal.
+              </p>
               <a
                 href={ONLINE_GIVE_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="kp-depth-button kp-button-purple w-full md:w-auto text-center bg-primary text-on-primary border-4 border-[#151218] brutalist-shadow py-3 px-10 font-label-md uppercase tracking-widest"
+                className="kp-depth-button kp-button-purple mt-6 w-full border-4 border-[#151218] bg-primary px-10 py-3 text-center font-label-md uppercase tracking-widest text-on-primary brutalist-shadow sm:w-auto sm:self-start"
               >
                 Give now
               </a>
             </div>
 
-            <div className="bg-white brutalist-border-thick p-8 md:p-10 flex flex-col group hover:-translate-y-2 transition-transform">
-              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                <span className="material-symbols-outlined text-primary text-4xl">
+            <div
+              data-giving-method="bank"
+              className="flex min-w-0 flex-col border-4 border-black bg-white p-6 md:p-10"
+            >
+              <div className="mb-6 flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                <span
+                  className="material-symbols-outlined text-4xl text-primary"
+                  aria-hidden="true"
+                >
                   account_balance
                 </span>
               </div>
-              <h3 className="font-headline-md text-headline-md uppercase mb-6">Bank Transfer</h3>
+              <h3 className="mb-6 font-headline-md text-headline-md uppercase">Bank Transfer</h3>
               <div
-                className="text-left font-label-sm p-4 bg-surface-container-high w-full border-2 border-black space-y-2 flex-grow"
+                className="w-full flex-1 space-y-2 border-2 border-black bg-surface-container-high p-4 text-left font-label-sm [overflow-wrap:anywhere]"
                 id="bank-details"
               >
                 <p>
@@ -211,14 +216,22 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               </div>
             </div>
 
-            <div className="bg-white brutalist-border-thick p-8 md:p-10 flex flex-col group hover:-translate-y-2 transition-transform">
-              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                <span className="material-symbols-outlined text-primary text-4xl">sms</span>
+            <div
+              data-giving-method="text"
+              className="flex min-w-0 flex-col border-4 border-black bg-white p-6 md:p-10"
+            >
+              <div className="mb-6 flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                <span
+                  className="material-symbols-outlined text-4xl text-primary"
+                  aria-hidden="true"
+                >
+                  sms
+                </span>
               </div>
-              <h3 className="font-headline-md text-headline-md uppercase mb-4">
+              <h3 className="mb-6 font-headline-md text-headline-md uppercase">
                 Text Giving (UK Only)
               </h3>
-              <p className="font-body-lg text-on-surface mb-4">
+              <p className="mb-4 font-body-lg text-on-surface">
                 Text <span className="font-bold">{SMS_GIVE.keyword} [Amount]</span> to{" "}
                 <span className="font-bold">{SMS_GIVE.number}</span> (e.g. {SMS_GIVE.keyword} 5).
               </p>
@@ -228,22 +241,22 @@ function GivingPage({ testimonies }: { testimonies: GivingTestimony[] }) {
               </p>
             </div>
 
-            <div className="md:col-span-2 bg-primary text-on-primary brutalist-border-thick p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 group hover:-translate-y-2 transition-transform">
-              <div className="flex items-start gap-6">
-                <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-white text-4xl">smartphone</span>
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-headline-md uppercase mb-3">Mobile App</h3>
-                  <p className="font-body-md text-on-primary/90 max-w-xl">
-                    Download the Kharis Hub app. Manage recurring giving and track your history
-                    easily.
-                  </p>
-                </div>
+            <div
+              data-giving-method="app"
+              className="flex min-w-0 flex-col border-4 border-black bg-primary p-6 text-on-primary md:p-10"
+            >
+              <div className="mb-6 flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-white/10">
+                <span className="material-symbols-outlined text-4xl text-white" aria-hidden="true">
+                  smartphone
+                </span>
               </div>
+              <h3 className="mb-6 font-headline-md text-headline-md uppercase">Mobile App</h3>
+              <p className="flex-1 font-body-md text-on-primary/90">
+                Download the Kharis Hub app. Manage recurring giving and track your history easily.
+              </p>
               <Link
                 href="/#app-stores"
-                className="w-full md:w-auto text-center bg-white text-primary brutalist-border neo-shadow py-3 px-10 font-label-md uppercase tracking-widest hover:bg-surface-variant transition-colors"
+                className="mt-6 w-full border-4 border-black bg-white px-10 py-3 text-center font-label-md uppercase tracking-widest text-primary neo-shadow transition-colors hover:bg-surface-variant sm:w-auto sm:self-start"
               >
                 GET THE APP
               </Link>

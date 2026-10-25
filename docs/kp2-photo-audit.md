@@ -46,7 +46,7 @@ Recording thumbnails should continue to represent the linked recording. App scre
 - Upcoming events preserve their supplied event image for every occurrence. Events without a photo receive a category-specific KP2 fallback.
 - The current main branch already includes the Our Story button removal and three KP2 testimony photographs and a story modal. Preserved that newer implementation. Matched the red-dress testimony scene to `2026/September/21.9.26/61-0I1A6311.jpg` and the orange-dress scene to `2025/BASS/21.4.25/0I1A8168.jpg` in KOffice. The third existing KP2 testimony photograph remains in place.
 - Preserved named pastor portraits, branch photographs, recording thumbnails, video frame posters, logos, maps and the building illustration so that these factual assets stay tied to their subjects.
-- Retained the existing spoken word performer and creative ministry collage on their department cards. No suitable replacement original was established for those subjects. The collage is described as creative ministries rather than a photograph of dancers alone.
+- Retained the existing KP2 spoken word performer photograph. Replaced the mixed creative ministry collage on the K-Dancers card with the original BASS worship dance photograph (`0I1A9546.jpg`). Its description refers to members dancing in worship, without identifying them as a particular team.
 - No Family Fun Day, Praise Night, Let the Bible Speak or Singles Ball shoot was found in the reviewed KP2 Photography folders. Kept the corresponding event photographs; did not substitute service photographs under those event names. `ComicFlip` is currently imported but not rendered by Events.
 
 ## Validation
@@ -63,3 +63,16 @@ Recording thumbnails should continue to represent the linked recording. App scre
 
 - Home Locations now uses the KP2 hall photograph to show the venue. About Us uses the KP2 community group photograph. Life, Become a Believer and Get Involved retain photographs showing community, gospel outreach and service respectively.
 - Updated Pastor Awo's leadership photograph to the same preaching image used by the main site (`main/ef23a725426d6b26/leadership/pastor-awo-preaching.jpg`). Verified the image loads and the desktop crop preserves the subject.
+
+## Baptism, Messages and Giving follow-up
+
+- Added four originals from `2025/Baptism/29.11.25`, including the ceremony, celebration, poolside team and wider KP2 family. The source manifest now records 37 optimized KOffice photographs.
+- Added a labelled Baptism section and four-photo gallery to Life. The Home About Us card now uses the KP2 family photograph from the same shoot.
+- Added the BASS worship dance original to the K-Dancers card and legacy image map. Corrected the legacy Spoken-word asset mapping to the existing KP2 performer photograph.
+- Added a decorative speaker icon to the Messages Watch Now CTA and included `volume_up` in the site's Material Symbols font subset. The CTA still links to the message browser.
+- Aligned Give Online and Bank Transfer in two equal desktop columns with matching padding, icon and heading positions, top edges and bottom edges. Text Giving and Mobile App form the second aligned row. All methods stack at phone width and long bank details can wrap. Bank values and giving destinations are unchanged.
+- Added a Children's Department illustration to all three serving quiz video preview contexts. The existing videos remain available. See `children-ministry-illustration.md` for the saved asset and generation prompt.
+
+### Follow-up checks
+
+TypeScript and the 10 focused KP2 tests pass. ESLint reports no errors and 54 warnings (existing warnings plus the intentional plain image elements). Checked Giving cards at 1280px and 390px, matching desktop card tops, heights and heading positions, with no phone overflow in either theme. Checked the baptism gallery's next control, Escape dismissal and focus restoration. Verified the speaker glyph renders and Watch Now still reaches the messages section. Rendered the children's illustration in an isolated local preview without submitting the live quiz; removed the temporary preview route afterwards. No push or deployment.

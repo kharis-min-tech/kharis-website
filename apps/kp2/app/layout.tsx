@@ -128,6 +128,7 @@ const MATERIAL_ICONS = [
   "train",
   "video_library",
   "videocam",
+  "volume_up",
   "volunteer_activism",
   "waving_hand",
   "zoom_in",
