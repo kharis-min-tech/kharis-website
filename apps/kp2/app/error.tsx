@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { RouteLoading } from "@/components/KpIntro";
 import { pageReloadAction, pageReloadStorageKey } from "@/lib/page-reload";
 
 function storageKey() {
@@ -48,16 +49,7 @@ export default function PageError({
     }
   }
 
-  if (!showError) {
-    return (
-      <div
-        className="flex min-h-screen items-center justify-center bg-background px-4 text-on-background"
-        role="status"
-      >
-        <p className="font-body-md text-on-surface-variant">Getting this page back for you</p>
-      </div>
-    );
-  }
+  if (!showError) return <RouteLoading />;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 text-on-background">
