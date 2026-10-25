@@ -197,7 +197,8 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
                 <p className="life-hero__eyebrow">Listen with us</p>
                 <h2>Worship that&apos;s alive</h2>
                 <p>
-                  Our children learn the Word with energy and joy. The teaching of God's word is an aspect of what builds strong households.
+                  Our children learn the Word with energy and joy. The teaching of God&apos;s word
+                  is an aspect of what builds strong households.
                 </p>
                 <a
                   href={KIDS_SERMON_URL}
