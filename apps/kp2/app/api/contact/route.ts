@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { SITE_WORKSPACE } from "@/lib/site";
 import { supabaseInsert, supabaseSelect } from "@/lib/supabase";
-import { CONTACT_TOPICS } from "@/lib/contact";
+import { CONTACT_TOPICS, withSiteLine } from "@/lib/contact";
 
 const LIMITS = { name: 120, email: 254, phone: 40, branch: 120, message: 12000 } as const;
 const TOPICS = new Set<string>(CONTACT_TOPICS.map((topic) => topic.value));
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   const phone = clean(data.phone, LIMITS.phone);
   const topic = clean(data.topic, 40) || "General";
   const branch = clean(data.branch, LIMITS.branch);
-  const message = clean(data.message, LIMITS.message);
+  let message = clean(data.message, LIMITS.message);
 
   if (!first) {
     return NextResponse.json({ ok: false, error: "Please enter your name." }, { status: 400 });
@@ -45,6 +45,8 @@ export async function POST(request: Request) {
   if (!TOPICS.has(topic)) {
     return NextResponse.json({ ok: false, error: "Please choose a topic." }, { status: 400 });
   }
+
+  message = withSiteLine(message, "KP2");
 
   const [match] = branch
     ? await supabaseSelect<{ id: string; name: string }>(

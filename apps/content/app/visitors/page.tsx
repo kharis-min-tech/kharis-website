@@ -5,7 +5,7 @@ import { CrudPage } from "@/components/studio/crud-page";
 import { listBranchOptions } from "@/lib/branches-repo";
 import { deleteVisitor, listVisitors, saveVisitor } from "@/lib/content-repo";
 import type { BranchOption, VisitorRow } from "@/lib/types";
-import { visitorToDraft } from "@/lib/visitors";
+import { visitorListNotes, visitorToDraft } from "@/lib/visitors";
 
 function branchChoices(branches: BranchOption[]) {
   const seen = new Set<string>();
@@ -31,7 +31,7 @@ export default function VisitorsPage() {
   return (
     <CrudPage<VisitorRow>
       title="Visitors"
-      description="People who asked to visit, with their message for the branch team."
+      description="People who planned a visit on the main site or KP2. The message records the site, the gathering, and that they agreed to be contacted."
       loadKey="visitors"
       fields={[
         { key: "name", label: "Name", kind: "text" },
@@ -44,7 +44,9 @@ export default function VisitorsPage() {
       blank={() => visitorToDraft({})}
       toDraft={visitorToDraft}
       titleOf={(row) => row.name?.trim() || "Unnamed"}
-      metaOf={(row) => [row.branch_name, row.email].filter(Boolean).join(" · ")}
+      metaOf={(row) =>
+        [row.branch_name, ...visitorListNotes(row.message), row.email].filter(Boolean).join(" · ")
+      }
       searchOf={(row) =>
         `${row.name ?? ""} ${row.email ?? ""} ${row.branch_name ?? ""} ${row.message ?? ""}`
       }

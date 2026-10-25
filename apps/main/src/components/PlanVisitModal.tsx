@@ -27,6 +27,7 @@ export default function PlanVisitModal({
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("Next Sunday");
   const [children, setChildren] = useState(false);
+  const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -52,35 +53,27 @@ export default function PlanVisitModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email) return;
+    if (!consent) {
+      setError("Please confirm the branch can contact you about this visit.");
+      return;
+    }
     setBusy(true);
     setError("");
-    const parts = name.trim().split(/\s+/);
-    const first = parts[0] || name;
-    const last = parts.slice(1).join(" ") || first;
-    const place = branchName || branchCity || "a Kharis branch";
-    const message = [
-      `Plan your visit request for ${place}.`,
-      `Preferred gathering: ${eventLabel || date}.`,
-      children ? "Bringing children (ages 0-12)." : "No children noted.",
-      phone ? `Phone: ${phone}` : null,
-    ]
-      .filter(Boolean)
-      .join(" ");
 
     try {
       request.current = new AbortController();
-      const res = await fetch("/api/contact", {
+      const res = await fetch("/api/visit", {
         method: "POST",
         signal: request.current.signal,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          first,
-          last,
+          name,
           email,
           phone,
-          topic: "Sunday visit",
-          branch: branchName || "",
-          message,
+          branch: branchName || branchCity || "",
+          gathering: eventLabel || date,
+          children,
+          consent,
         }),
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };
@@ -95,6 +88,7 @@ export default function PlanVisitModal({
         setEmail("");
         setPhone("");
         setChildren(false);
+        setConsent(false);
         onClose();
       }, 2400);
     } catch (error) {
@@ -255,11 +249,27 @@ export default function PlanVisitModal({
                   </label>
                 </div>
 
+                <div className="flex items-start gap-3 p-3 bg-[#1a1826] border border-[#2e2942]">
+                  <input
+                    type="checkbox"
+                    id="visit-consent"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 text-[#630ed4] focus:ring-[#630ed4] bg-[#15131f] border-[#2e2942]"
+                  />
+                  <label
+                    htmlFor="visit-consent"
+                    className="text-xs font-bold text-[#f3f0f8] cursor-pointer"
+                  >
+                    The branch can contact me about this visit if needed.
+                  </label>
+                </div>
+
                 {error ? <p className="text-xs font-semibold text-[#ff8a8a]">{error}</p> : null}
 
                 <button
                   type="submit"
-                  disabled={busy}
+                  disabled={busy || !consent}
                   className="k-cta w-full py-4 bg-[#630ed4] hover:bg-[#2a035c] text-white font-extrabold text-base shadow-lg shadow-[#630ed4]/30 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
                 >
                   <span>{busy ? "Sending…" : "Confirm my visit"}</span>

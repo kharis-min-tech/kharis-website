@@ -19,6 +19,13 @@ export function cleanText(value: unknown, max: number): string {
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/** Puts the submitting site on the first line so the studio can tell Main from KP2. */
+export function withSiteLine(message: string, site: "Main site" | "KP2") {
+  const line = `From: ${site}`;
+  if (new RegExp(`^From:\\s*${site}\\s*$`, "im").test(message)) return message;
+  return `${line}\n\n${message}`;
+}
+
 export function isUuid(value: unknown): value is string {
   return typeof value === "string" && UUID.test(value);
 }

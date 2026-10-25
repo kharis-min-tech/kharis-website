@@ -61,13 +61,14 @@
   cursor: pointer;
 }
 
-.kp-find__near {
+main .kp-find__near {
   flex: none;
   border: 3px solid #151218;
   background: #f7be1d;
   color: #151218;
-  min-width: 8.5rem;
-  padding: 0 1.1rem;
+  min-width: 9.5rem;
+  min-height: 3.25rem;
+  padding: 1rem 1.85rem;
   font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
   font-size: 0.875rem;
   font-weight: 700;
@@ -190,6 +191,7 @@
   touch-action: none;
   cursor: grab;
   overscroll-behavior: none;
+  font-family: var(--font-hanken), "Hanken Grotesk", sans-serif;
 }
 
 .kp-find__canvas.is-grabbing {

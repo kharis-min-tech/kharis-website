@@ -24,6 +24,7 @@ const generalNav: StudioNavItem[] = [
   { href: "/testimonies", label: "Testimonies" },
   { href: "/visitors", label: "Visitors" },
   { href: "/messages", label: "Messages" },
+  { href: "/newsletter", label: "Newsletter" },
 ];
 
 const appNav: StudioNavItem[] = [
@@ -50,13 +51,15 @@ const kp2Nav: StudioNavItem[] = [
   { href: "/testimonies", label: "Testimonies" },
   { href: "/announcements", label: "Announcements" },
   { href: "/messages", label: "Messages" },
+  { href: "/newsletter", label: "Newsletter" },
 ];
 
 export const WORKSPACES: StudioWorkspace[] = [
   {
     id: "general",
     name: "General",
-    description: "Shared content: branches, sermons, testimonies, visitors, and contact messages.",
+    description:
+      "Shared content: branches, sermons, testimonies, visitors, contact messages, and newsletter emails.",
     nav: generalNav,
   },
   {
@@ -76,7 +79,8 @@ export const WORKSPACES: StudioWorkspace[] = [
   {
     id: "kp2",
     name: "KP2 Website",
-    description: "KP2 events, testimonies, announcements, and contact messages for kharis.org/kp2.",
+    description:
+      "KP2 events, testimonies, announcements, contact messages, and newsletter emails for kharis.org/kp2.",
     nav: kp2Nav,
   },
 ];

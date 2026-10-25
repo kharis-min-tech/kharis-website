@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MobileMenu, type MobileNavItem } from "@/components/MobileMenu";
+import { pageReloadStorageKey } from "@/lib/page-reload";
 
 type NavItem = MobileNavItem;
 
@@ -42,9 +43,10 @@ const linkBase =
   "kp-nav-link relative font-body-md text-[13px] font-bold uppercase tracking-wide text-on-background transition-colors duration-200";
 
 const KP2_LOGO = "https://images.kharis.org/site-images/kp2/2d0d7fb8b146df33/kp2-logo-new.png";
+const KHARIS_MAIN_URL = "https://kharis.org/";
 
 export function SiteHeader() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "/";
   const pathActive = (to: string) =>
     to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/");
   const isActive = (item: NavItem | string) => {
@@ -53,6 +55,13 @@ export function SiteHeader() {
     return pathActive(item.to);
   };
   useEffect(() => {
+    try {
+      sessionStorage.removeItem(
+        pageReloadStorageKey(window.location.pathname, window.location.search),
+      );
+    } catch {
+      // Storage can be blocked. The error page still offers a manual reload.
+    }
     document.documentElement.dataset.kpPageReady = pathname;
     window.dispatchEvent(new Event("kp:page-ready"));
     return () => {
@@ -192,6 +201,9 @@ export function SiteHeader() {
                 </Link>
               ),
             )}
+            <a href={KHARIS_MAIN_URL} className={linkBase}>
+              <span className="kp-nav-label">Kharis Main</span>
+            </a>
           </nav>
 
           {/* CTA */}
