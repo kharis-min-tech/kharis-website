@@ -8,6 +8,8 @@ import { pageReloadStorageKey } from "@/lib/page-reload";
 
 type NavItem = MobileNavItem;
 
+const KHARIS_CHURCH_URL = "https://kharis.org/";
+
 const NAV_ITEMS: NavItem[] = [
   { label: "HOME", to: "/" },
   {
@@ -36,6 +38,7 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   { label: "GIVE", to: "/giving" },
+  { label: "Kharis Church", to: KHARIS_CHURCH_URL, external: true },
   { label: "CONTACT", to: "/contact" },
 ];
 
@@ -43,7 +46,6 @@ const linkBase =
   "kp-nav-link relative font-body-md text-[13px] font-bold uppercase tracking-wide text-on-background transition-colors duration-200";
 
 const KP2_LOGO = "https://images.kharis.org/site-images/kp2/2d0d7fb8b146df33/kp2-logo-new.png";
-const KHARIS_MAIN_URL = "https://kharis.org/";
 
 export function SiteHeader() {
   const pathname = usePathname() || "/";
@@ -189,6 +191,10 @@ export function SiteHeader() {
                     </div>
                   </div>
                 </div>
+              ) : item.external ? (
+                <a key={item.to} href={item.to} className={linkBase}>
+                  <span className="kp-nav-label">{item.label}</span>
+                </a>
               ) : (
                 <Link
                   key={item.to}
@@ -201,9 +207,6 @@ export function SiteHeader() {
                 </Link>
               ),
             )}
-            <a href={KHARIS_MAIN_URL} className={linkBase}>
-              <span className="kp-nav-label">Kharis Church</span>
-            </a>
           </nav>
 
           {/* CTA */}

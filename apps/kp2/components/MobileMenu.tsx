@@ -9,11 +9,11 @@ import "./mobile-menu.css";
 export type MobileNavItem = {
   label: string;
   to: string;
+  external?: boolean;
   children?: { label: string; to: string; blurb: string }[];
 };
 
 const SECONDARY = [
-  { label: "Kharis Church", href: "https://kharis.org/" },
   { label: "Instagram", href: INSTAGRAM_URL },
   { label: "YouTube", href: YOUTUBE_URL },
   { label: "TikTok", href: TIKTOK_URL },
@@ -111,14 +111,20 @@ export function MobileMenu({
             if (!item.children) {
               return (
                 <div key={item.to} className="kp-mnav__item" style={style}>
-                  <Link
-                    href={item.to}
-                    aria-current={isCurrent(item.to) ? "page" : undefined}
-                    onClick={onClose}
-                    className="kp-mnav__link"
-                  >
-                    {item.label}
-                  </Link>
+                  {item.external ? (
+                    <a href={item.to} className="kp-mnav__link" target="_blank" rel="noreferrer">
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={item.to}
+                      aria-current={isCurrent(item.to) ? "page" : undefined}
+                      onClick={onClose}
+                      className="kp-mnav__link"
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                 </div>
               );
             }
