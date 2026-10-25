@@ -1,6 +1,7 @@
 "use client";
 
 import { KP2_PHOTOS } from "@/lib/photography";
+import { BaptismGallery } from "@/components/BaptismGallery";
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -86,7 +87,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
       </header>
 
       <main className="relative z-20">
-        {/* Fellowship section removed */}
+        <BaptismGallery />
 
         <section className="border-b-4 border-black bg-background px-margin-desktop py-stack-lg">
           <div className="mx-auto max-w-7xl">

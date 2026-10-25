@@ -190,5 +190,35 @@
     "source": "2025/Jesus Campaign/26.07.25/20250726_144320270_iOS.jpg",
     "asset": "/kp2/assets/photography/outreach-message.webp",
     "alt": "A message being shared outdoors during the KP2 Jesus Campaign"
+  },
+  {
+    "key": "baptismCelebration",
+    "source": "2025/Baptism/29.11.25/601A5239.jpg",
+    "asset": "/kp2/assets/photography/baptism-celebration.webp",
+    "alt": "A KP2 member celebrating after baptism with the baptism team"
+  },
+  {
+    "key": "baptismCeremony",
+    "source": "2025/Baptism/29.11.25/601A4969.jpg",
+    "asset": "/kp2/assets/photography/baptism-ceremony.webp",
+    "alt": "A KP2 member emerging from the water during baptism"
+  },
+  {
+    "key": "baptismTeam",
+    "source": "2025/Baptism/29.11.25/601A5289.jpg",
+    "asset": "/kp2/assets/photography/baptism-team.webp",
+    "alt": "KP2 members together beside the pool after baptism"
+  },
+  {
+    "key": "baptismFamily",
+    "source": "2025/Baptism/29.11.25/601A5453.jpg",
+    "asset": "/kp2/assets/photography/baptism-family.webp",
+    "alt": "The KP2 family gathered together outside after baptism"
+  },
+  {
+    "key": "bassDance",
+    "source": "2025/BASS/21.4.25/0I1A9546.jpg",
+    "asset": "/kp2/assets/photography/bass-dance.webp",
+    "alt": "KP2 members dancing and celebrating during BASS worship"
   }
 ]

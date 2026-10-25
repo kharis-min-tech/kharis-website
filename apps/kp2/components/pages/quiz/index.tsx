@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatedHeight } from "@/components/AnimatedHeight";
+import { DepartmentIllustration } from "@/components/DepartmentIllustration";
 import { TypedText } from "@/components/TypedText";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -596,6 +597,7 @@ export default function DepartmentQuizPage() {
                             className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-primary to-on-background p-6 text-center cursor-pointer"
                             aria-label={`Play ${t.departments[topThree[0]].title ?? topThree[0]} department video`}
                           >
+                            <DepartmentIllustration department={topThree[0]} />
                             <div className="halftone-bg pointer-events-none absolute inset-0 opacity-20" />
                             <div className="relative z-10 flex flex-col items-center gap-3">
                               <span className="flex h-16 w-16 items-center justify-center rounded-none border-2 border-black bg-secondary-container text-on-secondary-container shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
@@ -665,7 +667,8 @@ export default function DepartmentQuizPage() {
                                 className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
                                 aria-label={`Play ${displayTitle} department video`}
                               >
-                                <div className="flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
+                                <DepartmentIllustration department={deptName} />
+                                <div className="relative z-10 flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
                                   <span className="material-symbols-outlined text-sm">
                                     play_arrow
                                   </span>
@@ -775,7 +778,8 @@ export default function DepartmentQuizPage() {
                                           onClick={() => setActiveVideo(`explore-${deptName}`)}
                                           className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
                                         >
-                                          <div className="flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
+                                          <DepartmentIllustration department={deptName} />
+                                          <div className="relative z-10 flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
                                             <span className="material-symbols-outlined text-sm">
                                               play_arrow
                                             </span>

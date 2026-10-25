@@ -112,4 +112,29 @@ export const KP2_PHOTOS = {
     "A message being shared outdoors during the KP2 Jesus Campaign",
     "center",
   ),
+  baptismCelebration: photo(
+    "baptism-celebration",
+    "A KP2 member celebrating after baptism with the baptism team",
+    "center",
+  ),
+  baptismCeremony: photo(
+    "baptism-ceremony",
+    "A KP2 member emerging from the water during baptism",
+    "center",
+  ),
+  baptismTeam: photo(
+    "baptism-team",
+    "KP2 members together beside the pool after baptism",
+    "center",
+  ),
+  baptismFamily: photo(
+    "baptism-family",
+    "The KP2 family gathered together outside after baptism",
+    "center",
+  ),
+  bassDance: photo(
+    "bass-dance",
+    "KP2 members dancing and celebrating during BASS worship",
+    "center",
+  ),
 };

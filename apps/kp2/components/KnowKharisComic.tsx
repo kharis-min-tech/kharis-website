@@ -20,8 +20,8 @@ const PANELS: Panel[] = [
     href: "/mission",
     title: "About Us",
     blurb: "Our mandate is to bring Christ to people everywhere.",
-    src: KP2_PHOTOS.welcomeGroup.src,
-    alt: KP2_PHOTOS.welcomeGroup.alt,
+    src: KP2_PHOTOS.baptismFamily.src,
+    alt: KP2_PHOTOS.baptismFamily.alt,
     position: "50% 35%",
   },
   {
