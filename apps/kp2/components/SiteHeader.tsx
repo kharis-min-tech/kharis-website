@@ -202,7 +202,7 @@ export function SiteHeader() {
               ),
             )}
             <a href={KHARIS_MAIN_URL} className={linkBase}>
-              <span className="kp-nav-label">Kharis Main</span>
+              <span className="kp-nav-label">Kharis Church</span>
             </a>
           </nav>
 
