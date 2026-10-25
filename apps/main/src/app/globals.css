@@ -197,7 +197,7 @@ h6 {
   color: #fff !important;
 }
 
-/* About Us a bit wider so mandate “IT’S” isn’t cropped */
+/* Four equal columns, left to right: About Us, Young Adults, Become a Believer, Get Involved */
 .know-grid {
   grid-template-columns: 1fr;
 }
@@ -210,13 +210,8 @@ h6 {
 
 @media (min-width: 1024px) {
   .know-grid {
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-}
-
-.know-about .know-card img {
-  object-fit: cover;
-  object-position: left 18%;
 }
 
 /* —— Messages band + join into Near You —— */
@@ -13655,12 +13650,15 @@ html[data-theme="dark"] .btn-secondary:hover {
 .know-card__cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.45rem;
   margin-top: 1rem;
-  font-size: 0.875rem;
-  font-weight: 800;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
   color: var(--yellow);
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.7),
+    0 2px 12px rgba(0, 0, 0, 0.6);
 }
 
 /* Latest messages */

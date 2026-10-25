@@ -64,11 +64,6 @@ export function SiteFooter({ tone }: Props) {
               <h5 className={`site-footer__heading ${heading}`}>Get Involved</h5>
               <ul className={`site-footer__links ${muted}`}>
                 <li>
-                  <Link href="/contact" className={linkHover}>
-                    Become a member
-                  </Link>
-                </li>
-                <li>
                   <Link href="/life/baptism" className={linkHover}>
                     Become a believer
                   </Link>
