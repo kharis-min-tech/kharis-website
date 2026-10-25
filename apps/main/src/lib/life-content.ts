@@ -218,19 +218,19 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     layout: "blend",
     icon: "sparkles",
     intro:
-      "Building the spiritual lives of the children to shape their future and beyond. We partner with parents to develop children in the way of the Lord. Fun activities, vibrant and powerful messages, and praise and worship help the children to learn and grow. We are seeking revival and equipping our children to carry the torch.",
+      "We are dedicated to shaping the spiritual futures of children and teenagers by partnering with parents to raise up the next generation in the ways of the Lord. Through engaging activities, timely and meaningful biblical messages, and vibrant praise and worship, we provide a dynamic environment where young people can truly learn and grow. Our ultimate vision is to spark revival and equip our children and teens to boldly carry the torch of faith for years to come.",
     sections: [
       {
         title: "Kinder (3–6 years)",
-        body: "Kinder is an energetic group of young children aged 3–6 years. A place where children discover the foundational principles of building a personal relationship with God through age-appropriate Bible stories, activities, worship, prayer and building relationships with one another. Our aim is for the children to develop a love and boldness in Jesus so that when they reach the age of awareness they will choose Him for themselves.",
+        body: "Kinder is a vibrant, energetic group for young children aged 3–6. It is a nurturing space where little ones discover the foundational principles of building a personal relationship with God through age-appropriate Bible stories, engaging activities, worship, prayer, and wholesome friendships. Our ultimate aim is to cultivate a deep love and boldness for Jesus in their hearts, so that when they reach the age of understanding, they will eagerly choose Him for themselves.",
       },
       {
         title: "Super (7–11 years)",
-        body: "Super is a vibrant group of young children. We focus on establishing the foundation of their Christian walk through fundamental topics such as salvation, faith and the Holy Spirit. Our aim is to begin a fruitful journey in getting to know Christ.",
+        body: "Super is a lively community for children. We focus on laying a solid biblical foundation for their Christian walk through core topics like salvation, faith, and the Holy Spirit. Our aim is to guide them into a deeply personal, fruitful journey of truly knowing and following Christ.",
       },
       {
         title: "Transition (12–16 years)",
-        body: "Transition is an exciting and engaging class designed to support spiritual growth and a smooth assimilation into the wider church, through fun, interactive lessons based on the teachings from Pastor David Antwi.",
+        body: "Transition is an exciting and engaging class designed to support spiritual growth and a smooth, confident assimilation into the wider church. Through fun, interactive lessons grounded in the teachings of Pastor David Antwi, we equip teenagers to navigate everyday life—empowering them to be bold for Jesus among their peers, stand firm in their faith, and live as true examples. Our goal is to anchor them deeply in Christ as they step into their next season.",
       },
     ],
     next: "departments",
