@@ -9,33 +9,38 @@ import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { LIFE_CATEGORIES, LIFE_VISIBLE_SLUGS, lifeBySlug, type LifeSlug } from "@/lib/life-content";
 
+const KIDS_HERO_IMAGE = "/images/kids-landing.jpg";
+
 const KIDS_GROUPS = [
   {
     title: "Kinder",
     ages: "3–6 years",
     icon: Sparkles,
-    image:
-      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1200&q=85",
+    image: "/images/kids-kinder.jpg",
+    position: "58% center",
     color: "#fff3d6",
   },
   {
     title: "Super",
     ages: "7–11 years",
     icon: Users,
-    image:
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=85",
+    image: "/images/kids-super.jpg",
+    position: "55% center",
     color: "#f2eef7",
   },
   {
     title: "Transition",
     ages: "12–16 years",
     icon: Heart,
-    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
+    image: "/images/kids-transition.jpg",
+    position: "56% center",
     color: "#eef6ff",
   },
 ] as const;
 
-const KIDS_VIDEO_ID = "iXo1fg_PRLM";
+const KIDS_SERMON_URL = "https://app.kharis.org/track?trackId=23780";
+const KIDS_SOUNDCLOUD_URL = "https://on.soundcloud.com/JWJDWztumwE31AAkuT";
+const KIDS_SERMON_IMAGE = "/images/family-enrichment.jpg";
 
 const DEPT_BANDS = [
   {
@@ -93,7 +98,10 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
             <div className="life-kids-editorial-hero__media">
               <div
                 className="life-kids-editorial-hero__photo"
-                style={{ backgroundImage: `url(${KIDS_GROUPS[0].image})` }}
+                style={{
+                  backgroundImage: `url(${KIDS_HERO_IMAGE})`,
+                  backgroundPosition: "54% center",
+                }}
                 role="img"
                 aria-label="Children learning and playing together"
               />
@@ -158,7 +166,10 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
                       {meta ? (
                         <div
                           className="life-kids-row__bleed"
-                          style={{ backgroundImage: `url(${meta.image})` }}
+                          style={{
+                            backgroundImage: `url(${meta.image})`,
+                            backgroundPosition: meta.position,
+                          }}
                           role="img"
                           aria-label={section.title}
                         />
@@ -183,20 +194,41 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
           <section className="life-kids-video life-kids-video--v2" aria-label="Watch with us">
             <Reveal variant="up" className="life-kids-video__card">
               <div className="life-kids-video__copy">
-                <p className="life-hero__eyebrow">Watch with us</p>
+                <p className="life-hero__eyebrow">Listen with us</p>
                 <h2>Worship that&apos;s alive</h2>
                 <p>
-                  Our children learn the Word with energy and joy. The same fire you feel in the
-                  main hall, made for young hearts.
+                  Our children learn the Word with energy and joy. The teaching of God's word is an aspect of what builds strong households.
                 </p>
+                <a
+                  href={KIDS_SERMON_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="life-cta life-kids-editorial-hero__cta"
+                >
+                  Listen to &lsquo;The Church Family&rsquo; here{" "}
+                  <Icon name="arrow" className="h-3.5 w-3.5" />
+                </a>
               </div>
-              <div className="life-kids-video__frame">
-                <iframe
-                  src={`https://www.youtube.com/embed/${KIDS_VIDEO_ID}?rel=0`}
-                  title="Kharis Church message"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
+              <div
+                className="life-kids-video__frame mx-auto max-w-[26rem]"
+                style={{ aspectRatio: "1 / 1" }}
+              >
+                <img
+                  src={KIDS_SERMON_IMAGE}
+                  alt="Family Enrichment — The Church Family message"
+                  className="block h-full w-full object-cover"
                 />
+                <div className="absolute bottom-3 right-3 z-20 flex flex-col items-end gap-2">
+                  <a
+                    href={KIDS_SOUNDCLOUD_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-[#160b24]/85 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-md transition-colors hover:bg-[var(--purple-fill)]"
+                  >
+                    &lsquo;The Church Family&rsquo; (Soundcloud){" "}
+                    <Icon name="arrow" className="h-3.5 w-3.5" />
+                  </a>
+                </div>
               </div>
             </Reveal>
           </section>
