@@ -546,7 +546,7 @@ export default function KharisTunnelHero() {
           className="pointer-events-none z-0 flex w-full max-w-2xl flex-col items-center px-6 text-center"
         >
           <p className="text-xs font-mono uppercase tracking-[0.4em] text-[#d6c4ff] mb-4 font-semibold">
-            Fellowship Life
+            Kharis Life
           </p>
           <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tighter! leading-[0.95] text-white! drop-shadow-[0_2px_18px_rgba(0,0,0,0.45)]">
             A ONE-ANOTHER
