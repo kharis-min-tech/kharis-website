@@ -138,6 +138,11 @@ export function SiteHeader({ tone = "auto" }: Props) {
                   ref={aboutRef}
                   onMouseEnter={() => setAboutOpen(true)}
                   onMouseLeave={() => setAboutOpen(false)}
+                  onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                      setAboutOpen(false);
+                    }
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === "Escape") {
                       setAboutOpen(false);
@@ -150,7 +155,20 @@ export function SiteHeader({ tone = "auto" }: Props) {
                     className={`${linkTone(aboutActive)} gap-1`}
                     aria-expanded={aboutOpen}
                     aria-haspopup="true"
-                    onClick={() => setAboutOpen((v) => !v)}
+                    onClick={(event) => {
+                      // Pointer entry already opens the menu, so its click should keep it open.
+                      setAboutOpen((value) => (event.detail === 0 ? !value : true));
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+                      event.preventDefault();
+                      setAboutOpen(true);
+                      const last = event.key === "ArrowUp";
+                      window.requestAnimationFrame(() => {
+                        const items = aboutRef.current?.querySelectorAll("a");
+                        items?.[last ? items.length - 1 : 0]?.focus();
+                      });
+                    }}
                   >
                     {link.label}
                     <span className="text-[10px] opacity-70" aria-hidden>

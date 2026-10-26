@@ -26,6 +26,7 @@
 /* Right-hand photo stage; its left edge melts into the ink panel. */
 .belong-story__media {
   position: absolute;
+  z-index: 0;
   inset: 0 0 0 34%;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24%);
   mask-image: linear-gradient(to right, transparent 0, #000 24%);
@@ -37,8 +38,13 @@
   will-change: opacity, transform;
 }
 
+.belong-story__image--illustration {
+  background: var(--belong-ink);
+}
+
 .belong-story__shade {
   position: absolute;
+  z-index: 1;
   inset: 0;
   pointer-events: none;
   background:

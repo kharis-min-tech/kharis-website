@@ -1,6 +1,9 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import Link from "next/link";
+import { LocationsMapArt, type LocationPin } from "@/components/LocationsMapArt";
 import { useRevealOnView } from "@/components/EventsTop";
 import "./know-kharis.css";
 
@@ -8,7 +11,8 @@ type Panel = {
   href: string;
   title: string;
   blurb?: string;
-  src: string;
+  src?: string;
+  map?: boolean;
   alt: string;
   position?: string;
 };
@@ -18,40 +22,40 @@ const PANELS: Panel[] = [
     href: "/mission",
     title: "About Us",
     blurb: "Our mandate is to bring Christ to people everywhere.",
-    src: "/kp2/assets/sunday-service-sermon-notes.jpg",
-    alt: "Taking sermon notes during a Sunday service",
-    position: "60% 50%",
+    src: KP2_PHOTOS.baptismFamily.src,
+    alt: KP2_PHOTOS.baptismFamily.alt,
+    position: "50% 35%",
   },
   {
     href: "/branches",
     title: "Locations",
-    src: "/kp2/assets/friends-arriving-at-church.jpg",
-    alt: "Two friends smiling as they arrive at church",
-    position: "50% 25%",
+    map: true,
+    alt: "Map of Kharis Phase 2 locations in the United Kingdom",
   },
   {
     href: "/life",
     title: "Life",
-    src: "/kp2/assets/congregation-celebrating.jpg",
-    alt: "The congregation celebrating together at a Kharis service",
+    src: KP2_PHOTOS.serviceTogether.src,
+    alt: KP2_PHOTOS.serviceTogether.alt,
     position: "50% 25%",
   },
   {
     href: "/messages",
     title: "Become a Believer",
-    src: "/kp2/assets/street-evangelism.jpg",
-    alt: "Sharing the gospel with a passer-by on the street",
+    src: KP2_PHOTOS.outreachConversation.src,
+    alt: KP2_PHOTOS.outreachConversation.alt,
     position: "50% 30%",
   },
   {
     href: "/departments",
     title: "Get Involved",
-    src: "/kp2/assets/choir-on-stage.jpg",
-    alt: "The KP2 choir ministering on stage",
+    src: KP2_PHOTOS.serviceSaxophone.src,
+    alt: KP2_PHOTOS.serviceSaxophone.alt,
+    position: KP2_PHOTOS.serviceSaxophone.position,
   },
 ];
 
-export function KnowKharisComic() {
+export function KnowKharisComic({ branchPins }: { branchPins: LocationPin[] }) {
   const [ref, phase] = useRevealOnView<HTMLDivElement>(0.2);
 
   return (
@@ -76,13 +80,19 @@ export function KnowKharisComic() {
             >
               <Link href={panel.href} className="kp-know__panel">
                 <span className="kp-know__media">
-                  <img
-                    src={panel.src}
-                    alt={panel.alt}
-                    loading="lazy"
-                    decoding="async"
-                    style={panel.position ? { objectPosition: panel.position } : undefined}
-                  />
+                  {panel.map ? (
+                    <LocationsMapArt pins={branchPins} />
+                  ) : (
+                    <img
+                      src={panel.src}
+                      alt={panel.alt}
+                      loading="lazy"
+                      decoding="async"
+                      style={{
+                        objectPosition: panel.position,
+                      }}
+                    />
+                  )}
                 </span>
                 <span className="kp-know__safe">
                   <span className="kp-know__copy">

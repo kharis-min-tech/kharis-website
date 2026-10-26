@@ -5,7 +5,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
-import { MessagesWhy } from "@/components/MessagesWhy";
 import { MessagesAppStrip } from "@/components/MessagesAppStrip";
 import { MessageBrowser } from "@/components/MessageBrowser";
 import "@/components/listen-row.css";
@@ -30,7 +29,8 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             <div
               className="absolute inset-0 bg-cover bg-center opacity-60"
               style={{
-                backgroundImage: "url('/kp2/assets/pastor-david-at-pulpit.jpg')",
+                backgroundImage:
+                  "url('https://images.kharis.org/site-images/kp2/a991d1457f200aa6/pastor-david-at-pulpit.jpg')",
               }}
             />
           )}
@@ -57,8 +57,9 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   <span
                     className="material-symbols-outlined"
                     style={{ fontVariationSettings: "'FILL' 1" }}
+                    aria-hidden="true"
                   >
-                    play_arrow
+                    volume_up
                   </span>
                   WATCH NOW
                 </a>

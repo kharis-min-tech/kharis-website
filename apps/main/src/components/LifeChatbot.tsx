@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import { AudioLines, MapPin, MessageSquareText, Search, X } from "lucide-react";
 import { ChatIcon } from "@/components/ChatIcon";
 import { ChatMarkdown } from "@/components/ChatMarkdown";
@@ -270,11 +270,11 @@ export function LifeChatbot({
     window.requestAnimationFrame(() => fabRef.current?.focus());
   };
 
-  const closeStartSheet = () => {
+  const closeStartSheet = useCallback(() => {
     setStartSheetOpen(false);
     onStartSheetClose?.();
     window.requestAnimationFrame(() => fabRef.current?.focus());
-  };
+  }, [onStartSheetClose]);
 
   const chooseStart = (choice: "chat" | "messages" | "branches") => {
     setStartSheetOpen(false);
@@ -315,7 +315,7 @@ export function LifeChatbot({
       window.clearTimeout(t);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open, startSheetOpen]);
+  }, [open, startSheetOpen, closeStartSheet]);
 
   useEffect(() => {
     if (!open) return;

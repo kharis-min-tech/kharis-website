@@ -14,17 +14,17 @@ export type TestimonyItem = { quote: string; title?: string; name: string; meta:
 
 const PHOTOS = [
   {
-    src: "/kp2/assets/testimony-1.jpg",
+    src: "https://images.kharis.org/site-images/kp2/fb9675c9cc674137/testimony-1.jpg",
     alt: "Sharing a testimony at Kharis Phase 2",
     position: "center top",
   },
   {
-    src: "/kp2/assets/testimony-3.jpg",
+    src: "https://images.kharis.org/site-images/kp2/2c9fe8d53a5b1d11/testimony-3.jpg",
     alt: "Giving glory to God in testimony at Kharis Phase 2",
     position: "center 20%",
   },
   {
-    src: "/kp2/assets/testimony-2.jpg",
+    src: "https://images.kharis.org/site-images/kp2/f1508812f09a9ccd/testimony-2.jpg",
     alt: "Praising God and giving thanks at Kharis Phase 2",
     position: "center 25%",
   },

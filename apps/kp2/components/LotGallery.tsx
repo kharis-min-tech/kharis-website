@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { useEffect, useState } from "react";
 import type { InstagramPost } from "@/lib/instagram";
 
@@ -21,47 +23,47 @@ export const LOT_CLIPS: LotClip[] = [
   },
   {
     kind: "image",
-    src: "https://images.kharis.org/site-images/kp2/8440a4a63e4ae020/K-dancers-img.jpg",
-    alt: "KP2 dancers",
-    label: "K-Dancers",
+    src: KP2_PHOTOS.bassDrama.src,
+    alt: KP2_PHOTOS.bassDrama.alt,
+    label: "K-Drama",
   },
   {
     kind: "image",
-    src: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
-    alt: "Praise night",
-    label: "Praise night",
+    src: KP2_PHOTOS.servicePraise.src,
+    alt: KP2_PHOTOS.servicePraise.alt,
+    label: "Praise & worship",
     span: "wide",
   },
   { kind: "video", src: "/kp2/assets/crowd.mp4", alt: "The room in full voice", label: "The room" },
   {
     kind: "image",
-    src: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg",
-    alt: "Young adults together",
+    src: KP2_PHOTOS.serviceTogether.src,
+    alt: KP2_PHOTOS.serviceTogether.alt,
     label: "The lot",
   },
   {
     kind: "image",
-    src: "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/sports-day.jpg",
-    alt: "Sports day",
-    label: "Sports day",
+    src: KP2_PHOTOS.welcomeGroup.src,
+    alt: KP2_PHOTOS.welcomeGroup.alt,
+    label: "Together at church",
   },
   { kind: "video", src: "/kp2/assets/choir2.mp4", alt: "Choir in worship", label: "Choir" },
   {
     kind: "image",
-    src: "https://images.kharis.org/site-images/kp2/ffbe5aca25d25b8c/Spoken-word.jpg",
-    alt: "Spoken word",
-    label: "Spoken word",
+    src: KP2_PHOTOS.outreachConversation.src,
+    alt: KP2_PHOTOS.outreachConversation.alt,
+    label: "Jesus Campaign",
   },
   {
     kind: "image",
-    src: "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/K-music-img.jpg",
-    alt: "KP2 music",
-    label: "K-Music",
+    src: KP2_PHOTOS.serviceSaxophone.src,
+    alt: KP2_PHOTOS.serviceSaxophone.alt,
+    label: "Instrumentalists",
   },
   {
     kind: "image",
-    src: "https://images.kharis.org/site-images/kp2/ca1bcf57dbf80629/community.jpg",
-    alt: "Community gathering",
+    src: KP2_PHOTOS.welcomeSmile.src,
+    alt: KP2_PHOTOS.welcomeSmile.alt,
     label: "Family",
   },
   {
@@ -73,8 +75,8 @@ export const LOT_CLIPS: LotClip[] = [
   },
   {
     kind: "image",
-    src: "https://images.kharis.org/site-images/kp2/f565b4d37758eee2/bass-sunday.jpg",
-    alt: "Bring a soul Sunday",
+    src: KP2_PHOTOS.bassSpokenWord.src,
+    alt: KP2_PHOTOS.bassSpokenWord.alt,
     label: "BASS",
   },
 ];
@@ -131,7 +133,7 @@ export function LotGallery({
               </span>
             </h2>
             <p className="mt-4 max-w-xl font-body-lg text-[15px] sm:text-body-lg text-white/70">
-              Dancing, choir, sports day, praise nights — this is what KP2 actually looks like.
+              Worship, drama, music and outreach. This is life at KP2.
             </p>
           </div>
           <a

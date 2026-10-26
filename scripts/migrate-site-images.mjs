@@ -82,7 +82,7 @@ export async function inventory() {
   }
   return result;
 }
-async function verifyPublic(image) {
+async function verifyPublicOnce(image) {
   const response = await fetch(image.url, {
     signal: AbortSignal.timeout(30000),
     redirect: "error",
@@ -93,6 +93,17 @@ async function verifyPublic(image) {
   if (contentType !== image.contentType) throw new Error(`Incorrect Content-Type: ${image.key}`);
   if (sha(Buffer.from(await response.arrayBuffer())) !== image.hash)
     throw new Error(`Public checksum mismatch: ${image.key}`);
+}
+export async function verifyPublic(image) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      await verifyPublicOnce(image);
+      return;
+    } catch (error) {
+      if (attempt === 2 || error.name !== "TimeoutError") throw error;
+      console.log(`Retrying public verification (${attempt + 2}/3): ${image.key}`);
+    }
+  }
 }
 export async function uploadImages(images) {
   const endpoint = new URL(process.env.R2_ENDPOINT ?? "https://missing.invalid");
@@ -174,28 +185,74 @@ export function replaceImageUrls(text, app, images) {
   }
   return updated;
 }
+export function imageMapping(app, images, previous = {}) {
+  const sourcesByUrl = new Map(
+    images.filter((image) => image.app === app).map((image) => [image.url, image.source]),
+  );
+  const mapping = {
+    ...previous,
+    ...Object.fromEntries(
+      images.filter((image) => image.app === app).map((image) => [image.source, image.url]),
+    ),
+  };
+  function resolveAlias(source, visited = new Set()) {
+    const value = previous[source];
+    const target = value?.startsWith("/")
+      ? app === "kp2"
+        ? value.replace(/^\/kp2(?=\/)/, "")
+        : value
+      : sourcesByUrl.get(value);
+    if (!target || target === source) return mapping[source];
+    if (visited.has(source)) throw new Error(`Circular image alias: ${source}`);
+    visited.add(source);
+    const resolved = resolveAlias(target, visited);
+    if (!resolved) throw new Error(`Image alias target missing: ${source} -> ${target}`);
+    return resolved;
+  }
+  for (const source of Object.keys(previous)) mapping[source] = resolveAlias(source);
+  return mapping;
+}
 export async function writeManifests(images) {
   for (const app of apps.filter((app) => app.sourceDirs.length)) {
     const output =
       app.id === "main"
         ? "apps/main/src/lib/site-image-urls.json"
         : "apps/kp2/lib/site-image-urls.json";
-    const mapping = Object.fromEntries(
-      images.filter((image) => image.app === app.id).map((image) => [image.source, image.url]),
-    );
+    const previous = JSON.parse(await readFile(resolve(root, output), "utf8"));
+    const mapping = imageMapping(app.id, images, previous);
     await writeFile(resolve(root, output), JSON.stringify(mapping, null, 2) + "\n");
   }
 }
 async function applyUrls(images) {
   // Finish all remote verification before the first local file changes.
-  for (const image of images) await verifyPublic(image);
+  // Public checks are read-only; small batches avoid a long serial verification pass.
+  for (let index = 0; index < images.length; index += 4) {
+    await Promise.all(images.slice(index, index + 4).map(verifyPublic));
+  }
   let changed = 0;
   for (const app of apps) {
+    if (!app.sourceDirs.length) continue;
+    const manifest =
+      app.id === "main"
+        ? "apps/main/src/lib/site-image-urls.json"
+        : "apps/kp2/lib/site-image-urls.json";
+    const mapping = imageMapping(
+      app.id,
+      images,
+      JSON.parse(await readFile(resolve(root, manifest), "utf8")),
+    );
+    // Saved paths can intentionally select a newer photograph than the local original.
+    const replacements = Object.entries(mapping).map(([source, url]) => ({
+      app: app.id,
+      source,
+      url,
+    }));
     const files = new Set(
       (await Promise.all(app.sourceDirs.map((directory) => walk(resolve(root, directory))))).flat(),
     );
     for (const file of files) {
       if (
+        / \d+\.[^.]+$/.test(file) ||
         /\.(test|spec)\./.test(file) ||
         !/\.(tsx?|css|jsx?|mjs|json)$/.test(file) ||
         file.endsWith("package.json") ||
@@ -203,7 +260,7 @@ async function applyUrls(images) {
       )
         continue;
       const original = await readFile(file, "utf8");
-      const updated = replaceImageUrls(original, app.id, images);
+      const updated = replaceImageUrls(original, app.id, replacements);
       if (updated !== original) {
         await writeFile(file, updated);
         changed++;

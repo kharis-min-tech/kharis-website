@@ -1,10 +1,13 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { AppListenSteps } from "@/components/AppListenSteps";
 import { KHARIS_APP } from "@/lib/kharis-app";
 import { AmbientVideo } from "@/components/AmbientVideo";
 import { HeroTitle } from "@/components/HeroTitle";
 import { KnowKharisComic } from "@/components/KnowKharisComic";
+import type { LocationPin } from "@/components/LocationsMapArt";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -21,9 +24,11 @@ import { type MessageVideo } from "@/lib/youtube";
 function Index({
   testimonials,
   messages,
+  branchPins,
 }: {
   testimonials: Testimonial[];
   messages: MessageVideo[];
+  branchPins: LocationPin[];
 }) {
   const [formOpen, setFormOpen] = useState(false);
   const introRef = useRef<HTMLElement>(null);
@@ -80,13 +85,17 @@ function Index({
       <SiteHeader />
 
       <header className="kp-home-hero kp-on-dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
-        <img className="kp-home-hero__still" src="/kp2/assets/crowd-poster.jpg" alt="" />
+        <img
+          className="kp-home-hero__still"
+          src="https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg"
+          alt=""
+        />
         <div className="kp-home-hero__mosaic absolute inset-0 grid grid-cols-2 lg:flex lg:flex-row w-full h-full z-0">
           <div className="relative col-span-2 lg:flex-1 group overflow-hidden border-b-2 lg:border-b-0 lg:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/Choir-video.mp4"
-              poster="/kp2/assets/choir-video-poster.jpg"
+              poster="https://images.kharis.org/site-images/kp2/88a52cf2f36e4dba/choir-video-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -95,7 +104,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/crowd.mp4"
-              poster="/kp2/assets/crowd-poster.jpg"
+              poster="https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -104,7 +113,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/choir2.mp4"
-              poster="/kp2/assets/choir2-poster.jpg"
+              poster="https://images.kharis.org/site-images/kp2/a20adefe3b0f9d7a/choir2-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -113,7 +122,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/dancing.mp4"
-              poster="/kp2/assets/dancing-poster.jpg"
+              poster="https://images.kharis.org/site-images/kp2/2777b7351167f611/dancing-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -163,10 +172,10 @@ function Index({
             <div className="kp-intro-visual relative order-2 md:order-1">
               <div className="border-4 border-gray-900 brutalist-shadow overflow-hidden rotate-[-2deg] bg-gray-100">
                 <img
-                  alt="A full hall at a Kharis Phase 2 Sunday service"
+                  alt={KP2_PHOTOS.midweekJoy.alt}
                   className="kp-intro-photo w-full object-cover"
                   style={{ height: "clamp(240px, 28vw, 420px)" }}
-                  src="/kp2/assets/sunday-service-full-hall.jpg"
+                  src={KP2_PHOTOS.midweekJoy.src}
                   loading="lazy"
                   decoding="async"
                 />
@@ -216,7 +225,7 @@ function Index({
           </div>
         </section>
 
-        <KnowKharisComic />
+        <KnowKharisComic branchPins={branchPins} />
 
         <section
           className="py-24 bg-[#630ed4] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden"
@@ -252,7 +261,7 @@ function Index({
                 <img
                   alt="Pastor David Antwi, Head Pastor of Kharis Phase 2"
                   className="relative w-full aspect-[4/5] object-cover rounded-[2rem] shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500"
-                  src="/kp2/assets/pastor-david-smiling.jpg"
+                  src="https://images.kharis.org/site-images/kp2/51390c9807aba7b8/pastor-david-smiling.jpg"
                   loading="lazy"
                   decoding="async"
                 />

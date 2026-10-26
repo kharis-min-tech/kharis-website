@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { withBasePath } from "@/lib/base-path";
 import { CONTACT_TOPICS } from "@/lib/contact";
@@ -265,12 +267,12 @@ export function ContactLetter({
         <aside className="kp-write__aside" aria-label="What happens next">
           <figure className="kp-write__photo">
             <img
-              src="https://images.kharis.org/site-images/main/67210f0fba54b6a1/contact/after-service-conversation.jpg"
-              alt="Two women talking after a Sunday service"
+              src={KP2_PHOTOS.serviceTogether.src}
+              alt={KP2_PHOTOS.serviceTogether.alt}
               loading="lazy"
               decoding="async"
             />
-            <figcaption>After a Sunday service</figcaption>
+            <figcaption>Together at KP2</figcaption>
           </figure>
 
           <ol className="kp-steps">

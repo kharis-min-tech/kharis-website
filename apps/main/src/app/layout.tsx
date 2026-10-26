@@ -43,7 +43,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={sans.variable} data-site-intro="pending" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={sans.variable}
+      data-site-intro="pending"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: SITE_INTRO_BOOTSTRAP }} />
         <noscript>

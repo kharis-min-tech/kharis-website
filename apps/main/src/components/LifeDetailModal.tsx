@@ -36,7 +36,13 @@ function FastingBackgroundPreview() {
   return (
     <div className="life-reader__fasting-backdrop" aria-hidden="true">
       <div className="life-reader__fasting-image">
-        <Image src="/images/life-fasting-detail-bw.png" alt="" fill sizes="100vw" quality={78} />
+        <Image
+          src="https://images.kharis.org/site-images/main/338614f051ff86bf/life-fasting-detail-bw.png"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={78}
+        />
       </div>
       <div className="life-reader__fasting-scrim" aria-hidden="true" />
     </div>

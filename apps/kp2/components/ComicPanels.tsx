@@ -1,5 +1,7 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+
 import { useCallback, useState } from "react";
 import { ComicGallery, type GalleryPhoto } from "@/components/ComicGallery";
 import { useRevealOnView } from "@/components/EventsTop";
@@ -22,33 +24,14 @@ const PANELS: Panel[] = [
     headline: "Midweek Service",
     subtext: "The Word and prayer, right in the middle of your week.",
     past: false,
-    poster: {
-      src: `${IMG}/b8180db67daeb332/hero/preaching-open-bible.jpg`,
-      alt: "Pastor preaching from an open Bible with scripture on the screen behind him",
-    },
+    poster: KP2_PHOTOS.midweekHall,
     gallery: [
-      {
-        src: `${IMG}/81043753566f149e/hero-b-poster.jpg`,
-        alt: "Pastor preaching on stage in front of a blue screen",
-      },
-      {
-        src: `${IMG}/16b531253b8a325e/grace-filled-prayer.jpg`,
-        alt: "Church members praying together",
-      },
-      { src: `${IMG}/cc4f9c67e2c899e3/testimony-stage-1.jpg`, alt: "Members sharing on stage" },
-      {
-        src: `${IMG}/bb1a12396469052d/testimony-stage-2.jpg`,
-        alt: "Pastor praying with members on stage",
-      },
-      { src: `${IMG}/79c0eac25d6bc370/testimony-sharing.jpg`, alt: "Member sharing a testimony" },
-      {
-        src: `${IMG}/aee6ab0aae266c72/hero/easter-pastor-david.jpg`,
-        alt: "Pastor teaching from the stage",
-      },
-      {
-        src: `${IMG}/3f1f49569aefd282/branch-slide-3.jpg`,
-        alt: "Members taking notes during teaching",
-      },
+      KP2_PHOTOS.midweekPrayer,
+      KP2_PHOTOS.midweekWorship,
+      KP2_PHOTOS.midweekKeys,
+      KP2_PHOTOS.midweekJoy,
+      KP2_PHOTOS.midweekGreeting,
+      KP2_PHOTOS.midweekSharing,
     ],
   },
   {
@@ -64,22 +47,8 @@ const PANELS: Panel[] = [
     gallery: [
       {
         src: `${IMG}/3423ef762f6c2481/events/family-fun-day-race.jpg`,
-        alt: "Members in 316 jerseys racing across the court on Family Fun Day",
+        alt: "Members racing across the court on Family Fun Day",
       },
-      {
-        src: `${IMG}/ca959585decb8ff4/hero/outreach-community.jpg`,
-        alt: "Church members gathered outdoors in a park",
-      },
-      {
-        src: `${IMG}/b722ebe4e6374dcd/about-hero-bench-3200.jpg`,
-        alt: "Members on a bench outdoors",
-      },
-      {
-        src: `${IMG}/4ac6c245a7e4d9c2/hero/impartation-celebration.jpg`,
-        alt: "Pastor celebrating with members",
-      },
-      { src: `${IMG}/6cecd6b024bd301a/love-greeting.jpg`, alt: "Members greeting each other" },
-      { src: `${IMG}/234c625e119f9e2a/young-adults.jpg`, alt: "Young adults together" },
     ],
   },
   {
@@ -97,24 +66,6 @@ const PANELS: Panel[] = [
         src: `${IMG}/c92b67201f985207/events/praise-night-stage.jpg`,
         alt: "Singers on stage leading a packed hall in praise",
       },
-      {
-        src: `${IMG}/2fd55a6761cfb656/locations-worship-team.jpg`,
-        alt: "Worship team singing on stage",
-      },
-      {
-        src: `${IMG}/de005ef42ce5304e/get-involved-sax.jpg`,
-        alt: "Saxophonist playing during worship",
-        position: "50% 30%",
-      },
-      {
-        src: `${IMG}/850b7f32a7f6712c/joyful-worship.jpg`,
-        alt: "Congregation worshipping with joy",
-      },
-      {
-        src: `${IMG}/e9df39abff1c7e6d/hero/sunday-service-stage.jpg`,
-        alt: "Hands raised under stage lights",
-      },
-      { src: `${IMG}/9b547f88f3b4d297/worship.jpg`, alt: "Worshippers with hands raised" },
     ],
   },
   {
@@ -122,31 +73,13 @@ const PANELS: Panel[] = [
     headline: "Jesus Campaign",
     subtext: "Taking the Glorious Gospel of Christ to the streets of our cities.",
     past: true,
-    poster: {
-      src: `${IMG}/d717c95a5811ee19/about-mission-outreach-3200.jpg`,
-      alt: "Two members in yellow campaign T-shirts talking with a woman at Stratford station",
-    },
+    poster: KP2_PHOTOS.outreachConversation,
     gallery: [
-      {
-        src: `${IMG}/5bbfb2fff5c0fc8c/hero/outreach-street.jpg`,
-        alt: "Outreach team in yellow shirts on a city street",
-      },
-      {
-        src: `${IMG}/c7e0b460a01f93eb/about-vision-team-2048.jpg`,
-        alt: "Outreach team posing together in yellow shirts",
-      },
-      {
-        src: `${IMG}/d717c95a5811ee19/about-mission-outreach-3200.jpg`,
-        alt: "Talking with people on the street",
-      },
-      {
-        src: `${IMG}/91479ba234a71277/vision-campaign.jpg`,
-        alt: "Crowd in yellow campaign shirts",
-      },
-      {
-        src: `${IMG}/ca959585decb8ff4/hero/outreach-community.jpg`,
-        alt: "Team gathered in a park",
-      },
+      KP2_PHOTOS.outreachTeam,
+      KP2_PHOTOS.outreachSharing,
+      KP2_PHOTOS.outreachSpeaker,
+      KP2_PHOTOS.outreachStreet,
+      KP2_PHOTOS.outreachMessage,
     ],
   },
 ];

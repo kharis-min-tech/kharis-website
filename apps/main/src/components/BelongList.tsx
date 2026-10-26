@@ -26,7 +26,7 @@ const ITEMS: BelongItem[] = [
     description:
       "A public declaration that you identify with Jesus Christ's death, burial and resurrection, walking in newness of life.",
     href: "/life/baptism",
-    image: "/images/baptism-illustration.jpeg",
+    image: "https://images.kharis.org/site-images/main/68bc7c9041dc2c7d/baptism-illustration.jpeg",
     alt: "Illustration of two people being baptised beneath a dove",
   },
   {
@@ -46,7 +46,7 @@ const ITEMS: BelongItem[] = [
     description:
       "We abstain from food to signal dependence on God, fasting joined with prayer, as a church family seeking His purpose.",
     href: "/life/fasting",
-    image: "/images/life-fasting.jpg",
+    image: "https://images.kharis.org/site-images/main/7226db6e24e8c131/life-fasting.jpg",
     alt: "A Kharis worshipper praising during a church service",
     panel: { eyebrow: "SEEK GOD", title: "WITH PURPOSE" },
   },

@@ -1,3 +1,4 @@
+import { KP2_PHOTOS } from "@/lib/photography";
 import type { Metadata } from "next";
 import { hasCoords, type Branch } from "@/lib/branches";
 import type { ChurchEvent } from "@/lib/events";
@@ -97,9 +98,7 @@ export function organizationJsonLd() {
         alternateName: ["KP2", "Kharis Phase Two"],
         url,
         description: SITE_DESCRIPTION,
-        image: absoluteUrl(
-          "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg",
-        ),
+        image: absoluteUrl(KP2_PHOTOS.serviceWorship.src),
         logo: absoluteUrl(
           "https://images.kharis.org/site-images/kp2/2d0d7fb8b146df33/kp2-logo-new.png",
         ),
