@@ -1,4 +1,4 @@
-/** Life page "Community First": pinned split-door reveal into the Kharis family photo. */
+/** Life page "Home of Grace": pinned split-door reveal into the Kharis family photo. */
 "use client";
 
 import {
@@ -102,11 +102,13 @@ export function CommunityDoors() {
         <motion.div className="life-doors__shade" style={{ opacity: shadeOpacity }} aria-hidden />
 
         <motion.div className="life-doors__copy" style={{ opacity: copyOpacity, y: copyY }}>
-          <p className="life-doors__eyebrow">COMMUNITY FIRST</p>
+          <p className="life-doors__eyebrow">HOME OF GRACE</p>
           <h1 id="life-refresh-title">KHARIS LIFE</h1>
           <p className="life-doors__body">
-            The Christian life is a one-another life. Believe, become, and belong. Grow in the Word,
-            find your people, and live out your faith in the Kharis family.
+            The Christian life is not designed to be lived in isolation. The Church is a place for
+            feeding on God&apos;s Word, through teaching and preaching, fellowship and
+            accountability. Grow as a believer and live out what the New Testament describes as the
+            &ldquo;One Another&rdquo; life.
           </p>
           <Link href="/locations" className="life-refresh__button">
             PLAN A VISIT <Icon name="arrow" className="h-4 w-4" />
@@ -120,7 +122,7 @@ export function CommunityDoors() {
           aria-hidden
         >
           <div className="life-doors__words">
-            <span className="life-doors__eyebrow">COMMUNITY</span>
+            <span className="life-doors__eyebrow">HOME OF</span>
             <span className="life-doors__title">KHARIS</span>
           </div>
           <span className="life-doors__quote">A ONE-ANOTHER LIFE.</span>
@@ -132,7 +134,7 @@ export function CommunityDoors() {
           aria-hidden
         >
           <div className="life-doors__words">
-            <span className="life-doors__eyebrow">FIRST</span>
+            <span className="life-doors__eyebrow">GRACE</span>
             <span className="life-doors__title">LIFE</span>
           </div>
           <span className="life-doors__quote">BELONG HERE.</span>

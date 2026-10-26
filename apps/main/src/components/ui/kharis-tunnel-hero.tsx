@@ -40,7 +40,7 @@ const KHARIS_ITEMS = [
   },
   {
     src: "https://images.kharis.org/site-images/main/5bbfb2fff5c0fc8c/hero/outreach-street.jpg",
-    title: "Community First",
+    title: "Fellowship Life",
     alt: "Kharis outreach team sharing the gospel on the street",
   },
   {
@@ -440,7 +440,7 @@ export default function KharisTunnelHero() {
           className="pointer-events-none z-0 flex w-full max-w-2xl flex-col items-center px-6 text-center"
         >
           <p className="text-xs font-mono uppercase tracking-[0.4em] text-[#d6c4ff] mb-4 font-semibold">
-            Community First
+            Fellowship Life
           </p>
           <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tighter! leading-[0.95] text-white! drop-shadow-[0_2px_18px_rgba(0,0,0,0.45)]">
             A ONE-ANOTHER
@@ -448,7 +448,7 @@ export default function KharisTunnelHero() {
             LIFE.
           </h2>
           <p className="mt-4 max-w-[40ch] text-sm sm:text-base font-light text-white/80">
-            Believe, become, and belong. Scroll to journey through the Kharis family experience.
+            A family shaped by grace. Scroll to journey through your Kharis experience.
           </p>
         </motion.div>
 

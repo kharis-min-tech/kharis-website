@@ -1,4 +1,4 @@
-/** Life page "Belong in the family": a pinned, scroll-scrubbed story through four ways to belong. */
+/** Life page "A Place to call Home": a pinned, scroll-scrubbed story through four ways to belong. */
 "use client";
 
 import {
@@ -298,7 +298,7 @@ export function BelongStory({ onLearnMore }: { onLearnMore: (id: "baptism" | "fa
         <div className="belong-story__content">
           <header className="belong-story__intro">
             <p className="belong-story__eyebrow">A ONE-ANOTHER LIFE</p>
-            <h2 id="belong-story-title">Belong in the family</h2>
+            <h2 id="belong-story-title">A Place to call Home</h2>
             <p className="belong-story__lede">
               Kharis is a family where you can grow in your relationship with Jesus, fellowship with
               other Christ-like believers and discover your place in God&apos;s house.
