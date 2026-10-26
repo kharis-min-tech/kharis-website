@@ -18,8 +18,13 @@ export const metadata: Metadata = {
 
 export default async function LocationsPage() {
   const [items, full] = await Promise.all([listBranches(), listBranchData()]);
-  // Send only map coordinates to the browser, not a second copy of every branch's
-  // galleries, service records, descriptions and pastor biographies.
+  const cityPhotos: Record<string, string> = {
+    accra:
+      "https://images.kharis.org/site-images/main/0c0031656910b735/globe/accra-independence-arch.webp",
+    freetown:
+      "https://images.kharis.org/site-images/main/f7a0b56e18f54965/globe/freetown-harbour.webp",
+  };
+  // Send map coordinates and a photo, without duplicating full branch records.
   const pins = full.flatMap((branch) => {
     const venue = sundayVenue(branch);
     if (venue?.latitude == null || venue.longitude == null) return [];
@@ -30,6 +35,9 @@ export default async function LocationsPage() {
         lat: venue.latitude,
         lng: venue.longitude,
         country: venue.country,
+        photo:
+          items.find((item) => item.id === branch.slug)?.photo || cityPhotos[branch.slug] || "",
+        city: venue.city,
       },
     ];
   });
