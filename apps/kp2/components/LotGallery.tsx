@@ -75,8 +75,8 @@ export const LOT_CLIPS: LotClip[] = [
   },
   {
     kind: "image",
-    src: KP2_PHOTOS.bassMusic.src,
-    alt: KP2_PHOTOS.bassMusic.alt,
+    src: KP2_PHOTOS.bassSpokenWord.src,
+    alt: KP2_PHOTOS.bassSpokenWord.alt,
     label: "BASS",
   },
 ];

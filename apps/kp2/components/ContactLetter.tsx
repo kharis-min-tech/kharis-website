@@ -272,7 +272,7 @@ export function ContactLetter({
               loading="lazy"
               decoding="async"
             />
-            <figcaption>After a Sunday service</figcaption>
+            <figcaption>Together at KP2</figcaption>
           </figure>
 
           <ol className="kp-steps">

@@ -3,6 +3,7 @@
 import { KP2_PHOTOS } from "@/lib/photography";
 
 import Link from "next/link";
+import { LocationsMapArt, type LocationPin } from "@/components/LocationsMapArt";
 import { useRevealOnView } from "@/components/EventsTop";
 import "./know-kharis.css";
 
@@ -10,7 +11,8 @@ type Panel = {
   href: string;
   title: string;
   blurb?: string;
-  src: string;
+  src?: string;
+  map?: boolean;
   alt: string;
   position?: string;
 };
@@ -27,9 +29,8 @@ const PANELS: Panel[] = [
   {
     href: "/branches",
     title: "Locations",
-    src: KP2_PHOTOS.serviceHall.src,
-    alt: KP2_PHOTOS.serviceHall.alt,
-    position: "50% 20%",
+    map: true,
+    alt: "Map of Kharis Phase 2 locations in the United Kingdom",
   },
   {
     href: "/life",
@@ -48,12 +49,13 @@ const PANELS: Panel[] = [
   {
     href: "/departments",
     title: "Get Involved",
-    src: KP2_PHOTOS.serviceChoir.src,
-    alt: "The KP2 choir ministering on stage",
+    src: KP2_PHOTOS.serviceSaxophone.src,
+    alt: KP2_PHOTOS.serviceSaxophone.alt,
+    position: KP2_PHOTOS.serviceSaxophone.position,
   },
 ];
 
-export function KnowKharisComic() {
+export function KnowKharisComic({ branchPins }: { branchPins: LocationPin[] }) {
   const [ref, phase] = useRevealOnView<HTMLDivElement>(0.2);
 
   return (
@@ -78,13 +80,19 @@ export function KnowKharisComic() {
             >
               <Link href={panel.href} className="kp-know__panel">
                 <span className="kp-know__media">
-                  <img
-                    src={panel.src}
-                    alt={panel.alt}
-                    loading="lazy"
-                    decoding="async"
-                    style={panel.position ? { objectPosition: panel.position } : undefined}
-                  />
+                  {panel.map ? (
+                    <LocationsMapArt pins={branchPins} />
+                  ) : (
+                    <img
+                      src={panel.src}
+                      alt={panel.alt}
+                      loading="lazy"
+                      decoding="async"
+                      style={{
+                        objectPosition: panel.position,
+                      }}
+                    />
+                  )}
                 </span>
                 <span className="kp-know__safe">
                   <span className="kp-know__copy">

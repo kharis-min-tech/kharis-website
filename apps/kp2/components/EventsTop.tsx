@@ -1,6 +1,7 @@
 "use client";
 
 import { KP2_PHOTOS } from "@/lib/photography";
+import { LocationsMapArt, type LocationPin } from "@/components/LocationsMapArt";
 
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -121,7 +122,13 @@ const EVENT_PHOTOS: Record<ChurchEvent["category"], string> = {
   Social: KP2_PHOTOS.serviceTogether.src,
 };
 
-export function EventsComingUp({ events }: { events: ChurchEvent[] }) {
+export function EventsComingUp({
+  events,
+  branchPins,
+}: {
+  events: ChurchEvent[];
+  branchPins: LocationPin[];
+}) {
   const [gridRef, phase] = useRevealOnView<HTMLUListElement>(0.15);
 
   return (
@@ -182,13 +189,12 @@ export function EventsComingUp({ events }: { events: ChurchEvent[] }) {
 
           <li style={{ ["--i" as string]: events.length }}>
             <Link href="/branches" className="kp-ev-next__tile kp-ev-next__tile--find">
-              <img
-                src={KP2_PHOTOS.serviceHall.src}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="kp-ev-next__img"
-              />
+              <div className="absolute inset-0 -z-[2] hidden md:block">
+                <LocationsMapArt pins={branchPins} wide />
+              </div>
+              <div className="absolute inset-0 -z-[2] md:hidden">
+                <LocationsMapArt pins={branchPins} />
+              </div>
               <span className="kp-ev-next__veil" aria-hidden="true" />
               <span className="kp-ev-next__pin material-symbols-outlined" aria-hidden="true">
                 location_on

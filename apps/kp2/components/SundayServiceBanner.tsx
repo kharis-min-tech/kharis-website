@@ -7,7 +7,11 @@ import { ComicGallery, type GalleryPhoto } from "@/components/ComicGallery";
 import { useRevealOnView } from "@/components/EventsTop";
 import "./sunday-service.css";
 
-const POSTER: GalleryPhoto = KP2_PHOTOS.serviceTeaching;
+const POSTER: GalleryPhoto = {
+  src: "https://images.kharis.org/site-images/main/e666a073b590b3ff/leadership/pastor-david-sunday.jpg",
+  alt: "Pastor David Antwi teaching from the Bible during a Sunday service",
+  position: "center 15%",
+};
 
 const GALLERY: GalleryPhoto[] = [
   KP2_PHOTOS.serviceChoir,

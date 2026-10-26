@@ -4,7 +4,7 @@ export function DepartmentIllustration({ department }: { department: string }) {
   return (
     <>
       <img
-        src="/kp2/assets/illustrations/childrens-ministry.webp"
+        src="/kp2/assets/illustrations/childrens-ministry-v2.webp"
         alt="Illustration of a teacher sharing a Bible story with children"
         loading="lazy"
         decoding="async"

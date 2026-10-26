@@ -6,6 +6,7 @@ import { ComicGallery } from "@/components/ComicGallery";
 import { KP2_PHOTOS } from "@/lib/photography";
 
 const PHOTOS = [
+  KP2_PHOTOS.baptismJoy,
   KP2_PHOTOS.baptismCelebration,
   KP2_PHOTOS.baptismCeremony,
   KP2_PHOTOS.baptismTeam,

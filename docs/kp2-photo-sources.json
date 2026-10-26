@@ -96,10 +96,10 @@
     "alt": "KP2 actors performing a drama during BASS"
   },
   {
-    "key": "bassMusic",
+    "key": "bassSpokenWord",
     "source": "2025/BASS/21.4.25/0I1A8360.jpg",
-    "asset": "/kp2/assets/photography/bass-music.webp",
-    "alt": "Two KP2 vocalists ministering on stage during BASS"
+    "asset": "/kp2/assets/photography/bass-spoken-word.webp",
+    "alt": "Two KP2 spoken word performers ministering on stage during BASS"
   },
   {
     "key": "welcomeGroup",
@@ -220,5 +220,11 @@
     "source": "2025/BASS/21.4.25/0I1A9546.jpg",
     "asset": "/kp2/assets/photography/bass-dance.webp",
     "alt": "KP2 members dancing and celebrating during BASS worship"
+  },
+  {
+    "key": "baptismJoy",
+    "source": "2025/Baptism/29.11.25/601A5101.jpg",
+    "asset": "/kp2/assets/photography/baptism-joy.webp",
+    "alt": "A KP2 member smiling with joy as she emerges from the baptism water"
   }
 ]

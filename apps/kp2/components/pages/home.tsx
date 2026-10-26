@@ -7,6 +7,7 @@ import { KHARIS_APP } from "@/lib/kharis-app";
 import { AmbientVideo } from "@/components/AmbientVideo";
 import { HeroTitle } from "@/components/HeroTitle";
 import { KnowKharisComic } from "@/components/KnowKharisComic";
+import type { LocationPin } from "@/components/LocationsMapArt";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -23,9 +24,11 @@ import { type MessageVideo } from "@/lib/youtube";
 function Index({
   testimonials,
   messages,
+  branchPins,
 }: {
   testimonials: Testimonial[];
   messages: MessageVideo[];
+  branchPins: LocationPin[];
 }) {
   const [formOpen, setFormOpen] = useState(false);
   const introRef = useRef<HTMLElement>(null);
@@ -165,10 +168,10 @@ function Index({
             <div className="kp-intro-visual relative order-2 md:order-1">
               <div className="border-4 border-gray-900 brutalist-shadow overflow-hidden rotate-[-2deg] bg-gray-100">
                 <img
-                  alt="A full hall at a Kharis Phase 2 Sunday service"
+                  alt={KP2_PHOTOS.midweekJoy.alt}
                   className="kp-intro-photo w-full object-cover"
                   style={{ height: "clamp(240px, 28vw, 420px)" }}
-                  src={KP2_PHOTOS.serviceHall.src}
+                  src={KP2_PHOTOS.midweekJoy.src}
                   loading="lazy"
                   decoding="async"
                 />
@@ -218,7 +221,7 @@ function Index({
           </div>
         </section>
 
-        <KnowKharisComic />
+        <KnowKharisComic branchPins={branchPins} />
 
         <section
           className="py-24 bg-[#630ed4] dark:bg-[#151218] border-b-4 border-gray-900 relative overflow-hidden"

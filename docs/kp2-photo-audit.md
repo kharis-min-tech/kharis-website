@@ -76,3 +76,30 @@ Recording thumbnails should continue to represent the linked recording. App scre
 ### Follow-up checks
 
 TypeScript and the 10 focused KP2 tests pass. ESLint reports no errors and 54 warnings (existing warnings plus the intentional plain image elements). Checked Giving cards at 1280px and 390px, matching desktop card tops, heights and heading positions, with no phone overflow in either theme. Checked the baptism gallery's next control, Escape dismissal and focus restoration. Verified the speaker glyph renders and Watch Now still reaches the messages section. Rendered the children's illustration in an isolated local preview without submitting the live quiz; removed the temporary preview route afterwards. No push or deployment.
+
+## Content relevance refinements
+
+- Replaced the cartoon children's illustration with a more natural editorial illustration. The current asset and full generation prompt are recorded in `children-ministry-illustration.md`.
+- Changed the Baptism lead image to the joyful emergence photograph `601A5101.jpg`. Changed the Home introduction to the smiling KP2 midweek group photograph, with source-specific alt text.
+- Home Locations and the Events branch CTA now use a UK map drawn from the repository's existing country outline data. Pins use published KP2 branch coordinates, filtered to the displayed UK area. No invented markers are used.
+- The Home Get Involved card was briefly changed to a static Departments preview, then restored to the KP2 saxophonist photograph following the user’s revised direction. The unused public screenshot asset was removed.
+- Corrected the two BASS performers to Spoken Word following the user's identification, renamed the corresponding photo entry, and restored the existing K-Music rapper photograph. K-Music copy now describes rapping and lyricists.
+- Replaced Choir's unexplained dot with a play symbol indicating that its video is available. Other departments are labelled as previews for assistive technology.
+- Removed a duplicated Material Symbols name that invalidated the icon font request. The request now sorts and deduplicates its icon names before constructing the stylesheet URL.
+- The Events Sunday Service lead image now shows Pastor David using his verified main-site photograph.
+- Contact uses envelope and conversation artwork in place of the unrelated group photograph. The Contact form's photograph caption is now "Together at KP2", without claiming it was taken after a service.
+
+
+## Giving page aligned with the main Kharis page
+
+The original KP2 layout used a full-height vision-campaign hero, a Why We Give grid, four giving cards, building fund and closing CTA. Following the user’s direction, the revised page uses the main site's focused structure: Sow bountifully, a three-photo worship stack, a giving-method selector and Spurgeon’s Centre. KP2 typography, purple and yellow, hard borders and offset shadows remain. The photographs are actual KP2 worship images from KOffice.
+
+The method selector provides online branch selection, bank transfer with copy controls, text amounts with an SMS preview and the existing app link. Branch links come from the existing content data, with the existing Kharis giving portal as a clearly labelled fallback. Bank details, SMS recipient and building fund destinations are unchanged. Existing testimonies remain below the building project.
+
+Validation: TypeScript passed. Targeted ESLint has no errors, with four plain-image warnings. Verified 390px and 1280px layouts, light and dark themes, no horizontal overflow, arrow-key tab selection and focus, all four method panels, branch portal fallback, bank copy feedback and the £15 SMS URL. Map CTA layering and phone sizing were corrected and visually checked. The new joyful baptism lead image was checked at phone width. Work remains local, without push or deployment.
+
+## Simplified Departments follow-up
+
+Restored the Home Get Involved card to the actual KP2 saxophonist photograph following the user's revised direction. Removed the Departments page's featured cards, searchable directory, filters and individual department selector. It now uses a static serving introduction with the saxophonist, a quiz CTA and the existing Why We Serve section. Department matching remains available inside the quiz.
+
+TypeScript passed. Targeted ESLint reports no errors and two plain-image warnings. Verified the restored Home card and simplified Departments page on desktop, plus 390px phone layouts in light and dark themes without horizontal overflow. No push or deployment.

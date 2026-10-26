@@ -133,7 +133,8 @@ const MATERIAL_ICONS = [
   "volunteer_activism",
   "waving_hand",
   "zoom_in",
-].join(",");
+];
+const MATERIAL_ICON_NAMES = [...new Set(MATERIAL_ICONS)].sort().join(",");
 import { PageTurn } from "@/components/PageTurn";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { JsonLd } from "@/components/JsonLd";
@@ -216,7 +217,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href={`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=${MATERIAL_ICONS}&display=swap`}
+          href={`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=${MATERIAL_ICON_NAMES}&display=swap`}
         />
       </head>
       <body>

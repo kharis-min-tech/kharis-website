@@ -48,7 +48,11 @@ export const KP2_PHOTOS = {
     "center",
   ),
   bassDrama: photo("bass-drama", "KP2 actors performing a drama during BASS", "center"),
-  bassMusic: photo("bass-music", "Two KP2 vocalists ministering on stage during BASS", "50% 35%"),
+  bassSpokenWord: photo(
+    "bass-spoken-word",
+    "Two KP2 spoken word performers ministering on stage during BASS",
+    "50% 35%",
+  ),
   welcomeGroup: photo(
     "welcome-group",
     "KP2 members together in the church entrance hall",
@@ -135,6 +139,11 @@ export const KP2_PHOTOS = {
   bassDance: photo(
     "bass-dance",
     "KP2 members dancing and celebrating during BASS worship",
+    "center",
+  ),
+  baptismJoy: photo(
+    "baptism-joy",
+    "A KP2 member smiling with joy as she emerges from the baptism water",
     "center",
   ),
 };

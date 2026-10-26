@@ -1,6 +1,7 @@
 "use client";
 
 import { KP2_PHOTOS } from "@/lib/photography";
+import type { LocationPin } from "@/components/LocationsMapArt";
 
 import { useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -67,7 +68,7 @@ function EventCard({ event }: { event: ChurchEvent }) {
   );
 }
 
-function EventsPage({ events }: { events: ChurchEvent[] }) {
+function EventsPage({ events, branchPins }: { events: ChurchEvent[]; branchPins: LocationPin[] }) {
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [query, setQuery] = useState("");
 
@@ -113,7 +114,7 @@ function EventsPage({ events }: { events: ChurchEvent[] }) {
       <main className="pt-[74px]">
         <EventsHero image={KP2_PHOTOS.serviceChoir.src} />
 
-        <EventsComingUp events={comingUp} />
+        <EventsComingUp events={comingUp} branchPins={branchPins} />
 
         <SundayServiceBanner
           when={sundayService ? `Every Sunday · ${sundayService.timeLabel}` : "Every Sunday"}
