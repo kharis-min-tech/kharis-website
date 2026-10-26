@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { visitorPayload, visitorToDraft } from "./visitors";
+import { visitorListNotes, visitorPayload, visitorToDraft } from "./visitors";
 
 describe("visitorPayload", () => {
   it("saves the live visitors columns, trimmed, with blanks as null", () => {
@@ -31,6 +31,18 @@ describe("visitorPayload", () => {
 
   it("needs a name", () => {
     expect(() => visitorPayload(visitorToDraft({}))).toThrow("A visitor needs a name.");
+  });
+});
+
+describe("visitorListNotes", () => {
+  it("shows the site and that they agreed to be contacted", () => {
+    expect(
+      visitorListNotes("May contact: yes\nSite: KP2\nPlan your visit for KP2 London."),
+    ).toEqual(["KP2", "May contact"]);
+  });
+
+  it("stays quiet when a visitor was added by hand", () => {
+    expect(visitorListNotes("Coming this Sunday")).toEqual([]);
   });
 });
 

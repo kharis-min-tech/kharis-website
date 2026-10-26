@@ -4,8 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MobileMenu, type MobileNavItem } from "@/components/MobileMenu";
+import { pageReloadStorageKey } from "@/lib/page-reload";
 
 type NavItem = MobileNavItem;
+
+const KHARIS_CHURCH_URL = "https://kharis.org/";
 
 const NAV_ITEMS: NavItem[] = [
   { label: "HOME", to: "/" },
@@ -35,6 +38,7 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   { label: "GIVE", to: "/giving" },
+  { label: "Kharis Church", to: KHARIS_CHURCH_URL, external: true },
   { label: "CONTACT", to: "/contact" },
 ];
 
@@ -44,7 +48,7 @@ const linkBase =
 const KP2_LOGO = "https://images.kharis.org/site-images/kp2/2d0d7fb8b146df33/kp2-logo-new.png";
 
 export function SiteHeader() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "/";
   const pathActive = (to: string) =>
     to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/");
   const isActive = (item: NavItem | string) => {
@@ -53,6 +57,13 @@ export function SiteHeader() {
     return pathActive(item.to);
   };
   useEffect(() => {
+    try {
+      sessionStorage.removeItem(
+        pageReloadStorageKey(window.location.pathname, window.location.search),
+      );
+    } catch {
+      // Storage can be blocked. The error page still offers a manual reload.
+    }
     document.documentElement.dataset.kpPageReady = pathname;
     window.dispatchEvent(new Event("kp:page-ready"));
     return () => {
@@ -180,6 +191,10 @@ export function SiteHeader() {
                     </div>
                   </div>
                 </div>
+              ) : item.external ? (
+                <a key={item.to} href={item.to} className={linkBase}>
+                  <span className="kp-nav-label">{item.label}</span>
+                </a>
               ) : (
                 <Link
                   key={item.to}

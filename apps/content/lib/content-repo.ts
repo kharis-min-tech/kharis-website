@@ -15,6 +15,7 @@ import type {
   SermonRow,
   TestimonyRow,
   VisitorRow,
+  NewsletterSubscriber,
 } from "@/lib/types";
 import type { WorkspaceId } from "@/lib/workspaces";
 import { visitorPayload, type VisitorDraft } from "@/lib/visitors";
@@ -364,6 +365,23 @@ export async function setMessageStatus(id: string, status: ContactStatus) {
 
 export async function deleteMessage(id: string) {
   const { error } = await getSupabase().from("contact_messages").delete().eq("id", id);
+  fail(error);
+}
+
+export async function listNewsletter(source?: string) {
+  let query = getSupabase()
+    .from("newsletter_subscribers")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(500);
+  if (source && source !== "general" && source !== "all") query = query.eq("source", source);
+  const { data, error } = await query;
+  fail(error);
+  return (data ?? []) as NewsletterSubscriber[];
+}
+
+export async function deleteNewsletter(id: string) {
+  const { error } = await getSupabase().from("newsletter_subscribers").delete().eq("id", id);
   fail(error);
 }
 

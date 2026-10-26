@@ -697,15 +697,11 @@ textarea:focus-visible {
   box-shadow: 4px 4px 0 0 var(--primary);
 }
 
-/* Smooth in-page navigation that clears the fixed header. */
+/* Clears the fixed header for in-page links.
+   Route changes use data-scroll-behavior on <html>. CSS scroll-behavior on
+   html makes those transitions fail until the address is loaded again. */
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 90px;
-}
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
 }
 
 /* Keyboard focus ring for links and buttons. */

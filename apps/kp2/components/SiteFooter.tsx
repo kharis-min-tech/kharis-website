@@ -6,10 +6,12 @@ import { TIKTOK_URL } from "@/lib/social";
 const eaLogoLight = "https://images.kharis.org/site-images/kp2/7034e8bd749d082a/ea-logo-light.png";
 const eaLogoDark = "https://images.kharis.org/site-images/kp2/8d53006577293048/ea-logo-dark.png";
 
+const KHARIS_MAIN_URL = "https://kharis.org/";
+
 type FooterColumn = {
   title: string;
   titleColor: string;
-  links: { label: string; to: string }[];
+  links: { label: string; to: string; external?: boolean }[];
 };
 
 const COLUMNS: FooterColumn[] = [
@@ -19,6 +21,7 @@ const COLUMNS: FooterColumn[] = [
     links: [
       { label: "Mission", to: "/mission" },
       { label: "Governance", to: "/governance" },
+      { label: "Kharis Church", to: KHARIS_MAIN_URL, external: true },
       { label: "Contact", to: "/contact" },
     ],
   },
@@ -105,9 +108,15 @@ export function SiteFooter() {
             <ul className="space-y-2 font-body-md text-on-surface-variant">
               {col.links.map((link) => (
                 <li key={link.label}>
-                  <Link className={footerLinkClass} href={link.to}>
-                    {link.label}
-                  </Link>
+                  {link.external ? (
+                    <a className={footerLinkClass} href={link.to}>
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link className={footerLinkClass} href={link.to}>
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

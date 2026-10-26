@@ -85,7 +85,7 @@ export async function supabaseInsert(
   table: string,
   row: Record<string, unknown>,
   serverKey: string | undefined,
-): Promise<{ ok: boolean; configured: boolean }> {
+): Promise<{ ok: boolean; configured: boolean; status?: number }> {
   if (!supabaseUrl || !serverKey) return { ok: false, configured: false };
 
   const headers = {
@@ -108,7 +108,7 @@ export async function supabaseInsert(
       result = await restPost(url, headers, payload);
     }
     if (!result.ok) console.error(`Supabase ${table} insert failed:`, result.status, result.body);
-    return { ok: result.ok, configured: true };
+    return { ok: result.ok, configured: true, status: result.status };
   } catch (error) {
     console.error(`Supabase ${table} insert request failed:`, error);
     return { ok: false, configured: true };

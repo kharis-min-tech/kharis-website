@@ -25,6 +25,10 @@ const COUNTS: Record<string, (workspace: WorkspaceId) => Promise<number | null>>
   "/live": () => countRows("app_config", { key: "live_stream" }),
   "/featured-video": (workspace) => countRows("featured_videos", { workspace }),
   "/messages": (workspace) => countRows("contact_messages", { workspace }),
+  "/newsletter": (workspace) =>
+    workspace === "general"
+      ? countRows("newsletter_subscribers", {})
+      : countRows("newsletter_subscribers", { source: workspace }),
 };
 
 export default function WorkspacePage() {

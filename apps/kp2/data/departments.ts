@@ -80,17 +80,6 @@ export const DEPARTMENTS: Department[] = [
     roles: ["Door Greeters", "Seat Guides"],
   },
   {
-    name: "HOST TEAM",
-    tagline: "MAKE THEM FEEL AT HOME",
-    description: "First-timers become family. Welcome them. Follow them up.",
-    image: KP2_PHOTOS.welcomeSmile.src,
-    imageAlt: KP2_PHOTOS.welcomeSmile.alt,
-    imagePosition: "50% 25%",
-    accent: "bg-primary text-on-primary",
-    icon: "group",
-    roles: ["Welcome Crew", "Follow-up"],
-  },
-  {
     name: "INSTRUMENTALISTS",
     tagline: "PLAY FOR HIS GLORY",
     description: "Guitars, drums, piano and more. Serve on the band. Get busy serving.",
@@ -133,7 +122,7 @@ export const DEPARTMENTS: Department[] = [
     roles: ["Intercession", "Night Vigils"],
   },
   {
-    name: "EASY WORSHIP (SCRIPTURES AND LIGHTS)",
+    name: "LIVE VISUALS",
     tagline: "SCRIPTURE ON THE SCREENS",
     description: "Scriptures and lights for every gathering. Keep the Word in front of the room.",
     image: KP2_PHOTOS.serviceScreen.src,

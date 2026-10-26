@@ -47,6 +47,21 @@ export function KpLoadingMark() {
   );
 }
 
+/** Same screen as a route change, so a reload does not look like a different error. */
+export function RouteLoading() {
+  return (
+    <div
+      className="kp-route-loading"
+      role="status"
+      aria-label="Loading Kharis Phase 2"
+      aria-busy="true"
+    >
+      <KpLoadingMark />
+      <p>Getting things ready for you</p>
+    </div>
+  );
+}
+
 export function KpIntro() {
   const [visible, setVisible] = useState(true);
   const overlayRef = useRef<HTMLDivElement>(null);

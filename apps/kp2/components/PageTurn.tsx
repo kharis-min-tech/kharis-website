@@ -4,7 +4,9 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const BASE = "/kp2";
-const TURN_MS = 920;
+const MIN_COVER_MS = 460;
+const LEAVE_MS = 400;
+const SAFETY_MS = 8000;
 
 const LABELS: Record<string, string> = {
   "/": "Home",
@@ -57,30 +59,71 @@ function destinationFrom(anchor: HTMLAnchorElement) {
   return nextPath;
 }
 
-/** Slams comic panels across the viewport whenever navigation opens another page. */
-export function PageTurn() {
-  const currentPath = usePathname();
-  const [stamp, setStamp] = useState("Home");
-  const seen = useRef(currentPath);
-  const playedFor = useRef<string | null>(null);
-  const timer = useRef(0);
-  const wordRef = useRef<HTMLElement>(null);
+function pageReadyPath() {
+  const value = document.documentElement.dataset.kpPageReady;
+  if (!value) return "";
+  return normalizePath(value);
+}
 
-  const play = useCallback((nextPath: string) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (document.documentElement.dataset.kpIntro === "playing") return;
-    const label = labelFor(nextPath);
-    setStamp(label);
-    if (wordRef.current) wordRef.current.textContent = label;
-    const root = document.documentElement;
-    delete root.dataset.kpTurn;
-    void root.offsetWidth;
-    root.dataset.kpTurn = "on";
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => {
-      delete document.documentElement.dataset.kpTurn;
-    }, TURN_MS);
+/** Covers the screen between pages and stays there until the next page is ready. */
+export function PageTurn() {
+  const currentPath = usePathname() || "/";
+  const [stamp, setStamp] = useState("Home");
+  const seen = useRef(normalizePath(currentPath));
+  const pending = useRef<string | null>(null);
+  const coveredAt = useRef(0);
+  const leaveTimer = useRef(0);
+  const safetyTimer = useRef(0);
+
+  const clearTimers = useCallback(() => {
+    window.clearTimeout(leaveTimer.current);
+    window.clearTimeout(safetyTimer.current);
   }, []);
+
+  const finishLeave = useCallback(() => {
+    leaveTimer.current = window.setTimeout(() => {
+      if (document.documentElement.dataset.kpTurn === "leave") {
+        delete document.documentElement.dataset.kpTurn;
+      }
+    }, LEAVE_MS);
+  }, []);
+
+  const reveal = useCallback(() => {
+    const root = document.documentElement;
+    if (root.dataset.kpTurn !== "on") return;
+    const wait = Math.max(0, MIN_COVER_MS - (performance.now() - coveredAt.current));
+    window.clearTimeout(leaveTimer.current);
+    leaveTimer.current = window.setTimeout(() => {
+      if (document.documentElement.dataset.kpTurn !== "on") return;
+      pending.current = null;
+      document.documentElement.dataset.kpTurn = "leave";
+      finishLeave();
+    }, wait);
+  }, [finishLeave]);
+
+  const cover = useCallback(
+    (nextPath: string) => {
+      const skip =
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+        document.documentElement.dataset.kpIntro === "playing";
+      if (skip) {
+        pending.current = null;
+        window.clearTimeout(safetyTimer.current);
+        delete document.documentElement.dataset.kpTurn;
+        return;
+      }
+      pending.current = nextPath;
+      coveredAt.current = performance.now();
+      window.clearTimeout(safetyTimer.current);
+      safetyTimer.current = window.setTimeout(reveal, SAFETY_MS);
+      setStamp(labelFor(nextPath));
+      const root = document.documentElement;
+      delete root.dataset.kpTurn;
+      void root.offsetWidth;
+      root.dataset.kpTurn = "on";
+    },
+    [reveal],
+  );
 
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
@@ -91,26 +134,32 @@ export function PageTurn() {
       if (!(anchor instanceof HTMLAnchorElement)) return;
       const nextPath = destinationFrom(anchor);
       if (!nextPath) return;
-      playedFor.current = nextPath;
-      if (nextPath === "/") return;
-      play(nextPath);
+      cover(nextPath);
     };
     document.addEventListener("click", onClick, true);
-    return () => {
-      document.removeEventListener("click", onClick, true);
-      window.clearTimeout(timer.current);
-      delete document.documentElement.dataset.kpTurn;
-    };
-  }, [play]);
+    return () => document.removeEventListener("click", onClick, true);
+  }, [cover]);
 
   useEffect(() => {
-    if (seen.current === currentPath) return;
-    const alreadyPlaying = playedFor.current === currentPath;
-    seen.current = currentPath;
-    playedFor.current = null;
-    if (alreadyPlaying) return;
-    play(currentPath);
-  }, [currentPath, play]);
+    const path = normalizePath(currentPath);
+    if (pending.current && pending.current !== path) return;
+    if (!pending.current) {
+      if (seen.current === path) return;
+      cover(path);
+    }
+    seen.current = path;
+    if (pending.current !== path) return;
+
+    const onReady = () => {
+      if (pageReadyPath() !== path) return;
+      reveal();
+    };
+    window.addEventListener("kp:page-ready", onReady);
+    onReady();
+    return () => window.removeEventListener("kp:page-ready", onReady);
+  }, [cover, currentPath, reveal]);
+
+  useEffect(() => clearTimers, [clearTimers]);
 
   return (
     <div className="kp-turn" aria-hidden="true">
@@ -119,7 +168,7 @@ export function PageTurn() {
       <span className="kp-turn__band" />
       <p className="kp-turn__stamp">
         <span>Next panel</span>
-        <strong ref={wordRef}>{stamp}</strong>
+        <strong>{stamp}</strong>
       </p>
     </div>
   );

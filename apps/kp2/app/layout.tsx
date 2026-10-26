@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Anton, Bricolage_Grotesque, Hanken_Grotesk, Space_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import "./refinements.css";
 import "./grace-chat.css";
@@ -206,11 +207,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("kharis-site-theme")??localStorage.getItem("kharis-theme");if(t==="dark")document.documentElement.classList.add("dark");document.documentElement.style.colorScheme=t==="dark"?"dark":"light"}catch(e){}})();`,
-          }}
-        />
+        <Script id="kp-theme" strategy="beforeInteractive">
+          {`(function(){try{var t=localStorage.getItem("kharis-site-theme")??localStorage.getItem("kharis-theme");if(t==="dark")document.documentElement.classList.add("dark");document.documentElement.style.colorScheme=t==="dark"?"dark":"light"}catch(e){}})();`}
+        </Script>
         <link rel="preconnect" href="https://cqgyiqxhpxwasogpdghx.supabase.co" />
         <link rel="preconnect" href="https://images.kharis.org" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -229,7 +228,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </div>
         <GraceChat />
-        <script src="/kp2/ui-boot.js?v=9" defer></script>
+        <Script src="/kp2/ui-boot.js?v=10" strategy="afterInteractive" />
       </body>
     </html>
   );

@@ -53,6 +53,8 @@ function EventCard({ event }: { event: ChurchEvent }) {
         <PlanVisitButton
           item={eventToCalendarItem(event)}
           directionsUrl={mapsSearchUrl(event.location)}
+          branchName={event.location}
+          collectDetails
           className="flex w-full justify-between items-center text-surface font-label-md uppercase hover:text-primary-fixed-dim transition-colors"
         >
           {event.cta}

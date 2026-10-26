@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
 import { YoutubeEmbed } from "@/components/YoutubeEmbed";
 import { VisitInstead } from "@/components/VisitInstead";
+import { withBasePath } from "@/lib/base-path";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
@@ -235,6 +236,9 @@ function BranchPage({
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactMessage, setContactMessage] = useState("");
+  const [contactBusy, setContactBusy] = useState(false);
+  const [contactError, setContactError] = useState("");
+  const [contactSent, setContactSent] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -269,22 +273,45 @@ function BranchPage({
     [branch, zoomLevel],
   );
 
-  function sendBranchMessage(event: FormEvent<HTMLFormElement>) {
+  async function sendBranchMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const to = branch.email;
-    if (!to) {
-      router.push("/contact");
-      return;
-    }
+    if (contactBusy) return;
     const data = new FormData(event.currentTarget);
     const name = String(data.get("name") || contactName).trim();
     const email = String(data.get("email") || contactEmail).trim();
     const phone = String(data.get("phone") || "").trim();
     const message = String(data.get("message") || contactMessage).trim();
-    const subject = encodeURIComponent(`Message for ${branch.name}`);
-    const phoneLine = phone ? `\nPhone: ${phone}` : "";
-    const body = encodeURIComponent(`From: ${name}\nEmail: ${email}${phoneLine}\n\n${message}`);
-    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+    setContactBusy(true);
+    setContactError("");
+    setContactSent(false);
+    try {
+      const res = await fetch(withBasePath("/api/contact"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          topic: "General",
+          branch: branch.name,
+          message,
+        }),
+      });
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !json.ok) {
+        setContactError(json.error || "We couldn't send that just now. Please try again.");
+        return;
+      }
+      setContactName("");
+      setContactEmail("");
+      setContactMessage("");
+      setContactSent(true);
+      event.currentTarget.reset();
+    } catch {
+      setContactError("We couldn't reach Kharis just now. Check your connection and try again.");
+    } finally {
+      setContactBusy(false);
+    }
   }
 
   return (
@@ -380,25 +407,16 @@ function BranchPage({
             </p>
 
             <div className="kp-branch-actions">
-              {nextVisit ? (
-                <PlanVisitButton
-                  item={nextVisit}
-                  directionsUrl={directions}
-                  className="flex items-center justify-center gap-2 bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-3.5 brutalist-border brutalist-shadow"
-                >
-                  Plan your visit
-                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                </PlanVisitButton>
-              ) : directions ? (
-                <a
-                  href={directions}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-3.5 brutalist-border brutalist-shadow"
-                >
-                  Plan your visit
-                </a>
-              ) : null}
+              <PlanVisitButton
+                item={nextVisit ?? undefined}
+                directionsUrl={directions}
+                branchName={branch.name}
+                collectDetails
+                className="flex items-center justify-center gap-2 bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-7 py-3.5 brutalist-border brutalist-shadow"
+              >
+                Plan your visit
+                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </PlanVisitButton>
 
               <a
                 href="#events"
@@ -598,6 +616,8 @@ function BranchPage({
                     <PlanVisitButton
                       item={nextVisit}
                       directionsUrl={directions}
+                      branchName={branch.name}
+                      collectDetails
                       className="text-primary font-body-md text-[12px] font-bold uppercase shrink-0"
                     >
                       Reserve seats
@@ -793,6 +813,8 @@ function BranchPage({
                 <PlanVisitButton
                   item={eventToCalendarItem(event)}
                   directionsUrl={mapsDirectionsUrl(event.location)}
+                  branchName={branch.name}
+                  collectDetails
                   className="mt-auto self-start bg-primary text-on-primary font-body-md text-[12px] font-bold uppercase tracking-wide px-5 py-3 brutalist-border"
                 >
                   Plan your visit
@@ -961,11 +983,20 @@ function BranchPage({
                   placeholder={`How can the ${branch.city} team help?`}
                 />
               </label>
+              {contactSent ? (
+                <p className="font-body-md text-on-surface-variant" role="status">
+                  Your message is with the {branch.name} team.
+                </p>
+              ) : null}
+              {contactError ? (
+                <p className="font-body-md text-sm text-[#9b1c1c]">{contactError}</p>
+              ) : null}
               <button
                 type="submit"
-                className="bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-8 py-4 brutalist-border brutalist-shadow"
+                disabled={contactBusy}
+                className="bg-primary text-on-primary font-body-md text-[13px] font-bold uppercase tracking-wide px-8 py-4 brutalist-border brutalist-shadow disabled:opacity-60"
               >
-                Send message
+                {contactBusy ? "Sending…" : "Send message"}
               </button>
             </form>
           </div>

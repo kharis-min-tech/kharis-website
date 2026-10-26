@@ -37,8 +37,8 @@ const ITEMS: StoryItem[] = [
     description:
       "A public declaration that you identify with Jesus Christ's death, burial and resurrection, walking in newness of life.",
     href: "/life/baptism",
-    image: "/images/become-a-believer.jpg",
-    focus: "50% 35%",
+    image: "/images/baptism-water.jpg",
+    focus: "45% 50%",
   },
   {
     id: "departments",
@@ -67,9 +67,8 @@ const ITEMS: StoryItem[] = [
     description:
       "Fun, vibrant, and full of life. We partner with parents to help children discover who God is through Bible teaching, worship, and friendship.",
     href: "/life/children",
-    image:
-      "https://images.kharis.org/site-images/main/ca959585decb8ff4/hero/outreach-community.jpg",
-    focus: "35% 60%",
+    image: "/images/kids-landing.jpg",
+    focus: "56% 50%",
   },
 ];
 
@@ -111,6 +110,7 @@ function StoryImage({
         src={item.image}
         alt=""
         fill
+        unoptimized={item.image.startsWith("/images/")}
         priority={index === 0}
         loading="eager"
         quality={90}

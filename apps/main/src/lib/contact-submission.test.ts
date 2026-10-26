@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { cleanText, isUuid, resolveBranch, type BranchRow } from "./contact-submission";
+import {
+  cleanText,
+  isUuid,
+  resolveBranch,
+  withSiteLine,
+  type BranchRow,
+} from "./contact-submission";
 
 const LONDON = "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed";
 const KP2 = "6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b";
@@ -41,6 +47,15 @@ describe("resolveBranch", () => {
       workspace: "kharis",
     });
     expect(resolveBranch(branches, null, "").branch_name).toBeNull();
+  });
+});
+
+describe("withSiteLine", () => {
+  it("marks a main-site message without repeating the line", () => {
+    expect(withSiteLine("Hello there.", "Main site")).toBe("From: Main site\n\nHello there.");
+    expect(withSiteLine("From: Main site\n\nHello there.", "Main site")).toBe(
+      "From: Main site\n\nHello there.",
+    );
   });
 });
 
