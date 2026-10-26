@@ -28,6 +28,7 @@ import { LISTEN_PLATFORMS } from "@/lib/listen-platforms";
 import { MESSAGE_TOPICS, matchesQuery, matchesTopic } from "@/lib/message-filters";
 import { buildMessageShelves } from "@/lib/message-shelves";
 import type { MessageVideo } from "@/lib/youtube";
+import { newestMessage } from "@/lib/newest-message";
 import "./messages-hub.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -191,6 +192,7 @@ type Props = {
 
 export function MessagesExperience({ messages, latest = [] }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const heroMessage = useMemo(() => newestMessage([...latest, ...messages]), [latest, messages]);
 
   const topRow = useMemo(() => latest.slice(0, 4), [latest]);
 
@@ -346,7 +348,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         </svg>
       </div>
 
-      <MessagesHero messages={messages} />
+      {heroMessage && <MessagesHero message={heroMessage} />}
 
       <section className="msg-row-band">
         <div className="msg-row-band__head">
