@@ -1,12 +1,13 @@
 "use client";
 
+import { PurposeHeroArt } from "@/components/PurposeHeroArt";
+
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { ContactLetter } from "@/components/ContactLetter";
-import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
 import { TypedText } from "@/components/TypedText";
 import { TIKTOK_URL } from "@/lib/social";
 import { type Branch } from "@/lib/branches";
@@ -16,11 +17,7 @@ function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; bran
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container">
       <SiteHeader />
       <header className="kp-media-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
-        <ParallaxHeroImage
-          src="/kp2/assets/young-men-in-congregation.jpg"
-          alt="Three young men in suits smiling together at a Kharis service"
-          className="object-[center_30%]"
-        />
+        <PurposeHeroArt />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25 pointer-events-none"></div>
         <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
           <p className="font-label-md uppercase tracking-[0.28em] text-white/80 mb-4">

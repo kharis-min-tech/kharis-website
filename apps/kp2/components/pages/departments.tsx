@@ -1,16 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-import { DEPARTMENTS, type Department } from "@/data/departments";
-import { DepartmentVideoHero } from "@/components/DepartmentVideoHero";
-
-const FEATURED = DEPARTMENTS.filter((d) => d.featured);
-const OTHERS = DEPARTMENTS.filter((d) => !d.featured);
+import { KP2_PHOTOS } from "@/lib/photography";
 
 const WHY_SERVE = [
   {
@@ -33,209 +28,38 @@ const WHY_SERVE = [
   },
 ];
 
-function DepartmentCard({ dept }: { dept: Department }) {
-  return (
-    <div className="group flex flex-col overflow-hidden rounded-none border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]">
-      <div className="relative h-44 overflow-hidden border-b-2 border-black">
-        <img
-          alt={dept.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          style={{ objectPosition: dept.imagePosition }}
-          src={dept.image}
-          loading="lazy"
-          decoding="async"
-        />
-        <span
-          className={`absolute left-3 top-3 inline-flex items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border-2 border-[#151218]`}
-        >
-          <span className="material-symbols-outlined text-sm" aria-hidden="true">
-            {dept.icon}
-          </span>
-          {dept.name}
-        </span>
-      </div>
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="font-headline-md mb-1 text-headline-md leading-none">{dept.tagline}</h3>
-        <p className="mb-4 text-sm text-on-surface-variant">{dept.description}</p>
-        <div className="mb-5 flex flex-wrap gap-1.5">
-          {dept.roles.map((r) => (
-            <span
-              key={r}
-              className="bg-surface-variant border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant"
-            >
-              {r}
-            </span>
-          ))}
-        </div>
-        <Link
-          href="/branches"
-          className="mt-auto w-full rounded-none border-2 border-black bg-on-background py-2.5 text-xs font-black uppercase tracking-wider text-surface text-center transition-all hover:bg-primary active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000] active:shadow-none"
-        >
-          Find Out with Your Local Branch
-        </Link>
-      </div>
-    </div>
-  );
-}
-
 function DepartmentsPage() {
-  const [query, setQuery] = useState("");
-  const [active, setActive] = useState("ALL");
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return OTHERS.filter((d) => {
-      const haystack = `${d.name} ${d.tagline} ${d.roles.join(" ")}`.toLowerCase();
-      const matchQ = !q || haystack.includes(q);
-      const matchA = active === "ALL" || d.name === active;
-      return matchQ && matchA;
-    });
-  }, [query, active]);
-
   return (
     <div className="font-body-md text-body-md overflow-x-hidden">
       <SiteHeader />
       <main className="pt-[74px]">
-        {/* Hero */}
-        <DepartmentVideoHero />
-
-        {/* Featured top 3 */}
-        <section className="relative z-10 bg-surface px-margin-mobile py-stack-lg md:px-margin-desktop">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-secondary-container px-3 py-1 text-xs font-black uppercase tracking-widest">
-                Start here
-              </span>
-              <h2 className="font-display-lg text-headline-lg leading-none uppercase">
-                Our Departments
-              </h2>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {FEATURED.map((dept, i) => (
-              <div
-                key={dept.name}
-                className="group flex flex-col overflow-hidden rounded-none border-2 border-black bg-surface-container-lowest neo-brutal-shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]"
-              >
-                <div className="relative h-52 overflow-hidden border-b-2 border-black">
-                  <img
-                    alt={dept.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    style={{ objectPosition: dept.imagePosition }}
-                    src={dept.image}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <span className="absolute left-3 top-3 rounded-none border border-on-background/10 bg-surface px-2 py-1 text-[11px] font-black uppercase tracking-wider text-on-surface">
-                    #{i + 1} · {dept.name}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <span
-                    className={`mb-3 inline-flex w-fit items-center gap-1.5 px-2 py-1 text-xs font-black uppercase tracking-wider ${dept.accent} rounded-none border-2 border-[#151218]`}
-                  >
-                    <span className="material-symbols-outlined text-sm" aria-hidden="true">
-                      {dept.icon}
-                    </span>
-                    {dept.tagline}
-                  </span>
-                  <h3 className="font-display-lg mb-2 text-headline-lg leading-none uppercase">
-                    {dept.name}
-                  </h3>
-                  <p className="mb-5 flex-1 text-sm text-on-surface-variant">{dept.description}</p>
-                  <div className="mb-5 flex flex-wrap gap-1.5">
-                    {dept.roles.map((r) => (
-                      <span
-                        key={r}
-                        className="bg-surface-variant border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant"
-                      >
-                        {r}
-                      </span>
-                    ))}
-                  </div>
-                  <Link
-                    href="/branches"
-                    className="w-full rounded-none border-2 border-black bg-primary py-3 text-xs font-black uppercase tracking-wider text-on-primary text-center transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_0_#000] active:shadow-none"
-                  >
-                    Find Out with Your Local Branch
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* All departments - searchable grid */}
-        <section className="relative border-t-4 border-black bg-surface-container px-margin-mobile py-stack-lg md:px-margin-desktop">
-          <div className="mx-auto max-w-5xl">
-            <div className="mb-8 text-center">
-              <span className="mb-3 inline-block rounded-none border border-on-background/10 bg-primary px-3 py-1 text-xs font-black uppercase tracking-widest text-on-primary">
-                The rest of the body
-              </span>
-              <h2 className="font-display-lg text-headline-lg leading-none uppercase">
-                Explore Every Department
-              </h2>
-              <p className="mx-auto mt-3 max-w-xl text-sm text-on-surface-variant">
-                Search or browse. There is a place for your gift. Get busy serving.
-              </p>
-            </div>
-
-            {/* Search + filters */}
-            <div className="mb-8 flex flex-col gap-4">
-              <label className="relative block">
-                <span
-                  className="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant"
-                  aria-hidden="true"
-                >
-                  search
-                </span>
-                <input
-                  type="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search by name or role. Try prayer, sound or media."
-                  className="input-focus w-full rounded-none border border-on-background/10 bg-surface-container-lowest px-11 py-3.5 text-sm font-medium text-on-surface placeholder:text-on-surface-variant"
-                />
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {["ALL", ...OTHERS.map((d) => d.name)].map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setActive(f)}
-                    className={`border-2 px-3 py-1.5 text-xs font-black uppercase tracking-wider transition-all active:translate-x-0.5 active:translate-y-0.5 ${
-                      active === f
-                        ? "border-black bg-on-background text-surface shadow-[3px_3px_0_0_#000]"
-                        : "border-black bg-surface text-on-surface hover:bg-surface-variant"
-                    }`}
-                  >
-                    {f}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Results */}
-            {filtered.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filtered.map((dept) => (
-                  <DepartmentCard key={dept.name} dept={dept} />
-                ))}
-              </div>
-            ) : (
-              <div className="border-2 border-dashed border-black bg-surface py-16 text-center">
-                <span
-                  className="material-symbols-outlined mb-3 text-4xl text-on-surface-variant"
-                  aria-hidden="true"
-                >
-                  search_off
-                </span>
-                <p className="font-headline-md text-headline-md mb-2">No teams found</p>
-                <p className="text-sm text-on-surface-variant">
-                  Try a different search, or talk to a pastor. We will find your fit.
-                </p>
-              </div>
-            )}
+        <section className="relative flex min-h-[min(42rem,85svh)] items-end overflow-hidden border-b-4 border-primary bg-[#151218] text-white">
+          <img
+            src={KP2_PHOTOS.serviceSaxophone.src}
+            alt={KP2_PHOTOS.serviceSaxophone.alt}
+            style={{ objectPosition: KP2_PHOTOS.serviceSaxophone.position }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#151218] via-[#151218]/50 to-[#151218]/10" />
+          <div className="relative mx-auto w-full max-w-7xl px-margin-mobile py-12 md:px-margin-desktop md:py-16">
+            <p className="mb-5 font-label-md uppercase tracking-widest text-white">
+              Get involved at KP2
+            </p>
+            <h1 className="max-w-3xl font-display-lg text-headline-lg-mobile uppercase leading-none md:text-display-lg">
+              Find your place.
+              <br />
+              Get busy serving.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg text-white">
+              Find where your gift meets the mission. Take the quiz and discover where you could
+              serve in your local branch.
+            </p>
+            <Link
+              href="/quiz"
+              className="kp-button-gold mt-8 inline-flex min-h-12 items-center gap-3 border-4 border-[#151218] bg-[#f7be1d] px-7 py-4 font-label-comic font-bold uppercase text-[#151218] brutalist-shadow"
+            >
+              Take the department quiz <span aria-hidden="true">↗</span>
+            </Link>
           </div>
         </section>
 

@@ -40,7 +40,10 @@ export function LifeDepartmentsPage() {
       <header className="life-dept-hero">
         <div
           className="life-dept-hero__media"
-          style={{ backgroundImage: "url(/images/about-vision-team-2048.jpg)" }}
+          style={{
+            backgroundImage:
+              "url(https://images.kharis.org/site-images/main/c7e0b460a01f93eb/about-vision-team-2048.jpg)",
+          }}
           aria-hidden
         />
         <div className="life-dept-hero__veil" aria-hidden />

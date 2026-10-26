@@ -134,7 +134,7 @@ export function DepartmentVideoHero() {
             ref={stripRef}
             className="no-scrollbar flex flex-nowrap gap-3 overflow-x-auto pb-1 pr-20"
             role="group"
-            aria-label="Choose a department video"
+            aria-label="Choose a department"
           >
             {DEPARTMENTS.map((d) => {
               const isActive = d.name === activeName;
@@ -147,7 +147,7 @@ export function DepartmentVideoHero() {
                   }}
                   type="button"
                   aria-pressed={isActive}
-                  aria-label={`Show ${d.name} video`}
+                  aria-label={`Show ${d.name}${hasVideo ? " video" : " preview"}`}
                   onClick={() => select(d.name)}
                   className={`kp-dept-chip inline-flex shrink-0 items-center gap-2 font-black uppercase tracking-wider transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f7be1d] ${
                     isActive ? "is-active shadow-[4px_4px_0_0_#000]" : ""
@@ -160,9 +160,11 @@ export function DepartmentVideoHero() {
                 >
                   {hasVideo ? (
                     <span
-                      className="h-2 w-2 shrink-0 rounded-full bg-[#630ed4]"
+                      className="material-symbols-outlined shrink-0 text-base text-[#630ed4]"
                       aria-hidden="true"
-                    />
+                    >
+                      play_circle
+                    </span>
                   ) : null}
                   {d.name}
                 </button>

@@ -16,6 +16,7 @@ import Image from "@/components/SiteImage";
 import { Icon } from "@/components/Icon";
 import { setHeaderOverlay } from "@/lib/header-overlay";
 import { glidePageTo } from "@/lib/page-snap";
+import { LIFE_BAPTISM_IMAGE, LIFE_CHILDREN_IMAGE } from "@/lib/life-content";
 import "./belong-story.css";
 
 type StoryItem = {
@@ -37,7 +38,7 @@ const ITEMS: StoryItem[] = [
     description:
       "A public declaration that you identify with Jesus Christ's death, burial and resurrection, walking in newness of life.",
     href: "/life/baptism",
-    image: "/images/baptism-water.jpg",
+    image: LIFE_BAPTISM_IMAGE,
     focus: "45% 50%",
   },
   {
@@ -47,7 +48,7 @@ const ITEMS: StoryItem[] = [
     description:
       "Serving is part of our worship. From ushers to music to hospitality, every believer has a role in God's house.",
     href: "/life/departments",
-    image: "/images/department-music.jpg",
+    image: "https://images.kharis.org/site-images/main/be6de89889053ab8/department-music.jpg",
     focus: "62% 30%",
   },
   {
@@ -57,7 +58,7 @@ const ITEMS: StoryItem[] = [
     description:
       "We abstain from food to signal dependence on God, fasting joined with prayer, as a church family seeking His purpose.",
     href: "/life/fasting",
-    image: "/images/life-fasting.jpg",
+    image: "https://images.kharis.org/site-images/main/7226db6e24e8c131/life-fasting.jpg",
     focus: "38% 40%",
   },
   {
@@ -67,8 +68,8 @@ const ITEMS: StoryItem[] = [
     description:
       "Fun, vibrant, and full of life. We partner with parents to help children discover who God is through Bible teaching, worship, and friendship.",
     href: "/life/children",
-    image: "/images/kids-landing.jpg",
-    focus: "56% 50%",
+    image: LIFE_CHILDREN_IMAGE,
+    focus: "50% 40%",
   },
 ];
 
@@ -105,7 +106,10 @@ function StoryImage({
   const scale = useTransform(progress, [centre - STEP, centre + STEP], reduce ? [1, 1] : [1.14, 1]);
 
   return (
-    <motion.div className="belong-story__image" style={{ opacity, scale, zIndex: index + 1 }}>
+    <motion.div
+      className={`belong-story__image${item.id === "children" ? " belong-story__image--illustration" : ""}`}
+      style={{ opacity, scale, zIndex: index + 1 }}
+    >
       <Image
         src={item.image}
         alt=""
@@ -115,7 +119,7 @@ function StoryImage({
         loading="eager"
         quality={90}
         sizes="(max-width: 767px) 100vw, 66vw"
-        className="object-cover"
+        className={item.id === "children" ? "object-contain" : "object-cover"}
         style={{ objectPosition: item.focus }}
       />
     </motion.div>

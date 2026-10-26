@@ -1,6 +1,7 @@
-import { test } from "node:test";
+import { test, mock } from "node:test";
 import assert from "node:assert/strict";
-import { inventory, replaceImageUrls } from "./migrate-site-images.mjs";
+import { createHash } from "node:crypto";
+import { inventory, replaceImageUrls, imageMapping, verifyPublic } from "./migrate-site-images.mjs";
 const images = [
   {
     app: "main",
@@ -13,6 +14,50 @@ const images = [
     url: "https://images.kharis.org/site-images/kp2/hash/photo.jpg",
   },
 ];
+test("retries a timed-out public image request and still checks its checksum", async () => {
+  const bytes = Buffer.from("verified image fixture");
+  const image = {
+    key: "site-images/test/fixture.webp",
+    url: "https://images.kharis.org/site-images/test/fixture.webp",
+    contentType: "image/webp",
+    hash: createHash("sha256").update(bytes).digest("hex"),
+  };
+  let requests = 0;
+  const request = mock.method(globalThis, "fetch", async () => {
+    if (requests++ === 0) throw new DOMException("Timed out", "TimeoutError");
+    return new Response(bytes, { headers: { "Content-Type": "image/webp" } });
+  });
+  try {
+    await verifyPublic(image);
+    assert.equal(request.mock.callCount(), 2);
+    await assert.rejects(verifyPublic({ ...image, hash: "incorrect" }), /checksum mismatch/);
+    assert.equal(request.mock.callCount(), 3);
+  } finally {
+    request.mock.restore();
+  }
+});
+test("keeps selected replacement aliases when rebuilding the Cloudflare mapping", () => {
+  const previous = {
+    "/assets/old-photo.jpg": "/kp2/assets/photo.jpg",
+    "/assets/older-photo.jpg": "/assets/old-photo.jpg",
+    "/assets/photo.jpg": "https://images.kharis.org/previous/photo.jpg",
+    "/assets/archived.jpg": "https://images.kharis.org/archived.jpg",
+  };
+  const catalog = [
+    ...images,
+    {
+      app: "kp2",
+      source: "/assets/old-photo.jpg",
+      url: "https://images.kharis.org/original-old-photo.jpg",
+    },
+  ];
+  const mapping = imageMapping("kp2", catalog, previous);
+  assert.equal(mapping["/assets/old-photo.jpg"], images[1].url);
+  assert.equal(mapping["/assets/older-photo.jpg"], images[1].url);
+  assert.equal(mapping["/assets/photo.jpg"], images[1].url);
+  assert.equal(mapping["/assets/archived.jpg"], previous["/assets/archived.jpg"]);
+  assert.deepEqual(imageMapping("kp2", catalog, mapping), mapping);
+});
 test("updates JSX and CSS while leaving external URLs and similar filenames intact", () => {
   const source = `<img src="/images/photo.jpg"/><img src="https://example.com/images/photo.jpg"/><img src="/images/photo.jpg.backup"/> url('/images/photo.jpg')`;
   const actual = replaceImageUrls(source, "main", images);

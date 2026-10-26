@@ -85,7 +85,7 @@ export function CommunityDoors() {
       <div className="life-doors__pin">
         <motion.div className="life-doors__photo" style={{ scale: photoScale }} aria-hidden>
           <Image
-            src="/images/join-family-community.jpg"
+            src="https://images.kharis.org/site-images/main/855d3d8689252c6e/join-family-community.jpg"
             alt=""
             fill
             priority

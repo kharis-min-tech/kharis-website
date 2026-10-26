@@ -1,5 +1,8 @@
 "use client";
 
+import { KP2_PHOTOS } from "@/lib/photography";
+import { BaptismGallery } from "@/components/BaptismGallery";
+
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import Link from "next/link";
@@ -41,8 +44,8 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
 
       <header className="kp-life-hero relative box-border flex h-svh max-h-svh w-full items-center overflow-hidden bg-black pt-24 pb-8 text-white">
         <ParallaxHeroImage
-          src="/kp2/assets/congregation-celebrating.jpg"
-          alt="The congregation celebrating and pointing joyfully at a KP2 service"
+          src={KP2_PHOTOS.serviceTogether.src}
+          alt={KP2_PHOTOS.serviceTogether.alt}
           className="object-[center_30%] opacity-60"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
@@ -84,7 +87,7 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
       </header>
 
       <main className="relative z-20">
-        {/* Fellowship section removed */}
+        <BaptismGallery />
 
         <section className="border-b-4 border-black bg-background px-margin-desktop py-stack-lg">
           <div className="mx-auto max-w-7xl">
