@@ -16,15 +16,12 @@ export type ChildrenLayout =
     }
   | {
       kind: "trail";
-      /** Pink invite button. Shares this page; no separate destination is confirmed. */
-      invite: string;
       checkpoints: readonly { id: string; name: string; goal?: boolean }[];
       /** The one field to edit when the month's verse changes. */
       memoryVerse: { label: string; text: string; reference: string };
     }
   | {
       kind: "bento";
-      invite: string;
       /** Small label on each discussion tile. */
       kicker: string;
       realTalk: readonly { id: string; title: string }[];
@@ -183,7 +180,6 @@ export const CHILDREN_GROUPS: readonly ChildrenGroup[] = [
     },
     layout: {
       kind: "trail",
-      invite: "Bring a friend",
       checkpoints: [
         { id: "salvation", name: "Salvation" },
         { id: "faith", name: "Faith" },
@@ -251,14 +247,13 @@ export const CHILDREN_GROUPS: readonly ChildrenGroup[] = [
     },
     layout: {
       kind: "bento",
-      invite: "Bring a friend",
-      kicker: "In the room",
+      kicker: "The Person Jesus Christ",
       realTalk: [
-        { id: "identity", title: "Identity in Christ" },
-        { id: "peers", title: "Peer pressure" },
-        { id: "purpose", title: "Purpose" },
+        { id: "identity", title: "Truly man" },
+        { id: "peers", title: "Truly God" },
+        { id: "purpose", title: "Sinless" },
       ],
-      realTalkConfirm: "The themes in the room: Identity in Christ, Peer pressure, Purpose.",
+      realTalkConfirm: "The themes for The Person Jesus Christ: Truly man, Truly God, Sinless.",
       teaching: "Grounded in Pastor David Antwi's teaching",
       scripture: {
         text: "Let no one despise your youth, but be an example to the believers in word, in conduct, in love, in spirit, in faith, in purity.",

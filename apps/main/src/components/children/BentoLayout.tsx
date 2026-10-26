@@ -3,7 +3,6 @@
 import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import type { ChildrenGroup, ChildrenLayout } from "@/data/children-groups";
-import { BringFriendButton } from "./BringFriendButton";
 import { ConfirmBadge } from "./ConfirmBadge";
 import { PlaceholderImage } from "./PlaceholderImage";
 
@@ -61,7 +60,6 @@ export function BentoLayout({ group, layout }: { group: ChildrenGroup; layout: B
         <div className="kids-bento__tile kids-bento__statement" style={{ "--i": 1 } as CSSProperties}>
           <h3>{group.headline}</h3>
           <p>{group.body}</p>
-          <BringFriendButton groupId={group.id} groupName={group.name} label={layout.invite} />
         </div>
 
         {layout.realTalk.map((theme, index) => (

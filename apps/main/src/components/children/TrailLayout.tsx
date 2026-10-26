@@ -2,7 +2,6 @@
 
 import { useState, type CSSProperties } from "react";
 import type { ChildrenGroup, ChildrenLayout } from "@/data/children-groups";
-import { BringFriendButton } from "./BringFriendButton";
 import { ConfirmBadge } from "./ConfirmBadge";
 import { PlaceholderImage } from "./PlaceholderImage";
 
@@ -17,7 +16,6 @@ export function TrailLayout({ group, layout }: { group: ChildrenGroup; layout: T
       <div className="kids-group__copy kids-trail-intro">
         <h3>{group.headline}</h3>
         <p>{group.body}</p>
-        <BringFriendButton groupId={group.id} groupName={group.name} label={layout.invite} />
       </div>
 
       <div className="kids-trail">

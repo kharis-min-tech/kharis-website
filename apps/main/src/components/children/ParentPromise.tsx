@@ -1,5 +1,3 @@
-import { ConfirmBadge } from "./ConfirmBadge";
-
 const LINES = [
   "Bible teaching that grows with your child.",
   "Worship they can join, with energy and joy.",
@@ -7,7 +5,7 @@ const LINES = [
   "We partner with you to raise the next generation in the ways of the Lord.",
 ] as const;
 
-/** Four reassurances from the existing kids copy, then the details still to confirm. */
+/** Four reassurances from the existing kids copy. */
 export function ParentPromise() {
   return (
     <section className="kids-promise" aria-labelledby="kids-promise-title">
@@ -18,20 +16,6 @@ export function ParentPromise() {
             <li key={line}>{line}</li>
           ))}
         </ul>
-        <dl className="kids-facts">
-          <div>
-            <dt>When</dt>
-            <dd>
-              <ConfirmBadge what="When Kids church meets, and how it lines up with the service." />
-            </dd>
-          </div>
-          <div>
-            <dt>Where</dt>
-            <dd>
-              <ConfirmBadge what="Where families take their child at their branch." />
-            </dd>
-          </div>
-        </dl>
       </div>
     </section>
   );
