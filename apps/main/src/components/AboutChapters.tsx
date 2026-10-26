@@ -5,6 +5,17 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ContentIcon } from "@/components/ContentIcon";
+import {
+  BookOpen,
+  ChevronDown,
+  Compass,
+  HeartHandshake,
+  Radio,
+  Sprout,
+  Users,
+  Flame,
+  Cross,
+} from "lucide-react";
 import { ABOUT } from "@/lib/about-content";
 
 export type AboutChapterId = "mission" | "vision" | "leadership";
@@ -279,20 +290,23 @@ function MissionPanel({ reduce }: { reduce: boolean }) {
 function VisionPanel({ reduce }: { reduce: boolean }) {
   const { vision } = ABOUT;
   const themes = [
-    { icon: "cross", text: "Christ-centred, purpose-driven and disciple-making" },
-    { icon: "sparkles", text: "Full of life, large and spiritually deep" },
-    { icon: "flame", text: "Naturally supernatural, glorifying God" },
-    { icon: "radio", text: "Proclamation and worship to the nations" },
-    { icon: "gift", text: "Ordinary people, extraordinary lives" },
-    { icon: "house", text: "A caring family, refuge and belonging" },
-    { icon: "users", text: "Strong, effective small groups" },
-    { icon: "plane", text: "Missionaries sent, every member equipped" },
+    { icon: Cross, text: "Christ-centred, purpose-driven and disciple-making" },
+    { icon: Sprout, text: "Full of life, large and spiritually deep" },
+    { icon: Flame, text: "Naturally supernatural, glorifying God" },
+    { icon: Radio, text: "Proclamation and worship to the nations" },
+    { icon: BookOpen, text: "Ordinary people, extraordinary lives" },
+    { icon: HeartHandshake, text: "A caring family, refuge and belonging" },
+    { icon: Users, text: "Strong, effective small groups" },
+    { icon: Compass, text: "Missionaries sent, every member equipped" },
   ];
   return (
     <div className="about-panel about-panel--vision about-vision-themes">
       <PanelHero reduce={reduce} tone="vision" eyebrow="Our Vision" title={vision.lead} />
       <div className="about-panel__body about-vision-themes__content">
         <p className="about-vision-themes__intro">{vision.intro}</p>
+        <p className="about-vision-themes__hint">
+          Explore each part of our vision. Select a theme to read more.
+        </p>
         <div className="about-vision-themes__grid">
           {themes.map((theme, index) => (
             <motion.details
@@ -304,10 +318,13 @@ function VisionPanel({ reduce }: { reduce: boolean }) {
               transition={{ duration: 0.45, delay: (index % 4) * 0.07, ease }}
             >
               <summary>
-                <ContentIcon name={theme.icon} className="h-9 w-9" />
-                <span>{theme.text}</span>
+                <theme.icon className="about-vision-theme__icon" aria-hidden="true" />
+                <span>
+                  {theme.text}
+                  <small className="about-vision-theme__action">Read our vision</small>
+                </span>
                 <span className="about-vision-theme__toggle" aria-hidden="true">
-                  +
+                  <ChevronDown />
                 </span>
               </summary>
               <p>{vision.points[index]}</p>
