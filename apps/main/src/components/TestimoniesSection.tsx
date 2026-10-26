@@ -1,7 +1,13 @@
 "use client";
 
 import Image from "@/components/SiteImage";
-import { type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
+import {
+  type PointerEvent as ReactPointerEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import type { Testimony } from "@/lib/testimonies";
@@ -38,6 +44,8 @@ function excerpt(text: string, limit = 240) {
 
 export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
+  const [rotationPaused, setRotationPaused] = useState(false);
+  const interacting = useRef(false);
   const [selected, setSelected] = useState<{ item: Testimony; accentIndex: number } | null>(null);
   const dragRef = useRef({
     active: false,
@@ -56,7 +64,7 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [selected]);
 
-  const scrollByCard = (dir: -1 | 1) => {
+  const scrollByCard = useCallback((dir: -1 | 1) => {
     const rail = railRef.current;
     if (!rail) return;
     const card = rail.querySelector<HTMLElement>(".testimony-card");
@@ -66,25 +74,61 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
     const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
     if (maxScroll <= 2) return;
     const edge = 8;
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "instant"
+      : "smooth";
 
     if (dir === 1) {
       if (rail.scrollLeft >= maxScroll - edge) {
-        rail.scrollTo({ left: 0, behavior: "smooth" });
+        rail.scrollTo({ left: 0, behavior });
       } else {
-        rail.scrollTo({ left: Math.min(maxScroll, rail.scrollLeft + step), behavior: "smooth" });
+        rail.scrollTo({ left: Math.min(maxScroll, rail.scrollLeft + step), behavior });
       }
       return;
     }
 
     if (rail.scrollLeft <= edge) {
-      rail.scrollTo({ left: maxScroll, behavior: "smooth" });
+      rail.scrollTo({ left: maxScroll, behavior });
     } else {
-      rail.scrollTo({ left: Math.max(0, rail.scrollLeft - step), behavior: "smooth" });
+      rail.scrollTo({ left: Math.max(0, rail.scrollLeft - step), behavior });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || rotationPaused || selected || testimonies.length < 2) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let timer: number | undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        window.clearInterval(timer);
+        if (entry.intersectionRatio < 0.5) return;
+        timer = window.setInterval(() => {
+          if (
+            !document.hidden &&
+            !motion.matches &&
+            !interacting.current &&
+            !dragRef.current.active
+          ) {
+            scrollByCard(1);
+          }
+        }, 9000);
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(rail);
+    return () => {
+      observer.disconnect();
+      window.clearInterval(timer);
+    };
+  }, [rotationPaused, selected, testimonies.length, scrollByCard]);
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (e.pointerType === "touch" || e.button !== 0) return;
+    if (e.pointerType === "touch") {
+      interacting.current = true;
+      return;
+    }
+    if (e.button !== 0) return;
     const rail = railRef.current;
     if (!rail) return;
     dragRef.current = {
@@ -113,6 +157,10 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   };
 
   const endPointerDrag = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") {
+      interacting.current = !!e.currentTarget.closest("section")?.contains(document.activeElement);
+      return;
+    }
     const state = dragRef.current;
     const rail = railRef.current;
     if (!state.active) return;
@@ -135,7 +183,26 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   };
 
   return (
-    <section id="testimonies" className="testimony-band px-5 py-8 md:px-8 md:py-10">
+    <section
+      id="testimonies"
+      className="testimony-band px-5 py-8 md:px-8 md:py-10"
+      onPointerEnter={(event) => {
+        if (event.pointerType === "mouse") interacting.current = true;
+      }}
+      onPointerLeave={() => {
+        interacting.current = !!railRef.current
+          ?.closest("section")
+          ?.contains(document.activeElement);
+      }}
+      onFocusCapture={() => {
+        interacting.current = true;
+      }}
+      onBlurCapture={(event) => {
+        interacting.current =
+          event.currentTarget.contains(event.relatedTarget) ||
+          event.currentTarget.matches(":hover");
+      }}
+    >
       <div className="mx-auto max-w-7xl">
         <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
           <p className="eyebrow">Stories</p>
@@ -238,6 +305,14 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
           <div className="mt-6 flex flex-col items-center gap-5">
             {testimonies.length > 1 ? (
               <div className="flex items-center justify-center gap-3">
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  aria-pressed={rotationPaused}
+                  onClick={() => setRotationPaused((paused) => !paused)}
+                >
+                  {rotationPaused ? "Play stories" : "Pause stories"}
+                </button>
                 <button
                   type="button"
                   aria-label="Previous testimonies"
