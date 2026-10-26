@@ -4,26 +4,26 @@ Based on main commit `4d363bf`. Source library: KOffice, Shared Folder / Kp2 Pho
 
 ## Coverage
 
-| Page or shared placement | Photographs to match | Source code |
-| --- | --- | --- |
-| Home | Hero still and video posters; full-hall introduction; head pastor portrait | `components/pages/home.tsx` |
-| Home navigation panels | Sermon notes; friends arriving; celebration; evangelism; choir | `components/KnowKharisComic.tsx` |
-| Testimonies, Home and Giving | Three separate KP2 testimony photographs and testimony story modal | `components/TestimoniesBand.tsx` |
-| About / Mission | Hero; Vision banner; leadership banner; Pastor David and Pastor Awo portraits | `components/pages/mission.tsx` |
-| Departments and Life | All 13 department images, including department hero, cards and video poster | `data/departments.ts` |
-| Serving quiz | Six rotating hero images | `data/quiz.ts` |
-| Life | Congregation celebration hero; gallery; social content | `components/pages/life.tsx`, `components/LotGallery.tsx`, `components/SocialStack.tsx` |
-| Events | Hero; upcoming event fallback images | `components/pages/events.tsx`, `components/EventsTop.tsx` |
-| Sunday Service | Main poster and every photo in its lightbox | `components/SundayServiceBanner.tsx` |
-| Event panels | Midweek, Family Fun Day, Praise Night and Jesus Campaign posters and all lightbox photographs | `components/ComicPanels.tsx` |
-| Event feature | Let the Bible Speak and Singles Ball photographs | `components/ComicFlip.tsx` |
-| Messages | Preaching hero; recording thumbnails | `components/pages/messages.tsx`, shared YouTube components |
-| Media | Hero; recording thumbnails | `components/pages/media.tsx`, shared YouTube components |
-| Giving | Outreach hero; building illustration; shared testimony strip | `components/pages/giving.tsx`, `lib/spurgeons.ts` |
-| Contact | Congregation hero; conversation image next to form | `components/pages/contact.tsx`, `components/ContactLetter.tsx` |
-| Branch directory and details | Published branch hero, pastor, gallery and related-branch cards; generic fallback galleries | `lib/branches.ts`, `components/pages/branch.tsx`, `components/pages/branches.tsx` |
-| Search and social previews | Organization and page metadata images | `lib/seo.ts`, route metadata |
-| Legacy Content Studio paths | Image mapping used by saved asset references | `lib/site-image-urls.json`, `lib/public-asset.ts` |
+| Page or shared placement     | Photographs to match                                                                          | Source code                                                                            |
+| ---------------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Home                         | Hero still and video posters; full-hall introduction; head pastor portrait                    | `components/pages/home.tsx`                                                            |
+| Home navigation panels       | Sermon notes; friends arriving; celebration; evangelism; choir                                | `components/KnowKharisComic.tsx`                                                       |
+| Testimonies, Home and Giving | Three separate KP2 testimony photographs and testimony story modal                            | `components/TestimoniesBand.tsx`                                                       |
+| About / Mission              | Hero; Vision banner; leadership banner; Pastor David and Pastor Awo portraits                 | `components/pages/mission.tsx`                                                         |
+| Departments and Life         | All 13 department images, including department hero, cards and video poster                   | `data/departments.ts`                                                                  |
+| Serving quiz                 | Six rotating hero images                                                                      | `data/quiz.ts`                                                                         |
+| Life                         | Congregation celebration hero; gallery; social content                                        | `components/pages/life.tsx`, `components/LotGallery.tsx`, `components/SocialStack.tsx` |
+| Events                       | Hero; upcoming event fallback images                                                          | `components/pages/events.tsx`, `components/EventsTop.tsx`                              |
+| Sunday Service               | Main poster and every photo in its lightbox                                                   | `components/SundayServiceBanner.tsx`                                                   |
+| Event panels                 | Midweek, Family Fun Day, Praise Night and Jesus Campaign posters and all lightbox photographs | `components/ComicPanels.tsx`                                                           |
+| Event feature                | Let the Bible Speak and Singles Ball photographs                                              | `components/ComicFlip.tsx`                                                             |
+| Messages                     | Preaching hero; recording thumbnails                                                          | `components/pages/messages.tsx`, shared YouTube components                             |
+| Media                        | Hero; recording thumbnails                                                                    | `components/pages/media.tsx`, shared YouTube components                                |
+| Giving                       | Outreach hero; building illustration; shared testimony strip                                  | `components/pages/giving.tsx`, `lib/spurgeons.ts`                                      |
+| Contact                      | Congregation hero; conversation image next to form                                            | `components/pages/contact.tsx`, `components/ContactLetter.tsx`                         |
+| Branch directory and details | Published branch hero, pastor, gallery and related-branch cards; generic fallback galleries   | `lib/branches.ts`, `components/pages/branch.tsx`, `components/pages/branches.tsx`      |
+| Search and social previews   | Organization and page metadata images                                                         | `lib/seo.ts`, route metadata                                                           |
+| Legacy Content Studio paths  | Image mapping used by saved asset references                                                  | `lib/site-image-urls.json`, `lib/public-asset.ts`                                      |
 
 Recording thumbnails should continue to represent the linked recording. App screenshots, logos, maps and the Spurgeons architectural illustration are factual assets and should remain tied to their subjects. Branch photographs and pastor portraits must match the named branch or person.
 
@@ -58,7 +58,6 @@ Recording thumbnails should continue to represent the linked recording. App scre
 - Verified Sunday/midweek/outreach gallery controls, Escape dismissal and focus restoration, plus mobile navigation dismissal. Local preview remains on port 3019.
 - Local branch only. No push, publication or deployment.
 
-
 ## Caption and leadership follow-up
 
 - Home Locations now uses the KP2 hall photograph to show the venue. About Us uses the KP2 community group photograph. Life, Become a Believer and Get Involved retain photographs showing community, gospel outreach and service respectively.
@@ -88,7 +87,6 @@ TypeScript and the 10 focused KP2 tests pass. ESLint reports no errors and 54 wa
 - Removed a duplicated Material Symbols name that invalidated the icon font request. The request now sorts and deduplicates its icon names before constructing the stylesheet URL.
 - The Events Sunday Service lead image now shows Pastor David using his verified main-site photograph.
 - Contact uses envelope and conversation artwork in place of the unrelated group photograph. The Contact form's photograph caption is now "Together at KP2", without claiming it was taken after a service.
-
 
 ## Giving page aligned with the main Kharis page
 
