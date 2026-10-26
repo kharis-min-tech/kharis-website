@@ -96,7 +96,7 @@
 }
 
 .location-globe__welcome--journey {
-  animation: globe-arrival-settle 2.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: globe-welcome 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .location-globe__welcome--journey > p {
   animation: globe-word-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
@@ -122,7 +122,7 @@
 }
 .location-globe__welcome--journey .location-globe__detail {
   display: block;
-  animation: globe-word-reveal 0.8s ease 1.9s both;
+  animation: globe-word-reveal 0.8s ease 0.65s both;
 }
 @keyframes globe-word-reveal {
   from {

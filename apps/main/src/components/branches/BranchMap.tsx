@@ -3,12 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSmoothRouter } from "@/lib/use-smooth-router";
 import { Plus, Minus, RotateCcw, ChevronDown, Check, ArrowUpRight } from "lucide-react";
-import { globeOrigin } from "@/lib/globe-origin";
+import { interpolateGlobeCamera } from "@/lib/globe-camera";
 import countryOutlines from "@/data/countryOutlines.json";
 import "./globe.css";
 
 const destinations = [
-  { id: "world", label: "Whole world", lat: 35, lng: -2, zoom: 1 },
+  { id: "world", label: "Whole world", lat: 30, lng: -4, zoom: 1.35 },
   { id: "United Kingdom", label: "United Kingdom", lat: 54, lng: -2, zoom: 6 },
   { id: "Ghana", label: "Ghana", lat: 7.9, lng: -1.1, zoom: 9 },
   { id: "Sierra Leone", label: "Sierra Leone", lat: 8.6, lng: -11.9, zoom: 16 },
@@ -83,25 +83,15 @@ export function BranchMap({
     };
   }, []);
   const [paused, setPaused] = useState(false);
-  const [initialCenter, setInitialCenter] = useState({ lat: 35, lng: -2 });
-  useEffect(() => {
-    setInitialCenter(
-      globeOrigin(Intl.DateTimeFormat().resolvedOptions().timeZone, new Date().getTimezoneOffset()),
-    );
-  }, []);
   const selected = country === undefined ? selection : country;
   const destination = destinations.find((d) => d.id === selected) ?? destinations[0];
   const [zoomMultiplier, setZoomMultiplier] = useState(1);
   const [cameraCountry, setCameraCountry] = useState(destination.id);
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timer = window.setTimeout(
-      () => {
-        setZoomMultiplier(1);
-        setCameraCountry(destination.id);
-      },
-      reduced || destination.id === "world" ? 0 : 950,
-    );
+    const timer = window.setTimeout(() => {
+      setZoomMultiplier(1);
+      setCameraCountry(destination.id);
+    }, 0);
     return () => window.clearTimeout(timer);
   }, [destination.id]);
   const cameraDestination = destinations.find((d) => d.id === cameraCountry) ?? destinations[0];
@@ -112,6 +102,7 @@ export function BranchMap({
     name: string;
     country: string | null;
     width: number;
+    hitWidth?: number;
   };
   const [hovered, setHovered] = useState<HoverPin | null>(null);
   const hoveredSlug = useRef<string | null>(null);
@@ -138,8 +129,25 @@ export function BranchMap({
     manualCenter.current = null;
   }, [cameraCountry, origin]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const camera = useRef({ lat: 35, lng: -2, zoom: 1 });
+  const camera = useRef({ lat: 30, lng: -4, zoom: 1.35 });
   const pins = useMemo(() => branches, [branches]);
+  const countryPins = useMemo(
+    () =>
+      destinations.slice(1).flatMap((country) => {
+        const members = branches.filter((branch) => branch.country === country.id);
+        if (!members.length) return [];
+        return [
+          {
+            slug: `country:${country.id}`,
+            name: `${country.label} · ${members.length} ${members.length === 1 ? "branch" : "branches"}`,
+            lat: country.lat,
+            lng: country.lng,
+            country: country.id,
+          },
+        ];
+      }),
+    [branches],
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -152,12 +160,15 @@ export function BranchMap({
     let width = 0;
     let height = 0;
     let settled = false;
+    let travelStarted: number | null = null;
+    const departure = { ...camera.current };
     const target =
       cameraDestination.id === "world"
-        ? { ...(origin ?? initialCenter), zoom: 1 }
+        ? { ...(origin ?? cameraDestination), zoom: cameraDestination.zoom }
         : { ...cameraDestination };
+    if (manualCenter.current) Object.assign(target, manualCenter.current);
     target.zoom = Math.min(32, Math.max(1, target.zoom * zoomMultiplier));
-    if (cameraDestination.id === "world") target.lng += worldAngle.current;
+    if (cameraDestination.id === "world" && !manualCenter.current) target.lng += worldAngle.current;
     const project = (x: number, y: number, z: number) => {
       const c = camera.current;
       const longitude = c.lng * rad;
@@ -166,7 +177,7 @@ export function BranchMap({
       const radius = Math.min(width, height) * 0.42 * c.zoom;
       return {
         x: width / 2 + (x * Math.cos(longitude) - z * Math.sin(longitude)) * radius,
-        y: height / 2 - (y * Math.cos(latitude) - depth * Math.sin(latitude)) * radius,
+        y: height * 0.43 - (y * Math.cos(latitude) - depth * Math.sin(latitude)) * radius,
         depth: y * Math.sin(latitude) + depth * Math.cos(latitude),
       };
     };
@@ -179,28 +190,35 @@ export function BranchMap({
       }
       const elapsed = Math.min((time - (last || time)) / 1000, 0.1);
       last = time;
-      if (manualCenter.current) Object.assign(target, manualCenter.current);
+      if (drag.current?.moved && manualCenter.current) {
+        Object.assign(target, manualCenter.current);
+        travelStarted = time - 1900;
+      }
       const c = camera.current;
-      const ease = motion.matches ? 1 : 1 - Math.exp(-elapsed * 5);
-      const delta = ((target.lng - c.lng + 540) % 360) - 180;
-      settled =
-        Math.abs(delta) + Math.abs(c.lat - target.lat) + Math.abs(c.zoom - target.zoom) < 0.02;
+      travelStarted ??= time;
+      const progress = motion.matches ? 1 : Math.min(1, (time - travelStarted) / 1900);
+      settled = progress === 1;
+      if (drag.current?.moved) {
+        Object.assign(c, manualCenter.current);
+      } else if (!settled || motion.matches) {
+        Object.assign(c, interpolateGlobeCamera(departure, target, progress));
+      } else {
+        c.lat = target.lat;
+        c.lng = target.lng;
+        if (manualCenter.current) manualCenter.current.lng = target.lng;
+        c.zoom = target.zoom;
+      }
       if (
-        cameraDestination.id === "world" &&
         settled &&
-        !paused &&
         !motion.matches &&
+        cameraDestination.id === "world" &&
+        !paused &&
         !hoveredSlug.current
       ) {
-        target.lng += elapsed * 3;
-        if (manualCenter.current) manualCenter.current.lng = target.lng;
-        worldAngle.current += elapsed * 3;
+        target.lng += elapsed * 2;
+        worldAngle.current += elapsed * 2;
         c.lng = target.lng;
-      } else {
-        c.lng += delta * ease;
       }
-      c.lat += (target.lat - c.lat) * ease;
-      c.zoom += (target.zoom - c.zoom) * ease;
       ctx.clearRect(0, 0, width, height);
       const radius = Math.min(width, height) * 0.42 * c.zoom;
       const ocean = ctx.createRadialGradient(
@@ -208,7 +226,7 @@ export function BranchMap({
         height * 0.35,
         0,
         width / 2,
-        height / 2,
+        height * 0.43,
         radius,
       );
       ocean.addColorStop(0, "#3c2064");
@@ -216,7 +234,7 @@ export function BranchMap({
       ocean.addColorStop(1, "#090610");
       ctx.fillStyle = ocean;
       ctx.beginPath();
-      ctx.arc(width / 2, height / 2, radius, 0, Math.PI * 2);
+      ctx.arc(width / 2, height * 0.43, radius, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = "#b99ad855";
       ctx.lineWidth = 1;
@@ -260,7 +278,8 @@ export function BranchMap({
         ctx.stroke();
       }
       hitPins.current = [];
-      for (const pin of pins) {
+      const clustered = cameraDestination.id === "world" && c.zoom < 3;
+      for (const pin of clustered ? countryPins : pins) {
         const lat = pin.lat * rad,
           lng = pin.lng * rad;
         const p = project(
@@ -269,7 +288,42 @@ export function BranchMap({
           Math.cos(lat) * Math.cos(lng),
         );
         if (p.depth <= 0) continue;
+        if (p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
         hitPins.current.push({ ...p, slug: pin.slug, name: pin.name, country: pin.country });
+        if (clustered) {
+          ctx.font = "600 12px system-ui, sans-serif";
+          const labelWidth = Math.min(width - 24, ctx.measureText(pin.name).width + 22);
+          const left = Math.max(
+            12,
+            Math.min(
+              width - labelWidth - 12,
+              pin.country !== "Ghana" ? p.x - labelWidth - 12 : p.x + 14,
+            ),
+          );
+          const top = Math.max(12, p.y - (pin.country === "Sierra Leone" ? 64 : 32));
+          ctx.strokeStyle = "#ffde5980";
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(left + labelWidth / 2, top + 30);
+          ctx.stroke();
+          ctx.fillStyle = "#211330";
+          ctx.fillRect(left, top, labelWidth, 30);
+          ctx.strokeRect(left, top, labelWidth, 30);
+          ctx.fillStyle = "#ffed9d";
+          ctx.fillText(pin.name, left + 11, top + 19);
+          hitPins.current.push({
+            x: left + labelWidth / 2,
+            y: top + 15,
+            hitWidth: labelWidth / 2,
+            slug: pin.slug,
+            name: pin.name,
+            country: pin.country,
+          });
+        }
+        ctx.fillStyle = "#ffde5928";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, clustered ? 13 : 10, 0, Math.PI * 2);
+        ctx.fill();
         const highlighted = hoveredSlug.current === pin.slug;
         if (highlighted) {
           ctx.strokeStyle = "#ffde5990";
@@ -284,7 +338,7 @@ export function BranchMap({
         }
         ctx.fillStyle = "#ffde59";
         ctx.beginPath();
-        ctx.arc(p.x, p.y, highlighted ? 5 : 3.5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, highlighted ? 7 : 5, 0, Math.PI * 2);
         ctx.fill();
       }
       if (!motion.matches && (!settled || (cameraDestination.id === "world" && !paused)))
@@ -321,12 +375,20 @@ export function BranchMap({
       document.removeEventListener("visibilitychange", start);
       motion.removeEventListener("change", start);
     };
-  }, [cameraDestination, pins, paused, origin, initialCenter, land, zoomMultiplier]);
+  }, [cameraDestination, pins, countryPins, paused, origin, land, zoomMultiplier]);
 
   return (
     <section
       className={`location-globe${bare ? " location-globe--bare" : ""}`}
       aria-label="Explore Kharis around the world"
+      onPointerEnter={(event) => {
+        if (event.pointerType === "mouse") setPaused(true);
+      }}
+      onPointerLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false);
+      }}
     >
       <div className="location-globe__toolbar">
         <details
@@ -391,9 +453,6 @@ export function BranchMap({
             ))}
           </div>
         </details>
-        <button type="button" onClick={() => setPaused((value) => !value)} aria-pressed={paused}>
-          {paused ? "Resume rotation" : "Pause rotation"}
-        </button>
       </div>
       <div className="location-globe__scene">
         <div className="location-globe__zoom" role="group" aria-label="Globe zoom">
@@ -472,12 +531,14 @@ export function BranchMap({
               return;
             }
             const rect = event.currentTarget.getBoundingClientRect();
-            const pin = hitPins.current.find(
-              (pin) =>
-                Math.hypot(
-                  pin.x - (event.clientX - rect.left),
-                  pin.y - (event.clientY - rect.top),
-                ) < 14,
+            const pin = hitPins.current.find((pin) =>
+              pin.hitWidth
+                ? Math.abs(pin.x - (event.clientX - rect.left)) < pin.hitWidth &&
+                  Math.abs(pin.y - (event.clientY - rect.top)) < 18
+                : Math.hypot(
+                    pin.x - (event.clientX - rect.left),
+                    pin.y - (event.clientY - rect.top),
+                  ) < 18,
             );
             event.currentTarget.style.cursor = pin ? "pointer" : "grab";
             event.currentTarget.removeAttribute("title");
@@ -499,14 +560,20 @@ export function BranchMap({
               return;
             }
             const rect = event.currentTarget.getBoundingClientRect();
-            const pin = hitPins.current.find(
-              (pin) =>
-                Math.hypot(
-                  pin.x - (event.clientX - rect.left),
-                  pin.y - (event.clientY - rect.top),
-                ) < 14,
+            const pin = hitPins.current.find((pin) =>
+              pin.hitWidth
+                ? Math.abs(pin.x - (event.clientX - rect.left)) < pin.hitWidth &&
+                  Math.abs(pin.y - (event.clientY - rect.top)) < 18
+                : Math.hypot(
+                    pin.x - (event.clientX - rect.left),
+                    pin.y - (event.clientY - rect.top),
+                  ) < 18,
             );
-            if (pin) {
+            if (pin?.slug.startsWith("country:")) {
+              setZoomMultiplier(1);
+              setSelection(pin.country!);
+              onCountryChange?.(pin.country!);
+            } else if (pin) {
               if (onSelectBranch) onSelectBranch(pin.slug);
               else router.push(`/locations/${pin.slug}`);
             }
@@ -524,7 +591,8 @@ export function BranchMap({
             <span className="globe-hover__eyebrow">{hovered.country ?? "Kharis Church"}</span>
             <strong>{hovered.name}</strong>
             <span className="globe-hover__action">
-              Explore this branch <ArrowUpRight size={15} />
+              {hovered.slug.startsWith("country:") ? "Explore this country" : "Explore this branch"}{" "}
+              <ArrowUpRight size={15} />
             </span>
           </div>
         ) : null}
