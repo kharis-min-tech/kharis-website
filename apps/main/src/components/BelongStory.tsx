@@ -48,7 +48,7 @@ const ITEMS: StoryItem[] = [
     description:
       "Serving is part of our worship. From ushers to music to hospitality, every believer has a role in God's house.",
     href: "/life/departments",
-    image: "/images/department-music.jpg",
+    image: "https://images.kharis.org/site-images/main/be6de89889053ab8/department-music.jpg",
     focus: "62% 30%",
   },
   {
@@ -58,7 +58,7 @@ const ITEMS: StoryItem[] = [
     description:
       "We abstain from food to signal dependence on God, fasting joined with prayer, as a church family seeking His purpose.",
     href: "/life/fasting",
-    image: "/images/life-fasting.jpg",
+    image: "https://images.kharis.org/site-images/main/7226db6e24e8c131/life-fasting.jpg",
     focus: "38% 40%",
   },
   {

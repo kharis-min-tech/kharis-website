@@ -1084,7 +1084,8 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
   width: 58px;
   height: 56px;
   margin: 0 auto 1.25rem;
-  background: url("/kp2/assets/kharis-logo.png") center / contain no-repeat;
+  background: url("https://images.kharis.org/site-images/kp2/113a6a24b1d3741b/kharis-logo.png")
+    center / contain no-repeat;
 }
 .kp-branch-panel .kp-branch-eyebrow {
   position: relative;

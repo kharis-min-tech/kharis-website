@@ -32,7 +32,7 @@ export function KpLoadingMark() {
             </mask>
           </defs>
           <image
-            href="/kp2/assets/kharis-logo.png"
+            href="https://images.kharis.org/site-images/kp2/113a6a24b1d3741b/kharis-logo.png"
             width="350"
             height="338"
             mask={`url(#${maskId})`}

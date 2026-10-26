@@ -33,11 +33,14 @@ export const LIFE_DEPARTMENTS_URL = "/quiz";
 export const LIFE_KGROUP_EMAIL = "kgroup@kharis.org";
 
 /** Actual baptism photograph used in the Life preview and detail hero. */
-export const LIFE_BAPTISM_IMAGE = "/images/baptism-water.jpg";
+export const LIFE_BAPTISM_IMAGE =
+  "https://images.kharis.org/site-images/main/13c9297f7be9a14a/baptism-water.jpg";
 
-export const LIFE_SERVE_IMAGE = "/images/life-departments.jpg";
+export const LIFE_SERVE_IMAGE =
+  "https://images.kharis.org/site-images/main/eaaa3446e38fc4e3/life-departments.jpg";
 
-export const LIFE_CHILDREN_IMAGE = "/images/home/childrens-ministry.webp";
+export const LIFE_CHILDREN_IMAGE =
+  "https://images.kharis.org/site-images/main/43bd4a0c466fb815/home/childrens-ministry.webp";
 
 export const LIFE_HERO = {
   eyebrow: "Home of Grace",

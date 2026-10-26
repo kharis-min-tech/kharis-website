@@ -85,13 +85,17 @@ function Index({
       <SiteHeader />
 
       <header className="kp-home-hero kp-on-dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
-        <img className="kp-home-hero__still" src="/kp2/assets/crowd-poster.jpg" alt="" />
+        <img
+          className="kp-home-hero__still"
+          src="https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg"
+          alt=""
+        />
         <div className="kp-home-hero__mosaic absolute inset-0 grid grid-cols-2 lg:flex lg:flex-row w-full h-full z-0">
           <div className="relative col-span-2 lg:flex-1 group overflow-hidden border-b-2 lg:border-b-0 lg:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/Choir-video.mp4"
-              poster="/kp2/assets/choir-video-poster.jpg"
+              poster="https://images.kharis.org/site-images/kp2/88a52cf2f36e4dba/choir-video-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -100,7 +104,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/crowd.mp4"
-              poster="/kp2/assets/crowd-poster.jpg"
+              poster="https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -109,7 +113,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/choir2.mp4"
-              poster="/kp2/assets/choir2-poster.jpg"
+              poster="https://images.kharis.org/site-images/kp2/a20adefe3b0f9d7a/choir2-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -118,7 +122,7 @@ function Index({
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
               src="/kp2/assets/dancing.mp4"
-              poster="/kp2/assets/dancing-poster.jpg"
+              poster="https://images.kharis.org/site-images/kp2/2777b7351167f611/dancing-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
           </div>
@@ -257,7 +261,7 @@ function Index({
                 <img
                   alt="Pastor David Antwi, Head Pastor of Kharis Phase 2"
                   className="relative w-full aspect-[4/5] object-cover rounded-[2rem] shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500"
-                  src="/kp2/assets/pastor-david-smiling.jpg"
+                  src="https://images.kharis.org/site-images/kp2/51390c9807aba7b8/pastor-david-smiling.jpg"
                   loading="lazy"
                   decoding="async"
                 />

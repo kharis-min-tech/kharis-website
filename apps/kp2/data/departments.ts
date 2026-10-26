@@ -17,7 +17,7 @@ export const DEPARTMENTS: Department[] = [
     name: "K-MUSIC",
     tagline: "SOUND OF A NEW BREED",
     description: "Rappers who proclaim Christ through rhythm and verse. Get busy serving.",
-    image: "/kp2/assets/praise-singer-on-stage.jpg",
+    image: "https://images.kharis.org/site-images/kp2/0a07dd570dc2424c/praise-singer-on-stage.jpg",
     imageAlt: "A KP2 K-Music performer rapping on stage",
     accent: "bg-primary text-on-primary",
     icon: "music_note",

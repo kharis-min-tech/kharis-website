@@ -10,14 +10,15 @@ import { LifeIcon } from "@/components/LifeIcon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { LIFE_CATEGORIES, LIFE_VISIBLE_SLUGS, lifeBySlug, type LifeSlug } from "@/lib/life-content";
 
-const KIDS_HERO_IMAGE = "/images/kids-landing.jpg";
+const KIDS_HERO_IMAGE =
+  "https://images.kharis.org/site-images/main/5ea8d379963f35cf/kids-landing.jpg";
 
 const KIDS_GROUPS = [
   {
     title: "Kinder",
     ages: "3–6 years",
     icon: Sparkles,
-    image: "/images/kids-kinder.jpg",
+    image: "https://images.kharis.org/site-images/main/1a54827f76bc5adc/kids-kinder.jpg",
     position: "58% center",
     color: "#fff3d6",
   },
@@ -25,7 +26,7 @@ const KIDS_GROUPS = [
     title: "Super",
     ages: "7–11 years",
     icon: Users,
-    image: "/images/kids-super.jpg",
+    image: "https://images.kharis.org/site-images/main/9683effdc02da8a0/kids-super.jpg",
     position: "55% center",
     color: "#f2eef7",
   },
@@ -33,7 +34,7 @@ const KIDS_GROUPS = [
     title: "Transition",
     ages: "12–16 years",
     icon: Heart,
-    image: "/images/kids-transition.jpg",
+    image: "https://images.kharis.org/site-images/main/5e437c8c684d3d72/kids-transition.jpg",
     position: "56% center",
     color: "#eef6ff",
   },
@@ -41,7 +42,8 @@ const KIDS_GROUPS = [
 
 const KIDS_SERMON_URL = "https://app.kharis.org/track?trackId=23780";
 const KIDS_SOUNDCLOUD_URL = "https://on.soundcloud.com/JWJDWztumwE31AAkuT";
-const KIDS_SERMON_IMAGE = "/images/family-enrichment.jpg";
+const KIDS_SERMON_IMAGE =
+  "https://images.kharis.org/site-images/main/da746ddcf4140fa0/family-enrichment.jpg";
 
 const DEPT_BANDS = [
   {

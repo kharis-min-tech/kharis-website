@@ -29,7 +29,8 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             <div
               className="absolute inset-0 bg-cover bg-center opacity-60"
               style={{
-                backgroundImage: "url('/kp2/assets/pastor-david-at-pulpit.jpg')",
+                backgroundImage:
+                  "url('https://images.kharis.org/site-images/kp2/a991d1457f200aa6/pastor-david-at-pulpit.jpg')",
               }}
             />
           )}

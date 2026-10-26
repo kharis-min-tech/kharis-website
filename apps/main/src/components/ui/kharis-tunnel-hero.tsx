@@ -90,7 +90,8 @@ const TUNNEL_CARDS: TunnelCardData[] = KHARIS_ITEMS.map((item, i) => {
 
 /** Worship crowd clip (from the KP2 assets), played muted behind the tunnel. */
 const BACKGROUND_VIDEO = "/videos/life-crowd.mp4";
-const BACKGROUND_POSTER = "/videos/life-crowd-poster.jpg";
+const BACKGROUND_POSTER =
+  "https://images.kharis.org/site-images/main/202d5d8fcf42bef6/life-crowd-poster.jpg";
 
 /**
  * Tunnel-vision layers. Blur strength stays fixed (animating backdrop-filter is costly);

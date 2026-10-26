@@ -1,6 +1,8 @@
+import { publicAsset } from "./public-asset";
+
 /** Photographs selected from the KP2 Photography library on KOffice. */
 function photo(file: string, alt: string, position = "center") {
-  return { src: `/kp2/assets/photography/${file}.webp`, alt, position };
+  return { src: publicAsset(`/kp2/assets/photography/${file}.webp`), alt, position };
 }
 
 export const KP2_PHOTOS = {
