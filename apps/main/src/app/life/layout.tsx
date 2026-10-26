@@ -6,7 +6,7 @@ import { LifeShell } from "@/components/LifeShell";
 export const metadata: Metadata = {
   title: "Kharis Life | Kharis Church",
   description:
-    "The Christian life is a one-another life. Baptism, fasting, children’s ministry, and serving in departments at Kharis.",
+    "The Christian life is not designed to be lived in isolation. Baptism, fasting, children’s ministry, and serving in departments at Kharis.",
 };
 
 export default function LifeLayout({ children }: { children: React.ReactNode }) {

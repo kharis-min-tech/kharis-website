@@ -2,14 +2,16 @@
 
 import {
   motion,
+  useAnimationFrame,
   useTransform,
   useReducedMotion,
   useMotionValue,
   useSpring,
   MotionValue,
 } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "@/components/SiteImage";
+import { glidePageTo } from "@/lib/page-snap";
 
 /** Kharis photos from images.kharis.org, one per Life theme. */
 const KHARIS_ITEMS = [
@@ -40,7 +42,7 @@ const KHARIS_ITEMS = [
   },
   {
     src: "https://images.kharis.org/site-images/main/5bbfb2fff5c0fc8c/hero/outreach-street.jpg",
-    title: "Community First",
+    title: "Fellowship Life",
     alt: "Kharis outreach team sharing the gospel on the street",
   },
   {
@@ -121,12 +123,18 @@ const TUNNEL_DARKEN =
 /** Pointer parallax: critically damped so the camera drifts without wobble. */
 const PARALLAX_SPRING = { stiffness: 90, damping: 19, mass: 1 };
 /**
- * Scroll progress: critically damped (24 / (2 * sqrt(120 * 1.2)) = 1), so cards carry
- * weight on the way out and tuck back on reversal without overshoot or trailing.
+ * Scroll progress springs, both critically damped (damping = 2 * sqrt(stiffness * mass)) so
+ * nothing overshoots. Forward keeps some weight (~0.4s settle); rewinding is stiffer (~0.25s) so
+ * the cards have folded back to the opening state by the time the page reaches the top.
  */
-const SCROLL_SPRING = { stiffness: 120, damping: 24, mass: 1.2, restDelta: 0.0001 };
-/** Progress per pixel of wheel delta / finger travel. */
-const WHEEL_SPEED = 0.0009;
+const FORWARD_SPRING = { stiffness: 160, damping: 28, mass: 1.2 };
+const REWIND_SPRING = { stiffness: 480, damping: 48, mass: 1.2 };
+/**
+ * Progress per pixel of wheel delta / finger travel. Forward is slower (~16 mouse-wheel notches end
+ * to end) so the cards have time to open up; going back stays quicker so rewinding feels light.
+ */
+const WHEEL_SPEED_FORWARD = 0.0008;
+const WHEEL_SPEED_BACK = 0.00125;
 /** Firefox and some mice report lines or pages instead of pixels. */
 const WHEEL_LINE_PX = 16;
 /**
@@ -136,15 +144,18 @@ const WHEEL_LINE_PX = 16;
 const WHEEL_KNEE_PX = 60;
 const WHEEL_MAX_PX = 140;
 const WHEEL_COMPRESSION = 0.4;
-const TOUCH_SPEED = 0.002;
+const TOUCH_SPEED_FORWARD = 0.0017;
+const TOUCH_SPEED_BACK = 0.0026;
 /** Start partway in so the first cards are already in flight and the title is fully visible. */
 const INITIAL_PROGRESS = 0.12;
 /**
- * Where the tunnel sits when the hero lands back at the top after a full escape. While the user
- * scrolls up and the hero re-enters, cards collapse from 1 (escaped) toward this value in step
- * with how much of the hero is back in view, so the hero never returns empty.
+ * The tunnel captures the wheel only on a visitor's first pass. Once they have scrolled past the
+ * hero (by any means) this session, later passes scroll natively and the cards simply follow the
+ * page: replaying a scroll-jacked intro on every return was friction, not delight.
  */
-const REENTRY_PROGRESS = 0.5;
+const SEEN_KEY = "kharis:life-tunnel-seen";
+/** Ignore wheel input this long after the page lands at the top, so trackpad momentum ends cleanly. */
+const MOMENTUM_GUARD_MS = 300;
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
@@ -193,6 +204,46 @@ function useCameraParallax(enabled: boolean) {
   }, [enabled, rawX, rawY]);
 
   return { x, y };
+}
+
+type SpringParams = { stiffness: number; damping: number; mass: number };
+
+/**
+ * Follows `source` with a spring whose settings depend on direction: `rewind` while moving back
+ * (target below the current value), `forward` otherwise. Position and velocity carry over when the
+ * direction flips, so switching springs never snaps.
+ */
+function useDirectionalSpring(
+  source: MotionValue<number>,
+  forward: SpringParams,
+  rewind: SpringParams,
+) {
+  const value = useMotionValue(source.get());
+  const velocity = useRef(0);
+
+  useAnimationFrame((_, deltaMs) => {
+    const target = source.get();
+    let x = value.get();
+    let v = velocity.current;
+    if (Math.abs(target - x) < 0.0001 && Math.abs(v) < 0.0001) {
+      if (x !== target) value.set(target);
+      velocity.current = 0;
+      return;
+    }
+    const { stiffness, damping, mass } = target < x ? rewind : forward;
+    /* Small fixed sub-steps keep the stiff rewind spring stable on slow frames. */
+    const dt = Math.min(deltaMs, 64) / 1000;
+    const steps = Math.max(1, Math.ceil(dt / 0.004));
+    const h = dt / steps;
+    for (let i = 0; i < steps; i++) {
+      v += ((stiffness * (target - x) - damping * v) / mass) * h;
+      x += v * h;
+    }
+    velocity.current = v;
+    value.set(x);
+  });
+
+  return value;
 }
 
 interface TunnelCardProps {
@@ -293,28 +344,60 @@ export default function KharisTunnelHero() {
   }, []);
 
   const rawProgress = useMotionValue(INITIAL_PROGRESS);
-  const smoothProgress = useSpring(rawProgress, SCROLL_SPRING);
+  const springProgress = useDirectionalSpring(rawProgress, FORWARD_SPRING, REWIND_SPRING);
+  const smoothProgress = reduce ? rawProgress : springProgress;
+
+  /* "Settled": the intro has been seen (or motion is reduced), so the wheel is never captured. */
+  const [settled, setSettled] = useState(false);
+  const settledRef = useRef(false);
+  const markSeen = useCallback(() => {
+    if (settledRef.current) return;
+    settledRef.current = true;
+    setSettled(true);
+    try {
+      window.sessionStorage.setItem(SEEN_KEY, "1");
+    } catch {
+      /* Private mode or blocked storage: settles for this page view only. */
+    }
+  }, []);
+
+  useEffect(() => {
+    let seen = false;
+    try {
+      seen = window.sessionStorage.getItem(SEEN_KEY) === "1";
+    } catch {
+      /* Storage unavailable: treat as a first visit. */
+    }
+    if (seen || reduce) {
+      settledRef.current = true;
+      setSettled(true);
+    }
+  }, [reduce]);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    let arrivedAt = 0;
 
     /**
-     * Moves the tunnel and returns true, or returns false so the page scrolls instead: at either
-     * end of the tunnel, or while the page is scrolled down (scrolling back up first returns the
-     * page to the top, then the cards tuck back in).
+     * First visit only: moves the tunnel and returns true, or returns false so the page scrolls
+     * instead (tunnel finished, page already scrolled, momentum still arriving at the top, or the
+     * intro already seen). Never rewinds below the opening composition.
      */
     const advance = (delta: number) => {
-      if (window.scrollY > 1) return false;
+      if (settledRef.current || window.scrollY > 1) return false;
+      if (performance.now() - arrivedAt < MOMENTUM_GUARD_MS) return false;
       const current = rawProgress.get();
-      const next = clamp01(current + delta);
+      const next = Math.min(1, Math.max(INITIAL_PROGRESS, current + delta));
       if (next === current) return false;
       rawProgress.set(next);
       return true;
     };
 
     const handleWheel = (e: WheelEvent) => {
-      if (advance(normalizeWheelDelta(e) * WHEEL_SPEED)) e.preventDefault();
+      const delta = normalizeWheelDelta(e);
+      const speed = delta > 0 ? WHEEL_SPEED_FORWARD : WHEEL_SPEED_BACK;
+      if (advance(delta * speed)) e.preventDefault();
     };
 
     let lastTouchY: number | null = null;
@@ -324,7 +407,8 @@ export default function KharisTunnelHero() {
     const handleTouchMove = (e: TouchEvent) => {
       const y = e.touches[0]?.clientY;
       if (lastTouchY === null || y === undefined) return;
-      const delta = (lastTouchY - y) * TOUCH_SPEED;
+      const travel = lastTouchY - y;
+      const delta = travel * (travel > 0 ? TOUCH_SPEED_FORWARD : TOUCH_SPEED_BACK);
       lastTouchY = y;
       if (advance(delta)) e.preventDefault();
     };
@@ -332,19 +416,27 @@ export default function KharisTunnelHero() {
       lastTouchY = null;
     };
 
-    /* Scrolling up into the hero rewinds the tunnel with it. Only ever pulls progress back, so
-       scrolling down past the hero leaves it alone. */
+    /*
+     * The cards follow page scroll through the hero: fully escaped when it is off screen, back at
+     * the opening state when the page is at the top. Going up only ever folds cards back; going
+     * down only ever pushes them on (and only once the intro has been seen), so neither direction
+     * undoes the other.
+     */
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const goingUp = scrollY < lastScrollY;
+      if (lastScrollY > 1 && scrollY <= 1) arrivedAt = performance.now();
       lastScrollY = scrollY;
-      if (!goingUp) return;
       const { top, height } = el.getBoundingClientRect();
-      if (top <= -height) return;
-      const hidden = clamp01(-top / height);
-      const target = REENTRY_PROGRESS + (1 - REENTRY_PROGRESS) * hidden;
-      if (target < rawProgress.get()) rawProgress.set(target);
+      if (-top > height * 0.5) markSeen();
+      /* No early exit when the hero is fully off screen: a jump (scrollbar, End key, anchor) must
+         still leave the cards escaped. */
+      const target = INITIAL_PROGRESS + (1 - INITIAL_PROGRESS) * clamp01(-top / height);
+      const current = rawProgress.get();
+      if (goingUp ? target < current : settledRef.current && target > current) {
+        rawProgress.set(target);
+      }
     };
 
     el.addEventListener("wheel", handleWheel, { passive: false });
@@ -361,9 +453,19 @@ export default function KharisTunnelHero() {
       el.removeEventListener("touchend", handleTouchEnd);
       el.removeEventListener("touchcancel", handleTouchEnd);
     };
-  }, [rawProgress]);
+  }, [markSeen, rawProgress]);
 
   const pointer = useCameraParallax(!reduce);
+
+  /* Escape hatch: glide straight to the next section; the cards fly on as the hero scrolls away. */
+  const skipIntro = () => {
+    const el = containerRef.current;
+    if (!el) return;
+    markSeen();
+    const target = el.getBoundingClientRect().bottom + window.scrollY;
+    if (reduce) window.scrollTo({ top: target, behavior: "instant" });
+    else glidePageTo(target);
+  };
 
   /* React does not reliably set the muted attribute, which iOS requires for autoplay. */
   useEffect(() => {
@@ -385,6 +487,10 @@ export default function KharisTunnelHero() {
     smoothProgress,
     [INITIAL_PROGRESS, INITIAL_PROGRESS + 0.1],
     [1, 0],
+  );
+  /* Hidden (not just transparent) once faded, so the skip button can't be clicked or tabbed to. */
+  const promptVisibility = useTransform(promptOpacity, (value) =>
+    value < 0.02 ? "hidden" : "visible",
   );
   /* Tunnel vision deepens with scroll: blur creeps inward and the edges darken. */
   const softBlurOpacity = useTransform(smoothProgress, [0, 1], [0.7, TUNNEL_PEAK.soft]);
@@ -440,7 +546,7 @@ export default function KharisTunnelHero() {
           className="pointer-events-none z-0 flex w-full max-w-2xl flex-col items-center px-6 text-center"
         >
           <p className="text-xs font-mono uppercase tracking-[0.4em] text-[#d6c4ff] mb-4 font-semibold">
-            Community First
+            Kharis Life
           </p>
           <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tighter! leading-[0.95] text-white! drop-shadow-[0_2px_18px_rgba(0,0,0,0.45)]">
             A ONE-ANOTHER
@@ -448,7 +554,7 @@ export default function KharisTunnelHero() {
             LIFE.
           </h2>
           <p className="mt-4 max-w-[40ch] text-sm sm:text-base font-light text-white/80">
-            Believe, become, and belong. Scroll to journey through the Kharis family experience.
+            A family shaped by grace. Scroll to journey through your Kharis experience.
           </p>
         </motion.div>
 
@@ -488,11 +594,20 @@ export default function KharisTunnelHero() {
 
       {/* Scroll Prompt */}
       <motion.div
-        style={{ opacity: promptOpacity }}
+        style={{ opacity: promptOpacity, visibility: promptVisibility }}
         className="pointer-events-none absolute inset-x-0 bottom-8 lg:left-[40%] flex flex-col items-center gap-2 text-xs font-mono uppercase tracking-[0.3em] text-white/75"
       >
         <span>Scroll to Explore</span>
         <div className="h-6 w-px bg-gradient-to-b from-white to-transparent" />
+        {settled ? null : (
+          <button
+            type="button"
+            onClick={skipIntro}
+            className="pointer-events-auto mt-1 border border-white/35 px-3 py-1.5 uppercase! text-[0.62rem] tracking-[0.25em] text-white/85 transition-colors duration-200 hover:border-[#e2bb62] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e2bb62]"
+          >
+            Skip intro ↓
+          </button>
+        )}
       </motion.div>
     </div>
   );

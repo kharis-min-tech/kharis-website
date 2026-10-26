@@ -40,9 +40,9 @@ export const LIFE_SERVE_IMAGE = "/images/life-departments.jpg";
 export const LIFE_CHILDREN_IMAGE = "/images/life-children.jpg";
 
 export const LIFE_HERO = {
-  eyebrow: "Community first",
+  eyebrow: "Home of Grace",
   title: "Kharis Life",
-  body: "The Christian life is a one-another life. Believe, become, and belong. Grow in the Word, find your people, and live out your faith in the Kharis family.",
+  body: "The Christian life is not designed to be lived in isolation. The Church is a place for feeding on God’s Word, through teaching and preaching, fellowship and accountability. Grow as a believer and live out what the New Testament describes as the “One Another” life.",
   sticky: "Plan a visit. We’d love to meet you.",
   banner: "A one-another life. Belong here",
   quoteSource: "David Antwi",
@@ -249,7 +249,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     layout: "photo",
     icon: "layout",
     intro:
-      "There are many ways to serve in God’s House. Serving in church is part of our worship to God. From sanctuary keepers to ushers to children’s teachers, every believer has a role to play. Joining a department also helps you grow as a believer and live out what the New Testament describes as the “one another” life.",
+      "There are many ways to serve in God’s House. Serving in church is part of our worship to God. From sanctuary keepers to ushers to children’s teachers, every believer has a role to play. Joining a department also helps you grow as a believer and live out what the New Testament describes as the “One Another” life.",
     sections: [
       {
         title: "A snapshot of Kharis departments",

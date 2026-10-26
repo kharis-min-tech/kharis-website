@@ -21,10 +21,13 @@ const SETTLE_DELAY_MS = 150;
 const MIN_TRAVEL = 0.06;
 
 let activeGlide: AnimationPlaybackControls | null = null;
+/** +1 gliding down, -1 gliding up, 0 idle. */
+let glideDirection = 0;
 
 export function stopPageGlide() {
   activeGlide?.stop();
   activeGlide = null;
+  glideDirection = 0;
 }
 
 export function isPageGliding() {
@@ -38,12 +41,14 @@ export function glidePageTo(target: number) {
   const distance = Math.abs(target - from);
   if (distance < 2) return;
   const screens = distance / window.innerHeight;
+  glideDirection = Math.sign(target - from);
   activeGlide = animate(from, target, {
     duration: Math.min(1.5, 0.6 + screens * 0.35),
     ease: GLIDE_EASE,
     onUpdate: (value) => window.scrollTo({ top: value, behavior: "instant" }),
     onComplete: () => {
       activeGlide = null;
+      glideDirection = 0;
     },
   });
 }
@@ -104,7 +109,16 @@ export function usePageSnap(enabled: boolean) {
       lastY = y;
       schedule();
     };
-    /* Any manual input takes over from a glide in progress. */
+    /*
+     * Wheel during a glide: the same direction means the glide is already heading where the user
+     * wants, so swallow the notch (cancelling mid-glide made steady wheel scrolling stutter);
+     * reversing takes over at once. Keys and touch always take over.
+     */
+    const onWheel = (event: WheelEvent) => {
+      if (!isPageGliding()) return;
+      if (Math.sign(event.deltaY) === glideDirection) event.preventDefault();
+      else stopPageGlide();
+    };
     const onInput = () => stopPageGlide();
     const onTouchStart = () => {
       touching = true;
@@ -116,7 +130,7 @@ export function usePageSnap(enabled: boolean) {
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("wheel", onInput, { passive: true });
+    window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("keydown", onInput);
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchend", onTouchEnd, { passive: true });
@@ -124,7 +138,7 @@ export function usePageSnap(enabled: boolean) {
     return () => {
       window.clearTimeout(timer);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("wheel", onInput);
+      window.removeEventListener("wheel", onWheel);
       window.removeEventListener("keydown", onInput);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
