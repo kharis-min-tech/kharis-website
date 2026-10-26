@@ -489,7 +489,8 @@
 
 .hello-field::placeholder {
   font-weight: 600;
-  color: rgba(28, 28, 31, 0.38);
+  color: #64606b;
+  opacity: 1;
 }
 
 .hello-field--name {
@@ -568,7 +569,8 @@
 }
 
 .hello-letter__message textarea::placeholder {
-  color: rgba(28, 28, 31, 0.4);
+  color: #64606b;
+  opacity: 1;
 }
 
 .hello-letter__message textarea:focus-visible {
@@ -1328,7 +1330,7 @@ html[data-theme="dark"] .hello-field {
 
 html[data-theme="dark"] .hello-field::placeholder,
 html[data-theme="dark"] .hello-letter__message textarea::placeholder {
-  color: rgba(241, 238, 245, 0.4);
+  color: #b9afc7;
 }
 
 html[data-theme="dark"] .hello-field:focus-visible {

@@ -35,7 +35,7 @@ const cards: Card[] = [
     title: "Young Adults",
     label: "Kharis Phase 2",
     href: KP2_URL,
-    image: "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
+    image: "/images/home/kp2-community.webp",
     info: "Next generation faith, community and purpose.",
     cta: "Visit KP2",
     position: "object-[45%_center]",

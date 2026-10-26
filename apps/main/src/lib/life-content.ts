@@ -32,12 +32,12 @@ export const LIFE_MEMBERSHIP_URL = "https://kharis.org/";
 export const LIFE_DEPARTMENTS_URL = "/quiz";
 export const LIFE_KGROUP_EMAIL = "kgroup@kharis.org";
 
-/** Baptism illustration used in the Life preview and detail hero. */
-export const LIFE_BAPTISM_IMAGE = "/images/baptism-illustration.jpeg";
+/** Actual baptism photograph used in the Life preview and detail hero. */
+export const LIFE_BAPTISM_IMAGE = "/images/baptism-water.jpg";
 
 export const LIFE_SERVE_IMAGE = "/images/life-departments.jpg";
 
-export const LIFE_CHILDREN_IMAGE = "/images/life-children.jpg";
+export const LIFE_CHILDREN_IMAGE = "/images/home/childrens-ministry.webp";
 
 export const LIFE_HERO = {
   eyebrow: "Community first",
@@ -108,7 +108,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     href: "/life/baptism",
     card: "A public declaration that you identify with Jesus Christ’s death, burial and resurrection, walking in newness of life.",
     image: LIFE_BAPTISM_IMAGE,
-    imageAlt: "Illustration of two people being baptised beneath a dove",
+    imageAlt: "A Kharis baptism candidate emerging from the water with hands raised",
     tone: "cream",
     layout: "photo",
     icon: "droplets",
@@ -213,7 +213,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
     href: "/life/children",
     card: "Fun, vibrant, and full of life. We partner with parents to help children discover who God is through Bible teaching, worship, and friendship.",
     image: LIFE_CHILDREN_IMAGE,
-    imageAlt: "Children reading a Bible together",
+    imageAlt: "Illustration of a teacher sharing a Bible story with children",
     tone: "gold",
     layout: "blend",
     icon: "sparkles",

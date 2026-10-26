@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "@/components/SiteImage";
 import { Sparkles, Users, Heart } from "lucide-react";
 import { Icon } from "@/components/Icon";
 import { LifeDeptList } from "@/components/LifeDeptGrid";
@@ -214,10 +215,13 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
                 className="life-kids-video__frame mx-auto max-w-[26rem]"
                 style={{ aspectRatio: "1 / 1" }}
               >
-                <img
+                <Image
                   src={KIDS_SERMON_IMAGE}
-                  alt="Family Enrichment — The Church Family message"
-                  className="block h-full w-full object-cover"
+                  alt="Family Enrichment: The Church Family message"
+                  fill
+                  sizes="(max-width: 767px) 90vw, 416px"
+                  unoptimized
+                  className="object-cover"
                 />
                 <div className="absolute bottom-3 right-3 z-20 flex flex-col items-end gap-2">
                   <a
