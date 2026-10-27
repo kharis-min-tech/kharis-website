@@ -16,7 +16,7 @@ import countryOutlines from "@/data/countryOutlines.json";
 import "./globe.css";
 
 const destinations = [
-  { id: "world", label: "Whole world", lat: 30, lng: -4, zoom: 1.05 },
+  { id: "world", label: "Whole world", lat: 30, lng: -4, zoom: 1.35 },
   { id: "United Kingdom", label: "United Kingdom", lat: 54, lng: -2, zoom: 6 },
   { id: "Ghana", label: "Ghana", lat: 7.9, lng: -1.1, zoom: 9 },
   { id: "Sierra Leone", label: "Sierra Leone", lat: 8.6, lng: -11.9, zoom: 16 },
@@ -139,21 +139,42 @@ export function BranchMap({
     manualCenter.current = null;
   }, [cameraCountry, origin]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const camera = useRef({ lat: 30, lng: -4, zoom: 1.05 });
+  const camera = useRef({ lat: 30, lng: -4, zoom: 1.35 });
   const pins = useMemo(() => branches, [branches]);
+  const countryMode = destination.id !== "world";
   const callouts = useMemo(
     () => globeCallouts(branches, destination.id),
     [branches, destination.id],
   );
+  const countryPins = useMemo(
+    () =>
+      destinations.slice(1).flatMap((country) => {
+        const members = branches.filter((branch) => branch.country === country.id);
+        if (!members.length) return [];
+        return [
+          {
+            slug: `country:${country.id}`,
+            name: `${country.label} · ${members.length} ${members.length === 1 ? "branch" : "branches"}`,
+            lat: country.lat,
+            lng: country.lng,
+            country: country.id,
+          },
+        ];
+      }),
+    [branches],
+  );
+
   const earthRef = useRef<HTMLCanvasElement>(null);
   const earthRenderer = useRef<ReturnType<typeof createEarthRenderer>>(null);
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const beamRefs = useRef<(SVGPathElement | null)[]>([]);
   const lineRefs = useRef<(SVGPathElement | null)[]>([]);
   useEffect(() => {
-    if (!earthRef.current) return;
+    const canvas = earthRef.current;
+    if (!canvas || !countryMode) return;
+    delete canvas.dataset.ready;
     const renderer = createEarthRenderer(
-      earthRef.current,
+      canvas,
       "https://images.kharis.org/site-images/main/56fb0dba60f8e277/globe/earth-blue-marble.webp",
       () => redraw.current?.(),
     );
@@ -161,8 +182,9 @@ export function BranchMap({
     return () => {
       renderer?.dispose();
       earthRenderer.current = null;
+      delete canvas.dataset.ready;
     };
-  }, []);
+  }, [countryMode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -192,7 +214,7 @@ export function BranchMap({
       const radius = globeGeometry(width, height, c.zoom).radius;
       return {
         x: width / 2 + (x * Math.cos(longitude) - z * Math.sin(longitude)) * radius,
-        y: height * 0.48 - (y * Math.cos(latitude) - depth * Math.sin(latitude)) * radius,
+        y: height * 0.43 - (y * Math.cos(latitude) - depth * Math.sin(latitude)) * radius,
         depth: y * Math.sin(latitude) + depth * Math.cos(latitude),
       };
     };
@@ -250,16 +272,20 @@ export function BranchMap({
           height * 0.35,
           0,
           width / 2,
-          height * 0.48,
+          height * 0.43,
           radius,
         );
-        ocean.addColorStop(0, "#22425d");
-        ocean.addColorStop(1, "#060b17");
+        ocean.addColorStop(0, "#3c2064");
+        ocean.addColorStop(0.8, "#180f2c");
+        ocean.addColorStop(1, "#090610");
         ctx.fillStyle = ocean;
         ctx.beginPath();
-        ctx.arc(width / 2, height * 0.48, radius, 0, Math.PI * 2);
+        ctx.arc(width / 2, height * 0.43, radius, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = "#9cb5c9";
+        ctx.strokeStyle = "#b99ad855";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.fillStyle = "#b299d2";
         ctx.beginPath();
         for (const dot of land) {
           const p = project(dot.x, dot.y, dot.z);
@@ -299,14 +325,80 @@ export function BranchMap({
         ctx.stroke();
       }
       hitPins.current = [];
-      for (const pin of pins) {
-        const p = projectGlobePoint(pin, c, width, height);
-        if (p.depth <= 0 || p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
-        hitPins.current.push({ ...p, slug: pin.slug, name: pin.name, country: pin.country });
-        ctx.fillStyle = "#ffdf8d";
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2);
-        ctx.fill();
+      if (cameraDestination.id === "world") {
+        const clustered = cameraDestination.id === "world" && c.zoom < 3;
+        for (const pin of clustered ? countryPins : pins) {
+          const lat = pin.lat * rad,
+            lng = pin.lng * rad;
+          const p = project(
+            Math.cos(lat) * Math.sin(lng),
+            Math.sin(lat),
+            Math.cos(lat) * Math.cos(lng),
+          );
+          if (p.depth <= 0) continue;
+          if (p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
+          hitPins.current.push({ ...p, slug: pin.slug, name: pin.name, country: pin.country });
+          if (clustered) {
+            ctx.font = "600 12px system-ui, sans-serif";
+            const labelWidth = Math.min(width - 24, ctx.measureText(pin.name).width + 22);
+            const left = Math.max(
+              12,
+              Math.min(
+                width - labelWidth - 12,
+                pin.country !== "Ghana" ? p.x - labelWidth - 12 : p.x + 14,
+              ),
+            );
+            const top = Math.max(12, p.y - (pin.country === "Sierra Leone" ? 64 : 32));
+            ctx.strokeStyle = "#ffde5980";
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(left + labelWidth / 2, top + 30);
+            ctx.stroke();
+            ctx.fillStyle = "#211330";
+            ctx.fillRect(left, top, labelWidth, 30);
+            ctx.strokeRect(left, top, labelWidth, 30);
+            ctx.fillStyle = "#ffed9d";
+            ctx.fillText(pin.name, left + 11, top + 19);
+            hitPins.current.push({
+              x: left + labelWidth / 2,
+              y: top + 15,
+              hitWidth: labelWidth / 2,
+              slug: pin.slug,
+              name: pin.name,
+              country: pin.country,
+            });
+          }
+          ctx.fillStyle = "#ffde5928";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, clustered ? 13 : 10, 0, Math.PI * 2);
+          ctx.fill();
+          const highlighted = hoveredSlug.current === pin.slug;
+          if (highlighted) {
+            ctx.strokeStyle = "#ffde5990";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 11, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = "#ffde5930";
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 15, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.fillStyle = "#ffde59";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, highlighted ? 7 : 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else {
+        for (const pin of pins) {
+          const p = projectGlobePoint(pin, c, width, height);
+          if (p.depth <= 0 || p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
+          hitPins.current.push({ ...p, slug: pin.slug, name: pin.name, country: pin.country });
+          ctx.fillStyle = "#ffdf8d";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
       callouts.forEach((branch, index) => {
         const p = projectGlobePoint(branch, c, width, height);
@@ -316,7 +408,7 @@ export function BranchMap({
         const line = lineRefs.current[index];
         if (card) {
           card.dataset.visible = String(front);
-          if (width >= 760) {
+          if (width >= 1024) {
             const position = globeCardPosition(index, callouts.length, width, height);
             card.style.setProperty("--card-x", `${position.x}px`);
             card.style.setProperty("--card-y", `${position.y}px`);
@@ -386,11 +478,12 @@ export function BranchMap({
       document.removeEventListener("visibilitychange", start);
       motion.removeEventListener("change", start);
     };
-  }, [cameraDestination, pins, callouts, paused, origin, land, zoomMultiplier]);
+  }, [cameraDestination, pins, countryPins, callouts, paused, origin, land, zoomMultiplier]);
 
   return (
     <section
       className={`location-globe${bare ? " location-globe--bare" : ""}`}
+      data-view={countryMode ? "country" : "world"}
       aria-label="Explore Kharis around the world"
       onPointerEnter={(event) => {
         if (event.pointerType === "mouse") setPaused(true);
@@ -409,7 +502,7 @@ export function BranchMap({
             const details = event.currentTarget;
             if (event.key === "Escape") {
               details.open = false;
-              details.querySelector("summary")?.focus();
+              details.querySelector("summary")?.focus({ preventScroll: true });
             }
             if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
             event.preventDefault();
@@ -447,7 +540,7 @@ export function BranchMap({
                   onCountryChange?.(d.id);
                   if (pickerRef.current) {
                     pickerRef.current.open = false;
-                    pickerRef.current.querySelector("summary")?.focus();
+                    pickerRef.current.querySelector("summary")?.focus({ preventScroll: true });
                   }
                 }}
               >
@@ -636,133 +729,141 @@ export function BranchMap({
               </g>
             ))}
           </svg>
-        </div>
-        <div className="globe-callouts" aria-label="Explore our branches">
-          {callouts.map((branch, index) => (
-            <button
-              type="button"
-              key={branch.slug}
-              ref={(node) => {
-                cardRefs.current[index] = node;
-              }}
-              className="globe-card"
-              aria-label={`Explore ${branch.name}`}
-              onPointerEnter={() => {
-                hoveredSlug.current = branch.slug;
-                redraw.current?.();
-              }}
-              onPointerLeave={() => {
-                hoveredSlug.current = null;
-                redraw.current?.();
-              }}
-              onFocus={() => {
-                hoveredSlug.current = branch.slug;
-                redraw.current?.();
-              }}
-              onBlur={() => {
-                hoveredSlug.current = null;
-                redraw.current?.();
-              }}
-              onClick={() =>
-                onSelectBranch
-                  ? onSelectBranch(branch.slug)
-                  : router.push(`/locations/${branch.slug}`)
+          <div
+            className={`location-globe__welcome${destination.id !== "world" ? " location-globe__welcome--journey" : ""}`}
+            key={destination.id}
+            role="status"
+          >
+            <p>{destination.id === "world" ? "One global family" : "Your family is here"}</p>
+            <h2
+              aria-label={
+                destination.id === "world"
+                  ? "A world of welcome"
+                  : `Welcome to ${destination.id === "United Kingdom" ? "the United Kingdom" : destination.label}`
               }
             >
-              <span className="globe-card__photo">
-                {branch.photo ? (
-                  <Image
-                    src={branch.photo}
-                    alt=""
-                    fill
-                    sizes="(max-width: 759px) 240px, 224px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="globe-card__monogram" aria-hidden="true">
-                    {branch.name.slice(0, 1)}
+              {destination.id === "world" ? (
+                "A world of welcome"
+              ) : (
+                <>
+                  <span className="location-globe__word-mask" aria-hidden="true">
+                    <span className="location-globe__word location-globe__word--intro">
+                      Welcome to
+                    </span>
+                  </span>{" "}
+                  <span className="location-globe__word-mask" aria-hidden="true">
+                    <span className="location-globe__word location-globe__word--country">
+                      {destination.id === "United Kingdom"
+                        ? "the United Kingdom"
+                        : destination.label}
+                    </span>
                   </span>
-                )}
-              </span>
-              <span className="globe-card__copy">
-                <strong>{branch.name}</strong>
-                <span>
-                  {branch.city || branch.country}
-                  <ArrowUpRight size={15} aria-hidden="true" />
-                </span>
-              </span>
-            </button>
-          ))}
+                </>
+              )}
+            </h2>
+            <span className="location-globe__detail">
+              {branches.length
+                ? "A place for you. A family to call home."
+                : "Explore our global family. Branch details are temporarily unavailable."}
+            </span>
+          </div>
         </div>
-      </div>
-      <div
-        className={`location-globe__welcome${destination.id !== "world" ? " location-globe__welcome--journey" : ""}`}
-        key={destination.id}
-        role="status"
-      >
-        <p>{destination.id === "world" ? "One global family" : "Your family is here"}</p>
-        <h2
-          aria-label={
-            destination.id === "world"
-              ? "A world of welcome"
-              : `Welcome to ${destination.id === "United Kingdom" ? "the United Kingdom" : destination.label}`
-          }
-        >
-          {destination.id === "world" ? (
-            "A world of welcome"
-          ) : (
-            <>
-              <span className="location-globe__word-mask" aria-hidden="true">
-                <span className="location-globe__word location-globe__word--intro">Welcome to</span>
-              </span>{" "}
-              <span className="location-globe__word-mask" aria-hidden="true">
-                <span className="location-globe__word location-globe__word--country">
-                  {destination.id === "United Kingdom" ? "the United Kingdom" : destination.label}
+        {countryMode && (
+          <div className="globe-callouts" aria-label="Explore our branches">
+            {callouts.map((branch, index) => (
+              <button
+                type="button"
+                key={branch.slug}
+                ref={(node) => {
+                  cardRefs.current[index] = node;
+                }}
+                className="globe-card"
+                aria-label={`Explore ${branch.name}`}
+                onPointerEnter={() => {
+                  hoveredSlug.current = branch.slug;
+                  redraw.current?.();
+                }}
+                onPointerLeave={() => {
+                  hoveredSlug.current = null;
+                  redraw.current?.();
+                }}
+                onFocus={() => {
+                  hoveredSlug.current = branch.slug;
+                  redraw.current?.();
+                }}
+                onBlur={() => {
+                  hoveredSlug.current = null;
+                  redraw.current?.();
+                }}
+                onClick={() =>
+                  onSelectBranch
+                    ? onSelectBranch(branch.slug)
+                    : router.push(`/locations/${branch.slug}`)
+                }
+              >
+                <span className="globe-card__photo">
+                  {branch.photo ? (
+                    <Image
+                      src={branch.photo}
+                      alt=""
+                      fill
+                      sizes="(max-width: 759px) 240px, 224px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="globe-card__monogram" aria-hidden="true">
+                      {branch.name.slice(0, 1)}
+                    </span>
+                  )}
                 </span>
-              </span>
-            </>
-          )}
-        </h2>
-        <span className="location-globe__detail">
-          {branches.length
-            ? "A place for you. A family to call home."
-            : "Explore our global family. Branch details are temporarily unavailable."}
-        </span>
+                <span className="globe-card__copy">
+                  <strong>{branch.name}</strong>
+                  <span>
+                    {branch.city || branch.country}
+                    <ArrowUpRight size={15} aria-hidden="true" />
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
-      <details className="location-globe__credit">
-        <summary>Image credits</summary>
-        <p>
-          Earth imagery:{" "}
-          <a
-            href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-map/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            NASA Blue Marble
-          </a>
-          . Accra:{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:Independence_Arch_-_Accra,_Ghana2.jpg"
-            target="_blank"
-            rel="noreferrer"
-          >
-            George Appiah
-          </a>
-          . Freetown:{" "}
-          <a
-            href="https://commons.wikimedia.org/wiki/File:Freetown-aerialview.jpg"
-            target="_blank"
-            rel="noreferrer"
-          >
-            David Hond
-          </a>
-          . City images cropped and resized,{" "}
-          <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noreferrer">
-            CC BY 2.0
-          </a>
-          .
-        </p>
-      </details>
+      {countryMode && (
+        <details className="location-globe__credit">
+          <summary>Image credits</summary>
+          <p>
+            Earth imagery:{" "}
+            <a
+              href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-map/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              NASA Blue Marble
+            </a>
+            . Accra:{" "}
+            <a
+              href="https://commons.wikimedia.org/wiki/File:Independence_Arch_-_Accra,_Ghana2.jpg"
+              target="_blank"
+              rel="noreferrer"
+            >
+              George Appiah
+            </a>
+            . Freetown:{" "}
+            <a
+              href="https://commons.wikimedia.org/wiki/File:Freetown-aerialview.jpg"
+              target="_blank"
+              rel="noreferrer"
+            >
+              David Hond
+            </a>
+            . City images cropped and resized,{" "}
+            <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noreferrer">
+              CC BY 2.0
+            </a>
+            .
+          </p>
+        </details>
+      )}
     </section>
   );
 }

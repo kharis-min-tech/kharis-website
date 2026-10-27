@@ -18,7 +18,7 @@ it("uses real branches from each country and filters country close-ups", () => {
     { slug: "freetown", lat: 8.5, lng: -13.2, country: "Sierra Leone" },
     { slug: "birmingham", lat: 52.5, lng: -1.9, country: "United Kingdom" },
   ];
-  expect(globeCallouts(branches, "world")).toEqual(branches);
+  expect(globeCallouts(branches, "world")).toEqual([]);
   expect(globeCallouts(branches, "Ghana")).toEqual([branches[1]]);
   expect(globeCallouts([], "world")).toEqual([]);
 });

@@ -3,8 +3,8 @@ export type GlobeLocation = { slug: string; lat: number; lng: number; country: s
 export function globeGeometry(width: number, height: number, zoom: number) {
   return {
     x: width / 2,
-    y: height * 0.48,
-    radius: Math.min(width * (width < 760 ? 0.49 : 0.34), height * 0.46) * zoom,
+    y: height * 0.43,
+    radius: Math.min(width, height) * 0.42 * zoom,
   };
 }
 
@@ -27,22 +27,13 @@ export function projectGlobePoint(
   };
 }
 
-/** A small, stable selection keeps dense UK branches from covering the globe. */
+/** Photo callouts belong to country close-ups; the rotating overview keeps its original layout. */
 export function globeCallouts<T extends GlobeLocation>(
   branches: readonly T[],
   country: string,
 ): T[] {
-  const available = branches.filter((branch) => country === "world" || branch.country === country);
-  if (country !== "world") return available.slice(0, 6);
-  const preferred = ["london", "accra", "freetown", "birmingham"];
-  const picked = preferred.flatMap(
-    (slug) => available.find((branch) => branch.slug === slug) ?? [],
-  );
-  for (const branch of available) {
-    if (picked.length >= 4) break;
-    if (!picked.some((item) => item.slug === branch.slug)) picked.push(branch);
-  }
-  return picked;
+  if (country === "world") return [];
+  return branches.filter((branch) => branch.country === country).slice(0, 4);
 }
 
 export function globeCardPosition(index: number, count: number, width: number, height: number) {

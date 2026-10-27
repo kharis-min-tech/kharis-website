@@ -412,41 +412,15 @@
   }
 }
 
-/* Photo callouts sit around the Earth, with the same coordinates as its branch markers. */
-.location-globe {
-  background: #060b17;
-  border-color: #7e9cce30;
-}
-.location-globe__toolbar {
-  padding-bottom: 0.5rem;
-}
+/* Preserve the overview layout, styling only selected-country close-ups. */
 .location-globe__scene {
   height: auto;
-  position: relative;
-  overflow: visible;
 }
 .location-globe__viewport {
   position: relative;
-  height: clamp(620px, 55vw, 790px);
+  height: clamp(340px, 42vw, 560px);
   overflow: hidden;
   isolation: isolate;
-  background: radial-gradient(ellipse at 50% 48%, #112741 0, #080f20 46%, #060b17 75%);
-}
-.location-globe__viewport::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    radial-gradient(circle, #c2d7ff80 0.7px, transparent 1px),
-    radial-gradient(circle, #92b2de60 0.6px, transparent 1px);
-  background-size:
-    97px 83px,
-    163px 127px;
-  background-position:
-    13px 21px,
-    49px 63px;
-  opacity: 0.5;
 }
 .location-globe .location-globe__earth,
 .location-globe .location-globe__markers,
@@ -459,9 +433,17 @@
 .location-globe .location-globe__earth {
   pointer-events: none;
   z-index: 0;
+  opacity: 0;
+  transition: opacity 650ms ease;
+}
+.location-globe[data-view="country"] .location-globe__earth[data-ready="true"] {
+  opacity: 1;
 }
 .location-globe .location-globe__markers {
   z-index: 2;
+}
+.location-globe[data-view="country"] .location-globe__viewport {
+  background: radial-gradient(ellipse at 50% 43%, #112741 0, #080f20 46%, #0c0814 75%);
 }
 .globe-connections {
   z-index: 1;
@@ -477,6 +459,35 @@
   inset: 0;
   pointer-events: none;
   z-index: 4;
+  animation: globe-country-cards 600ms ease 700ms both;
+}
+@keyframes globe-country-cards {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.location-globe__welcome {
+  z-index: 3;
+}
+.location-globe[data-view="country"] .location-globe__welcome {
+  left: 25%;
+  right: 25%;
+  padding: 1rem 0.5rem;
+  text-align: center;
+}
+.location-globe[data-view="country"] .location-globe__welcome h2 {
+  font-size: clamp(1.4rem, 2.5vw, 2.3rem);
+}
+.location-globe[data-view="country"] .location-globe__zoom {
+  top: 0.75rem;
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: row;
+  z-index: 5;
 }
 .globe-card {
   position: absolute;
@@ -561,21 +572,6 @@
   color: #ffdf9b;
   flex-shrink: 0;
 }
-.location-globe__zoom {
-  top: auto;
-  bottom: 1rem;
-  flex-direction: row;
-  z-index: 5;
-}
-.location-globe__welcome {
-  position: relative;
-  padding: 1.25rem 1.5rem 0.75rem;
-  text-align: center;
-  background: none;
-}
-.location-globe__welcome h2 {
-  font-size: clamp(1.5rem, 3vw, 2.3rem);
-}
 .location-globe__credit {
   margin: 0;
   padding: 0.5rem 1.5rem 1.25rem;
@@ -588,13 +584,20 @@
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
-@media (max-width: 759px) {
-  .location-globe__viewport {
-    height: clamp(320px, 96vw, 460px);
+
+@media (max-width: 1023px) {
+  .location-globe[data-view="country"] .location-globe__zoom {
+    right: 1rem;
+    left: auto;
+    top: 1rem;
+    transform: none;
+    flex-direction: column;
   }
-  .location-globe__zoom {
-    bottom: 0.75rem;
-    right: 0.75rem;
+  .location-globe[data-view="country"] .location-globe__welcome {
+    left: 0;
+    right: 0;
+    padding: 3rem 1.5rem 1.5rem;
+    text-align: left;
   }
   .globe-connections {
     display: none;
@@ -609,7 +612,7 @@
     padding: 0.75rem 1rem 1rem;
     pointer-events: auto;
     scrollbar-width: thin;
-    scrollbar-color: #80629c #060b17;
+    scrollbar-color: #80629c #0c0814;
   }
   .globe-card {
     position: relative;
@@ -623,14 +626,15 @@
   .globe-card[data-visible="false"] {
     opacity: 1;
   }
-  .location-globe__welcome {
-    padding-top: 0.5rem;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .globe-card,
-  .globe-card__photo img {
+  .globe-card__photo img,
+  .location-globe .location-globe__earth {
     transition: none;
+  }
+  .globe-callouts {
+    animation: none;
   }
 }
 .location-globe__credit summary {

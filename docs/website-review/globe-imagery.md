@@ -2,6 +2,8 @@
 
 The globe uses actual branch coordinates and current branch photos where available. Accra and Freetown use city images until a branch photograph is available. Those city images are decorative location illustrations, not photographs of the church buildings.
 
+The rotating world overview retains its purple dotted appearance and original dimensions. The Earth texture, connected photo cards and image credits appear only after selecting a country.
+
 ## Earth
 
 NASA Blue Marble: Next Generation, August 2004 global base map. Converted from the 5400 by 2700 JPEG to a 4096 by 2048 WebP.
