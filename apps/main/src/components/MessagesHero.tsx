@@ -9,17 +9,11 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 import { Play, X } from "lucide-react";
+import Image from "@/components/SiteImage";
 import type { MessageVideo } from "@/lib/youtube";
 
-/** Pastor David on camera, mid-sermon, in a message that is also on the poster wall. */
-const PREVIEW = {
-  id: "KBFfpU0mX2U",
-  start: 1260,
-  title: "A Living Witness For Jesus",
-};
-
-/** Keep YouTube's transient start controls covered until playback is stable. */
-const PLAY_SETTLE_MS = 4200;
+/** Reveal the preview promptly once YouTube reports playback. */
+const PLAY_SETTLE_MS = 180;
 /** Matches the crossfade in messages-hub.css; pause only once the video is invisible. */
 const FADE_MS = 320;
 /** Autoplay is sometimes ignored (notably on phones), so keep asking while it should run. */
@@ -30,11 +24,11 @@ const HEADLINE_SECOND_PREFIX = "feed your ";
 const HEADLINE_LAST_WORD = "spirit.";
 const HEADLINE_HOLD_AT = HEADLINE_FIRST.length + HEADLINE_SECOND_PREFIX.length;
 const HEADLINE_LENGTH = HEADLINE_HOLD_AT + HEADLINE_LAST_WORD.length;
-const HEADLINE_TYPE_MS = 100;
+const HEADLINE_TYPE_MS = 45;
 
 const YT_ORIGIN = "https://www.youtube-nocookie.com";
 
-function previewSrc() {
+function previewSrc(id: string) {
   const params = new URLSearchParams({
     autoplay: "1",
     mute: "1",
@@ -46,14 +40,14 @@ function previewSrc() {
     cc_load_policy: "0",
     disablekb: "1",
     fs: "0",
-    start: String(PREVIEW.start),
+    start: "0",
     enablejsapi: "1",
     origin: window.location.origin,
   });
-  return `${YT_ORIGIN}/embed/${PREVIEW.id}?${params}`;
+  return `${YT_ORIGIN}/embed/${id}?${params}`;
 }
 
-function watchSrc(start: number) {
+function watchSrc(id: string, start: number) {
   const params = new URLSearchParams({
     autoplay: "1",
     rel: "0",
@@ -61,14 +55,14 @@ function watchSrc(start: number) {
     playsinline: "1",
     start: String(start),
   });
-  return `${YT_ORIGIN}/embed/${PREVIEW.id}?${params}`;
+  return `${YT_ORIGIN}/embed/${id}?${params}`;
 }
 
 type Props = {
-  messages: MessageVideo[];
+  message: MessageVideo;
 };
 
-export function MessagesHero({ messages }: Props) {
+export function MessagesHero({ message }: Props) {
   const heroRef = useRef<HTMLElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const watchBtnRef = useRef<HTMLButtonElement>(null);
@@ -77,10 +71,9 @@ export function MessagesHero({ messages }: Props) {
   const pauseTimer = useRef<number | null>(null);
   const playingRef = useRef(false);
   const wantPlay = useRef(false);
-  const currentTime = useRef(PREVIEW.start);
-  const soundOnRef = useRef(false);
 
   const [allowed, setAllowed] = useState(false);
+  const [sharpPoster, setSharpPoster] = useState(true);
   const [inView, setInView] = useState(true);
   const [typed, setTyped] = useState(0);
   const [typingStarted, setTypingStarted] = useState(false);
@@ -94,18 +87,14 @@ export function MessagesHero({ messages }: Props) {
 
   const watching = watchStart !== null;
   const showPreview = allowed && warming && settled && inView && !watching;
-  const title =
-    messages
-      .find((m) => m.id === PREVIEW.id)
-      ?.title.split("|")[0]
-      ?.trim() || PREVIEW.title;
+  const title = message.title.split("|")[0]?.trim() || message.title;
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const syncMotion = () => setReducedMotion(motionQuery.matches);
     syncMotion();
     motionQuery.addEventListener("change", syncMotion);
-    const startTimer = window.setTimeout(() => setTypingStarted(true), 500);
+    const startTimer = window.setTimeout(() => setTypingStarted(true), 100);
     return () => {
       motionQuery.removeEventListener("change", syncMotion);
       window.clearTimeout(startTimer);
@@ -117,7 +106,7 @@ export function MessagesHero({ messages }: Props) {
       setTyped(HEADLINE_LENGTH);
       return;
     }
-    const typeLimit = settled ? HEADLINE_LENGTH : HEADLINE_HOLD_AT;
+    const typeLimit = HEADLINE_LENGTH;
     if (!typingStarted || typed >= typeLimit) return;
     const timer = window.setTimeout(
       () => setTyped((current) => Math.min(typeLimit, current + 1)),
@@ -147,35 +136,22 @@ export function MessagesHero({ messages }: Props) {
 
   const resume = useCallback(() => {
     if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
-    if (soundOnRef.current) {
-      command("unMute");
-      command("setVolume", [80]);
-    }
+    command("mute");
     command("playVideo");
   }, [command]);
-
-  const toggleSound = useCallback(() => {
-    const next = !soundOnRef.current;
-    soundOnRef.current = next;
-    if (next) {
-      resume();
-    } else {
-      command("mute");
-    }
-  }, [command, resume]);
 
   const onHeroClick = (event: ReactMouseEvent<HTMLElement>) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
-    if (target.closest("[role='dialog']")) return;
-    toggleSound();
+    if (target.closest("[role='dialog'], button, a")) return;
+    openPlayer();
   };
 
   const onHeroKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
     if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " "))
       return;
     event.preventDefault();
-    toggleSound();
+    openPlayer();
   };
 
   /** Pausing makes YouTube show its play overlay, so only pause once the video is already hidden. */
@@ -259,7 +235,6 @@ export function MessagesHero({ messages }: Props) {
       if (data.event === "infoDelivery" && data.info && typeof data.info === "object") {
         const info = data.info as { playerState?: number; currentTime?: number };
         state = info.playerState;
-        if (typeof info.currentTime === "number") currentTime.current = info.currentTime;
       }
       if (state === undefined) return;
       // YouTube reports buffering while it is already playing. Keep the settled
@@ -300,7 +275,11 @@ export function MessagesHero({ messages }: Props) {
     );
   };
 
-  const openPlayer = () => setWatchStart(showPreview ? Math.floor(currentTime.current) : 0);
+  const openPlayer = () => {
+    wantPlay.current = false;
+    command("pauseVideo");
+    setWatchStart(0);
+  };
 
   const closePlayer = useCallback(() => setWatchStart(null), []);
 
@@ -325,7 +304,7 @@ export function MessagesHero({ messages }: Props) {
     <section
       ref={heroRef}
       className="msg-hub__hero"
-      aria-label="Kharis messages"
+      aria-label={`Watch the latest Kharis message: ${title}`}
       tabIndex={0}
       data-preview={showPreview || undefined}
       data-preview-cut={cut || undefined}
@@ -333,11 +312,22 @@ export function MessagesHero({ messages }: Props) {
       onClick={onHeroClick}
       onKeyDown={onHeroKeyDown}
     >
+      <Image
+        src={
+          sharpPoster ? `https://i.ytimg.com/vi/${message.id}/maxresdefault.jpg` : message.thumbnail
+        }
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="msg-hero-poster"
+        onError={() => setSharpPoster(false)}
+      />
       <div className="msg-hero-preview" aria-hidden inert>
         {allowed && (
           <iframe
             ref={frameRef}
-            src={previewSrc()}
+            src={previewSrc(message.id)}
             title="Message preview"
             className="msg-hero-preview__frame"
             allow="autoplay; encrypted-media"
@@ -370,13 +360,20 @@ export function MessagesHero({ messages }: Props) {
             aria-label={`Watch message: ${title}`}
           >
             <Play className="msg-hero-watch__icon" strokeWidth={2.2} aria-hidden />
-            Watch message
+            Watch latest message
           </button>
         </div>
       </div>
 
       {watchStart !== null && (
-        <div className="msg-hero-player" role="dialog" aria-label={`Watch ${title}`}>
+        <div
+          className="msg-hero-player"
+          role="dialog"
+          aria-label={`Watch ${title}`}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closePlayer();
+          }}
+        >
           <div className="msg-hero-player__box">
             <div className="msg-hero-player__bar">
               <p className="msg-hero-player__title">{title}</p>
@@ -392,7 +389,7 @@ export function MessagesHero({ messages }: Props) {
             </div>
             <div className="msg-hero-player__frame">
               <iframe
-                src={watchSrc(watchStart)}
+                src={watchSrc(message.id, watchStart)}
                 title={title}
                 allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                 allowFullScreen

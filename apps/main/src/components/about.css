@@ -394,16 +394,11 @@
 
 .about-page .about-hero__brand,
 .about-page .about-panel__hero-copy h3 {
-  text-shadow:
-    0 1px 1px rgba(7, 4, 12, 0.35),
-    0 4px 10px rgba(7, 4, 12, 0.25),
-    0 12px 28px rgba(7, 4, 12, 0.16);
+  text-shadow: none;
 }
 .about-page .about-stage__title,
 .about-page .about-faith-band .about-section__title {
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7),
-    0 5px 12px rgba(30, 19, 40, 0.08);
+  text-shadow: none;
   font-weight: 700;
 }
 .about-page .about-panel__lead {
@@ -533,11 +528,7 @@
     .about-panel__focus h4
   ) {
   position: relative;
-  text-shadow:
-    0 1px 0 rgba(21, 14, 30, 0.08),
-    0 2px 1px rgba(21, 14, 30, 0.06),
-    0 5px 4px rgba(21, 14, 30, 0.05),
-    0 10px 12px rgba(21, 14, 30, 0.07);
+  text-shadow: none;
   transition:
     transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
     text-shadow 0.3s ease;
@@ -550,19 +541,11 @@
     .about-panel__focus h4
   ):hover {
   transform: translateY(-3px);
-  text-shadow:
-    0 1px 0 rgba(21, 14, 30, 0.08),
-    0 3px 2px rgba(21, 14, 30, 0.06),
-    0 8px 7px rgba(21, 14, 30, 0.06),
-    0 16px 18px rgba(21, 14, 30, 0.08);
+  text-shadow: none;
 }
 .about-page .about-panel__hero-copy h3,
 .about-page .about-hero__brand {
-  text-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.35),
-    0 2px 1px rgba(0, 0, 0, 0.25),
-    0 5px 5px rgba(0, 0, 0, 0.18),
-    0 12px 20px rgba(0, 0, 0, 0.185);
+  text-shadow: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .about-page
@@ -612,10 +595,10 @@
 .about-page .about-vision-theme summary::-webkit-details-marker {
   display: none;
 }
-.about-page .about-vision-theme summary svg {
+.about-page .about-vision-theme summary > .about-vision-theme__icon {
   transition: transform 0.25s ease;
 }
-.about-page .about-vision-theme summary:hover svg {
+.about-page .about-vision-theme summary:hover > .about-vision-theme__icon {
   transform: translateY(-4px);
 }
 .about-page .about-vision-theme summary:focus-visible {
@@ -636,10 +619,10 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .about-page .about-vision-theme summary svg {
+  .about-page .about-vision-theme summary > .about-vision-theme__icon {
     transition: none;
   }
-  .about-page .about-vision-theme summary:hover svg {
+  .about-page .about-vision-theme summary:hover > .about-vision-theme__icon {
     transform: none;
   }
 }
@@ -668,7 +651,7 @@
 }
 @media (prefers-color-scheme: dark) {
   html[data-theme="dark"] .about-page .about-panel__focus .about-panel__verse,
-  html[data-theme="dark"] .about-page .about-vision-theme summary svg {
+  html[data-theme="dark"] .about-page .about-vision-theme summary > .about-vision-theme__icon {
     color: #ffde59 !important;
   }
 }
@@ -676,6 +659,9 @@
 .about-page .about-panel__hero--vision .about-panel__hero-media {
   background-image: url("https://images.kharis.org/site-images/main/a080e8123b487573/vision-church-family.jpg");
   background-position: center 40%;
+}
+html[data-theme="dark"] .about-page .about-panel__hero--vision .about-panel__hero-media::after {
+  background: rgba(10, 9, 13, 0.7);
 }
 .about-page .about-vision-themes .about-panel__hero-copy h3 {
   color: #fff;
@@ -688,11 +674,17 @@
 }
 .about-page .about-vision-themes__intro {
   color: var(--purple);
-  font-size: 0.8rem;
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.6rem;
+}
+.about-page .about-vision-themes__hint {
+  max-width: 40rem;
+  color: var(--fg-soft);
   margin: 0 0 1.5rem;
+  line-height: 1.65;
 }
 .about-page .about-vision-themes__grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -700,14 +692,30 @@
 }
 .about-page .about-vision-theme {
   padding: 1.5rem 0;
+  border-bottom: 1px solid var(--line);
 }
 .about-page .about-vision-theme summary {
   display: grid;
   grid-template-columns: 2rem 1fr 1rem;
   align-items: start;
   gap: 1rem;
+  min-height: 3rem;
+  cursor: pointer;
 }
-.about-page .about-vision-theme summary svg {
+.about-page .about-vision-theme summary:hover {
+  color: var(--purple);
+}
+.about-page .about-vision-theme .about-vision-theme__action {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--purple);
+}
+html[data-theme="dark"] .about-page .about-vision-theme .about-vision-theme__action {
+  color: #d8b7ff;
+}
+.about-page .about-vision-theme summary > .about-vision-theme__icon {
   width: 1.8rem;
   height: 1.8rem;
   color: var(--purple);
@@ -721,8 +729,12 @@
   color: var(--muted);
   transition: transform 0.25s ease;
 }
+.about-page .about-vision-theme__toggle svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
 .about-page .about-vision-theme[open] .about-vision-theme__toggle {
-  transform: rotate(45deg);
+  transform: rotate(180deg);
 }
 .about-page .about-vision-theme > p {
   margin-left: 3rem;

@@ -474,3 +474,11 @@ html[data-theme="dark"] .events-filter__search input:focus {
 html[data-theme="dark"] .events-filter__search input:focus-visible {
   outline-color: #ffde59;
 }
+#events-branch-filter {
+  scroll-margin-block: 7rem;
+}
+
+#events-branch-filter:focus {
+  outline: 3px solid var(--purple);
+  outline-offset: 5px;
+}
