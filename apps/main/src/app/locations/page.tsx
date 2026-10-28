@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { listBranches, listBranchData } from "@/lib/branches";
 import { branchDisplayName, sundayVenue } from "@/lib/branch-display";
 import { LocationsClient } from "./LocationsClient";
-import { globeCityPhotos } from "@/lib/globe-imagery";
+import { globeCityPhoto } from "@/lib/globe-imagery";
 
 export const metadata: Metadata = {
   title: "Kharis Church Locations | Find a Branch Near You",
@@ -31,7 +31,7 @@ export default async function LocationsPage() {
         lng: venue.longitude,
         country: venue.country,
         photo:
-          globeCityPhotos[branch.slug]?.photo ||
+          globeCityPhoto(branch.slug)?.photo ||
           items.find((item) => item.id === branch.slug)?.photo ||
           "",
         city: venue.city,

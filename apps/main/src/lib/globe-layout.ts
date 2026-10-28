@@ -34,10 +34,32 @@ export function globeCallouts<T extends GlobeLocation>(
   country: string,
 ): T[] {
   if (country === "world") return [];
-  return branches.filter((branch) => branch.country === country).slice(0, 4);
+  return branches.filter((branch) => branch.country === country);
 }
 
 export function globeCardPosition(index: number, count: number, width: number, height: number) {
+  if (count > 6) {
+    const cardWidth = Math.max(128, Math.min(172, width * 0.135));
+    const cardHeight = cardWidth / 3 + 68;
+    const rows = Math.ceil(count / 4);
+    const row = Math.floor(index / 4);
+    const column = [0, 3, 1, 2][index % 4];
+    const margin = width * 0.025;
+    const gap = 12;
+    const rowGap = (height - rows * cardHeight) / (rows + 1);
+    const x =
+      column < 2
+        ? margin + column * (cardWidth + gap)
+        : width - margin - (4 - column) * cardWidth - (3 - column) * gap;
+    const y = rowGap + row * (cardHeight + rowGap);
+    return {
+      x,
+      y,
+      width: cardWidth,
+      anchorX: x + (column < 2 ? cardWidth : 0),
+      anchorY: y + cardHeight / 2,
+    };
+  }
   const cardWidth = Math.max(156, Math.min(224, width * 0.19));
   const cardHeight = cardWidth * 0.52 + 66;
   const slots =

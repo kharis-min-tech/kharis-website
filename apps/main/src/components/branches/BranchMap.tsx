@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useSmoothRouter } from "@/lib/use-smooth-router";
 import { Plus, Minus, RotateCcw, ChevronDown, Check, ArrowUpRight } from "lucide-react";
 import { interpolateGlobeCamera } from "@/lib/globe-camera";
@@ -14,7 +14,7 @@ import {
 } from "@/lib/globe-layout";
 import countryOutlines from "@/data/countryOutlines.json";
 import siteImageUrls from "@/lib/site-image-urls.json";
-import { globeCityPhotos } from "@/lib/globe-imagery";
+import { globeCityPhoto } from "@/lib/globe-imagery";
 import "./globe.css";
 
 const destinations = [
@@ -149,6 +149,7 @@ export function BranchMap({
     () => globeCallouts(branches, destination.id),
     [branches, destination.id],
   );
+  const crowded = callouts.length > 6;
   const countryPins = useMemo(
     () =>
       destinations.slice(1).flatMap((country) => {
@@ -452,9 +453,12 @@ export function BranchMap({
         const card = cardRefs.current[index];
         const beam = beamRefs.current[index];
         const line = lineRefs.current[index];
+        const highlighted = hoveredSlug.current === branch.slug;
+        if (beam) beam.dataset.highlighted = String(highlighted);
+        if (line) line.dataset.highlighted = String(highlighted);
         if (card) {
           card.dataset.visible = String(front);
-          if (width >= 1024) {
+          if (window.matchMedia("(min-width: 1024px)").matches) {
             const position = globeCardPosition(index, callouts.length, width, height);
             card.style.setProperty("--card-x", `${position.x}px`);
             card.style.setProperty("--card-y", `${position.y}px`);
@@ -477,20 +481,20 @@ export function BranchMap({
           }
         }
         if (!front) return;
-        const highlighted = hoveredSlug.current === branch.slug;
-        const halo = ctx.createRadialGradient(p.x, p.y, 1, p.x, p.y, highlighted ? 42 : 34);
+        const haloRadius = highlighted ? 42 : callouts.length > 6 ? 14 : 34;
+        const halo = ctx.createRadialGradient(p.x, p.y, 1, p.x, p.y, haloRadius);
         halo.addColorStop(0, "#fff7d9");
         halo.addColorStop(0.25, "#ffb93aaa");
         halo.addColorStop(0.6, "#ffb24333");
         halo.addColorStop(1, "#ffb24300");
         ctx.fillStyle = halo;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, highlighted ? 42 : 34, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, haloRadius, 0, Math.PI * 2);
         ctx.fill();
         ctx.strokeStyle = "#ffdf8d";
         ctx.lineWidth = highlighted ? 2.5 : 1.5;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, highlighted ? 11 : 9, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, highlighted ? 11 : callouts.length > 6 ? 4.5 : 9, 0, Math.PI * 2);
         ctx.stroke();
         ctx.fillStyle = "#fff4ce";
         ctx.beginPath();
@@ -537,6 +541,8 @@ export function BranchMap({
     <section
       className={`location-globe${bare ? " location-globe--bare" : ""}`}
       data-view={countryMode ? "country" : "world"}
+      data-crowded={crowded}
+      style={{ "--globe-card-rows": Math.ceil(callouts.length / 4) } as CSSProperties}
       aria-label="Explore Kharis around the world"
       onPointerEnter={(event) => {
         if (event.pointerType === "mouse") setPaused(true);
@@ -866,7 +872,11 @@ export function BranchMap({
                       src={branch.photo}
                       alt=""
                       fill
-                      sizes="(max-width: 759px) 240px, 224px"
+                      sizes={
+                        crowded
+                          ? "(max-width: 1023px) 45vw, 172px"
+                          : "(max-width: 1023px) 45vw, 224px"
+                      }
                       className="object-cover"
                     />
                   ) : (
@@ -876,9 +886,12 @@ export function BranchMap({
                   )}
                 </span>
                 <span className="globe-card__copy">
-                  <strong>{branch.name} Branch</strong>
+                  <strong>
+                    {branch.name}
+                    {!crowded && " Branch"}
+                  </strong>
                   <span>
-                    {branch.city || branch.country}
+                    {branch.city?.replace(/,\s*UK$/i, "") || branch.country}
                     {branch.city
                       ? `, ${branch.country === "United Kingdom" ? "UK" : branch.country}`
                       : ""}
@@ -912,7 +925,7 @@ export function BranchMap({
             </a>
             . City photographs cropped and resized.{" "}
             {callouts.map((branch) => {
-              const credit = globeCityPhotos[branch.slug];
+              const credit = globeCityPhoto(branch.slug);
               return credit ? (
                 <span key={branch.slug}>
                   {branch.city || branch.name}:{" "}
