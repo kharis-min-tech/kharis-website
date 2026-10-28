@@ -1,9 +1,9 @@
 export type GlobeLocation = { slug: string; lat: number; lng: number; country: string | null };
 
-export function globeGeometry(width: number, height: number, zoom: number) {
+export function globeGeometry(width: number, height: number, zoom: number, countryFocus = 0) {
   return {
     x: width / 2,
-    y: height * 0.43,
+    y: height * (0.43 + countryFocus * 0.23),
     radius: Math.min(width, height) * 0.42 * zoom,
   };
 }
@@ -13,13 +13,14 @@ export function projectGlobePoint(
   camera: { lat: number; lng: number; zoom: number },
   width: number,
   height: number,
+  countryFocus = 0,
 ) {
   const radians = Math.PI / 180;
   const lat = point.lat * radians,
     lng = (point.lng - camera.lng) * radians;
   const tilt = camera.lat * radians;
   const depth = Math.cos(lat) * Math.cos(lng);
-  const sphere = globeGeometry(width, height, camera.zoom);
+  const sphere = globeGeometry(width, height, camera.zoom, countryFocus);
   return {
     x: sphere.x + Math.cos(lat) * Math.sin(lng) * sphere.radius,
     y: sphere.y - (Math.sin(lat) * Math.cos(tilt) - depth * Math.sin(tilt)) * sphere.radius,

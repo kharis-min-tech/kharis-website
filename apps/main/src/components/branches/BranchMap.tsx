@@ -13,13 +13,15 @@ import {
   projectGlobePoint,
 } from "@/lib/globe-layout";
 import countryOutlines from "@/data/countryOutlines.json";
+import siteImageUrls from "@/lib/site-image-urls.json";
+import { globeCityPhotos } from "@/lib/globe-imagery";
 import "./globe.css";
 
 const destinations = [
   { id: "world", label: "Whole world", lat: 30, lng: -4, zoom: 1.35 },
-  { id: "United Kingdom", label: "United Kingdom", lat: 54, lng: -2, zoom: 6 },
-  { id: "Ghana", label: "Ghana", lat: 7.9, lng: -1.1, zoom: 9 },
-  { id: "Sierra Leone", label: "Sierra Leone", lat: 8.6, lng: -11.9, zoom: 16 },
+  { id: "United Kingdom", label: "United Kingdom", lat: 54, lng: -2, zoom: 1.4 },
+  { id: "Ghana", label: "Ghana", lat: 7.9, lng: -1.1, zoom: 1.4 },
+  { id: "Sierra Leone", label: "Sierra Leone", lat: 8.6, lng: -11.9, zoom: 1.4 },
 ];
 const rad = Math.PI / 180;
 export interface GlobeBranch {
@@ -140,6 +142,7 @@ export function BranchMap({
   }, [cameraCountry, origin]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const camera = useRef({ lat: 30, lng: -4, zoom: 1.35 });
+  const countryFocus = useRef(0);
   const pins = useMemo(() => branches, [branches]);
   const countryMode = destination.id !== "world";
   const callouts = useMemo(
@@ -169,13 +172,16 @@ export function BranchMap({
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const beamRefs = useRef<(SVGPathElement | null)[]>([]);
   const lineRefs = useRef<(SVGPathElement | null)[]>([]);
+  const beamGradientRefs = useRef<(SVGLinearGradientElement | null)[]>([]);
   useEffect(() => {
     const canvas = earthRef.current;
     if (!canvas || !countryMode) return;
     delete canvas.dataset.ready;
+    delete canvas.dataset.lights;
     const renderer = createEarthRenderer(
       canvas,
       "https://images.kharis.org/site-images/main/56fb0dba60f8e277/globe/earth-blue-marble.webp",
+      siteImageUrls["/images/globe/earth-night-lights.webp"],
       () => redraw.current?.(),
     );
     earthRenderer.current = renderer;
@@ -183,6 +189,7 @@ export function BranchMap({
       renderer?.dispose();
       earthRenderer.current = null;
       delete canvas.dataset.ready;
+      delete canvas.dataset.lights;
     };
   }, [countryMode]);
 
@@ -199,10 +206,12 @@ export function BranchMap({
     let settled = false;
     let travelStarted: number | null = null;
     const departure = { ...camera.current };
+    const departureFocus = countryFocus.current;
+    const targetFocus = cameraDestination.id === "world" ? 0 : 1;
     const target =
       cameraDestination.id === "world"
         ? { ...(origin ?? cameraDestination), zoom: cameraDestination.zoom }
-        : { ...cameraDestination };
+        : { ...cameraDestination, lat: cameraDestination.lat - 18 };
     if (manualCenter.current) Object.assign(target, manualCenter.current);
     target.zoom = Math.min(32, Math.max(1, target.zoom * zoomMultiplier));
     if (cameraDestination.id === "world" && !manualCenter.current) target.lng += worldAngle.current;
@@ -211,10 +220,12 @@ export function BranchMap({
       const longitude = c.lng * rad;
       const latitude = c.lat * rad;
       const depth = x * Math.sin(longitude) + z * Math.cos(longitude);
-      const radius = globeGeometry(width, height, c.zoom).radius;
+      const radius = globeGeometry(width, height, c.zoom, countryFocus.current).radius;
       return {
         x: width / 2 + (x * Math.cos(longitude) - z * Math.sin(longitude)) * radius,
-        y: height * 0.43 - (y * Math.cos(latitude) - depth * Math.sin(latitude)) * radius,
+        y:
+          globeGeometry(width, height, c.zoom, countryFocus.current).y -
+          (y * Math.cos(latitude) - depth * Math.sin(latitude)) * radius,
         depth: y * Math.sin(latitude) + depth * Math.cos(latitude),
       };
     };
@@ -235,6 +246,8 @@ export function BranchMap({
       travelStarted ??= time;
       const progress = motion.matches ? 1 : Math.min(1, (time - travelStarted) / 1900);
       settled = progress === 1;
+      const focusEase = progress * progress * (3 - 2 * progress);
+      countryFocus.current = departureFocus + (targetFocus - departureFocus) * focusEase;
       if (drag.current?.moved) {
         Object.assign(c, manualCenter.current);
       } else if (!settled || motion.matches) {
@@ -257,11 +270,11 @@ export function BranchMap({
         c.lng = target.lng;
       }
       ctx.clearRect(0, 0, width, height);
-      const radius = globeGeometry(width, height, c.zoom).radius;
+      const radius = globeGeometry(width, height, c.zoom, countryFocus.current).radius;
       const textured = earthRenderer.current?.draw(
         {
           ...c,
-          ...globeGeometry(width, height, c.zoom),
+          ...globeGeometry(width, height, c.zoom, countryFocus.current),
         },
         width,
         height,
@@ -272,7 +285,7 @@ export function BranchMap({
           height * 0.35,
           0,
           width / 2,
-          height * 0.43,
+          globeGeometry(width, height, c.zoom, countryFocus.current).y,
           radius,
         );
         ocean.addColorStop(0, "#3c2064");
@@ -280,7 +293,13 @@ export function BranchMap({
         ocean.addColorStop(1, "#090610");
         ctx.fillStyle = ocean;
         ctx.beginPath();
-        ctx.arc(width / 2, height * 0.43, radius, 0, Math.PI * 2);
+        ctx.arc(
+          width / 2,
+          globeGeometry(width, height, c.zoom, countryFocus.current).y,
+          radius,
+          0,
+          Math.PI * 2,
+        );
         ctx.fill();
         ctx.strokeStyle = "#b99ad855";
         ctx.lineWidth = 1;
@@ -303,8 +322,8 @@ export function BranchMap({
         >
       )[cameraDestination.id];
       const outlines = countryOutlines as Record<string, number[][][]>;
-      ctx.strokeStyle = "#ffde59";
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = "#ffe4a044";
+      ctx.lineWidth = 0.8;
       for (const ring of outlines[outlineKey ?? ""] ?? []) {
         ctx.beginPath();
         let drawing = false;
@@ -390,8 +409,35 @@ export function BranchMap({
           ctx.fill();
         }
       } else {
+        const home = countryPins.find((pin) => pin.country === cameraDestination.id);
+        if (home) {
+          const start = projectGlobePoint(home, c, width, height, countryFocus.current);
+          for (const country of countryPins) {
+            if (country.country === home.country) continue;
+            const end = projectGlobePoint(country, c, width, height, countryFocus.current);
+            if (start.depth <= 0 || end.depth <= 0) continue;
+            ctx.strokeStyle = "#ffd38b88";
+            ctx.lineWidth = 1;
+            ctx.shadowColor = "#ffb83e";
+            ctx.shadowBlur = 6;
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.quadraticCurveTo(
+              (start.x + end.x) / 2 + 40,
+              Math.min(start.y, end.y) - 70,
+              end.x,
+              end.y,
+            );
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "#ffdf8d";
+            ctx.beginPath();
+            ctx.arc(end.x, end.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
         for (const pin of pins) {
-          const p = projectGlobePoint(pin, c, width, height);
+          const p = projectGlobePoint(pin, c, width, height, countryFocus.current);
           if (p.depth <= 0 || p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
           hitPins.current.push({ ...p, slug: pin.slug, name: pin.name, country: pin.country });
           ctx.fillStyle = "#ffdf8d";
@@ -401,7 +447,7 @@ export function BranchMap({
         }
       }
       callouts.forEach((branch, index) => {
-        const p = projectGlobePoint(branch, c, width, height);
+        const p = projectGlobePoint(branch, c, width, height, countryFocus.current);
         const front = p.depth > 0.05 && p.x > 0 && p.x < width && p.y > 0 && p.y < height;
         const card = cardRefs.current[index];
         const beam = beamRefs.current[index];
@@ -414,9 +460,15 @@ export function BranchMap({
             card.style.setProperty("--card-y", `${position.y}px`);
             card.style.setProperty("--card-width", `${position.width}px`);
             const { anchorX: x, anchorY: y } = position;
+            const gradient = beamGradientRefs.current[index];
+            gradient?.setAttribute("x1", String(p.x));
+            gradient?.setAttribute("y1", String(p.y));
+            gradient?.setAttribute("x2", String(x));
+            gradient?.setAttribute("y2", String(y));
+            const spread = position.width * 0.25;
             beam?.setAttribute(
               "d",
-              front ? `M${p.x},${p.y} L${x},${y - 20} L${x},${y + 20} Z` : "",
+              front ? `M${p.x},${p.y} L${x},${y - spread} L${x},${y + spread} Z` : "",
             );
             line?.setAttribute(
               "d",
@@ -426,22 +478,23 @@ export function BranchMap({
         }
         if (!front) return;
         const highlighted = hoveredSlug.current === branch.slug;
-        const halo = ctx.createRadialGradient(p.x, p.y, 1, p.x, p.y, highlighted ? 30 : 23);
-        halo.addColorStop(0, "#ffce69cc");
-        halo.addColorStop(0.35, "#ffb24355");
+        const halo = ctx.createRadialGradient(p.x, p.y, 1, p.x, p.y, highlighted ? 42 : 34);
+        halo.addColorStop(0, "#fff7d9");
+        halo.addColorStop(0.25, "#ffb93aaa");
+        halo.addColorStop(0.6, "#ffb24333");
         halo.addColorStop(1, "#ffb24300");
         ctx.fillStyle = halo;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, highlighted ? 30 : 23, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, highlighted ? 42 : 34, 0, Math.PI * 2);
         ctx.fill();
         ctx.strokeStyle = "#ffdf8d";
         ctx.lineWidth = highlighted ? 2.5 : 1.5;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, highlighted ? 10 : 7, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, highlighted ? 11 : 9, 0, Math.PI * 2);
         ctx.stroke();
         ctx.fillStyle = "#fff4ce";
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
         ctx.fill();
       });
       if (!motion.matches && (!settled || (cameraDestination.id === "world" && !paused)))
@@ -706,19 +759,25 @@ export function BranchMap({
             </div>
           ) : null}
           <svg className="globe-connections" width="100%" height="100%" aria-hidden="true">
-            <defs>
-              <linearGradient id="globe-beam" x1="0" y1="0" x2="1" y2="1">
-                <stop stopColor="#ffe2a0" stopOpacity="0.02" />
-                <stop offset="1" stopColor="#ffe2a0" stopOpacity="0.24" />
-              </linearGradient>
-            </defs>
             {callouts.map((branch, index) => (
               <g key={branch.slug}>
+                <linearGradient
+                  id={`globe-beam-${branch.slug}`}
+                  gradientUnits="userSpaceOnUse"
+                  ref={(node) => {
+                    beamGradientRefs.current[index] = node;
+                  }}
+                >
+                  <stop stopColor="#fff4cf" stopOpacity="0.8" />
+                  <stop offset="0.55" stopColor="#fff2d1" stopOpacity="0.32" />
+                  <stop offset="1" stopColor="#d8e9ff" stopOpacity="0.18" />
+                </linearGradient>
                 <path
                   ref={(node) => {
                     beamRefs.current[index] = node;
                   }}
-                  fill="url(#globe-beam)"
+                  fill={`url(#globe-beam-${branch.slug})`}
+                  className="globe-connections__beam"
                 />
                 <path
                   ref={(node) => {
@@ -817,9 +876,12 @@ export function BranchMap({
                   )}
                 </span>
                 <span className="globe-card__copy">
-                  <strong>{branch.name}</strong>
+                  <strong>{branch.name} Branch</strong>
                   <span>
                     {branch.city || branch.country}
+                    {branch.city
+                      ? `, ${branch.country === "United Kingdom" ? "UK" : branch.country}`
+                      : ""}
                     <ArrowUpRight size={15} aria-hidden="true" />
                   </span>
                 </span>
@@ -839,28 +901,32 @@ export function BranchMap({
               rel="noreferrer"
             >
               NASA Blue Marble
-            </a>
-            . Accra:{" "}
+            </a>{" "}
+            and{" "}
             <a
-              href="https://commons.wikimedia.org/wiki/File:Independence_Arch_-_Accra,_Ghana2.jpg"
+              href="https://science.nasa.gov/earth/earth-observatory/earth-at-night/maps/"
               target="_blank"
               rel="noreferrer"
             >
-              George Appiah
+              NASA Black Marble
             </a>
-            . Freetown:{" "}
-            <a
-              href="https://commons.wikimedia.org/wiki/File:Freetown-aerialview.jpg"
-              target="_blank"
-              rel="noreferrer"
-            >
-              David Hond
-            </a>
-            . City images cropped and resized,{" "}
-            <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noreferrer">
-              CC BY 2.0
-            </a>
-            .
+            . City photographs cropped and resized.{" "}
+            {callouts.map((branch) => {
+              const credit = globeCityPhotos[branch.slug];
+              return credit ? (
+                <span key={branch.slug}>
+                  {branch.city || branch.name}:{" "}
+                  <a href={credit.source} target="_blank" rel="noreferrer">
+                    {credit.author}
+                  </a>{" "}
+                  (
+                  <a href={credit.licenseUrl} target="_blank" rel="noreferrer">
+                    {credit.license}
+                  </a>
+                  ).{" "}
+                </span>
+              ) : null;
+            })}
           </p>
         </details>
       )}

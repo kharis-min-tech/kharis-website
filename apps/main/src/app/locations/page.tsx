@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { listBranches, listBranchData } from "@/lib/branches";
 import { branchDisplayName, sundayVenue } from "@/lib/branch-display";
 import { LocationsClient } from "./LocationsClient";
+import { globeCityPhotos } from "@/lib/globe-imagery";
 
 export const metadata: Metadata = {
   title: "Kharis Church Locations | Find a Branch Near You",
@@ -18,12 +19,6 @@ export const metadata: Metadata = {
 
 export default async function LocationsPage() {
   const [items, full] = await Promise.all([listBranches(), listBranchData()]);
-  const cityPhotos: Record<string, string> = {
-    accra:
-      "https://images.kharis.org/site-images/main/0c0031656910b735/globe/accra-independence-arch.webp",
-    freetown:
-      "https://images.kharis.org/site-images/main/f7a0b56e18f54965/globe/freetown-harbour.webp",
-  };
   // Send map coordinates and a photo, without duplicating full branch records.
   const pins = full.flatMap((branch) => {
     const venue = sundayVenue(branch);
@@ -36,7 +31,9 @@ export default async function LocationsPage() {
         lng: venue.longitude,
         country: venue.country,
         photo:
-          items.find((item) => item.id === branch.slug)?.photo || cityPhotos[branch.slug] || "",
+          globeCityPhotos[branch.slug]?.photo ||
+          items.find((item) => item.id === branch.slug)?.photo ||
+          "",
         city: venue.city,
       },
     ];
