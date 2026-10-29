@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
@@ -42,6 +43,7 @@ import {
 } from "@/data/quiz";
 import { getSiteTheme, subscribeSiteTheme, type SiteTheme } from "@/lib/theme";
 import { useDialog } from "@/lib/use-dialog";
+import "./quiz.css";
 
 export function QuizExperience() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
@@ -80,12 +82,12 @@ export function QuizExperience() {
   const t = useMemo(() => QUIZ_TRANSLATIONS[lang] ?? QUIZ_TRANSLATIONS.en, [lang]);
   const privacyData = useMemo(() => QUIZ_PRIVACY_CONTENT[lang] ?? QUIZ_PRIVACY_CONTENT.en, [lang]);
 
-  // Background slideshow rotation (respects prefers-reduced-motion)
+  // Background slideshow rotation (8s per slide, cycles through all 9 mixed slides before repeating)
   useEffect(() => {
     if (prefersReducedMotion || QUIZ_SLIDESHOW_IMAGES.length <= 1) return;
     const timer = window.setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % QUIZ_SLIDESHOW_IMAGES.length);
-    }, 5000);
+    }, 8000);
     return () => window.clearInterval(timer);
   }, [prefersReducedMotion]);
 
@@ -258,152 +260,76 @@ export function QuizExperience() {
 
   return (
     <div
-      className={`relative min-h-screen transition-colors duration-300 selection:bg-[#fd7f20]/30 ${
+      className={`quiz-page relative min-h-screen transition-colors duration-300 selection:bg-[#630ed4]/25 ${
         isDark
-          ? "bg-[#07040c] text-white selection:text-white"
-          : "bg-[#faf7fc] text-[#1c1c1f] selection:text-[#1c1c1f]"
+          ? "bg-[#090512] text-white selection:text-white"
+          : "bg-[#f8f6fa] text-[#1c1c1f] selection:text-[#1c1c1f]"
       }`}
     >
-      {/* Background Photo Slideshow + Ambient Lighting & Glows */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
-        {QUIZ_SLIDESHOW_IMAGES.map((src, idx) => (
-          <div
-            key={src}
-            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
-              idx === activeSlide ? (isDark ? "opacity-[0.14]" : "opacity-[0.10]") : "opacity-0"
-            }`}
-            style={{ backgroundImage: `url(${src})` }}
-          />
-        ))}
-        <div
-          className={`absolute inset-0 transition-colors duration-500 ${
-            isDark
-              ? "bg-gradient-to-b from-[#07040c]/80 via-[#07040c]/88 to-[#07040c]"
-              : "bg-gradient-to-b from-[#faf7fc]/82 via-[#faf7fc]/90 to-[#faf7fc]"
-          }`}
-        />
-        <div
-          className={`absolute -top-40 left-1/2 -translate-x-1/2 h-[550px] w-[900px] rounded-full blur-[140px] transition-opacity duration-500 ${
-            isDark ? "bg-purple-700/15 opacity-100" : "bg-purple-300/25 opacity-70"
-          }`}
-        />
-        <div
-          className={`absolute top-[40%] right-[-10%] h-[450px] w-[600px] rounded-full blur-[130px] transition-opacity duration-500 ${
-            isDark ? "bg-[#6b34fa]/10 opacity-100" : "bg-[#6b34fa]/8 opacity-60"
-          }`}
-        />
-        <div
-          className={`absolute bottom-[-10%] left-[-10%] h-[500px] w-[650px] rounded-full blur-[150px] transition-opacity duration-500 ${
-            isDark ? "bg-[#fd7f20]/8 opacity-100" : "bg-[#fd7f20]/10 opacity-60"
-          }`}
-        />
-        <div
-          className={`absolute inset-0 transition-opacity duration-500 ${
-            isDark ? "opacity-20" : "opacity-10"
-          }`}
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
-            backgroundSize: "32px 32px",
-          }}
-        />
-      </div>
+      {/* Hero: KP2-style full-bleed photo slideshow header */}
+      <header className="quiz-hero">
+        <div className="quiz-hero__media">
+          {QUIZ_SLIDESHOW_IMAGES.map((slide, idx) => (
+            <Image
+              key={slide.src}
+              src={slide.src}
+              alt={idx === activeSlide ? slide.alt : ""}
+              aria-hidden={idx !== activeSlide}
+              fill
+              priority={idx === 0}
+              quality={95}
+              sizes="100vw"
+              unoptimized={slide.src.startsWith("/")}
+              className={`quiz-hero__img ${idx === activeSlide ? "is-active" : ""}`}
+              style={{ objectPosition: slide.position }}
+            />
+          ))}
+          <div className="quiz-hero__veil" aria-hidden="true" />
+        </div>
 
-      <div className="relative z-10 pt-28 pb-20">
-        {/* Hero Section */}
-        <header className="relative mx-auto max-w-5xl px-5 text-center md:px-8">
+        <div className="quiz-hero__inner">
           <Reveal variant="blur">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              {/* Eyebrow badge */}
-              <span
-                className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.16em] backdrop-blur-md shadow-xs transition-colors ${
-                  isDark
-                    ? "border-purple-500/30 bg-purple-500/10 text-[#c4b0ff]"
-                    : "border-purple-500/25 bg-purple-500/10 text-[#6b34fa]"
-                }`}
-              >
-                <Compass className="h-3.5 w-3.5 text-[#fd7f20]" />
+            <div className="quiz-hero__top">
+              <span className="quiz-hero__badge">
+                <Compass className="h-3.5 w-3.5" aria-hidden="true" />
                 {t.badge}
               </span>
 
               {/* Language Selector */}
-              <div className="relative inline-block">
+              <div className="quiz-hero__lang">
                 <select
                   id="main-quiz-language"
                   aria-label="Select quiz language"
                   value={lang}
                   onChange={(e) => setLang(e.target.value as SupportedLanguage)}
-                  className={`min-h-11 appearance-none rounded-full border backdrop-blur-md px-4 py-2 pr-9 text-sm font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#6b34fa]/50 cursor-pointer shadow-xs ${
-                    isDark
-                      ? "border-white/15 bg-white/[0.07] text-white hover:bg-white/[0.12]"
-                      : "border-purple-900/15 bg-white text-[#1c1c1f] hover:bg-purple-50/50"
-                  }`}
                 >
                   {QUIZ_LANGUAGES.map(
                     (item: { code: SupportedLanguage; label: string; flag: string }) => (
-                      <option
-                        key={item.code}
-                        value={item.code}
-                        className={isDark ? "bg-[#151022] text-white" : "bg-white text-[#1c1c1f]"}
-                      >
+                      <option key={item.code} value={item.code}>
                         {item.flag} {item.label}
                       </option>
                     ),
                   )}
-                  <option
-                    disabled
-                    className={isDark ? "bg-[#151022] text-white/50" : "bg-white text-gray-400"}
-                  >
-                    ────────────
-                  </option>
+                  <option disabled>────────────</option>
                   {UPCOMING_LANGUAGES.map((item: { code: string; label: string }) => (
-                    <option
-                      key={item.code}
-                      value={item.code}
-                      disabled
-                      className={isDark ? "bg-[#151022] text-white/40" : "bg-white text-gray-300"}
-                    >
+                    <option key={item.code} value={item.code} disabled>
                       {item.label}
                     </option>
                   ))}
                 </select>
-                <ChevronDown
-                  className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 ${
-                    isDark ? "text-white/70" : "text-[#5a5a64]"
-                  }`}
-                />
+                <ChevronDown aria-hidden="true" />
               </div>
             </div>
 
-            <h1
-              className={`font-extrabold tracking-tight leading-[1.08] ${
-                isDark ? "!text-white" : "!text-[#1c1c1f]"
-              }`}
-              style={{ fontSize: "clamp(2.3rem, 1.5rem + 4.2vw, 4.2rem)" }}
-            >
-              {t.title}
-            </h1>
-
-            <p
-              className={`mt-4 max-w-2xl mx-auto text-base sm:text-lg font-medium leading-relaxed ${
-                isDark ? "text-white/70" : "text-[#5a5a64]"
-              }`}
-              style={{ fontSize: "clamp(1rem, 0.95rem + 0.35vw, 1.25rem)" }}
-            >
-              {t.subtitle}
-            </p>
-
-            <div className="mt-8 flex justify-center items-center gap-2">
-              <span className="h-1.5 w-12 rounded-full bg-[#fd7f20]" />
-              <span className="h-1.5 w-6 rounded-full bg-[#6b34fa]" />
-              <span
-                className={`h-1.5 w-2 rounded-full ${isDark ? "bg-white/40" : "bg-purple-900/20"}`}
-              />
-            </div>
+            <h1 className="quiz-hero__title">{t.title}</h1>
+            <p className="quiz-hero__subtitle">{t.subtitle}</p>
           </Reveal>
-        </header>
+        </div>
+      </header>
 
+      <div className="relative z-10 py-12 sm:py-16">
         {/* Quiz Flow Card Section */}
-        <section ref={containerRef} className="mt-12 px-5 md:px-8">
+        <section id="quiz-card" ref={containerRef} className="quiz-card-section px-5 md:px-8">
           <div className="mx-auto max-w-3xl">
             {/* 1. START SCREEN */}
             {screen === "start" && (
@@ -411,30 +337,26 @@ export function QuizExperience() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
-                className={`relative rounded-3xl border p-7 sm:p-11 backdrop-blur-xl overflow-hidden transition-colors ${
+                className={`relative border p-7 sm:p-11 overflow-hidden transition-colors ${
                   isDark
-                    ? "border-white/10 bg-[#120c1f]/85 shadow-[0_24px_60px_rgba(0,0,0,0.55)] text-white"
-                    : "border-purple-900/10 bg-white shadow-[0_20px_50px_rgba(40,20,80,0.08)] text-[#1c1c1f]"
+                    ? "border-white/15 bg-[#120b1f] shadow-[0_24px_60px_rgba(0,0,0,0.55)] text-white"
+                    : "border-purple-900/15 bg-white shadow-[0_18px_50px_rgba(40,10,80,0.1)] text-[#1c1c1f]"
                 }`}
               >
-                {/* Glow accent */}
+                {/* Subtle purple corner glow */}
                 <div
                   className={`pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full blur-3xl ${
-                    isDark ? "bg-[#6b34fa]/20" : "bg-[#6b34fa]/10"
+                    isDark ? "bg-[#630ed4]/25" : "bg-[#630ed4]/10"
                   }`}
                 />
 
                 <div className="relative z-10">
                   <div
-                    className={`mb-7 pb-6 border-b ${isDark ? "border-white/10" : "border-purple-900/10"}`}
+                    className={`mb-7 pb-6 border-b ${
+                      isDark ? "border-white/12" : "border-purple-900/12"
+                    }`}
                   >
-                    <span
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider mb-3 ${
-                        isDark
-                          ? "border-purple-400/30 bg-purple-500/15 text-[#d4c4fd]"
-                          : "border-purple-400/25 bg-purple-50 text-[#6b34fa]"
-                      }`}
-                    >
+                    <span className="inline-flex items-center gap-1.5 bg-[#630ed4] px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white mb-3">
                       {t.stepBadge}
                     </span>
                     <h2
@@ -445,7 +367,9 @@ export function QuizExperience() {
                       {t.startHeading}
                     </h2>
                     <p
-                      className={`mt-2 text-sm sm:text-base leading-relaxed ${isDark ? "text-white/65" : "text-[#5a5a64]"}`}
+                      className={`mt-2 text-sm sm:text-base leading-relaxed ${
+                        isDark ? "text-white/70" : "text-[#4a4a52]"
+                      }`}
                     >
                       {t.startDescription}
                     </p>
@@ -462,11 +386,12 @@ export function QuizExperience() {
                     <div className="space-y-2">
                       <label
                         htmlFor="user-branch-select"
-                        className={`block text-xs font-extrabold uppercase tracking-wider ${
-                          isDark ? "text-white/80" : "text-[#3a3a40]"
+                        className={`block text-xs font-extrabold uppercase tracking-[0.12em] ${
+                          isDark ? "text-white/85" : "text-[#1c1c1f]"
                         }`}
                       >
-                        {t.branchLabel} <span className="text-[#fd7f20]">*</span>
+                        {t.branchLabel}{" "}
+                        <span className={isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}>*</span>
                       </label>
                       <div className="relative">
                         <select
@@ -478,14 +403,14 @@ export function QuizExperience() {
                           }}
                           aria-required="true"
                           aria-invalid={branchError}
-                          className={`w-full appearance-none rounded-2xl border px-4 py-3.5 pr-10 text-sm sm:text-base font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-[#6b34fa]/50 cursor-pointer ${
-                            isDark ? "bg-white/[0.04] text-white" : "bg-[#f8f5fb] text-[#1c1c1f]"
+                          className={`w-full appearance-none rounded-none border px-4 py-3.5 pr-10 text-sm sm:text-base font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#630ed4]/40 cursor-pointer ${
+                            isDark ? "bg-white/[0.04] text-white" : "bg-[#f8f6fa] text-[#1c1c1f]"
                           } ${
                             branchError
                               ? "border-rose-500 ring-2 ring-rose-500/30"
                               : isDark
-                                ? "border-white/15 hover:border-white/25 focus:border-[#6b34fa]"
-                                : "border-purple-900/15 hover:border-purple-900/30 focus:border-[#6b34fa]"
+                                ? "border-white/20 hover:border-white/35 focus:border-[#630ed4]"
+                                : "border-purple-900/20 hover:border-[#630ed4] focus:border-[#630ed4]"
                           }`}
                         >
                           <option
@@ -511,12 +436,12 @@ export function QuizExperience() {
                         </select>
                         <ChevronDown
                           className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 ${
-                            isDark ? "text-white/60" : "text-[#5a5a64]"
+                            isDark ? "text-white/70" : "text-[#3a3a40]"
                           }`}
                         />
                       </div>
                       {branchError && (
-                        <p className="flex items-center gap-1.5 text-xs font-semibold text-rose-500 pt-1">
+                        <p className="flex items-center gap-1.5 text-xs font-bold text-rose-500 pt-1">
                           <AlertCircle className="h-3.5 w-3.5" />
                           {t.branchError}
                         </p>
@@ -524,10 +449,7 @@ export function QuizExperience() {
                     </div>
 
                     {/* Submit CTA Button */}
-                    <button
-                      type="submit"
-                      className="group w-full rounded-full bg-[#fd7f20] hover:bg-[#ff933f] text-white py-4 px-8 font-extrabold text-base tracking-wide shadow-[0_12px_32px_rgba(253,127,32,0.32)] transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2.5 cursor-pointer mt-4"
-                    >
+                    <button type="submit" className="quiz-btn-primary group w-full mt-4">
                       <span>{t.startButton}</span>
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </button>
@@ -535,7 +457,9 @@ export function QuizExperience() {
                     {/* Privacy Note */}
                     <div className="pt-2 text-center">
                       <p
-                        className={`text-xs font-medium ${isDark ? "text-white/50" : "text-[#6e6e76]"}`}
+                        className={`text-xs font-semibold ${
+                          isDark ? "text-white/55" : "text-[#4a4a52]"
+                        }`}
                       >
                         {t.privacyAgreement.includes("{policy}") ? (
                           <>
@@ -543,10 +467,10 @@ export function QuizExperience() {
                             <button
                               type="button"
                               onClick={() => setShowPrivacy(true)}
-                              className={`font-bold underline underline-offset-2 transition-colors cursor-pointer ${
+                              className={`font-extrabold underline underline-offset-2 transition-colors cursor-pointer ${
                                 isDark
                                   ? "text-[#c4b0ff] hover:text-white"
-                                  : "text-[#6b34fa] hover:text-[#5420d6]"
+                                  : "text-[#630ed4] hover:text-[#4c08a8]"
                               }`}
                             >
                               {t.privacyPolicyLink}
@@ -559,10 +483,10 @@ export function QuizExperience() {
                             <button
                               type="button"
                               onClick={() => setShowPrivacy(true)}
-                              className={`font-bold underline underline-offset-2 transition-colors cursor-pointer ${
+                              className={`font-extrabold underline underline-offset-2 transition-colors cursor-pointer ${
                                 isDark
                                   ? "text-[#c4b0ff] hover:text-white"
-                                  : "text-[#6b34fa] hover:text-[#5420d6]"
+                                  : "text-[#630ed4] hover:text-[#4c08a8]"
                               }`}
                             >
                               {t.privacyPolicyLink}
@@ -585,32 +509,34 @@ export function QuizExperience() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className={`relative rounded-3xl border p-7 sm:p-11 backdrop-blur-xl overflow-hidden transition-colors ${
+                className={`relative border p-7 sm:p-11 overflow-hidden transition-colors ${
                   isDark
-                    ? "border-white/10 bg-[#120c1f]/85 shadow-[0_24px_60px_rgba(0,0,0,0.55)] text-white"
-                    : "border-purple-900/10 bg-white shadow-[0_20px_50px_rgba(40,20,80,0.08)] text-[#1c1c1f]"
+                    ? "border-white/15 bg-[#120b1f] shadow-[0_24px_60px_rgba(0,0,0,0.55)] text-white"
+                    : "border-purple-900/15 bg-white shadow-[0_18px_50px_rgba(40,10,80,0.1)] text-[#1c1c1f]"
                 }`}
               >
                 {/* Progress Header */}
                 <div className="mb-7">
                   <div
-                    className={`mb-3 flex items-center justify-between text-xs font-extrabold uppercase tracking-wider ${
-                      isDark ? "text-white/70" : "text-[#5a5a64]"
+                    className={`mb-3 flex items-center justify-between text-xs font-extrabold uppercase tracking-[0.12em] ${
+                      isDark ? "text-white/75" : "text-[#3a3a40]"
                     }`}
                   >
                     <span
-                      className={`inline-flex items-center gap-1.5 ${isDark ? "text-[#c4b0ff]" : "text-[#6b34fa]"}`}
+                      className={`inline-flex items-center gap-1.5 ${
+                        isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"
+                      }`}
                     >
-                      <Compass className="h-4 w-4 text-[#fd7f20]" />
+                      <Compass className="h-4 w-4" />
                       {t.questionBadge
                         .replace("{current}", String(currentQuestion + 1))
                         .replace("{total}", String(t.questions.length))}
                     </span>
                     <span
-                      className={`rounded-full border px-2.5 py-0.5 font-mono text-xs ${
+                      className={`border px-2.5 py-0.5 text-xs font-extrabold ${
                         isDark
-                          ? "border-white/10 bg-white/5 text-white/80"
-                          : "border-purple-900/10 bg-purple-50 text-[#6b34fa]"
+                          ? "border-purple-400/30 bg-purple-500/15 text-[#c4b0ff]"
+                          : "border-purple-900/15 bg-[#f2eef7] text-[#630ed4]"
                       }`}
                     >
                       {Math.round(((currentQuestion + 1) / t.questions.length) * 100)}%
@@ -619,8 +545,8 @@ export function QuizExperience() {
 
                   {/* Progress bar */}
                   <div
-                    className={`h-2 w-full rounded-full overflow-hidden ${
-                      isDark ? "bg-white/10" : "bg-purple-900/10"
+                    className={`h-2.5 w-full overflow-hidden border ${
+                      isDark ? "border-white/15 bg-white/10" : "border-purple-900/15 bg-[#f2eef7]"
                     }`}
                     role="progressbar"
                     aria-valuemin={0}
@@ -628,7 +554,7 @@ export function QuizExperience() {
                     aria-valuenow={Math.round(((currentQuestion + 1) / t.questions.length) * 100)}
                   >
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#6b34fa] via-[#9b7bff] to-[#fd7f20] transition-all duration-300 ease-out"
+                      className="h-full bg-[#630ed4] transition-all duration-300 ease-out"
                       style={{
                         width: `${((currentQuestion + 1) / t.questions.length) * 100}%`,
                       }}
@@ -647,20 +573,18 @@ export function QuizExperience() {
                   </h2>
 
                   <div
-                    className={`mt-4 flex items-start gap-3 rounded-2xl border p-4 ${
-                      isDark
-                        ? "border-purple-500/20 bg-purple-500/[0.08]"
-                        : "border-purple-500/20 bg-purple-50/70"
+                    className={`mt-4 flex items-start gap-3 border-l-4 border-[#630ed4] p-4 ${
+                      isDark ? "bg-purple-500/[0.08]" : "bg-[#f2eef7]"
                     }`}
                   >
                     <BookOpen
                       className={`h-5 w-5 shrink-0 mt-0.5 ${
-                        isDark ? "text-[#c4b0ff]" : "text-[#6b34fa]"
+                        isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"
                       }`}
                     />
                     <p
-                      className={`text-xs sm:text-sm italic leading-relaxed ${
-                        isDark ? "text-purple-200/90" : "text-[#5420d6]"
+                      className={`text-xs sm:text-sm leading-relaxed font-semibold ${
+                        isDark ? "text-purple-100/90" : "text-[#3a3a40]"
                       }`}
                     >
                       {t.questions[currentQuestion].s}
@@ -677,32 +601,30 @@ export function QuizExperience() {
                         key={idx}
                         type="button"
                         onClick={() => handleSelectOption(option)}
-                        className={`group relative flex items-start gap-3.5 rounded-2xl border p-5 text-left transition-all cursor-pointer ${
+                        className={`group relative flex items-start gap-3.5 border p-4 sm:p-5 text-left transition-all cursor-pointer ${
                           isSelected
-                            ? isDark
-                              ? "border-[#6b34fa] bg-gradient-to-br from-[#6b34fa]/30 via-[#6b34fa]/15 to-transparent text-white ring-2 ring-[#6b34fa] shadow-[0_0_24px_rgba(107,52,250,0.3)] scale-[1.01]"
-                              : "border-[#6b34fa] bg-gradient-to-br from-purple-100/90 via-purple-50 to-white text-[#1c1c1f] ring-2 ring-[#6b34fa] shadow-[0_8px_25px_rgba(107,52,250,0.18)] scale-[1.01]"
+                            ? "border-[#630ed4] bg-[#630ed4] text-white shadow-[0_12px_28px_rgba(99,14,212,0.28)] scale-[1.01]"
                             : isDark
-                              ? "border-white/10 bg-white/[0.03] text-white/90 hover:border-purple-400/40 hover:bg-white/[0.06] hover:-translate-y-0.5"
-                              : "border-purple-900/10 bg-[#faf7fc] text-[#1c1c1f] hover:border-purple-500/40 hover:bg-purple-50/60 hover:-translate-y-0.5 shadow-xs"
+                              ? "border-white/15 bg-white/[0.03] text-white/90 hover:border-[#c4b0ff]/50 hover:bg-white/[0.07] hover:-translate-y-0.5"
+                              : "border-purple-900/15 bg-[#f8f6fa] text-[#1c1c1f] hover:border-[#630ed4] hover:bg-[#f2eef7] hover:-translate-y-0.5"
                         }`}
                       >
                         <span
-                          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-extrabold transition-all ${
+                          className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center border text-xs font-extrabold transition-all ${
                             isSelected
-                              ? "bg-[#fd7f20] text-white shadow-md"
+                              ? "border-white bg-white text-[#630ed4]"
                               : isDark
-                                ? "bg-white/10 text-white/80 group-hover:bg-[#6b34fa] group-hover:text-white"
-                                : "bg-purple-100/80 text-[#6b34fa] group-hover:bg-[#6b34fa] group-hover:text-white"
+                                ? "border-white/25 bg-white/10 text-white group-hover:border-[#c4b0ff] group-hover:bg-[#630ed4]"
+                                : "border-purple-900/20 bg-white text-[#630ed4] group-hover:border-[#630ed4] group-hover:bg-[#630ed4] group-hover:text-white"
                           }`}
                         >
                           {isSelected ? (
-                            <Check className="h-4 w-4" />
+                            <Check className="h-3.5 w-3.5 stroke-[3]" />
                           ) : (
                             String.fromCharCode(65 + idx)
                           )}
                         </span>
-                        <span className="text-sm sm:text-base font-bold leading-snug pt-0.5">
+                        <span className="text-sm sm:text-base font-bold leading-snug">
                           {option.label}
                         </span>
                       </button>
@@ -712,17 +634,11 @@ export function QuizExperience() {
 
                 {/* Nav Controls */}
                 <div
-                  className={`flex items-center justify-between gap-4 border-t pt-6 ${isDark ? "border-white/10" : "border-purple-900/10"}`}
+                  className={`flex items-center justify-between gap-4 border-t pt-6 ${
+                    isDark ? "border-white/12" : "border-purple-900/12"
+                  }`}
                 >
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    className={`inline-flex items-center gap-2 rounded-full border font-bold text-xs sm:text-sm px-5 py-3 transition-all cursor-pointer active:scale-95 ${
-                      isDark
-                        ? "border-white/15 bg-white/5 hover:bg-white/10 text-white hover:border-white/25"
-                        : "border-purple-900/15 bg-white hover:bg-purple-50 text-[#1c1c1f] hover:border-purple-900/30 shadow-xs"
-                    }`}
-                  >
+                  <button type="button" onClick={handleBack} className="quiz-btn-secondary">
                     <ArrowLeft className="h-4 w-4" />
                     <span>{t.backButton}</span>
                   </button>
@@ -731,11 +647,7 @@ export function QuizExperience() {
                     type="button"
                     onClick={handleNext}
                     disabled={answers[currentQuestion] === null}
-                    className={`inline-flex items-center gap-2 rounded-full bg-[#fd7f20] hover:bg-[#ff933f] text-white font-extrabold text-sm sm:text-base px-7 py-3 shadow-[0_8px_25px_rgba(253,127,32,0.3)] transition-all cursor-pointer ${
-                      answers[currentQuestion] === null
-                        ? "opacity-40 cursor-not-allowed shadow-none"
-                        : "hover:scale-[1.02] active:scale-[0.98]"
-                    }`}
+                    className="quiz-btn-primary"
                   >
                     <span>
                       {currentQuestion === t.questions.length - 1 ? t.finishButton : t.nextButton}
@@ -756,21 +668,21 @@ export function QuizExperience() {
               >
                 {/* Result Heading Banner */}
                 <div
-                  className={`relative rounded-3xl border p-7 sm:p-9 backdrop-blur-xl overflow-hidden ${
+                  className={`relative border p-7 sm:p-9 overflow-hidden ${
                     isDark
-                      ? "border-white/10 bg-gradient-to-r from-purple-900/40 via-[#120c1f]/85 to-[#120c1f]/85 shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white"
-                      : "border-purple-900/10 bg-gradient-to-r from-purple-100/70 via-white to-white shadow-[0_20px_50px_rgba(40,20,80,0.08)] text-[#1c1c1f]"
+                      ? "border-white/15 bg-[#120b1f] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white"
+                      : "border-purple-900/15 bg-white shadow-[0_18px_50px_rgba(40,10,80,0.1)] text-[#1c1c1f]"
                   }`}
                 >
                   <div
                     className={`pointer-events-none absolute top-0 right-0 h-40 w-40 rounded-full blur-3xl ${
-                      isDark ? "bg-[#fd7f20]/15" : "bg-[#fd7f20]/10"
+                      isDark ? "bg-[#630ed4]/25" : "bg-[#630ed4]/10"
                     }`}
                   />
 
                   <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
                     <div>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-400/40 bg-orange-400/15 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#ffaa55] mb-2.5">
+                      <span className="inline-flex items-center gap-1.5 bg-[#630ed4] px-3 py-1 text-xs font-extrabold uppercase tracking-[0.12em] text-white mb-2.5">
                         <Sparkles className="h-3.5 w-3.5" />
                         {t.discoveryCompleted}
                       </span>
@@ -782,20 +694,22 @@ export function QuizExperience() {
                         {t.resultsTitle}
                       </h2>
                       <p
-                        className={`mt-2 text-sm sm:text-base ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                        className={`mt-2 text-sm sm:text-base ${
+                          isDark ? "text-white/70" : "text-[#4a4a52]"
+                        }`}
                       >
                         {t.resultsSubtitle}
                       </p>
                     </div>
 
                     <div
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-xs font-bold ${
+                      className={`inline-flex items-center gap-1.5 border px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wider ${
                         isDark
-                          ? "border-white/15 bg-white/5 text-white/90"
-                          : "border-purple-900/15 bg-purple-50 text-[#1c1c1f]"
+                          ? "border-white/20 bg-white/5 text-white"
+                          : "border-purple-900/15 bg-[#f2eef7] text-[#630ed4]"
                       }`}
                     >
-                      <MapPin className="h-3.5 w-3.5 text-[#fd7f20]" />
+                      <MapPin className="h-3.5 w-3.5" />
                       <span>{branch || "Kharis Church"}</span>
                     </div>
                   </div>
@@ -804,18 +718,22 @@ export function QuizExperience() {
                 {/* Top Match (#1 Hero Spotlight Card) */}
                 {topThree[0] && t.departments[topThree[0]] && (
                   <div
-                    className={`relative rounded-3xl border p-7 sm:p-9 backdrop-blur-xl overflow-hidden ${
+                    className={`relative border-2 p-7 sm:p-9 overflow-hidden ${
                       isDark
-                        ? "border-purple-500/40 bg-[#160f26]/90 shadow-[0_24px_60px_rgba(107,52,250,0.18)] text-white"
-                        : "border-purple-500/25 bg-gradient-to-b from-purple-50/70 via-white to-white shadow-[0_20px_50px_rgba(40,20,80,0.08)] text-[#1c1c1f]"
+                        ? "border-[#630ed4] bg-[#150c28] shadow-[0_24px_60px_rgba(99,14,212,0.22)] text-white"
+                        : "border-[#630ed4] bg-white shadow-[0_20px_50px_rgba(99,14,212,0.12)] text-[#1c1c1f]"
                     }`}
                   >
                     <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6b34fa] to-[#5420d6] px-4 py-1 text-xs font-extrabold uppercase tracking-widest text-white shadow-md">
-                        <Trophy className="h-3.5 w-3.5 text-[#ffaa55]" />
+                      <span className="inline-flex items-center gap-1.5 bg-[#630ed4] px-3.5 py-1 text-xs font-extrabold uppercase tracking-[0.14em] text-white shadow-sm">
+                        <Trophy className="h-3.5 w-3.5" />
                         {t.topMatchBadge}
                       </span>
-                      <span className="text-xs font-bold uppercase tracking-wider text-[#fd7f20]">
+                      <span
+                        className={`text-xs font-extrabold uppercase tracking-wider ${
+                          isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"
+                        }`}
+                      >
                         {t.highestCompatibility}
                       </span>
                     </div>
@@ -829,28 +747,34 @@ export function QuizExperience() {
                     </h3>
 
                     <p
-                      className={`text-sm sm:text-base leading-relaxed mb-5 ${isDark ? "text-white/80" : "text-[#4a4a52]"}`}
+                      className={`text-sm sm:text-base leading-relaxed mb-5 ${
+                        isDark ? "text-white/80" : "text-[#4a4a52]"
+                      }`}
                     >
                       {t.departments[topThree[0]].desc}
                     </p>
 
                     <div
-                      className={`mb-6 flex items-start gap-3 rounded-2xl border-l-4 border-[#6b34fa] p-4 ${
-                        isDark ? "bg-white/[0.03]" : "bg-purple-50/70"
+                      className={`mb-6 flex items-start gap-3 border-l-4 border-[#630ed4] p-4 ${
+                        isDark ? "bg-white/[0.04]" : "bg-[#f2eef7]"
                       }`}
                     >
                       <Quote
-                        className={`h-5 w-5 shrink-0 mt-0.5 ${isDark ? "text-[#c4b0ff]" : "text-[#6b34fa]"}`}
+                        className={`h-5 w-5 shrink-0 mt-0.5 ${
+                          isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"
+                        }`}
                       />
                       <p
-                        className={`text-xs sm:text-sm italic leading-relaxed ${isDark ? "text-purple-200/90" : "text-[#5420d6]"}`}
+                        className={`text-xs sm:text-sm leading-relaxed font-semibold ${
+                          isDark ? "text-purple-100/90" : "text-[#3a3a40]"
+                        }`}
                       >
                         {t.departments[topThree[0]].scripture}
                       </p>
                     </div>
 
                     {/* Video Player / Facade */}
-                    <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-black/20 bg-black shadow-2xl">
+                    <div className="relative aspect-video w-full overflow-hidden border border-black/20 bg-black shadow-xl">
                       {activeVideo === topThree[0] ? (
                         <iframe
                           src={`${t.departments[topThree[0]].video}?autoplay=1`}
@@ -863,15 +787,14 @@ export function QuizExperience() {
                         <button
                           type="button"
                           onClick={() => setActiveVideo(topThree[0])}
-                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#1d1233] to-[#07040c] p-6 text-center cursor-pointer"
+                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#2a0c5e] via-[#170930] to-[#090412] p-6 text-center cursor-pointer"
                           aria-label={`Play ${t.departments[topThree[0]].title ?? topThree[0]} video`}
                         >
-                          <div className="absolute inset-0 bg-radial from-purple-500/20 via-transparent to-transparent opacity-60" />
                           <div className="relative z-10 flex flex-col items-center gap-3">
-                            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#fd7f20] text-white shadow-[0_10px_30px_rgba(253,127,32,0.45)] transition-transform duration-200 group-hover:scale-110">
+                            <span className="flex h-16 w-16 items-center justify-center bg-[#630ed4] text-white border-2 border-white/30 shadow-[0_12px_30px_rgba(99,14,212,0.5)] transition-transform duration-200 group-hover:scale-110">
                               <Play className="h-7 w-7 translate-x-0.5 fill-white" />
                             </span>
-                            <span className="rounded-full border border-white/20 bg-black/60 backdrop-blur-md px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
+                            <span className="border border-white/25 bg-black/75 px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider text-white">
                               {t.watchSpotlight.replace(
                                 "{dept}",
                                 t.departments[topThree[0]].title ?? topThree[0],
@@ -894,19 +817,19 @@ export function QuizExperience() {
                     return (
                       <div
                         key={deptName}
-                        className={`rounded-3xl border p-6 flex flex-col justify-between backdrop-blur-xl transition-all ${
+                        className={`border p-6 flex flex-col justify-between transition-all ${
                           isDark
-                            ? "border-white/10 bg-[#120c1f]/85 text-white shadow-lg hover:border-white/20"
-                            : "border-purple-900/10 bg-white text-[#1c1c1f] shadow-md hover:border-purple-900/20"
+                            ? "border-white/15 bg-[#120b1f] text-white shadow-lg hover:border-[#c4b0ff]/40"
+                            : "border-purple-900/15 bg-white text-[#1c1c1f] shadow-md hover:border-[#630ed4]/40"
                         }`}
                       >
                         <div>
                           <div className="mb-3 flex items-center justify-between">
                             <span
-                              className={`rounded-full border px-3 py-0.5 text-xs font-bold ${
+                              className={`border px-3 py-0.5 text-xs font-extrabold uppercase tracking-wider ${
                                 isDark
-                                  ? "border-white/15 bg-white/5 text-white/90"
-                                  : "border-purple-900/15 bg-purple-50 text-[#6b34fa]"
+                                  ? "border-white/20 bg-white/5 text-[#c4b0ff]"
+                                  : "border-purple-900/15 bg-[#f2eef7] text-[#630ed4]"
                               }`}
                             >
                               {t.matchRank.replace("{rank}", String(rankNum))}
@@ -922,14 +845,16 @@ export function QuizExperience() {
                           </h4>
 
                           <p
-                            className={`text-xs sm:text-sm leading-relaxed mb-3 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                            className={`text-xs sm:text-sm leading-relaxed mb-3 ${
+                              isDark ? "text-white/70" : "text-[#4a4a52]"
+                            }`}
                           >
                             {dept.desc}
                           </p>
 
                           <p
-                            className={`text-xs italic border-l-2 border-[#fd7f20] pl-3 mb-4 ${
-                              isDark ? "text-purple-200/80" : "text-[#5420d6]"
+                            className={`text-xs font-semibold border-l-2 border-[#630ed4] pl-3 mb-4 ${
+                              isDark ? "text-purple-200/85" : "text-[#3a3a40]"
                             }`}
                           >
                             {dept.scripture}
@@ -937,7 +862,7 @@ export function QuizExperience() {
                         </div>
 
                         {/* Video facade */}
-                        <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-black/20 bg-black mt-2">
+                        <div className="relative aspect-video w-full overflow-hidden border border-black/20 bg-black mt-2">
                           {activeVideo === deptName ? (
                             <iframe
                               src={`${dept.video}?autoplay=1`}
@@ -950,10 +875,10 @@ export function QuizExperience() {
                             <button
                               type="button"
                               onClick={() => setActiveVideo(deptName)}
-                              className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#1a1226] to-[#0a0712] p-4 text-center cursor-pointer"
+                              className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#210d47] to-[#0a0612] p-4 text-center cursor-pointer"
                               aria-label={`Play ${displayTitle} video`}
                             >
-                              <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-4 py-2 text-xs font-bold text-white shadow-md group-hover:bg-[#6b34fa] group-hover:border-[#6b34fa] transition-colors">
+                              <div className="flex items-center gap-2 border border-white/25 bg-[#630ed4] px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-white shadow-md group-hover:bg-[#4c08a8] transition-colors">
                                 <Play className="h-3.5 w-3.5 fill-white" />
                                 <span>{t.previewVideo}</span>
                               </div>
@@ -967,10 +892,10 @@ export function QuizExperience() {
 
                 {/* Explore All Departments Accordion */}
                 <div
-                  className={`rounded-3xl border overflow-hidden backdrop-blur-xl shadow-lg transition-colors ${
+                  className={`border overflow-hidden shadow-lg transition-colors ${
                     isDark
-                      ? "border-white/10 bg-[#120c1f]/85 text-white"
-                      : "border-purple-900/10 bg-white text-[#1c1c1f]"
+                      ? "border-white/15 bg-[#120b1f] text-white"
+                      : "border-purple-900/15 bg-white text-[#1c1c1f]"
                   }`}
                 >
                   <button
@@ -979,17 +904,17 @@ export function QuizExperience() {
                     className={`flex w-full items-center justify-between p-6 text-left font-extrabold text-lg sm:text-xl transition-colors cursor-pointer ${
                       isDark
                         ? "text-white hover:bg-white/[0.04]"
-                        : "text-[#1c1c1f] hover:bg-purple-50/50"
+                        : "text-[#1c1c1f] hover:bg-[#f2eef7]"
                     }`}
                   >
                     <span className="inline-flex items-center gap-2.5">
-                      <Grid className="h-5 w-5 text-[#fd7f20]" />
+                      <Grid className={`h-5 w-5 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`} />
                       {t.exploreButton} ({Object.keys(t.departments).length})
                     </span>
                     <ChevronDown
                       className={`h-5 w-5 transition-transform duration-300 ${
-                        isDark ? "text-white/70" : "text-[#5a5a64]"
-                      } ${isExploreOpen ? "rotate-180 text-[#fd7f20]" : ""}`}
+                        isDark ? "text-white/70" : "text-[#4a4a52]"
+                      } ${isExploreOpen ? "rotate-180 !text-[#630ed4]" : ""}`}
                     />
                   </button>
 
@@ -1000,7 +925,11 @@ export function QuizExperience() {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className={`border-t p-6 ${isDark ? "border-white/10 bg-black/20" : "border-purple-900/10 bg-purple-50/30"}`}
+                        className={`border-t p-6 ${
+                          isDark
+                            ? "border-white/12 bg-black/25"
+                            : "border-purple-900/12 bg-[#f8f6fa]"
+                        }`}
                       >
                         {/* Search input in explore */}
                         <div className="mb-5">
@@ -1014,15 +943,15 @@ export function QuizExperience() {
                               value={exploreFilter}
                               onChange={(e) => setExploreFilter(e.target.value)}
                               placeholder={t.filterDepartmentsPlaceholder}
-                              className={`w-full rounded-2xl border px-4 py-3 pl-11 text-base sm:text-sm font-semibold transition-all focus:outline-none focus:border-[#6b34fa] focus:ring-2 focus:ring-[#6b34fa]/30 ${
+                              className={`w-full rounded-none border px-4 py-3 pl-11 text-base sm:text-sm font-semibold transition-all focus:outline-none focus:border-[#630ed4] focus:ring-2 focus:ring-[#630ed4]/30 ${
                                 isDark
-                                  ? "border-white/15 bg-white/[0.04] text-white placeholder:text-white/40"
-                                  : "border-purple-900/15 bg-white text-[#1c1c1f] placeholder:text-[#8e8e98]"
+                                  ? "border-white/20 bg-white/[0.05] text-white placeholder:text-white/40"
+                                  : "border-purple-900/20 bg-white text-[#1c1c1f] placeholder:text-[#77737a]"
                               }`}
                             />
                             <Search
                               className={`pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 ${
-                                isDark ? "text-white/50" : "text-gray-400"
+                                isDark ? "text-white/50" : "text-[#630ed4]"
                               }`}
                             />
                           </div>
@@ -1030,10 +959,10 @@ export function QuizExperience() {
 
                         {/* List */}
                         <div
-                          className={`divide-y rounded-2xl border overflow-hidden ${
+                          className={`divide-y border overflow-hidden ${
                             isDark
-                              ? "divide-white/10 border-white/10 bg-white/[0.02]"
-                              : "divide-purple-900/10 border-purple-900/10 bg-white"
+                              ? "divide-white/10 border-white/15 bg-white/[0.02]"
+                              : "divide-purple-900/10 border-purple-900/15 bg-white"
                           }`}
                         >
                           {exploreDepts.map((deptName) => {
@@ -1052,14 +981,14 @@ export function QuizExperience() {
                                   className={`flex w-full items-center justify-between p-4 text-left font-bold text-sm transition-colors cursor-pointer ${
                                     isDark
                                       ? "text-white hover:bg-white/[0.05]"
-                                      : "text-[#1c1c1f] hover:bg-purple-50/60"
+                                      : "text-[#1c1c1f] hover:bg-[#f2eef7]"
                                   }`}
                                 >
                                   <span>{displayTitle}</span>
                                   <ChevronDown
                                     className={`h-4 w-4 transition-transform ${
-                                      isDark ? "text-white/60" : "text-[#5a5a64]"
-                                    } ${isExpanded ? "rotate-180 text-[#fd7f20]" : ""}`}
+                                      isDark ? "text-white/60" : "text-[#4a4a52]"
+                                    } ${isExpanded ? "rotate-180 !text-[#630ed4]" : ""}`}
                                   />
                                 </button>
 
@@ -1067,20 +996,20 @@ export function QuizExperience() {
                                   <div
                                     className={`border-t p-5 text-xs sm:text-sm space-y-3 ${
                                       isDark
-                                        ? "border-white/5 bg-black/30 text-white/75"
-                                        : "border-purple-900/10 bg-purple-50/40 text-[#4a4a52]"
+                                        ? "border-white/10 bg-black/30 text-white/80"
+                                        : "border-purple-900/10 bg-[#f8f6fa] text-[#4a4a52]"
                                     }`}
                                   >
                                     <p className="leading-relaxed">{dept.desc}</p>
                                     <p
-                                      className={`italic border-l-2 border-[#6b34fa] pl-3 ${
-                                        isDark ? "text-purple-200/80" : "text-[#5420d6]"
+                                      className={`font-semibold border-l-2 border-[#630ed4] pl-3 ${
+                                        isDark ? "text-purple-200/85" : "text-[#3a3a40]"
                                       }`}
                                     >
                                       {dept.scripture}
                                     </p>
 
-                                    <div className="relative aspect-video w-full max-w-md rounded-xl overflow-hidden border border-black/20 bg-black mt-3">
+                                    <div className="relative aspect-video w-full max-w-md overflow-hidden border border-black/20 bg-black mt-3">
                                       {activeVideo === `explore-${deptName}` ? (
                                         <iframe
                                           src={`${dept.video}?autoplay=1`}
@@ -1093,9 +1022,9 @@ export function QuizExperience() {
                                         <button
                                           type="button"
                                           onClick={() => setActiveVideo(`explore-${deptName}`)}
-                                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#1a1226] to-[#0a0712] p-4 text-center cursor-pointer"
+                                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#210d47] to-[#0a0612] p-4 text-center cursor-pointer"
                                         >
-                                          <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold text-white shadow-md group-hover:bg-[#6b34fa] transition-colors">
+                                          <div className="flex items-center gap-2 border border-white/25 bg-[#630ed4] px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-white shadow-md group-hover:bg-[#4c08a8] transition-colors">
                                             <Play className="h-3.5 w-3.5 fill-white" />
                                             <span>
                                               {t.playDeptVideo.replace("{dept}", displayTitle)}
@@ -1117,10 +1046,10 @@ export function QuizExperience() {
 
                 {/* Next Step / Call to Action */}
                 <div
-                  className={`rounded-3xl border p-7 sm:p-9 flex flex-col sm:flex-row items-center justify-between gap-6 backdrop-blur-xl shadow-lg ${
+                  className={`border p-7 sm:p-9 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-lg ${
                     isDark
-                      ? "border-purple-500/30 bg-gradient-to-r from-purple-900/30 via-[#120c1f]/90 to-[#120c1f]/90 text-white"
-                      : "border-purple-500/20 bg-gradient-to-r from-purple-100/70 via-white to-white text-[#1c1c1f]"
+                      ? "border-white/15 bg-[#120b1f] text-white"
+                      : "border-purple-900/15 bg-white text-[#1c1c1f]"
                   }`}
                 >
                   <div>
@@ -1132,7 +1061,9 @@ export function QuizExperience() {
                       {t.nextStepTitle}
                     </h3>
                     <p
-                      className={`mt-1 text-sm max-w-md ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                      className={`mt-1 text-sm max-w-md ${
+                        isDark ? "text-white/70" : "text-[#4a4a52]"
+                      }`}
                     >
                       {t.nextStepSubtitle}
                     </p>
@@ -1142,20 +1073,13 @@ export function QuizExperience() {
                     <button
                       type="button"
                       onClick={handleRestart}
-                      className={`inline-flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-full border font-bold text-sm px-6 py-3 transition-all cursor-pointer ${
-                        isDark
-                          ? "border-white/20 bg-white/5 hover:bg-white/10 text-white"
-                          : "border-purple-900/20 bg-white hover:bg-purple-50 text-[#1c1c1f] shadow-xs"
-                      }`}
+                      className="quiz-btn-secondary flex-1 sm:flex-none"
                     >
                       <RotateCcw className="h-4 w-4" />
                       <span>{t.restartButton}</span>
                     </button>
 
-                    <Link
-                      href="/locations"
-                      className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-full bg-[#fd7f20] hover:bg-[#ff933f] text-white font-extrabold text-sm px-7 py-3 shadow-[0_10px_25px_rgba(253,127,32,0.35)] transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-                    >
+                    <Link href="/locations" className="quiz-btn-primary flex-1 sm:flex-none">
                       <span>{t.findBranchButton}</span>
                       <ArrowRight className="h-4 w-4" />
                     </Link>
@@ -1180,45 +1104,27 @@ export function QuizExperience() {
             ref={privacyDialogRef}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className={`flex max-h-[85vh] w-full max-w-2xl flex-col rounded-3xl border shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 focus:outline-none ${
+            className={`flex max-h-[85vh] w-full max-w-2xl flex-col border shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 focus:outline-none ${
               isDark
-                ? "border-white/15 bg-[#120c1e] text-white"
-                : "border-purple-900/15 bg-white text-[#1c1c1f]"
+                ? "border-white/20 bg-[#120b1f] text-white"
+                : "border-purple-900/20 bg-white text-[#1c1c1f]"
             }`}
           >
             {/* Header */}
-            <div
-              className={`flex items-center justify-between border-b px-7 py-5 ${
-                isDark
-                  ? "border-white/10 bg-gradient-to-r from-purple-900/40 to-transparent"
-                  : "border-purple-900/10 bg-gradient-to-r from-purple-100/60 to-transparent"
-              }`}
-            >
+            <div className="flex items-center justify-between border-b border-white/15 bg-[#630ed4] px-7 py-5 text-white">
               <div>
                 <h3
                   id="privacy-modal-heading"
-                  className={`text-xl sm:text-2xl font-extrabold ${
-                    isDark ? "!text-white" : "!text-[#1c1c1f]"
-                  }`}
+                  className="text-xl sm:text-2xl font-extrabold !text-white"
                 >
                   {privacyData.title}
                 </h3>
-                <p
-                  className={`mt-1 text-xs font-mono ${
-                    isDark ? "text-purple-200/70" : "text-[#6b34fa]"
-                  }`}
-                >
-                  {privacyData.subtitle}
-                </p>
+                <p className="mt-1 text-xs font-semibold text-white/85">{privacyData.subtitle}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowPrivacy(false)}
-                className={`rounded-full p-2 transition-colors cursor-pointer ${
-                  isDark
-                    ? "text-white/60 hover:text-white hover:bg-white/10"
-                    : "text-[#1c1c1f]/60 hover:text-[#1c1c1f] hover:bg-purple-50"
-                }`}
+                className="border border-white/30 bg-white/10 p-2 text-white hover:bg-white hover:text-[#630ed4] transition-colors cursor-pointer"
                 aria-label={privacyData.backButton || "Close"}
               >
                 <X className="h-5 w-5" />
@@ -1228,7 +1134,7 @@ export function QuizExperience() {
             {/* Body */}
             <div
               className={`overflow-y-auto p-7 space-y-6 text-sm font-medium leading-relaxed ${
-                isDark ? "text-white/75" : "text-[#4a4a52]"
+                isDark ? "text-white/80" : "text-[#4a4a52]"
               }`}
             >
               {privacyData.sections.map((section: PrivacySection, idx: number) => (
@@ -1240,12 +1146,30 @@ export function QuizExperience() {
                         : "!text-[#1c1c1f] border-purple-900/10"
                     }`}
                   >
-                    {section.icon === "info" && <Info className="h-4 w-4 text-[#fd7f20]" />}
-                    {section.icon === "database" && <Compass className="h-4 w-4 text-[#fd7f20]" />}
-                    {section.icon === "settings" && <Settings className="h-4 w-4 text-[#fd7f20]" />}
-                    {section.icon === "lock" && <Lock className="h-4 w-4 text-[#fd7f20]" />}
-                    {section.icon === "shield" && <Shield className="h-4 w-4 text-[#fd7f20]" />}
-                    {section.icon === "mail" && <Mail className="h-4 w-4 text-[#fd7f20]" />}
+                    {section.icon === "info" && (
+                      <Info className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`} />
+                    )}
+                    {section.icon === "database" && (
+                      <Compass
+                        className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`}
+                      />
+                    )}
+                    {section.icon === "settings" && (
+                      <Settings
+                        className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`}
+                      />
+                    )}
+                    {section.icon === "lock" && (
+                      <Lock className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`} />
+                    )}
+                    {section.icon === "shield" && (
+                      <Shield
+                        className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`}
+                      />
+                    )}
+                    {section.icon === "mail" && (
+                      <Mail className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`} />
+                    )}
                     <span>{section.heading}</span>
                   </h4>
 
@@ -1259,7 +1183,9 @@ export function QuizExperience() {
                         {sub.title}
                       </p>
                       <ul
-                        className={`list-disc pl-5 space-y-1 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                        className={`list-disc pl-5 space-y-1 ${
+                          isDark ? "text-white/75" : "text-[#4a4a52]"
+                        }`}
                       >
                         {sub.items.map((item: string, iIdx: number) => (
                           <li key={iIdx}>{item}</li>
@@ -1270,7 +1196,9 @@ export function QuizExperience() {
 
                   {section.items && (
                     <ul
-                      className={`list-disc pl-5 space-y-1 ${isDark ? "text-white/70" : "text-[#5a5a64]"}`}
+                      className={`list-disc pl-5 space-y-1 ${
+                        isDark ? "text-white/75" : "text-[#4a4a52]"
+                      }`}
                     >
                       {section.items.map((item: string, iIdx: number) => (
                         <li key={iIdx}>{item}</li>
@@ -1280,19 +1208,19 @@ export function QuizExperience() {
 
                   {section.contact && (
                     <div
-                      className={`rounded-2xl border-l-4 border-[#6b34fa] p-4 space-y-1 ${
-                        isDark ? "bg-white/[0.04] text-white" : "bg-purple-50 text-[#1c1c1f]"
+                      className={`border-l-4 border-[#630ed4] p-4 space-y-1 ${
+                        isDark ? "bg-white/[0.04] text-white" : "bg-[#f2eef7] text-[#1c1c1f]"
                       }`}
                     >
                       <p className="font-bold">{section.contact.officer}</p>
-                      <p className={isDark ? "text-white/70" : "text-[#5a5a64]"}>
+                      <p className={isDark ? "text-white/75" : "text-[#4a4a52]"}>
                         Email:{" "}
                         <a
                           href={`mailto:${section.contact.email}`}
-                          className={`underline ${
+                          className={`font-bold underline ${
                             isDark
                               ? "text-[#c4b0ff] hover:text-white"
-                              : "text-[#6b34fa] hover:text-[#5420d6]"
+                              : "text-[#630ed4] hover:text-[#4c08a8]"
                           }`}
                         >
                           {section.contact.email}
@@ -1304,8 +1232,8 @@ export function QuizExperience() {
               ))}
 
               <p
-                className={`text-center text-xs italic pt-4 border-t ${
-                  isDark ? "text-white/40 border-white/10" : "text-gray-400 border-purple-900/10"
+                className={`text-center text-xs pt-4 border-t ${
+                  isDark ? "text-white/45 border-white/10" : "text-[#77737a] border-purple-900/10"
                 }`}
               >
                 {privacyData.lastUpdated}
@@ -1315,13 +1243,13 @@ export function QuizExperience() {
             {/* Footer */}
             <div
               className={`border-t p-5 flex justify-end ${
-                isDark ? "border-white/10 bg-black/40" : "border-purple-900/10 bg-purple-50/50"
+                isDark ? "border-white/10 bg-black/40" : "border-purple-900/10 bg-[#f8f6fa]"
               }`}
             >
               <button
                 type="button"
                 onClick={() => setShowPrivacy(false)}
-                className="rounded-full bg-[#fd7f20] hover:bg-[#ff933f] text-white px-6 py-2.5 font-extrabold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md"
+                className="quiz-btn-primary"
               >
                 {privacyData.backButton}
               </button>
