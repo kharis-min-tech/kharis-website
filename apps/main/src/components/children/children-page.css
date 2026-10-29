@@ -1,0 +1,1626 @@
+/* Children's department page (/life/children). Always light: each age group has a fixed palette. */
+
+.kids-page {
+  --kids-gold: #c99a33;
+  --kids-paper: #fffdf8;
+  --kids-ink: #1d1b20;
+  --kids-muted: #4b474e;
+  --kids-cream: #f5f1e8;
+  --kids-purple: #5b2bd1;
+  --kids-header: 4.5rem;
+  --kids-agenav: 4.25rem;
+  /* Shared tokens read by the reused Life classes; pinned so the dark theme can't flip them here. */
+  --bg: #ffffff;
+  --bg-purple: #f2eef7;
+  --fg: #1c1c1f;
+  --fg-soft: #3a3a40;
+  --muted: #4a4a52;
+  --line: rgba(99, 14, 212, 0.12);
+  --purple: #630ed4;
+  --purple-fill: #630ed4;
+  --orange: #d4920a;
+  --shadow: 0 18px 50px rgba(40, 10, 80, 0.1);
+  --shadow-lift: 0 28px 60px rgba(99, 14, 212, 0.16);
+  --card-bg: linear-gradient(135deg, #f2eef7 0%, #fff8ee 55%, #fff 100%);
+  color-scheme: light;
+  overflow-x: clip;
+  background: var(--kids-paper);
+  color: var(--kids-ink);
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+.kids-page :is(h1, h2, h3) {
+  color: var(--kids-ink);
+}
+
+.kids-wrap {
+  width: min(72rem, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.kids-page :is(a, button, summary):focus-visible {
+  outline: 3px solid var(--kids-gold);
+  outline-offset: 3px;
+}
+
+/* Glide targets take focus so keyboard users land in the section; no ring around the whole block. */
+.kids-page [tabindex="-1"]:focus {
+  outline: none;
+}
+
+.kids-cta {
+  min-height: 2.75rem;
+  margin-top: 1.5rem;
+}
+
+/* —— Hero: a growth chart, like pencil marks on a doorframe —— */
+.kids-hero {
+  padding: calc(var(--kids-header) + clamp(1.75rem, 5vw, 3.5rem)) 0 clamp(2.5rem, 6vw, 4.5rem);
+  background: var(--kids-cream);
+}
+
+.kids-hero__grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.kids-eyebrow {
+  margin: 0 0 0.9rem;
+  color: var(--kids-purple);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.kids-hero h1 {
+  max-width: 14ch;
+  margin: 0;
+  font-size: clamp(2.3rem, 6.2vw, 4.4rem);
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.kids-hero__lead {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--kids-muted);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.65;
+}
+
+.kids-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.kids-hero__actions .kids-cta {
+  margin-top: 0;
+}
+
+/* Vertical chart: measured rule on the left, bars stepping up to their top age. */
+.kids-chart {
+  --chart-h: clamp(20rem, 38vw, 28rem);
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+}
+
+.kids-chart__rule {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  height: var(--chart-h);
+  border-right: 2px solid var(--kids-ink);
+}
+
+.kids-chart__tick {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--bar-reach) * 100%);
+  padding-right: 0.85rem;
+  color: var(--kids-ink);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+  transform: translateY(50%);
+}
+
+.kids-chart__tick::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 0.6rem;
+  height: 2px;
+  background: var(--kids-ink);
+  content: "";
+}
+
+.kids-chart__bars {
+  display: grid;
+  height: var(--chart-h);
+  grid-column: 2;
+  grid-row: 1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin: 0;
+  border-bottom: 2px solid var(--kids-ink);
+  padding: 0 0 0 0.75rem;
+  list-style: none;
+}
+
+.kids-chart__item {
+  height: calc(var(--bar-reach) * 100%);
+  min-height: 0;
+}
+
+.kids-chart__bar {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 200ms ease;
+  animation: kids-bar-rise 300ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--bar-index) * 150ms);
+}
+
+.kids-chart__bar:hover,
+.kids-chart__bar:focus-visible {
+  transform: translateY(-6px);
+}
+
+.kids-chart__tag {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.6rem 0.7rem;
+  background: var(--bar-tag-bg);
+  color: var(--bar-tag-text);
+}
+
+.kids-chart__tag strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.kids-chart__tag > span {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.kids-chart__line {
+  display: block;
+  max-height: 0;
+  overflow: hidden;
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 650;
+  line-height: 1.3;
+  opacity: 0;
+  transition:
+    max-height 200ms ease,
+    opacity 200ms ease;
+}
+
+.kids-chart__bar:hover .kids-chart__line,
+.kids-chart__bar:focus-visible .kids-chart__line {
+  max-height: 3rem;
+  margin-top: 0.25rem;
+  opacity: 1;
+}
+
+.kids-chart__photo {
+  flex: 1;
+  min-height: 0;
+}
+
+@keyframes kids-bar-rise {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+/* Phones: the chart turns sideways. Tag left, photo right, bars stepping out to the right. */
+@media (max-width: 639px) {
+  .kids-hero__lead,
+  .kids-hero__actions {
+    display: none;
+  }
+
+  .kids-chart {
+    --tag-w: 7.25rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kids-chart__bars {
+    height: auto;
+    grid-column: 1;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+    border-bottom: 0;
+    border-left: 2px solid var(--kids-ink);
+    padding: 0;
+  }
+
+  .kids-chart__item {
+    width: calc(var(--tag-w) + (100% - var(--tag-w)) * var(--bar-reach));
+    height: 4.25rem;
+  }
+
+  .kids-chart__bar {
+    flex-direction: row;
+    animation-name: kids-bar-reach;
+  }
+
+  .kids-chart__bar:hover,
+  .kids-chart__bar:focus-visible {
+    transform: translateX(4px);
+  }
+
+  .kids-chart__tag {
+    width: var(--tag-w);
+    flex: none;
+    align-content: center;
+  }
+
+  .kids-chart__rule {
+    height: 1.6rem;
+    grid-column: 1;
+    grid-row: 2;
+    border-top: 2px solid var(--kids-ink);
+    border-right: 0;
+  }
+
+  .kids-chart__tick {
+    top: 0.45rem;
+    right: auto;
+    bottom: auto;
+    left: calc(var(--tag-w) + (100% - var(--tag-w)) * var(--bar-reach));
+    padding: 0;
+    transform: translateX(-50%);
+  }
+
+  .kids-chart__tick::after {
+    top: -0.45rem;
+    left: 50%;
+    width: 2px;
+    height: 0.35rem;
+  }
+}
+
+@keyframes kids-bar-reach {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@media (min-width: 960px) {
+  .kids-hero__grid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-areas:
+      "head chart"
+      "lead chart"
+      "actions chart";
+    align-content: start;
+    column-gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .kids-hero__head {
+    grid-area: head;
+  }
+
+  .kids-hero__lead {
+    grid-area: lead;
+  }
+
+  .kids-hero__actions {
+    grid-area: actions;
+    align-self: start;
+  }
+
+  .kids-chart {
+    grid-area: chart;
+    align-self: end;
+  }
+}
+
+/* —— Plain sections —— */
+.kids-section {
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+}
+
+/* —— Parent promise: cream, square, gold. Not a group palette. —— */
+.kids-promise {
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+  background: var(--kids-cream);
+}
+
+.kids-promise h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.kids-promise__lines {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1.35rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kids-promise__lines li {
+  margin: 0;
+  border-top: 3px solid var(--kids-gold);
+  padding-top: 0.75rem;
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.kids-faq .kids-confirm {
+  margin-top: 0.75rem;
+}
+
+/* —— Parents' FAQ —— */
+.kids-faq {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.kids-faq__item {
+  border: 2px solid var(--kids-ink);
+  background: #fff;
+}
+
+.kids-faq summary {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.35;
+  list-style: none;
+}
+
+.kids-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.kids-faq summary::after {
+  flex: none;
+  color: var(--kids-ink);
+  content: "+";
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.kids-faq__item[open] summary::after {
+  content: "\2212";
+}
+
+.kids-faq__item[open] summary {
+  box-shadow: inset 0 -3px 0 var(--kids-gold);
+}
+
+.kids-faq__answer {
+  padding: 0.25rem 1rem 1rem;
+}
+
+.kids-faq__answer p {
+  margin: 0.85rem 0 0;
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.kids-faq__more {
+  margin-top: 1.35rem;
+  text-align: center;
+}
+
+.kids-faq__more > summary {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border: 0;
+  padding: 0.85rem 1.45rem;
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(99, 14, 212, 0.28);
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  list-style: none;
+}
+
+.kids-faq__more > summary:hover {
+  background: var(--orange);
+  color: var(--kids-ink);
+  box-shadow: 0 14px 32px rgba(212, 146, 10, 0.32);
+}
+
+.kids-faq__more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.kids-faq__more > summary::after {
+  flex: none;
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-top: -0.18rem;
+  border-right: 2.5px solid currentColor;
+  border-bottom: 2.5px solid currentColor;
+  content: "";
+  rotate: 45deg;
+}
+
+.kids-faq__more[open] > summary {
+  border: 2px solid var(--purple);
+  background: transparent;
+  color: var(--purple);
+  box-shadow: none;
+}
+
+.kids-faq__more[open] > summary:hover {
+  border-color: var(--orange);
+  background: var(--orange);
+  color: var(--kids-ink);
+}
+
+.kids-faq__more[open] > summary::after {
+  margin-top: 0.18rem;
+  rotate: -135deg;
+}
+
+.kids-faq__more-hide {
+  display: none;
+}
+
+.kids-faq__more[open] > summary .kids-faq__more-show {
+  display: none;
+}
+
+.kids-faq__more[open] > summary .kids-faq__more-hide {
+  display: inline;
+}
+
+.kids-faq__more > .kids-faq {
+  margin-top: 0.75rem;
+  text-align: start;
+}
+
+.kids-faq__link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  margin-top: 0.35rem;
+  color: var(--purple);
+  font-weight: 800;
+  text-underline-offset: 0.18em;
+}
+
+.kids-section h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.kids-section__body {
+  max-width: 42rem;
+  margin: 1rem 0 0;
+  color: var(--kids-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+@media (min-width: 700px) {
+  .kids-promise__lines {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 960px) {
+  .kids-promise__lines {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.kids-vision {
+  margin-block: clamp(1rem, 3vw, 2rem) clamp(2.5rem, 6vw, 4rem);
+  padding-left: 1rem;
+  border-left: 4px solid var(--kids-gold);
+  font-size: clamp(1.35rem, 3.4vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+/* —— Sticky age navigator: a square three-way switcher —— */
+.kids-groups {
+  scroll-margin-top: var(--kids-header);
+}
+
+.kids-agenav {
+  position: sticky;
+  top: var(--kids-header);
+  z-index: 20;
+  border-bottom: 1px solid rgba(29, 27, 32, 0.12);
+  padding-block: 0.5rem;
+  background: rgba(255, 253, 248, 0.96);
+}
+
+.kids-agenav__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-block: 0;
+  border: 1.5px solid var(--kids-ink);
+  padding: 0;
+  list-style: none;
+}
+
+.kids-agenav__list li + li {
+  border-left: 1.5px solid var(--kids-ink);
+}
+
+.kids-agenav__link {
+  display: flex;
+  min-height: 3rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 0.45rem;
+  padding: 0.35rem 0.5rem;
+  color: var(--kids-ink);
+  text-align: center;
+  text-decoration: none;
+  box-shadow: inset 0 -4px 0 transparent;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.kids-agenav__name {
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.kids-agenav__ages {
+  color: var(--kids-muted);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.kids-agenav__link:hover {
+  background: #fff;
+}
+
+.kids-agenav__link[aria-current] {
+  background: #fff;
+  box-shadow: inset 0 -4px 0 var(--agenav-mark);
+}
+
+.kids-page .kids-agenav__link:focus-visible {
+  outline-offset: -3px;
+}
+
+/* —— Age groups —— */
+.kids-group {
+  scroll-margin-top: calc(var(--kids-header) + var(--kids-agenav));
+  padding-block: clamp(3rem, 8vw, 6rem);
+  background: var(--g-bg);
+  color: var(--g-ink);
+}
+
+.kids-group :is(h2, h3) {
+  color: var(--g-ink);
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-weight: var(--g-heading-weight);
+}
+
+.kids-group__header {
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.kids-group__numeral {
+  margin: 0;
+  color: var(--g-numeral);
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: clamp(4.5rem, 16vw, 9rem);
+  font-weight: var(--g-heading-weight);
+  letter-spacing: -0.03em;
+  line-height: 0.85;
+}
+
+.kids-group__years {
+  margin-left: 0.4rem;
+  color: var(--g-ink);
+  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+  font-weight: var(--g-label-weight);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kids-group__header h2 {
+  margin: 0.6rem 0 0;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.kids-group__promise {
+  max-width: 34rem;
+  margin: 0.75rem 0 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.kids-group__body {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.kids-group__copy h3 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+
+.kids-group__copy p {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  font-size: 1.02rem;
+  font-weight: 550;
+  line-height: 1.7;
+}
+
+.kids-group__photos {
+  display: grid;
+  gap: 1rem;
+}
+
+/* —— Kinder: picture-book spread —— */
+.kids-group--kinder :is(h2, h3) {
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+/* Coral is too light for text (2.5:1), so the numeral is ink with a coral offset. */
+.kids-group--kinder .kids-group__numeral {
+  color: var(--g-ink);
+  text-shadow: 0.05em 0.05em 0 var(--g-coral);
+}
+
+.kids-group--kinder .kids-group__years {
+  text-shadow: none;
+}
+
+.kids-group--kinder .kids-group__header h2 {
+  font-size: clamp(2.4rem, 7vw, 4rem);
+}
+
+.kids-group--kinder .kids-group__copy h3 {
+  font-size: clamp(1.9rem, 4.2vw, 3rem);
+}
+
+.kids-group--kinder .kids-group__copy p {
+  font-size: clamp(1.05rem, 0.98rem + 0.3vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+.kids-book__photos {
+  position: relative;
+  display: grid;
+  width: min(100%, 36rem);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  /* Room for the tilted corners inside the gutters. */
+  padding: 1rem 1.25rem 1.5rem;
+}
+
+.kids-polaroid {
+  --tilt: -5deg;
+  position: relative;
+  grid-row: 1;
+  grid-column: 1 / span 8;
+  align-self: start;
+  margin: 0;
+  padding: 0.6rem 0.6rem 0;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(58, 42, 18, 0.12),
+    0 16px 30px -14px rgba(58, 42, 18, 0.4);
+  rotate: var(--tilt);
+}
+
+.kids-polaroid + .kids-polaroid {
+  --tilt: 4deg;
+  z-index: 1;
+  grid-column: 6 / -1;
+  margin-top: clamp(7rem, 30vw, 13rem);
+}
+
+/* Tape strip across the top edge. */
+.kids-polaroid::before {
+  position: absolute;
+  z-index: 1;
+  top: -0.7rem;
+  left: 50%;
+  width: 5.5rem;
+  height: 1.5rem;
+  background: color-mix(in srgb, var(--g-sun) 70%, transparent);
+  box-shadow: 0 1px 2px rgba(58, 42, 18, 0.1);
+  content: "";
+  rotate: -3deg;
+  translate: -50% 0;
+}
+
+.kids-polaroid + .kids-polaroid::before {
+  rotate: 5deg;
+}
+
+.kids-polaroid figcaption {
+  padding: 0.55rem 0.25rem 0.75rem;
+  color: var(--g-clay);
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.kids-polaroid .kids-placeholder__label {
+  padding: 0.6rem 0.7rem;
+  font-size: 0.72rem;
+}
+
+.kids-sticker {
+  position: absolute;
+  z-index: 2;
+  top: clamp(0.25rem, 2vw, 1.25rem);
+  right: 0.5rem;
+  max-width: 7.5rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  background: var(--g-coral);
+  box-shadow: 0 10px 18px -10px rgba(58, 42, 18, 0.55);
+  color: var(--g-ink);
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.1;
+  rotate: 7deg;
+  animation: kids-bob 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes kids-bob {
+  from {
+    translate: 0 -3px;
+  }
+  to {
+    translate: 0 4px;
+  }
+}
+
+/* Where supported, the photos settle into their tilt as they scroll into view. Always visible. */
+@supports (animation-timeline: view()) {
+  .kids-polaroid {
+    animation: kids-settle linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 35%;
+  }
+}
+
+@keyframes kids-settle {
+  from {
+    rotate: 0deg;
+    translate: 0 1.25rem;
+  }
+}
+
+.kids-routine {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.kids-routine h3 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+}
+
+.kids-routine__steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: routine;
+}
+
+.kids-routine__steps li {
+  position: relative;
+  display: grid;
+  min-height: 5.5rem;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem;
+  background: var(--g-sun);
+  color: var(--g-ink);
+  counter-increment: routine;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.kids-routine__steps li:nth-child(3n + 2) {
+  background: var(--g-sky);
+}
+
+.kids-routine__steps li:nth-child(3n) {
+  background: var(--g-coral);
+}
+
+.kids-routine__steps li::before {
+  content: counter(routine);
+  content: counter(routine) / "";
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.kids-routine__steps li:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 599px) {
+  .kids-polaroid .kids-placeholder__label em {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .kids-sticker {
+    max-width: 10rem;
+    padding: 0.75rem 0.9rem;
+    font-size: 1.2rem;
+  }
+
+  .kids-routine__steps {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .kids-routine__steps li:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  /* Chevron in the gap: one step leads to the next. */
+  .kids-routine__steps li:not(:last-child)::after {
+    position: absolute;
+    top: 50%;
+    right: -0.9rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-top: 2px solid var(--g-ink);
+    border-right: 2px solid var(--g-ink);
+    content: "";
+    rotate: 45deg;
+    translate: 0 -50%;
+  }
+}
+
+@media (min-width: 900px) {
+  .kids-book {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+}
+
+/* —— Super: adventure trail —— */
+.kids-group--super :is(h2, h3, .kids-trail__detail-title) {
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.kids-group--super .kids-group__copy h3 {
+  font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+}
+
+.kids-trail-intro {
+  max-width: 38rem;
+}
+
+.kids-trail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem 0.5rem;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.kids-trail__line {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 12%;
+  width: 76%;
+  height: 4.75rem;
+  pointer-events: none;
+}
+
+.kids-trail__line line {
+  stroke: var(--g-green);
+  stroke-width: 3px;
+  stroke-dasharray: 0.018 0.014;
+  stroke-dashoffset: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+.kids-checkpoint {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  border: 0;
+  padding: 0 0.25rem;
+  background: transparent;
+  color: var(--g-ink);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+
+.kids-checkpoint__gem {
+  display: grid;
+  width: 4.75rem;
+  height: 4.75rem;
+  place-items: center;
+  background: var(--g-green);
+  color: #fff;
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1;
+  rotate: 45deg;
+}
+
+.kids-checkpoint__gem > span {
+  rotate: -45deg;
+}
+
+.kids-checkpoint--goal .kids-checkpoint__gem {
+  background: var(--g-ink);
+}
+
+.kids-checkpoint__name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.kids-checkpoint__goal {
+  margin-top: -0.35rem;
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kids-checkpoint[aria-expanded="true"] .kids-checkpoint__gem {
+  outline: 3px solid var(--g-pink);
+  outline-offset: 5px;
+}
+
+.kids-trail__detail {
+  grid-column: 1 / -1;
+  padding: 1rem 1.1rem 1.15rem;
+  background: #fff;
+}
+
+.kids-trail__detail-title {
+  margin: 0 0 0.75rem;
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.kids-trail__detail .kids-confirm {
+  margin-top: 0;
+}
+
+.kids-squad {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.kids-squad__photos {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.kids-signpost {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 1.35rem 1.4rem;
+  background: var(--g-cobalt);
+  color: #fff;
+}
+
+.kids-signpost__label {
+  margin: 0;
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.kids-signpost blockquote {
+  margin: 0;
+}
+
+.kids-signpost blockquote p {
+  margin: 0;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.kids-signpost cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .kids-trail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 0.75rem;
+  }
+
+  .kids-trail__line {
+    display: none;
+  }
+}
+
+@media (min-width: 700px) {
+  .kids-squad__photos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .kids-squad {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+    align-items: stretch;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .kids-trail__line line {
+    animation: kids-draw linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+
+  .kids-checkpoint__gem {
+    animation: kids-pop linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 35%;
+    animation-delay: calc(var(--i) * 80ms);
+  }
+}
+
+@keyframes kids-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes kids-pop {
+  from {
+    scale: 0.55;
+  }
+}
+
+/* —— Transition: comic bento —— */
+.kids-group--transition :is(h2, h3, .kids-bento__title, .kids-bento-faq summary) {
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.kids-group--transition .kids-group__years,
+.kids-bento__kicker,
+.kids-bento__scripture cite {
+  font-family: "Plus Jakarta Sans", var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kids-group--transition .kids-group__copy h3,
+.kids-bento__statement h3 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+}
+
+.kids-bento {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+  /* Keeps the hard shadow inside the 16px gutter. */
+  padding: 0 4px 4px 0;
+}
+
+.kids-bento__tile {
+  min-width: 0;
+  border: 2px solid var(--g-ink);
+  background: #fff;
+  box-shadow: 4px 4px 0 var(--g-ink);
+  animation: kids-tile-pop 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 55ms);
+}
+
+.kids-bento__photo,
+.kids-bento__statement,
+.kids-bento__scripture,
+.kids-bento__path,
+.kids-bento__shots {
+  grid-column: 1 / -1;
+}
+
+.kids-bento__photo {
+  min-height: 16rem;
+  margin: 0;
+}
+
+.kids-bento__photo .kids-placeholder {
+  height: 100%;
+  border: 0;
+  background: var(--g-lavender);
+}
+
+.kids-bento__statement {
+  display: flex;
+  flex-direction: column;
+  padding: 1.15rem 1.2rem 1.25rem;
+  background: var(--g-purple);
+  color: #fff;
+}
+
+.kids-bento__statement :is(h3, p) {
+  color: #fff;
+}
+
+.kids-bento__statement p {
+  max-width: 38rem;
+  margin: 0.85rem 0 0;
+  font-family: "Plus Jakarta Sans", var(--font-display), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.6;
+  text-transform: none;
+}
+
+.kids-bento__teaching,
+.kids-bento__scripture,
+.kids-bento__path,
+.kids-flip__face {
+  padding: 1rem 1.05rem;
+}
+
+.kids-bento__teaching {
+  display: flex;
+  align-items: flex-end;
+  background: var(--g-orange);
+  color: var(--g-ink);
+}
+
+.kids-bento__title {
+  margin: 0.35rem 0 0;
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  font-weight: var(--g-heading-weight);
+}
+
+.kids-bento__kicker {
+  display: block;
+  margin: 0;
+  color: var(--g-ink);
+  font-size: 0.68rem;
+  line-height: 1.3;
+}
+
+.kids-bento__statement .kids-bento__kicker,
+.kids-flip__face--front .kids-bento__kicker {
+  color: inherit;
+}
+
+.kids-flip__face--front {
+  background: var(--g-lavender);
+}
+
+.kids-bento__tile:nth-child(4) .kids-flip__face--front {
+  background: #fff;
+}
+
+.kids-bento__tile:nth-child(5) .kids-flip__face--front {
+  background: var(--g-sky);
+}
+
+.kids-bento__scripture {
+  margin: 0;
+  background: #fff;
+}
+
+.kids-bento__scripture p {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.02rem, 1.6vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.55;
+  text-transform: none;
+}
+
+.kids-bento__scripture cite {
+  display: block;
+  margin-top: 0.85rem;
+  color: var(--g-purple);
+  font-size: 0.72rem;
+  font-style: normal;
+}
+
+.kids-bento__path {
+  background: var(--g-lavender);
+}
+
+.kids-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.15rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kids-path li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.kids-path li + li::before {
+  color: var(--g-ink);
+  content: ">";
+  font-weight: 800;
+}
+
+.kids-path a,
+.kids-path span {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: var(--g-ink);
+  font-weight: 800;
+}
+
+.kids-path a {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.kids-bento__shots {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.kids-bento__shot {
+  margin: 0;
+}
+
+.kids-bento__shot .kids-placeholder {
+  border: 0;
+  background: color-mix(in srgb, var(--g-sky) 35%, #fff);
+}
+
+.kids-flip {
+  display: grid;
+  width: 100%;
+  min-height: 9.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--g-ink);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  perspective: 900px;
+}
+
+.kids-flip__inner {
+  display: grid;
+  min-height: 9.5rem;
+  transform-style: preserve-3d;
+  transition: transform 450ms ease;
+}
+
+.kids-flip__face {
+  grid-area: 1 / 1;
+  display: flex;
+  min-height: 9.5rem;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 2px solid var(--g-ink);
+  background: var(--g-lavender);
+  box-shadow: 4px 4px 0 var(--g-ink);
+  backface-visibility: hidden;
+}
+
+.kids-flip__face--back {
+  justify-content: center;
+  background: #fff;
+  transform: rotateY(180deg);
+}
+
+.kids-flip__face--back .kids-confirm {
+  margin: 0;
+}
+
+.kids-flip[aria-pressed="true"] .kids-flip__inner {
+  transform: rotateY(180deg);
+}
+
+.kids-bento-faq {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+  padding: 0 4px 4px 0;
+}
+
+.kids-bento-faq__item {
+  border: 2px solid var(--g-ink);
+  background: #fff;
+  box-shadow: 4px 4px 0 var(--g-ink);
+}
+
+.kids-bento-faq summary {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  list-style: none;
+}
+
+.kids-bento-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.kids-bento-faq summary::after {
+  content: "+";
+  font-family: "Plus Jakarta Sans", var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.kids-bento-faq__item[open] summary::after {
+  content: "\2212";
+}
+
+.kids-bento-faq__item .kids-confirm {
+  margin: 0 1rem 1rem;
+}
+
+@keyframes kids-tile-pop {
+  from {
+    translate: 0 12px;
+  }
+}
+
+@media (min-width: 720px) {
+  .kids-bento__shots {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .kids-bento {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .kids-bento__photo,
+  .kids-bento__statement {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .kids-bento__scripture,
+  .kids-bento__path {
+    grid-column: span 2;
+  }
+
+  .kids-bento__shots {
+    grid-column: 1 / -1;
+  }
+}
+
+/* —— Photo placeholder —— */
+.kids-placeholder {
+  position: relative;
+  display: flex;
+  aspect-ratio: var(--ph-aspect-mobile);
+  align-items: flex-end;
+  overflow: hidden;
+  border: 2px dashed color-mix(in srgb, var(--g-ink, var(--kids-ink)) 35%, transparent);
+  background: color-mix(in srgb, var(--g-soft, #e8e0d3) 60%, #fff);
+}
+
+@media (min-width: 768px) {
+  .kids-placeholder {
+    aspect-ratio: var(--ph-aspect);
+  }
+}
+
+.kids-placeholder--fill {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.kids-chart .kids-placeholder__label {
+  padding: 0.4rem 0.5rem;
+  line-height: 1.2;
+}
+
+.kids-chart .kids-placeholder__label strong {
+  font-size: 0.56rem;
+  letter-spacing: 0.06em;
+  overflow-wrap: anywhere;
+}
+
+.kids-placeholder__label {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.9rem 1rem;
+  color: var(--g-ink, var(--kids-ink));
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.kids-placeholder__label strong {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kids-placeholder__label em {
+  font-style: normal;
+  opacity: 0.8;
+}
+
+/* —— Confirm placeholder —— */
+.kids-confirm {
+  display: flex;
+  max-width: 42rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 1.25rem 0 0;
+  border: 2px dashed #b45309;
+  padding: 0.75rem 1rem;
+  background: #fff7e6;
+  color: #5c3a00;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.kids-confirm__tag {
+  padding: 0.2rem 0.5rem;
+  background: #b45309;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* —— For parents + end —— */
+.kids-page .life-kids-video {
+  padding-top: clamp(1rem, 3vw, 2rem);
+}
+
+.kids-page .life-kids-video__frame a {
+  min-height: 2.75rem;
+}
+
+.kids-end {
+  padding-bottom: clamp(3rem, 7vw, 4.5rem);
+}
+
+.kids-end .life-cta {
+  min-height: 2.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kids-page *,
+  .kids-page *::before,
+  .kids-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .kids-page .life-cta:hover {
+    transform: none;
+  }
+
+  .kids-chart__bar,
+  .kids-sticker,
+  .kids-polaroid,
+  .kids-trail__line line,
+  .kids-checkpoint__gem,
+  .kids-bento__tile {
+    animation: none;
+  }
+
+  .kids-flip__inner {
+    transition: none;
+  }
+
+  .kids-flip__face {
+    transform: none;
+    backface-visibility: visible;
+  }
+
+  .kids-flip[aria-pressed="true"] .kids-flip__face--front,
+  .kids-flip:not([aria-pressed="true"]) .kids-flip__face--back {
+    display: none;
+  }
+}
