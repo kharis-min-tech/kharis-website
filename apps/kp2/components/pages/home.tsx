@@ -12,11 +12,10 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { type Testimonial } from "@/components/TestimonialCarousel";
 import { TestimoniesBand } from "@/components/TestimoniesBand";
-import { TestimonyFormModal } from "@/components/TestimonyFormModal";
 import { LatestMessages } from "@/components/LatestMessages";
 import { VisitInstead } from "@/components/VisitInstead";
 import { type MessageVideo } from "@/lib/youtube";
@@ -30,20 +29,12 @@ function Index({
   messages: MessageVideo[];
   branchPins: LocationPin[];
 }) {
-  const [formOpen, setFormOpen] = useState(false);
   const introRef = useRef<HTMLElement>(null);
   const [introMotion, setIntroMotion] = useState<"rest" | "ready" | "in">("rest");
-  const closeForm = useCallback(() => {
-    setFormOpen(false);
-    if (window.location.hash === "#share-testimony") {
-      window.history.replaceState({}, "", window.location.pathname + window.location.search);
-    }
-  }, []);
 
   useEffect(() => {
     let scrollFrame = 0;
     const sync = () => {
-      if (window.location.hash === "#share-testimony") setFormOpen(true);
       if (window.location.hash === "#app-stores") {
         // Client navigation can resolve the hash before this page's target mounts.
         scrollFrame = requestAnimationFrame(() => {
@@ -444,7 +435,6 @@ function Index({
 
       <SiteFooter />
 
-      <TestimonyFormModal open={formOpen} onClose={closeForm} />
       <ThemeToggle />
     </div>
   );

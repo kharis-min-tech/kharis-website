@@ -43,3 +43,6 @@ yarn-error.log*
 # vercel
 .vercel
 **/.local-data/
+
+# Supabase CLI scratch
+supabase/.temp/

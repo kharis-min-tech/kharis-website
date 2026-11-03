@@ -276,7 +276,8 @@ function BranchPage({
   async function sendBranchMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (contactBusy) return;
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     const name = String(data.get("name") || contactName).trim();
     const email = String(data.get("email") || contactEmail).trim();
     const phone = String(data.get("phone") || "").trim();
@@ -306,7 +307,7 @@ function BranchPage({
       setContactEmail("");
       setContactMessage("");
       setContactSent(true);
-      event.currentTarget.reset();
+      form.reset();
     } catch {
       setContactError("We couldn't reach Kharis just now. Check your connection and try again.");
     } finally {

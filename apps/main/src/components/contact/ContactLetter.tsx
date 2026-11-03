@@ -97,6 +97,15 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
     }));
   }, [searchParams]);
 
+  // Pages that hand a visitor over for one subject — the Life baptism panel,
+  // for instance — arrive as /contact?topic=Baptism.
+  useEffect(() => {
+    const wanted = searchParams.get("topic")?.trim();
+    if (!wanted) return;
+    const match = TOPICS.find((t) => t.value.toLowerCase() === wanted.toLowerCase());
+    if (match) setForm((f) => ({ ...f, topic: match.value }));
+  }, [searchParams]);
+
   useEffect(() => {
     if (focusSignal > 0) messageRef.current?.focus({ preventScroll: true });
   }, [focusSignal]);

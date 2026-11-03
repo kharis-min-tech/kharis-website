@@ -110,32 +110,29 @@ export const UPCOMING_LANGUAGES = [
 ];
 
 export const QUIZ_BRANCHES = [
-  "Kharis Church Accra",
-  "Kharis Church Birmingham",
-  "Kharis Church Brighton",
-  "Kharis Church Bristol",
-  "Kharis Church Chatham",
-  "Kharis Church Chelmsford",
-  "Kharis Church Coventry",
-  "Kharis Church Croydon",
-  "Kharis Church Freetown",
-  "Kharis Church London",
-  "Kharis Church Luton",
-  "Kharis Church Manchester",
-  "Kharis Church Northampton",
-  "Kharis Church Nottingham",
-  "Kharis Church Orpington",
-  "Kharis Church Reading",
-  "Kharis Phase 2 Peterborough",
-  "Kharis Phase 2 Birmingham",
-  "Kharis Phase 2 London",
-  "Kharis Phase 2 Romford",
-  "Kharis Phase 2 Southampton",
-  "Kharis Phase 2 Barking",
+  "Accra",
+  "Birmingham",
+  "Brighton",
+  "Bristol",
+  "Chatham",
+  "Chelmsford",
+  "Coventry",
+  "Croydon",
+  "Freetown",
+  "London",
+  "Luton",
+  "Manchester",
+  "Northampton",
+  "Nottingham",
+  "Orpington",
+  "Reading",
+  "KP2 Barking",
+  "KP2 Birmingham",
+  "KP2 London",
+  "KP2 Peterborough",
+  "KP2 Romford",
+  "KP2 Southampton",
 ] as const;
-
-export const GOOGLE_SHEETS_QUIZ_URL =
-  "https://script.google.com/macros/s/AKfycbznl6ltl0ydLSa7STMUPQPguZ5Bf74aEuTMH6mhUwk88ee8xsaMA6QtVvBXclxUor28/exec";
 
 export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
   en: {
