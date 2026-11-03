@@ -15,7 +15,6 @@ const primary = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Find a Branch", href: "/locations" },
-  { label: "Events", href: "/events" },
   { label: "Messages", href: "/messages" },
   { label: "Life at Kharis", href: "/life" },
   { label: "Give", href: "/give" },
