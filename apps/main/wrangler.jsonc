@@ -12,7 +12,19 @@
   "observability": {
     "enabled": true,
   },
-  "vars": {},
+  // Non-secret email settings. The AWS keys that go with these are secrets:
+  // `npx wrangler secret put AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
+  // EMAIL_FROM must be an identity verified in SES, in AWS_REGION.
+  "vars": {
+    "AWS_REGION": "eu-west-2",
+    "EMAIL_FROM": "\"Kharis Church\" <noreply@kharis.org>",
+    // Its own configuration set, so website bounces and complaints are tracked
+    // separately from the kairos and venue-checkin apps.
+    "SES_CONFIGURATION_SET": "kharis-website",
+    // Where a submission goes when the visitor chose no branch. Leave unset and
+    // those submissions are recorded without an email being sent.
+    "FALLBACK_NOTIFY_EMAIL": "",
+  },
   // Cutover switch — uncomment to take kharis.org/* live on Cloudflare.
   // Until then `wrangler deploy` only publishes to *.workers.dev and
   // leaves the current production host untouched.

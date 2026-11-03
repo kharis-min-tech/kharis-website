@@ -13,8 +13,11 @@ import { usePageSnap } from "@/lib/page-snap";
 import "./life-refresh.css";
 import "./life-alone.css";
 
-function CloserPanel() {
+export type LifeBranch = { id: string; name: string };
+
+function CloserPanel({ branches }: { branches: LifeBranch[] }) {
   const [email, setEmail] = useState("");
+  const [branch, setBranch] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [savedLocally, setSavedLocally] = useState(false);
@@ -25,6 +28,10 @@ function CloserPanel() {
     event.preventDefault();
     setEmailAttempted(true);
     setError("");
+    if (!branch) {
+      setError("Please choose the branch closest to you.");
+      return;
+    }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       setError("Please enter a valid email address.");
       return;
@@ -39,6 +46,8 @@ function CloserPanel() {
           name: "Kharis Life visitor",
           email: email.trim(),
           topic: "General",
+          branch,
+          branchId: branches.find((b) => b.name === branch)?.id,
           message:
             "I'd like to get plugged into Kharis Life. Please connect me with next steps at my local branch.",
         }),
@@ -83,6 +92,30 @@ function CloserPanel() {
             </p>
           ) : (
             <form className="life-alone__form" onSubmit={onSubmit} noValidate>
+              <label className="sr-only" htmlFor="life-refresh-branch">
+                Your nearest branch
+              </label>
+              <select
+                id="life-refresh-branch"
+                className="life-alone__branch"
+                required
+                value={branch}
+                aria-invalid={emailAttempted && !branch}
+                aria-describedby={error ? "life-refresh-email-error" : undefined}
+                onChange={(event) => {
+                  setBranch(event.target.value);
+                  if (error) setError("");
+                }}
+              >
+                <option value="" disabled>
+                  Your branch
+                </option>
+                {branches.map((b) => (
+                  <option key={b.id} value={b.name}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
               <label className="sr-only" htmlFor="life-refresh-email">
                 Your email address
               </label>
@@ -121,7 +154,7 @@ function CloserPanel() {
   );
 }
 
-export function LifeExperience() {
+export function LifeExperience({ branches }: { branches: LifeBranch[] }) {
   /* Snap between the page's scroll stages (sections declare points with data-snap). */
   const reduceMotion = useReducedMotion();
   usePageSnap(!reduceMotion);
@@ -161,7 +194,7 @@ export function LifeExperience() {
 
       <BelongStory onLearnMore={openModal} />
 
-      <CloserPanel />
+      <CloserPanel branches={branches} />
       <LifeDetailModal category={modalCategory} onClose={closeModal} />
     </div>
   );

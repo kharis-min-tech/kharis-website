@@ -10,7 +10,6 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import type { ChurchEvent } from "@/lib/events";
 import { eventToCalendarItem } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { TIKTOK_HANDLE, TIKTOK_URL } from "@/lib/social";
 import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
@@ -317,15 +316,6 @@ function LifePage({ upcoming }: { upcoming: ChurchEvent[] }) {
             </div>
           </div>
         </section>
-
-        <NewsletterSignup
-          title="Don't Miss a beat."
-          copy="Sign up for our weekly 'Life Update' and never miss out on a social or small group gathering."
-          cta="Subscribe Now"
-          className="bg-primary text-on-primary"
-          copyClassName="text-primary-fixed"
-          buttonClassName="bg-black text-white"
-        />
       </main>
 
       <SiteFooter />
