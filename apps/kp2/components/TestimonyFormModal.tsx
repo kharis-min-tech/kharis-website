@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
+import { withBasePath } from "@/lib/base-path";
 
 const CATEGORIES = [
   "Deliverance",
@@ -84,7 +85,7 @@ export function TestimonyFormModal({ open, onClose }: Props) {
         onlineUse: formData.get("onlineUse"),
       };
 
-      const response = await fetch("/api/testimonies", {
+      const response = await fetch(withBasePath("/api/testimonies"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

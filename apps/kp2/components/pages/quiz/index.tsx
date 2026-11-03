@@ -93,6 +93,8 @@ export default function DepartmentQuizPage() {
   // Submit to Google Sheets
   const submitToGoogleSheets = useCallback(
     (topMatches: string[]) => {
+      // Local preview completions should not add test records to the live results sheet.
+      if (process.env.NODE_ENV !== "production") return;
       try {
         const payload = new FormData();
         payload.append("name", "Anonymous");
