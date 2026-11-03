@@ -21,9 +21,10 @@
     // Its own configuration set, so website bounces and complaints are tracked
     // separately from the kairos and venue-checkin apps.
     "SES_CONFIGURATION_SET": "kharis-website",
-    // Where a submission goes when the visitor chose no branch. Leave unset and
-    // those submissions are recorded without an email being sent.
-    "FALLBACK_NOTIFY_EMAIL": "",
+    // Where a submission goes when the visitor chose no branch (the contact
+    // form's branch field is optional). Blank it and those submissions are
+    // still recorded, just not emailed to anyone.
+    "FALLBACK_NOTIFY_EMAIL": "amen@kharis.org",
   },
   // Cutover switch — uncomment to take kharis.org/* live on Cloudflare.
   // Until then `wrangler deploy` only publishes to *.workers.dev and

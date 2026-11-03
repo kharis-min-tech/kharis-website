@@ -81,11 +81,13 @@ Baptism enquiries are deliberately _not_ a form: `/life` hands people to
 ### Database access
 
 The sites write with the **publishable** key (`sb_publishable_…`), never a
-service-role or secret key. `supabase/migrations/003_website_form_inserts.sql`
-gives the `anon` role INSERT and nothing else on the three tables above, so a
-leaked key cannot read anyone's message, visit or contact detail. Because
-`anon` has no SELECT policy there, API routes must not ask for the inserted row
-back (`Prefer: return=minimal`, no `.select()`).
+service-role or secret key. The `anon` role holds INSERT and nothing else on
+the three tables above, so a leaked key cannot read anyone's message, visit or
+contact detail. `contact_messages` and `visitors` were already set up that way;
+`supabase/migrations/003_website_quiz_results.sql` adds `quiz_results` to match.
+Because `anon` has no SELECT there, API routes must not ask for the inserted row
+back (`Prefer: return=minimal`, no `.select()`). `branches` is readable by
+`anon` (active rows only), which is how a route finds the inbox to notify.
 
 ### Email
 
@@ -104,8 +106,8 @@ AWS_SECRET_ACCESS_KEY
 Non-secret settings live in each `wrangler.jsonc` under `vars`: `AWS_REGION`,
 `EMAIL_FROM`, `SES_CONFIGURATION_SET` (`kharis-website`, so website bounce and
 complaint metrics stay separate from the other apps) and `FALLBACK_NOTIFY_EMAIL`
-(where a submission goes when no branch was chosen — leave it empty and those
-submissions are recorded without an email).
+(`amen@kharis.org` — where a submission goes when no branch was chosen; blank it
+and those submissions are still recorded, just not emailed).
 
 Leave the AWS keys unset locally and nothing is sent: the route logs the email
 instead and the form still works end to end.
