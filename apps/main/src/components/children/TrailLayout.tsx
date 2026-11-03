@@ -1,15 +1,33 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import type { ChildrenGroup, ChildrenLayout } from "@/data/children-groups";
-import { ConfirmBadge } from "./ConfirmBadge";
-import { PlaceholderImage } from "./PlaceholderImage";
 
 type Trail = Extract<ChildrenLayout, { kind: "trail" }>;
 
-/** Super: a dashed route through four checkpoints, then the squad and the month's verse. */
+const VERSE_MOTION_MS = 420;
+
+/** Super: a dashed route through four checkpoints. Each opens its scripture. */
 export function TrailLayout({ group, layout }: { group: ChildrenGroup; layout: Trail }) {
   const [open, setOpen] = useState<string | null>(null);
+  const [shown, setShown] = useState<string | null>(null);
+  const closeTimer = useRef<number | null>(null);
+  const panelId = `${group.id}-scripture`;
+  const verse = layout.checkpoints.find((checkpoint) => checkpoint.id === shown);
+
+  function toggle(id: string) {
+    if (closeTimer.current !== null) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    if (open === id) {
+      setOpen(null);
+      closeTimer.current = window.setTimeout(() => setShown(null), VERSE_MOTION_MS);
+      return;
+    }
+    setShown(id);
+    setOpen(id);
+  }
 
   return (
     <>
@@ -23,7 +41,6 @@ export function TrailLayout({ group, layout }: { group: ChildrenGroup; layout: T
           <line pathLength="1" x1="0" y1="5" x2="100" y2="5" />
         </svg>
         {layout.checkpoints.map((checkpoint, index) => {
-          const panelId = `${group.id}-${checkpoint.id}`;
           const expanded = open === checkpoint.id;
           return (
             <button
@@ -33,7 +50,7 @@ export function TrailLayout({ group, layout }: { group: ChildrenGroup; layout: T
               style={{ "--i": index } as CSSProperties}
               aria-expanded={expanded}
               aria-controls={panelId}
-              onClick={() => setOpen(expanded ? null : checkpoint.id)}
+              onClick={() => toggle(checkpoint.id)}
             >
               <span className="kids-checkpoint__gem">
                 <span>{index + 1}</span>
@@ -43,27 +60,20 @@ export function TrailLayout({ group, layout }: { group: ChildrenGroup; layout: T
             </button>
           );
         })}
-        {layout.checkpoints.map((checkpoint) => (
-          <div
-            key={`${checkpoint.id}-panel`}
-            id={`${group.id}-${checkpoint.id}`}
-            className="kids-trail__detail"
-            hidden={open !== checkpoint.id}
-          >
-            <p className="kids-trail__detail-title">{checkpoint.name}</p>
-            <ConfirmBadge what={`The verse and the one line for ${checkpoint.name}.`} />
+        <div className={`kids-trail__reveal${open ? " is-open" : ""}`}>
+          <div className="kids-trail__reveal-inner">
+            {verse ? (
+              <blockquote id={panelId} className="kids-trail__detail" key={verse.id}>
+                <p>&ldquo;{verse.scripture.text}&rdquo;</p>
+                <cite>{verse.scripture.reference}</cite>
+              </blockquote>
+            ) : null}
           </div>
-        ))}
+        </div>
       </div>
 
       <div className="kids-squad">
-        <div className="kids-squad__photos">
-          {group.photos.map((slot) => (
-            <PlaceholderImage key={slot.id} slot={slot} />
-          ))}
-        </div>
         <aside className="kids-signpost">
-          <p className="kids-signpost__label">{layout.memoryVerse.label}</p>
           <blockquote>
             <p>&ldquo;{layout.memoryVerse.text}&rdquo;</p>
             <cite>{layout.memoryVerse.reference}</cite>

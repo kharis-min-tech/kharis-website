@@ -11,26 +11,22 @@ export type ChildrenLayout =
       kind: "picture-book";
       /** Hand-stuck label on the photo pile. */
       sticker: string;
-      /** Numbered strip under the spread. */
-      routine: { title: string; steps: readonly string[]; confirm: string };
     }
   | {
       kind: "trail";
-      checkpoints: readonly { id: string; name: string; goal?: boolean }[];
+      checkpoints: readonly {
+        id: string;
+        name: string;
+        goal?: boolean;
+        scripture: { text: string; reference: string };
+      }[];
       /** The one field to edit when the month's verse changes. */
-      memoryVerse: { label: string; text: string; reference: string };
+      memoryVerse: { text: string; reference: string };
     }
   | {
       kind: "bento";
-      /** Small label on each discussion tile. */
-      kicker: string;
-      realTalk: readonly { id: string; title: string }[];
-      /** Shown on the page, not only behind a flip. */
-      realTalkConfirm: string;
       teaching: string;
       scripture: { text: string; reference: string };
-      pathway: { label: string; steps: readonly { label: string; href?: string }[] };
-      questions: readonly { id: string; question: string; confirm: string }[];
     };
 
 /** Colour roles the components read. Each maps to one of the group's named tokens. */
@@ -61,15 +57,6 @@ export type ChildrenGroup<Token extends string = string> = {
     roles: Record<PaletteRole, NoInfer<Token>>;
   };
   font: { heading: ChildrenFontKey; headingWeight: number; labelWeight: number };
-  /** The group's bar in the growth-chart hero. */
-  heroBar: {
-    /** Shown when the bar is hovered or focused. */
-    line: string;
-    tagBg: NoInfer<Token>;
-    /** Text colour on the tag; must hold 4.5:1 against `tagBg`. */
-    tagText: string;
-    photo: PhotoSlot;
-  };
   layout: ChildrenLayout;
   headline: string;
   body: string;
@@ -91,10 +78,6 @@ export const CHILDREN_HERO = {
   findLabel: "Find my child's group",
 } as const;
 
-/** Art direction shared by the hero bars: tall on wide screens, short and wide on phones. */
-const HERO_BAR_ART =
-  "Crops tall on desktop and short-and-wide on phones, so keep the subject centred with space around it. Faces visible only with parental consent.";
-
 export const CHILDREN_GROUPS: readonly ChildrenGroup[] = [
   defineGroup({
     id: "kinder",
@@ -112,25 +95,9 @@ export const CHILDREN_GROUPS: readonly ChildrenGroup[] = [
       roles: { bg: "bg", ink: "ink", numeral: "coral", accent: "sun", soft: "sky" },
     },
     font: { heading: "fredoka", headingWeight: 700, labelWeight: 700 },
-    heroBar: {
-      line: "Little hearts, big wonder.",
-      tagBg: "sun",
-      tagText: "#3A2A12",
-      photo: {
-        id: "kinder-hero-bar",
-        aspect: "auto",
-        alt: "A Kinder child smiling during a Sunday activity",
-        art: HERO_BAR_ART,
-      },
-    },
     layout: {
       kind: "picture-book",
       sticker: "Little hearts, big wonder.",
-      routine: {
-        title: "A Kinder morning",
-        steps: ["Welcome & play", "Bible story", "Sing & move", "Create & pray", "Pick-up"],
-        confirm: "The order of a Kinder morning.",
-      },
     },
     headline: "Loved by God from the very start.",
     body: "A nurturing space where little ones first discover God through Bible stories, worship, prayer and friendship. Our aim is a love and boldness for Jesus that, when they reach the age of understanding, they'll eagerly choose for themselves.",
@@ -167,27 +134,44 @@ export const CHILDREN_GROUPS: readonly ChildrenGroup[] = [
       roles: { bg: "bg", ink: "ink", numeral: "green", accent: "cobalt", soft: "leaf" },
     },
     font: { heading: "rubik", headingWeight: 800, labelWeight: 700 },
-    heroBar: {
-      line: "Curious minds, solid ground.",
-      tagBg: "green",
-      tagText: "#FFFFFF",
-      photo: {
-        id: "super-hero-bar",
-        aspect: "auto",
-        alt: "A Super child reading an open Bible",
-        art: HERO_BAR_ART,
-      },
-    },
     layout: {
       kind: "trail",
       checkpoints: [
-        { id: "salvation", name: "Salvation" },
-        { id: "faith", name: "Faith" },
-        { id: "holy-spirit", name: "The Holy Spirit" },
-        { id: "knowing-jesus", name: "Knowing & following Jesus", goal: true },
+        {
+          id: "salvation",
+          name: "Salvation",
+          scripture: {
+            text: "For by grace you have been saved through faith, and that not of yourselves; it is the gift of God,",
+            reference: "Ephesians 2:8 (NKJV)",
+          },
+        },
+        {
+          id: "faith",
+          name: "Faith",
+          scripture: {
+            text: "For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life.",
+            reference: "John 3:16 (NKJV)",
+          },
+        },
+        {
+          id: "holy-spirit",
+          name: "The Holy Spirit",
+          scripture: {
+            text: "And the angel answered and said to her, \u201cThe Holy Spirit will come upon you, and the power of the Highest will overshadow you; therefore, also, that Holy One who is to be born will be called the Son of God.",
+            reference: "Luke 1:35 (NKJV)",
+          },
+        },
+        {
+          id: "knowing-jesus",
+          name: "Knowing & following Jesus",
+          goal: true,
+          scripture: {
+            text: "Therefore My Father loves Me, because I lay down My life that I may take it again.",
+            reference: "John 10:17 (NKJV)",
+          },
+        },
       ],
       memoryVerse: {
-        label: "Memory verse this month",
         text: "Your word is a lamp to my feet and a light to my path.",
         reference: "Psalm 119:105 (NKJV)",
       },
@@ -234,51 +218,13 @@ export const CHILDREN_GROUPS: readonly ChildrenGroup[] = [
       roles: { bg: "bg", ink: "ink", numeral: "purple", accent: "orange", soft: "lavender" },
     },
     font: { heading: "archivo-black", headingWeight: 400, labelWeight: 400 },
-    heroBar: {
-      line: "Big questions, bold faith.",
-      tagBg: "purple",
-      tagText: "#FFFFFF",
-      photo: {
-        id: "transition-hero-bar",
-        aspect: "auto",
-        alt: "A Transition teenager worshipping with friends",
-        art: HERO_BAR_ART,
-      },
-    },
     layout: {
       kind: "bento",
-      kicker: "The Person Jesus Christ",
-      realTalk: [
-        { id: "identity", title: "Truly man" },
-        { id: "peers", title: "Truly God" },
-        { id: "purpose", title: "Sinless" },
-      ],
-      realTalkConfirm: "The themes for The Person Jesus Christ: Truly man, Truly God, Sinless.",
       teaching: "Grounded in Pastor David Antwi's teaching",
       scripture: {
         text: "Let no one despise your youth, but be an example to the believers in word, in conduct, in love, in spirit, in faith, in purity.",
         reference: "1 Timothy 4:12 (NKJV)",
       },
-      pathway: {
-        label: "Your next season",
-        steps: [
-          { label: "Baptism", href: "/life/baptism" },
-          { label: "Departments", href: "/life/departments" },
-          { label: "Sunday family" },
-        ],
-      },
-      questions: [
-        {
-          id: "session",
-          question: "What happens in a session?",
-          confirm: "What happens in a Transition session.",
-        },
-        {
-          id: "friend",
-          question: "Can I bring a friend?",
-          confirm: "How a friend checks in to a Transition session.",
-        },
-      ],
     },
     headline: "Stand firm. Stand out.",
     body: "Fun, interactive lessons grounded in the teachings of Pastor David Antwi. We equip teenagers to navigate everyday life, be bold for Jesus among their peers, and step confidently into their next season in the church.",

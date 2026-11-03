@@ -53,7 +53,7 @@
   margin-top: 1.5rem;
 }
 
-/* —— Hero: a growth chart, like pencil marks on a doorframe —— */
+/* —— Hero —— */
 .kids-hero {
   padding: calc(var(--kids-header) + clamp(1.75rem, 5vw, 3.5rem)) 0 clamp(2.5rem, 6vw, 4.5rem);
   background: var(--kids-cream);
@@ -100,244 +100,6 @@
   margin-top: 0;
 }
 
-/* Vertical chart: measured rule on the left, bars stepping up to their top age. */
-.kids-chart {
-  --chart-h: clamp(20rem, 38vw, 28rem);
-  display: grid;
-  grid-template-columns: 2.25rem minmax(0, 1fr);
-}
-
-.kids-chart__rule {
-  position: relative;
-  grid-column: 1;
-  grid-row: 1;
-  height: var(--chart-h);
-  border-right: 2px solid var(--kids-ink);
-}
-
-.kids-chart__tick {
-  position: absolute;
-  right: 0;
-  bottom: calc(var(--bar-reach) * 100%);
-  padding-right: 0.85rem;
-  color: var(--kids-ink);
-  font-size: 0.78rem;
-  font-weight: 800;
-  line-height: 1;
-  transform: translateY(50%);
-}
-
-.kids-chart__tick::after {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  width: 0.6rem;
-  height: 2px;
-  background: var(--kids-ink);
-  content: "";
-}
-
-.kids-chart__bars {
-  display: grid;
-  height: var(--chart-h);
-  grid-column: 2;
-  grid-row: 1;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: end;
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-  margin: 0;
-  border-bottom: 2px solid var(--kids-ink);
-  padding: 0 0 0 0.75rem;
-  list-style: none;
-}
-
-.kids-chart__item {
-  height: calc(var(--bar-reach) * 100%);
-  min-height: 0;
-}
-
-.kids-chart__bar {
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  color: inherit;
-  text-decoration: none;
-  transition: transform 200ms ease;
-  animation: kids-bar-rise 300ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
-  animation-delay: calc(var(--bar-index) * 150ms);
-}
-
-.kids-chart__bar:hover,
-.kids-chart__bar:focus-visible {
-  transform: translateY(-6px);
-}
-
-.kids-chart__tag {
-  display: grid;
-  gap: 0.1rem;
-  padding: 0.6rem 0.7rem;
-  background: var(--bar-tag-bg);
-  color: var(--bar-tag-text);
-}
-
-.kids-chart__tag strong {
-  font-size: 0.95rem;
-  font-weight: 800;
-  line-height: 1.15;
-}
-
-.kids-chart__tag > span {
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.kids-chart__line {
-  display: block;
-  max-height: 0;
-  overflow: hidden;
-  font-size: 0.78rem;
-  font-style: normal;
-  font-weight: 650;
-  line-height: 1.3;
-  opacity: 0;
-  transition:
-    max-height 200ms ease,
-    opacity 200ms ease;
-}
-
-.kids-chart__bar:hover .kids-chart__line,
-.kids-chart__bar:focus-visible .kids-chart__line {
-  max-height: 3rem;
-  margin-top: 0.25rem;
-  opacity: 1;
-}
-
-.kids-chart__photo {
-  flex: 1;
-  min-height: 0;
-}
-
-@keyframes kids-bar-rise {
-  from {
-    clip-path: inset(100% 0 0 0);
-  }
-  to {
-    clip-path: inset(0);
-  }
-}
-
-/* Phones: the chart turns sideways. Tag left, photo right, bars stepping out to the right. */
-@media (max-width: 639px) {
-  .kids-hero__lead,
-  .kids-hero__actions {
-    display: none;
-  }
-
-  .kids-chart {
-    --tag-w: 7.25rem;
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .kids-chart__bars {
-    height: auto;
-    grid-column: 1;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.6rem;
-    border-bottom: 0;
-    border-left: 2px solid var(--kids-ink);
-    padding: 0;
-  }
-
-  .kids-chart__item {
-    width: calc(var(--tag-w) + (100% - var(--tag-w)) * var(--bar-reach));
-    height: 4.25rem;
-  }
-
-  .kids-chart__bar {
-    flex-direction: row;
-    animation-name: kids-bar-reach;
-  }
-
-  .kids-chart__bar:hover,
-  .kids-chart__bar:focus-visible {
-    transform: translateX(4px);
-  }
-
-  .kids-chart__tag {
-    width: var(--tag-w);
-    flex: none;
-    align-content: center;
-  }
-
-  .kids-chart__rule {
-    height: 1.6rem;
-    grid-column: 1;
-    grid-row: 2;
-    border-top: 2px solid var(--kids-ink);
-    border-right: 0;
-  }
-
-  .kids-chart__tick {
-    top: 0.45rem;
-    right: auto;
-    bottom: auto;
-    left: calc(var(--tag-w) + (100% - var(--tag-w)) * var(--bar-reach));
-    padding: 0;
-    transform: translateX(-50%);
-  }
-
-  .kids-chart__tick::after {
-    top: -0.45rem;
-    left: 50%;
-    width: 2px;
-    height: 0.35rem;
-  }
-}
-
-@keyframes kids-bar-reach {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0);
-  }
-}
-
-@media (min-width: 960px) {
-  .kids-hero__grid {
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-    grid-template-areas:
-      "head chart"
-      "lead chart"
-      "actions chart";
-    align-content: start;
-    column-gap: clamp(2.5rem, 5vw, 4.5rem);
-  }
-
-  .kids-hero__head {
-    grid-area: head;
-  }
-
-  .kids-hero__lead {
-    grid-area: lead;
-  }
-
-  .kids-hero__actions {
-    grid-area: actions;
-    align-self: start;
-  }
-
-  .kids-chart {
-    grid-area: chart;
-    align-self: end;
-  }
-}
-
-/* —— Plain sections —— */
-.kids-section {
-  padding-block: clamp(2.5rem, 6vw, 4rem);
-}
-
 /* —— Parent promise: cream, square, gold. Not a group palette. —— */
 .kids-promise {
   padding-block: clamp(2.5rem, 6vw, 4rem);
@@ -366,173 +128,6 @@
   font-size: 1.02rem;
   font-weight: 650;
   line-height: 1.45;
-}
-
-.kids-faq .kids-confirm {
-  margin-top: 0.75rem;
-}
-
-/* —— Parents' FAQ —— */
-.kids-faq {
-  display: grid;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-}
-
-.kids-faq__item {
-  border: 2px solid var(--kids-ink);
-  background: #fff;
-}
-
-.kids-faq summary {
-  display: flex;
-  min-height: 2.75rem;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  cursor: pointer;
-  font-size: 1.02rem;
-  font-weight: 700;
-  line-height: 1.35;
-  list-style: none;
-}
-
-.kids-faq summary::-webkit-details-marker {
-  display: none;
-}
-
-.kids-faq summary::after {
-  flex: none;
-  color: var(--kids-ink);
-  content: "+";
-  font-size: 1.35rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.kids-faq__item[open] summary::after {
-  content: "\2212";
-}
-
-.kids-faq__item[open] summary {
-  box-shadow: inset 0 -3px 0 var(--kids-gold);
-}
-
-.kids-faq__answer {
-  padding: 0.25rem 1rem 1rem;
-}
-
-.kids-faq__answer p {
-  margin: 0.85rem 0 0;
-  font-size: 1.02rem;
-  line-height: 1.6;
-}
-
-.kids-faq__more {
-  margin-top: 1.35rem;
-  text-align: center;
-}
-
-.kids-faq__more > summary {
-  display: inline-flex;
-  min-height: 2.75rem;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  border: 0;
-  padding: 0.85rem 1.45rem;
-  background: var(--purple);
-  color: #fff;
-  box-shadow: 0 12px 28px rgba(99, 14, 212, 0.28);
-  cursor: pointer;
-  font-size: 0.86rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  list-style: none;
-}
-
-.kids-faq__more > summary:hover {
-  background: var(--orange);
-  color: var(--kids-ink);
-  box-shadow: 0 14px 32px rgba(212, 146, 10, 0.32);
-}
-
-.kids-faq__more > summary::-webkit-details-marker {
-  display: none;
-}
-
-.kids-faq__more > summary::after {
-  flex: none;
-  width: 0.42rem;
-  height: 0.42rem;
-  margin-top: -0.18rem;
-  border-right: 2.5px solid currentColor;
-  border-bottom: 2.5px solid currentColor;
-  content: "";
-  rotate: 45deg;
-}
-
-.kids-faq__more[open] > summary {
-  border: 2px solid var(--purple);
-  background: transparent;
-  color: var(--purple);
-  box-shadow: none;
-}
-
-.kids-faq__more[open] > summary:hover {
-  border-color: var(--orange);
-  background: var(--orange);
-  color: var(--kids-ink);
-}
-
-.kids-faq__more[open] > summary::after {
-  margin-top: 0.18rem;
-  rotate: -135deg;
-}
-
-.kids-faq__more-hide {
-  display: none;
-}
-
-.kids-faq__more[open] > summary .kids-faq__more-show {
-  display: none;
-}
-
-.kids-faq__more[open] > summary .kids-faq__more-hide {
-  display: inline;
-}
-
-.kids-faq__more > .kids-faq {
-  margin-top: 0.75rem;
-  text-align: start;
-}
-
-.kids-faq__link {
-  display: inline-flex;
-  min-height: 2.75rem;
-  align-items: center;
-  margin-top: 0.35rem;
-  color: var(--purple);
-  font-weight: 800;
-  text-underline-offset: 0.18em;
-}
-
-.kids-section h2 {
-  margin: 0;
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
-  letter-spacing: -0.035em;
-  line-height: 1.05;
-}
-
-.kids-section__body {
-  max-width: 42rem;
-  margin: 1rem 0 0;
-  color: var(--kids-muted);
-  font-size: 1.05rem;
-  line-height: 1.7;
 }
 
 @media (min-width: 700px) {
@@ -841,60 +436,6 @@
   }
 }
 
-.kids-routine {
-  margin-top: clamp(2.5rem, 6vw, 4rem);
-}
-
-.kids-routine h3 {
-  margin: 0 0 1rem;
-  font-size: clamp(1.45rem, 3vw, 1.9rem);
-}
-
-.kids-routine__steps {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: routine;
-}
-
-.kids-routine__steps li {
-  position: relative;
-  display: grid;
-  min-height: 5.5rem;
-  align-content: start;
-  gap: 0.35rem;
-  padding: 0.9rem 1rem;
-  background: var(--g-sun);
-  color: var(--g-ink);
-  counter-increment: routine;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.kids-routine__steps li:nth-child(3n + 2) {
-  background: var(--g-sky);
-}
-
-.kids-routine__steps li:nth-child(3n) {
-  background: var(--g-coral);
-}
-
-.kids-routine__steps li::before {
-  content: counter(routine);
-  content: counter(routine) / "";
-  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
-  font-size: 1.9rem;
-  line-height: 1;
-}
-
-.kids-routine__steps li:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-}
-
 @media (max-width: 599px) {
   .kids-polaroid .kids-placeholder__label em {
     display: none;
@@ -907,29 +448,6 @@
     padding: 0.75rem 0.9rem;
     font-size: 1.2rem;
   }
-
-  .kids-routine__steps {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1.25rem;
-  }
-
-  .kids-routine__steps li:last-child:nth-child(odd) {
-    grid-column: auto;
-  }
-
-  /* Chevron in the gap: one step leads to the next. */
-  .kids-routine__steps li:not(:last-child)::after {
-    position: absolute;
-    top: 50%;
-    right: -0.9rem;
-    width: 0.45rem;
-    height: 0.45rem;
-    border-top: 2px solid var(--g-ink);
-    border-right: 2px solid var(--g-ink);
-    content: "";
-    rotate: 45deg;
-    translate: 0 -50%;
-  }
 }
 
 @media (min-width: 900px) {
@@ -941,7 +459,7 @@
 }
 
 /* —— Super: adventure trail —— */
-.kids-group--super :is(h2, h3, .kids-trail__detail-title) {
+.kids-group--super :is(h2, h3) {
   letter-spacing: -0.03em;
   line-height: 0.95;
 }
@@ -1023,6 +541,11 @@
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.25;
+  transition: margin-top 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kids-checkpoint[aria-expanded="true"] .kids-checkpoint__name {
+  margin-top: 1.25rem;
 }
 
 .kids-checkpoint__goal {
@@ -1039,52 +562,70 @@
   outline-offset: 5px;
 }
 
-.kids-trail__detail {
+.kids-trail__reveal {
+  display: grid;
   grid-column: 1 / -1;
-  padding: 1rem 1.1rem 1.15rem;
-  background: #fff;
+  grid-template-rows: 0fr;
+  margin-top: -0.75rem;
+  transition:
+    grid-template-rows 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.kids-trail__detail-title {
-  margin: 0 0 0.75rem;
-  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
-  font-size: 1.4rem;
-  font-weight: 800;
+.kids-trail__reveal.is-open {
+  grid-template-rows: 1fr;
+  margin-top: 0.35rem;
 }
 
-.kids-trail__detail .kids-confirm {
-  margin-top: 0;
+.kids-trail__reveal-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.kids-trail__detail {
+  margin: 0;
+  padding: 0.2rem 0 0.15rem;
+  background: transparent;
+  animation: kids-verse-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes kids-verse-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+
+.kids-trail__detail p {
+  margin: 0;
+  font-size: clamp(1.02rem, 1.6vw, 1.15rem);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.kids-trail__detail cite {
+  display: block;
+  margin-top: 0.65rem;
+  color: var(--g-green);
+  font-size: 0.85rem;
+  font-style: normal;
+  font-weight: 700;
 }
 
 .kids-squad {
   display: grid;
-  gap: 1rem;
   margin-top: clamp(2.5rem, 6vw, 4rem);
-}
-
-.kids-squad__photos {
-  display: grid;
-  gap: 0.75rem;
 }
 
 .kids-signpost {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.85rem;
-  padding: 1.35rem 1.4rem;
-  background: var(--g-cobalt);
-  color: #fff;
-}
-
-.kids-signpost__label {
-  margin: 0;
-  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  line-height: 1.35;
-  text-transform: uppercase;
+  gap: 0.75rem;
+  border-top: 3px solid var(--g-green);
+  padding: 1.15rem 0 0;
+  background: transparent;
+  color: var(--g-ink);
 }
 
 .kids-signpost blockquote {
@@ -1101,6 +642,7 @@
 .kids-signpost cite {
   display: block;
   margin-top: 0.75rem;
+  color: var(--g-green);
   font-size: 0.85rem;
   font-style: normal;
   font-weight: 700;
@@ -1114,19 +656,6 @@
 
   .kids-trail__line {
     display: none;
-  }
-}
-
-@media (min-width: 700px) {
-  .kids-squad__photos {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1000px) {
-  .kids-squad {
-    grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
-    align-items: stretch;
   }
 }
 
@@ -1158,14 +687,25 @@
 }
 
 /* —— Transition: comic bento —— */
-.kids-group--transition :is(h2, h3, .kids-bento__title, .kids-bento-faq summary) {
+.kids-group--transition {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.kids-group--transition .kids-wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.kids-group--transition :is(h2, h3, .kids-bento__title) {
   letter-spacing: -0.02em;
   line-height: 0.92;
   text-transform: uppercase;
 }
 
 .kids-group--transition .kids-group__years,
-.kids-bento__kicker,
 .kids-bento__scripture cite {
   font-family: "Plus Jakarta Sans", var(--font-display), system-ui, sans-serif;
   font-weight: 800;
@@ -1180,7 +720,9 @@
 
 .kids-bento {
   display: grid;
+  flex: 1;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
   gap: 1rem;
   margin-top: 0.5rem;
   /* Keeps the hard shadow inside the 16px gutter. */
@@ -1196,23 +738,10 @@
   animation-delay: calc(var(--i) * 55ms);
 }
 
-.kids-bento__photo,
 .kids-bento__statement,
-.kids-bento__scripture,
-.kids-bento__path,
-.kids-bento__shots {
+.kids-bento__teaching,
+.kids-bento__scripture {
   grid-column: 1 / -1;
-}
-
-.kids-bento__photo {
-  min-height: 16rem;
-  margin: 0;
-}
-
-.kids-bento__photo .kids-placeholder {
-  height: 100%;
-  border: 0;
-  background: var(--g-lavender);
 }
 
 .kids-bento__statement {
@@ -1239,9 +768,7 @@
 }
 
 .kids-bento__teaching,
-.kids-bento__scripture,
-.kids-bento__path,
-.kids-flip__face {
+.kids-bento__scripture {
   padding: 1rem 1.05rem;
 }
 
@@ -1257,31 +784,6 @@
   font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
   font-size: clamp(1.15rem, 2vw, 1.55rem);
   font-weight: var(--g-heading-weight);
-}
-
-.kids-bento__kicker {
-  display: block;
-  margin: 0;
-  color: var(--g-ink);
-  font-size: 0.68rem;
-  line-height: 1.3;
-}
-
-.kids-bento__statement .kids-bento__kicker,
-.kids-flip__face--front .kids-bento__kicker {
-  color: inherit;
-}
-
-.kids-flip__face--front {
-  background: var(--g-lavender);
-}
-
-.kids-bento__tile:nth-child(4) .kids-flip__face--front {
-  background: #fff;
-}
-
-.kids-bento__tile:nth-child(5) .kids-flip__face--front {
-  background: var(--g-sky);
 }
 
 .kids-bento__scripture {
@@ -1307,185 +809,59 @@
   font-style: normal;
 }
 
-.kids-bento__path {
-  background: var(--g-lavender);
-}
-
-.kids-path {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.15rem;
-  margin: 0.85rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.kids-path li {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.kids-path li + li::before {
-  color: var(--g-ink);
-  content: ">";
-  font-weight: 800;
-}
-
-.kids-path a,
-.kids-path span {
-  display: inline-flex;
-  min-height: 2.75rem;
-  align-items: center;
-  color: var(--g-ink);
-  font-weight: 800;
-}
-
-.kids-path a {
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
-}
-
-.kids-bento__shots {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
-}
-
-.kids-bento__shot {
-  margin: 0;
-}
-
-.kids-bento__shot .kids-placeholder {
-  border: 0;
-  background: color-mix(in srgb, var(--g-sky) 35%, #fff);
-}
-
-.kids-flip {
-  display: grid;
-  width: 100%;
-  min-height: 9.5rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  color: var(--g-ink);
-  cursor: pointer;
-  font: inherit;
-  text-align: left;
-  perspective: 900px;
-}
-
-.kids-flip__inner {
-  display: grid;
-  min-height: 9.5rem;
-  transform-style: preserve-3d;
-  transition: transform 450ms ease;
-}
-
-.kids-flip__face {
-  grid-area: 1 / 1;
-  display: flex;
-  min-height: 9.5rem;
-  flex-direction: column;
-  justify-content: flex-end;
-  border: 2px solid var(--g-ink);
-  background: var(--g-lavender);
-  box-shadow: 4px 4px 0 var(--g-ink);
-  backface-visibility: hidden;
-}
-
-.kids-flip__face--back {
-  justify-content: center;
-  background: #fff;
-  transform: rotateY(180deg);
-}
-
-.kids-flip__face--back .kids-confirm {
-  margin: 0;
-}
-
-.kids-flip[aria-pressed="true"] .kids-flip__inner {
-  transform: rotateY(180deg);
-}
-
-.kids-bento-faq {
-  display: grid;
-  gap: 0.85rem;
-  margin-top: 1.25rem;
-  padding: 0 4px 4px 0;
-}
-
-.kids-bento-faq__item {
-  border: 2px solid var(--g-ink);
-  background: #fff;
-  box-shadow: 4px 4px 0 var(--g-ink);
-}
-
-.kids-bento-faq summary {
-  display: flex;
-  min-height: 2.75rem;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  cursor: pointer;
-  font-family: var(--g-heading-font), var(--font-display), system-ui, sans-serif;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  list-style: none;
-}
-
-.kids-bento-faq summary::-webkit-details-marker {
-  display: none;
-}
-
-.kids-bento-faq summary::after {
-  content: "+";
-  font-family: "Plus Jakarta Sans", var(--font-display), system-ui, sans-serif;
-  font-weight: 800;
-  letter-spacing: 0;
-  line-height: 1;
-}
-
-.kids-bento-faq__item[open] summary::after {
-  content: "\2212";
-}
-
-.kids-bento-faq__item .kids-confirm {
-  margin: 0 1rem 1rem;
-}
-
 @keyframes kids-tile-pop {
   from {
     translate: 0 12px;
   }
 }
 
-@media (min-width: 720px) {
-  .kids-bento__shots {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 @media (min-width: 960px) {
+  .kids-group--transition {
+    min-height: max(100vh, 64rem);
+  }
+
   .kids-bento {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    grid-template-rows: minmax(9.5rem, 0.85fr) minmax(0, 1fr);
+    align-content: stretch;
+    gap: 1.15rem;
   }
 
-  .kids-bento__photo,
   .kids-bento__statement {
-    grid-column: span 2;
-    grid-row: span 2;
+    grid-column: 1;
+    grid-row: 1 / -1;
+    justify-content: space-between;
+    padding: clamp(1.5rem, 3vw, 2.75rem);
   }
 
-  .kids-bento__scripture,
-  .kids-bento__path {
-    grid-column: span 2;
+  .kids-bento__statement h3 {
+    max-width: 11ch;
+    font-size: clamp(2.8rem, 4.6vw, 4.6rem);
   }
 
-  .kids-bento__shots {
-    grid-column: 1 / -1;
+  .kids-bento__teaching {
+    grid-column: 2;
+    grid-row: 1;
+    align-items: center;
+    padding: 1.35rem 1.4rem;
+  }
+
+  .kids-bento__title {
+    margin: 0;
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+  }
+
+  .kids-bento__scripture {
+    display: flex;
+    grid-column: 2;
+    grid-row: 2;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(1.35rem, 2vw, 2rem);
+  }
+
+  .kids-bento__scripture p {
+    font-size: clamp(1.15rem, 1.5vw, 1.4rem);
   }
 }
 
@@ -1512,17 +888,6 @@
   aspect-ratio: auto;
 }
 
-.kids-chart .kids-placeholder__label {
-  padding: 0.4rem 0.5rem;
-  line-height: 1.2;
-}
-
-.kids-chart .kids-placeholder__label strong {
-  font-size: 0.56rem;
-  letter-spacing: 0.06em;
-  overflow-wrap: anywhere;
-}
-
 .kids-placeholder__label {
   display: grid;
   gap: 0.3rem;
@@ -1542,33 +907,6 @@
 .kids-placeholder__label em {
   font-style: normal;
   opacity: 0.8;
-}
-
-/* —— Confirm placeholder —— */
-.kids-confirm {
-  display: flex;
-  max-width: 42rem;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  margin: 1.25rem 0 0;
-  border: 2px dashed #b45309;
-  padding: 0.75rem 1rem;
-  background: #fff7e6;
-  color: #5c3a00;
-  font-size: 0.88rem;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.kids-confirm__tag {
-  padding: 0.2rem 0.5rem;
-  background: #b45309;
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 /* —— For parents + end —— */
@@ -1601,26 +939,11 @@
     transform: none;
   }
 
-  .kids-chart__bar,
   .kids-sticker,
   .kids-polaroid,
   .kids-trail__line line,
   .kids-checkpoint__gem,
   .kids-bento__tile {
     animation: none;
-  }
-
-  .kids-flip__inner {
-    transition: none;
-  }
-
-  .kids-flip__face {
-    transform: none;
-    backface-visibility: visible;
-  }
-
-  .kids-flip[aria-pressed="true"] .kids-flip__face--front,
-  .kids-flip:not([aria-pressed="true"]) .kids-flip__face--back {
-    display: none;
   }
 }

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { CHILDREN_GROUPS, CHILDREN_VISION_LINE } from "@/data/children-groups";
 import { AgeNav } from "./AgeNav";
-import { ChildrenFaq } from "./ChildrenFaq";
 import { ChildrenHero } from "./ChildrenHero";
 import { ForParents } from "./ForParents";
 import { CHILDREN_FONT_CLASSES } from "./fonts";
@@ -25,7 +24,6 @@ export function ChildrenPage() {
         ))}
       </div>
 
-      <ChildrenFaq />
       <ForParents />
 
       <div className="kids-end kids-wrap">
