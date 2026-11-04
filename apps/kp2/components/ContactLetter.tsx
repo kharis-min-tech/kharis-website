@@ -6,6 +6,8 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import { withBasePath } from "@/lib/base-path";
 import { CONTACT_TOPICS } from "@/lib/contact";
 import "./contact-letter.css";
+import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../shared/form-fields";
+import { HoneypotField, useTurnstile } from "../../../shared/form-widgets";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -33,6 +35,8 @@ export function ContactLetter({
   const [errors, setErrors] = useState<Errors>({});
   const [serverError, setServerError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
+  const turnstile = useTurnstile("contact");
   const [sent, setSent] = useState<{ first: string; email: string } | null>(null);
   const thanksRef = useRef<HTMLDivElement>(null);
   const fieldRefs = useRef<Partial<Record<Field, HTMLElement | null>>>({});
@@ -65,6 +69,8 @@ export function ContactLetter({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          [HONEYPOT_FIELD]: honeypot,
+          [TURNSTILE_FIELD]: turnstile.token,
           name: form.name,
           email: form.email.trim(),
           phone: form.phone.trim(),
@@ -83,6 +89,7 @@ export function ContactLetter({
     } catch {
       setServerError("We couldn't reach Kharis just now. Check your connection and try again.");
     } finally {
+      turnstile.reset();
       setBusy(false);
     }
   };
@@ -251,6 +258,8 @@ export function ContactLetter({
                 ) : null}
 
                 <div className="kp-letter__send">
+                  {turnstile.widget}
+                  <HoneypotField value={honeypot} onChange={setHoneypot} />
                   <button type="submit" className="kp-letter__button" disabled={busy}>
                     {busy ? "Sending…" : "Send my message"}
                   </button>

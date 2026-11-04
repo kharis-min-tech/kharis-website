@@ -7,6 +7,7 @@ import {
   visitEmail,
   type BranchContact,
 } from "../../../../../../shared/form-notifications";
+import { guardFormSubmission } from "../../../../../../shared/form-guard";
 
 type LocalVisit = VisitorInsert & { id: string; created_at: string };
 
@@ -67,6 +68,13 @@ export async function POST(request: Request) {
   }
 
   const data = body as Record<string, unknown>;
+
+  const guard = await guardFormSubmission(request, data, "visit");
+  if (!guard.ok) {
+    // A tripped honeypot gets a cheerful 200 and no row, so a bot learns nothing.
+    if (guard.silent) return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: false, error: guard.error }, { status: guard.status });
+  }
   const parsed = visitorInsert({
     name: cleanVisitText(data.name, 120),
     email: cleanVisitText(data.email, 254),

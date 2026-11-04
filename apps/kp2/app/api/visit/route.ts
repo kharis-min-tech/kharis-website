@@ -7,6 +7,7 @@ import {
   visitEmail,
   type BranchContact,
 } from "../../../../../shared/form-notifications";
+import { guardFormSubmission } from "../../../../../shared/form-guard";
 
 export async function POST(request: Request) {
   let data: Record<string, unknown>;
@@ -14,6 +15,13 @@ export async function POST(request: Request) {
     data = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
+  }
+
+  const guard = await guardFormSubmission(request, data, "visit");
+  if (!guard.ok) {
+    // A tripped honeypot gets a cheerful 200 and no row, so a bot learns nothing.
+    if (guard.silent) return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: false, error: guard.error }, { status: guard.status });
   }
 
   const parsed = visitorInsert({

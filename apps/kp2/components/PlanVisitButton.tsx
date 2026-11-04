@@ -10,6 +10,8 @@ import {
   type CalendarItem,
 } from "@/lib/calendar";
 import { withBasePath } from "@/lib/base-path";
+import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../shared/form-fields";
+import { HoneypotField, useTurnstile } from "../../../shared/form-widgets";
 
 type Props = {
   item?: CalendarItem;
@@ -44,6 +46,8 @@ export function PlanVisitButton({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const turnstile = useTurnstile("visit");
   const request = useRef<AbortController | null>(null);
 
   useEffect(() => setMounted(true), []);
@@ -88,6 +92,8 @@ export function PlanVisitButton({
         signal: request.current.signal,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          [HONEYPOT_FIELD]: honeypot,
+          [TURNSTILE_FIELD]: turnstile.token,
           name,
           email,
           phone,
@@ -112,6 +118,7 @@ export function PlanVisitButton({
       if (err instanceof Error && err.name === "AbortError") return;
       setError("Unable to save your visit. Please try again.");
     } finally {
+      turnstile.reset();
       setBusy(false);
     }
   }
@@ -239,6 +246,8 @@ export function PlanVisitButton({
                         {error ? (
                           <p className="font-body-md text-sm text-[#9b1c1c]">{error}</p>
                         ) : null}
+                        {turnstile.widget}
+                        <HoneypotField value={honeypot} onChange={setHoneypot} />
                         <button
                           type="submit"
                           disabled={busy || !consent}

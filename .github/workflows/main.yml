@@ -41,6 +41,9 @@ jobs:
       NEXT_PUBLIC_KP2_URL: ${{ vars.NEXT_PUBLIC_KP2_URL || 'https://kharis-kp2.itadmin-a94.workers.dev/kp2' }}
       # Optional: the contact map renders only when this is set (repo Variable).
       NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ vars.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+      # Public Turnstile sitekey, inlined at build time. Unset means the
+      # widget never renders and the routes skip verification.
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
     steps:
       - uses: actions/checkout@v4
 

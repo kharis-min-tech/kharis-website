@@ -19,6 +19,8 @@ import {
   type QuizOption,
   type SupportedLanguage,
 } from "@/data/quiz";
+import { TURNSTILE_FIELD } from "../../../../../shared/form-fields";
+import { useTurnstile } from "../../../../../shared/form-widgets";
 
 export default function DepartmentQuizPage() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
@@ -27,6 +29,7 @@ export default function DepartmentQuizPage() {
   // User input state
   const [branch, setBranch] = useState("");
   const [branchError, setBranchError] = useState(false);
+  const turnstile = useTurnstile("quiz", "interaction-only");
 
   // Quiz progression state
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -98,14 +101,19 @@ export default function DepartmentQuizPage() {
         void fetch(withBasePath("/api/quiz"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ branch, lang, departments: topMatches }),
+          body: JSON.stringify({
+            branch,
+            lang,
+            departments: topMatches,
+            [TURNSTILE_FIELD]: turnstile.token,
+          }),
           keepalive: true,
         }).catch(() => {});
       } catch {
         // Suppress network errors
       }
     },
-    [branch, lang],
+    [branch, lang, turnstile.token],
   );
 
   // Compute final scores and show results
@@ -932,6 +940,8 @@ export default function DepartmentQuizPage() {
 
       <SiteFooter />
       <ThemeToggle />
+      {/* Keeps a fresh Turnstile token ready for the result submission. */}
+      {turnstile.widget}
     </div>
   );
 }

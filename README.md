@@ -89,6 +89,34 @@ Because `anon` has no SELECT there, API routes must not ask for the inserted row
 back (`Prefer: return=minimal`, no `.select()`). `branches` is readable by
 `anon` (active rows only), which is how a route finds the inbox to notify.
 
+### Spam defences
+
+Three layers sit in front of every public form, in `shared/form-guard.ts`.
+Each is inert until configured, so `npm run dev` behaves exactly as before.
+
+1. **Honeypot** — a hidden `company` field. A filled one gets a cheerful `200`
+   and no row, so the bot learns nothing and stops retrying.
+2. **Rate limit** — the `FORM_RATE_LIMITER` binding in each `wrangler.jsonc`,
+   5 submissions per IP per minute. This is the Workers Rate Limiting API
+   rather than a WAF rate-limiting rule, because WAF rules apply to a zone and
+   the sites are still served from `*.workers.dev`. Add the zone rule as well
+   at cutover (`Security → WAF → Rate limiting rules`, path starts with
+   `/api/`, 5 per minute per IP) — it blocks at the edge, before a Worker is
+   even invoked.
+3. **Turnstile** — a managed widget on each form, verified server-side against
+   siteverify with the action and (optionally) the hostname checked. Set
+   `NEXT_PUBLIC_TURNSTILE_SITE_KEY` as a repo Variable, since it is inlined at
+   build time, and `TURNSTILE_SECRET` as a Worker secret on both apps.
+   Verification fails closed: if siteverify cannot be reached, the submission
+   is refused.
+
+What this protects is the email path, not the database. The Supabase
+publishable key is public by design, so rows can always be posted straight to
+PostgREST; none of the above changes that. What it stops is a bot turning a
+contact form into a mail cannon aimed at the branch inboxes, which would put
+the shared `noreply@kharis.org` SES reputation at risk for kairos and
+venue-checkin too.
+
 ### Email
 
 `shared/mailer.ts` sends through AWS SES v2, signed with `aws4fetch` — the same
@@ -101,12 +129,13 @@ Secrets, per Worker (`npx wrangler secret put <NAME>` in `apps/main` and
 ```
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
+TURNSTILE_SECRET
 ```
 
 Non-secret settings live in each `wrangler.jsonc` under `vars`: `AWS_REGION`,
 `EMAIL_FROM`, `SES_CONFIGURATION_SET` (`kharis-website`, so website bounce and
 complaint metrics stay separate from the other apps) and `FALLBACK_NOTIFY_EMAIL`
-(`amen@kharis.org` — where a submission goes when no branch was chosen; blank it
+(`info@kharis.org` — where a submission goes when no branch was chosen; blank it
 and those submissions are still recorded, just not emailed).
 
 Leave the AWS keys unset locally and nothing is sent: the route logs the email
