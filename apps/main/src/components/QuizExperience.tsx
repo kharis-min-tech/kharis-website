@@ -29,7 +29,6 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import {
-  GOOGLE_SHEETS_QUIZ_URL,
   QUIZ_BRANCHES,
   QUIZ_LANGUAGES,
   QUIZ_PRIVACY_CONTENT,
@@ -126,28 +125,17 @@ export function QuizExperience() {
     });
   };
 
-  // Google Sheets submission
-  const submitToGoogleSheets = useCallback(
+  // Results go to Supabase and on to the branch inbox. Fire and forget: a
+  // failed save must not block someone from seeing their departments.
+  const submitResult = useCallback(
     (topMatches: string[]) => {
-      // Local preview completions should not add test records to the live results sheet.
-      if (process.env.NODE_ENV !== "production") return;
       try {
-        const payload = new FormData();
-        payload.append("name", "Anonymous");
-        payload.append("branch", branch);
-        payload.append("lang", lang);
-        payload.append("dept1", topMatches[0] || "");
-        payload.append("dept2", topMatches[1] || "");
-        payload.append("dept3", topMatches[2] || "");
-        payload.append("timestamp", new Date().toISOString());
-
-        fetch(GOOGLE_SHEETS_QUIZ_URL, {
+        void fetch("/api/quiz", {
           method: "POST",
-          body: payload,
-          mode: "no-cors",
-        }).catch(() => {
-          // Fire and forget
-        });
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ branch, lang, departments: topMatches }),
+          keepalive: true,
+        }).catch(() => {});
       } catch {
         // Suppress network errors
       }
@@ -172,7 +160,7 @@ export function QuizExperience() {
         .slice(0, 3)
         .map(([dept]) => dept);
 
-      submitToGoogleSheets(top3);
+      submitResult(top3);
       setScreen("result");
       if (containerRef.current) {
         containerRef.current.scrollIntoView({
@@ -181,7 +169,7 @@ export function QuizExperience() {
         });
       }
     },
-    [submitToGoogleSheets, prefersReducedMotion],
+    [submitResult, prefersReducedMotion],
   );
 
   // Navigation handlers

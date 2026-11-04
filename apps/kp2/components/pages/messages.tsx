@@ -4,7 +4,6 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { MessagesAppStrip } from "@/components/MessagesAppStrip";
 import { MessageBrowser } from "@/components/MessageBrowser";
 import "@/components/listen-row.css";
@@ -163,13 +162,6 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             </div>
           </div>
         </section>
-
-        <NewsletterSignup
-          title="Never Miss A Word"
-          copy="Subscribe to get the latest messages, series notes, and study guides delivered straight to your inbox."
-          className="bg-primary text-on-primary"
-          copyClassName="text-primary-fixed"
-        />
       </main>
       <SiteFooter />
       <ThemeToggle />

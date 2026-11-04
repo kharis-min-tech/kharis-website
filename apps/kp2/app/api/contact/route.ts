@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { SITE_WORKSPACE } from "@/lib/site";
 import { supabaseInsert, supabaseSelect } from "@/lib/supabase";
 import { CONTACT_TOPICS, withSiteLine } from "@/lib/contact";
+import { sendEmailSafely } from "../../../../../shared/mailer";
+import {
+  contactEmail,
+  notifyAddress,
+  type BranchContact,
+} from "../../../../../shared/form-notifications";
 
 const LIMITS = { name: 120, email: 254, phone: 40, branch: 120, message: 12000 } as const;
 const TOPICS = new Set<string>(CONTACT_TOPICS.map((topic) => topic.value));
@@ -48,12 +54,13 @@ export async function POST(request: Request) {
 
   message = withSiteLine(message, "KP2");
 
+  const branches = await supabaseSelect<BranchContact>(
+    "branches",
+    "select=id,name,contact_email",
+    false,
+  );
   const [match] = branch
-    ? await supabaseSelect<{ id: string; name: string }>(
-        "branches",
-        `select=id,name&name=eq.${encodeURIComponent(branch)}&limit=1`,
-        false,
-      )
+    ? branches.filter((row) => row.name.trim().toLowerCase() === branch.trim().toLowerCase())
     : [];
 
   const result = await supabaseInsert(
@@ -70,11 +77,13 @@ export async function POST(request: Request) {
       workspace: SITE_WORKSPACE,
       status: "new",
     },
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    // The publishable key, not a service-role key: `anon` may INSERT into
+    // contact_messages and read nothing (supabase/migrations/003).
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   );
 
   if (!result.configured) {
-    console.error("Missing SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL for contact.");
+    console.error("Missing Supabase environment variables for contact.");
     return NextResponse.json(
       { ok: false, error: "Messages can't be sent from the site right now." },
       { status: 503 },
@@ -86,5 +95,24 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+  // The message is saved. Notifying the branch must never fail the request.
+  const branchName = match?.name ?? (branch || "");
+  const to = notifyAddress(branches, branchName, process.env.FALLBACK_NOTIFY_EMAIL);
+  if (to) {
+    const mail = contactEmail({
+      firstName: first,
+      lastName: last,
+      email,
+      phone,
+      topic,
+      branchName,
+      message,
+      site: "KP2",
+    });
+    await sendEmailSafely({ to, replyTo: email, ...mail });
+  } else {
+    console.warn("Contact message saved with no branch inbox to notify.");
+  }
+
   return NextResponse.json({ ok: true });
 }

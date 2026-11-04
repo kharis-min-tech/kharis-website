@@ -8,6 +8,8 @@ import {
   type BranchRow,
 } from "@/lib/contact-submission";
 import { isGraceTicketId } from "@/lib/grace-handoff";
+import { sendEmailSafely } from "../../../../../../shared/mailer";
+import { contactEmail, notifyAddress } from "../../../../../../shared/form-notifications";
 
 const TOPICS = new Set([
   "Sunday visit",
@@ -166,9 +168,11 @@ export async function POST(request: Request) {
   message = withSiteLine(message, "Main site");
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // The publishable key, not a service-role key: `anon` may INSERT into
+  // contact_messages and read nothing (supabase/migrations/003).
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-  if (!supabaseUrl || !serviceRoleKey) {
+  if (!supabaseUrl || !publishableKey) {
     if (process.env.NODE_ENV === "development") {
       return localContactResponse({
         first_name: first,
@@ -187,31 +191,32 @@ export async function POST(request: Request) {
 
   // File the message under the branch in the directory, and in the KP2 inbox for KP2 branches.
   try {
-    const supabase = createClient(supabaseUrl, serviceRoleKey, {
+    const supabase = createClient(supabaseUrl, publishableKey, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
       },
     });
-    const { data: branchRows } = await supabase.from("branches").select("id, name, workspace");
-    const filed = resolveBranch((branchRows ?? []) as BranchRow[], data.branchId, branch);
+    const { data: branchRows } = await supabase
+      .from("branches")
+      .select("id, name, workspace, contact_email");
+    const branches = (branchRows ?? []) as (BranchRow & { contact_email: string | null })[];
+    const filed = resolveBranch(branches as BranchRow[], data.branchId, branch);
 
-    const { data: row, error } = await supabase
-      .from("contact_messages")
-      .insert({
-        first_name: first,
-        last_name: last,
-        email,
-        phone: phone || null,
-        topic,
-        branch_id: filed.branch_id,
-        branch_name: filed.branch_name,
-        message,
-        workspace: filed.workspace,
-        status: "new",
-      })
-      .select("id")
-      .single();
+    // No `.select()`: the insert-only policy gives `anon` no read access, so
+    // asking for the row back would fail.
+    const { error } = await supabase.from("contact_messages").insert({
+      first_name: first,
+      last_name: last,
+      email,
+      phone: phone || null,
+      topic,
+      branch_id: filed.branch_id,
+      branch_name: filed.branch_name,
+      message,
+      workspace: filed.workspace,
+      status: "new",
+    });
 
     if (error) {
       console.error("Supabase contact insert error:", error);
@@ -232,9 +237,26 @@ export async function POST(request: Request) {
       );
     }
 
+    // The message is saved. Notifying the branch must never fail the request.
+    const to = notifyAddress(branches, filed.branch_name ?? "", process.env.FALLBACK_NOTIFY_EMAIL);
+    if (to) {
+      const mail = contactEmail({
+        firstName: first,
+        lastName: last,
+        email,
+        phone,
+        topic,
+        branchName: filed.branch_name,
+        message,
+        site: "Main site",
+      });
+      await sendEmailSafely({ to, replyTo: email, ...mail });
+    } else {
+      console.warn("Contact message saved with no branch inbox to notify.");
+    }
+
     return NextResponse.json({
       ok: true,
-      id: row.id,
       received: {
         first,
         last,

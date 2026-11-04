@@ -11,7 +11,6 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { CATEGORY_ICON, EVENT_CATEGORIES, type ChurchEvent } from "@/lib/events";
 import { eventToCalendarItem, mapsSearchUrl } from "@/lib/calendar";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { ComicFlip } from "@/components/ComicFlip";
 import { EventsComingUp, EventsHero } from "@/components/EventsTop";
 import { SundayServiceBanner } from "@/components/SundayServiceBanner";
@@ -253,14 +252,6 @@ function EventsPage({ events, branchPins }: { events: ChurchEvent[]; branchPins:
             ))}
           </div>
         </section>
-
-        <NewsletterSignup
-          title="Get the schedule in your inbox"
-          copy="Never miss an update. Subscribe to our Weekly Briefing for event registration links, location changes and early access."
-          placeholder="ENTER YOUR EMAIL"
-          className="bg-secondary-container text-on-secondary-container"
-          copyClassName="text-on-secondary-container"
-        />
       </main>
 
       <SiteFooter />
