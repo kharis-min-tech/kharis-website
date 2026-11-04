@@ -10,6 +10,7 @@ import {
 import { isGraceTicketId } from "@/lib/grace-handoff";
 import { sendEmailSafely } from "../../../../../../shared/mailer";
 import { contactEmail, notifyAddress } from "../../../../../../shared/form-notifications";
+import { guardFormSubmission } from "../../../../../../shared/form-guard";
 
 const TOPICS = new Set([
   "Sunday visit",
@@ -120,6 +121,13 @@ export async function POST(request: Request) {
   }
 
   const data = body as Record<string, unknown>;
+
+  const guard = await guardFormSubmission(request, data, "contact");
+  if (!guard.ok) {
+    // A tripped honeypot gets a cheerful 200 and no row, so a bot learns nothing.
+    if (guard.silent) return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: false, error: guard.error }, { status: guard.status });
+  }
   const nameParts = cleanText(data.name, LIMITS.name).split(/\s+/).filter(Boolean);
   let first = cleanText(data.first, LIMITS.name);
   let last = cleanText(data.last, LIMITS.name);

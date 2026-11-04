@@ -43,6 +43,8 @@ import {
 import { getSiteTheme, subscribeSiteTheme, type SiteTheme } from "@/lib/theme";
 import { useDialog } from "@/lib/use-dialog";
 import "./quiz.css";
+import { TURNSTILE_FIELD } from "../../../../shared/form-fields";
+import { useTurnstile } from "../../../../shared/form-widgets";
 
 export function QuizExperience() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
@@ -57,6 +59,7 @@ export function QuizExperience() {
   // User details state
   const [branch, setBranch] = useState("");
   const [branchError, setBranchError] = useState(false);
+  const turnstile = useTurnstile("quiz", "interaction-only");
 
   // Quiz progression state
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -133,14 +136,19 @@ export function QuizExperience() {
         void fetch("/api/quiz", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ branch, lang, departments: topMatches }),
+          body: JSON.stringify({
+            branch,
+            lang,
+            departments: topMatches,
+            [TURNSTILE_FIELD]: turnstile.token,
+          }),
           keepalive: true,
         }).catch(() => {});
       } catch {
         // Suppress network errors
       }
     },
-    [branch, lang],
+    [branch, lang, turnstile.token],
   );
 
   // Finish quiz & calculate scores
@@ -1245,6 +1253,8 @@ export function QuizExperience() {
           </div>
         </div>
       )}
+      {/* Keeps a fresh Turnstile token ready for the result submission. */}
+      {turnstile.widget}
     </div>
   );
 }

@@ -11,6 +11,8 @@ import { useReducedMotion } from "framer-motion";
 import { usePageSnap } from "@/lib/page-snap";
 import "./life-refresh.css";
 import "./life-alone.css";
+import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../shared/form-fields";
+import { HoneypotField, useTurnstile } from "../../../../shared/form-widgets";
 
 export type LifeBranch = { id: string; name: string };
 
@@ -22,6 +24,8 @@ function CloserPanel({ branches }: { branches: LifeBranch[] }) {
   const [savedLocally, setSavedLocally] = useState(false);
   const [error, setError] = useState("");
   const [emailAttempted, setEmailAttempted] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
+  const turnstile = useTurnstile("contact");
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,6 +46,8 @@ function CloserPanel({ branches }: { branches: LifeBranch[] }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          [HONEYPOT_FIELD]: honeypot,
+          [TURNSTILE_FIELD]: turnstile.token,
           name: "Kharis Life visitor",
           email: email.trim(),
           topic: "General",
@@ -65,6 +71,7 @@ function CloserPanel({ branches }: { branches: LifeBranch[] }) {
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
+      turnstile.reset();
       setBusy(false);
     }
   };
@@ -132,6 +139,8 @@ function CloserPanel({ branches }: { branches: LifeBranch[] }) {
                   if (error) setError("");
                 }}
               />
+              {turnstile.widget}
+              <HoneypotField value={honeypot} onChange={setHoneypot} />
               <button type="submit" className="life-alone__button" disabled={busy}>
                 {busy ? "Sending…" : "GET PLUGGED IN"}
                 <Icon name="arrow" className="h-4 w-4" />

@@ -8,6 +8,7 @@ import {
   quizEmail,
   type BranchContact,
 } from "../../../../../../shared/form-notifications";
+import { guardFormSubmission } from "../../../../../../shared/form-guard";
 
 const BRANCHES = new Set<string>(QUIZ_BRANCHES);
 const LANGUAGES = new Set<string>(QUIZ_LANGUAGES.map((l) => l.code));
@@ -28,6 +29,13 @@ export async function POST(request: Request) {
     data = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
+  }
+
+  const guard = await guardFormSubmission(request, data, "quiz");
+  if (!guard.ok) {
+    // A tripped honeypot gets a cheerful 200 and no row, so a bot learns nothing.
+    if (guard.silent) return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: false, error: guard.error }, { status: guard.status });
   }
 
   const branchName = clean(data.branch, 120);

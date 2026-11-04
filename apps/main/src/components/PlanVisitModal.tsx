@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { useDialog } from "@/lib/use-dialog";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
+import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../shared/form-fields";
+import { HoneypotField, useTurnstile } from "../../../../shared/form-widgets";
 
 interface PlanVisitModalProps {
   isOpen: boolean;
@@ -31,6 +33,8 @@ export default function PlanVisitModal({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
+  const turnstile = useTurnstile("visit");
 
   const dialogRef = useDialog(isOpen, onClose);
   const reduce = usePrefersReducedMotion();
@@ -67,6 +71,8 @@ export default function PlanVisitModal({
         signal: request.current.signal,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          [HONEYPOT_FIELD]: honeypot,
+          [TURNSTILE_FIELD]: turnstile.token,
           name,
           email,
           phone,
@@ -95,6 +101,7 @@ export default function PlanVisitModal({
       if (error instanceof Error && error.name === "AbortError") return;
       setError("Something went wrong. Please try the contact page.");
     } finally {
+      turnstile.reset();
       setBusy(false);
     }
   };
@@ -267,6 +274,8 @@ export default function PlanVisitModal({
 
                 {error ? <p className="text-xs font-semibold text-[#ff8a8a]">{error}</p> : null}
 
+                {turnstile.widget}
+                <HoneypotField value={honeypot} onChange={setHoneypot} />
                 <button
                   type="submit"
                   disabled={busy || !consent}
