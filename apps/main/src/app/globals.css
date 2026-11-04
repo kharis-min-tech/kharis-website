@@ -197,7 +197,7 @@ h6 {
   color: #fff !important;
 }
 
-/* Four equal columns, left to right: About Us, Young Adults, Become a Believer, Get Involved */
+/* Five equal cards, with Events kept alongside the Life pathways instead of the main menu. */
 .know-grid {
   grid-template-columns: 1fr;
 }
@@ -210,7 +210,13 @@ h6 {
 
 @media (min-width: 1024px) {
   .know-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .know-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 

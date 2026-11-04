@@ -61,6 +61,17 @@ const cards: Card[] = [
     position: "object-[center_12%]",
     reveal: "right",
   },
+  {
+    title: "Events",
+    label: "Gather with us",
+    href: "/events",
+    image:
+      "https://images.kharis.org/site-images/main/e06e47b90f538fed/events/singles-ball/ballroom-overview.jpg",
+    info: "Find the next opportunity to gather, celebrate, and share life with the Kharis family.",
+    cta: "Learn more",
+    position: "object-center",
+    reveal: "right",
+  },
 ];
 
 const IMAGE_SIZES = "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw";
