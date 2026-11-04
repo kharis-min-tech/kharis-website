@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Icon } from "@/components/Icon";
-import { LIFE_MEMBERSHIP_URL } from "@/lib/life-content";
 import { lifeBySlug, type LifeSlug } from "@/lib/life-content";
 import { LifeDetailModal } from "@/components/LifeDetailModal";
 import { BelongStory } from "@/components/BelongStory";
@@ -154,8 +153,8 @@ function CloserPanel({ branches }: { branches: LifeBranch[] }) {
             </form>
           )}
           <p className="life-alone__note">
-            We&apos;ll connect you with a local branch, or{" "}
-            <a href={LIFE_MEMBERSHIP_URL}>BECOME A MEMBER</a> when you&apos;re ready.
+            We&apos;ll connect you with a local branch, or <span>BECOME A MEMBER</span> when
+            you&apos;re ready.
           </p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-/** Life page "A Place to call Home": a pinned, scroll-scrubbed story through four ways to belong. */
+/** Life page "A Place to call Home": a pinned, scroll-scrubbed story through ways to belong. */
 "use client";
 
 import {
@@ -20,7 +20,7 @@ import { LIFE_BAPTISM_IMAGE, LIFE_CHILDREN_IMAGE } from "@/lib/life-content";
 import "./belong-story.css";
 
 type StoryItem = {
-  id: "baptism" | "departments" | "fasting" | "children";
+  id: "baptism" | "departments" | "fasting" | "children" | "events";
   tag: string;
   title: string;
   description: string;
@@ -70,6 +70,17 @@ const ITEMS: StoryItem[] = [
     href: "/life/children",
     image: LIFE_CHILDREN_IMAGE,
     focus: "50% 40%",
+  },
+  {
+    id: "events",
+    tag: "GATHER",
+    title: "Events",
+    description:
+      "Make room for meaningful moments, shared celebration, and fellowship with the Kharis family.",
+    href: "/events",
+    image:
+      "https://images.kharis.org/site-images/main/e06e47b90f538fed/events/singles-ball/ballroom-overview.jpg",
+    focus: "50% 50%",
   },
 ];
 
