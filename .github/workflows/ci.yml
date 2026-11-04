@@ -35,7 +35,7 @@ jobs:
       kp2: ${{ steps.filter.outputs.kp2 }}
       main: ${{ steps.filter.outputs.main }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -59,7 +59,7 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -84,7 +84,7 @@ jobs:
       run:
         working-directory: apps/content
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -108,7 +108,7 @@ jobs:
       run:
         working-directory: apps/kp2
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -141,7 +141,7 @@ jobs:
       run:
         working-directory: apps/main
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
