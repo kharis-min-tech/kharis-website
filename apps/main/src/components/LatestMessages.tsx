@@ -67,13 +67,6 @@ export function LatestMessages({ featured, others }: Props) {
               <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,2.4vw,1.75rem)] font-bold leading-snug text-fg">
                 {featured.title}
               </h3>
-              <blockquote className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-                “Good teaching is Christ centred, does not go silent on the power of God and points
-                us to the second coming.”
-              </blockquote>
-              <p className="mt-2 text-sm font-bold uppercase tracking-[0.14em] text-purple">
-                David Antwi
-              </p>
               <div className="latest-messages__actions btn-pair">
                 <a href="/messages" className="btn-primary">
                   Browse All Messages

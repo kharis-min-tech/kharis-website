@@ -36,15 +36,6 @@ export function VisionSection() {
           </p>
 
           <div className="btn-pair mt-7">
-            <a
-              href={KHARIS_APP.iosUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-            >
-              Download the app
-              <Icon name="arrow" className="h-3.5 w-3.5" />
-            </a>
             <a href="#messages" className="btn-secondary">
               Watch messages
             </a>

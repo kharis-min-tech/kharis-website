@@ -28,17 +28,10 @@ export function BuildHouseSection() {
           </h2>
           <div className="mx-auto mt-6 max-w-3xl space-y-5 text-lg leading-relaxed text-white/90 md:text-xl md:leading-relaxed">
             <p>
-              We are excited to announce that we have officially acquired our own facility that was
-              formerly Spurgeon&rsquo;s College.
+              We&rsquo;ve acquired the former Spurgeon&rsquo;s College. Now we begin restoring and
+              developing it into a home for advancing the gospel.
             </p>
-            <p>
-              Now begins the exciting work restoring and developing this facility into a home for
-              advancing the gospel.
-            </p>
-            <p>
-              If you would like to partner with us and give towards this project, you can do so
-              using the link below.
-            </p>
+            <p>Partner with us by giving or making a pledge.</p>
           </div>
           <div className="btn-pair mt-10">
             <a

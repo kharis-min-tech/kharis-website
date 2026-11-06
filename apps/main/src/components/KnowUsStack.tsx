@@ -8,10 +8,8 @@ import { KP2_URL } from "@/lib/kp2";
 
 type Card = {
   title: string;
-  label: string;
   href: string;
   image: string;
-  info: string;
   cta: string;
   position?: string;
   /** Entrance animation: the outer columns slide in from the sides, the middle two rise up, so the row converges left to right. */
@@ -23,51 +21,41 @@ type Card = {
 const cards: Card[] = [
   {
     title: "About Us",
-    label: "Who we are",
     href: "/about",
     image: "https://images.kharis.org/site-images/main/529646bbc41f3bc3/community.jpg",
-    info: "Our mandate is to bring Christ to people everywhere.",
     cta: "Read our story",
     position: "object-[60%_center]",
     reveal: "left",
   },
   {
     title: "Young Adults",
-    label: "Kharis Phase 2",
     href: KP2_URL,
     image: "https://images.kharis.org/site-images/main/012b86affad979dd/home/kp2-community.webp",
-    info: "Next generation faith, community and purpose.",
     cta: "Visit KP2",
     position: "object-[45%_center]",
     reveal: "up",
   },
   {
     title: "Become a Believer",
-    label: "Next step",
     href: "/life/baptism",
     image: "https://images.kharis.org/site-images/main/13c9297f7be9a14a/baptism-water.jpg",
-    info: "Take your next step with Jesus. Start with baptism at Kharis.",
     cta: "Take the step",
     position: "object-[46%_center]",
     reveal: "up",
   },
   {
     title: "Get Involved",
-    label: "Serve God with us",
     href: "/life/departments",
     image: "https://images.kharis.org/site-images/main/de005ef42ce5304e/get-involved-sax.jpg",
-    info: "Join a team and grow with the Kharis family.",
     cta: "Join a team",
     position: "object-[center_12%]",
     reveal: "right",
   },
   {
     title: "Events",
-    label: "Gather with us",
     href: "/events",
     image:
       "https://images.kharis.org/site-images/main/e06e47b90f538fed/events/singles-ball/ballroom-overview.jpg",
-    info: "Find the next opportunity to gather, celebrate, and share life with the Kharis family.",
     cta: "Learn more",
     position: "object-center",
     reveal: "right",
@@ -121,15 +109,9 @@ export function KnowUsStack() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
                 <div className="absolute inset-x-0 bottom-0 p-6 text-center md:p-7">
-                  <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/90 drop-shadow">
-                    {card.label}
-                  </p>
-                  <h3 className="mt-2 font-[family-name:var(--font-display)] text-[1.75rem] font-extrabold leading-tight text-white drop-shadow-md md:text-[2rem] lg:text-[1.6rem]">
+                  <h3 className="font-[family-name:var(--font-display)] text-[1.75rem] font-extrabold leading-tight text-white drop-shadow-md md:text-[2rem] lg:text-[1.6rem]">
                     {card.title}
                   </h3>
-                  <p className="mt-3 max-h-20 text-sm leading-relaxed text-white opacity-95 drop-shadow transition-all duration-500 group-hover:max-h-28 group-hover:opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-28 md:group-hover:opacity-100">
-                    {card.info}
-                  </p>
                   <span className="know-card__cta">
                     {card.cta} <Icon name="arrow" className="h-4 w-4" />
                   </span>

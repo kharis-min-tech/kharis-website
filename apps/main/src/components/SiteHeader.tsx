@@ -245,19 +245,21 @@ export function SiteHeader({ tone = "auto" }: Props) {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <Link
-            href="/locations"
-            className={`k-cta hidden items-center gap-2 px-5 py-3 text-[0.8rem] font-bold shadow-[0_2px_0_var(--edge),0_8px_18px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_0_var(--edge),0_14px_24px_rgba(0,0,0,0.3)] focus-visible:-translate-y-0.5 active:translate-y-px sm:inline-flex ${
-              siteDark
-                ? "bg-orange text-[#1c1c1f] [--edge:#a8660f] hover:bg-[#f2b254]"
-                : onDark || (forceDark && !open)
-                  ? "bg-white text-fg [--edge:#a596d3]"
-                  : "bg-purple text-white [--edge:#3d0591]"
-            }`}
-          >
-            Find a Branch
-            <Icon name="arrow" className="h-3.5 w-3.5" />
-          </Link>
+          {pathname === "/locations" ? null : (
+            <Link
+              href="/locations"
+              className={`k-cta hidden items-center gap-2 px-5 py-3 text-[0.8rem] font-bold shadow-[0_2px_0_var(--edge),0_8px_18px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_0_var(--edge),0_14px_24px_rgba(0,0,0,0.3)] focus-visible:-translate-y-0.5 active:translate-y-px sm:inline-flex ${
+                siteDark
+                  ? "bg-orange text-[#1c1c1f] [--edge:#a8660f] hover:bg-[#f2b254]"
+                  : onDark || (forceDark && !open)
+                    ? "bg-white text-fg [--edge:#a596d3]"
+                    : "bg-purple text-white [--edge:#3d0591]"
+              }`}
+            >
+              Find a Branch
+              <Icon name="arrow" className="h-3.5 w-3.5" />
+            </Link>
+          )}
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}

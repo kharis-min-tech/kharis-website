@@ -90,7 +90,7 @@ export function SiteFooter({ tone }: Props) {
               <ul className={`site-footer__links ${muted}`}>
                 <li>
                   <Link href="/locations" className={linkHover}>
-                    Find a Location
+                    Find a Branch
                   </Link>
                 </li>
                 <li>
