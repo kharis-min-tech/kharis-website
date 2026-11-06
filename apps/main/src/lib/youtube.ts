@@ -624,10 +624,13 @@ export async function resolveHeroVideo(): Promise<HeroVideo> {
       { next: { revalidate: 3600 } },
     );
     if (!playlistRes.ok) throw new Error("playlist fetch failed");
-    const playlist = await playlistRes.json();
+    // undici 6.29 types Response.json() as unknown, so the shape is declared here.
+    const playlist = (await playlistRes.json()) as {
+      items?: { contentDetails?: { videoId?: string } }[];
+    };
     const ids: string[] = (playlist.items || [])
-      .map((item: { contentDetails?: { videoId?: string } }) => item.contentDetails?.videoId)
-      .filter(Boolean);
+      .map((item) => item.contentDetails?.videoId)
+      .filter((id): id is string => Boolean(id));
 
     // Always include known cinematic candidates
     const preferred = [
@@ -646,31 +649,31 @@ export async function resolveHeroVideo(): Promise<HeroVideo> {
       { next: { revalidate: 3600 } },
     );
     if (!detailsRes.ok) throw new Error("details fetch failed");
-    const details = await detailsRes.json();
-
-    type Ranked = HeroVideo & { score: number };
-    const ranked: Ranked[] = (details.items || []).map(
-      (v: {
+    const details = (await detailsRes.json()) as {
+      items?: {
         id: string;
         snippet: { title: string };
         contentDetails: { duration: string; definition: string };
         statistics: { viewCount?: string };
-      }) => {
-        const duration = parseDuration(v.contentDetails.duration);
-        const score = scoreVideo({
-          title: v.snippet.title,
-          duration,
-          definition: v.contentDetails.definition,
-          views: Number(v.statistics.viewCount || 0),
-        });
-        return {
-          id: v.id,
-          title: v.snippet.title,
-          startSeconds: duration > 120 ? 40 : 0,
-          score,
-        };
-      },
-    );
+      }[];
+    };
+
+    type Ranked = HeroVideo & { score: number };
+    const ranked: Ranked[] = (details.items || []).map((v) => {
+      const duration = parseDuration(v.contentDetails.duration);
+      const score = scoreVideo({
+        title: v.snippet.title,
+        duration,
+        definition: v.contentDetails.definition,
+        views: Number(v.statistics.viewCount || 0),
+      });
+      return {
+        id: v.id,
+        title: v.snippet.title,
+        startSeconds: duration > 120 ? 40 : 0,
+        score,
+      };
+    });
 
     ranked.sort((a, b) => b.score - a.score);
     const best = ranked[0];

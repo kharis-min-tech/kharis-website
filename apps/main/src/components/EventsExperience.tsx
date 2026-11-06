@@ -55,7 +55,23 @@ export function EventsExperience({ branches }: Props) {
             Gather with <span>Kharis</span>
           </h1>
           <p className="events-top__tag">Come encounter God with us.</p>
-          <Link href="#events-next-title" className="events-top__link k-cta">
+          <Link
+            href="#events-branch-filter"
+            className="events-top__link k-cta"
+            onClick={(event) => {
+              const picker = document.getElementById("events-branch-filter");
+              if (!picker) return;
+              event.preventDefault();
+              window.history.replaceState(null, "", "#events-branch-filter");
+              picker.focus({ preventScroll: true });
+              picker.scrollIntoView({
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "instant"
+                  : "smooth",
+                block: "center",
+              });
+            }}
+          >
             Choose your branch
             <ArrowUpRight aria-hidden className="h-4 w-4" />
           </Link>

@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
-import { supabaseInsert } from "@/lib/supabase";
+import { supabaseInsert, supabaseSelect } from "@/lib/supabase";
 import { cleanVisitText, visitorInsert } from "@/lib/visit-submission";
+import { sendEmailSafely } from "../../../../../shared/mailer";
+import {
+  notifyAddress,
+  visitEmail,
+  type BranchContact,
+} from "../../../../../shared/form-notifications";
+import { guardFormSubmission } from "../../../../../shared/form-guard";
 
 export async function POST(request: Request) {
   let data: Record<string, unknown>;
@@ -8,6 +15,13 @@ export async function POST(request: Request) {
     data = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
+  }
+
+  const guard = await guardFormSubmission(request, data, "visit");
+  if (!guard.ok) {
+    // A tripped honeypot gets a cheerful 200 and no row, so a bot learns nothing.
+    if (guard.silent) return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: false, error: guard.error }, { status: guard.status });
   }
 
   const parsed = visitorInsert({
@@ -24,13 +38,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: parsed.error }, { status: 400 });
   }
 
+  // The publishable key, not a service-role key: `anon` may INSERT into
+  // visitors and read nothing (supabase/migrations/003).
   const result = await supabaseInsert(
     "visitors",
     parsed.row,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   );
   if (!result.configured) {
-    console.error("Missing SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL for visits.");
+    console.error("Missing Supabase environment variables for visits.");
     return NextResponse.json(
       { ok: false, error: "Visits can't be saved from the site right now." },
       { status: 503 },
@@ -42,5 +58,27 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+  // The visit is saved. Notifying the branch must never fail the request.
+  const branches = await supabaseSelect<BranchContact>(
+    "branches",
+    "select=name,contact_email",
+    false,
+  );
+  const to = notifyAddress(branches, parsed.row.branch_name, process.env.FALLBACK_NOTIFY_EMAIL);
+  if (to) {
+    const mail = visitEmail({
+      name: parsed.row.name,
+      email: parsed.row.email,
+      phone: parsed.row.phone,
+      branchName: parsed.row.branch_name,
+      gathering: cleanVisitText(data.gathering, 160),
+      children: data.children === true,
+      site: "KP2",
+    });
+    await sendEmailSafely({ to, replyTo: parsed.row.email, ...mail });
+  } else {
+    console.warn("Visit saved with no branch inbox to notify.");
+  }
+
   return NextResponse.json({ ok: true });
 }

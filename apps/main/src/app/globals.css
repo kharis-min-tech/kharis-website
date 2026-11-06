@@ -197,7 +197,7 @@ h6 {
   color: #fff !important;
 }
 
-/* Four equal columns, left to right: About Us, Young Adults, Become a Believer, Get Involved */
+/* Five equal cards, with Events kept alongside the Life pathways instead of the main menu. */
 .know-grid {
   grid-template-columns: 1fr;
 }
@@ -210,7 +210,13 @@ h6 {
 
 @media (min-width: 1024px) {
   .know-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .know-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
@@ -1290,7 +1296,7 @@ html[data-theme="dark"] .testimony-card__read {
   display: flex;
   gap: 1rem;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: none;
   scroll-behavior: smooth;
   touch-action: pan-x pan-y;
   overscroll-behavior-x: contain;
@@ -12425,18 +12431,18 @@ html[data-theme="dark"] .about-panel__kicker {
   color: var(--fg-soft);
 }
 
-/* Vision hero wallpaper stays light in every theme — keep dark, readable copy */
+/* The vision photograph uses a dark scrim and bright copy in both themes. */
 html[data-theme="dark"] .about-panel__hero--vision::before {
   display: none;
 }
 
 html[data-theme="dark"] .about-panel__hero--vision .about-panel__eyebrow {
-  color: var(--purple) !important;
+  color: #ffde59 !important;
 }
 
 html[data-theme="dark"] .about-panel__hero--vision h3 {
-  color: var(--purple-deep) !important;
-  -webkit-text-fill-color: var(--purple-deep) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 html[data-theme="dark"] .about-lead__profile-focus {
@@ -13919,11 +13925,7 @@ html[data-theme="dark"] .listen-card__detail {
   line-height: 1.05;
   letter-spacing: -0.03em;
   color: #fff;
-  text-shadow:
-    0 0.01em 0 color-mix(in srgb, var(--c) 78%, #1b0a45),
-    0 0.02em 0 color-mix(in srgb, var(--c) 60%, #1b0a45),
-    0 0.03em 0 color-mix(in srgb, var(--c) 44%, #1b0a45),
-    0 0.16em 0.28em rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
 }
 
 .locations-hero__lead {

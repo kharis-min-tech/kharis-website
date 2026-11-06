@@ -1,0 +1,91 @@
+export type GlobeLocation = { slug: string; lat: number; lng: number; country: string | null };
+
+export function globeGeometry(width: number, height: number, zoom: number, countryFocus = 0) {
+  return {
+    x: width / 2,
+    y: height * (0.43 + countryFocus * 0.23),
+    radius: Math.min(width, height) * 0.42 * zoom,
+  };
+}
+
+export function projectGlobePoint(
+  point: Pick<GlobeLocation, "lat" | "lng">,
+  camera: { lat: number; lng: number; zoom: number },
+  width: number,
+  height: number,
+  countryFocus = 0,
+) {
+  const radians = Math.PI / 180;
+  const lat = point.lat * radians,
+    lng = (point.lng - camera.lng) * radians;
+  const tilt = camera.lat * radians;
+  const depth = Math.cos(lat) * Math.cos(lng);
+  const sphere = globeGeometry(width, height, camera.zoom, countryFocus);
+  return {
+    x: sphere.x + Math.cos(lat) * Math.sin(lng) * sphere.radius,
+    y: sphere.y - (Math.sin(lat) * Math.cos(tilt) - depth * Math.sin(tilt)) * sphere.radius,
+    depth: Math.sin(lat) * Math.sin(tilt) + depth * Math.cos(tilt),
+  };
+}
+
+/** Photo callouts belong to country close-ups; the rotating overview keeps its original layout. */
+export function globeCallouts<T extends GlobeLocation>(
+  branches: readonly T[],
+  country: string,
+): T[] {
+  if (country === "world") return [];
+  return branches.filter((branch) => branch.country === country);
+}
+
+export function globeCardPosition(index: number, count: number, width: number, height: number) {
+  if (count > 6) {
+    const cardWidth = Math.max(128, Math.min(172, width * 0.135));
+    const cardHeight = cardWidth / 3 + 68;
+    const rows = Math.ceil(count / 4);
+    const row = Math.floor(index / 4);
+    const column = [0, 3, 1, 2][index % 4];
+    const margin = width * 0.025;
+    const gap = 12;
+    const rowGap = (height - rows * cardHeight) / (rows + 1);
+    const x =
+      column < 2
+        ? margin + column * (cardWidth + gap)
+        : width - margin - (4 - column) * cardWidth - (3 - column) * gap;
+    const y = rowGap + row * (cardHeight + rowGap);
+    return {
+      x,
+      y,
+      width: cardWidth,
+      anchorX: x + (column < 2 ? cardWidth : 0),
+      anchorY: y + cardHeight / 2,
+    };
+  }
+  const cardWidth = Math.max(156, Math.min(224, width * 0.19));
+  const cardHeight = cardWidth * 0.52 + 66;
+  const slots =
+    count <= 4
+      ? [
+          [0, 0.07],
+          [1, 0.64],
+          [0, 0.64],
+          [1, 0.07],
+        ]
+      : [
+          [0, 0.04],
+          [1, 0.04],
+          [0, 0.35],
+          [1, 0.35],
+          [0, 0.66],
+          [1, 0.66],
+        ];
+  const [right, top] = slots[index % slots.length];
+  const x = right ? width - cardWidth - width * 0.035 : width * 0.035;
+  const y = Math.min(height - cardHeight - 12, height * top);
+  return {
+    x,
+    y,
+    width: cardWidth,
+    anchorX: x + (right ? 0 : cardWidth),
+    anchorY: y + cardHeight / 2,
+  };
+}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowLeft, ChevronDown, ExternalLink, Volume2, VolumeX } from "lucide-react";
-import { FormEvent, useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   AnimatePresence,
@@ -361,14 +361,6 @@ export function LifeDetailModal({ category, onClose }: Props) {
     reduce ? { duration: 0 } : { duration, delay, ease: [0.22, 1, 0.36, 1] as const };
   const titleId = useId();
   const [mounted, setMounted] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [followupStep, setFollowupStep] = useState(0);
-  const [emailAttempted, setEmailAttempted] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [savedLocally, setSavedLocally] = useState(false);
-  const [error, setError] = useState("");
 
   useEffect(() => setMounted(true), []);
 
@@ -388,13 +380,6 @@ export function LifeDetailModal({ category, onClose }: Props) {
 
   useEffect(() => {
     readerScrollRef.current?.scrollTo({ top: 0, behavior: "instant" });
-    setSent(false);
-    setSavedLocally(false);
-    setError("");
-    setName("");
-    setEmail("");
-    setFollowupStep(0);
-    setEmailAttempted(false);
   }, [category?.slug]);
 
   const slug = category?.slug as LifeModalSlug | undefined;
@@ -406,55 +391,6 @@ export function LifeDetailModal({ category, onClose }: Props) {
   const isDepartments = category?.slug === "departments";
 
   if (!mounted) return null;
-
-  const onFollowup = async (e: FormEvent) => {
-    e.preventDefault();
-    setEmailAttempted(true);
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-    setBusy(true);
-    setError("");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim(),
-          topic: "Baptism",
-          message:
-            "I'd like to speak with someone about baptism. Please share the next steps and baptism class details at my local branch.",
-        }),
-      });
-      const data = (await res.json()) as {
-        ok?: boolean;
-        error?: string;
-        storage?: string;
-      };
-      if (!res.ok || !data.ok) {
-        setError(data.error || "Please check your details and try again.");
-        return;
-      }
-      setSavedLocally(data.storage === "local-development");
-      setSent(true);
-    } catch {
-      setError("Something went wrong. You can also use the contact page.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const onNameContinue = (e: FormEvent) => {
-    e.preventDefault();
-    if (!name.trim()) {
-      setError("Please enter your name to continue.");
-      return;
-    }
-    setError("");
-    setFollowupStep(2);
-  };
 
   const ctaHref = isDepartments ? "/life/departments" : (category?.cta.href ?? "/life");
   const ctaLabel = isDepartments ? "Join a department" : (category?.cta.label ?? "Learn more");
@@ -541,125 +477,16 @@ export function LifeDetailModal({ category, onClose }: Props) {
                   >
                     <h3>Let&apos;s talk baptism.</h3>
                     <p className="life-reader__family-copy">
-                      We&apos;ll help you connect with your local branch about baptism.
+                      Baptism begins with a conversation at your local branch, not a form. Tell them
+                      you&apos;re interested and they&apos;ll walk you through what comes next.
                     </p>
-                    {sent ? (
-                      <p className="life-reader__family-success" role="status">
-                        {savedLocally
-                          ? "Thanks for reaching out. Someone from your local Kharis branch will be in touch soon."
-                          : "Thank you. A member of the team will follow up soon."}
-                      </p>
-                    ) : (
-                      <AnimatePresence mode="wait" initial={false}>
-                        {followupStep === 0 ? (
-                          <motion.div
-                            className="life-reader__family-step"
-                            key="start"
-                            initial={reduce ? false : { opacity: 0, y: 14 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={reduce ? undefined : { opacity: 0, y: -10 }}
-                            transition={revealTransition(0.32)}
-                          >
-                            <button
-                              type="button"
-                              className="life-refresh__button"
-                              onClick={() => setFollowupStep(1)}
-                            >
-                              CONNECT WITH US <Icon name="arrow" className="h-4 w-4" />
-                            </button>
-                          </motion.div>
-                        ) : followupStep === 1 ? (
-                          <motion.form
-                            className="life-reader__family-step"
-                            key="name"
-                            onSubmit={onNameContinue}
-                            noValidate
-                            initial={reduce ? false : { opacity: 0, y: 14 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={reduce ? undefined : { opacity: 0, y: -10 }}
-                            transition={revealTransition(0.32)}
-                          >
-                            <label htmlFor="baptism-followup-name">
-                              First, what&apos;s your name?
-                            </label>
-                            <input
-                              id="baptism-followup-name"
-                              type="text"
-                              autoComplete="name"
-                              autoFocus
-                              required
-                              placeholder="Your name"
-                              value={name}
-                              aria-invalid={Boolean(error)}
-                              aria-describedby={error ? "baptism-followup-error" : undefined}
-                              onChange={(e) => setName(e.target.value)}
-                            />
-                            <button type="submit" className="life-refresh__button">
-                              CONTINUE <Icon name="arrow" className="h-4 w-4" />
-                            </button>
-                          </motion.form>
-                        ) : (
-                          <motion.form
-                            className="life-reader__family-step"
-                            key="email"
-                            onSubmit={onFollowup}
-                            noValidate
-                            initial={reduce ? false : { opacity: 0, y: 14 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={reduce ? undefined : { opacity: 0, y: -10 }}
-                            transition={revealTransition(0.32)}
-                          >
-                            <label htmlFor="baptism-followup-email">
-                              Nice to meet you, {name.trim().split(/\s+/)[0]}. Where can we reach
-                              you?
-                            </label>
-                            <input
-                              id="baptism-followup-email"
-                              type="email"
-                              autoComplete="email"
-                              autoFocus
-                              required
-                              placeholder="Your email address"
-                              value={email}
-                              aria-invalid={
-                                emailAttempted && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
-                              }
-                              aria-describedby={error ? "baptism-followup-error" : undefined}
-                              onChange={(e) => {
-                                setEmail(e.target.value);
-                                if (error) setError("");
-                              }}
-                            />
-                            <div className="life-reader__family-actions">
-                              <button
-                                type="button"
-                                className="life-reader__family-back"
-                                onClick={() => setFollowupStep(1)}
-                              >
-                                Back
-                              </button>
-                              <button
-                                type="submit"
-                                className="life-refresh__button"
-                                disabled={busy}
-                              >
-                                {busy ? "SENDING…" : "SEND MY DETAILS"}
-                                <Icon name="arrow" className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </motion.form>
-                        )}
-                      </AnimatePresence>
-                    )}
-                    {error ? (
-                      <p
-                        id="baptism-followup-error"
-                        className="life-reader__family-error"
-                        role="alert"
-                      >
-                        {error}
-                      </p>
-                    ) : null}
+                    <Link
+                      href="/contact?topic=Baptism"
+                      className="life-refresh__button"
+                      onClick={onClose}
+                    >
+                      TALK TO MY BRANCH <Icon name="arrow" className="h-4 w-4" />
+                    </Link>
                   </motion.div>
                 ) : (
                   <>

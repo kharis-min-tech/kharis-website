@@ -141,6 +141,7 @@ export function EventsUpcoming({ branches, ...filters }: Props) {
           </div>
           {branch ? (
             <BranchSelect
+              id="events-branch-filter"
               label="Showing events for"
               branch={branch}
               branches={branches}

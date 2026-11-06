@@ -12,7 +12,37 @@
   "observability": {
     "enabled": true,
   },
-  "vars": {},
+  // Non-secret email settings. The AWS keys that go with these are secrets:
+  // `npx wrangler secret put AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
+  // EMAIL_FROM must be an identity verified in SES, in AWS_REGION.
+  "vars": {
+    "AWS_REGION": "eu-west-2",
+    "EMAIL_FROM": "\"Kharis Church\" <noreply@kharis.org>",
+    // Its own configuration set, so website bounces and complaints are tracked
+    // separately from the kairos and venue-checkin apps.
+    "SES_CONFIGURATION_SET": "kharis-website",
+    // Where a submission goes when the visitor chose no branch (the contact
+    // form's branch field is optional). Blank it and those submissions are
+    // still recorded, just not emailed to anyone.
+    "FALLBACK_NOTIFY_EMAIL": "info@kharis.org",
+    // Turnstile hostname allowlist for siteverify, comma-separated. Empty
+    // accepts any hostname the widget itself is registered for, which is what
+    // the workers.dev previews need. Pin it to "kharis.org,www.kharis.org" at
+    // cutover. The sitekey is public and inlined at build time from
+    // NEXT_PUBLIC_TURNSTILE_SITE_KEY; the secret is a Worker secret:
+    // `npx wrangler secret put TURNSTILE_SECRET`.
+    "TURNSTILE_HOSTNAMES": "",
+  },
+  // Per-IP limit on form submissions, approximate and per Cloudflare
+  // location. Unlike a WAF rate-limiting rule this also covers the
+  // workers.dev hostname, so it protects previews before cutover.
+  "ratelimits": [
+    {
+      "name": "FORM_RATE_LIMITER",
+      "namespace_id": "1002",
+      "simple": { "limit": 5, "period": 60 },
+    },
+  ],
   // Cutover switch — uncomment to take kharis.org/kp2* live on Cloudflare.
   // Until then `wrangler deploy` only publishes to *.workers.dev and
   // leaves the current production host untouched.

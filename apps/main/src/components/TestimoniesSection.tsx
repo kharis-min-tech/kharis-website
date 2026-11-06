@@ -1,7 +1,13 @@
 "use client";
 
 import Image from "@/components/SiteImage";
-import { type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
+import {
+  type PointerEvent as ReactPointerEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import type { Testimony } from "@/lib/testimonies";
@@ -38,6 +44,9 @@ function excerpt(text: string, limit = 240) {
 
 export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
+  const [rotationPaused, setRotationPaused] = useState(false);
+  const interacting = useRef(false);
+  const manualUntil = useRef(0);
   const [selected, setSelected] = useState<{ item: Testimony; accentIndex: number } | null>(null);
   const dragRef = useRef({
     active: false,
@@ -56,7 +65,8 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [selected]);
 
-  const scrollByCard = (dir: -1 | 1) => {
+  const scrollByCard = useCallback((dir: -1 | 1) => {
+    manualUntil.current = performance.now() + 700;
     const rail = railRef.current;
     if (!rail) return;
     const card = rail.querySelector<HTMLElement>(".testimony-card");
@@ -66,25 +76,84 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
     const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
     if (maxScroll <= 2) return;
     const edge = 8;
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "instant"
+      : "smooth";
 
     if (dir === 1) {
       if (rail.scrollLeft >= maxScroll - edge) {
-        rail.scrollTo({ left: 0, behavior: "smooth" });
+        rail.scrollTo({ left: 0, behavior });
       } else {
-        rail.scrollTo({ left: Math.min(maxScroll, rail.scrollLeft + step), behavior: "smooth" });
+        rail.scrollTo({ left: Math.min(maxScroll, rail.scrollLeft + step), behavior });
       }
       return;
     }
 
     if (rail.scrollLeft <= edge) {
-      rail.scrollTo({ left: maxScroll, behavior: "smooth" });
+      rail.scrollTo({ left: maxScroll, behavior });
     } else {
-      rail.scrollTo({ left: Math.max(0, rail.scrollLeft - step), behavior: "smooth" });
+      rail.scrollTo({ left: Math.max(0, rail.scrollLeft - step), behavior });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || rotationPaused || selected || testimonies.length < 2) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    let previous = 0;
+    let visible = false;
+    let position = rail.scrollLeft;
+    const animate = (time: number) => {
+      const elapsed = previous ? Math.min(time - previous, 64) : 0;
+      previous = time;
+      if (
+        visible &&
+        !document.hidden &&
+        !motion.matches &&
+        !interacting.current &&
+        !dragRef.current.active &&
+        time >= manualUntil.current
+      ) {
+        const first = rail.querySelector<HTMLElement>(".testimony-card");
+        const copy = rail.querySelector<HTMLElement>('[data-loop-copy="true"]');
+        const cycle = first && copy ? copy.offsetLeft - first.offsetLeft : 0;
+        if (Math.abs(rail.scrollLeft - position) > 2) position = rail.scrollLeft;
+        if (cycle > 0) {
+          position = (position + elapsed * 0.014) % cycle;
+          rail.scrollTo({ left: position, behavior: "instant" });
+        }
+      } else {
+        position = rail.scrollLeft;
+      }
+      if (visible && !document.hidden && !motion.matches) frame = requestAnimationFrame(animate);
+    };
+    const start = () => {
+      cancelAnimationFrame(frame);
+      previous = 0;
+      if (visible && !document.hidden && !motion.matches) frame = requestAnimationFrame(animate);
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      start();
+    });
+    observer.observe(rail);
+    document.addEventListener("visibilitychange", start);
+    motion.addEventListener("change", start);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", start);
+      motion.removeEventListener("change", start);
+    };
+  }, [rotationPaused, selected, testimonies.length]);
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (e.pointerType === "touch" || e.button !== 0) return;
+    if (e.pointerType === "touch") {
+      interacting.current = true;
+      return;
+    }
+    if (e.button !== 0) return;
     const rail = railRef.current;
     if (!rail) return;
     dragRef.current = {
@@ -113,6 +182,10 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   };
 
   const endPointerDrag = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") {
+      interacting.current = !!e.currentTarget.closest("section")?.contains(document.activeElement);
+      return;
+    }
     const state = dragRef.current;
     const rail = railRef.current;
     if (!state.active) return;
@@ -135,7 +208,16 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   };
 
   return (
-    <section id="testimonies" className="testimony-band px-5 py-8 md:px-8 md:py-10">
+    <section
+      id="testimonies"
+      className="testimony-band px-5 py-8 md:px-8 md:py-10"
+      onFocusCapture={(event) => {
+        interacting.current = !!railRef.current?.contains(event.target);
+      }}
+      onBlurCapture={(event) => {
+        interacting.current = !!railRef.current?.contains(event.relatedTarget);
+      }}
+    >
       <div className="mx-auto max-w-7xl">
         <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
           <p className="eyebrow">Stories</p>
@@ -179,57 +261,62 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
                   onPointerUp={endPointerDrag}
                   onPointerCancel={endPointerDrag}
                 >
-                  {testimonies.map((item, i) => {
-                    const accentIndex = (i % 5) + 1;
-                    const shortText = item.short_description?.trim() || "";
-                    const fullText = (item.description || "").trim();
-                    const hasDistinctBody =
-                      Boolean(shortText && fullText) &&
-                      shortText.toLowerCase() !== fullText.toLowerCase();
-                    const previewQuote = hasDistinctBody
-                      ? excerpt(fullText, 210)
-                      : excerpt(fullText || shortText, 260);
+                  {Array.from({ length: testimonies.length < 4 ? 4 : 2 }, () => testimonies)
+                    .flat()
+                    .map((item, i) => {
+                      const accentIndex = ((i % testimonies.length) % 5) + 1;
+                      const copy = i >= testimonies.length;
+                      const shortText = item.short_description?.trim() || "";
+                      const fullText = (item.description || "").trim();
+                      const hasDistinctBody =
+                        Boolean(shortText && fullText) &&
+                        shortText.toLowerCase() !== fullText.toLowerCase();
+                      const previewQuote = hasDistinctBody
+                        ? excerpt(fullText, 210)
+                        : excerpt(fullText || shortText, 260);
 
-                    return (
-                      <article
-                        key={`${item.name}-${i}`}
-                        role="button"
-                        tabIndex={0}
-                        aria-label={`Read full testimony from ${item.name}`}
-                        onClick={() => openCard(item, accentIndex)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            openCard(item, accentIndex);
-                          }
-                        }}
-                        className={`testimony-card testimony-card--clickable testimony-card--${accentIndex}`}
-                      >
-                        <span className="testimony-card__wall" aria-hidden />
-                        <div className="testimony-card__ornament" aria-hidden>
-                          <svg className="testimony-card__marks" viewBox="0 0 72 48" fill="none">
-                            <path
-                              d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </div>
-                        {hasDistinctBody ? (
-                          <h3 className="testimony-card__title">{shortText}</h3>
-                        ) : null}
-                        <p className="testimony-card__quote">{previewQuote}</p>
-                        <div className="testimony-card__footer">
-                          <div className="testimony-card__meta">
-                            <strong>{item.name}</strong>
-                            <span>{item.branch_name}</span>
+                      return (
+                        <article
+                          key={`${item.name}-${i}`}
+                          role="button"
+                          tabIndex={copy ? undefined : 0}
+                          aria-hidden={copy || undefined}
+                          data-loop-copy={copy || undefined}
+                          aria-label={`Read full testimony from ${item.name}`}
+                          onClick={() => openCard(item, accentIndex)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              openCard(item, accentIndex);
+                            }
+                          }}
+                          className={`testimony-card testimony-card--clickable testimony-card--${accentIndex}`}
+                        >
+                          <span className="testimony-card__wall" aria-hidden />
+                          <div className="testimony-card__ornament" aria-hidden>
+                            <svg className="testimony-card__marks" viewBox="0 0 72 48" fill="none">
+                              <path
+                                d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
+                                fill="currentColor"
+                              />
+                            </svg>
                           </div>
-                          <span className="testimony-card__read">
-                            Read full story <Icon name="arrow" className="h-3.5 w-3.5" />
-                          </span>
-                        </div>
-                      </article>
-                    );
-                  })}
+                          {hasDistinctBody ? (
+                            <h3 className="testimony-card__title">{shortText}</h3>
+                          ) : null}
+                          <p className="testimony-card__quote">{previewQuote}</p>
+                          <div className="testimony-card__footer">
+                            <div className="testimony-card__meta">
+                              <strong>{item.name}</strong>
+                              <span>{item.branch_name}</span>
+                            </div>
+                            <span className="testimony-card__read">
+                              Read full story <Icon name="arrow" className="h-3.5 w-3.5" />
+                            </span>
+                          </div>
+                        </article>
+                      );
+                    })}
                 </div>
               </div>
             </>
@@ -238,6 +325,14 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
           <div className="mt-6 flex flex-col items-center gap-5">
             {testimonies.length > 1 ? (
               <div className="flex items-center justify-center gap-3">
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  aria-pressed={rotationPaused}
+                  onClick={() => setRotationPaused((paused) => !paused)}
+                >
+                  {rotationPaused ? "Play stories" : "Pause stories"}
+                </button>
                 <button
                   type="button"
                   aria-label="Previous testimonies"

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { withBasePath } from "@/lib/base-path";
 import { AnimatedHeight } from "@/components/AnimatedHeight";
 import { DepartmentIllustration } from "@/components/DepartmentIllustration";
 import { TypedText } from "@/components/TypedText";
@@ -9,7 +10,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
-  GOOGLE_SHEETS_QUIZ_URL,
   QUIZ_BRANCHES,
   QUIZ_LANGUAGES,
   QUIZ_PRIVACY_CONTENT,
@@ -19,6 +19,8 @@ import {
   type QuizOption,
   type SupportedLanguage,
 } from "@/data/quiz";
+import { TURNSTILE_FIELD } from "../../../../../shared/form-fields";
+import { useTurnstile } from "../../../../../shared/form-widgets";
 
 export default function DepartmentQuizPage() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
@@ -27,6 +29,7 @@ export default function DepartmentQuizPage() {
   // User input state
   const [branch, setBranch] = useState("");
   const [branchError, setBranchError] = useState(false);
+  const turnstile = useTurnstile("quiz", "interaction-only");
 
   // Quiz progression state
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -90,31 +93,27 @@ export default function DepartmentQuizPage() {
     });
   };
 
-  // Submit to Google Sheets
-  const submitToGoogleSheets = useCallback(
+  // Results go to Supabase and on to the branch inbox. Fire and forget: a
+  // failed save must not block someone from seeing their departments.
+  const submitResult = useCallback(
     (topMatches: string[]) => {
       try {
-        const payload = new FormData();
-        payload.append("name", "Anonymous");
-        payload.append("branch", branch);
-        payload.append("lang", lang);
-        payload.append("dept1", topMatches[0] || "");
-        payload.append("dept2", topMatches[1] || "");
-        payload.append("dept3", topMatches[2] || "");
-        payload.append("timestamp", new Date().toISOString());
-
-        fetch(GOOGLE_SHEETS_QUIZ_URL, {
+        void fetch(withBasePath("/api/quiz"), {
           method: "POST",
-          body: payload,
-          mode: "no-cors",
-        }).catch(() => {
-          // Fire and forget
-        });
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            branch,
+            lang,
+            departments: topMatches,
+            [TURNSTILE_FIELD]: turnstile.token,
+          }),
+          keepalive: true,
+        }).catch(() => {});
       } catch {
         // Suppress network errors
       }
     },
-    [branch, lang],
+    [branch, lang, turnstile.token],
   );
 
   // Compute final scores and show results
@@ -134,13 +133,13 @@ export default function DepartmentQuizPage() {
         .slice(0, 3)
         .map(([dept]) => dept);
 
-      submitToGoogleSheets(top3);
+      submitResult(top3);
       setScreen("result");
       if (quizCardRef.current) {
         quizCardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     },
-    [submitToGoogleSheets],
+    [submitResult],
   );
 
   // Navigation: Next / Finish
@@ -941,6 +940,8 @@ export default function DepartmentQuizPage() {
 
       <SiteFooter />
       <ThemeToggle />
+      {/* Keeps a fresh Turnstile token ready for the result submission. */}
+      {turnstile.widget}
     </div>
   );
 }

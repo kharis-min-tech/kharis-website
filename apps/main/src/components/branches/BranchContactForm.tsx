@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { MapPin, Send, Check } from "lucide-react";
+import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../../shared/form-fields";
+import { HoneypotField, useTurnstile } from "../../../../../shared/form-widgets";
 interface BranchContactFormProps {
   branch: {
     name: string;
@@ -14,6 +16,8 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const turnstile = useTurnstile("contact");
 
   const inputClass =
     "w-full border border-[var(--branch-line)] bg-[var(--branch-inset)] px-4 py-3 text-sm font-medium text-[var(--branch-ink)] placeholder:text-[var(--branch-muted)] outline-none transition-colors focus:border-[#e8a33d]";
@@ -56,6 +60,8 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
+                    [HONEYPOT_FIELD]: honeypot,
+                    [TURNSTILE_FIELD]: turnstile.token,
                     first: String(data.get("firstName") || ""),
                     last: String(data.get("lastName") || ""),
                     phone: String(data.get("phone") || ""),
@@ -78,6 +84,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
               } catch {
                 setError("Something went wrong. Please try again shortly.");
               } finally {
+                turnstile.reset();
                 setBusy(false);
               }
             }}
@@ -150,6 +157,8 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
             </div>
 
             <div className="mt-7 flex flex-wrap items-center gap-4">
+              {turnstile.widget}
+              <HoneypotField value={honeypot} onChange={setHoneypot} />
               <button
                 type="submit"
                 disabled={busy}

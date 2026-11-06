@@ -61,13 +61,27 @@ const cards: Card[] = [
     position: "object-[center_12%]",
     reveal: "right",
   },
+  {
+    title: "Events",
+    label: "Gather with us",
+    href: "/events",
+    image:
+      "https://images.kharis.org/site-images/main/e06e47b90f538fed/events/singles-ball/ballroom-overview.jpg",
+    info: "Find the next opportunity to gather, celebrate, and share life with the Kharis family.",
+    cta: "Learn more",
+    position: "object-center",
+    reveal: "right",
+  },
 ];
 
 const IMAGE_SIZES = "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw";
 
 export function KnowUsStack() {
   return (
-    <section id="know" className="bg-bg-soft px-4 pb-5 pt-8 md:px-6 md:pb-5 md:pt-10">
+    <section
+      id="know"
+      className="overflow-x-clip bg-bg-soft px-4 pb-5 pt-8 md:px-6 md:pb-5 md:pt-10"
+    >
       <div className="mx-auto max-w-[88rem]">
         <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
           <p className="eyebrow">Family</p>

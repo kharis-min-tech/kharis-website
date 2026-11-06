@@ -16,13 +16,61 @@ export type QuizDepartment = {
   video: string;
 };
 
-export const QUIZ_SLIDESHOW_IMAGES = [
-  "https://images.kharis.org/site-images/main/8440a4a63e4ae020/serve-with-us.jpg",
-  "https://images.kharis.org/site-images/main/9b547f88f3b4d297/worship.jpg",
-  "https://images.kharis.org/site-images/main/ca1bcf57dbf80629/community.jpg",
-  "https://images.kharis.org/site-images/main/ffbe5aca25d25b8c/pastor-stage.jpg",
-  "https://images.kharis.org/site-images/main/234c625e119f9e2a/young-adults.jpg",
-] as const;
+export type QuizSlide = {
+  src: string;
+  alt: string;
+  /** CSS object-position, so faces stay in frame when the photo is cropped. */
+  position: string;
+};
+
+/** Hero slideshow behind the quiz heading. Add more slides here and they crossfade automatically. */
+export const QUIZ_SLIDESHOW_IMAGES: readonly QuizSlide[] = [
+  {
+    src: "/images/quiz/choir-vocalists-worship.jpg",
+    alt: "Kharis choir vocalists worshipping on stage with hands raised",
+    position: "50% 60%",
+  },
+  {
+    src: "/images/quiz/outreach-we-preach-christ.jpg",
+    alt: "Kharis members smiling in yellow We Preach Christ shirts during street outreach",
+    position: "50% 35%",
+  },
+  {
+    src: "/images/quiz/sound-mixing-desk.jpg",
+    alt: "Digital sound mixing console glowing in blue during a Kharis service",
+    position: "50% 50%",
+  },
+  {
+    src: "/images/quiz/jesus-campaign-praise.jpg",
+    alt: "Kharis members praising joyfully outdoors during the Jesus Campaign",
+    position: "50% 30%",
+  },
+  {
+    src: "/images/quiz/bible-study-tablet.jpg",
+    alt: "Member taking Bible study notes on a tablet alongside an open Bible",
+    position: "50% 50%",
+  },
+  {
+    src: "/images/quiz/jesus-campaign-outreach.jpg",
+    alt: "Kharis members in yellow Jesus Campaign shirts talking with a man on the street",
+    position: "50% 32%",
+  },
+  {
+    src: "/images/quiz/worship-guitarist.jpg",
+    alt: "Musician playing electric guitar with headphones during worship",
+    position: "50% 20%",
+  },
+  {
+    src: "/images/quiz/outreach-crowd-celebration.jpg",
+    alt: "Outreach team celebrating together in yellow Jesus Campaign shirts",
+    position: "50% 30%",
+  },
+  {
+    src: "/images/quiz/media-camera-rig.jpg",
+    alt: "Cinema camera rig capturing the congregation during worship",
+    position: "50% 48%",
+  },
+];
 
 export type QuizTranslation = {
   // Hero & General
@@ -105,32 +153,29 @@ export const UPCOMING_LANGUAGES = [
 ];
 
 export const QUIZ_BRANCHES = [
-  "Kharis Church Accra",
-  "Kharis Church Birmingham",
-  "Kharis Church Brighton",
-  "Kharis Church Bristol",
-  "Kharis Church Chatham",
-  "Kharis Church Chelmsford",
-  "Kharis Church Coventry",
-  "Kharis Church Croydon",
-  "Kharis Church Freetown",
-  "Kharis Church London",
-  "Kharis Church Luton",
-  "Kharis Church Manchester",
-  "Kharis Church Northampton",
-  "Kharis Church Nottingham",
-  "Kharis Church Orpington",
-  "Kharis Church Reading",
-  "Kharis Phase 2 Peterborough",
-  "Kharis Phase 2 Birmingham",
-  "Kharis Phase 2 London",
-  "Kharis Phase 2 Romford",
-  "Kharis Phase 2 Southampton",
-  "Kharis Phase 2 Barking",
+  "Accra",
+  "Birmingham",
+  "Brighton",
+  "Bristol",
+  "Chatham",
+  "Chelmsford",
+  "Coventry",
+  "Croydon",
+  "Freetown",
+  "London",
+  "Luton",
+  "Manchester",
+  "Northampton",
+  "Nottingham",
+  "Orpington",
+  "Reading",
+  "KP2 Barking",
+  "KP2 Birmingham",
+  "KP2 London",
+  "KP2 Peterborough",
+  "KP2 Romford",
+  "KP2 Southampton",
 ] as const;
-
-export const GOOGLE_SHEETS_QUIZ_URL =
-  "https://script.google.com/macros/s/AKfycbznl6ltl0ydLSa7STMUPQPguZ5Bf74aEuTMH6mhUwk88ee8xsaMA6QtVvBXclxUor28/exec";
 
 export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
   en: {

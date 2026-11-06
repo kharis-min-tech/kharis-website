@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { cleanVisitText, visitorInsert, type VisitorInsert } from "@/lib/visit-submission";
+import { sendEmailSafely } from "../../../../../../shared/mailer";
+import {
+  notifyAddress,
+  visitEmail,
+  type BranchContact,
+} from "../../../../../../shared/form-notifications";
+import { guardFormSubmission } from "../../../../../../shared/form-guard";
 
 type LocalVisit = VisitorInsert & { id: string; created_at: string };
 
@@ -61,6 +68,13 @@ export async function POST(request: Request) {
   }
 
   const data = body as Record<string, unknown>;
+
+  const guard = await guardFormSubmission(request, data, "visit");
+  if (!guard.ok) {
+    // A tripped honeypot gets a cheerful 200 and no row, so a bot learns nothing.
+    if (guard.silent) return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: false, error: guard.error }, { status: guard.status });
+  }
   const parsed = visitorInsert({
     name: cleanVisitText(data.name, 120),
     email: cleanVisitText(data.email, 254),
@@ -76,15 +90,17 @@ export async function POST(request: Request) {
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !serviceRoleKey) {
+  // The publishable key, not a service-role key: `anon` may INSERT into
+  // visitors and read nothing (supabase/migrations/003).
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!supabaseUrl || !publishableKey) {
     if (process.env.NODE_ENV === "development") return localVisitResponse(parsed.row);
     console.error("Missing Supabase server environment variables");
     return NextResponse.json({ ok: false, error: "Server configuration error." }, { status: 500 });
   }
 
   try {
-    const supabase = createClient(supabaseUrl, serviceRoleKey, {
+    const supabase = createClient(supabaseUrl, publishableKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const { error } = await supabase.from("visitors").insert(parsed.row);
@@ -96,6 +112,29 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    // The visit is saved. Notifying the branch must never fail the request.
+    const { data: branchRows } = await supabase.from("branches").select("name, contact_email");
+    const to = notifyAddress(
+      (branchRows ?? []) as BranchContact[],
+      parsed.row.branch_name,
+      process.env.FALLBACK_NOTIFY_EMAIL,
+    );
+    if (to) {
+      const mail = visitEmail({
+        name: parsed.row.name,
+        email: parsed.row.email,
+        phone: parsed.row.phone,
+        branchName: parsed.row.branch_name,
+        gathering: cleanVisitText(data.gathering, 160),
+        children: data.children === true,
+        site: "Main site",
+      });
+      await sendEmailSafely({ to, replyTo: parsed.row.email, ...mail });
+    } else {
+      console.warn("Visit saved with no branch inbox to notify.");
+    }
+
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Supabase visitor request failed:", error);

@@ -4,6 +4,12 @@
 
 .msg-hub__hero {
   background: #07040c;
+  cursor: pointer;
+}
+
+.msg-hero-poster {
+  object-fit: cover;
+  filter: grayscale(1) brightness(0.5);
 }
 
 .msg-hub__hero .msg-hub__hero-copy {
@@ -21,6 +27,7 @@
 
 .msg-hub__hero .msg-hub__title .msg-hub__title-line {
   display: block !important;
+  min-height: 1.1em;
 }
 
 .msg-hub__hero .msg-hub__title .msg-hub__title-line + .msg-hub__title-line {
@@ -38,7 +45,7 @@
 }
 
 .msg-hub__hero .msg-hero-watch-wrap {
-  animation-delay: 3.3s;
+  animation-delay: 0.25s;
 }
 
 .msg-hub__typing-caret {
@@ -99,15 +106,15 @@
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 900ms var(--ease-out),
-    visibility 0s linear 900ms;
+    opacity 320ms var(--ease-out),
+    visibility 0s linear 320ms;
 }
 
 .msg-hub__hero[data-preview] .msg-hero-preview {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 900ms var(--ease-out),
+    opacity 320ms var(--ease-out),
     visibility 0s;
 }
 

@@ -1,6 +1,6 @@
 # Site pictures in Cloudflare R2
 
-The migration uses the existing EU `kharis-images` bucket and its public host `https://images.kharis.org`. Current source inventory: 167 main-site pictures (including video posters) and 105 KP2 pictures, 149.9 MiB combined. Videos and the unused original app-screen canvases are excluded.
+The migration uses the existing EU `kharis-images` bucket and its public host `https://images.kharis.org`. Current source inventory: 189 main-site pictures (including video posters) and 105 KP2 pictures, 151.6 MiB combined. Videos and the unused original app-screen canvases are excluded.
 
 Objects use `site-images/main/<content-hash>/<relative-path>` and `site-images/kp2/<content-hash>/<relative-path>`. Existing branch uploads under `branch-images/` are untouched. Each upload has its original MIME type and immutable, year-long cache headers. Content hashes prevent replacing existing different pictures.
 
@@ -28,3 +28,9 @@ The original 122 objects were uploaded to the existing EU bucket and their publi
 All 272 pictures in the current local inventory were uploaded or found already present in the existing EU bucket, then verified through `images.kharis.org` using their MIME types and SHA-256 checksums. This includes all 38 selected KP2 KOffice photographs, baptism photos, and the children’s illustrations. The refreshed bucket-scoped credentials remain in the ignored `.env.r2.local` file with mode 600.
 
 Source references and both image mappings use the verified Cloudflare URLs. Legacy aliases continue to select the replacement photographs, and the KP2 photography helper resolves its generated paths through the mapping. Local originals remain as rollback inputs. Third-party video and recording thumbnail URLs retain their existing providers.
+
+## Main-site review imagery
+
+The 22 new globe assets include 20 town and city photographs plus the daylight Earth and night-light textures. They use verified, content-hashed URLs on `images.kharis.org`; the originals remain local for rollback and their licences are documented in `docs/website-review/globe-imagery.md`.
+
+On 28 October 2026, all 294 images in the current main-site and KP2 inventory were verified through their public Cloudflare URLs using MIME types and SHA-256 checksums. Both image mappings were checked to contain only `images.kharis.org` URLs.

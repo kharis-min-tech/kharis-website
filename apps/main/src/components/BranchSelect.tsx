@@ -51,11 +51,13 @@ export function BranchSelect({
   branch,
   branches,
   className = "",
+  id,
 }: {
   label: string;
   branch: ServiceBranch;
   branches: ServiceBranch[];
   className?: string;
+  id?: string;
 }) {
   const kharis = branches.filter((b) => b.group === "kharis");
   const kp2 = branches.filter((b) => b.group === "kp2");
@@ -63,7 +65,7 @@ export function BranchSelect({
   return (
     <label className={`events-branch__pick ${className}`.trim()}>
       <span>{label}</span>
-      <select value={branch.slug} onChange={(e) => saveBranch(e.target.value)}>
+      <select id={id} value={branch.slug} onChange={(e) => saveBranch(e.target.value)}>
         <optgroup label="Kharis Church">
           {kharis.map((b) => (
             <option key={b.slug} value={b.slug}>

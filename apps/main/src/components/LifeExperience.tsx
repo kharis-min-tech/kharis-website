@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Icon } from "@/components/Icon";
-import { LIFE_MEMBERSHIP_URL } from "@/lib/life-content";
 import { lifeBySlug, type LifeSlug } from "@/lib/life-content";
 import { LifeDetailModal } from "@/components/LifeDetailModal";
 import { BelongStory } from "@/components/BelongStory";
@@ -12,19 +11,30 @@ import { useReducedMotion } from "framer-motion";
 import { usePageSnap } from "@/lib/page-snap";
 import "./life-refresh.css";
 import "./life-alone.css";
+import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../shared/form-fields";
+import { HoneypotField, useTurnstile } from "../../../../shared/form-widgets";
 
-function CloserPanel() {
+export type LifeBranch = { id: string; name: string };
+
+function CloserPanel({ branches }: { branches: LifeBranch[] }) {
   const [email, setEmail] = useState("");
+  const [branch, setBranch] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [savedLocally, setSavedLocally] = useState(false);
   const [error, setError] = useState("");
   const [emailAttempted, setEmailAttempted] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
+  const turnstile = useTurnstile("contact");
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setEmailAttempted(true);
     setError("");
+    if (!branch) {
+      setError("Please choose the branch closest to you.");
+      return;
+    }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       setError("Please enter a valid email address.");
       return;
@@ -36,9 +46,13 @@ function CloserPanel() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          [HONEYPOT_FIELD]: honeypot,
+          [TURNSTILE_FIELD]: turnstile.token,
           name: "Kharis Life visitor",
           email: email.trim(),
           topic: "General",
+          branch,
+          branchId: branches.find((b) => b.name === branch)?.id,
           message:
             "I'd like to get plugged into Kharis Life. Please connect me with next steps at my local branch.",
         }),
@@ -57,6 +71,7 @@ function CloserPanel() {
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
+      turnstile.reset();
       setBusy(false);
     }
   };
@@ -83,6 +98,30 @@ function CloserPanel() {
             </p>
           ) : (
             <form className="life-alone__form" onSubmit={onSubmit} noValidate>
+              <label className="sr-only" htmlFor="life-refresh-branch">
+                Your nearest branch
+              </label>
+              <select
+                id="life-refresh-branch"
+                className="life-alone__branch"
+                required
+                value={branch}
+                aria-invalid={emailAttempted && !branch}
+                aria-describedby={error ? "life-refresh-email-error" : undefined}
+                onChange={(event) => {
+                  setBranch(event.target.value);
+                  if (error) setError("");
+                }}
+              >
+                <option value="" disabled>
+                  Your branch
+                </option>
+                {branches.map((b) => (
+                  <option key={b.id} value={b.name}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
               <label className="sr-only" htmlFor="life-refresh-email">
                 Your email address
               </label>
@@ -100,6 +139,8 @@ function CloserPanel() {
                   if (error) setError("");
                 }}
               />
+              {turnstile.widget}
+              <HoneypotField value={honeypot} onChange={setHoneypot} />
               <button type="submit" className="life-alone__button" disabled={busy}>
                 {busy ? "Sending…" : "GET PLUGGED IN"}
                 <Icon name="arrow" className="h-4 w-4" />
@@ -112,8 +153,8 @@ function CloserPanel() {
             </form>
           )}
           <p className="life-alone__note">
-            We&apos;ll connect you with a local branch, or{" "}
-            <a href={LIFE_MEMBERSHIP_URL}>BECOME A MEMBER</a> when you&apos;re ready.
+            We&apos;ll connect you with a local branch, or <span>BECOME A MEMBER</span> when
+            you&apos;re ready.
           </p>
         </div>
       </div>
@@ -121,7 +162,7 @@ function CloserPanel() {
   );
 }
 
-export function LifeExperience() {
+export function LifeExperience({ branches }: { branches: LifeBranch[] }) {
   /* Snap between the page's scroll stages (sections declare points with data-snap). */
   const reduceMotion = useReducedMotion();
   usePageSnap(!reduceMotion);
@@ -161,7 +202,7 @@ export function LifeExperience() {
 
       <BelongStory onLearnMore={openModal} />
 
-      <CloserPanel />
+      <CloserPanel branches={branches} />
       <LifeDetailModal category={modalCategory} onClose={closeModal} />
     </div>
   );

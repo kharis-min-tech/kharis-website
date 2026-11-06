@@ -10,6 +10,8 @@ import {
   isGraceTicketId,
   readGraceHandoff,
 } from "@/lib/grace-handoff";
+import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../../shared/form-fields";
+import { HoneypotField, useTurnstile } from "../../../../../shared/form-widgets";
 
 /** Values match the topics /api/contact accepts. */
 const TOPICS = [
@@ -66,6 +68,8 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
   const [errors, setErrors] = useState<Errors>({});
   const [serverError, setServerError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
+  const turnstile = useTurnstile("contact");
   const [sent, setSent] = useState<{ first: string; email: string; ticket: string } | null>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
   const thanksRef = useRef<HTMLDivElement>(null);
@@ -95,6 +99,15 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
       chatTranscript: payload.summary,
       message: f.message.trim() ? f.message : buildContactPrefill(payload),
     }));
+  }, [searchParams]);
+
+  // Pages that hand a visitor over for one subject — the Life baptism panel,
+  // for instance — arrive as /contact?topic=Baptism.
+  useEffect(() => {
+    const wanted = searchParams.get("topic")?.trim();
+    if (!wanted) return;
+    const match = TOPICS.find((t) => t.value.toLowerCase() === wanted.toLowerCase());
+    if (match) setForm((f) => ({ ...f, topic: match.value }));
   }, [searchParams]);
 
   useEffect(() => {
@@ -130,6 +143,8 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          [HONEYPOT_FIELD]: honeypot,
+          [TURNSTILE_FIELD]: turnstile.token,
           name: form.name,
           first,
           last,
@@ -154,6 +169,7 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
     } catch {
       setServerError("We couldn't reach Kharis just now. Check your connection and try again.");
     } finally {
+      turnstile.reset();
       setBusy(false);
     }
   };
@@ -341,6 +357,8 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
                 ) : null}
 
                 <div className="hello-letter__send">
+                  {turnstile.widget}
+                  <HoneypotField value={honeypot} onChange={setHoneypot} />
                   <button type="submit" className="btn-primary" disabled={busy}>
                     {busy ? "Sending…" : "Send my message"}
                   </button>

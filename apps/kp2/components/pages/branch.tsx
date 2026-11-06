@@ -25,6 +25,8 @@ import {
 import type { ChurchEvent } from "@/lib/events";
 import { displayMessageTitle, formatMessageDate, type MessageVideo } from "@/lib/youtube";
 import "@/components/branch-cards.css";
+import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../shared/form-fields";
+import { HoneypotField, useTurnstile } from "../../../../shared/form-widgets";
 
 const BRANCH_MARK = "https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png";
 
@@ -239,6 +241,8 @@ function BranchPage({
   const [contactBusy, setContactBusy] = useState(false);
   const [contactError, setContactError] = useState("");
   const [contactSent, setContactSent] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
+  const turnstile = useTurnstile("contact");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -276,7 +280,8 @@ function BranchPage({
   async function sendBranchMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (contactBusy) return;
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     const name = String(data.get("name") || contactName).trim();
     const email = String(data.get("email") || contactEmail).trim();
     const phone = String(data.get("phone") || "").trim();
@@ -289,6 +294,8 @@ function BranchPage({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          [HONEYPOT_FIELD]: honeypot,
+          [TURNSTILE_FIELD]: turnstile.token,
           name,
           email,
           phone,
@@ -306,10 +313,11 @@ function BranchPage({
       setContactEmail("");
       setContactMessage("");
       setContactSent(true);
-      event.currentTarget.reset();
+      form.reset();
     } catch {
       setContactError("We couldn't reach Kharis just now. Check your connection and try again.");
     } finally {
+      turnstile.reset();
       setContactBusy(false);
     }
   }
@@ -991,6 +999,8 @@ function BranchPage({
               {contactError ? (
                 <p className="font-body-md text-sm text-[#9b1c1c]">{contactError}</p>
               ) : null}
+              {turnstile.widget}
+              <HoneypotField value={honeypot} onChange={setHoneypot} />
               <button
                 type="submit"
                 disabled={contactBusy}

@@ -8,7 +8,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SocialStack, type SocialPlatform } from "@/components/SocialStack";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { INSTAGRAM_PROFILE_URL } from "@/lib/instagram";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { TIKTOK_HANDLE, TIKTOK_URL } from "@/lib/social";
@@ -153,15 +152,6 @@ function MediaPage() {
         <div className="absolute inset-0 halftone-bg opacity-10 pointer-events-none"></div>
 
         <SocialStack platforms={SOCIALS} />
-
-        <NewsletterSignup
-          title="Stay in the loop"
-          copy="Get updates from Kharis Phase 2 in your inbox."
-          placeholder="Your email address"
-          className="bg-primary text-on-primary"
-          copyClassName="text-primary-fixed"
-          buttonClassName="bg-secondary-container text-on-background"
-        />
       </main>
 
       <SiteFooter />

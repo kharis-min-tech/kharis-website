@@ -78,7 +78,7 @@ export function LatestMessages({ featured, others }: Props) {
                 <a href="/messages" className="btn-primary">
                   Browse All Messages
                 </a>
-                <a href="/messages#listen" className="btn-secondary">
+                <a href="/messages#listen" data-no-smooth-nav className="btn-secondary">
                   Listen on Podcasts
                 </a>
               </div>
