@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { useRevealOnView } from "@/components/EventsTop";
 import "./testimonies-band.css";
 
@@ -75,8 +76,13 @@ export function TestimoniesBand({
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelected(null);
     };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [selected]);
 
   const scrollByCard = (dir: -1 | 1) => {
@@ -277,58 +283,61 @@ export function TestimoniesBand({
         )}
       </div>
 
-      {selected ? (
-        <div
-          className="kp-tst__modal-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={`${id}-modal-title`}
-          onClick={() => setSelected(null)}
-        >
-          <div
-            className={`kp-tst__modal kp-tst__card--${selected.accentIndex}`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              className="kp-tst__modal-close"
-              aria-label="Close testimony"
+      {selected
+        ? createPortal(
+            <div
+              className="kp-tst__modal-backdrop"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`${id}-modal-title`}
               onClick={() => setSelected(null)}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M5 5l14 14M19 5 5 19" />
-              </svg>
-            </button>
-            <svg className="kp-tst__marks" viewBox="0 0 72 48" fill="none" aria-hidden="true">
-              <path
-                d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
-                fill="currentColor"
-              />
-            </svg>
-            {selected.item.title ? (
-              <h3 id={`${id}-modal-title`} className="kp-tst__modal-title">
-                {selected.item.title}
-              </h3>
-            ) : (
-              <h3 id={`${id}-modal-title`} className="sr-only">
-                Testimony from {selected.item.name}
-              </h3>
-            )}
-            <div className="kp-tst__modal-body">
-              {cleanQuote(selected.item.quote)
-                .split(/\n{2,}|\r\n\r\n/)
-                .filter(Boolean)
-                .map((para, idx) => (
-                  <p key={idx}>{para.trim()}</p>
-                ))}
-            </div>
-            <div className="kp-tst__modal-meta">
-              <strong>{selected.item.name}</strong>
-              <span>{selected.item.meta}</span>
-            </div>
-          </div>
-        </div>
-      ) : null}
+              <div
+                className={`kp-tst__modal kp-tst__card--${selected.accentIndex}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  className="kp-tst__modal-close"
+                  aria-label="Close testimony"
+                  onClick={() => setSelected(null)}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M5 5l14 14M19 5 5 19" />
+                  </svg>
+                </button>
+                <svg className="kp-tst__marks" viewBox="0 0 72 48" fill="none" aria-hidden="true">
+                  <path
+                    d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                {selected.item.title ? (
+                  <h3 id={`${id}-modal-title`} className="kp-tst__modal-title">
+                    {selected.item.title}
+                  </h3>
+                ) : (
+                  <h3 id={`${id}-modal-title`} className="sr-only">
+                    Testimony from {selected.item.name}
+                  </h3>
+                )}
+                <div className="kp-tst__modal-body">
+                  {cleanQuote(selected.item.quote)
+                    .split(/\n{2,}|\r\n\r\n/)
+                    .filter(Boolean)
+                    .map((para, idx) => (
+                      <p key={idx}>{para.trim()}</p>
+                    ))}
+                </div>
+                <div className="kp-tst__modal-meta">
+                  <strong>{selected.item.name}</strong>
+                  <span>{selected.item.meta}</span>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </section>
   );
 }
