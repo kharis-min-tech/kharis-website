@@ -169,6 +169,14 @@ export const GOVERNANCE = {
       icon: "lock-keyhole",
     },
     {
+      id: "cookies",
+      title: "Cookie Policy",
+      blurb:
+        "The cookies and browser storage this site uses, and why a consent banner is not required.",
+      icon: "cookie",
+      href: "/cookies",
+    },
+    {
       id: "disclaimer",
       title: "Website Disclaimer",
       blurb: "Important notes about information on this website and your use of our online spaces.",

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Mark } from "@/components/studio/mark";
 import { Button } from "@/components/ui/button";
@@ -67,6 +68,11 @@ export function SignIn() {
             {pending ? "Signing in…" : "Sign in"}
           </Button>
         </form>
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          <Link href="/cookies" className="underline">
+            Cookie policy
+          </Link>
+        </p>
       </Card>
     </div>
   );

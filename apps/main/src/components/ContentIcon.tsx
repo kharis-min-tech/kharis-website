@@ -7,6 +7,7 @@ import {
   Gift,
   House,
   Plane,
+  Cookie,
   Cross,
   Flame,
   Globe,
@@ -38,6 +39,7 @@ const MAP: Record<string, LucideIcon> = {
   "shield-alert": ShieldAlert,
   "lock-keyhole": LockKeyhole,
   sparkles: Sparkles,
+  cookie: Cookie,
   "scroll-text": ScrollText,
 };
 
