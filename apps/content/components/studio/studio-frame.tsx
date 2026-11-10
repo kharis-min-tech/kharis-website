@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { AdminShell } from "@/components/studio/admin-shell";
 import { GraceChat } from "@/components/studio/grace-chat";
@@ -20,6 +21,7 @@ function BootScreen() {
 }
 
 export function StudioFrame({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<"loading" | "anon" | "authed">("loading");
 
@@ -46,6 +48,7 @@ export function StudioFrame({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  if (pathname === "/cookies") return children;
   if (status === "loading") return <BootScreen />;
   if (status === "anon" || !user) return <SignIn />;
 
