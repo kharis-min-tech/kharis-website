@@ -1,5 +1,5 @@
 import { LifeExperience } from "@/components/LifeExperience";
-import KharisTunnelHero from "@/components/ui/kharis-tunnel-hero";
+import { LifeTunnel } from "@/components/LifeTunnel";
 import { listBranches } from "@/lib/branches";
 
 export default async function LifePage() {
@@ -8,7 +8,7 @@ export default async function LifePage() {
   const branches = await listBranches();
   return (
     <>
-      <KharisTunnelHero />
+      <LifeTunnel />
       <LifeExperience branches={branches.map((b) => ({ id: b.id, name: b.name }))} />
     </>
   );

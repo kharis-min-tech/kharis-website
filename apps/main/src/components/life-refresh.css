@@ -13,6 +13,18 @@
   font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
+/* The whole lower half of the Life page is built on these six tokens, so a
+ * dark counterpart flips the subsystem in one place. It had none: the shell
+ * pinned cream and dark ink in both themes, which only stayed hidden while a
+ * full bleed photo hero sat on top of it. */
+html[data-theme="dark"] .life-refresh {
+  --life-cream: var(--surface-0);
+  --life-paper: var(--surface-1);
+  --life-ink: var(--fg);
+  --life-muted: var(--muted);
+  --life-line: rgba(255, 255, 255, 0.14);
+}
+
 .life-refresh :is(h1, h2, h3, h4, h5, h6) {
   color: var(--life-ink) !important;
   -webkit-text-fill-color: var(--life-ink) !important;
