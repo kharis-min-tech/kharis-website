@@ -17,11 +17,8 @@ export function MissionSection() {
   });
 
   return (
-    <section
-      ref={ref}
-      className="relative overflow-hidden bg-bg px-5 pb-10 pt-7 md:px-8 md:pb-12 md:pt-9"
-    >
-      <div className="mx-auto max-w-7xl text-center">
+    <section ref={ref} className="section band band--0 relative overflow-hidden">
+      <div className="section__inner text-center">
         <Reveal variant="up" distance={28} duration={0.8} className="mb-4">
           <p className="eyebrow">Our Mission</p>
         </Reveal>

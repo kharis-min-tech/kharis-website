@@ -11,7 +11,7 @@
   align-items: flex-end;
   box-sizing: border-box;
   min-height: clamp(28rem, 66svh, 40rem);
-  padding: 7.5rem clamp(1.25rem, 4vw, 3rem) clamp(2.75rem, 5vw, 4rem);
+  padding: calc(4.5rem + var(--pad-md)) var(--gutter) var(--pad-md);
   overflow: hidden;
   background: #12091f;
   border-bottom: 4px solid var(--purple);
@@ -256,6 +256,11 @@ html[data-theme="dark"] .quiz-btn-secondary:hover {
   border-color: rgba(196, 176, 255, 0.6);
 }
 
+/* Was py-12 sm:py-16 inline: 48/64px, off the shared scale. */
+.quiz-flow {
+  padding-block: var(--pad-md);
+}
+
 .quiz-card-section {
   scroll-margin-top: 5.5rem;
 }
@@ -269,8 +274,8 @@ html[data-theme="dark"] .quiz-btn-secondary:hover {
 @media (max-width: 767px) {
   .quiz-hero {
     min-height: clamp(24rem, 58svh, 32rem);
-    padding-top: 6.5rem;
-    padding-bottom: 2.5rem;
+    padding-top: calc(4.5rem + var(--pad-sm));
+    padding-bottom: var(--pad-sm);
   }
 }
 

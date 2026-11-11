@@ -1,0 +1,165 @@
+/*
+ * Homepage hero. Scoped to .band-hero.
+ *
+ * The hero this replaced pinned its copy to white with !important, which was
+ * right when the copy sat on photographs. Here it sits on the panel, so it
+ * takes the page's own ink instead and follows the theme like everything
+ * else.
+ */
+
+.band-hero {
+  --band-accent: var(--purple);
+
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  /* Leaves the header its own strip of page surface above the panel, the way
+   * every other section on the site is treated. */
+  padding: 4.5rem 1rem 1rem;
+  min-height: 100svh;
+  background: var(--surface-0);
+  box-sizing: border-box;
+}
+
+html[data-theme="dark"] .band-hero {
+  --band-accent: var(--yellow);
+}
+
+@media (min-width: 768px) {
+  .band-hero {
+    padding: 5.25rem 1.5rem 1.5rem;
+  }
+}
+
+.band-hero__panel {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  min-height: 30rem;
+  /* Square, like the rest of the site and like the sample this layout comes
+   * from. The carousel's own reference look rounds both the panel and the
+   * tiles; neither is rounded here. */
+  border: 1px solid var(--line);
+  background: var(--surface-0);
+  /* The carousel sizes itself against its container, so the panel has to be
+   * the thing with a height. */
+  container-type: size;
+}
+
+/* The reel fills the panel; the band is a share of that height, set by
+ * tileHeight, and sits where `axis` puts it. */
+.band-hero__reel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Three rows: everything above the first band, the stretch the bands occupy,
+ * everything below the last one. The reference card is 480px tall,
+ * where simply pushing the copy to the top and bottom edges still leaves it
+ * near the band. A panel a whole viewport tall does not, so the copy is hung
+ * off the band instead of off the panel, and the composition holds at any
+ * height. The measurements come from --band-tile-h / --band-tile-w and the
+ * axes, which BandHero derives from the very numbers it hands the carousel.
+ * With a single band the first and last axis are the same, so the middle row
+ * is just the band's own height. */
+.band-hero__copy {
+  --band-h: min(var(--band-tile-h), var(--band-tile-w));
+  --bands-top: calc(var(--band-axis-top) - var(--band-h) / 2);
+  --bands-height: calc(var(--band-axis-bottom) - var(--band-axis-top) + var(--band-h));
+
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-rows: var(--bands-top) var(--bands-height) 1fr;
+  justify-items: center;
+  height: 100%;
+  padding-inline: 1.5rem;
+  text-align: center;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.band-hero__head,
+.band-hero__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 44rem;
+}
+
+/* Sits on the top band's upper edge, then backs off. */
+.band-hero__head {
+  align-self: end;
+  padding-bottom: clamp(2.5rem, 6vh, 4.25rem);
+}
+
+/* Row three, so it starts at the lower band's bottom edge. */
+.band-hero__foot {
+  grid-row: 3;
+  align-self: start;
+  padding-top: clamp(2.5rem, 6vh, 4.25rem);
+}
+
+/* HeroHeadline sets its colours inline, for the photo wall where the copy is
+ * always white. An author !important is the only thing that outranks an
+ * inline declaration.
+ *
+ * No text-shadow anywhere in here: this is the page's own ink on the page's
+ * own surface, so it is not being separated from anything. */
+.band-hero :is(.hero-lead, .hero-headline),
+.band-hero .hero-headline :is(.hero-depth, .hero-type, .hero-type__live, .hero-type__sizer) {
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg) !important;
+  text-shadow: none !important;
+}
+
+/* The rotating phrase and "Kharis" carry the accent, and the rotator's caret
+ * is `background: currentColor`, so colouring its wrapper colours the caret
+ * too. The rotator is handed campaign yellow in its props, which is right on
+ * dark and off-brand on white; the accent token is the site's own answer,
+ * purple in light and yellow in dark. */
+.band-hero .hero-phrases,
+.band-hero .hero-phrases *,
+.band-hero .hero-headline .kharis-brand {
+  color: var(--band-accent) !important;
+  -webkit-text-fill-color: var(--band-accent) !important;
+  text-shadow: none !important;
+}
+
+.band-hero__tagline {
+  margin: 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.band-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  pointer-events: auto;
+}
+
+.band-hero__ctas :is(.btn-primary, .btn-ghost) {
+  min-width: 11.75rem;
+}
+
+@media (max-width: 767px) {
+  .band-hero__copy {
+    padding-inline: 1rem;
+  }
+
+  .band-hero__ctas {
+    width: 100%;
+  }
+
+  .band-hero__ctas :is(.btn-primary, .btn-ghost) {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 0.625rem;
+  }
+}

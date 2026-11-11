@@ -1,12 +1,12 @@
 /* Events: "Don't miss out on what's happening" square tiles */
 .events-next {
-  padding: clamp(2.5rem, 5vw, 4rem) 0 0;
+  padding: var(--pad-md) 0 0;
   background: #fff;
   scroll-margin-top: 5.5rem;
 }
 
 .events-next__wrap {
-  padding-inline: clamp(0.75rem, 2.5vw, 2.5rem);
+  padding-inline: var(--gutter);
 }
 
 .events-next__head {

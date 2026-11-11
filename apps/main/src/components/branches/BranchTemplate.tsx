@@ -470,7 +470,13 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
 
         {/* CONTACT BRANCH */}
         <BranchContactForm
-          branch={{ name: currentBranch.name, city: view.city, fullAddress: view.address }}
+          branch={{
+            name: currentBranch.name,
+            city: view.city,
+            fullAddress: view.address,
+            email: currentBranch.contact_email,
+            phone: currentBranch.contact_phone,
+          }}
         />
 
         {/* TRANSIT & PARKING INFO SECTION */}

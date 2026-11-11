@@ -118,7 +118,7 @@
 }
 
 /* On photos / dark bands a purple ring disappears. */
-:where(.hero-shell, .gov-incident, .apple-slide, [data-theme="dark"])
+:where(.gov-incident, .apple-slide, [data-theme="dark"])
   :where(
     .btn-primary,
     .btn-ghost,

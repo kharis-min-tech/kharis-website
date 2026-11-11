@@ -188,8 +188,8 @@ html[data-theme="dark"] .branch-page {
 .branch-watch,
 .branch-page #contact {
   max-width: 1280px;
-  padding-top: clamp(3.5rem, 7vw, 6rem);
-  padding-bottom: clamp(3.5rem, 7vw, 6rem);
+  padding-top: var(--pad-lg);
+  padding-bottom: var(--pad-lg);
 }
 .branch-services > div:first-child,
 .branch-watch > div:first-child {

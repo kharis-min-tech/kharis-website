@@ -18,11 +18,9 @@ export function BuildHouseSection() {
       </Parallax>
       <div className="absolute inset-0 bg-[#170733]/72" />
 
-      <div className="relative z-10 mx-auto flex min-h-[58vh] max-w-7xl items-center justify-center px-5 py-10 text-center md:px-8 md:py-12">
+      <div className="section section--lg relative z-10 flex min-h-[58vh] items-center justify-center text-center">
         <Reveal variant="blur" duration={1.1} className="mx-auto w-full max-w-3xl md:max-w-4xl">
-          <p className="give-eyebrow text-[0.8rem] font-extrabold uppercase tracking-[0.18em] md:text-[0.88rem]">
-            Spurgeon&apos;s Centre
-          </p>
+          <p className="eyebrow give-eyebrow">Spurgeon&apos;s Centre</p>
           <h2 className="section-title mt-3 !text-[clamp(2rem,4.6vw,3.4rem)] !text-white">
             We&rsquo;ve purchased our new home
           </h2>
