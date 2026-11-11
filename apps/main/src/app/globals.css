@@ -284,15 +284,6 @@ h6 {
   }
 }
 
-/* .messages-band and the .visit-band__seam diagonal join are gone: no
- * component rendered either of them, and the negative margin the seam needed
- * was already being zeroed further down. Bands get their surface from
- * .band--0 / .band--1 and their separation from the hairline between them. */
-.visit-band {
-  position: relative;
-  z-index: 0;
-  overflow: hidden;
-}
 .eyebrow {
   color: var(--purple);
 }
@@ -11702,11 +11693,14 @@ html[data-site-intro="seen"] .home-below-hero {
 }
 
 /* Latest messages CTA row */
+/* One button, centred under the whole section rather than under the
+ * featured message, which is only the left two thirds of the grid. */
 .latest-messages__actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: 2.25rem;
   padding-bottom: 0.75rem;
 }
 
@@ -13419,12 +13413,6 @@ html[data-theme="dark"] .btn-secondary:hover {
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.55),
     0 4px 18px rgba(0, 0, 0, 0.5);
-}
-
-/* How Kharis Looks */
-.visit-band {
-  margin-top: 0;
-  padding-top: 0;
 }
 
 .apple-slide,

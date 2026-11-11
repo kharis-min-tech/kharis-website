@@ -66,11 +66,6 @@ export function LatestMessages({ featured, others }: Props) {
               <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,2.4vw,1.75rem)] font-bold leading-snug text-fg">
                 {featured.title}
               </h3>
-              <div className="latest-messages__actions mt-5 flex justify-center">
-                <a href="/messages" className="btn-primary">
-                  Browse All Messages
-                </a>
-              </div>
             </div>
           </Reveal>
 
@@ -101,6 +96,12 @@ export function LatestMessages({ featured, others }: Props) {
               </RevealItem>
             ))}
           </RevealStagger>
+        </div>
+
+        <div className="latest-messages__actions">
+          <a href="/messages" className="btn-primary">
+            Browse All Messages
+          </a>
         </div>
       </div>
     </section>

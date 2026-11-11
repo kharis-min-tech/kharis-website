@@ -28,7 +28,7 @@ const cards: Card[] = [
     reveal: "left",
   },
   {
-    title: "Young Adults",
+    title: "A New Generation",
     href: KP2_URL,
     image: "https://images.kharis.org/site-images/main/012b86affad979dd/home/kp2-community.webp",
     cta: "Visit KP2",

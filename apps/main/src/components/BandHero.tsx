@@ -42,7 +42,7 @@ import "./hero-band.css";
  * this layout comes from does not, and nor does anything else on the site.
  */
 const BAND = {
-  tileHeight: 34,
+  tileHeight: 38,
   aspectRatio: 1.77,
   curve: 80,
   /* The reference ships 6. `gap` is a share of the tile's HEIGHT, not its
