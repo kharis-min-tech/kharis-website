@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 import { EvangelicalAllianceMark } from "@/components/EvangelicalAllianceMark";
 import "./evangelical-alliance.css";
 import { BrandLogo } from "@/components/BrandLogo";
-import { Reveal } from "@/components/Reveal";
+import { FooterWorld } from "@/components/FooterWorld";
 import { KP2_URL } from "@/lib/kp2";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
@@ -25,20 +25,31 @@ export function SiteFooter({ tone }: Props) {
     <footer
       data-site-footer
       data-smooth-nav
+      // --surface-0 in both themes: the footer is the last band on every page,
+      // so it has to alternate against whatever precedes it. The section above
+      // it is --surface-1 on the home page and most others.
       className={`site-footer border-t ${
-        dark ? "site-footer--dark border-white/10 bg-[#0d0914] text-white" : "border-line bg-bg"
+        dark
+          ? "site-footer--dark border-line-on-dark bg-surface-0 text-white"
+          : "border-line bg-surface-0"
       }`}
     >
-      <Reveal variant="fade">
+      {/* No reveal here. This was wrapped in <Reveal variant="fade">, whose
+          viewport trigger needs 20% of the element on screen (and shrinks the
+          viewport a further 8% at the bottom) before it starts a 0.95s fade.
+          The footer is tall — nav columns, the globe, the strapline — so you
+          scrolled to the bottom of the page and sat looking at an empty band
+          for about a second. A footer is a destination, not a surprise: it
+          should already be there when you arrive. */}
+      <div>
         <div className="site-footer__inner">
           <div className="site-footer__grid">
             <div className="site-footer__brand">
               <Link href="/" aria-label="Kharis home">
                 <BrandLogo tone={dark ? "onDark" : "onLight"} />
               </Link>
-              <p className={`site-footer__tagline ${muted}`}>
-                Changing the world with a touch of His grace.
-              </p>
+              {/* The strapline sits under the big wordmark above; repeating it
+                  here put it on the page twice, a few hundred pixels apart. */}
             </div>
             <div className="site-footer__col">
               <h5 className={`site-footer__heading ${heading}`}>About</h5>
@@ -129,7 +140,10 @@ export function SiteFooter({ tone }: Props) {
                   </Link>
                 </li>
               </ul>
-              <div className={`site-footer__social ${dark ? "text-[#d4920a]" : "text-purple"}`}>
+              {/* Was a hard-coded #d4920a, the light-mode orange, which made
+                  these the only orange marks on a dark page. Dark mode's
+                  accent is the campaign yellow, same as the header CTA. */}
+              <div className={`site-footer__social ${dark ? "text-yellow" : "text-purple"}`}>
                 <a
                   href="https://www.youtube.com/@davidantwi"
                   target="_blank"
@@ -189,6 +203,12 @@ export function SiteFooter({ tone }: Props) {
               </div>
             </div>
           </div>
+          {/* Navigation first, then the wordmark, then the legal row —
+              the order the component was designed around. */}
+          {/* Passed down rather than subscribed to again inside: this
+              component already knows the tone, and `tone` can override the
+              stored theme on pages that force one. */}
+          <FooterWorld dark={dark} />
           <div className="site-footer__bottom">
             <p className={`site-footer__legal ${dark ? "text-white/60" : "text-muted"}`}>
               2026 Kharis Ministries | All Rights Reserved | Charity Number 1139291
@@ -212,7 +232,7 @@ export function SiteFooter({ tone }: Props) {
             <EvangelicalAllianceMark />
           </div>
         </div>
-      </Reveal>
+      </div>
     </footer>
   );
 }

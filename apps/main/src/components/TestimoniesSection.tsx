@@ -210,7 +210,7 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   return (
     <section
       id="testimonies"
-      className="testimony-band px-5 py-8 md:px-8 md:py-10"
+      className="testimony-band section band band--0"
       onFocusCapture={(event) => {
         interacting.current = !!railRef.current?.contains(event.target);
       }}
@@ -218,7 +218,7 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
         interacting.current = !!railRef.current?.contains(event.relatedTarget);
       }}
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="section__inner">
         <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
           <p className="eyebrow">Stories</p>
           <h2 className="section-title mt-2">Testimonies</h2>

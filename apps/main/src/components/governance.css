@@ -25,7 +25,7 @@
 }
 
 .gov-page .gov-hero {
-  padding: clamp(7rem, 12vw, 10rem) clamp(1.25rem, 5vw, 5rem) 3rem;
+  padding: calc(4.5rem + var(--pad-md)) var(--gutter) var(--pad-md);
 }
 .gov-page .gov-hero > div {
   grid-template-columns: 1.2fr 0.8fr;
@@ -52,7 +52,7 @@
     0 8px 12px rgba(21, 14, 30, 0.07);
 }
 .gov-page .gov-policies {
-  padding: 1rem clamp(1.25rem, 5vw, 5rem) 4rem;
+  padding: var(--pad-sm) var(--gutter) var(--pad-lg);
 }
 .gov-page .gov-policies__grid {
   grid-template-columns: 1fr;
@@ -121,7 +121,7 @@
   }
 }
 .gov-page .gov-incident {
-  padding-inline: clamp(1.25rem, 5vw, 5rem);
+  padding-inline: var(--gutter);
 }
 .gov-page .gov-incident__panel {
   box-shadow:
@@ -164,10 +164,11 @@
   text-shadow: none;
 }
 
+/* 76rem put governance's content column 32px inside every other page's. */
 .gov-page .gov-hero {
-  max-width: 76rem;
-  padding-top: 7rem;
-  padding-bottom: 2rem;
+  max-width: calc(var(--page-max) + 2 * var(--gutter));
+  padding-top: calc(4.5rem + var(--pad-md));
+  padding-bottom: var(--pad-md);
 }
 .gov-page .gov-hero > div {
   display: block;
@@ -181,8 +182,8 @@
   margin-top: 1rem;
 }
 .gov-page .gov-policies {
-  max-width: 76rem;
-  padding-bottom: 2rem;
+  max-width: calc(var(--page-max) + 2 * var(--gutter));
+  padding-bottom: var(--pad-md);
 }
 .gov-page .gov-policies__grid {
   background: var(--bg-soft);
@@ -200,7 +201,7 @@
   font-size: clamp(1.2rem, 1.8vw, 1.55rem);
 }
 .gov-page .gov-incident {
-  max-width: 76rem;
+  max-width: calc(var(--page-max) + 2 * var(--gutter));
 }
 @media (max-width: 800px) {
   .gov-page .gov-policy {
@@ -211,6 +212,6 @@
     grid-column: 1;
   }
   .gov-page .gov-hero {
-    padding-bottom: 1rem;
+    padding-bottom: var(--pad-sm);
   }
 }

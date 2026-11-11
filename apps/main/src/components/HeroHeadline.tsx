@@ -1,36 +1,18 @@
-/** Hero headline timeline: types "Welcome to Kharis", then "We are …" for each church value, then loops. */
+/** Hero headline: types "Welcome to Kharis" once, then hands over to the rotator. */
 "use client";
 
 import { useEffect, useState, type CSSProperties } from "react";
+import { HeroPhrases } from "./HeroPhrases";
+import "./hero-headline.css";
 
 const WELCOME = "Welcome to ";
 const BRAND = "Kharis";
 const FULL_LENGTH = WELCOME.length + BRAND.length;
 const LEAD = "We are";
 
-/** Each phrase gets its own entrance (styles live in hero-slider.css). */
-const PHRASES = [
-  { text: "Jesus Believers", anim: "wipe" },
-  { text: "Christ Glorifying", anim: "fade-up" },
-  { text: "Biblical", anim: "tracking" },
-  { text: "Spirit Filled", anim: "words" },
-  { text: "Revival Seeking", anim: "wipe" },
-  { text: "Sound Believers", anim: "blur-in" },
-  { text: "God\u2019s Elect", anim: "fade-up" },
-  { text: "Disciples", anim: "tracking" },
-  { text: "Hungry for God", anim: "words" },
-  { text: "Jesus Lovers", anim: "blur-in" },
-] as const;
-
 const START_DELAY_MS = 500;
 const TYPE_MS = 80;
 const WELCOME_HOLD_MS = 2600;
-/** "We are" animates first; the phrase follows after this delay. */
-const LEAD_MS = 450;
-const PHRASE_MS = 2800;
-const OUT_MS = 550;
-
-type Phase = "in" | "hold" | "out";
 
 /** Layout is inline so the headline stays centred even if the stylesheet is stale. */
 const LEAD_STYLE: CSSProperties = {
@@ -66,14 +48,13 @@ const LIVE_STYLE: CSSProperties = {
   zIndex: 1,
   textAlign: "left",
 };
-/** Campaign yellow: "Kharis" in the welcome line and every "We are …" phrase. */
+/** Campaign yellow: "Kharis" in the welcome line. */
 const ACCENT = "#ffde59";
 const BRAND_STYLE: CSSProperties = { color: ACCENT, WebkitTextFillColor: ACCENT };
 
 export function HeroHeadline() {
-  const [step, setStep] = useState(0);
   const [typed, setTyped] = useState(0);
-  const [phase, setPhase] = useState<Phase>("in");
+  const [introDone, setIntroDone] = useState(false);
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
@@ -86,39 +67,20 @@ export function HeroHeadline() {
 
   useEffect(() => {
     if (reduced) {
-      setStep(0);
       setTyped(FULL_LENGTH);
-      setPhase("hold");
+      setIntroDone(true);
       return;
     }
-
     const timers: number[] = [];
-    const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
-    const goTo = (next: number) => {
-      setTyped(0);
-      setPhase("in");
-      setStep(next);
-    };
-
-    if (step === 0) {
-      for (let i = 1; i <= FULL_LENGTH; i += 1) {
-        at(START_DELAY_MS + i * TYPE_MS, () => setTyped(i));
-      }
-      const typedAt = START_DELAY_MS + FULL_LENGTH * TYPE_MS;
-      at(typedAt, () => setPhase("hold"));
-      at(typedAt + WELCOME_HOLD_MS, () => setPhase("out"));
-      at(typedAt + WELCOME_HOLD_MS + OUT_MS, () => goTo(1));
-    } else {
-      at(LEAD_MS + PHRASE_MS, () => setPhase("out"));
-      at(LEAD_MS + PHRASE_MS + OUT_MS, () => goTo((step + 1) % (PHRASES.length + 1)));
+    for (let i = 1; i <= FULL_LENGTH; i += 1) {
+      timers.push(window.setTimeout(() => setTyped(i), START_DELAY_MS + i * TYPE_MS));
     }
-
+    const typedAt = START_DELAY_MS + FULL_LENGTH * TYPE_MS;
+    timers.push(window.setTimeout(() => setIntroDone(true), typedAt + WELCOME_HOLD_MS));
     return () => timers.forEach((t) => window.clearTimeout(t));
-  }, [step, reduced]);
+  }, [reduced]);
 
-  const out = phase === "out" ? " is-out" : "";
-
-  if (step === 0) {
+  if (!introDone) {
     const welcome = WELCOME.slice(0, Math.min(typed, WELCOME.length));
     const brand = BRAND.slice(0, Math.max(0, typed - WELCOME.length));
     const complete = typed >= FULL_LENGTH;
@@ -126,7 +88,7 @@ export function HeroHeadline() {
       <div aria-hidden>
         <span style={{ ...LEAD_STYLE, visibility: "hidden" }}>{LEAD}</span>
         <div className="hero-headline" style={HEADLINE_STYLE}>
-          <span className={`hero-type${out}`} style={TYPE_BOX_STYLE}>
+          <span className="hero-type" style={TYPE_BOX_STYLE}>
             <span className="hero-type__sizer" style={SIZER_STYLE}>
               {WELCOME}
               {BRAND}
@@ -144,38 +106,15 @@ export function HeroHeadline() {
     );
   }
 
-  const phrase = PHRASES[step - 1]!;
-  const words = phrase.text.split(" ");
+  /* The rotator owns its own loop from here, so there are no per-letter
+   * timers and no step state to keep in sync with it. */
   return (
-    <div aria-hidden>
-      <span key={`lead-${step}`} className={`hero-lead${out}`} style={LEAD_STYLE}>
+    <div>
+      <span className="hero-lead" style={LEAD_STYLE} aria-hidden>
         {LEAD}
       </span>
       <div className="hero-headline" style={HEADLINE_STYLE}>
-        <span
-          key={step}
-          className={`hero-phrase hero-phrase--${phrase.anim}${out}${phrase.anim === "words" ? "" : " hero-3d"}`}
-          style={
-            {
-              animationDelay: `${LEAD_MS}ms`,
-              color: ACCENT,
-              "--c": ACCENT,
-            } as CSSProperties
-          }
-        >
-          {phrase.anim === "words"
-            ? words.map((word, i) => (
-                <span
-                  key={word}
-                  className="hero-phrase__word hero-3d"
-                  style={{ animationDelay: `${LEAD_MS + i * 220}ms` }}
-                >
-                  {word}
-                  {i < words.length - 1 ? "\u00a0" : null}
-                </span>
-              ))
-            : phrase.text}
-        </span>
+        <HeroPhrases />
       </div>
     </div>
   );

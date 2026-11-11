@@ -12,20 +12,24 @@ export function VisitSection({ slides = [] }: Props) {
   const list = Array.isArray(slides) ? slides : [];
 
   return (
-    <section id="who-we-are" className="visit-band">
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pt-10 md:px-8 md:pt-12">
-        <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
-          <h2 className="section-title">
-            This is <span className="kharis-word">Kharis</span>
-          </h2>
-        </Reveal>
+    <section id="who-we-are" className="visit-band band band--1">
+      {/* The carousel is full-bleed, so the band's own padding stops above it
+          and the lower half is spaced by the section's bottom pad instead. */}
+      <div className="section section--flush-bottom relative z-10">
+        <div className="section__inner">
+          <Reveal variant="blur" className="mx-auto max-w-2xl text-center">
+            <h2 className="section-title">
+              This is <span className="kharis-word">Kharis</span>
+            </h2>
+          </Reveal>
+        </div>
       </div>
 
-      <Reveal variant="up" distance={40} className="relative z-10 w-full">
+      <Reveal variant="up" distance={40} className="relative z-10 mt-6 w-full md:mt-8">
         <BranchCarousel slides={list} />
       </Reveal>
 
-      <div className="relative z-10 pb-8 md:pb-10" aria-hidden />
+      <div className="section section--flush-top" aria-hidden />
     </section>
   );
 }

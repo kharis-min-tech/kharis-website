@@ -7,7 +7,7 @@
   display: grid;
   align-items: end;
   height: clamp(34rem, calc(100svh - 4.5rem), 56rem);
-  padding: 7rem clamp(1.25rem, 4vw, 3rem) clamp(2.5rem, 6vw, 4rem);
+  padding: calc(4.5rem + var(--pad-md)) var(--gutter) var(--pad-md);
   overflow: hidden;
   background: #140b22;
   color: #fff;
@@ -118,7 +118,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--story-gap);
-  padding: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: var(--pad-md) 0 0;
   background: #fff;
 }
 
@@ -429,7 +429,7 @@ div.events-page {
   height: 2.75rem;
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.86);
   color: #111;
   cursor: pointer;
@@ -641,7 +641,7 @@ div.events-page {
   flex: none;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 999px;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   cursor: pointer;
@@ -675,7 +675,7 @@ div.events-page {
   height: 2.75rem;
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.1);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);

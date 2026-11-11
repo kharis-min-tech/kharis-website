@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { BuildHouseSection } from "@/components/BuildHouseSection";
-import { Hero } from "@/components/Hero";
+import { BandHero } from "@/components/BandHero";
 import { KnowUsStack } from "@/components/KnowUsStack";
 import { LatestMessages } from "@/components/LatestMessages";
 import { MissionSection } from "@/components/MissionSection";
@@ -8,7 +8,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TestimoniesSection } from "@/components/TestimoniesSection";
 import { getTestimonies } from "@/lib/testimonies";
-import { UnsureBranchCta } from "@/components/UnsureBranchCta";
 import { VisionSection } from "@/components/VisionSection";
 import { VisitSection } from "@/components/VisitSection";
 import { CHARACTER_SLIDES } from "@/lib/branch-slides";
@@ -29,19 +28,25 @@ export default function Home() {
   return (
     <main className="home-page bg-bg text-fg">
       <div className="home-page-shell">
-        <SiteHeader />
-        <Hero />
+        {/* The hero is inset below the header now, so the header sits on the
+            page surface rather than on photographs. In light mode that means
+            dark nav on white; `tone="light"` only applies when the site theme
+            is light, so dark mode still gets the white treatment. */}
+        <SiteHeader tone="light" />
+        <BandHero />
         <div className="home-below-hero">
           <MissionSection />
           <KnowUsStack />
           <Suspense
             fallback={
               <section
-                className="px-5 py-8 md:px-8 md:py-10"
+                className="section band band--0"
                 aria-busy="true"
                 aria-label="Loading latest messages"
               >
-                <h2 className="section-title">Latest Messages</h2>
+                <div className="section__inner text-center">
+                  <h2 className="section-title">Latest Messages</h2>
+                </div>
               </section>
             }
           >
@@ -53,18 +58,19 @@ export default function Home() {
             fallback={
               <section
                 id="testimonies"
-                className="testimony-band px-5 py-8 md:px-8 md:py-10"
+                className="testimony-band section band band--0"
                 aria-busy="true"
                 aria-label="Loading testimonies"
               >
-                <h2 className="section-title">Testimonies</h2>
+                <div className="section__inner text-center">
+                  <h2 className="section-title">Testimonies</h2>
+                </div>
               </section>
             }
           >
             <HomeTestimonies />
           </Suspense>
           <VisionSection />
-          <UnsureBranchCta />
           <SiteFooter />
         </div>
       </div>

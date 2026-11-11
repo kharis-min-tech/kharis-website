@@ -15,7 +15,8 @@ export default async function GivePage() {
 
   return (
     <main className="bg-bg text-fg">
-      <SiteHeader />
+      {/* Hero is a page surface now, so the header follows the theme. */}
+      <SiteHeader tone="light" />
       <GiveExperience branches={branches} />
       <SiteFooter />
     </main>

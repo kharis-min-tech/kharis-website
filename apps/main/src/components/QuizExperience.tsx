@@ -323,7 +323,7 @@ export function QuizExperience() {
         </div>
       </header>
 
-      <div className="relative z-10 py-12 sm:py-16">
+      <div className="quiz-flow relative z-10">
         {/* Quiz Flow Card Section */}
         <section id="quiz-card" ref={containerRef} className="quiz-card-section px-5 md:px-8">
           <div className="mx-auto max-w-3xl">

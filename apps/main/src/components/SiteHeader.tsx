@@ -77,27 +77,16 @@ export function SiteHeader({ tone = "auto" }: Props) {
   const overlay = overlayMode !== null && !open;
   const overlayDark = overlay && overlayMode === "dark";
 
-  const onDark = overlay
-    ? true
-    : siteDark
-      ? true
-      : forceLight
-        ? false
-        : forceDark
-          ? !open
-          : !scrolled && !open;
-  const solid = overlay
-    ? overlayDark
-    : siteDark
-      ? true
-      : forceLight
-        ? true
-        : forceDark
-          ? scrolled || open
-          : scrolled || open;
+  /* The header floats clear over hero media and solidifies on scroll — in
+   * BOTH themes. Dark mode used to force `solid` on from the first frame, so
+   * the bar sat as an opaque slab over the hero video while light mode let it
+   * breathe. Same behaviour either way now; only the colours differ. */
+  const atTop = !scrolled && !open;
+  const onDark = overlay ? true : forceLight ? false : forceDark ? true : atTop;
+  const solid = overlay ? overlayDark : forceLight ? true : !atTop;
 
   const linkTone = (active: boolean) =>
-    `k-motion inline-flex h-10 cursor-pointer items-center text-[13px] leading-none font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-1 focus-visible:-translate-y-1 ${
+    `k-motion inline-flex h-10 cursor-pointer items-center text-[13px] leading-none font-semibold tracking-wide transition-transform duration-200 hover:-translate-y-0.5 focus-visible:-translate-y-0.5 ${
       onDark || (forceDark && !open)
         ? active
           ? "text-white"
@@ -114,12 +103,12 @@ export function SiteHeader({ tone = "auto" }: Props) {
     <header
       data-site-header
       data-smooth-nav
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-400 ${
+      className={`site-header fixed inset-x-0 top-0 z-50 transition-all duration-400 ${
         solid
           ? forceDark || overlayDark
-            ? "border-b border-white/10 bg-[#0a0612]/90 shadow-sm backdrop-blur-xl"
-            : "border-b border-line bg-white/92 shadow-sm backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+            ? "site-header--solid site-header--solid-dark"
+            : "site-header--solid site-header--solid-light"
+          : "site-header--clear"
       }`}
     >
       <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-4 px-5 md:px-8">
@@ -179,10 +168,8 @@ export function SiteHeader({ tone = "auto" }: Props) {
                       className={`absolute left-1/2 top-full z-50 min-w-[13.5rem] -translate-x-1/2 pt-3`}
                     >
                       <div
-                        className={`overflow-hidden border py-2 shadow-lg ${
-                          onDark || forceDark
-                            ? "border-white/10 bg-[#120816]/96 text-white backdrop-blur-xl"
-                            : "border-line bg-white text-fg"
+                        className={`site-menu overflow-hidden border py-2 shadow-lg ${
+                          onDark || forceDark ? "site-menu--dark" : "site-menu--light"
                         }`}
                       >
                         {link.children.map((child) => {
@@ -248,12 +235,12 @@ export function SiteHeader({ tone = "auto" }: Props) {
           {pathname === "/locations" ? null : (
             <Link
               href="/locations"
-              className={`k-cta hidden items-center gap-2 px-5 py-3 text-[0.8rem] font-bold shadow-[0_2px_0_var(--edge),0_8px_18px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_0_var(--edge),0_14px_24px_rgba(0,0,0,0.3)] focus-visible:-translate-y-0.5 active:translate-y-px sm:inline-flex ${
+              className={`btn-header hidden sm:inline-flex ${
                 siteDark
-                  ? "bg-orange text-[#1c1c1f] [--edge:#a8660f] hover:bg-[#f2b254]"
+                  ? "btn-header--accent"
                   : onDark || (forceDark && !open)
-                    ? "bg-white text-fg [--edge:#a596d3]"
-                    : "bg-purple text-white [--edge:#3d0591]"
+                    ? "btn-header--on-dark"
+                    : "btn-header--on-light"
               }`}
             >
               Find a Branch

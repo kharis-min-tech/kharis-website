@@ -7,7 +7,7 @@
 
 @media (max-width: 539px) {
   .site-footer {
-    padding: 2.5rem 1.125rem 1.75rem;
+    padding: var(--pad-md) var(--gutter) var(--pad-sm);
   }
 
   .site-footer__grid {
@@ -86,8 +86,8 @@
   overflow: hidden;
   isolation: isolate;
   margin: 0;
-  padding: clamp(2rem, 7vw, 7rem);
-  border-radius: 2.4rem 2.4rem 0 0;
+  padding: var(--pad-lg) var(--gutter);
+  border-radius: 0;
   background: #0a0612;
 }
 
@@ -292,7 +292,7 @@
   position: relative;
   isolation: isolate;
   overflow: clip;
-  padding: clamp(2.5rem, 5vw, 3.75rem) max(1.25rem, calc((100vw - 82rem) / 2));
+  padding: var(--pad-md) max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   background:
     radial-gradient(
       ellipse at 78% 0%,
@@ -464,7 +464,7 @@
   width: min(82rem, calc(100% - 3rem));
   margin: clamp(2rem, 5vw, 3rem) auto;
   padding: clamp(1.5rem, 4vw, 3rem);
-  background: #faf8ff;
+  background: var(--surface-1);
   color: #1c1c1f;
   box-shadow: 0.4rem 0.45rem 0 rgba(0, 0, 0, 0.36);
 }
@@ -594,7 +594,7 @@ html[data-theme="dark"] .life-page--depts .life-dept-band__copy {
   .life-page--depts .life-dept-band {
     min-height: 100svh;
     padding: 1.25rem;
-    border-radius: 1.35rem 1.35rem 0 0;
+    border-radius: 0;
   }
 
   .life-page--depts .life-dept-band__copy {

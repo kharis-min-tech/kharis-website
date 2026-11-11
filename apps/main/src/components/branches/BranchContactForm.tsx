@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { MapPin, Send, Check } from "lucide-react";
+import { MapPin, Mail, Phone, Send, Check } from "lucide-react";
 import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../../shared/form-fields";
 import { HoneypotField, useTurnstile } from "../../../../../shared/form-widgets";
 interface BranchContactFormProps {
@@ -9,6 +9,11 @@ interface BranchContactFormProps {
     name: string;
     city: string;
     fullAddress: string;
+    /* Moved here from the contact page's branch directory, which was the only
+     * place these were shown. This is where someone looking for a branch's
+     * number actually goes. */
+    email?: string | null;
+    phone?: string | null;
   };
 }
 
@@ -44,6 +49,24 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
               <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--branch-accent)]" />
               {branch.fullAddress}
             </div>
+            {branch.email ? (
+              <a
+                href={`mailto:${branch.email}`}
+                className="flex items-start gap-3 border border-[var(--branch-line)] bg-[var(--branch-card)] px-4 py-3.5 text-sm font-semibold text-[var(--branch-ink)] transition-colors hover:border-[var(--branch-accent)]"
+              >
+                <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--branch-accent)]" />
+                {branch.email}
+              </a>
+            ) : null}
+            {branch.phone ? (
+              <a
+                href={`tel:${branch.phone.replace(/s+/g, "")}`}
+                className="flex items-start gap-3 border border-[var(--branch-line)] bg-[var(--branch-card)] px-4 py-3.5 text-sm font-semibold text-[var(--branch-ink)] transition-colors hover:border-[var(--branch-accent)]"
+              >
+                <Phone className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--branch-accent)]" />
+                {branch.phone}
+              </a>
+            ) : null}
           </div>
         </div>
 

@@ -16,7 +16,8 @@ export default async function ContactPage() {
 
   return (
     <main className="site-page text-fg">
-      <SiteHeader />
+      {/* Hero is a page surface now, so the header follows the theme. */}
+      <SiteHeader tone="light" />
       <Suspense fallback={null}>
         <ContactExperience locations={locations} />
       </Suspense>

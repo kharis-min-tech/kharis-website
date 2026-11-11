@@ -1,0 +1,45 @@
+/*
+ * The headline's own chrome: the display face it is set in, and the typing
+ * caret. Everything else about HeroHeadline is inline on the elements.
+ *
+ * It lives here, next to the component, rather than in a hero's stylesheet,
+ * because the headline belongs to whichever hero is mounted and should not
+ * stop being a headline if that hero is replaced. Colour deliberately is NOT
+ * set here: each hero decides that, since it depends on what the copy is
+ * sitting on.
+ */
+
+.hero-headline {
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+/* Blinks beside the letters while "Welcome to Kharis" is typed out.
+ * currentColor, so it takes the colour the hero gives the headline. */
+.hero-type__caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.9em;
+  margin-left: 0.04em;
+  vertical-align: -0.08em;
+  background: currentColor;
+  border-radius: 1px;
+  animation: hero-caret 0.9s steps(1) infinite;
+}
+
+@keyframes hero-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* HeroHeadline skips the typing pass entirely under reduced motion, so
+   * there is nothing for the caret to sit beside. */
+  .hero-type__caret {
+    display: none;
+  }
+}

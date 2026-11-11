@@ -5,7 +5,8 @@
  */
 
 .gv {
-  --gv-ink: #150934;
+  /* Follows the theme now; these two bands were a fixed violet slab. */
+  --gv-ink: var(--surface-0);
   --gv-surface: #fff;
   --gv-edge: #b9a6e6;
   /* One light source, top left; shadows tinted toward the page's purple. */
@@ -22,29 +23,33 @@
   overflow-x: clip;
 }
 
+/* The highlight word inside a heading. --yellow is a dark-surface colour and
+ * these bands follow the theme now, so on a light page it has to be the
+ * purple accent; the dark block below puts the yellow back. */
 .gv-yellow {
+  --c: var(--purple);
+  color: var(--purple);
+  -webkit-text-fill-color: var(--purple);
+}
+
+html[data-theme="dark"] .gv-yellow {
   --c: var(--yellow);
   color: var(--yellow);
   -webkit-text-fill-color: var(--yellow);
 }
 
-/* Lettering on dark: a shallow edge in a darker shade of the letter colour, then a cast shadow. */
+/* Flat lettering. This used to build a 3D edge out of seven stacked
+ * text-shadows — four colour steps for the extruded face and three blurs for
+ * a cast shadow. It was designed to sit on the old dark violet slab; on the
+ * page surface it read as a drop shadow stuck to the type. */
 .gv-3d,
 .gv-build h2 {
-  --c: #fff;
-  text-shadow:
-    0 0.01em 0 color-mix(in srgb, var(--c) 78%, #1b0a45),
-    0 0.02em 0 color-mix(in srgb, var(--c) 60%, #1b0a45),
-    0 0.03em 0 color-mix(in srgb, var(--c) 44%, #1b0a45),
-    0 0.04em 0 color-mix(in srgb, var(--c) 30%, #1b0a45),
-    0 0.06em 0.04em rgba(0, 0, 0, 0.5),
-    0 0.16em 0.28em rgba(0, 0, 0, 0.45),
-    0 0.34em 0.7em rgba(0, 0, 0, 0.4);
+  --c: var(--fg);
 }
 
 .gv-3d.gv-yellow,
 .gv-build h2 .gv-yellow {
-  --c: var(--yellow);
+  --c: var(--purple);
 }
 
 .gv-eyebrow {
@@ -53,17 +58,17 @@
   font-weight: 800;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--purple);
 }
 
 /* Hero */
 .gv-hero {
   position: relative;
-  padding: calc(4.5rem + clamp(2.75rem, 7vw, 5rem)) 1.25rem 0;
+  padding: calc(4.5rem + var(--pad-lg)) var(--gutter) 0;
   background-color: var(--gv-ink);
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1.4px);
+  background-image: radial-gradient(circle, var(--line) 1px, transparent 1.4px);
   background-size: 14px 14px;
-  color: #fff;
+  color: var(--fg);
   text-align: center;
 }
 
@@ -80,7 +85,7 @@
   font-weight: 800;
   line-height: 1.02;
   letter-spacing: -0.035em;
-  color: #fff;
+  color: var(--fg);
 }
 
 .gv-rise {
@@ -94,7 +99,7 @@
   font-size: clamp(1.05rem, 1.8vw, 1.25rem);
   font-weight: 700;
   line-height: 1.45;
-  color: #fff;
+  color: var(--fg);
   text-wrap: balance;
 }
 
@@ -106,7 +111,7 @@
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--yellow);
+  color: var(--muted);
 }
 
 .gv-hero__lede {
@@ -115,7 +120,7 @@
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--muted);
   text-wrap: pretty;
 }
 
@@ -236,9 +241,6 @@
   line-height: 1.08;
   letter-spacing: -0.03em;
   color: var(--fg);
-  text-shadow:
-    0 0.03em 0 var(--gv-edge),
-    0 0.07em 0.06em rgba(40, 14, 92, 0.1);
 }
 
 .gv-head > p:not(.gv-kicker) {
@@ -255,8 +257,7 @@
   position: relative;
   z-index: 1;
   scroll-margin-top: 4.5rem;
-  padding: calc(clamp(5rem, 13vw, 10rem) + clamp(3rem, 6vw, 4.5rem)) 1.25rem
-    clamp(4.5rem, 9vw, 7rem);
+  padding: var(--pad-lg) var(--gutter);
   background: var(--bg-soft);
 }
 
@@ -924,11 +925,11 @@
 /* Spurgeon's Centre */
 .gv-build {
   scroll-margin-top: 4.5rem;
-  padding: clamp(4.5rem, 9vw, 7.5rem) 1.25rem;
+  padding: var(--pad-lg) var(--gutter);
   background-color: var(--gv-ink);
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1.4px);
+  background-image: radial-gradient(circle, var(--line) 1px, transparent 1.4px);
   background-size: 14px 14px;
-  color: #fff;
+  color: var(--fg);
 }
 
 .gv-build__inner {
@@ -936,7 +937,7 @@
   grid-template-columns: 1.05fr 1fr;
   gap: clamp(2.5rem, 6vw, 5.5rem);
   align-items: center;
-  max-width: 72rem;
+  max-width: var(--page-max);
   margin: 0 auto;
 }
 
@@ -960,7 +961,7 @@
 }
 
 .gv-build__copy .gv-eyebrow {
-  color: var(--yellow);
+  color: var(--purple);
 }
 
 .gv .gv-build h2 {
@@ -969,7 +970,7 @@
   font-weight: 800;
   line-height: 1.02;
   letter-spacing: -0.035em;
-  color: #fff;
+  color: var(--fg);
 }
 
 .gv-build__copy > p:not(.gv-eyebrow) {
@@ -978,7 +979,7 @@
   font-size: 1.05rem;
   font-weight: 600;
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--muted);
 }
 
 .gv-build .btn-pair :is(.btn-give, .btn-secondary) {
@@ -992,7 +993,7 @@
   margin-top: 1.5rem;
   font-size: 0.9rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--muted);
   text-decoration: underline;
   text-underline-offset: 0.25em;
 }
@@ -1103,9 +1104,6 @@ html[data-theme="dark"] .gv {
 }
 
 html[data-theme="dark"] .gv .gv-head h2 {
-  text-shadow:
-    0 0.03em 0 var(--gv-edge),
-    0 0.07em 0.06em rgba(0, 0, 0, 0.35);
 }
 
 html[data-theme="dark"] .gv :is(.gv-kicker, .gv-tab__num, .gv-dial) {

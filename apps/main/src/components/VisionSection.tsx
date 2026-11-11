@@ -25,8 +25,8 @@ const LISTEN_STEPS = [
 
 export function VisionSection() {
   return (
-    <section id="vision" className="listen-band">
-      <div className="relative z-10 mx-auto max-w-7xl px-5 py-10 md:px-8 md:py-12">
+    <section id="vision" className="listen-band section section--lg band band--1">
+      <div className="section__inner relative z-10">
         <Reveal variant="up" distance={28} className="mx-auto max-w-3xl text-center">
           <p className="eyebrow">Get the app</p>
           <h2 className="section-title mt-2">Church in your pocket.</h2>

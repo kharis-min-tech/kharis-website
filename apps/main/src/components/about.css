@@ -58,7 +58,7 @@
   border-left: 1px solid var(--line);
 }
 .about-page .about-ety__blurb-wrap {
-  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 5vw, 5rem);
+  padding: var(--pad-md) var(--gutter);
 }
 .about-page .about-ety__blurb {
   margin: 0;
@@ -174,11 +174,11 @@
 }
 .about-page .about-stage__banner-inner {
   max-width: none;
-  padding-inline: clamp(1.25rem, 5vw, 5rem);
+  padding-inline: var(--gutter);
 }
 .about-page .about-jump--stage {
   max-width: none;
-  padding: 0 clamp(1.25rem, 5vw, 5rem) 2rem;
+  padding: 0 var(--gutter) var(--pad-sm);
 }
 .about-page .about-jump__link {
   min-height: 10rem;
@@ -211,7 +211,7 @@
 }
 .about-page .about-stage__canvas {
   max-width: none;
-  padding-inline: clamp(1.25rem, 5vw, 5rem);
+  padding-inline: var(--gutter);
 }
 .about-page .about-stage__panel {
   box-shadow: none;
@@ -235,7 +235,7 @@
 }
 .about-page .about-faith-band {
   margin-top: 3rem;
-  padding-block: clamp(3rem, 7vw, 7rem);
+  padding-block: var(--pad-lg);
 }
 .about-page .about-faith-band .about-section__title {
   font-size: clamp(2.8rem, 6vw, 5.5rem);
@@ -266,7 +266,7 @@
 }
 
 .about-page .about-stage__canvas {
-  padding-bottom: 2rem;
+  padding-bottom: var(--pad-sm);
 }
 .about-page .about-panel__hero {
   overflow: visible;
@@ -322,7 +322,7 @@
   font-size: clamp(2.5rem, 5.5vw, 5rem);
 }
 .about-page .about-stage__banner {
-  padding-block: clamp(2rem, 4vw, 3rem);
+  padding-block: var(--pad-md);
 }
 .about-page .about-panel__pillar,
 .about-page .about-panel__pillar.is-active {
