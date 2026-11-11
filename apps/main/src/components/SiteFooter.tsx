@@ -72,16 +72,6 @@ export function SiteFooter({ tone }: Props) {
               </ul>
             </div>
             <div className="site-footer__col">
-              <h5 className={`site-footer__heading ${heading}`}>Get Involved</h5>
-              <ul className={`site-footer__links ${muted}`}>
-                <li>
-                  <Link href="/quiz" data-no-smooth-nav className={linkHover}>
-                    Discover your ministry
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div className="site-footer__col">
               <h5 className={`site-footer__heading ${heading}`}>Belong</h5>
               <ul className={`site-footer__links ${muted}`}>
                 <li>
@@ -100,8 +90,8 @@ export function SiteFooter({ tone }: Props) {
                   </a>
                 </li>
                 <li>
-                  <Link href="/#testimonies" className={linkHover}>
-                    Read testimonies
+                  <Link href="/quiz" data-no-smooth-nav className={linkHover}>
+                    Discover your ministry
                   </Link>
                 </li>
               </ul>

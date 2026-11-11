@@ -66,7 +66,10 @@ export function KnowUsStack() {
           </h2>
         </Reveal>
 
-        <RevealStagger className="know-grid grid grid-cols-1 gap-4 sm:grid-cols-2" stagger={0.14}>
+        <RevealStagger
+          className="know-grid grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-6 lg:gap-7"
+          stagger={0.14}
+        >
           {cards.map((card) => (
             <RevealItem key={card.title} variant={card.reveal} distance={64} className="h-full">
               <motion.a

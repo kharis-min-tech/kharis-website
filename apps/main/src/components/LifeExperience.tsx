@@ -173,7 +173,7 @@ export function LifeExperience({ branches }: { branches: LifeBranch[] }) {
       window.location.replace("/life/departments");
       return;
     }
-    if (slug === "baptism" || slug === "fasting" || slug === "marriage" || slug === "k-group") {
+    if (slug === "fasting" || slug === "marriage" || slug === "k-group") {
       setModalSlug(slug);
     }
   }, []);

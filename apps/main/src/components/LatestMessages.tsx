@@ -66,12 +66,9 @@ export function LatestMessages({ featured, others }: Props) {
               <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,2.4vw,1.75rem)] font-bold leading-snug text-fg">
                 {featured.title}
               </h3>
-              <div className="latest-messages__actions btn-pair">
+              <div className="latest-messages__actions mt-5 flex justify-center">
                 <a href="/messages" className="btn-primary">
                   Browse All Messages
-                </a>
-                <a href="/messages#listen" data-no-smooth-nav className="btn-secondary">
-                  Listen on Podcasts
                 </a>
               </div>
             </div>

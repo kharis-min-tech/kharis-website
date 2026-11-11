@@ -1,9 +1,6 @@
 import type { LifeSlug } from "@/lib/life-content";
 
-export type LifeModalSlug = Extract<
-  LifeSlug,
-  "baptism" | "fasting" | "departments" | "k-group" | "marriage"
->;
+export type LifeModalSlug = Extract<LifeSlug, "fasting" | "departments" | "k-group" | "marriage">;
 
 export type LifeModalVideo = {
   /** YouTube video ID, or local file path when kind is "file" */
@@ -22,13 +19,6 @@ export const LIFE_MODAL_VIDEOS: Record<LifeModalSlug, LifeModalVideo> = {
     videoId: "0Aburds8DqQ",
     title: "K-Group at Kharis",
     blurb: "Small home fellowships where we discuss the Word, pray, and care for one another.",
-  },
-  baptism: {
-    videoId: "NOiT8EPTMrg",
-    title: "The Saving Power of Baptism",
-    blurb:
-      "A public declaration that you identify with Jesus Christ’s death, burial and resurrection.",
-    startSeconds: 95,
   },
   fasting: {
     videoId: "AE2AXoQetmc",

@@ -262,7 +262,12 @@ h6 {
   color: #fff !important;
 }
 
-/* Five equal cards, with Events kept alongside the Life pathways instead of the main menu. */
+/* Four equal cards: two up, then four across. It used to carry five and
+ * stepped 2 -> 4 -> 5 with a pile of nth-child(5) special cases to stop the
+ * last row going ragged. With four cards the five column step left an empty
+ * column, which read as the row sitting left of centre, and every one of
+ * those special cases was dead. Four divides cleanly, so none of it is
+ * needed. */
 .know-grid {
   grid-template-columns: 1fr;
 }
@@ -273,38 +278,9 @@ h6 {
   }
 }
 
-/* Five cards. A 3-column step left a 3+2 row with a hard empty rectangle
- * hanging off the end — with nothing rounded, that reads as a missing tile
- * rather than a gap. Going 2 → 4 → 5 keeps the last row either full or
- * centred, never ragged: at 2-up the fifth card spans the full width, at
- * 4-up it spans the two middle columns, and at 5-up the row is simply full. */
-@media (min-width: 640px) and (max-width: 1023px) {
-  .know-grid > *:nth-child(5) {
-    grid-column: 1 / -1;
-  }
-
-  .know-grid > *:nth-child(5) .know-card {
-    aspect-ratio: 16 / 7;
-  }
-}
-
 @media (min-width: 1024px) {
   .know-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .know-grid > *:nth-child(5) {
-    grid-column: 2 / span 2;
-  }
-}
-
-@media (min-width: 1280px) {
-  .know-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .know-grid > *:nth-child(5) {
-    grid-column: auto;
   }
 }
 
@@ -10522,8 +10498,12 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
 }
 
 @media (min-width: 900px) {
+  /* Brand, then one track per link column. This used to hard code four, so
+   * dropping a column left an empty track on the end and the whole row read
+   * as sitting left of centre. auto-fit collapses the tracks nothing lands
+   * in, so the columns always fill the width however many there are. */
   .site-footer__grid {
-    grid-template-columns: minmax(11rem, 1.15fr) repeat(4, minmax(9.5rem, 1fr));
+    grid-template-columns: minmax(11rem, 1.15fr) repeat(auto-fit, minmax(9.5rem, 1fr));
     gap: 2.75rem 2.5rem;
   }
 }

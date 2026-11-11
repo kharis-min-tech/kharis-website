@@ -34,12 +34,7 @@ export function VisionSection() {
             Romans 10:17. Faith comes by hearing, and hearing by the word of God.
           </p>
 
-          <div className="btn-pair mt-7">
-            <a href="#messages" className="btn-secondary">
-              Watch messages
-            </a>
-          </div>
-          <p className="mt-3 text-xs font-medium text-muted">Available on iPhone &amp; Android</p>
+          <p className="mt-5 text-xs font-medium text-muted">Available on iPhone &amp; Android</p>
         </Reveal>
 
         <Reveal variant="up" delay={0.08} className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
