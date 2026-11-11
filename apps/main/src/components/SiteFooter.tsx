@@ -82,7 +82,7 @@ export function SiteFooter({ tone }: Props) {
               </ul>
             </div>
             <div className="site-footer__col">
-              <h5 className={`site-footer__heading ${heading}`}>Join Us</h5>
+              <h5 className={`site-footer__heading ${heading}`}>Belong</h5>
               <ul className={`site-footer__links ${muted}`}>
                 <li>
                   <Link href="/locations" className={linkHover}>
@@ -101,7 +101,7 @@ export function SiteFooter({ tone }: Props) {
                 </li>
                 <li>
                   <Link href="/#testimonies" className={linkHover}>
-                    Belong
+                    Read testimonies
                   </Link>
                 </li>
               </ul>
