@@ -816,14 +816,14 @@ h6 {
 .vision-store__copy strong {
   font-size: 0.92rem;
   font-weight: 800;
-  color: #1c1c1f;
+  color: var(--fg);
   letter-spacing: -0.01em;
 }
 
 .vision-store__copy span {
   font-size: 0.74rem;
   font-weight: 600;
-  color: #6e6e76;
+  color: var(--muted);
 }
 
 /* —— Vision iPhone mock (linked app preview, brand glass colours) —— */
@@ -13166,8 +13166,7 @@ html[data-theme="dark"] .life-grid__intro .life-grid__eyebrow {
   color: #ffd38a !important;
 }
 
-.listen-card__detail,
-.vision-store__copy span {
+.listen-card__detail {
   color: #3f3f46;
 }
 html[data-theme="light"] .msg-btn--ghost {

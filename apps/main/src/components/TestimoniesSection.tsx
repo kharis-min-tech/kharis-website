@@ -3,7 +3,6 @@
 import Image from "@/components/SiteImage";
 import {
   type PointerEvent as ReactPointerEvent,
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -44,7 +43,6 @@ function excerpt(text: string, limit = 240) {
 
 export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
-  const [rotationPaused, setRotationPaused] = useState(false);
   const interacting = useRef(false);
   const manualUntil = useRef(0);
   const [selected, setSelected] = useState<{ item: Testimony; accentIndex: number } | null>(null);
@@ -65,40 +63,9 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [selected]);
 
-  const scrollByCard = useCallback((dir: -1 | 1) => {
-    manualUntil.current = performance.now() + 700;
-    const rail = railRef.current;
-    if (!rail) return;
-    const card = rail.querySelector<HTMLElement>(".testimony-card");
-    const gap =
-      parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap || "16") || 16;
-    const step = (card?.offsetWidth ?? 300) + gap;
-    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
-    if (maxScroll <= 2) return;
-    const edge = 8;
-    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "instant"
-      : "smooth";
-
-    if (dir === 1) {
-      if (rail.scrollLeft >= maxScroll - edge) {
-        rail.scrollTo({ left: 0, behavior });
-      } else {
-        rail.scrollTo({ left: Math.min(maxScroll, rail.scrollLeft + step), behavior });
-      }
-      return;
-    }
-
-    if (rail.scrollLeft <= edge) {
-      rail.scrollTo({ left: maxScroll, behavior });
-    } else {
-      rail.scrollTo({ left: Math.max(0, rail.scrollLeft - step), behavior });
-    }
-  }, []);
-
   useEffect(() => {
     const rail = railRef.current;
-    if (!rail || rotationPaused || selected || testimonies.length < 2) return;
+    if (!rail || selected || testimonies.length < 2) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let previous = 0;
@@ -120,7 +87,7 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
         const cycle = first && copy ? copy.offsetLeft - first.offsetLeft : 0;
         if (Math.abs(rail.scrollLeft - position) > 2) position = rail.scrollLeft;
         if (cycle > 0) {
-          position = (position + elapsed * 0.014) % cycle;
+          position = (position + elapsed * 0.008) % cycle;
           rail.scrollTo({ left: position, behavior: "instant" });
         }
       } else {
@@ -146,7 +113,7 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
       document.removeEventListener("visibilitychange", start);
       motion.removeEventListener("change", start);
     };
-  }, [rotationPaused, selected, testimonies.length]);
+  }, [selected, testimonies.length]);
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "touch") {
@@ -220,7 +187,7 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
     >
       <div className="section__inner">
         <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
-          <p className="eyebrow">Stories</p>
+          <p className="eyebrow">Changed Lives</p>
           <h2 className="section-title mt-2">Testimonies</h2>
         </Reveal>
 
@@ -243,15 +210,6 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
         <Reveal variant="up" delay={0.08} className="mt-8 md:mt-10">
           {testimonies.length > 0 ? (
             <>
-              <div className="mb-5 text-center">
-                <p className="text-sm font-extrabold uppercase tracking-[0.14em] text-purple">
-                  From the family
-                </p>
-                <p className="mt-1 text-base font-semibold text-muted">
-                  Real stories of what Jesus is doing.
-                </p>
-              </div>
-
               <div className="testimony-viewport">
                 <div
                   ref={railRef}
@@ -321,37 +279,6 @@ export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
               </div>
             </>
           ) : null}
-
-          <div className="mt-6 flex flex-col items-center gap-5">
-            {testimonies.length > 1 ? (
-              <div className="flex items-center justify-center gap-3">
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  aria-pressed={rotationPaused}
-                  onClick={() => setRotationPaused((paused) => !paused)}
-                >
-                  {rotationPaused ? "Play stories" : "Pause stories"}
-                </button>
-                <button
-                  type="button"
-                  aria-label="Previous testimonies"
-                  onClick={() => scrollByCard(-1)}
-                  className="testimony-arrow"
-                >
-                  <Icon name="arrow" className="h-5 w-5 rotate-180" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next testimonies"
-                  onClick={() => scrollByCard(1)}
-                  className="testimony-arrow"
-                >
-                  <Icon name="arrow" className="h-5 w-5" />
-                </button>
-              </div>
-            ) : null}
-          </div>
         </Reveal>
       </div>
 

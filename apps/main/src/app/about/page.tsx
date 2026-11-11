@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AboutExperience } from "@/components/AboutExperience";
+import { VisitSection } from "@/components/VisitSection";
+import { CHARACTER_SLIDES } from "@/lib/branch-slides";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
@@ -17,6 +19,7 @@ export default function AboutPage() {
       <Suspense fallback={null}>
         <AboutExperience />
       </Suspense>
+      <VisitSection slides={CHARACTER_SLIDES} />
       <SiteFooter />
     </main>
   );

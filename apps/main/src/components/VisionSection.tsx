@@ -28,11 +28,10 @@ export function VisionSection() {
     <section id="vision" className="listen-band section section--lg band band--1">
       <div className="section__inner relative z-10">
         <Reveal variant="up" distance={28} className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">Get the app</p>
-          <h2 className="section-title mt-2">Church in your pocket.</h2>
+          <p className="eyebrow">Stay plugged in</p>
+          <h2 className="section-title mt-2">Messages on the go.</h2>
           <p className="mx-auto mt-4 max-w-xl text-[0.98rem] font-semibold leading-relaxed text-muted">
-            Download the Kharis app, then listen to any message in three simple steps: home, search,
-            and play.
+            Romans 10:17. Faith comes by hearing, and hearing by the word of God.
           </p>
 
           <div className="btn-pair mt-7">

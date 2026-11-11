@@ -75,23 +75,8 @@ export function SiteFooter({ tone }: Props) {
               <h5 className={`site-footer__heading ${heading}`}>Get Involved</h5>
               <ul className={`site-footer__links ${muted}`}>
                 <li>
-                  <Link href="/life/baptism" className={linkHover}>
-                    Become a believer
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/life/departments" className={linkHover}>
-                    Volunteer
-                  </Link>
-                </li>
-                <li>
                   <Link href="/quiz" data-no-smooth-nav className={linkHover}>
-                    Department Quiz
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/#testimonies" className={linkHover}>
-                    Read testimonies
+                    Discover your ministry
                   </Link>
                 </li>
               </ul>
@@ -101,33 +86,28 @@ export function SiteFooter({ tone }: Props) {
               <ul className={`site-footer__links ${muted}`}>
                 <li>
                   <Link href="/locations" className={linkHover}>
-                    Find a Branch
+                    Where we are
                   </Link>
                 </li>
                 <li>
                   <Link href="/life" className={linkHover}>
-                    Life
+                    How we live
                   </Link>
                 </li>
                 <li>
                   <a href={KP2_URL} className={linkHover}>
-                    KP2
+                    The Next Generation
                   </a>
                 </li>
                 <li>
-                  <Link href="/events" className={linkHover}>
-                    Events
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/messages" className={linkHover}>
-                    Messages
+                  <Link href="/#testimonies" className={linkHover}>
+                    Belong
                   </Link>
                 </li>
               </ul>
             </div>
             <div className="site-footer__col">
-              <h5 className={`site-footer__heading ${heading}`}>Finance</h5>
+              <h5 className={`site-footer__heading ${heading}`}>Build</h5>
               <ul className={`site-footer__links ${muted}`}>
                 <li>
                   <Link href="/give" className={linkHover}>
@@ -136,7 +116,7 @@ export function SiteFooter({ tone }: Props) {
                 </li>
                 <li>
                   <Link href="/give#building" className={linkHover}>
-                    Building Fund
+                    Spurgeon&rsquo;s Centre
                   </Link>
                 </li>
               </ul>

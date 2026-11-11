@@ -20,7 +20,6 @@
  */
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, type CSSProperties } from "react";
 import { HeroHeadline } from "./HeroHeadline";
 import { PanoramaRow, type PanoramaImage } from "./PanoramaRow";
@@ -149,14 +148,6 @@ export function BandHero() {
 
           <div className="band-hero__foot">
             <p className="band-hero__tagline">Changing the world with a touch of His Grace.</p>
-            <div className="band-hero__ctas">
-              <Link href="/locations" className="btn-primary">
-                Find a Branch
-              </Link>
-              <a href="#messages" className="btn-ghost">
-                Watch Messages
-              </a>
-            </div>
           </div>
         </div>
       </div>

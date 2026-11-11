@@ -25,7 +25,7 @@ export function MissionSection() {
 
         <h2
           aria-label={WORDS.join(" ")}
-          className="section-title mission-section-title mx-auto max-w-none text-center text-[clamp(1.15rem,3.2vw,2.85rem)]"
+          className="section-title mission-section-title mx-auto max-w-none text-center text-[clamp(1.5rem,4.4vw,4rem)]"
         >
           {WORDS.map((word, i) => (
             <Fragment key={`${word}-${i}`}>

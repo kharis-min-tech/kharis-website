@@ -43,7 +43,6 @@ export function LatestMessages({ featured, others }: Props) {
     <section id="messages" className="section band band--0">
       <div className="section__inner">
         <Reveal variant="up" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
-          <p className="eyebrow">Teachings</p>
           <h2 className="section-title mt-2">Latest Messages</h2>
         </Reveal>
 

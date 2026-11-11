@@ -9,8 +9,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { TestimoniesSection } from "@/components/TestimoniesSection";
 import { getTestimonies } from "@/lib/testimonies";
 import { VisionSection } from "@/components/VisionSection";
-import { VisitSection } from "@/components/VisitSection";
-import { CHARACTER_SLIDES } from "@/lib/branch-slides";
 import { fetchLatestMessages } from "@/lib/youtube";
 
 async function HomeMessages() {
@@ -52,7 +50,6 @@ export default function Home() {
           >
             <HomeMessages />
           </Suspense>
-          <VisitSection slides={CHARACTER_SLIDES} />
           <BuildHouseSection />
           <Suspense
             fallback={
