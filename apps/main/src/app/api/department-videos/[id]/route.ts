@@ -1,14 +1,10 @@
-import { DEPARTMENT_VIDEOS } from "@/data/department-videos";
-
 export const runtime = "nodejs";
+
+const VALID_DRIVE_ID = /^[a-zA-Z0-9_-]{10,100}$/;
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const department = DEPARTMENT_VIDEOS.find((item) =>
-    item.src.endsWith(`/api/department-videos/${id}`),
-  );
-
-  if (!department) {
+  if (!VALID_DRIVE_ID.test(id)) {
     return new Response("Video not found", { status: 404 });
   }
 
@@ -23,10 +19,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return new Response("Video stream unavailable", { status: upstream.status });
     }
 
+    const upstreamType = upstream.headers.get("content-type") || "";
+    const contentType = upstreamType.startsWith("video/") ? upstreamType : "video/mp4";
+
     const responseHeaders = new Headers({
       "Accept-Ranges": "bytes",
       "Cache-Control": "private, no-store",
-      "Content-Type": department.mimeType,
+      "Content-Type": contentType,
       "Content-Disposition": "inline",
       "X-Content-Type-Options": "nosniff",
     });

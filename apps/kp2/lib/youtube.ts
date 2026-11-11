@@ -308,6 +308,20 @@ export function youtubeWatchUrl(id: string) {
   return `https://www.youtube.com/watch?v=${id}`;
 }
 
+export function youtubeVideoId(input: string | null | undefined): string | null {
+  const value = input?.trim() ?? "";
+  if (!value) return null;
+  if (/^[A-Za-z0-9_-]{11}$/.test(value)) return value;
+  const match = value.match(
+    /(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i,
+  );
+  return match?.[1] ?? null;
+}
+
+export function youtubeThumbnail(id: string) {
+  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+}
+
 /** Jump this far into a sermon for ambient hero playback, when the video is long enough. */
 export const AMBIENT_START_SECONDS = 10 * 60;
 

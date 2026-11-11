@@ -1,13 +1,13 @@
 "use client";
 
-import { ImagePlus, X } from "lucide-react";
+import { ImagePlus, Video, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { isR2ObjectKey, type BranchImageCategory } from "@/lib/branch-image-paths";
 import { uploadBranchImage } from "@/lib/branch-images";
-import { pathFromPublicUrl, removeStored, uploadImage } from "@/lib/media-repo";
+import { pathFromPublicUrl, removeStored, uploadImage, uploadVideo } from "@/lib/media-repo";
 import { cn } from "@/lib/utils";
 
 async function clearUrl(url: string) {
@@ -294,6 +294,126 @@ export function MultiImageDrop({
       ) : (
         <p className="mt-2 text-sm text-muted-foreground">No gallery images yet.</p>
       )}
+    </div>
+  );
+}
+
+export function VideoDrop({
+  label,
+  value,
+  folder,
+  onChange,
+}: {
+  label?: string;
+  value: string;
+  folder?: string;
+  onChange: (url: string) => void | Promise<void>;
+}) {
+  const [uploading, setUploading] = useState(false);
+
+  async function takeFile(file: File | undefined) {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const uploaded = await uploadVideo(file, folder ?? "videos");
+      if (value) await clearUrl(value);
+      await onChange(uploaded.url);
+      toast.success("Video uploaded");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Video upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  const isDirectVideo =
+    Boolean(value) &&
+    !value.includes("youtube.com") &&
+    !value.includes("youtu.be") &&
+    !value.includes("drive.google.com");
+
+  return (
+    <div>
+      {label ? <p className="mb-1.5 text-sm font-medium">{label}</p> : null}
+      <div className="space-y-2">
+        {value ? (
+          <div className="flex flex-col gap-2 rounded-lg border border-border bg-background p-3 sm:flex-row sm:items-center sm:justify-between">
+            {isDirectVideo ? (
+              <video
+                src={value}
+                controls
+                playsInline
+                preload="metadata"
+                className="max-h-40 rounded-md bg-black object-contain"
+              />
+            ) : (
+              <p className="truncate text-xs text-muted-foreground">{value}</p>
+            )}
+            <div className="flex shrink-0 items-center gap-2">
+              <label
+                className={cn(
+                  "inline-flex h-9 cursor-pointer items-center justify-center rounded-md border border-border bg-background px-3 text-xs font-medium hover:bg-muted",
+                  uploading && "pointer-events-none opacity-60",
+                )}
+              >
+                <span>{uploading ? "Uploading…" : "Replace video"}</span>
+                <input
+                  type="file"
+                  accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm"
+                  className="sr-only"
+                  disabled={uploading}
+                  onChange={(event) => {
+                    void takeFile(event.target.files?.[0]);
+                    event.target.value = "";
+                  }}
+                />
+              </label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={uploading}
+                onClick={async () => {
+                  await clearUrl(value);
+                  await onChange("");
+                }}
+              >
+                <X className="mr-1 h-4 w-4" />
+                Remove
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <label
+            className={cn(
+              "flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-background px-4 py-4 text-center text-sm text-muted-foreground",
+              uploading && "opacity-60",
+            )}
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => {
+              event.preventDefault();
+              void takeFile(event.dataTransfer.files[0]);
+            }}
+          >
+            <Video className="h-5 w-5" />
+            <span>
+              {uploading
+                ? "Uploading video…"
+                : "Drop a video file (.mp4 or .mov), or click to choose from Finder"}
+            </span>
+            <input
+              type="file"
+              accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm"
+              className="sr-only"
+              disabled={uploading}
+              onChange={(event) => {
+                void takeFile(event.target.files?.[0]);
+                event.target.value = "";
+              }}
+            />
+          </label>
+        )}
+      </div>
     </div>
   );
 }

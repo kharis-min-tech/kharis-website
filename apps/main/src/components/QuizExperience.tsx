@@ -42,14 +42,61 @@ import {
 } from "@/data/quiz";
 import { getSiteTheme, subscribeSiteTheme, type SiteTheme } from "@/lib/theme";
 import { useDialog } from "@/lib/use-dialog";
+import {
+  fetchCustomDepartmentVideos,
+  resolveDepartmentVideoSource,
+} from "@/data/department-videos";
 import "./quiz.css";
 import { TURNSTILE_FIELD } from "../../../../shared/form-fields";
 import { useTurnstile } from "../../../../shared/form-widgets";
+
+function DepartmentVideoPlayer({ rawUrl, title }: { rawUrl: string; title: string }) {
+  const source = resolveDepartmentVideoSource(rawUrl);
+  if (source.kind === "youtube") {
+    return (
+      <div className="relative aspect-video w-full overflow-hidden bg-black">
+        <iframe
+          src={source.embedUrl}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="h-full w-full border-0"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <video
+      src={source.src}
+      poster={source.poster}
+      controls
+      autoPlay
+      playsInline
+      preload="metadata"
+      className="max-h-[520px] w-full bg-black object-contain"
+    >
+      Your browser does not support embedded videos.
+    </video>
+  );
+}
+
+const QUIZ_STORAGE_KEY = "kharis_quiz_state_v1";
+
+type PersistedQuizState = {
+  lang?: SupportedLanguage;
+  screen?: "start" | "quiz" | "result";
+  branch?: string;
+  currentQuestion?: number;
+  answers?: (QuizOption | null)[];
+  scores?: Record<string, number>;
+};
 
 export function QuizExperience() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
   const [screen, setScreen] = useState<"start" | "quiz" | "result">("start");
   const [activeSlide, setActiveSlide] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   // Site theme subscription (light vs dark mode)
@@ -68,6 +115,73 @@ export function QuizExperience() {
   // Results state
   const [scores, setScores] = useState<Record<string, number>>({});
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const [customVideos, setCustomVideos] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(QUIZ_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as PersistedQuizState;
+        if (parsed.lang && parsed.lang in QUIZ_TRANSLATIONS) {
+          setLang(parsed.lang);
+        }
+        if (typeof parsed.branch === "string") {
+          setBranch(parsed.branch);
+        }
+        if (Array.isArray(parsed.answers)) {
+          setAnswers(parsed.answers);
+        }
+        if (typeof parsed.currentQuestion === "number" && parsed.currentQuestion >= 0) {
+          setCurrentQuestion(parsed.currentQuestion);
+        }
+        if (parsed.scores && typeof parsed.scores === "object") {
+          setScores(parsed.scores);
+        }
+        if (parsed.screen === "quiz" || parsed.screen === "result") {
+          if (
+            parsed.screen === "result" &&
+            parsed.scores &&
+            Object.keys(parsed.scores).length > 0
+          ) {
+            setScreen("result");
+          } else if (parsed.screen === "quiz") {
+            setScreen("quiz");
+          }
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      const payload: PersistedQuizState = {
+        lang,
+        screen,
+        branch,
+        currentQuestion,
+        answers,
+        scores,
+      };
+      window.localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // Ignore storage write errors
+    }
+  }, [hydrated, lang, screen, branch, currentQuestion, answers, scores]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchCustomDepartmentVideos().then((map) => {
+      if (!cancelled) setCustomVideos(map);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Explore all accordion state
   const [isExploreOpen, setIsExploreOpen] = useState(false);
@@ -211,6 +325,11 @@ export function QuizExperience() {
   };
 
   const handleRestart = () => {
+    try {
+      window.localStorage.removeItem(QUIZ_STORAGE_KEY);
+    } catch {
+      // Ignore storage clear errors
+    }
     setAnswers(new Array(t.questions.length).fill(null));
     setScores({});
     setCurrentQuestion(0);
@@ -770,36 +889,35 @@ export function QuizExperience() {
                     </div>
 
                     {/* Video Player / Facade */}
-                    <div className="relative aspect-video w-full overflow-hidden border border-black/20 bg-black shadow-xl">
-                      {activeVideo === topThree[0] ? (
-                        <iframe
-                          src={`${t.departments[topThree[0]].video}?autoplay=1`}
-                          title={`${t.departments[topThree[0]].title ?? topThree[0]} Department Overview`}
-                          allow="autoplay; fullscreen"
-                          allowFullScreen
-                          className="h-full w-full border-0"
-                        />
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setActiveVideo(topThree[0])}
-                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#2a0c5e] via-[#170930] to-[#090412] p-6 text-center cursor-pointer"
-                          aria-label={`Play ${t.departments[topThree[0]].title ?? topThree[0]} video`}
-                        >
-                          <div className="relative z-10 flex flex-col items-center gap-3">
-                            <span className="flex h-16 w-16 items-center justify-center bg-[#630ed4] text-white border-2 border-white/30 shadow-[0_12px_30px_rgba(99,14,212,0.5)] transition-transform duration-200 group-hover:scale-110">
-                              <Play className="h-7 w-7 translate-x-0.5 fill-white" />
-                            </span>
-                            <span className="border border-white/25 bg-black/75 px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider text-white">
-                              {t.watchSpotlight.replace(
-                                "{dept}",
-                                t.departments[topThree[0]].title ?? topThree[0],
-                              )}
-                            </span>
-                          </div>
-                        </button>
-                      )}
-                    </div>
+                    {customVideos[topThree[0]] && (
+                      <div className="relative w-full overflow-hidden border border-black/20 bg-black shadow-xl">
+                        {activeVideo === topThree[0] ? (
+                          <DepartmentVideoPlayer
+                            rawUrl={customVideos[topThree[0]]}
+                            title={`${t.departments[topThree[0]].title ?? topThree[0]} Department Overview`}
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setActiveVideo(topThree[0])}
+                            className="group relative flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[#2a0c5e] via-[#170930] to-[#090412] p-6 text-center cursor-pointer"
+                            aria-label={`Play ${t.departments[topThree[0]].title ?? topThree[0]} video`}
+                          >
+                            <div className="relative z-10 flex flex-col items-center gap-3">
+                              <span className="flex h-16 w-16 items-center justify-center bg-[#630ed4] text-white border-2 border-white/30 shadow-[0_12px_30px_rgba(99,14,212,0.5)] transition-transform duration-200 group-hover:scale-110">
+                                <Play className="h-7 w-7 translate-x-0.5 fill-white" />
+                              </span>
+                              <span className="border border-white/25 bg-black/75 px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider text-white">
+                                {t.watchSpotlight.replace(
+                                  "{dept}",
+                                  t.departments[topThree[0]].title ?? topThree[0],
+                                )}
+                              </span>
+                            </div>
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -858,29 +976,28 @@ export function QuizExperience() {
                         </div>
 
                         {/* Video facade */}
-                        <div className="relative aspect-video w-full overflow-hidden border border-black/20 bg-black mt-2">
-                          {activeVideo === deptName ? (
-                            <iframe
-                              src={`${dept.video}?autoplay=1`}
-                              title={`${displayTitle} Video`}
-                              allow="autoplay; fullscreen"
-                              allowFullScreen
-                              className="h-full w-full border-0"
-                            />
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => setActiveVideo(deptName)}
-                              className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#210d47] to-[#0a0612] p-4 text-center cursor-pointer"
-                              aria-label={`Play ${displayTitle} video`}
-                            >
-                              <div className="flex items-center gap-2 border border-white/25 bg-[#630ed4] px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-white shadow-md group-hover:bg-[#4c08a8] transition-colors">
-                                <Play className="h-3.5 w-3.5 fill-white" />
-                                <span>{t.previewVideo}</span>
-                              </div>
-                            </button>
-                          )}
-                        </div>
+                        {customVideos[deptName] && (
+                          <div className="relative w-full overflow-hidden border border-black/20 bg-black mt-2">
+                            {activeVideo === deptName ? (
+                              <DepartmentVideoPlayer
+                                rawUrl={customVideos[deptName]}
+                                title={`${displayTitle} Video`}
+                              />
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setActiveVideo(deptName)}
+                                className="group relative flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[#210d47] to-[#0a0612] p-4 text-center cursor-pointer"
+                                aria-label={`Play ${displayTitle} video`}
+                              >
+                                <div className="flex items-center gap-2 border border-white/25 bg-[#630ed4] px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-white shadow-md group-hover:bg-[#4c08a8] transition-colors">
+                                  <Play className="h-3.5 w-3.5 fill-white" />
+                                  <span>{t.previewVideo}</span>
+                                </div>
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -1005,30 +1122,29 @@ export function QuizExperience() {
                                       {dept.scripture}
                                     </p>
 
-                                    <div className="relative aspect-video w-full max-w-md overflow-hidden border border-black/20 bg-black mt-3">
-                                      {activeVideo === `explore-${deptName}` ? (
-                                        <iframe
-                                          src={`${dept.video}?autoplay=1`}
-                                          title={`${displayTitle} Video`}
-                                          allow="autoplay; fullscreen"
-                                          allowFullScreen
-                                          className="h-full w-full border-0"
-                                        />
-                                      ) : (
-                                        <button
-                                          type="button"
-                                          onClick={() => setActiveVideo(`explore-${deptName}`)}
-                                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-[#210d47] to-[#0a0612] p-4 text-center cursor-pointer"
-                                        >
-                                          <div className="flex items-center gap-2 border border-white/25 bg-[#630ed4] px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-white shadow-md group-hover:bg-[#4c08a8] transition-colors">
-                                            <Play className="h-3.5 w-3.5 fill-white" />
-                                            <span>
-                                              {t.playDeptVideo.replace("{dept}", displayTitle)}
-                                            </span>
-                                          </div>
-                                        </button>
-                                      )}
-                                    </div>
+                                    {customVideos[deptName] && (
+                                      <div className="relative w-full max-w-lg overflow-hidden border border-black/20 bg-black mt-3">
+                                        {activeVideo === `explore-${deptName}` ? (
+                                          <DepartmentVideoPlayer
+                                            rawUrl={customVideos[deptName]}
+                                            title={`${displayTitle} Video`}
+                                          />
+                                        ) : (
+                                          <button
+                                            type="button"
+                                            onClick={() => setActiveVideo(`explore-${deptName}`)}
+                                            className="group relative flex aspect-video w-full items-center justify-center bg-gradient-to-br from-[#210d47] to-[#0a0612] p-4 text-center cursor-pointer"
+                                          >
+                                            <div className="flex items-center gap-2 border border-white/25 bg-[#630ed4] px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-white shadow-md group-hover:bg-[#4c08a8] transition-colors">
+                                              <Play className="h-3.5 w-3.5 fill-white" />
+                                              <span>
+                                                {t.playDeptVideo.replace("{dept}", displayTitle)}
+                                              </span>
+                                            </div>
+                                          </button>
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
                                 )}
                               </div>

@@ -92,6 +92,7 @@ export type BranchDraft = {
   shortDescription: string;
   description: string;
   heroImage: string;
+  videoUrl: string;
   pastorName: string;
   pastorRole: PastorRole;
   pastorPhoto: string;

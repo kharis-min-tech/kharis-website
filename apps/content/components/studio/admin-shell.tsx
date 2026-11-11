@@ -32,6 +32,7 @@ import { hrefWithWorkspace, isWorkspaceId, WORKSPACES } from "@/lib/workspaces";
 
 const ICONS: Record<string, LucideIcon> = {
   "/branches": Users,
+  "/department-videos": Video,
   "/sermons": Mic,
   "/testimonies": Quote,
   "/visitors": Users,

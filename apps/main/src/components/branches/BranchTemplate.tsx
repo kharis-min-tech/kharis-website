@@ -39,10 +39,22 @@ function formatServiceTime(time?: string | null) {
   return `${displayHour}:${minute} ${ampm}`;
 }
 
+function youtubeVideoId(input?: string | null): string | null {
+  const value = input?.trim() ?? "";
+  if (!value) return null;
+  if (/^[A-Za-z0-9_-]{11}$/.test(value)) return value;
+  const match = value.match(
+    /(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i,
+  );
+  return match?.[1] ?? null;
+}
+
 export function BranchTemplate({ branchData, extraSections }: BranchTemplateProps) {
   const currentBranch = branchData;
   const view = presentBranch(currentBranch);
   const introduction = branchIntroductions[currentBranch.slug];
+  const youtubeId = youtubeVideoId(currentBranch.video_url);
+  const directVideoUrl = !youtubeId ? currentBranch.video_url?.trim() || "" : "";
 
   const sundayServices = (currentBranch.services ?? [])
     .filter((service) => service.is_active && service.type?.toLowerCase() === "sunday")
@@ -426,26 +438,49 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
           </div>
         </section>
 
-        {introduction ? (
+        {youtubeId || directVideoUrl || introduction ? (
           <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
             <div className="mb-10 text-center">
-              <p className="eyebrow mb-3">Meet our branch</p>
+              <p className="eyebrow mb-3">Watch</p>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
-                Welcome to {currentBranch.name}
+                A look at {view.city}
               </h2>
             </div>
             <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
-              <video
-                className="block aspect-video w-full"
-                src={introduction.src}
-                poster={introduction.poster}
-                controls
-                playsInline
-                preload="none"
-                aria-label={`${currentBranch.name} branch introduction`}
-              >
-                <a href={introduction.src}>Watch our branch introduction video</a>
-              </video>
+              {youtubeId ? (
+                <iframe
+                  className="block aspect-video w-full border-0"
+                  src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1&playsinline=1`}
+                  title={`A look at ${view.city}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                />
+              ) : directVideoUrl ? (
+                <video
+                  className="block aspect-video w-full object-contain"
+                  src={directVideoUrl}
+                  poster={view.hero || undefined}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  aria-label={`A look at ${view.city}`}
+                >
+                  <a href={directVideoUrl}>Watch our branch video</a>
+                </video>
+              ) : introduction ? (
+                <video
+                  className="block aspect-video w-full"
+                  src={introduction.src}
+                  poster={introduction.poster}
+                  controls
+                  playsInline
+                  preload="none"
+                  aria-label={`${currentBranch.name} branch introduction`}
+                >
+                  <a href={introduction.src}>Watch our branch introduction video</a>
+                </video>
+              ) : null}
             </div>
           </section>
         ) : null}
