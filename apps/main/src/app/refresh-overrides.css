@@ -293,7 +293,8 @@
   isolation: isolate;
   overflow: clip;
   padding: var(--pad-md) max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  background: radial-gradient(
+  background:
+    radial-gradient(
       ellipse at 78% 0%,
       color-mix(in srgb, var(--purple) 14%, transparent),
       transparent 38rem

@@ -186,7 +186,6 @@ export function LocationsClient({ items, full }: Props) {
         </div>
       </section>
 
-
       <section id="branches" className="locations-list" aria-labelledby="branches-title">
         <div className="locations-list__head">
           <p className="eyebrow">Every branch</p>

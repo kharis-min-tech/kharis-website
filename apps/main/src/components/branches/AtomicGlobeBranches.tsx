@@ -51,9 +51,7 @@ export function AtomicGlobeBranches({
   const palette = theme === "dark" ? FOOTER_GLOBE_PALETTE.dark : FOOTER_GLOBE_PALETTE.light;
 
   const places = useMemo(() => {
-    const inScope = branches.filter(
-      (branch) => country === "world" || branch.country === country,
-    );
+    const inScope = branches.filter((branch) => country === "world" || branch.country === country);
 
     if (group === "branch") {
       return inScope.map((branch) => ({
