@@ -33,7 +33,7 @@ function DepartmentsPage() {
     <div className="font-body-md text-body-md overflow-x-hidden">
       <SiteHeader />
       <main className="pt-[74px]">
-        <section className="relative flex min-h-[min(42rem,85svh)] items-end overflow-hidden border-b-4 border-primary bg-[#151218] text-white">
+        <section className="relative flex h-[calc(100svh-74px)] min-h-[540px] items-end overflow-hidden border-b-4 border-primary bg-[#151218] text-white">
           <img
             src={KP2_PHOTOS.serviceSaxophone.src}
             alt={KP2_PHOTOS.serviceSaxophone.alt}

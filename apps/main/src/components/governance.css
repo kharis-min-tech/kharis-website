@@ -102,6 +102,24 @@
   line-height: 1.7;
   max-width: 48ch;
 }
+.gov-page .gov-policy:has(.gov-policy__link) {
+  display: block;
+  padding-block: 0;
+}
+.gov-page .gov-policy__link {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 1.25fr;
+  gap: 1rem 1.5rem;
+  padding-block: 1.5rem;
+  color: inherit;
+  text-decoration: none;
+}
+@media (max-width: 800px) {
+  .gov-page .gov-policy__link {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+}
 .gov-page .gov-incident {
   padding-inline: var(--gutter);
 }

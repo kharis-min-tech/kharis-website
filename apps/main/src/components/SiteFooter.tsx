@@ -218,6 +218,10 @@ export function SiteFooter({ tone }: Props) {
                 Privacy Policy
               </Link>
               <span className="site-footer__policy-mark" aria-hidden="true" />
+              <Link href="/cookies" className="site-footer__policy">
+                Cookie Policy
+              </Link>
+              <span className="site-footer__policy-mark" aria-hidden="true" />
               <Link
                 href="/governance#disclaimer"
                 className="site-footer__policy site-footer__policy--note"
