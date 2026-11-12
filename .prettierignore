@@ -14,6 +14,11 @@ package-lock.json
 # Static assets
 apps/*/public
 
+# VitePress cache and build output, and the local screenshot session
+apps/content-docs/.vitepress/cache
+apps/content-docs/.vitepress/dist
+apps/content-docs/.auth
+
 # Generated map data (huge, minified; keep as-is, do not reformat)
 apps/main/src/data/*.json
 apps/kp2/data/*.json
