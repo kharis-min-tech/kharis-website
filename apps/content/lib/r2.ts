@@ -5,13 +5,13 @@ import {
   isR2ObjectKey,
   publicUrlForKey,
 } from "@/lib/branch-image-paths";
+import { isMediaObjectKey } from "@/lib/media-paths";
 
 /**
- * Branch images are stored in the `kharis-images` R2 bucket, bound to this
- * Worker as `BUCKET` (see wrangler.jsonc). There are no S3 access keys: every
- * call goes through the native binding, and images are served back to the
- * browser through /api/media/[...key]. Saved addresses use R2_PUBLIC_URL
- * (https://images.kharis.org) when that host is set.
+ * Studio uploads are stored in the `kharis-images` R2 bucket. On Cloudflare
+ * Workers it is bound as `BUCKET` (see wrangler.jsonc); during local dev it
+ * falls back to the S3-compatible R2 env vars when `BUCKET` is absent. Saved
+ * addresses use R2_PUBLIC_URL (https://images.kharis.org) when configured.
  */
 
 // Structural type for the subset of the R2 binding we use. Kept local so the
@@ -19,7 +19,7 @@ import {
 interface R2BucketLike {
   put(
     key: string,
-    value: Uint8Array | ArrayBuffer | string,
+    value: Uint8Array | ArrayBuffer | string | ReadableStream,
     options?: { httpMetadata?: { contentType?: string } },
   ): Promise<unknown>;
   get(key: string): Promise<{
@@ -51,8 +51,7 @@ function cloudflarePublicUrl() {
   }
 }
 
-/** The bound bucket, or null when the binding is unavailable (e.g. misconfigured dev). */
-function bucket(): R2BucketLike | null {
+function nativeBucket(): R2BucketLike | null {
   try {
     const env = getCloudflareContext().env as unknown as { BUCKET?: R2BucketLike };
     return env.BUCKET ?? null;
@@ -61,9 +60,107 @@ function bucket(): R2BucketLike | null {
   }
 }
 
+async function s3BucketFallback(): Promise<R2BucketLike | null> {
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID?.trim();
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY?.trim();
+  const accountId = process.env.R2_ACCOUNT_ID?.trim();
+  const endpoint =
+    process.env.R2_ENDPOINT?.trim() ||
+    (accountId ? `https://${accountId}.eu.r2.cloudflarestorage.com` : "");
+  const Bucket = process.env.R2_BUCKET_NAME?.trim() || "kharis-images";
+  if (!accessKeyId || !secretAccessKey || !endpoint) return null;
+
+  const {
+    S3Client,
+    PutObjectCommand,
+    GetObjectCommand,
+    DeleteObjectCommand,
+    DeleteObjectsCommand,
+    ListObjectsV2Command,
+  } = await import("@aws-sdk/client-s3");
+
+  const client = new S3Client({
+    region: "auto",
+    endpoint,
+    credentials: { accessKeyId, secretAccessKey },
+  });
+
+  return {
+    async put(key, value, options) {
+      const Body =
+        typeof value === "string"
+          ? value
+          : value instanceof Uint8Array
+            ? value
+            : value instanceof ArrayBuffer
+              ? new Uint8Array(value)
+              : new Uint8Array(await new Response(value).arrayBuffer());
+      await client.send(
+        new PutObjectCommand({
+          Bucket,
+          Key: key,
+          Body,
+          ContentType: options?.httpMetadata?.contentType,
+        }),
+      );
+    },
+    async get(key) {
+      try {
+        const res = await client.send(new GetObjectCommand({ Bucket, Key: key }));
+        if (!res.Body) return null;
+        const bytes = await res.Body.transformToByteArray();
+        return {
+          async arrayBuffer() {
+            return bytes.buffer.slice(
+              bytes.byteOffset,
+              bytes.byteOffset + bytes.byteLength,
+            ) as ArrayBuffer;
+          },
+          httpMetadata: { contentType: res.ContentType },
+        };
+      } catch {
+        return null;
+      }
+    },
+    async delete(keys) {
+      const list = Array.isArray(keys) ? keys : [keys];
+      if (list.length === 0) return;
+      if (list.length === 1) {
+        await client.send(new DeleteObjectCommand({ Bucket, Key: list[0] }));
+        return;
+      }
+      await client.send(
+        new DeleteObjectsCommand({
+          Bucket,
+          Delete: { Objects: list.map((Key) => ({ Key })) },
+        }),
+      );
+    },
+    async list(options) {
+      const res = await client.send(
+        new ListObjectsV2Command({
+          Bucket,
+          Prefix: options?.prefix,
+          ContinuationToken: options?.cursor,
+        }),
+      );
+      return {
+        objects: (res.Contents ?? []).flatMap((item) => (item.Key ? [{ key: item.Key }] : [])),
+        truncated: Boolean(res.IsTruncated),
+        cursor: res.NextContinuationToken,
+      };
+    },
+  };
+}
+
+/** The bound bucket, or S3 credentials fallback during local dev. */
+async function bucket(): Promise<R2BucketLike | null> {
+  return nativeBucket() ?? (await s3BucketFallback());
+}
+
 /** Writes a branch photo to R2. The upload route attaches the public address. */
 export async function storeBranchImage(key: string, body: Uint8Array, contentType: string) {
-  const store = bucket();
+  const store = await bucket();
   if (!store) return null;
   await store.put(key, body, { httpMetadata: { contentType } });
   return {
@@ -72,9 +169,29 @@ export async function storeBranchImage(key: string, body: Uint8Array, contentTyp
   };
 }
 
+/** Writes a studio video or picture to R2 under site-media/. Streams, so large videos are not buffered. */
+export async function storeMediaObject(
+  key: string,
+  body: ReadableStream | Uint8Array,
+  contentType: string,
+) {
+  const store = await bucket();
+  if (!store || !isMediaObjectKey(key)) return null;
+  await store.put(key, body, { httpMetadata: { contentType } });
+  return { key };
+}
+
+export async function deleteMediaObject(key: string) {
+  const store = await bucket();
+  if (!store || !isMediaObjectKey(key)) return false;
+  await store.delete(key);
+  return true;
+}
+
 export async function readBranchImage(key: string) {
-  const store = bucket();
-  if (!store || !key.startsWith("branch-images/") || key.includes("..")) return null;
+  const store = await bucket();
+  const allowed = key.startsWith("branch-images/") || isMediaObjectKey(key);
+  if (!store || !allowed || key.includes("..")) return null;
   const object = await store.get(key);
   if (!object) return null;
   return {
@@ -85,7 +202,7 @@ export async function readBranchImage(key: string) {
 
 /** Creates branch-images/{branchId}/ for a branch that does not have one yet. Safe to call again. */
 export async function ensureBranchImageFolder(branchId: string) {
-  const store = bucket();
+  const store = await bucket();
   if (!store) return null;
   const key = branchImageFolderKey(branchId);
   await store.put(key, "keep", { httpMetadata: { contentType: "text/plain" } });
@@ -94,7 +211,7 @@ export async function ensureBranchImageFolder(branchId: string) {
 
 /** Lists every object under branch-images/{branchId}/. */
 export async function listBranchImageKeys(branchId: string) {
-  const store = bucket();
+  const store = await bucket();
   if (!store || !isBranchId(branchId)) return [];
   const prefix = `branch-images/${branchId}/`;
   const keys: string[] = [];
@@ -130,7 +247,7 @@ export async function deleteUnusedBranchImages(
 }
 
 async function deleteBranchImageKeys(keys: string[]) {
-  const store = bucket();
+  const store = await bucket();
   if (!store || keys.length === 0) return 0;
   let removed = 0;
   // The R2 binding deletes up to 1000 keys per call.
