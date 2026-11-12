@@ -162,6 +162,12 @@ export function SiteFooter() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
+              href="/cookies"
+              className="no-accent-fill inline-flex border-[3px] border-[#fffdf5] bg-[#ffde59] px-3 py-1 font-headline-md text-sm uppercase tracking-wide text-[#151218] shadow-[3px_3px_0_#fffdf5] transition-transform hover:-translate-y-0.5"
+            >
+              Cookie Policy
+            </Link>
+            <Link
               href="/governance#disclaimer"
               className="no-accent-fill inline-flex -rotate-2 border-[3px] border-[#151218] bg-[#f7be1d] px-3 py-1 font-headline-md text-sm uppercase tracking-wide text-[#151218] shadow-[3px_3px_0_#f7be1d] transition-transform hover:-translate-y-0.5 hover:rotate-0"
             >

@@ -2,13 +2,12 @@
 /* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 
 import Link from "next/link";
-import { useSmoothRouter } from "@/lib/use-smooth-router";
 import { useMemo, useState } from "react";
 import type { BranchItem } from "@/lib/branches";
-import BranchMap, { type GlobeBranch } from "@/components/branches/BranchMap";
+import { AtomicGlobeBranches } from "@/components/branches/AtomicGlobeBranches";
+import type { GlobeBranch } from "@/lib/globe-branches";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { UnsureBranchCta } from "@/components/UnsureBranchCta";
 import { kp2BranchUrl } from "@/lib/kp2";
 
 interface Props {
@@ -35,7 +34,6 @@ function milesBetween(a: Origin, b: Origin) {
 }
 
 export function LocationsClient({ items, full }: Props) {
-  const router = useSmoothRouter();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [origin, setOrigin] = useState<Origin | null>(null);
@@ -129,7 +127,9 @@ export function LocationsClient({ items, full }: Props) {
 
   return (
     <div className="locations-page">
-      <SiteHeader />
+      {/* The hero is a page surface now, not a dark slab, so the header
+          follows the theme with it. */}
+      <SiteHeader tone="light" />
 
       <section className="locations-hero">
         <div className="locations-hero__intro">
@@ -169,37 +169,22 @@ export function LocationsClient({ items, full }: Props) {
           ) : null}
         </div>
 
-        <BranchMap
-          bare
-          country={filter === "all" || filter === KP2 ? "world" : filter}
-          onCountryChange={(country) => setFilter(country === "world" ? "all" : country)}
-          origin={origin}
-          branches={full}
-          onSelectBranch={(id) => {
-            const branch = items.find((b) => b.id === id);
-            if (branch?.family === KP2) window.location.assign(kp2BranchUrl(id));
-            else router.push(`/locations/${id}`);
-          }}
-        />
-      </section>
-
-      <figure className="locations-sunday">
-        <div className="locations-sunday__photos">
-          <img
-            src="https://images.kharis.org/site-images/main/8687dacfd8faa5e2/locations/london-sunday-laughter.jpg"
-            alt="Three women in the congregation laughing together during the service"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src="https://images.kharis.org/site-images/main/894014bef2ca905c/locations/london-sunday-prayer.jpg"
-            alt="A row of people standing side by side in prayer, hands open"
-            loading="lazy"
-            decoding="async"
+        {/* One marker per country rather than per branch: the globe states the
+            reach, and the filtered list below is where you actually choose a
+            branch. Picking every branch out of a cluster was never something
+            the globe did well. */}
+        <div className="locations-hero__globe">
+          <AtomicGlobeBranches
+            branches={full}
+            country={filter === "all" || filter === KP2 ? "world" : filter}
+            hrefFor={(branch) =>
+              items.find((item) => item.id === branch.slug)?.family === KP2
+                ? kp2BranchUrl(branch.slug)
+                : `/locations/${branch.slug}`
+            }
           />
         </div>
-        <figcaption>Sunday at Kharis London</figcaption>
-      </figure>
+      </section>
 
       <section id="branches" className="locations-list" aria-labelledby="branches-title">
         <div className="locations-list__head">
@@ -256,7 +241,6 @@ export function LocationsClient({ items, full }: Props) {
         )}
       </section>
 
-      <UnsureBranchCta showFindBranch={false} />
       <SiteFooter />
     </div>
   );

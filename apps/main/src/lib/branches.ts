@@ -7,7 +7,8 @@ import {
   sundayVenue,
   venueAddress,
 } from "@/lib/branch-display";
-import { supabase } from "@/lib/supabase";
+import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { BRANCH_FIXTURE } from "@/lib/branch-fixture";
 
 // ======================================================
 // TYPES
@@ -206,6 +207,11 @@ async function mediaByBranch() {
 
 // Share one directory read across cards, map and metadata within a server render.
 export const listBranchData = cache(async (): Promise<BranchData[]> => {
+  // Without credentials every query fails and the page used to render an empty
+  // directory and an empty globe. Fall back to the development fixture, the
+  // same way testimonies and messages already do.
+  if (!supabaseConfigured) return BRANCH_FIXTURE;
+
   const [{ data, error }, { galleries, videos }] = await Promise.all([
     supabase
       .from("branches")
@@ -365,6 +371,13 @@ export async function listBranches(): Promise<BranchItem[]> {
 // ======================================================
 
 export async function getBranchBySlug(slug: string): Promise<BranchData | null> {
+  // Same development fallback as listBranchData. Without this the branch
+  // detail pages rendered "Branch unavailable" offline even though the
+  // directory that links to them was fully populated.
+  if (!supabaseConfigured) {
+    return BRANCH_FIXTURE.find((branch) => branch.slug === slug) ?? null;
+  }
+
   const [{ data, error }, { galleries, videos }] = await Promise.all([
     supabase
       .from("branches")

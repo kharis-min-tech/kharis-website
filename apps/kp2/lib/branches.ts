@@ -1,5 +1,6 @@
 import { publicTransportInfo } from "../../../shared/public-transport";
 import { withBasePath } from "@/lib/base-path";
+import { resolveGivingLink } from "@/lib/giving";
 import { SITE_WORKSPACE } from "@/lib/site";
 import { supabaseSelect } from "@/lib/supabase";
 
@@ -333,7 +334,7 @@ function toBranch(row: BranchRow, gallery: string[], videoUrl = ""): Branch {
     image: remoteImage(row.hero_image_url) || gallery[0] || "",
     videoUrl: videoUrl.trim(),
     gallery,
-    givingLink: row.giving_link,
+    givingLink: resolveGivingLink(row.slug, row.giving_link),
     parkingInfo: mainVenue?.parking_info || DEFAULT_PARKING,
     transitInfo: publicTransportInfo(mainVenue?.public_transport_info),
   };

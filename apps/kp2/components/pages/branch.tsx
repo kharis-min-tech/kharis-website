@@ -230,6 +230,7 @@ function BranchPage({
   const campusEvents = eventsForBranch(events, branch);
   const others = branches.filter((item) => item.slug !== branch.slug);
   const giveHref = branch.givingLink || "/giving";
+  const externalGive = giveHref.startsWith("http");
 
   const [zoomLevel, setZoomLevel] = useState(15);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
@@ -435,15 +436,29 @@ function BranchPage({
                 Upcoming events
               </a>
 
-              <Link
-                href={giveHref}
-                className="flex items-center justify-center gap-2 border-2 border-white/40 px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-white"
-              >
-                <span className="material-symbols-outlined text-[18px] text-secondary-container">
-                  favorite
-                </span>
-                Give
-              </Link>
+              {externalGive ? (
+                <a
+                  href={giveHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 border-2 border-white/40 px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-white"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-secondary-container">
+                    favorite
+                  </span>
+                  Give
+                </a>
+              ) : (
+                <Link
+                  href={giveHref}
+                  className="flex items-center justify-center gap-2 border-2 border-white/40 px-7 py-3.5 font-body-md text-[13px] font-bold uppercase tracking-wide text-white"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-secondary-container">
+                    favorite
+                  </span>
+                  Give
+                </Link>
+              )}
 
               <a
                 href="#contact"

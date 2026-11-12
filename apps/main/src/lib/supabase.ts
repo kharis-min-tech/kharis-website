@@ -27,3 +27,6 @@ const notConfiguredFetch: typeof fetch = async () =>
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   global: { fetch: configured ? serverFetch : notConfiguredFetch },
 });
+
+/** False in local development and CI without secrets; readers fall back to fixtures. */
+export const supabaseConfigured = configured;

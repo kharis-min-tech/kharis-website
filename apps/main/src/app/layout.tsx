@@ -13,10 +13,12 @@ import "./mobile.css";
 import "./refresh-overrides.css";
 import "./department-detail.css";
 
-/* Clean Vive / Apple-like type (not bubble Quicksand) */
+/* Clean Vive / Apple-like type (not bubble Quicksand).
+ * Loaded as the variable font (no `weight` key) so body copy can sit at 400
+ * while headings stay at 800. The old static set started at 500, which is why
+ * every paragraph on the site had to be 600 — there was nothing lighter. */
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });
@@ -24,7 +26,7 @@ const sans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL("https://kharis.org"),
   title: "Kharis Church",
-  description: "Changing the world with a touch of His grace. Find a Kharis branch near you.",
+  description: "Changing the world with a touch of His Grace. Find a Kharis branch near you.",
   other: {
     "color-scheme": "light",
   },

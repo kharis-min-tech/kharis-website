@@ -1,0 +1,33 @@
+/* The "This is Kharis" panorama reel.
+ *
+ * The vendored carousel sizes itself at 100% of its parent and declares
+ * `container-type: size`, so the parent has to state an explicit height or
+ * the component collapses to nothing.
+ */
+.panorama {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 42vw, 540px);
+}
+
+/* In the hero the row is one of two stacked bands, so it takes its height
+ * from the flex row that holds it rather than setting its own. */
+.panorama--fill {
+  height: 100%;
+}
+
+/* Holds the band's height while the client-only chunk loads, so the page
+ * below it does not jump when the reel appears. */
+.panorama__placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--surface-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The component stops its own row; this only stops the tiles sliding
+   * their colour in and out as they travel. */
+  .panorama * {
+    transition: none !important;
+  }
+}

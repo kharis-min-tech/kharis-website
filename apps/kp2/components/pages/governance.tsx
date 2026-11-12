@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -18,6 +19,14 @@ const POLICIES = [
     title: "Privacy Policy",
     description:
       "How we collect, use and look after personal information when you engage with Kharis Ministries.",
+  },
+  {
+    id: "cookies",
+    icon: "cookie",
+    title: "Cookie Policy",
+    description:
+      "The cookies and browser storage this site uses, and why a consent banner is not required.",
+    href: "/cookies",
   },
   {
     id: "disclaimer",
@@ -50,29 +59,42 @@ function GovernancePage() {
 
       {/* Policy grid */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
-          {POLICIES.map((policy) => (
-            <div
-              id={policy.id}
-              key={policy.title}
-              className="scroll-mt-28 bg-surface-container-lowest rounded-none border-2 border-black brutalist-shadow p-8 transition-all group hover:-translate-y-1"
-            >
-              <div className="w-16 h-16 bg-[#f2eef7] dark:bg-[#2a2430] border-heavy rounded-none flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
-                <span
-                  className="material-symbols-outlined text-3xl text-primary"
-                  data-weight="fill"
-                >
-                  {policy.icon}
-                </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+          {POLICIES.map((policy) => {
+            const card = (
+              <>
+                <div className="w-16 h-16 bg-[#f2eef7] dark:bg-[#2a2430] border-heavy rounded-none flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
+                  <span
+                    className="material-symbols-outlined text-3xl text-primary"
+                    data-weight="fill"
+                    aria-hidden="true"
+                  >
+                    {policy.icon}
+                  </span>
+                </div>
+                <h3 className="font-headline-md text-headline-md uppercase mb-3 text-on-surface dark:text-[#e8e0e9]">
+                  {policy.title}
+                </h3>
+                <p className="font-body-md text-on-surface-variant dark:text-[#ccc3d8] leading-relaxed">
+                  {policy.description}
+                </p>
+              </>
+            );
+            const className =
+              "no-accent-fill scroll-mt-28 block text-inherit bg-surface-container-lowest rounded-none border-2 border-black brutalist-shadow p-8 transition-all group hover:-translate-y-1";
+            if ("href" in policy && policy.href) {
+              return (
+                <Link key={policy.id} id={policy.id} href={policy.href} className={className}>
+                  {card}
+                </Link>
+              );
+            }
+            return (
+              <div key={policy.id} id={policy.id} className={className}>
+                {card}
               </div>
-              <h3 className="font-headline-md text-headline-md uppercase mb-3 text-on-surface dark:text-[#e8e0e9]">
-                {policy.title}
-              </h3>
-              <p className="font-body-md text-on-surface-variant dark:text-[#ccc3d8] leading-relaxed">
-                {policy.description}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

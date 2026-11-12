@@ -38,7 +38,7 @@ export function AboutExperience() {
         <div className="about-hero__copy">
           <p className="about-hero__eyebrow">Kharis Ministries</p>
           <h1 className="about-hero__brand">Kharis</h1>
-          <p className="about-hero__tag">Changing the world with a touch of His grace.</p>
+          <p className="about-hero__tag">Changing the world with a touch of His Grace.</p>
         </div>
       </header>
 

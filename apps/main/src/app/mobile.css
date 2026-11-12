@@ -17,9 +17,6 @@
   :where(main, section, form, fieldset) {
     min-width: 0;
   }
-  .location-globe__toolbar {
-    align-items: center;
-  }
   .branch-intro__actions {
     align-items: stretch;
   }

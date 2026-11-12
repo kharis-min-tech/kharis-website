@@ -20,3 +20,8 @@ apps/kp2/data/*.json
 
 # Session scratch (local only; never source)
 .remember/
+
+# Vendored third-party components (Framer community). Kept in the exact shape
+# they shipped in, minified, so that re-fetching the source and re-applying our
+# KHARIS PATCH edits stays a readable diff. Reformatting them would destroy that.
+apps/main/src/vendor

@@ -164,3 +164,27 @@ export const globeCityPhotos: Record<string, CityPhoto> = {
 export function globeCityPhoto(slug: string): CityPhoto | undefined {
   return globeCityPhotos[slug] ?? globeCityPhotos[slug.replace(/^kp2-/, "")];
 }
+
+/**
+ * One photograph per country, shown on the globe's country marker card.
+ *
+ * These are people, not landmarks: the marker is the only place on the
+ * Locations page where a branch gets to feel like a room full of faces rather
+ * than a row of addresses. The Sunday photographs used to sit in a standalone
+ * band under the globe where they decorated the page without helping anyone
+ * choose a branch; they do more work here.
+ */
+const countryPhotos: Record<string, string> = {
+  "United Kingdom":
+    "https://images.kharis.org/site-images/main/8687dacfd8faa5e2/locations/london-sunday-laughter.jpg",
+  Ghana:
+    "https://images.kharis.org/site-images/main/894014bef2ca905c/locations/london-sunday-prayer.jpg",
+};
+
+/** Falls back to whichever branch in that country has a photograph. */
+export function globeCountryPhoto(
+  country: string,
+  branchPhotos: readonly (string | undefined)[] = [],
+): string | undefined {
+  return countryPhotos[country] ?? branchPhotos.find(Boolean);
+}

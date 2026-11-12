@@ -26,6 +26,7 @@ export const STATIC_PATHS = [
   "/media",
   "/giving",
   "/contact",
+  "/cookies",
   "/branches",
 ] as const;
 

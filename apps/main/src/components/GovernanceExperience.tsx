@@ -21,11 +21,23 @@ export function GovernanceExperience() {
         <RevealStagger className="gov-policies__grid" stagger={0.1}>
           {GOVERNANCE.policies.map((policy) => (
             <RevealItem key={policy.id} id={policy.id} className="gov-policy">
-              <span className="gov-policy__icon">
-                <ContentIcon name={policy.icon} className="h-10 w-10" />
-              </span>
-              <h2>{policy.title}</h2>
-              <p>{policy.blurb}</p>
+              {"href" in policy ? (
+                <a href={policy.href} className="gov-policy__link">
+                  <span className="gov-policy__icon">
+                    <ContentIcon name={policy.icon} className="h-10 w-10" />
+                  </span>
+                  <h2>{policy.title}</h2>
+                  <p>{policy.blurb}</p>
+                </a>
+              ) : (
+                <>
+                  <span className="gov-policy__icon">
+                    <ContentIcon name={policy.icon} className="h-10 w-10" />
+                  </span>
+                  <h2>{policy.title}</h2>
+                  <p>{policy.blurb}</p>
+                </>
+              )}
             </RevealItem>
           ))}
         </RevealStagger>

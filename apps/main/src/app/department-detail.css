@@ -10,7 +10,7 @@
   min-height: min(82svh, 58rem);
   align-items: flex-end;
   overflow: hidden;
-  padding: clamp(2rem, 7vw, 7rem);
+  padding: var(--pad-lg) var(--gutter);
   background: #342642;
   isolation: isolate;
 }
@@ -67,7 +67,7 @@
 }
 
 .department-detail__next {
-  padding: clamp(3rem, 8vw, 8rem) max(1.5rem, calc((100vw - 80rem) / 2));
+  padding: var(--pad-lg) max(var(--gutter), calc((100vw - var(--page-max)) / 2));
 }
 
 .department-detail__next p {

@@ -1,13 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #ffffff;
-  --bg-soft: #f8f6fa;
-  --bg-purple: #f2eef7;
+  /* —— Surfaces ————————————————————————————————————————————————
+   * One purple-tinted ramp with even perceptual steps (~1.1 contrast each).
+   * Sections alternate 0 / 1 only; 2 is for nested panels and hover fills.
+   * Everything that used to be a one-off near-white hex maps onto these.
+   */
+  --surface-0: #ffffff;
+  --surface-1: #f4f1f8;
+  --surface-2: #ebe6f2;
+  --surface-raised: #ffffff;
+
+  /* The saturated violet the Locations hero and branch cards are built on.
+   * It is a brand surface, not a step on the neutral ramp, so it keeps its
+   * own token rather than being forced onto --surface-N. It does not flip
+   * with the theme: it always carries white text. */
+  --surface-brand: #150934;
+
+  /* Older rules read these names; they are now aliases onto the ramp. */
+  --bg: var(--surface-0);
+  --bg-soft: var(--surface-1);
+  --bg-purple: var(--surface-2);
+
   --fg: #1c1c1f;
   --fg-soft: #3a3a40;
   --muted: #4a4a52;
-  --line: rgba(99, 14, 212, 0.12);
+
+  /* —— Edges ——————————————————————————————————————————————————
+   * A square system lives on its edges, so there are exactly two: a hairline
+   * for section joins and card borders, and a strong one for focus/active.
+   */
+  --line: rgba(99, 14, 212, 0.14);
+  --line-strong: rgba(99, 14, 212, 0.3);
+
+  /* The header and any panel that sits over dark media keeps these in BOTH
+   * themes — they must not flip with the theme or the glass goes white. */
+  --header-dark: #0c0814;
+  --header-dark-raised: #151021;
+  --line-on-dark: rgba(255, 255, 255, 0.14);
+  --line-on-dark-strong: rgba(255, 255, 255, 0.26);
+
+  /* —— Layout rhythm ——————————————————————————————————————————
+   * One container width and one 3-step vertical scale for every section.
+   * Overridden at 768px below; see the .section primitive.
+   */
+  --page-max: 80rem;
+  --gutter: 1.25rem;
+  --pad-sm: 1.75rem;
+  --pad-md: 2.25rem;
+  --pad-lg: 3rem;
+
   --purple: #630ed4;
   --purple-deep: #4c08a8;
   /* Dark yellow-orangish accent (CTAs + accents) */
@@ -38,6 +80,131 @@
   --color-purple: var(--purple);
   --color-purple-deep: var(--purple-deep);
   --color-orange: var(--orange);
+  /* The campaign yellow was the one brand colour with no Tailwind utility,
+     so components reached for a hard-coded hex instead. */
+  --color-yellow: var(--yellow);
+  --color-surface-0: var(--surface-0);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-line-on-dark: var(--line-on-dark);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 2rem;
+    --pad-sm: 2.5rem;
+    --pad-md: 3.5rem;
+    --pad-lg: 4.5rem;
+  }
+}
+
+/* —— Section primitive ————————————————————————————————————————
+ * Every full-width section on the site uses .section + .section__inner, so
+ * the content edge lands in the same place on every band. With square
+ * geometry there is no corner radius to disguise a few pixels of drift, so
+ * one container width is not a nicety — it is the whole look.
+ */
+.section {
+  padding-inline: var(--gutter);
+  padding-block: var(--pad-md);
+}
+
+.section--sm {
+  padding-block: var(--pad-sm);
+}
+
+.section--lg {
+  padding-block: var(--pad-lg);
+}
+
+.section--flush-top {
+  padding-top: 0;
+}
+
+.section--flush-bottom {
+  padding-bottom: 0;
+}
+
+.section__inner {
+  width: min(var(--page-max), 100%);
+  margin-inline: auto;
+}
+
+/* —— Band rhythm ——————————————————————————————————————————————
+ * Two surfaces, strictly alternating, with a hairline at every join. The
+ * rule is what separates one band from the next now that nothing is rounded.
+ * Bands that carry their own photograph or colour (the hero, Spurgeon's)
+ * deliberately skip .band so no rule is drawn against their hard edge.
+ */
+.band--0 {
+  background: var(--surface-0);
+}
+
+/* One page surface per theme.
+ *
+ * This used to be --surface-1, so bands alternated white / #f4f1f8 in light
+ * and #0c0814 / #151021 in dark. That is about a 4% move in luminance: too
+ * small to read as a decision, too large to disappear, so across a tall or
+ * sparse section it looked like a smudge rather than a boundary. It was also
+ * a second separator stacked on the hairline below, and where a third
+ * surface joined — the globe stage, the footer — the three edges landed
+ * within a few pixels of each other and the join went muddy.
+ *
+ * The hairline is now the only separator, with the section padding doing the
+ * spacing. The modifier is kept because the markup uses it and because the
+ * distinction is still meaningful if we ever want a contrasting band back;
+ * it simply resolves to the same surface today.
+ *
+ * Panels that are genuinely their own object — cards, modals, the chat and
+ * reader surfaces — still use --surface-1 and --surface-2, and should.
+ */
+.band--1 {
+  background: var(--surface-0);
+}
+
+.band + .band {
+  border-top: 1px solid var(--line);
+}
+
+/* —— Site header ——————————————————————————————————————————————
+ * Three states: clear over hero media, solid-light, solid-dark. The solid
+ * backgrounds used to be hardcoded (#0a0612/90, white/92) and the dark one no
+ * longer matched the dark theme's own page colour, so the bar and the page
+ * behind it were two different near-blacks with a visible seam. These use
+ * --header-dark, which is fixed in both themes because the bar sits over dark
+ * media regardless of which theme is on.
+ */
+.site-header--clear {
+  border-bottom: 1px solid transparent;
+  background: transparent;
+}
+
+.site-header--solid {
+  box-shadow: 0 1px 2px rgba(16, 6, 32, 0.06);
+  backdrop-filter: blur(16px);
+}
+
+.site-header--solid-light {
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-0) 92%, transparent);
+}
+
+.site-header--solid-dark {
+  border-bottom: 1px solid var(--line-on-dark);
+  background: color-mix(in srgb, var(--header-dark) 90%, transparent);
+}
+
+.site-menu--light {
+  border-color: var(--line);
+  background: var(--surface-raised);
+  color: var(--fg);
+}
+
+.site-menu--dark {
+  border-color: var(--line-on-dark);
+  background: color-mix(in srgb, var(--header-dark-raised) 96%, transparent);
+  color: #fff;
+  backdrop-filter: blur(16px);
 }
 
 * {
@@ -55,18 +222,20 @@ html {
   scroll-behavior: smooth;
   /* Stop OS/browser auto-inverting colors; our theme toggle owns dark mode. */
   color-scheme: light;
-  background-color: #ffffff;
-  color: #1c1c1f;
+  background-color: var(--surface-0);
+  color: var(--fg);
 }
 
 body {
   margin: 0;
-  background-color: #ffffff;
-  background: var(--bg);
-  color: #1c1c1f;
+  background: var(--surface-0);
   color: var(--fg);
   overflow-x: hidden;
-  font-weight: 600;
+  /* Body copy is regular. It used to be 600, which put every paragraph,
+   * caption and link at the same weight as the emphasis around it and left
+   * the page with no light-to-dark contrast. 600+ is now a deliberate choice
+   * a rule has to make, not the floor everything starts from. */
+  font-weight: 400;
 }
 
 h1,
@@ -79,110 +248,6 @@ h6 {
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--fg);
-}
-
-.hero-shell h1,
-.hero-shell .headline,
-.hero-shell p {
-  color: #fff !important;
-}
-
-.hero-shell {
-  --hero-purple: #9b7bff;
-  --hero-stroke: #a78bfa;
-  --hero-stroke-deep: #7c4dff;
-  --hero-glow: rgba(107, 52, 250, 0.85);
-  --hero-stroke-soft: rgba(107, 52, 250, 0.45);
-}
-
-/* Welcome sentence: Kharis is bright lavender purple */
-.hero-shell .kharis-brand,
-.hero-shell .welcome-draw__fill .kharis-brand {
-  color: var(--hero-purple) !important;
-  -webkit-text-fill-color: var(--hero-purple) !important;
-  font-weight: 800;
-  filter: none;
-  -webkit-text-stroke: 0 !important;
-}
-
-/* Continuous purple stroke running through welcome letters */
-.hero-shell .welcome-draw {
-  position: relative;
-  display: inline-block;
-  max-width: none;
-  width: max-content;
-}
-
-.hero-shell .welcome-draw__fill {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-shell .welcome-draw__ghost,
-.hero-shell .welcome-draw__run {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  width: 100%;
-  margin: 0;
-  pointer-events: none;
-  color: transparent !important;
-  -webkit-text-fill-color: transparent !important;
-  user-select: none;
-}
-
-.hero-shell .welcome-draw__ghost {
-  z-index: 2;
-  -webkit-text-stroke: 1.75px var(--hero-stroke-soft);
-}
-
-.hero-shell .welcome-draw__run {
-  z-index: 3;
-  -webkit-text-stroke: 3px var(--hero-stroke);
-  filter: drop-shadow(0 0 12px var(--hero-glow));
-  -webkit-mask-image: linear-gradient(
-    100deg,
-    transparent 0%,
-    transparent 38%,
-    #000 46%,
-    #000 54%,
-    transparent 62%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    100deg,
-    transparent 0%,
-    transparent 38%,
-    #000 46%,
-    #000 54%,
-    transparent 62%,
-    transparent 100%
-  );
-  -webkit-mask-size: 280% 100%;
-  mask-size: 280% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  animation: welcome-purple-run 2.4s linear infinite;
-}
-
-.hero-shell .welcome-draw__run .kharis-brand,
-.hero-shell .welcome-draw__ghost .kharis-brand {
-  color: transparent !important;
-  -webkit-text-fill-color: transparent !important;
-  -webkit-text-stroke: 3px var(--hero-stroke-deep);
-  filter: none;
-}
-
-@keyframes welcome-purple-run {
-  0% {
-    -webkit-mask-position: 130% 0;
-    mask-position: 130% 0;
-  }
-  100% {
-    -webkit-mask-position: -130% 0;
-    mask-position: -130% 0;
-  }
 }
 
 .kharis-word {
@@ -208,9 +273,28 @@ h6 {
   }
 }
 
+/* Five cards. A 3-column step left a 3+2 row with a hard empty rectangle
+ * hanging off the end — with nothing rounded, that reads as a missing tile
+ * rather than a gap. Going 2 → 4 → 5 keeps the last row either full or
+ * centred, never ragged: at 2-up the fifth card spans the full width, at
+ * 4-up it spans the two middle columns, and at 5-up the row is simply full. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .know-grid > *:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  .know-grid > *:nth-child(5) .know-card {
+    aspect-ratio: 16 / 7;
+  }
+}
+
 @media (min-width: 1024px) {
   .know-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .know-grid > *:nth-child(5) {
+    grid-column: 2 / span 2;
   }
 }
 
@@ -218,58 +302,22 @@ h6 {
   .know-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
+
+  .know-grid > *:nth-child(5) {
+    grid-column: auto;
+  }
 }
 
-/* —— Messages band + join into Near You —— */
-.messages-band {
-  position: relative;
-  z-index: 1;
-  background: #fff;
-  padding-bottom: 2.25rem;
-}
-
-/* Soft diagonal join: Latest Messages → Kharis Near You */
+/* .messages-band and the .visit-band__seam diagonal join are gone: no
+ * component rendered either of them, and the negative margin the seam needed
+ * was already being zeroed further down. Bands get their surface from
+ * .band--0 / .band--1 and their separation from the hairline between them. */
 .visit-band {
   position: relative;
   z-index: 0;
   overflow: hidden;
-  background: var(--bg-purple);
-  margin-top: -1.75rem;
-  padding-top: 1.25rem;
 }
-
-.visit-band__seam {
-  position: absolute;
-  left: -8%;
-  width: 116%;
-  top: -0.35rem;
-  height: 4.75rem;
-  background: #fff;
-  transform: skewY(-2.75deg);
-  transform-origin: 0 0;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.visit-band__seam--soft {
-  top: 2.35rem;
-  height: 3.25rem;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(242, 238, 247, 0.35) 55%,
-    transparent 100%
-  );
-  transform: skewY(-2.75deg);
-  filter: blur(6px);
-  opacity: 0.95;
-}
-
 .eyebrow {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
   color: var(--purple);
 }
 
@@ -306,7 +354,6 @@ h6 {
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: linear-gradient(180deg, #f7f7f9 0%, #f3f1f5 45%, #f8f7fa 100%);
 }
 
 .listen-band .section-title {
@@ -320,7 +367,10 @@ h6 {
   flex-direction: column;
   align-items: center;
   border-radius: 0;
-  background: #ececef;
+  /* Was #ececef — a pure neutral grey card on a purple-tinted band, which is
+   * what made this section read as dirty rather than quiet. */
+  background: var(--surface-2);
+  border: 1px solid var(--line);
   padding: 1.5rem 1.1rem 0;
   overflow: hidden;
   min-height: 28rem;
@@ -331,8 +381,9 @@ h6 {
 }
 
 .listen-card:hover {
-  background: #f1ecff;
-  transform: translateY(-3px);
+  background: var(--surface-raised);
+  border-color: var(--line-strong);
+  transform: translateY(-2px);
   box-shadow: 0 18px 40px rgba(107, 52, 250, 0.1);
 }
 
@@ -346,10 +397,6 @@ h6 {
 
 .listen-card__step {
   margin: 0 0 0.35rem;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--purple);
 }
 
@@ -725,9 +772,9 @@ h6 {
   border-radius: 0;
   padding: 0.95rem 1rem;
   text-decoration: none;
-  border: 1px solid rgba(28, 28, 31, 0.08);
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(10px);
+  /* Was rgba(28,28,31,0.08) — effectively no edge at all on a light band. */
+  border: 1px solid var(--line);
+  background: var(--surface-raised);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -1183,43 +1230,12 @@ h6 {
     0 28px 56px rgba(99, 14, 212, 0.16);
 }
 
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  border-radius: 0;
-  border: 1.5px solid var(--orange);
-  background: #fff;
-  color: var(--orange-ink);
-  font-weight: 800;
-  font-size: 0.875rem;
-  padding: 0.9rem 1.45rem;
-  box-shadow: 0 8px 22px rgba(212, 146, 10, 0.12);
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.btn-primary:hover {
-  background: var(--orange);
-  border-color: var(--orange);
-  color: #1c1c1f;
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px rgba(212, 146, 10, 0.32);
-}
+/* .btn-primary used to be defined here with the pre-square sizing and an
+ * orange outline. It is declared once, with every other button, in the
+ * shared button block further down. */
 
 /* —— Testimony band —— */
-.testimony-band {
-  background: linear-gradient(180deg, #faf8ff 0%, #f1ecff 48%, #ebe4ff 100%);
-}
-
-html[data-theme="dark"] .testimony-band {
-  background: linear-gradient(180deg, #120b1d 0%, #180d27 48%, #211136 100%);
-}
+/* Band surfaces come from .band--0 / .band--1; see the band rhythm block. */
 
 html[data-theme="dark"] .testimony-viewport::before {
   background: linear-gradient(90deg, #180d27 10%, transparent 100%);
@@ -1231,7 +1247,7 @@ html[data-theme="dark"] .testimony-viewport::after {
 
 html[data-theme="dark"] .testimony-card {
   border-color: rgba(196, 166, 255, 0.2);
-  background: #241735;
+  background: var(--surface-2);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
 }
 
@@ -1240,7 +1256,7 @@ html[data-theme="dark"] .testimony-card--2,
 html[data-theme="dark"] .testimony-card--3,
 html[data-theme="dark"] .testimony-card--4,
 html[data-theme="dark"] .testimony-card--5 {
-  background: #241735;
+  background: var(--surface-2);
 }
 
 html[data-theme="dark"] .testimony-card__wall {
@@ -1643,7 +1659,7 @@ html[data-theme="dark"] .testimony-card__read {
   width: 2.4rem;
   height: 2.4rem;
   border: 2px solid #1c1c1f;
-  background: #f8f6fa;
+  background: var(--surface-1);
   color: #1c1c1f;
   font-size: 1.35rem;
   font-weight: 800;
@@ -2043,99 +2059,15 @@ html[data-theme="dark"] .testimony-card__read {
   color: var(--fg-soft);
 }
 
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  border-radius: 0;
-  border: 1.5px solid var(--purple);
-  background: #fff;
-  color: var(--purple);
-  font-weight: 700;
-  font-size: 0.875rem;
-  padding: 0.9rem 1.45rem;
-  box-shadow: 0 8px 22px rgba(99, 14, 212, 0.08);
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.btn-secondary:hover {
-  background: var(--purple-fill);
-  border-color: var(--purple);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px rgba(99, 14, 212, 0.28);
-}
-
-.btn-give {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  border-radius: 0;
-  border: 2px solid var(--purple);
-  background: var(--purple-fill);
-  color: #fff;
-  font-weight: 800;
-  font-size: 0.9rem;
-  letter-spacing: 0.01em;
-  padding: 0.75rem 1.55rem;
-  text-decoration: none;
-  box-shadow: 0 10px 24px rgba(99, 14, 212, 0.28);
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.btn-give:hover {
-  background: #fff;
-  border-color: var(--purple);
-  color: var(--purple-fill);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(99, 14, 212, 0.18);
-}
-
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.875rem;
-  padding: 0.9rem 1.45rem;
-  backdrop-filter: blur(8px);
-}
+/* .btn-secondary, .btn-give and .btn-ghost used to be defined here with the
+ * pre-square sizing. They are declared once, with everything else, in the
+ * shared button block further down. */
 
 .panel {
   border-radius: 0;
   background: #fff;
   box-shadow: var(--shadow);
   border: 1px solid var(--line);
-}
-
-/* Full-bleed hero — video edge-to-edge under transparent header (Vive-style) */
-.hero-shell {
-  position: relative;
-  width: 100%;
-  max-width: none;
-  height: 100svh;
-  height: 100dvh;
-  min-height: 640px;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: #0a0614;
 }
 
 .hero-video-frame {
@@ -2151,43 +2083,7 @@ html[data-theme="dark"] .testimony-card__read {
 }
 
 /*
- * Full-bleed cover: Tailwind preflight sets `video { max-width:100%; height:auto }`,
- * which pins the element to intrinsic 16:9 and leaves black gutters (right + bottom).
- * Fill the frame box (100% × 100%) and let object-fit crop — more reliable on <video>
- * than min-width/min-height + width/height:auto (WebKit often keeps intrinsic size).
- */
-.hero-shell .hero-video-frame .hero-local-video {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 100% !important;
-  min-height: 100% !important;
-  max-width: none !important;
-  max-height: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  transform: none !important;
-  object-fit: cover !important;
-  object-position: center center !important;
-  opacity: 0;
-  visibility: visible !important;
-  pointer-events: none !important;
-  display: block !important;
-  background: #0a0614;
-  transition: opacity 0.3s cubic-bezier(0.33, 0, 0.2, 1);
-  z-index: 1;
-}
-
-.hero-shell .hero-video-frame .hero-local-video.is-ready.is-active,
-.hero-shell .hero-video-frame .hero-local-video.is-active {
-  opacity: 1;
-  z-index: 2;
-}
+ * Full-bleed cover: Tailwind preflight sets `video { max-width:100%; height:auto }
 
 /* Hero slideshow picks — larger thumbs, no weak glass bar */
 .hero-slides {
@@ -2228,7 +2124,7 @@ html[data-theme="dark"] .testimony-card__read {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 10;
-  border-radius: 0.75rem;
+  border-radius: 0;
   overflow: hidden;
   background: #1a1230;
   box-shadow:
@@ -2364,10 +2260,6 @@ html[data-theme="dark"] .testimony-card__read {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-shell .hero-video-frame .hero-local-video {
-    transition-duration: 0.01ms;
-  }
-
   .hero-slide__frame,
   .hero-slide__thumb,
   .hero-slides__dot {
@@ -2383,12 +2275,6 @@ html[data-theme="dark"] .testimony-card__read {
   pointer-events: none !important;
   width: 0 !important;
   height: 0 !important;
-}
-
-@supports not (height: 100dvh) {
-  .hero-shell {
-    height: 100svh;
-  }
 }
 
 .hero-still {
@@ -2670,7 +2556,7 @@ html[data-theme="dark"] .testimony-card__read {
   /* Closest to source photos (≈1024×535–630) for sharp quality */
   aspect-ratio: 16 / 9;
   min-height: 0;
-  border-radius: 18px;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   background: #1a1230;
@@ -2746,7 +2632,7 @@ html[data-theme="dark"] .testimony-card__read {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
+  border-radius: 0;
   background: #fff;
   color: #1c1c1f;
   font-size: 0.875rem;
@@ -2799,212 +2685,6 @@ html[data-theme="dark"] .testimony-card__read {
   width: 22px;
   background: #1c1c1f;
 }
-
-/* —— Unsure which branch CTA (pre-footer) —— */
-.unsure-band {
-  background: #f7f5f9;
-}
-
-.unsure-panel {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  overflow: hidden;
-  border-radius: 0;
-  padding: clamp(2.25rem, 5vw, 3.75rem) clamp(1.35rem, 4vw, 3rem);
-  background: linear-gradient(145deg, #7c3aed 0%, #630ed4 48%, #260650 100%);
-  box-shadow: 0 28px 60px rgba(99, 14, 212, 0.22);
-}
-
-.unsure-panel__shapes {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.unsure-shape {
-  position: absolute;
-  display: block;
-}
-
-.unsure-shape--orb-a {
-  width: 14rem;
-  height: 14rem;
-  left: -3.5rem;
-  top: -4rem;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 35% 35%,
-    rgba(212, 146, 10, 0.55),
-    rgba(212, 146, 10, 0.08) 62%,
-    transparent 70%
-  );
-}
-
-.unsure-shape--orb-b {
-  width: 18rem;
-  height: 18rem;
-  right: -5rem;
-  bottom: -7rem;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 40% 40%,
-    rgba(155, 123, 255, 0.5),
-    rgba(107, 52, 250, 0.12) 60%,
-    transparent 72%
-  );
-}
-
-.unsure-shape--orb-c {
-  width: 9rem;
-  height: 9rem;
-  left: 18%;
-  bottom: -2.5rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  filter: blur(1px);
-}
-
-.unsure-shape--ring {
-  width: 11rem;
-  height: 11rem;
-  right: 8%;
-  top: -2.5rem;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.22);
-  box-shadow: inset 0 0 0 18px rgba(212, 146, 10, 0.08);
-}
-
-.unsure-shape--blob {
-  width: 13rem;
-  height: 10rem;
-  left: 55%;
-  top: 35%;
-  border-radius: 58% 42% 48% 52% / 45% 55% 45% 55%;
-  background: rgba(212, 146, 10, 0.16);
-  transform: translate(-50%, -50%) rotate(18deg);
-  filter: blur(0.5px);
-}
-
-.unsure-shape--dot-a {
-  width: 0.85rem;
-  height: 0.85rem;
-  left: 12%;
-  top: 42%;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.55);
-}
-
-.unsure-shape--dot-b {
-  width: 0.55rem;
-  height: 0.55rem;
-  right: 16%;
-  bottom: 28%;
-  border-radius: 50%;
-  background: rgba(212, 146, 10, 0.85);
-}
-
-.unsure-shape--arc {
-  width: 7.5rem;
-  height: 7.5rem;
-  left: 6%;
-  bottom: 18%;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  border-top-color: rgba(255, 255, 255, 0.35);
-  border-right-color: rgba(212, 146, 10, 0.45);
-  transform: rotate(-28deg);
-}
-
-.unsure-panel__content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.unsure-panel__eyebrow {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.unsure-panel__title {
-  margin: 0.85rem 0 0;
-  max-width: 18ch;
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: clamp(1.75rem, 4vw, 2.55rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.12;
-  color: #fff;
-}
-
-.unsure-panel__copy {
-  margin: 1rem 0 0;
-  max-width: 36rem;
-  font-size: clamp(0.98rem, 2vw, 1.12rem);
-  font-weight: 600;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.unsure-panel__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-top: 1.75rem;
-}
-
-.unsure-panel__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0;
-  padding: 0.9rem 1.55rem;
-  font-size: 0.92rem;
-  font-weight: 800;
-  text-decoration: none;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.unsure-panel__btn--solid {
-  background: #fff;
-  color: #630ed4;
-  border: 1.5px solid #fff;
-}
-
-.unsure-panel__btn--solid:hover {
-  background: transparent;
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.unsure-panel__btn--ghost {
-  background: transparent;
-  color: #fff;
-  border: 1.5px solid rgba(255, 255, 255, 0.75);
-}
-
-.unsure-panel__btn--ghost:hover {
-  background: #fff;
-  color: #630ed4;
-  border-color: #fff;
-  transform: translateY(-2px);
-}
-
 @media (max-width: 640px) {
   .apple-carousel {
     --slide-w: 86vw;
@@ -3013,7 +2693,7 @@ html[data-theme="dark"] .testimony-card__read {
 
   .apple-slide {
     aspect-ratio: 16 / 9;
-    border-radius: 14px;
+    border-radius: 0;
     min-height: 0;
   }
 
@@ -3042,12 +2722,15 @@ html[data-theme="dark"] .testimony-card__read {
 
 .msg-page {
   position: relative;
-  background: #07040c;
+  background: var(--surface-0);
   color: #fff;
   overflow-x: hidden;
-  /* Same content column as the site header (max-w-7xl + px-5/px-8). */
-  --msg-gutter: clamp(1.25rem, 4vw, 2rem);
-  --msg-max: 80rem;
+  /* Aliases onto the site-wide layout tokens. These used to be their own
+   * clamp and their own max-width, and because the gutter was applied INSIDE
+   * the max-width the page's content column came out 1216px at an edge of
+   * 112px, against 1280px at 80px everywhere else. */
+  --msg-gutter: var(--gutter);
+  --msg-max: var(--page-max);
   --msg-frame: 1px solid rgba(255, 255, 255, 0.55);
 }
 
@@ -3059,10 +2742,21 @@ html[data-theme="dark"] .testimony-card__read {
   -webkit-text-fill-color: #fff !important;
 }
 
+/* The decorative purple wash behind the Messages page.
+ *
+ * It used to stretch over the WHOLE page — some 6,800px — which turned two
+ * radial gradients into broad horizontal bands. Where a band crossed the gap
+ * between two rows of cards it read as a deliberate coloured strip across
+ * the page, which is what made the filter row look like a banner.
+ *
+ * Now it is pinned to the top of the page and no taller than the viewport,
+ * so it stays what it was meant to be: a glow behind the hero.
+ */
 .msg-mist {
   pointer-events: none;
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto;
+  height: 100svh;
   z-index: 0 !important;
   opacity: 0.55;
   overflow: hidden;
@@ -3168,7 +2862,7 @@ html[data-theme="dark"] .testimony-card__read {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #f0e6ff;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .msg-hub__title {
@@ -3179,17 +2873,13 @@ html[data-theme="dark"] .testimony-card__read {
   letter-spacing: -0.035em;
   line-height: 1.02;
   color: #ffffff;
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.8),
-    0 8px 28px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
 }
 
 .msg-hub__title span {
-  color: #ffc14d !important;
-  -webkit-text-fill-color: #ffc14d !important;
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.75),
-    0 0 24px rgba(212, 146, 10, 0.4);
+  color: var(--yellow) !important;
+  -webkit-text-fill-color: var(--yellow) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
 }
 
 .msg-hub__lede {
@@ -3373,17 +3063,18 @@ html[data-theme="dark"] .testimony-card__read {
 
 .msg-row-band {
   width: 100%;
-  padding: clamp(2.5rem, 6vw, 4.25rem) 0 1.75rem;
+  padding: var(--pad-md) var(--gutter) var(--pad-sm);
 }
 
+/* Extra air where the first band meets the hero. */
 .msg-hub__hero + .msg-row-band {
-  padding-top: clamp(3rem, 7vw, 4.75rem);
+  padding-top: var(--pad-lg);
 }
 
 .msg-row-band__head {
   max-width: var(--msg-max);
   margin-inline: auto;
-  padding-inline: var(--msg-gutter);
+  padding-inline: 0;
   margin-bottom: 1.35rem;
   scroll-margin-top: 6.5rem;
 }
@@ -3395,13 +3086,15 @@ html[data-theme="dark"] .testimony-card__read {
   letter-spacing: -0.02em;
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85);
 }
 
+/* The gutter is on the section, so the row adds none of its own: it used to
+ * add up to 48px more, which pushed every tile 32px to the right of the
+ * heading sitting directly above it. */
 .msg-row {
   display: flex;
   gap: 1.15rem;
-  padding: 0.35rem clamp(1.25rem, 4vw, 3rem) 1.5rem;
+  padding: 0.35rem 0 1.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -3423,7 +3116,7 @@ html[data-theme="dark"] .testimony-card__read {
   width: 100%;
   max-width: var(--msg-max);
   margin-inline: auto;
-  padding: 0 var(--msg-gutter) 0.5rem;
+  padding: 0 0 0.5rem;
   overflow: visible !important;
   scroll-snap-type: none;
   flex-wrap: unset;
@@ -3434,7 +3127,7 @@ html[data-theme="dark"] .testimony-card__read {
   .msg-row.msg-row--series {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.15rem;
-    padding: 0 var(--msg-gutter) 0.65rem;
+    padding: 0 0 0.65rem;
   }
 }
 
@@ -3520,7 +3213,9 @@ html[data-theme="dark"] .testimony-card__read {
 
 .msg-tile--series:hover .msg-tile__cta,
 .msg-tile--series:focus-visible .msg-tile__cta {
-  color: #d4920a;
+  /* Campaign yellow, not the old orange. The tile is a photograph in both
+     themes, so the base stays white and this stays readable on it. */
+  color: var(--yellow);
 }
 
 .msg-row--neat {
@@ -3544,14 +3239,16 @@ html[data-theme="dark"] .testimony-card__read {
 }
 
 /* Compact landscape shelves under Latest */
+/* Shelves are a continuous catalogue, so they share one surface and sit on
+ * the small step of the scale rather than each inventing its own. */
 .msg-shelf {
-  padding: 1.15rem 0 0.25rem;
+  padding: var(--pad-sm) var(--gutter);
 }
 
 .msg-shelf__head {
   max-width: var(--msg-max);
   margin-inline: auto;
-  padding-inline: var(--msg-gutter);
+  padding-inline: 0;
   margin-bottom: 0.55rem;
   scroll-margin-top: 6.5rem;
 }
@@ -3581,7 +3278,7 @@ html[data-theme="dark"] .testimony-card__read {
   width: 100%;
   max-width: var(--msg-max);
   margin-inline: auto;
-  padding: 0.15rem var(--msg-gutter) 0.55rem;
+  padding: 0.15rem 0 0.55rem;
   overflow: visible;
   scroll-snap-type: none;
   box-sizing: border-box;
@@ -3629,9 +3326,11 @@ html[data-theme="dark"] .testimony-card__read {
 }
 
 /* Netflix-style FAQ at bottom of Messages page */
+/* Reading column, deliberately narrower than the page, but on the shared
+ * vertical scale and gutter rather than three more clamps. */
 .msg-faq {
-  padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 4vw, 3rem) clamp(4rem, 9vw, 6.5rem);
-  max-width: 56rem;
+  padding: var(--pad-lg) var(--gutter);
+  max-width: calc(56rem + 2 * var(--gutter));
   margin-inline: auto;
 }
 
@@ -3693,9 +3392,11 @@ html[data-theme="dark"] .testimony-card__read {
   padding-top: 1.1rem;
 }
 
+/* Was a 90rem container with its own 44px gutter — the one section on the
+ * page whose content edge did not line up with the rest. */
 .msg-listen {
-  padding: clamp(3.5rem, 8vw, 5.5rem) clamp(1.1rem, 4vw, 2.75rem) clamp(3.5rem, 7vw, 5rem);
-  max-width: 90rem;
+  padding: var(--pad-lg) var(--gutter);
+  max-width: calc(var(--page-max) + 2 * var(--gutter));
   margin-inline: auto;
   text-align: center;
 }
@@ -3939,7 +3640,7 @@ html[data-theme="dark"] .testimony-card__read {
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #ffc14d;
+  color: var(--yellow);
 }
 
 .msg-devices__lap-hero-copy p {
@@ -4337,15 +4038,18 @@ html[data-theme="dark"] .testimony-card__read {
     border-color 0.2s ease;
 }
 
+/* The site's primary action colour, the same purple as every other primary
+ * button. It used to be a hardcoded #d4920a, which was the old orange and
+ * the last one left on the page. */
 .msg-btn--primary {
-  border: 1.5px solid #d4920a;
-  background: #d4920a;
-  color: #1c1c1f;
+  border: 1.5px solid var(--purple);
+  background: var(--purple);
+  color: #fff;
 }
 
 .msg-btn--primary:hover {
-  background: #b87c08;
-  border-color: #b87c08;
+  background: #6f1fe0;
+  border-color: #6f1fe0;
   transform: translateY(-2px);
 }
 
@@ -4376,7 +4080,7 @@ html[data-theme="dark"] .testimony-card__read {
   min-height: min(72svh, 40rem);
   display: grid;
   place-items: end start;
-  padding: 7rem clamp(1.25rem, 4vw, 3rem) clamp(2.5rem, 6vw, 4rem);
+  padding: calc(4.5rem + var(--pad-md)) var(--gutter) var(--pad-md);
   color: #fff;
 }
 
@@ -4434,8 +4138,8 @@ html[data-theme="dark"] .testimony-card__read {
 }
 
 .about-ety {
-  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 3rem);
-  max-width: 70rem;
+  padding: var(--pad-md) var(--gutter);
+  max-width: var(--page-max);
   margin-inline: auto;
 }
 
@@ -4517,8 +4221,8 @@ html[data-theme="dark"] .testimony-card__read {
 }
 
 .about-jump {
-  padding: 0 clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vw, 3rem);
-  max-width: 70rem;
+  padding: 0 var(--gutter) var(--pad-md);
+  max-width: var(--page-max);
   margin-inline: auto;
 }
 
@@ -4608,7 +4312,7 @@ html[data-theme="dark"] .testimony-card__read {
 /* About interactive stage — Mission / Vision / Leadership */
 .about-stage {
   position: relative;
-  padding: 0 0 clamp(2.5rem, 6vw, 4rem);
+  padding: 0 0 var(--pad-md);
   background: #fff;
   scroll-margin-top: 5.5rem;
 }
@@ -4643,7 +4347,7 @@ html[data-theme="dark"] .testimony-card__read {
 .about-stage__banner-inner {
   position: relative;
   z-index: 1;
-  padding: 1.35rem clamp(1.25rem, 4vw, 3rem);
+  padding: var(--pad-sm) var(--gutter);
   text-align: center;
 }
 
@@ -4679,7 +4383,7 @@ html[data-theme="dark"] .testimony-card__read {
   min-height: clamp(7.5rem, 18vw, 10.5rem);
   padding: 0;
   border: 0;
-  border-radius: 1.15rem;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   text-align: left;
@@ -4749,7 +4453,7 @@ html[data-theme="dark"] .testimony-card__read {
 }
 
 .about-stage__panel {
-  border-radius: 1.5rem;
+  border-radius: 0;
   overflow: hidden;
   background: #fff;
   box-shadow:
@@ -5048,7 +4752,7 @@ html[data-theme="dark"] .testimony-card__read {
   width: 2.15rem;
   height: 2.15rem;
   border: 1.5px solid var(--line);
-  border-radius: 999px;
+  border-radius: 0;
   background: #fff;
   color: var(--purple);
   cursor: pointer;
@@ -5091,7 +4795,7 @@ html[data-theme="dark"] .testimony-card__read {
   padding: 1.35rem 5.75rem;
   background: var(--vision-bg, #630ed4);
   color: #fff;
-  border-radius: 1rem;
+  border-radius: 0;
   overflow: hidden;
   transition: background 0.45s ease;
 }
@@ -5364,7 +5068,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   justify-content: center;
   margin-top: 0;
   padding: 0.9rem 1.5rem;
-  border-radius: 999px;
+  border-radius: 0;
   border: 1.5px solid #fff;
   background: #fff;
   color: var(--purple-fill);
@@ -5432,15 +5136,15 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .about-section {
-  padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 4vw, 3rem);
-  max-width: 70rem;
+  padding: var(--pad-lg) var(--gutter);
+  max-width: var(--page-max);
   margin-inline: auto;
 }
 
 .about-section--soft {
   max-width: none;
   background: var(--bg-soft);
-  padding-inline: clamp(1.25rem, 4vw, 3rem);
+  padding-inline: var(--gutter);
 }
 
 .about-section--soft > * {
@@ -5452,9 +5156,12 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 .about-faith-band {
   position: relative;
   isolation: isolate;
-  padding: clamp(3.25rem, 7vw, 5.25rem) clamp(1.25rem, 4vw, 3rem);
+  padding: var(--pad-lg) var(--gutter);
   overflow: hidden;
-  background: var(--bg-soft);
+  /* Was --bg-soft; see the note on .band--1. This one is not a .band, so it
+     needs its own hairline rather than inheriting the band rule. */
+  background: var(--surface-0);
+  border-block: 1px solid var(--line);
 }
 
 .faith-svg {
@@ -5605,7 +5312,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   max-width: none;
   background: linear-gradient(165deg, #260a4a 0%, #0f071a 55%, #0f0814 100%);
   color: #fff;
-  padding-inline: clamp(1.25rem, 4vw, 3rem);
+  padding-inline: var(--gutter);
 }
 
 .about-section--plum > * {
@@ -6288,7 +5995,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   margin: 1rem 0 0;
   font-size: clamp(1.35rem, 3vw, 1.85rem);
   font-weight: 800;
-  color: #ffc14d;
+  color: var(--yellow);
 }
 
 .about-vision__intro {
@@ -6319,7 +6026,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 .about-vision__list li span {
   font-size: 0.85rem;
   font-weight: 800;
-  color: #ffc14d;
+  color: var(--yellow);
 }
 
 .about-vision__list p {
@@ -6364,9 +6071,12 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   align-self: flex-start;
 }
 
+/* Was --surface-1; see the note on .band--1. This is a full-width band, not
+ * a panel, so it takes the page surface and the hairline does the dividing. */
 .about-next {
-  padding: clamp(3rem, 7vw, 4.5rem) clamp(1.25rem, 4vw, 3rem);
-  background: var(--bg-soft);
+  padding: var(--pad-lg) var(--gutter);
+  background: var(--surface-0);
+  border-top: 1px solid var(--line);
 }
 
 .about-next__inner {
@@ -6396,7 +6106,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   display: inline-flex;
   align-items: center;
   padding: 0.85rem 1.25rem;
-  border-radius: 999px;
+  border-radius: 0;
   border: 1.5px solid var(--line);
   color: var(--fg);
   font-size: 0.88rem;
@@ -6422,7 +6132,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   min-height: min(58svh, 32rem);
   display: grid;
   place-items: end start;
-  padding: 7rem clamp(1.25rem, 4vw, 3rem) clamp(2.25rem, 5vw, 3.5rem);
+  padding: calc(4.5rem + var(--pad-md)) var(--gutter) var(--pad-md);
   color: #fff;
 }
 
@@ -6471,7 +6181,6 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   letter-spacing: -0.035em;
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
-  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
 }
 
 .about-chapter__sub {
@@ -6682,7 +6391,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .gov-hero {
-  padding: 7.5rem clamp(1.25rem, 4vw, 3rem) 2.5rem;
+  padding: calc(4.5rem + var(--pad-md)) var(--gutter) var(--pad-sm);
   max-width: 56rem;
   margin-inline: auto;
 }
@@ -6711,7 +6420,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .gov-policies {
-  padding: 1rem clamp(1.25rem, 4vw, 3rem) clamp(2.5rem, 6vw, 4rem);
+  padding: var(--pad-sm) var(--gutter) var(--pad-md);
   max-width: 70rem;
   margin-inline: auto;
 }
@@ -6769,7 +6478,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .gov-incident {
-  padding: 0 clamp(1.25rem, 4vw, 3rem) clamp(3rem, 7vw, 4.5rem);
+  padding: 0 var(--gutter) var(--pad-lg);
   max-width: 70rem;
   margin-inline: auto;
 }
@@ -6796,7 +6505,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   height: 4.25rem;
   border-radius: 0;
   background: rgba(255, 255, 255, 0.1);
-  color: #ffc14d;
+  color: var(--yellow);
 }
 
 .gov-incident__panel h2 {
@@ -6833,12 +6542,12 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 
 .gov-incident__cta:hover {
   transform: translateY(-2px);
-  background: #ffc14d;
+  background: var(--yellow);
   color: #0f071a;
 }
 
 .gov-back {
-  padding: 0 clamp(1.25rem, 4vw, 3rem) clamp(3.5rem, 7vw, 5rem);
+  padding: 0 var(--gutter) var(--pad-lg);
   max-width: 70rem;
   margin-inline: auto;
 }
@@ -6856,7 +6565,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 
 /* —— Events page —— */
 .events-page {
-  padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  padding-bottom: var(--pad-md);
 }
 
 /* Event detail modal */
@@ -7195,7 +6904,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
     ),
     linear-gradient(165deg, #fff 0%, var(--bg-purple) 48%, #fff8ee 100%);
   box-shadow: var(--shadow);
-  padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.25rem, 4vw, 2.5rem) 1.35rem;
+  padding: var(--pad-sm) var(--gutter) var(--pad-sm);
   color: var(--fg);
 }
 
@@ -7320,7 +7029,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .life-grid {
-  padding: clamp(3rem, 7vw, 4.75rem) 0 1.5rem;
+  padding: var(--pad-lg) 0 var(--pad-sm);
 }
 
 .life-grid__intro {
@@ -7477,7 +7186,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 .life-mixed {
-  padding: 0.5rem 0 clamp(3.5rem, 8vw, 5.5rem);
+  padding: 0 0 var(--pad-lg);
 }
 
 .life-mixed__grid {
@@ -7660,7 +7369,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   border-radius: 0;
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
-  background: linear-gradient(180deg, #fff3d6 0%, #f2eef7 42%, #fff8ee 100%);
+  background: linear-gradient(180deg, #fff3d6 0%, var(--surface-2) 42%, #fff8ee 100%);
 }
 
 .life-kids__blend {
@@ -8034,7 +7743,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   overflow: hidden;
   border: 1px solid rgba(99, 14, 212, 0.14);
   border-radius: 0;
-  background: #f7f5f8;
+  background: var(--surface-1);
   box-shadow: 0 24px 60px rgba(20, 10, 24, 0.22);
   opacity: 0;
   visibility: hidden;
@@ -8178,7 +7887,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   flex-direction: column;
   gap: 0.85rem;
   padding: 1rem 0.95rem 1.1rem;
-  background: #f7f5f8;
+  background: var(--surface-1);
   -webkit-overflow-scrolling: touch;
 }
 
@@ -8630,7 +8339,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   padding: 0.78rem 1rem;
   font: inherit;
   font-size: 0.94rem;
-  background: #f7f5f8;
+  background: var(--surface-1);
   outline: none;
   transition:
     border-color 200ms ease,
@@ -8693,7 +8402,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   padding: 0.55rem 1.1rem max(0.8rem, env(safe-area-inset-bottom, 0px));
   border: 1px solid rgba(99, 14, 212, 0.1);
   border-bottom: 0;
-  border-radius: 1.6rem 1.6rem 0 0;
+  border-radius: 0;
   background: #fff;
   box-shadow: 0 -18px 54px rgba(15, 8, 24, 0.2);
   animation: life-chat-start-rise 340ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -8733,7 +8442,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   align-items: center;
   gap: 0.35rem;
   padding: 0.4rem 0.7rem;
-  border-radius: 999px;
+  border-radius: 0;
   color: #78421c;
   background: #fff3e6;
   font-size: 0.74rem;
@@ -8764,7 +8473,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   min-height: 3.3rem;
   padding: 0.4rem 0.75rem;
   border: 1px solid transparent;
-  border-radius: 1rem;
+  border-radius: 0;
   color: #2a2331;
   background: #f5f4f6;
   text-align: left;
@@ -8828,7 +8537,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
 }
 
 html[data-theme="dark"] .life-chat-start__sheet {
-  background: #17101f;
+  background: var(--surface-raised);
 }
 
 html[data-theme="dark"] .life-chat-start__intro h2,
@@ -8837,7 +8546,7 @@ html[data-theme="dark"] .life-chat-start__choice {
 }
 
 html[data-theme="dark"] .life-chat-start__choice {
-  background: #251d2c;
+  background: var(--surface-2);
 }
 
 html[data-theme="dark"] .life-chat-start__choice:hover,
@@ -8896,19 +8605,19 @@ html[data-theme="dark"] .life-chat-start__choice i {
 
 html[data-theme="dark"] .life-chat {
   border-color: rgba(255, 255, 255, 0.1);
-  background: #151018;
+  background: var(--surface-1);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
 }
 
 html[data-theme="dark"] .life-chat__head,
 html[data-theme="dark"] .life-chat__form,
 html[data-theme="dark"] .life-chat__nudge {
-  background: #1a1420;
+  background: var(--surface-raised);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
 html[data-theme="dark"] .life-chat__thread {
-  background: #120e16;
+  background: var(--surface-1);
 }
 
 html[data-theme="dark"] .life-chat__name,
@@ -8928,7 +8637,7 @@ html[data-theme="dark"] .life-chat__bubble--assistant {
 }
 
 html[data-theme="dark"] .life-chat__card {
-  background: #231c28;
+  background: var(--surface-2);
   border-color: rgba(241, 238, 245, 0.12);
 }
 
@@ -8941,7 +8650,7 @@ html[data-theme="dark"] .life-chat__card-cta {
 }
 
 html[data-theme="dark"] .life-chat__app {
-  background: #231c28;
+  background: var(--surface-2);
   border-color: rgba(241, 238, 245, 0.12);
   color: #f1eef5;
 }
@@ -8955,7 +8664,7 @@ html[data-theme="dark"] .life-chat__app-kicker {
 }
 
 html[data-theme="dark"] .life-chat__option {
-  background: #1a1420;
+  background: var(--surface-raised);
   color: #d8c6f0;
   border-color: #885ac4;
 }
@@ -8966,7 +8675,7 @@ html[data-theme="dark"] .life-chat__option.is-selected {
 }
 
 html[data-theme="dark"] .life-chat__form input {
-  background: #221b28;
+  background: var(--surface-2);
   border-color: rgba(255, 255, 255, 0.12);
   color: #f1eef5;
 }
@@ -9016,7 +8725,7 @@ html[data-theme="dark"] .life-chat__code {
 }
 
 html[data-theme="dark"] .life-chat__nudge-no {
-  background: #221b28;
+  background: var(--surface-2);
   border-color: rgba(255, 255, 255, 0.12);
   color: #e1dce8;
 }
@@ -10792,7 +10501,7 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
 /* —— Site footer —— */
 .site-footer {
   overflow: visible;
-  padding: clamp(2.25rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2rem);
+  padding: var(--pad-md) var(--gutter);
 }
 
 .site-footer__inner {
@@ -10841,11 +10550,6 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
 
 .site-footer__heading {
   margin: 0 0 0.85rem;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  line-height: 1.35;
-  text-transform: uppercase;
 }
 
 .site-footer__links {
@@ -11020,25 +10724,7 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
   --card-bg: #ffffff;
 }
 
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.9rem 1.45rem;
-  border-radius: 0;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(8px);
-  font-weight: 700;
-  font-size: 0.875rem;
-  cursor: pointer;
-}
-
-.btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.24);
-}
+/* .btn-ghost is declared with the rest of the buttons further down. */
 
 .glass-panel {
   background: rgba(255, 255, 255, 0.86);
@@ -11054,7 +10740,7 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
 }
 
 html.branch-light .bg-\[\#0d0710\] {
-  background-color: #f8f6fa;
+  background-color: var(--surface-1);
 }
 
 html.branch-light .bg-\[\#15131f\] {
@@ -11094,17 +10780,32 @@ html.branch-light .border-white\/10 {
 }
 
 /* —— Global site theme —— */
+/* —— Dark theme ————————————————————————————————————————————————
+ * This is the ONLY place dark values are declared. There used to be a second
+ * html[data-theme="dark"] block further down redeclaring --bg, --fg, --muted
+ * and the card surfaces to different values; the two disagreed, so the page
+ * painted one near-black while the tokens reported another and every
+ * hardcoded dark hex drifted from both. Merged here, using the values that
+ * were actually winning, re-expressed through the surface ramp.
+ */
 html[data-theme="dark"] {
   color-scheme: dark;
-  background-color: #0a0612;
-  color: #f1eef5;
-  --bg: #0a0612;
-  --bg-soft: #120818;
-  --bg-purple: #140f1a;
-  --fg: #f1eef5;
-  --fg-soft: #d0cad8;
-  --muted: #a99aa6;
-  --line: rgba(255, 255, 255, 0.1);
+
+  --surface-0: #0c0814;
+  --surface-1: #151021;
+  --surface-2: #1e1730;
+  --surface-raised: #181223;
+
+  background-color: var(--surface-0);
+  color: var(--fg);
+
+  --fg: #f3f0f7;
+  --fg-soft: #dbd5e2;
+  --muted: #b8a8b4;
+
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.24);
+
   --purple: #8a5ac8;
   --purple-deep: #6c44a0;
   --purple-fill: #5c358e;
@@ -11113,19 +10814,17 @@ html[data-theme="dark"] {
   --orange-ink: #e8a33d;
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
   --shadow-lift: 0 28px 60px rgba(0, 0, 0, 0.45);
-  --page-bg: var(--bg);
+  --page-bg: var(--surface-0);
   --page-fg: var(--fg);
-  --surface-muted: var(--bg-purple);
+  --surface-muted: var(--surface-2);
   --border: var(--line);
-  --card-bg: #15131f;
-  --card-bg-soft: #1e1828;
-  --input-bg: #15131f;
+  --card-bg: var(--surface-raised);
+  --card-bg-soft: var(--surface-2);
+  --input-bg: var(--surface-raised);
 }
 
 html[data-theme="dark"] body {
-  background-color: #0a0612;
-  background: var(--bg);
-  color: #f1eef5;
+  background: var(--surface-0);
   color: var(--fg);
 }
 
@@ -11165,7 +10864,9 @@ html[data-theme="dark"] .msg-page .msg-faq__title {
 }
 
 html[data-theme="light"] .msg-page {
-  background: var(--bg-soft);
+  /* Was --bg-soft, which tinted the whole Messages page a shade off white
+     while every other page was white — see the note on .band--1. */
+  background: var(--surface-0);
   color: var(--fg);
 }
 
@@ -11173,14 +10874,12 @@ html[data-theme="light"] .msg-page {
 .msg-hub__hero .msg-hub__title {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.85),
-    0 8px 28px rgba(0, 0, 0, 0.65);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 .msg-hub__hero .msg-hub__title span {
-  color: #ffc14d !important;
-  -webkit-text-fill-color: #ffc14d !important;
+  color: var(--yellow) !important;
+  -webkit-text-fill-color: var(--yellow) !important;
   text-shadow:
     0 2px 4px rgba(0, 0, 0, 0.8),
     0 0 24px rgba(212, 146, 10, 0.45);
@@ -11266,7 +10965,7 @@ html[data-theme="light"] .msg-tile--series .msg-tile__cta {
 
 html[data-theme="light"] .msg-tile--series:hover .msg-tile__cta,
 html[data-theme="light"] .msg-tile--series:focus-visible .msg-tile__cta {
-  color: #d4920a;
+  color: var(--yellow);
 }
 
 html[data-theme="light"] .msg-faq__item {
@@ -11306,8 +11005,8 @@ html[data-theme="light"] .msg-faq__title {
   width: 3rem;
   height: 3rem;
   border: 1.5px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
+  border-radius: 0;
+  background: var(--surface-raised);
   color: var(--purple);
   cursor: pointer;
   box-shadow: 0 8px 24px rgba(22, 8, 40, 0.16);
@@ -11383,14 +11082,19 @@ html[data-theme="dark"] .floating-theme-toggle:hover {
   overflow: hidden;
   isolation: isolate;
   cursor: grab;
-  background: linear-gradient(165deg, #fff8ee 0%, #f2eef7 45%, #fff 100%);
+  background: linear-gradient(165deg, #fff8ee 0%, var(--surface-2) 45%, #fff 100%);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-lift);
   touch-action: none;
 }
 
 html[data-theme="dark"] .not-found__scene {
-  background: linear-gradient(165deg, #1a1020 0%, #120818 55%, #1c1224 100%);
+  background: linear-gradient(
+    165deg,
+    var(--surface-raised) 0%,
+    var(--surface-1) 55%,
+    var(--surface-raised) 100%
+  );
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -11696,7 +11400,7 @@ html[data-theme="dark"] .not-found__cta:hover {
 }
 
 html[data-theme="dark"] .life-modal__panel {
-  background: #15131f;
+  background: var(--surface-raised);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -11744,13 +11448,13 @@ html[data-theme="dark"] .life-modal__panel {
 }
 
 html[data-theme="dark"] .life-modal__close {
-  background: #1f1524;
+  background: var(--surface-2);
   color: #fff;
   border-color: rgba(255, 255, 255, 0.12);
 }
 
 html[data-theme="dark"] .life-modal__toolbar {
-  background: #120818;
+  background: var(--surface-1);
 }
 
 .life-modal__close--video {
@@ -11966,7 +11670,12 @@ html[data-theme="dark"] .life-kids-row__copy p {
 }
 
 html[data-theme="dark"] .life-kids-hero--v2 {
-  background: linear-gradient(165deg, #1a1020 0%, #120818 55%, #140f1a 100%);
+  background: linear-gradient(
+    165deg,
+    var(--surface-raised) 0%,
+    var(--surface-1) 55%,
+    var(--surface-1) 100%
+  );
 }
 
 html[data-theme="dark"] .life-kids-hero__veil {
@@ -11980,7 +11689,7 @@ html[data-theme="dark"] .life-kids-hero__veil {
 }
 
 html[data-theme="dark"] .life-kids-row__visual {
-  background: #1e1428;
+  background: var(--surface-2);
 }
 
 html[data-theme="dark"] .life-kids-hero__bleed {
@@ -12074,7 +11783,7 @@ html[data-theme="light"] .msg-hub__year.is-on {
 
 /* Messages filter: one compact row of icon topic buttons + a year dropdown */
 .msg-filter {
-  padding: 0.5rem 0 0.75rem;
+  padding: 0 var(--gutter) var(--pad-sm);
 }
 
 .msg-filter__inner {
@@ -12083,7 +11792,7 @@ html[data-theme="light"] .msg-hub__year.is-on {
   gap: 0.5rem;
   max-width: var(--msg-max);
   margin-inline: auto;
-  padding-inline: var(--msg-gutter);
+  padding-inline: 0;
 }
 
 .msg-filter__topics {
@@ -12254,10 +11963,16 @@ html[data-theme="light"] .msg-filter-results__empty {
   color: var(--fg-soft);
 }
 
-/* Phones: topics swipe edge to edge, the year dropdown stays pinned on the right. */
+/* Phones: topics swipe edge to edge, the year dropdown stays pinned on the right.
+ * The gutter lives on .msg-filter now, so the left side is dropped there
+ * rather than being cancelled again on the inner. */
 @media (max-width: 767px) {
+  .msg-filter {
+    padding-left: 0;
+  }
+
   .msg-filter__inner {
-    padding-right: var(--msg-gutter);
+    padding-right: 0;
     padding-left: 0;
   }
 
@@ -12269,17 +11984,6 @@ html[data-theme="light"] .msg-filter-results__empty {
 }
 
 /* Dark mode: refined contrast sitewide */
-html[data-theme="dark"] {
-  --bg: #0c0814;
-  --bg-soft: #140e1c;
-  --bg-purple: #1c1224;
-  --fg: #f3f0f7;
-  --fg-soft: #dbd5e2;
-  --muted: #b8a8b4;
-  --card-bg: #1a1222;
-  --card-bg-soft: #22182c;
-}
-
 html[data-theme="dark"] .btn-primary {
   background: rgba(138, 90, 200, 0.18);
   border-color: #8a5ac8;
@@ -12304,17 +12008,9 @@ html[data-theme="dark"] .btn-secondary:hover {
   color: #1c1c1f;
 }
 
-html[data-theme="dark"] .testimony-band {
-  background: linear-gradient(180deg, #140e1c 0%, #1a1224 48%, #1c1228 100%);
-}
-
 html[data-theme="dark"] .testimony-band .section-title,
 html[data-theme="dark"] .testimony-band .eyebrow {
   color: var(--fg) !important;
-}
-
-html[data-theme="dark"] .listen-band {
-  background: linear-gradient(180deg, #140e1c 0%, #1a1224 48%, #1c1228 100%);
 }
 
 html[data-theme="dark"] .listen-band .section-title {
@@ -12323,11 +12019,11 @@ html[data-theme="dark"] .listen-band .section-title {
 }
 
 html[data-theme="dark"] .testimony-viewport::before {
-  background: linear-gradient(90deg, #1a1224 10%, transparent 100%);
+  background: linear-gradient(90deg, var(--surface-raised) 10%, transparent 100%);
 }
 
 html[data-theme="dark"] .testimony-viewport::after {
-  background: linear-gradient(270deg, #1a1224 10%, transparent 100%);
+  background: linear-gradient(270deg, var(--surface-raised) 10%, transparent 100%);
 }
 
 html[data-theme="dark"] .life-card,
@@ -12360,16 +12056,8 @@ html[data-theme="dark"] .life-textcard p,
 html[data-theme="dark"] .life-kids__copy p {
   color: var(--fg-soft) !important;
 }
-
-html[data-theme="dark"] .know-stack__card,
-html[data-theme="dark"] .visit-band,
-html[data-theme="dark"] .vision-band,
-html[data-theme="dark"] .unsure-band {
-  background: var(--bg-soft);
-}
-
 html[data-theme="dark"] .build-house-band {
-  background: linear-gradient(180deg, var(--bg-soft) 0%, #1a1020 100%);
+  background: linear-gradient(180deg, var(--bg-soft) 0%, var(--surface-raised) 100%);
 }
 
 /* Dark mode: About + Governance — light panels → dark cards, readable text */
@@ -12454,7 +12142,7 @@ html[data-theme="dark"] .about-lead__profile-blurb {
 }
 
 html[data-theme="dark"] .about-faith-band {
-  background: var(--bg-soft);
+  background: var(--surface-0);
 }
 
 html[data-theme="dark"] .about-chapter {
@@ -12608,8 +12296,9 @@ html[data-theme="dark"] .about-chapter__card blockquote {
 }
 
 html[data-theme="dark"] .life-cta--quiet {
+  /* Same chip as the header accent button: campaign yellow, dark ink. */
   color: #1c1c1f;
-  background-color: #e8a33d;
+  background-color: var(--yellow);
 }
 
 html[data-theme="dark"] .life-kids-showcase__intro p {
@@ -12620,14 +12309,19 @@ html[data-theme="dark"] .life-kids-showcase__intro p {
 /* Life + modules: pair text with explicit backgrounds (no OS invert surprises) */
 html[data-theme="dark"] .life-page,
 html[data-theme="dark"] .life-wrap {
-  background-color: #0a0612;
+  background-color: var(--surface-0);
   color: #f1eef5;
 }
 
 html[data-theme="dark"] .life-hero {
   background:
     radial-gradient(ellipse 70% 60% at 12% 18%, rgba(232, 163, 61, 0.12), transparent 55%),
-    linear-gradient(165deg, #1a1224 0%, #120818 48%, #1a1020 100%);
+    linear-gradient(
+      165deg,
+      var(--surface-raised) 0%,
+      var(--surface-1) 48%,
+      var(--surface-raised) 100%
+    );
   border-color: rgba(255, 255, 255, 0.1);
   color: #f1eef5;
 }
@@ -12648,7 +12342,12 @@ html[data-theme="dark"] .life-hero__body {
 }
 
 html[data-theme="dark"] .life-closer__panel {
-  background: linear-gradient(165deg, #1a1224 0%, #1d1428 55%, #1e1828 100%);
+  background: linear-gradient(
+    165deg,
+    var(--surface-raised) 0%,
+    var(--surface-2) 55%,
+    var(--surface-2) 100%
+  );
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #f1eef5;
 }
@@ -12664,7 +12363,7 @@ html[data-theme="dark"] .life-closer__thanks {
 }
 
 html[data-theme="dark"] .life-closer__form input {
-  background-color: #15131f;
+  background-color: var(--surface-raised);
   border-color: rgba(255, 255, 255, 0.1);
   color: #f1eef5;
 }
@@ -12673,7 +12372,7 @@ html[data-theme="dark"] .life-card,
 html[data-theme="dark"] .life-textcard,
 html[data-theme="dark"] .life-kids,
 html[data-theme="dark"] .life-detail-block {
-  background-color: #15131f;
+  background-color: var(--surface-raised);
   color: #f1eef5;
 }
 
@@ -12682,7 +12381,7 @@ html[data-theme="dark"] .life-card--cream .life-card__body,
 html[data-theme="dark"] .life-textcard--gold,
 html[data-theme="dark"] .life-textcard--cream,
 html[data-theme="dark"] .life-kids__copy {
-  background-color: #1e1828 !important;
+  background-color: var(--surface-2) !important;
   color: #f1eef5;
 }
 
@@ -12707,12 +12406,12 @@ html[data-theme="dark"] .msg-page,
 html[data-theme="dark"] .about-page,
 html[data-theme="dark"] .home-page,
 html[data-theme="dark"] .site-page {
-  background-color: #0a0612;
+  background-color: var(--surface-0);
   color: #f1eef5;
 }
 
 html[data-theme="dark"] .events-happen__card {
-  background-color: #15131f;
+  background-color: var(--surface-raised);
   color: #f1eef5;
 }
 
@@ -12720,12 +12419,12 @@ html[data-theme="dark"] .msg-faq,
 html[data-theme="dark"] .msg-faq__item,
 html[data-theme="dark"] .msg-row-band,
 html[data-theme="dark"] .msg-shelf {
-  background-color: #0a0612;
+  background-color: var(--surface-0);
   color: #f1eef5;
 }
 
 html[data-theme="dark"] .msg-faq__item {
-  background-color: #15131f;
+  background-color: var(--surface-raised);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -12757,7 +12456,7 @@ html[data-theme="dark"] .msg-faq__a {
 .incident-hero {
   max-width: 48rem;
   margin: 0 auto;
-  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) 1.5rem;
+  padding: var(--pad-md) var(--gutter) var(--pad-sm);
 }
 
 .incident-hero h1 {
@@ -12783,7 +12482,7 @@ html[data-theme="dark"] .msg-faq__a {
 .incident-embed {
   max-width: 56rem;
   margin: 0 auto 3rem;
-  padding: 0 clamp(1.25rem, 4vw, 2rem);
+  padding: 0 var(--gutter);
 }
 
 .incident-embed__frame {
@@ -13093,7 +12792,7 @@ html[data-theme="dark"] .msg-faq__a {
 }
 
 html[data-theme="dark"] .life-dept-band__copy {
-  background: #0a0612;
+  background: var(--surface-0);
 }
 
 /* Kids row contrast + juxtaposition */
@@ -13124,7 +12823,7 @@ html[data-theme="dark"] .life-dept-band__copy {
 
 html[data-theme="dark"] .life-kids-row,
 html[data-theme="dark"] .life-kids-row__copy {
-  background: #1a1224 !important;
+  background: var(--surface-raised) !important;
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -13166,14 +12865,14 @@ html[data-theme="dark"] .life-card--gold .life-card__body,
 html[data-theme="dark"] .life-card--cream .life-card__body,
 html[data-theme="dark"] .life-textcard,
 html[data-theme="dark"] .life-closer__panel {
-  background: #1a1224;
+  background: var(--surface-raised);
   border-color: rgba(255, 255, 255, 0.1);
   color: #f3f0f8;
 }
 
 html[data-theme="dark"] .life-closer__form input,
 html[data-theme="dark"] .life-modal__followup-form input {
-  background: #120c1c;
+  background: var(--surface-1);
   border-color: rgba(255, 255, 255, 0.14);
   color: #fff;
 }
@@ -13201,7 +12900,7 @@ html[data-theme="dark"] .life-modal__followup-form input {
   display: grid;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 1.5rem;
+  border-radius: 0;
   background: var(--card-bg, #fff);
   box-shadow: var(--shadow-lift);
 }
@@ -13235,7 +12934,7 @@ html[data-theme="dark"] .life-modal__followup-form input {
   left: 1.25rem;
   padding: 0.6rem 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 999px;
+  border-radius: 0;
   background: rgba(18, 10, 27, 0.42);
   color: #fff;
   font-size: 0.76rem;
@@ -13281,7 +12980,7 @@ html[data-theme="dark"] .life-modal__followup-form input {
   gap: 2rem;
   margin: clamp(2.5rem, 6vw, 5rem) 0 0;
   padding: clamp(1.75rem, 5vw, 3.5rem);
-  border-radius: 1.25rem;
+  border-radius: 0;
   background: linear-gradient(110deg, #f0eaf6 0%, #f9f5ed 100%);
 }
 
@@ -13343,7 +13042,7 @@ html[data-theme="dark"] .life-modal__followup-form input {
 }
 
 .life-kids-row--editorial {
-  border-radius: 1.15rem;
+  border-radius: 0;
   border-color: transparent;
   box-shadow: 0 18px 48px rgba(33, 18, 49, 0.08);
 }
@@ -13396,7 +13095,7 @@ html[data-theme="dark"] .life-modal__followup-form input {
 
 @media (max-width: 640px) {
   .life-page--kids .life-kids-editorial-hero {
-    border-radius: 1rem;
+    border-radius: 0;
   }
 
   .life-kids-editorial-hero__media {
@@ -13409,12 +13108,12 @@ html[data-theme="dark"] .life-modal__followup-form input {
 
   .life-kids-values {
     gap: 1.25rem;
-    border-radius: 1rem;
+    border-radius: 0;
   }
 }
 
 html[data-theme="dark"] .life-kids-editorial-hero {
-  background: #1a1224;
+  background: var(--surface-raised);
 }
 
 html[data-theme="dark"] .life-kids-editorial-hero__copy h1,
@@ -13423,7 +13122,7 @@ html[data-theme="dark"] .life-kids-editorial-hero__lead {
 }
 
 html[data-theme="dark"] .life-kids-values {
-  background: linear-gradient(110deg, #24182f 0%, #211b2a 100%);
+  background: linear-gradient(110deg, var(--surface-2) 0%, var(--surface-2) 100%);
 }
 
 html[data-theme="dark"] .life-kids-values__heading h2,
@@ -13471,11 +13170,6 @@ html[data-theme="dark"] .life-grid__intro .life-grid__eyebrow {
 .vision-store__copy span {
   color: #3f3f46;
 }
-
-.unsure-panel__eyebrow {
-  color: rgba(255, 255, 255, 0.92);
-}
-
 html[data-theme="light"] .msg-btn--ghost {
   border-color: rgba(28, 28, 31, 0.28);
   color: var(--fg);
@@ -13487,18 +13181,8 @@ html[data-theme="light"] .msg-btn--ghost:hover {
   color: var(--purple);
 }
 
-html[data-theme="light"] .incident-actions .btn-ghost {
-  border-color: rgba(28, 28, 31, 0.28);
-  background: #fff;
-  color: var(--fg);
-  backdrop-filter: none;
-}
-
-html[data-theme="light"] .incident-actions .btn-ghost:hover {
-  border-color: var(--purple);
-  background: var(--bg-purple);
-  color: var(--purple);
-}
+/* The incident form's .btn-ghost overrides are gone: the shared .btn-ghost is
+ * already the solid white treatment they were restating. */
 
 html[data-theme="dark"] .kharis-word {
   color: #b48fe5;
@@ -13518,13 +13202,13 @@ html[data-theme="dark"] .life-detail-nav a:not(.is-on):hover {
   border-color: var(--purple);
   color: var(--fg);
 }
-
 /* —— Shared buttons: square, a thin edge underneath and a soft shadow —— */
 .btn-primary,
 .btn-secondary,
 .btn-give,
-.btn-testimony,
-.unsure-panel__btn {
+.btn-ghost,
+.btn-header,
+.btn-testimony {
   --edge: var(--purple-edge);
   display: inline-flex;
   align-items: center;
@@ -13550,7 +13234,7 @@ html[data-theme="dark"] .life-detail-nav a:not(.is-on):hover {
   cursor: pointer;
 }
 
-:is(.btn-primary, .btn-secondary, .btn-give, .btn-testimony, .unsure-panel__btn):is(
+:is(.btn-primary, .btn-secondary, .btn-give, .btn-ghost, .btn-header, .btn-testimony):is(
   :hover,
   :focus-visible
 ) {
@@ -13560,11 +13244,22 @@ html[data-theme="dark"] .life-detail-nav a:not(.is-on):hover {
     0 14px 26px rgba(28, 10, 70, 0.22);
 }
 
-:is(.btn-primary, .btn-secondary, .btn-give, .btn-testimony, .unsure-panel__btn):active {
+:is(.btn-primary, .btn-secondary, .btn-give, .btn-ghost, .btn-header, .btn-testimony):active {
   transform: translateY(1px);
   box-shadow:
     0 1px 0 var(--edge),
     0 4px 10px rgba(28, 10, 70, 0.16);
+}
+
+.btn-give {
+  --edge: var(--yellow-deep);
+  background: var(--yellow);
+  color: #1c1c1f;
+}
+
+.btn-give:is(:hover, :focus-visible) {
+  background: #ffe678;
+  color: #1c1c1f;
 }
 
 .btn-primary,
@@ -13601,29 +13296,71 @@ html[data-theme="dark"] .btn-secondary:hover {
     0 2px 0 var(--edge),
     0 14px 26px rgba(28, 10, 70, 0.16);
 }
+/* The secondary action on dark media: solid white so it reads against a
+ * photograph. Both places that use it (the hero and the incident form) were
+ * already overriding the old glass treatment to exactly this, each in their
+ * own stylesheet, so it is the base now and those overrides are gone. */
+.btn-ghost {
+  --edge: var(--lilac-edge);
+  background: #fff;
+  color: #1c1c1f;
+  white-space: nowrap;
+  backdrop-filter: none;
+}
 
-.btn-give,
-.unsure-panel__btn--solid {
+.btn-ghost:is(:hover, :focus-visible) {
+  background: #fff;
+  color: var(--purple-deep);
+}
+
+/* Navigation CTA: the one deliberately smaller button, sized off the nav
+ * link scale (13px) rather than an arbitrary inline value. */
+.btn-header {
+  min-height: 2.5rem;
+  padding: 0 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  gap: 0.45rem;
+}
+
+.btn-header--on-light {
+  --edge: var(--purple-edge);
+  background: var(--purple);
+  color: #fff;
+}
+
+.btn-header--on-light:is(:hover, :focus-visible) {
+  background: #6f1fe0;
+  color: #fff;
+}
+
+.btn-header--on-dark {
+  --edge: #a596d3;
+  background: #fff;
+  color: var(--purple-deep);
+}
+
+.btn-header--on-dark:is(:hover, :focus-visible) {
+  background: #fff;
+  color: var(--purple-deep);
+}
+
+/* The dark-theme variant of the header CTA.
+ *
+ * This used to be --orange. Orange is a real token and reads well on white,
+ * but in dark mode it was the only orange thing on screen while the hero
+ * headline and the footer's vision line were both campaign yellow, so the
+ * button looked like it belonged to another site. Dark mode gets one accent.
+ */
+.btn-header--accent {
   --edge: var(--yellow-deep);
   background: var(--yellow);
   color: #1c1c1f;
 }
 
-.btn-give:is(:hover, :focus-visible),
-.unsure-panel__btn--solid:is(:hover, :focus-visible) {
-  background: #ffe678;
+.btn-header--accent:is(:hover, :focus-visible) {
+  background: #ffe88a;
   color: #1c1c1f;
-}
-
-.unsure-panel__btn--ghost {
-  --edge: var(--lilac-edge);
-  background: #fff;
-  color: var(--purple-deep);
-}
-
-.unsure-panel__btn--ghost:is(:hover, :focus-visible) {
-  background: #fff;
-  color: var(--purple-deep);
 }
 
 /* Paired buttons share one width; stacked on phones */
@@ -13758,9 +13495,7 @@ html[data-theme="dark"] .btn-secondary:hover {
 
 /* Testimonies */
 .testimony-band {
-  background: var(--bg-purple);
   box-shadow: none;
-  border: 0;
 }
 
 .testimony-card,
@@ -13774,7 +13509,9 @@ html[data-theme="dark"] .btn-secondary:hover {
 
 /* App */
 .listen-band {
-  background: var(--bg-soft);
+  /* Was --bg-soft, which resolves to --surface-1 — see the note on .band--1.
+     This carries .band--1 too, so it already gets the hairline. */
+  background: var(--surface-0);
 }
 
 .listen-card,
@@ -13787,62 +13524,6 @@ html[data-theme="dark"] .btn-secondary:hover {
   backdrop-filter: none;
 }
 
-/* Closing invitation */
-.unsure-band {
-  background: var(--bg);
-}
-
-.unsure-panel {
-  border-radius: 0;
-  background-color: #22075c;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1.4px);
-  background-size: 14px 14px;
-  box-shadow:
-    0 3px 0 #14033a,
-    0 24px 44px rgba(28, 10, 70, 0.24);
-}
-
-.unsure-panel__content {
-  position: relative;
-  z-index: 1;
-}
-
-.unsure-panel__map,
-.unsure-panel__dove {
-  position: absolute;
-  pointer-events: none;
-  user-select: none;
-}
-
-.unsure-panel__map {
-  right: -10%;
-  top: 50%;
-  height: 150%;
-  transform: translateY(-50%);
-}
-
-.unsure-panel__dove {
-  left: 6%;
-  bottom: 12%;
-  width: min(17%, 11rem);
-  opacity: 0.22;
-}
-
-@media (max-width: 1023px) {
-  .unsure-panel__map {
-    right: -30%;
-    height: 120%;
-    opacity: 0.55;
-  }
-
-  .unsure-panel__dove {
-    left: 4%;
-    bottom: auto;
-    top: 5%;
-    width: 4.25rem;
-  }
-}
-
 .give-shell .give-more {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: underline;
@@ -13853,32 +13534,32 @@ html[data-theme="dark"] .btn-secondary:hover {
   color: var(--yellow);
 }
 
-html[data-theme="dark"] .testimony-band,
-html[data-theme="dark"] .listen-band {
-  background: var(--bg-soft);
+/* Dark mode contrast for the small purple labels. There were four different
+ * purples doing this one job (#a98be6, #c8a7ed, --purple, --testimony-accent);
+ * this is the single accent for small type on a dark surface. */
+html[data-theme="dark"] {
+  --label-accent: #b79ae8;
 }
 
-/* Dark mode contrast for the small purple labels */
 html[data-theme="dark"] .eyebrow,
+html[data-theme="dark"] .listen-card__step,
 html[data-theme="dark"] :is(#messages, #testimonies) .text-purple {
-  color: #a98be6;
+  color: var(--label-accent);
 }
 
+/* Cards lift toward the light in dark mode. This one used to sit at #0b0711,
+ * darker than the page behind it, so the steps read as holes. */
 html[data-theme="dark"] .listen-card {
-  --listen-card-surface: #0b0711;
+  --listen-card-surface: var(--surface-raised);
   background: var(--listen-card-surface);
 }
 
 html[data-theme="dark"] .listen-card:hover {
-  --listen-card-surface: #100a19;
-}
-
-html[data-theme="dark"] .listen-card__step {
-  color: #c8a7ed;
+  --listen-card-surface: var(--surface-2);
 }
 
 html[data-theme="dark"] .listen-card__title {
-  color: #f4effa;
+  color: var(--fg);
 }
 
 html[data-theme="dark"] .listen-card__detail {
@@ -13894,13 +13575,22 @@ html[data-theme="dark"] .listen-card__detail {
   color: var(--fg);
 }
 
-/* Same deep violet as the homepage hero, with the closing panel's dot grain */
+/* Same deep violet as the homepage hero, with the closing panel's dot grain.
+ * The globe sits INSIDE this band and takes the same backdrop colour, so the
+ * search area and the globe read as one surface. They used to meet at a hard
+ * horizontal line where the hero's padding stopped and the globe's own dark
+ * backdrop began — three different darks butted together with no transition. */
+/* Follows the theme, like every other surface. It used to be a fixed brand
+ * violet with `color: #fff`, which meant a dark slab and white text sitting
+ * on an otherwise white page. The dot grain now draws in --line so it shows
+ * on either surface instead of being white-on-white. */
 .locations-hero {
-  background-color: #150934;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1.4px);
+  --locations-hero-surface: var(--surface-0);
+  background-color: var(--locations-hero-surface);
+  background-image: radial-gradient(circle, var(--line) 1px, transparent 1.4px);
   background-size: 14px 14px;
-  padding: calc(4.5rem + 3rem) 1.25rem 3rem;
-  color: #fff;
+  padding: calc(4.5rem + var(--pad-lg)) var(--gutter) 0;
+  color: var(--fg);
 }
 
 .locations-hero__intro {
@@ -13909,23 +13599,30 @@ html[data-theme="dark"] .listen-card__detail {
   text-align: center;
 }
 
+/* The dot grain stops at the globe so the particles are not competing with a
+ * second field of dots behind them; the colour carries through unchanged. */
+.locations-hero__globe {
+  margin-top: 2.5rem;
+  height: clamp(420px, 52vw, 680px);
+  background: var(--locations-hero-surface);
+}
+
 .locations-hero__eyebrow {
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--yellow);
+  color: var(--purple);
 }
 
 .locations-hero__title {
-  --c: #fff;
+  --c: var(--fg);
   margin: 0.9rem 0 0;
   font-size: clamp(2.4rem, 6vw, 4.4rem);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: #fff;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+  color: var(--fg);
 }
 
 .locations-hero__lead {
@@ -13934,7 +13631,7 @@ html[data-theme="dark"] .listen-card__detail {
   font-size: clamp(1rem, 1.6vw, 1.15rem);
   font-weight: 600;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--muted);
 }
 
 .locations-search {
@@ -13988,79 +13685,19 @@ html[data-theme="dark"] .listen-card__detail {
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
 }
 
-.locations-sunday {
-  margin: 0;
-  background: #150934;
-  padding: 0 1.25rem 2.25rem;
-}
+/* The Sunday photo band under the globe is gone: a generic London photo on
+ * a "find your branch" page decorated without helping anyone choose, and
+ * it created a hard violet-to-near-black seam. Those photographs now ride
+ * on the globe's country markers instead. */
 
-.locations-sunday__photos {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 0.5rem;
-  margin: 0 auto;
-  max-width: 80rem;
-  height: clamp(15rem, 30vw, 26rem);
-}
-
-.locations-sunday__photos img {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  object-fit: cover;
-}
-
-.locations-sunday__photos img:first-child {
-  object-position: 55% 30%;
-}
-
-.locations-sunday__photos img:last-child {
-  object-position: 50% 35%;
-}
-
-.locations-sunday figcaption {
-  margin: 0.85rem auto 0;
-  max-width: 80rem;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .locations-sunday__photos img {
-      animation: locations-sunday-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 70%;
-    }
-
-    .locations-sunday__photos img:last-child {
-      animation-range: entry 15% entry 90%;
-    }
-  }
-}
-
-@keyframes locations-sunday-in {
-  from {
-    opacity: 0.4;
-    transform: scale(0.95);
-  }
-}
-
-@media (max-width: 640px) {
-  .locations-sunday__photos {
-    grid-template-columns: 1fr;
-    grid-template-rows: 15rem 11rem;
-    height: auto;
-  }
-}
-
+/* The brand violet above meets the neutral list surface here, so the join
+ * gets the same hairline every other band boundary on the site gets. */
 .locations-list {
-  background: var(--bg-soft);
-  padding: 4rem 1.25rem 4.5rem;
+  /* Was --surface-1; see the note on .band--1. The hairline below was
+     already here and is now the whole separator. */
+  background: var(--surface-0);
+  border-top: 1px solid var(--line);
+  padding: var(--pad-lg) var(--gutter);
 }
 
 .locations-list__head {
@@ -14108,7 +13745,7 @@ html[data-theme="dark"] .listen-card__detail {
 
 .locations-group {
   margin: 0 auto;
-  max-width: 80rem;
+  max-width: var(--page-max);
 }
 
 .locations-group + .locations-group {
@@ -14154,7 +13791,7 @@ html[data-theme="dark"] .listen-card__detail {
   display: block;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: #150934;
+  background: var(--surface-brand);
 }
 
 .branch-card__media > img {
@@ -14390,7 +14027,7 @@ html[data-theme="dark"] .locations-empty a {
 }
 
 html[data-theme="dark"] .life-reader {
-  background: #100b17;
+  background: var(--surface-1);
   color: #f4eff8;
 }
 
@@ -14464,7 +14101,7 @@ html[data-theme="dark"] .life-reader__journey-current ul {
 }
 
 html[data-theme="dark"] .life-reader__journey-current {
-  background: #100b17;
+  background: var(--surface-1);
 }
 
 html[data-theme="dark"] .life-reader__journey--fasting-preview .life-reader__journey-current {
@@ -14513,12 +14150,12 @@ html[data-theme="dark"] .life-reader__journey--fasting-preview .life-reader__jou
 }
 
 html[data-theme="dark"] .life-reader__journey-heading {
-  background: #100b17;
+  background: var(--surface-1);
 }
 
 html[data-theme="dark"] .life-modal--reader,
 html[data-theme="dark"] .life-modal--reader .life-modal__scrim {
-  background: #100b17;
+  background: var(--surface-1);
 }
 
 /* —— Department Discovery Quiz (/quiz) —— */
@@ -14536,4 +14173,140 @@ html[data-theme="dark"] .quiz-page h3,
 html[data-theme="dark"] .quiz-page h4 {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
+}
+
+/* —— Footer world ————————————————————————————————————————————
+ * The Locations page's AtomicGlobe, cropped to its upper half so it closes
+ * the page as a horizon rather than a floating ball. The component centres
+ * the sphere in its frame, so the frame is made twice as tall as the window
+ * onto it and the equator lands exactly on the bottom edge.
+ *
+ * The hand-built CSS dome this replaces is gone: one globe component, used
+ * twice, is the point.
+ */
+.footer-world-block {
+  width: 100%;
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.footer-world {
+  --dome: clamp(170px, 24vw, 360px);
+  position: relative;
+  width: 100%;
+  height: var(--dome);
+  overflow: hidden;
+}
+
+/* The crop shows a bit more than half the sphere. A clean half looked
+ * tidier but put the equator on the bottom edge, and no camera tilt could
+ * then hold both the UK cluster and the West African cities on screen at
+ * once — measured, not guessed. Showing past the equator fits them all. */
+.footer-world__inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--dome) * 1.5);
+}
+
+/* No markers at all on the footer globe. The cities are drawn into the dot
+ * field itself by the vendored component's `spotRadius` option (see the
+ * KHARIS PATCH note in AtomicGlobe.js), which lights the land rather than
+ * floating pins above it.
+ *
+ * The component always renders a DOM marker per place and offers no way to
+ * suppress one, so the whole marker layer is hidden here. The places are
+ * still passed: they are what the patches are positioned from.
+ *
+ * Matched on inline style because the component sets no class names
+ * anywhere. Scoped to .footer-world, so the Locations globe keeps its
+ * markers and its names.
+ */
+.footer-world div[style*="will-change"] {
+  display: none !important;
+}
+
+/* —— Strapline ————————————————————————————————————————————————
+ * Travels horizontally on the same clock as the globe. Two identical copies
+ * in the track, shifted by exactly half its width, so the loop never seams.
+ */
+.footer-strap {
+  position: relative;
+  width: 100%;
+  /* Clear of the dome's shoulders, which reach low on either side. */
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.footer-strap__track {
+  display: flex;
+  width: max-content;
+  animation: footer-strap-run var(--cycle, 52s) linear infinite;
+}
+
+/* Each pair is half the track, so translating by -50% lands the second pair
+ * exactly where the first began. */
+.footer-strap__pair {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.footer-strap__line {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.4rem, 4.2vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  /* Not 1.15. The display face's descenders reach below a 1.15em content
+     box, and .footer-strap clips with overflow:hidden for the marquee, so
+     the tail of every g, y, p and j was being shaved off. */
+  line-height: 1.4;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.site-footer--dark .footer-strap__line {
+  color: #fff;
+}
+
+/* The vision line is set apart from the strapline so the two phrases read as
+ * two statements rather than one run-on sentence.
+ *
+ * It cannot simply be --yellow: that token is the campaign yellow meant to
+ * sit BEHIND dark text, and at ~1.3:1 on the light footer the line all but
+ * disappeared. Light mode uses the brand purple, which is what every other
+ * accented word on a light surface uses; the dark footer gets the yellow it
+ * was made for.
+ */
+.footer-strap__line--vision,
+.footer-strap__dot {
+  color: var(--purple);
+}
+
+.site-footer--dark .footer-strap__line--vision,
+.site-footer--dark .footer-strap__dot {
+  color: var(--yellow);
+}
+
+.footer-strap__dot {
+  margin: 0 0.6em;
+}
+
+@keyframes footer-strap-run {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* The globe component stops itself under reduced motion; this only needs to
+ * hold the strapline still. */
+@media (prefers-reduced-motion: reduce) {
+  .footer-strap__track {
+    animation: none;
+  }
 }
