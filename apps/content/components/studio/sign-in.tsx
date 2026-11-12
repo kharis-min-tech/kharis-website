@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
-import { Mark } from "@/components/studio/mark";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { AuthLayout } from "@/components/studio/auth-layout";
 import { TextField } from "@/components/studio/fields";
+import { PasswordField } from "@/components/studio/password-input";
+import { Button } from "@/components/ui/button";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 import { friendlyAuthError } from "@/lib/utils";
 
@@ -29,51 +29,46 @@ export function SignIn() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-sm p-6">
-        <div className="mb-6 flex flex-col items-center text-center">
-          <Mark className="h-12 w-12 text-xl" />
-          <h1 className="mt-4 font-heading text-2xl font-extrabold tracking-tight">
-            Kharis Content Studio
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">Sign in to manage church content.</p>
-        </div>
-        {configured ? null : (
-          <p className="mb-4 rounded-md bg-accent px-3 py-2 text-sm">
-            Supabase is not configured. Add the public URL and publishable key to
-            apps/content/.env.local.
-          </p>
-        )}
-        <form className="space-y-4" onSubmit={onSubmit}>
-          <TextField
-            label="Email"
-            name="email"
-            type="email"
-            autoComplete="username"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          {error ? <p className="text-sm text-destructive">{error}</p> : null}
-          <Button type="submit" className="w-full" disabled={pending || !configured}>
-            {pending ? "Signing in…" : "Sign in"}
-          </Button>
-        </form>
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          <Link href="/cookies" className="underline">
-            Cookie policy
-          </Link>
+    <AuthLayout
+      title="Welcome back"
+      description="Sign in to manage Kharis content."
+      footer="Need an account? Ask a super admin to invite you."
+    >
+      {configured ? null : (
+        <p className="mb-4 rounded-lg border border-gold-line bg-gold-soft px-3 py-2 text-sm text-gold">
+          Supabase is not configured. Add the public URL and publishable key to
+          apps/content/.env.local.
         </p>
-      </Card>
-    </div>
+      )}
+      <form className="space-y-4" onSubmit={onSubmit}>
+        <TextField
+          label="Email address"
+          name="email"
+          type="email"
+          autoComplete="username"
+          placeholder="you@kharis.org"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
+        <PasswordField
+          label="Password"
+          name="password"
+          autoComplete="current-password"
+          required
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+        {error ? (
+          <p className="rounded-lg border border-danger-line bg-danger-soft px-3 py-2 text-sm text-danger">
+            {error}
+          </p>
+        ) : null}
+        <Button type="submit" className="h-10 w-full" disabled={pending || !configured}>
+          {pending ? "Signing in…" : "Sign in"}
+          {pending ? null : <ArrowRight className="h-4 w-4" />}
+        </Button>
+      </form>
+    </AuthLayout>
   );
 }

@@ -1,13 +1,20 @@
 "use client";
 
+import { Mail, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import {
+  EmptyState,
+  ErrorNotice,
+  IconTile,
+  ListSkeleton,
+  SearchInput,
+  Toolbar,
+} from "@/components/studio/blocks";
 import { PageHeader } from "@/components/studio/page-header";
 import { PickWorkspace } from "@/components/studio/pick-workspace";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { confirmDelete } from "@/lib/confirm";
 import { deleteNewsletter, listNewsletter } from "@/lib/content-repo";
 import type { NewsletterSubscriber } from "@/lib/types";
@@ -66,42 +73,83 @@ export function NewsletterList() {
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       <PageHeader
+        icon={<IconTile icon={Mail} className="h-12 w-12 rounded-2xl" />}
         title="Newsletter"
         description="Email addresses from the public signup. KP2 Website shows KP2 signups. General shows every site."
       />
-      <Input
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-        placeholder="Search email"
-        aria-label="Search newsletter emails"
-      />
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+      <Toolbar>
+        <SearchInput
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search email"
+          aria-label="Search newsletter emails"
+        />
+        {rows && !error ? (
+          <span className="text-xs text-muted-foreground">
+            {visible.length} subscriber{visible.length === 1 ? "" : "s"}
+          </span>
+        ) : null}
+      </Toolbar>
       {rows === null ? (
-        <Skeleton className="h-24 w-full" />
+        <ListSkeleton />
+      ) : error ? (
+        <ErrorNotice message={error} />
       ) : visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">
-          No newsletter emails yet.
-        </div>
+        <EmptyState icon={Mail} title={search.trim() ? "No matches" : "No subscribers yet"}>
+          {search.trim()
+            ? "Try a different search."
+            : "Emails from the newsletter signup will show up here."}
+        </EmptyState>
       ) : (
-        <ul className="divide-y divide-border rounded-lg border border-border bg-card">
-          {visible.map((row) => (
-            <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
-              <a
-                className="font-medium underline-offset-2 hover:underline"
-                href={`mailto:${row.email}`}
-              >
-                {row.email}
-              </a>
-              <Badge tone="accent">{sourceLabel(row.source)}</Badge>
-              <span className="text-sm text-muted-foreground">{formatWhen(row.created_at)}</span>
-              <Button className="ml-auto" variant="ghost" onClick={() => remove(row)}>
-                Remove
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-card">
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <thead className="border-b border-border">
+              <tr>
+                <th className="studio-eyebrow px-5 py-3">Email</th>
+                <th className="studio-eyebrow px-5 py-3">Source</th>
+                <th className="studio-eyebrow px-5 py-3">Signed up</th>
+                <th className="px-5 py-3">
+                  <span className="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {visible.map((row) => (
+                <tr key={row.id} className="transition-colors hover:bg-accent/60">
+                  <td className="px-5 py-3">
+                    <a
+                      className="font-medium underline-offset-2 hover:text-brand hover:underline"
+                      href={`mailto:${row.email}`}
+                    >
+                      {row.email}
+                    </a>
+                  </td>
+                  <td className="px-5 py-3">
+                    <Badge tone={row.source === "kp2" ? "gold" : "default"}>
+                      {sourceLabel(row.source)}
+                    </Badge>
+                  </td>
+                  <td className="whitespace-nowrap px-5 py-3 text-muted-foreground">
+                    {formatWhen(row.created_at)}
+                  </td>
+                  <td className="px-5 py-2 text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-danger hover:bg-danger-soft"
+                      onClick={() => remove(row)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Remove
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
