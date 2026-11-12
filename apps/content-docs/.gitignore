@@ -1,0 +1,6 @@
+node_modules
+.vitepress/cache
+.vitepress/dist
+.wrangler
+# Signed-in studio session used by npm run screenshots. Never commit it.
+.auth

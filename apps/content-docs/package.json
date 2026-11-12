@@ -1,0 +1,20 @@
+{
+  "name": "@kharis/content-docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Content Studio documentation, served at docs.content.kharis.org.",
+  "scripts": {
+    "dev": "vitepress dev --port 3004",
+    "build": "vitepress build",
+    "preview": "vitepress preview --port 3004",
+    "screenshots": "node scripts/capture-screenshots.mjs",
+    "screenshots:upload": "node --env-file=../../.env.r2.local scripts/upload-screenshots.mjs --upload",
+    "deploy": "vitepress build && wrangler deploy"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.65.0",
+    "vitepress": "^1.6.4",
+    "wrangler": "^4.150.0"
+  }
+}

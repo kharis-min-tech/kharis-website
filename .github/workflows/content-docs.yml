@@ -1,0 +1,49 @@
+name: deploy-content-docs
+
+# Ships the Content Studio documentation (apps/content-docs, a VitePress site)
+# to Cloudflare on merge to main, only when its files (or the shared root
+# manifests) changed.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/content-docs/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/content-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: content-docs-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/content-docs
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: a94432b07dae8050b83efdec72a492a3
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+        working-directory: .
+
+      - name: Check deploy config
+        run: |
+          : "${CLOUDFLARE_API_TOKEN:?set the CLOUDFLARE_API_TOKEN repo secret}"
+
+      - name: Build and deploy
+        run: npm run deploy
