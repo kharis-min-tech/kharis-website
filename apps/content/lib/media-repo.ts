@@ -1,59 +1,114 @@
 import { isR2ObjectKey } from "@/lib/branch-image-paths";
+import {
+  MAX_MEDIA_IMAGE_BYTES,
+  MAX_MEDIA_VIDEO_BYTES,
+  isMediaFolder,
+  mediaKeyFromUrl,
+} from "@/lib/media-paths";
 import { fail, getSupabase, MEDIA_BUCKET } from "@/lib/supabase";
 import type { GalleryItem } from "@/lib/branch-types";
 
+// Older uploads were saved to Supabase Storage. New uploads go to Cloudflare R2;
+// this is kept only so those older files can still be cleaned up.
 const PUBLIC_MARKER = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
 
 export function pathFromPublicUrl(url: string) {
+  const r2Key = mediaKeyFromUrl(url);
+  if (r2Key) return r2Key;
   const index = url.indexOf(PUBLIC_MARKER);
   if (index === -1) return null;
   return decodeURIComponent(url.slice(index + PUBLIC_MARKER.length).split("?")[0] ?? "");
 }
 
-function safeName(name: string) {
-  return name.replace(/[^\w.\-]+/g, "_").slice(0, 80) || "image";
+async function studioToken() {
+  const { data } = await getSupabase().auth.getSession();
+  const token = data.session?.access_token;
+  if (!token) throw new Error("Sign in again to upload files.");
+  return token;
 }
 
-export async function uploadImage(file: File, folder: string) {
-  if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
-  if (file.size > 8 * 1024 * 1024) throw new Error("Images need to be 8MB or smaller.");
-
-  const path = `${folder}/${crypto.randomUUID()}-${safeName(file.name)}`;
-  const supabase = getSupabase();
-  const uploaded = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
-    contentType: file.type,
-    upsert: false,
+/** Streams a file to /api/uploads/media, which writes it to R2 and returns its public address. */
+async function uploadToR2(
+  file: File,
+  folder: string,
+  contentType: string,
+  onProgress?: (percent: number) => void,
+) {
+  const target = isMediaFolder(folder) ? folder : "uploads";
+  const token = await studioToken();
+  return new Promise<{ path: string; url: string }>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/uploads/media");
+    xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    xhr.setRequestHeader("Content-Type", contentType);
+    xhr.setRequestHeader("X-Media-Folder", target);
+    xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
+    xhr.upload.onprogress = (event) => {
+      if (!event.lengthComputable || !onProgress) return;
+      onProgress(Math.min(100, Math.round((event.loaded / event.total) * 100)));
+    };
+    xhr.onload = () => {
+      let body: { key?: string; publicUrl?: string; error?: string } | null = null;
+      try {
+        body = JSON.parse(xhr.responseText);
+      } catch {
+        body = null;
+      }
+      if (xhr.status >= 200 && xhr.status < 300 && body?.key && body.publicUrl) {
+        resolve({ path: body.key, url: body.publicUrl });
+        return;
+      }
+      reject(new Error(body?.error || "The file could not be stored. Try again."));
+    };
+    xhr.onerror = () => reject(new Error("The file could not be stored. Try again."));
+    xhr.send(file);
   });
-  fail(uploaded.error);
-  const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path);
-  return { path, url: data.publicUrl };
 }
 
-export async function uploadVideo(file: File, folder: string) {
+export async function uploadImage(
+  file: File,
+  folder: string,
+  onProgress?: (percent: number) => void,
+) {
+  if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
+  if (file.size > MAX_MEDIA_IMAGE_BYTES) throw new Error("Images need to be 8MB or smaller.");
+  return uploadToR2(file, folder, file.type, onProgress);
+}
+
+export async function uploadVideo(
+  file: File,
+  folder: string,
+  onProgress?: (percent: number) => void,
+) {
   const isVideo = file.type.startsWith("video/") || /\.(mp4|mov|m4v|webm)$/i.test(file.name);
   if (!isVideo) throw new Error("Choose a video file (.mp4, .mov, or .webm).");
+  if (file.size > MAX_MEDIA_VIDEO_BYTES) {
+    throw new Error("Videos need to be 95MB or smaller. Export a smaller copy and try again.");
+  }
 
-  const contentType = file.type.startsWith("video/")
-    ? file.type
-    : /\.mov$/i.test(file.name)
+  const contentType =
+    file.type === "video/quicktime" || /\.mov$/i.test(file.name)
       ? "video/quicktime"
-      : /\.webm$/i.test(file.name)
+      : file.type === "video/webm" || /\.webm$/i.test(file.name)
         ? "video/webm"
         : "video/mp4";
 
-  const path = `${folder}/${crypto.randomUUID()}-${safeName(file.name)}`;
-  const supabase = getSupabase();
-  const uploaded = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
-    contentType,
-    upsert: false,
-  });
-  fail(uploaded.error);
-  const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path);
-  return { path, url: data.publicUrl };
+  return uploadToR2(file, folder, contentType, onProgress);
 }
 
 export async function removeStored(path: string | null | undefined) {
   if (!path || path.startsWith("external/")) return;
+  const r2Key = mediaKeyFromUrl(path);
+  if (r2Key) {
+    const token = await studioToken();
+    const response = await fetch("/api/uploads/media", {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ key: r2Key }),
+    });
+    if (!response.ok) throw new Error("The old file could not be removed.");
+    return;
+  }
   const { error } = await getSupabase().storage.from(MEDIA_BUCKET).remove([path]);
   if (error) throw new Error(error.message);
 }
