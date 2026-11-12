@@ -25,17 +25,26 @@ const DEPARTMENT_ID_TO_KEY: Record<string, string> = {
   "00000000-0000-4000-8000-000000000024": "Welfare",
 };
 
+const YOUTUBE_HOSTS = new Set([
+  "youtube.com",
+  "www.youtube.com",
+  "m.youtube.com",
+  "youtube-nocookie.com",
+  "www.youtube-nocookie.com",
+]);
+
 export function extractYoutubeId(input: string | null | undefined): string | null {
   const raw = input?.trim();
   if (!raw) return null;
   if (/^[a-zA-Z0-9_-]{11}$/.test(raw)) return raw;
   try {
     const url = new URL(raw);
-    if (url.hostname === "youtu.be") {
+    const host = url.hostname.toLowerCase();
+    if (host === "youtu.be") {
       const id = url.pathname.split("/").filter(Boolean)[0];
       return id && /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : null;
     }
-    if (url.hostname.includes("youtube.com") || url.hostname.includes("youtube-nocookie.com")) {
+    if (YOUTUBE_HOSTS.has(host)) {
       const v = url.searchParams.get("v");
       if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
       const parts = url.pathname.split("/").filter(Boolean);
@@ -54,15 +63,18 @@ export function extractYoutubeId(input: string | null | undefined): string | nul
 export function extractGoogleDriveId(input: string | null | undefined): string | null {
   const raw = input?.trim();
   if (!raw) return null;
-  const fileMatch = raw.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (fileMatch?.[1]) return fileMatch[1];
-  const queryMatch = raw.match(
-    /drive\.google\.com\/(?:open|uc|thumbnail)\?(?:[^#]*&)?id=([a-zA-Z0-9_-]+)/,
-  );
-  if (queryMatch?.[1]) return queryMatch[1];
-  const apiMatch = raw.match(/\/api\/department-videos\/([a-zA-Z0-9_-]+)/);
+  const apiMatch = raw.match(/^\/api\/department-videos\/([a-zA-Z0-9_-]+)/);
   if (apiMatch?.[1]) return apiMatch[1];
-  return null;
+  try {
+    const url = new URL(raw);
+    if (url.hostname.toLowerCase() !== "drive.google.com") return null;
+    const fileMatch = url.pathname.match(/^\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (fileMatch?.[1]) return fileMatch[1];
+    const queryId = url.searchParams.get("id");
+    return queryId && /^[a-zA-Z0-9_-]+$/.test(queryId) ? queryId : null;
+  } catch {
+    return null;
+  }
 }
 
 export type ResolvedDepartmentVideo =

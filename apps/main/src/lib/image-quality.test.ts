@@ -1,10 +1,10 @@
 import { expect, it } from "vitest";
 import { getImgProps } from "next/dist/shared/lib/get-img-props";
-import { imageConfigDefault, prepareImageConfig } from "next/dist/shared/lib/image-config";
+import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 import defaultLoader from "next/dist/shared/lib/image-loader";
 import nextConfig from "../../next.config";
 
-const imgConf = prepareImageConfig({ ...imageConfigDefault, ...nextConfig.images });
+const imgConf = { ...imageConfigDefault, ...nextConfig.images };
 
 it("accepts the branch carousel's quality for Cloudflare pictures", () => {
   const { props } = getImgProps(

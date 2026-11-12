@@ -328,9 +328,7 @@ export function VideoDrop({
 
   const isDirectVideo =
     Boolean(value) &&
-    !value.includes("youtube.com") &&
-    !value.includes("youtu.be") &&
-    !value.includes("drive.google.com");
+    (/\.(mp4|mov|m4v|webm)(\?|#|$)/i.test(value) || value.includes("/storage/v1/object/public/"));
 
   return (
     <div>

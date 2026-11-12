@@ -30,15 +30,18 @@ const DEPARTMENT_ID_TO_KEY: Record<string, string> = {
 export function extractGoogleDriveId(input: string | null | undefined): string | null {
   const raw = input?.trim();
   if (!raw) return null;
-  const fileMatch = raw.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (fileMatch?.[1]) return fileMatch[1];
-  const queryMatch = raw.match(
-    /drive\.google\.com\/(?:open|uc|thumbnail)\?(?:[^#]*&)?id=([a-zA-Z0-9_-]+)/,
-  );
-  if (queryMatch?.[1]) return queryMatch[1];
-  const apiMatch = raw.match(/\/api\/department-videos\/([a-zA-Z0-9_-]+)/);
+  const apiMatch = raw.match(/^\/api\/department-videos\/([a-zA-Z0-9_-]+)/);
   if (apiMatch?.[1]) return apiMatch[1];
-  return null;
+  try {
+    const url = new URL(raw);
+    if (url.hostname.toLowerCase() !== "drive.google.com") return null;
+    const fileMatch = url.pathname.match(/^\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (fileMatch?.[1]) return fileMatch[1];
+    const queryId = url.searchParams.get("id");
+    return queryId && /^[a-zA-Z0-9_-]+$/.test(queryId) ? queryId : null;
+  } catch {
+    return null;
+  }
 }
 
 export type ResolvedDepartmentVideo =
