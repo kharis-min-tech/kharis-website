@@ -35,6 +35,7 @@ export type Branch = {
   description: string;
   tags: string[];
   image: string;
+  videoUrl: string;
   gallery: string[];
   givingLink: string | null;
   parkingInfo: string;
@@ -252,7 +253,7 @@ function pickMainVenue(
   };
 }
 
-function toBranch(row: BranchRow, gallery: string[]): Branch {
+function toBranch(row: BranchRow, gallery: string[], videoUrl = ""): Branch {
   const venues = row.venues ?? [];
   const services = [...(row.services ?? [])]
     .filter((s) => s.is_active !== false)
@@ -331,6 +332,7 @@ function toBranch(row: BranchRow, gallery: string[]): Branch {
       addressMatchesCity && mainVenue?.city ? [mainVenue.city] : city ? [city] : [],
     ),
     image: remoteImage(row.hero_image_url) || gallery[0] || "",
+    videoUrl: videoUrl.trim(),
     gallery,
     givingLink: resolveGivingLink(row.slug, row.giving_link),
     parkingInfo: mainVenue?.parking_info || DEFAULT_PARKING,
@@ -349,37 +351,47 @@ export function hasCoords(branch: { lat: number; lng: number }) {
 type GalleryRow = {
   branch_id: string | null;
   owner_id: string | null;
+  owner_type: string | null;
   url: string | null;
 };
 
-async function galleriesByBranch() {
+async function mediaByBranch() {
   const rows = await supabaseSelect<GalleryRow>(
     "media",
-    "select=branch_id,owner_id,url,sort_order&owner_type=eq.branch-gallery&order=sort_order.asc",
+    "select=branch_id,owner_id,owner_type,url,sort_order&owner_type=in.(branch-gallery,branch-video)&order=sort_order.asc",
     false,
   );
-  const map = new Map<string, string[]>();
+  const galleries = new Map<string, string[]>();
+  const videos = new Map<string, string>();
   for (const row of rows) {
     const id = row.branch_id || row.owner_id;
+    if (!id) continue;
+    if (row.owner_type === "branch-video") {
+      const videoUrl = row.url?.trim() ?? "";
+      if (videoUrl && !videos.has(id)) videos.set(id, videoUrl);
+      continue;
+    }
     const url = remoteImage(row.url);
-    if (!id || !url) continue;
-    const list = map.get(id) ?? [];
+    if (!url) continue;
+    const list = galleries.get(id) ?? [];
     list.push(url);
-    map.set(id, list);
+    galleries.set(id, list);
   }
-  return map;
+  return { galleries, videos };
 }
 
 export async function listBranches(): Promise<Branch[]> {
-  const [rows, galleries] = await Promise.all([
+  const [rows, { galleries, videos }] = await Promise.all([
     supabaseSelect<BranchRow>(
       "branches",
       "select=*,venues(*),services(*)&is_active=eq.true&order=sort_order.asc",
       false,
     ),
-    galleriesByBranch(),
+    mediaByBranch(),
   ]);
-  return rows.filter(isKp2Location).map((row) => toBranch(row, galleries.get(row.id) ?? []));
+  return rows
+    .filter(isKp2Location)
+    .map((row) => toBranch(row, galleries.get(row.id) ?? [], videos.get(row.id) ?? ""));
 }
 
 export async function getBranch(slug: string): Promise<Branch | null> {
@@ -390,8 +402,8 @@ export async function getBranch(slug: string): Promise<Branch | null> {
   );
   const row = rows[0];
   if (!row || !isKp2Location(row)) return null;
-  const galleries = await galleriesByBranch();
-  return toBranch(row, galleries.get(row.id) ?? []);
+  const { galleries, videos } = await mediaByBranch();
+  return toBranch(row, galleries.get(row.id) ?? [], videos.get(row.id) ?? "");
 }
 
 export async function listBranchSlugs(): Promise<string[]> {

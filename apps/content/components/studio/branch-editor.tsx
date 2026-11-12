@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { AreaField, SelectField, TextField, ToggleField } from "@/components/studio/fields";
-import { ImageDrop, MultiImageDrop } from "@/components/studio/image-drop";
+import { ImageDrop, MultiImageDrop, VideoDrop } from "@/components/studio/image-drop";
 import { PageHeader } from "@/components/studio/page-header";
 import { VenueLocation } from "@/components/studio/venue-location";
 import { Badge } from "@/components/ui/badge";
@@ -34,7 +34,7 @@ import {
   uploadBranchImage,
 } from "@/lib/branch-images";
 import { confirmDelete } from "@/lib/confirm";
-import { syncGallery, syncVenueImages } from "@/lib/media-repo";
+import { syncBranchVideo, syncGallery, syncVenueImages } from "@/lib/media-repo";
 import { slugify } from "@/lib/utils";
 import { WORKSPACES } from "@/lib/workspaces";
 
@@ -192,6 +192,15 @@ export function BranchEditor() {
           caught instanceof Error
             ? `Branch saved, but a venue photo was not: ${caught.message}`
             : "A venue photo was not saved",
+        );
+      }
+      try {
+        await syncBranchVideo(id, draft.videoUrl);
+      } catch (caught) {
+        toast.error(
+          caught instanceof Error
+            ? `Branch saved, but the branch video was not: ${caught.message}`
+            : "Branch video was not saved",
         );
       }
       try {
@@ -406,6 +415,19 @@ export function BranchEditor() {
               pendingImages.current.hero = file;
             }}
           />
+
+          <div className="space-y-1.5">
+            <VideoDrop
+              label="Branch video"
+              value={draft.videoUrl}
+              folder="branch-videos"
+              onChange={(videoUrl) => patch({ videoUrl })}
+            />
+            <p className="text-sm text-muted-foreground">
+              Upload a video file (.mp4 or .mov) from Finder / iCloud for the &ldquo;A look at
+              …&rdquo; section on the branch page.
+            </p>
+          </div>
 
           <section className="space-y-4">
             <div className="flex items-center justify-between gap-3">

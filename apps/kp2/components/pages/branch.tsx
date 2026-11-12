@@ -23,7 +23,7 @@ import {
   weeklyServiceToCalendarItem,
 } from "@/lib/calendar";
 import type { ChurchEvent } from "@/lib/events";
-import { displayMessageTitle, formatMessageDate, type MessageVideo } from "@/lib/youtube";
+import { youtubeThumbnail, youtubeVideoId } from "@/lib/youtube";
 import "@/components/branch-cards.css";
 import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../shared/form-fields";
 import { HoneypotField, useTurnstile } from "../../../../shared/form-widgets";
@@ -209,17 +209,16 @@ function eventsForBranch(events: ChurchEvent[], branch: Branch) {
 function BranchPage({
   branch,
   branches,
-  featuredMessage,
   events,
 }: {
   branch: Branch;
   branches: Branch[];
-  featuredMessage: MessageVideo | null;
   events: ChurchEvent[];
 }) {
   const router = useRouter();
   const nextVisit = visitItem(branch);
   const directions = visitDirections(branch);
+  const branchVideoId = youtubeVideoId(branch.videoUrl);
   const { sunday, midweek } = splitServices(branch.services);
   const sundayList = (sunday.length ? sunday : branch.serviceTimes) as Array<{
     day: string;
@@ -723,29 +722,27 @@ function BranchPage({
               Watch
             </div>
             <h2 className="font-display-lg text-headline-lg uppercase leading-none">
-              Latest from {branch.name}
+              A look at {branch.city}
             </h2>
           </div>
 
           <div className="relative overflow-hidden brutalist-border brutalist-shadow bg-on-background aspect-video">
-            {featuredMessage ? (
-              <>
-                <YoutubeEmbed
-                  id={featuredMessage.id}
-                  title={displayMessageTitle(featuredMessage.title)}
-                  thumbnail={featuredMessage.thumbnail || branch.image}
-                />
-                <div className="absolute bottom-4 left-4 right-4 pointer-events-none z-10">
-                  <p className="font-display-lg text-[18px] uppercase text-white leading-tight">
-                    {displayMessageTitle(featuredMessage.title)}
-                  </p>
-                  {featuredMessage.publishedAt ? (
-                    <p className="font-body-md text-[12px] text-white/80">
-                      {formatMessageDate(featuredMessage.publishedAt)}
-                    </p>
-                  ) : null}
-                </div>
-              </>
+            {branchVideoId ? (
+              <YoutubeEmbed
+                id={branchVideoId}
+                title={`A look at ${branch.city}`}
+                thumbnail={branch.image || youtubeThumbnail(branchVideoId)}
+              />
+            ) : branch.videoUrl ? (
+              <video
+                className="block h-full w-full bg-black object-contain"
+                src={branch.videoUrl}
+                poster={branch.image || undefined}
+                controls
+                playsInline
+                preload="metadata"
+                aria-label={`A look at ${branch.city}`}
+              />
             ) : branch.image ? (
               <Link href="/messages" className="group relative block h-full w-full">
                 <img

@@ -20,6 +20,7 @@ export type StudioWorkspace = {
 
 const generalNav: StudioNavItem[] = [
   { href: "/branches", label: "Branches" },
+  { href: "/department-videos", label: "Department Videos" },
   { href: "/sermons", label: "Sermons" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/visitors", label: "Visitors" },
@@ -39,6 +40,8 @@ const appNav: StudioNavItem[] = [
 ];
 
 const kharisNav: StudioNavItem[] = [
+  { href: "/branches", label: "Branches" },
+  { href: "/department-videos", label: "Department Videos" },
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/featured-video", label: "Featured Video" },
@@ -47,6 +50,8 @@ const kharisNav: StudioNavItem[] = [
 ];
 
 const kp2Nav: StudioNavItem[] = [
+  { href: "/branches", label: "Branches" },
+  { href: "/department-videos", label: "Department Videos" },
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/announcements", label: "Announcements" },

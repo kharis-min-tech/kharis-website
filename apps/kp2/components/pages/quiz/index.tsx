@@ -21,10 +21,60 @@ import {
 } from "@/data/quiz";
 import { TURNSTILE_FIELD } from "../../../../../shared/form-fields";
 import { useTurnstile } from "../../../../../shared/form-widgets";
+import { fetchCustomDepartmentVideos, resolveDepartmentVideoSource } from "@/lib/department-videos";
+
+function DepartmentVideoPlayer({ rawUrl, title }: { rawUrl: string; title: string }) {
+  const source = resolveDepartmentVideoSource(rawUrl);
+  if (source.kind === "youtube") {
+    return (
+      <div className="relative aspect-video w-full overflow-hidden bg-black">
+        <iframe
+          src={source.embedUrl}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="h-full w-full border-0"
+        />
+      </div>
+    );
+  }
+
+  const videoSrc = source.src.startsWith("/api/") ? withBasePath(source.src) : source.src;
+  const posterSrc =
+    source.poster && source.poster.startsWith("/api/")
+      ? withBasePath(source.poster)
+      : source.poster;
+
+  return (
+    <video
+      src={videoSrc}
+      poster={posterSrc}
+      controls
+      autoPlay
+      playsInline
+      preload="metadata"
+      className="max-h-[520px] w-full bg-black object-contain"
+    >
+      Your browser does not support embedded videos.
+    </video>
+  );
+}
+
+const QUIZ_STORAGE_KEY = "kharis_kp2_quiz_state_v1";
+
+type PersistedQuizState = {
+  lang?: SupportedLanguage;
+  screen?: "start" | "quiz" | "result";
+  branch?: string;
+  currentQuestion?: number;
+  answers?: (QuizOption | null)[];
+  scores?: Record<string, number>;
+};
 
 export default function DepartmentQuizPage() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
   const [screen, setScreen] = useState<"start" | "quiz" | "result">("start");
+  const [hydrated, setHydrated] = useState(false);
 
   // User input state
   const [branch, setBranch] = useState("");
@@ -38,6 +88,73 @@ export default function DepartmentQuizPage() {
   // Results state
   const [scores, setScores] = useState<Record<string, number>>({});
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const [customVideos, setCustomVideos] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(QUIZ_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as PersistedQuizState;
+        if (parsed.lang && parsed.lang in QUIZ_TRANSLATIONS) {
+          setLang(parsed.lang);
+        }
+        if (typeof parsed.branch === "string") {
+          setBranch(parsed.branch);
+        }
+        if (Array.isArray(parsed.answers)) {
+          setAnswers(parsed.answers);
+        }
+        if (typeof parsed.currentQuestion === "number" && parsed.currentQuestion >= 0) {
+          setCurrentQuestion(parsed.currentQuestion);
+        }
+        if (parsed.scores && typeof parsed.scores === "object") {
+          setScores(parsed.scores);
+        }
+        if (parsed.screen === "quiz" || parsed.screen === "result") {
+          if (
+            parsed.screen === "result" &&
+            parsed.scores &&
+            Object.keys(parsed.scores).length > 0
+          ) {
+            setScreen("result");
+          } else if (parsed.screen === "quiz") {
+            setScreen("quiz");
+          }
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      const payload: PersistedQuizState = {
+        lang,
+        screen,
+        branch,
+        currentQuestion,
+        answers,
+        scores,
+      };
+      window.localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // Ignore storage write errors
+    }
+  }, [hydrated, lang, screen, branch, currentQuestion, answers, scores]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchCustomDepartmentVideos().then((map) => {
+      if (!cancelled) setCustomVideos(map);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Explore all accordion state
   const [isExploreOpen, setIsExploreOpen] = useState(false);
@@ -169,6 +286,11 @@ export default function DepartmentQuizPage() {
 
   // Restart quiz
   const handleRestart = () => {
+    try {
+      window.localStorage.removeItem(QUIZ_STORAGE_KEY);
+    } catch {
+      // Ignore storage clear errors
+    }
     setAnswers(new Array(t.questions.length).fill(null));
     setScores({});
     setCurrentQuestion(0);
@@ -580,40 +702,39 @@ export default function DepartmentQuizPage() {
                       </div>
 
                       {/* Top Dept Video Facade / Player */}
-                      <div className="relative aspect-video w-full overflow-hidden rounded-none border-2 border-black bg-black shadow-[4px_4px_0_0_#000]">
-                        {activeVideo === topThree[0] ? (
-                          <iframe
-                            src={`${t.departments[topThree[0]].video}?autoplay=1`}
-                            title={`${t.departments[topThree[0]].title ?? topThree[0]} Department Overview`}
-                            allow="autoplay; fullscreen"
-                            allowFullScreen
-                            className="h-full w-full border-0"
-                          />
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => setActiveVideo(topThree[0])}
-                            className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-primary to-on-background p-6 text-center cursor-pointer"
-                            aria-label={`Play ${t.departments[topThree[0]].title ?? topThree[0]} department video`}
-                          >
-                            <DepartmentIllustration department={topThree[0]} />
-                            <div className="halftone-bg pointer-events-none absolute inset-0 opacity-20" />
-                            <div className="relative z-10 flex flex-col items-center gap-3">
-                              <span className="flex h-16 w-16 items-center justify-center rounded-none border-2 border-black bg-secondary-container text-on-secondary-container shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
-                                <span className="material-symbols-outlined text-3xl">
-                                  play_arrow
+                      {customVideos[topThree[0]] && (
+                        <div className="relative w-full overflow-hidden rounded-none border-2 border-black bg-black shadow-[4px_4px_0_0_#000]">
+                          {activeVideo === topThree[0] ? (
+                            <DepartmentVideoPlayer
+                              rawUrl={customVideos[topThree[0]]}
+                              title={`${t.departments[topThree[0]].title ?? topThree[0]} Department Overview`}
+                            />
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setActiveVideo(topThree[0])}
+                              className="group relative flex aspect-video w-full items-center justify-center bg-gradient-to-br from-primary to-on-background p-6 text-center cursor-pointer"
+                              aria-label={`Play ${t.departments[topThree[0]].title ?? topThree[0]} department video`}
+                            >
+                              <DepartmentIllustration department={topThree[0]} />
+                              <div className="halftone-bg pointer-events-none absolute inset-0 opacity-20" />
+                              <div className="relative z-10 flex flex-col items-center gap-3">
+                                <span className="flex h-16 w-16 items-center justify-center rounded-none border-2 border-black bg-secondary-container text-on-secondary-container shadow-[4px_4px_0_0_#000] transition-transform duration-200 group-hover:scale-110">
+                                  <span className="material-symbols-outlined text-3xl">
+                                    play_arrow
+                                  </span>
                                 </span>
-                              </span>
-                              <span className="border border-black bg-black/80 px-3 py-1 font-label-md text-xs uppercase tracking-wider text-white">
-                                {t.watchSpotlight.replace(
-                                  "{dept}",
-                                  t.departments[topThree[0]].title ?? topThree[0],
-                                )}
-                              </span>
-                            </div>
-                          </button>
-                        )}
-                      </div>
+                                <span className="border border-black bg-black/80 px-3 py-1 font-label-md text-xs uppercase tracking-wider text-white">
+                                  {t.watchSpotlight.replace(
+                                    "{dept}",
+                                    t.departments[topThree[0]].title ?? topThree[0],
+                                  )}
+                                </span>
+                              </div>
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -650,32 +771,31 @@ export default function DepartmentQuizPage() {
                           </div>
 
                           {/* Video facade */}
-                          <div className="relative aspect-video w-full overflow-hidden rounded-none border-2 border-black bg-black mt-2">
-                            {activeVideo === deptName ? (
-                              <iframe
-                                src={`${dept.video}?autoplay=1`}
-                                title={`${displayTitle} Video`}
-                                allow="autoplay; fullscreen"
-                                allowFullScreen
-                                className="h-full w-full border-0"
-                              />
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => setActiveVideo(deptName)}
-                                className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
-                                aria-label={`Play ${displayTitle} department video`}
-                              >
-                                <DepartmentIllustration department={deptName} />
-                                <div className="relative z-10 flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
-                                  <span className="material-symbols-outlined text-sm">
-                                    play_arrow
-                                  </span>
-                                  <span>{t.previewVideo}</span>
-                                </div>
-                              </button>
-                            )}
-                          </div>
+                          {customVideos[deptName] && (
+                            <div className="relative w-full overflow-hidden rounded-none border-2 border-black bg-black mt-2">
+                              {activeVideo === deptName ? (
+                                <DepartmentVideoPlayer
+                                  rawUrl={customVideos[deptName]}
+                                  title={`${displayTitle} Video`}
+                                />
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveVideo(deptName)}
+                                  className="group relative flex aspect-video w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
+                                  aria-label={`Play ${displayTitle} department video`}
+                                >
+                                  <DepartmentIllustration department={deptName} />
+                                  <div className="relative z-10 flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
+                                    <span className="material-symbols-outlined text-sm">
+                                      play_arrow
+                                    </span>
+                                    <span>{t.previewVideo}</span>
+                                  </div>
+                                </button>
+                              )}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -762,33 +882,32 @@ export default function DepartmentQuizPage() {
                                       {dept.scripture}
                                     </p>
 
-                                    <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-none border-2 border-black bg-black mt-2">
-                                      {activeVideo === `explore-${deptName}` ? (
-                                        <iframe
-                                          src={`${dept.video}?autoplay=1`}
-                                          title={`${displayTitle} Video`}
-                                          allow="autoplay; fullscreen"
-                                          allowFullScreen
-                                          className="h-full w-full border-0"
-                                        />
-                                      ) : (
-                                        <button
-                                          type="button"
-                                          onClick={() => setActiveVideo(`explore-${deptName}`)}
-                                          className="group relative flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
-                                        >
-                                          <DepartmentIllustration department={deptName} />
-                                          <div className="relative z-10 flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
-                                            <span className="material-symbols-outlined text-sm">
-                                              play_arrow
-                                            </span>
-                                            <span>
-                                              {t.playDeptVideo.replace("{dept}", displayTitle)}
-                                            </span>
-                                          </div>
-                                        </button>
-                                      )}
-                                    </div>
+                                    {customVideos[deptName] && (
+                                      <div className="relative w-full max-w-lg overflow-hidden rounded-none border-2 border-black bg-black mt-2">
+                                        {activeVideo === `explore-${deptName}` ? (
+                                          <DepartmentVideoPlayer
+                                            rawUrl={customVideos[deptName]}
+                                            title={`${displayTitle} Video`}
+                                          />
+                                        ) : (
+                                          <button
+                                            type="button"
+                                            onClick={() => setActiveVideo(`explore-${deptName}`)}
+                                            className="group relative flex aspect-video w-full items-center justify-center bg-gradient-to-br from-surface-container-high to-surface-container-lowest p-4 text-center cursor-pointer"
+                                          >
+                                            <DepartmentIllustration department={deptName} />
+                                            <div className="relative z-10 flex items-center gap-2 rounded-none border border-black bg-on-background px-3 py-1.5 text-xs font-bold uppercase text-surface shadow-[2px_2px_0_0_#000] group-hover:bg-primary transition-colors">
+                                              <span className="material-symbols-outlined text-sm">
+                                                play_arrow
+                                              </span>
+                                              <span>
+                                                {t.playDeptVideo.replace("{dept}", displayTitle)}
+                                              </span>
+                                            </div>
+                                          </button>
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
                                 )}
                               </div>

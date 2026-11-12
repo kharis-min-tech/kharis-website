@@ -6,7 +6,12 @@ import type {
   VenueDraft,
 } from "@/lib/branch-types";
 import { emptyService, emptyVenue } from "@/lib/branch-types";
-import { listGallery, listVenueImages, type VenueImageRecord } from "@/lib/media-repo";
+import {
+  getBranchVideo,
+  listGallery,
+  listVenueImages,
+  type VenueImageRecord,
+} from "@/lib/media-repo";
 import { fail, getSupabase } from "@/lib/supabase";
 import type { BranchOption } from "@/lib/types";
 import { isWorkspaceId, type WorkspaceId } from "@/lib/workspaces";
@@ -33,6 +38,7 @@ export function emptyBranch(): BranchDraft {
     shortDescription: "",
     description: "",
     heroImage: "",
+    videoUrl: "",
     pastorName: "",
     pastorRole: "pastor",
     pastorPhoto: "",
@@ -62,6 +68,7 @@ export function branchToDraft(
   row: BranchRow,
   gallery: BranchDraft["gallery"],
   venueImages: VenueImageRecord[] = [],
+  videoUrl = "",
 ): BranchDraft {
   const venues = [...(row.venues ?? [])];
   const services = [...(row.services ?? [])].sort(
@@ -95,6 +102,7 @@ export function branchToDraft(
     shortDescription: row.short_description ?? "",
     description: row.description ?? "",
     heroImage: row.hero_image_url ?? "",
+    videoUrl,
     pastorName: row.pastor_name ?? "",
     pastorRole: asRole(row.pastor_role),
     pastorPhoto: row.pastor_image_url ?? "",
@@ -134,11 +142,12 @@ export async function listBranches() {
 }
 
 export async function loadBranchDraft(row: BranchRow) {
-  const [gallery, venueImages] = await Promise.all([
+  const [gallery, venueImages, videoUrl] = await Promise.all([
     listGallery(row.id).catch(() => []),
     listVenueImages(row.id).catch(() => []),
+    getBranchVideo(row.id).catch(() => ""),
   ]);
-  return branchToDraft(row, gallery, venueImages);
+  return branchToDraft(row, gallery, venueImages, videoUrl);
 }
 
 export async function listBranchOptions(): Promise<BranchOption[]> {

@@ -29,6 +29,29 @@ export async function uploadImage(file: File, folder: string) {
   return { path, url: data.publicUrl };
 }
 
+export async function uploadVideo(file: File, folder: string) {
+  const isVideo = file.type.startsWith("video/") || /\.(mp4|mov|m4v|webm)$/i.test(file.name);
+  if (!isVideo) throw new Error("Choose a video file (.mp4, .mov, or .webm).");
+
+  const contentType = file.type.startsWith("video/")
+    ? file.type
+    : /\.mov$/i.test(file.name)
+      ? "video/quicktime"
+      : /\.webm$/i.test(file.name)
+        ? "video/webm"
+        : "video/mp4";
+
+  const path = `${folder}/${crypto.randomUUID()}-${safeName(file.name)}`;
+  const supabase = getSupabase();
+  const uploaded = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
+    contentType,
+    upsert: false,
+  });
+  fail(uploaded.error);
+  const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+  return { path, url: data.publicUrl };
+}
+
 export async function removeStored(path: string | null | undefined) {
   if (!path || path.startsWith("external/")) return;
   const { error } = await getSupabase().storage.from(MEDIA_BUCKET).remove([path]);
@@ -191,4 +214,66 @@ export async function syncVenueImages(
     const removed = await supabase.from("media").delete().eq("id", row.id);
     fail(removed.error);
   }
+}
+
+export async function getBranchVideo(branchId: string): Promise<string> {
+  const { data, error } = await getSupabase()
+    .from("media")
+    .select("url")
+    .eq("owner_type", "branch-video")
+    .eq("owner_id", branchId)
+    .order("sort_order", { ascending: true })
+    .limit(1);
+  if (error) {
+    if (error.code === "PGRST205") return "";
+    throw new Error(error.message);
+  }
+  return (data?.[0]?.url as string) ?? "";
+}
+
+export async function syncBranchVideo(branchId: string, videoUrl: string) {
+  const supabase = getSupabase();
+  const trimmed = videoUrl.trim();
+  const { data, error } = await supabase
+    .from("media")
+    .select("id")
+    .eq("owner_type", "branch-video")
+    .eq("owner_id", branchId)
+    .order("sort_order", { ascending: true });
+  if (error) {
+    if (error.code === "PGRST205") return;
+    throw new Error(error.message);
+  }
+  const existing = (data ?? []) as { id: string }[];
+
+  if (!trimmed) {
+    for (const row of existing) {
+      const removed = await supabase.from("media").delete().eq("id", row.id);
+      fail(removed.error);
+    }
+    return;
+  }
+
+  const [first, ...rest] = existing;
+  if (first) {
+    const updated = await supabase
+      .from("media")
+      .update({ url: trimmed, branch_id: branchId, sort_order: 0 })
+      .eq("id", first.id);
+    fail(updated.error);
+    for (const extra of rest) {
+      const removed = await supabase.from("media").delete().eq("id", extra.id);
+      fail(removed.error);
+    }
+    return;
+  }
+
+  await insertMedia({
+    ownerType: "branch-video",
+    ownerId: branchId,
+    branchId,
+    url: trimmed,
+    folder: "branches",
+    sortOrder: 0,
+  });
 }

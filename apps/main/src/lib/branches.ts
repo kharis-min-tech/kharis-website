@@ -92,6 +92,7 @@ export interface BranchData {
   venues: Venue[];
   services: Service[];
   gallery: string[];
+  video_url?: string | null;
 }
 
 // ======================================================
@@ -167,29 +168,37 @@ function formatTime(time?: string | null): string {
 type GalleryRow = {
   branch_id: string | null;
   owner_id: string | null;
+  owner_type?: string | null;
   url: string | null;
 };
 
-async function galleriesByBranch() {
-  const map = new Map<string, string[]>();
+async function mediaByBranch() {
+  const galleries = new Map<string, string[]>();
+  const videos = new Map<string, string>();
   const { data, error } = await supabase
     .from("media")
-    .select("branch_id,owner_id,url,sort_order")
-    .eq("owner_type", "branch-gallery")
+    .select("branch_id,owner_id,owner_type,url,sort_order")
+    .in("owner_type", ["branch-gallery", "branch-video"])
     .order("sort_order", { ascending: true });
 
-  if (error || !data) return map;
+  if (error || !data) return { galleries, videos };
 
   for (const row of data as GalleryRow[]) {
     const id = row.branch_id || row.owner_id;
+    if (!id) continue;
+    if (row.owner_type === "branch-video") {
+      const videoUrl = row.url?.trim() ?? "";
+      if (videoUrl && !videos.has(id)) videos.set(id, videoUrl);
+      continue;
+    }
     const url = remoteImage(row.url);
-    if (!id || !url) continue;
-    const list = map.get(id) ?? [];
+    if (!url) continue;
+    const list = galleries.get(id) ?? [];
     list.push(url);
-    map.set(id, list);
+    galleries.set(id, list);
   }
 
-  return map;
+  return { galleries, videos };
 }
 
 // ======================================================
@@ -203,7 +212,7 @@ export const listBranchData = cache(async (): Promise<BranchData[]> => {
   // same way testimonies and messages already do.
   if (!supabaseConfigured) return BRANCH_FIXTURE;
 
-  const [{ data, error }, galleries] = await Promise.all([
+  const [{ data, error }, { galleries, videos }] = await Promise.all([
     supabase
       .from("branches")
       .select(
@@ -215,7 +224,7 @@ export const listBranchData = cache(async (): Promise<BranchData[]> => {
       )
       .eq("is_active", true)
       .order("sort_order", { ascending: true }),
-    galleriesByBranch(),
+    mediaByBranch(),
   ]);
 
   if (error) {
@@ -236,6 +245,7 @@ export const listBranchData = cache(async (): Promise<BranchData[]> => {
     ),
 
     gallery: galleries.get(branch.id) ?? [],
+    video_url: videos.get(branch.id) ?? null,
   }));
 
   return branches as BranchData[];
@@ -368,7 +378,7 @@ export async function getBranchBySlug(slug: string): Promise<BranchData | null> 
     return BRANCH_FIXTURE.find((branch) => branch.slug === slug) ?? null;
   }
 
-  const [{ data, error }, galleries] = await Promise.all([
+  const [{ data, error }, { galleries, videos }] = await Promise.all([
     supabase
       .from("branches")
       .select(
@@ -381,7 +391,7 @@ export async function getBranchBySlug(slug: string): Promise<BranchData | null> 
       .eq("slug", slug)
       .eq("is_active", true)
       .single(),
-    galleriesByBranch(),
+    mediaByBranch(),
   ]);
 
   if (error) {
@@ -403,6 +413,7 @@ export async function getBranchBySlug(slug: string): Promise<BranchData | null> 
     services: [...(data.services ?? [])].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)),
 
     gallery: galleries.get(data.id) ?? [],
+    video_url: videos.get(data.id) ?? null,
   } as BranchData;
 }
 
