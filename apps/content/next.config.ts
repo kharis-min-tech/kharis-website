@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "cqgyiqxhpxwasogpdghx.supabase.co" }],
   },
+  // The docs are static VitePress pages in public/documentation, built by `npm run build`.
+  async redirects() {
+    return [
+      { source: "/documentation", destination: "/documentation/index.html", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

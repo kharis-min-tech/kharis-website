@@ -2,11 +2,27 @@ import { isR2ObjectKey } from "@/lib/branch-image-paths";
 import {
   MAX_MEDIA_IMAGE_BYTES,
   MAX_MEDIA_VIDEO_BYTES,
+  isBranchMediaFolder,
   isMediaFolder,
   mediaKeyFromUrl,
 } from "@/lib/media-paths";
-import { fail, getSupabase, MEDIA_BUCKET } from "@/lib/supabase";
+import { studioData } from "@/lib/studio-data";
+import { getSupabase, MEDIA_BUCKET } from "@/lib/supabase";
 import type { GalleryItem } from "@/lib/branch-types";
+
+type MediaRow = {
+  id: string;
+  url: string | null;
+  storage_path: string | null;
+  sort_order: number | null;
+};
+
+function mediaRows(ownerType: string, ownerId: string) {
+  return studioData.list<MediaRow>("media", {
+    where: { owner_type: ownerType, owner_id: ownerId },
+    order: "sort_order",
+  });
+}
 
 // Older uploads were saved to Supabase Storage. New uploads go to Cloudflare R2;
 // this is kept only so those older files can still be cleaned up.
@@ -33,6 +49,7 @@ async function uploadToR2(
   folder: string,
   contentType: string,
   onProgress?: (percent: number) => void,
+  branchId?: string | null,
 ) {
   const target = isMediaFolder(folder) ? folder : "uploads";
   const token = await studioToken();
@@ -42,6 +59,7 @@ async function uploadToR2(
     xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.setRequestHeader("Content-Type", contentType);
     xhr.setRequestHeader("X-Media-Folder", target);
+    if (branchId && isBranchMediaFolder(target)) xhr.setRequestHeader("X-Branch-Id", branchId);
     xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
     xhr.upload.onprogress = (event) => {
       if (!event.lengthComputable || !onProgress) return;
@@ -69,16 +87,18 @@ export async function uploadImage(
   file: File,
   folder: string,
   onProgress?: (percent: number) => void,
+  branchId?: string | null,
 ) {
   if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
   if (file.size > MAX_MEDIA_IMAGE_BYTES) throw new Error("Images need to be 8MB or smaller.");
-  return uploadToR2(file, folder, file.type, onProgress);
+  return uploadToR2(file, folder, file.type, onProgress, branchId);
 }
 
 export async function uploadVideo(
   file: File,
   folder: string,
   onProgress?: (percent: number) => void,
+  branchId?: string | null,
 ) {
   const isVideo = file.type.startsWith("video/") || /\.(mp4|mov|m4v|webm)$/i.test(file.name);
   if (!isVideo) throw new Error("Choose a video file (.mp4, .mov, or .webm).");
@@ -93,7 +113,7 @@ export async function uploadVideo(
         ? "video/webm"
         : "video/mp4";
 
-  return uploadToR2(file, folder, contentType, onProgress);
+  return uploadToR2(file, folder, contentType, onProgress, branchId);
 }
 
 export async function removeStored(path: string | null | undefined) {
@@ -109,8 +129,7 @@ export async function removeStored(path: string | null | undefined) {
     if (!response.ok) throw new Error("The old file could not be removed.");
     return;
   }
-  const { error } = await getSupabase().storage.from(MEDIA_BUCKET).remove([path]);
-  if (error) throw new Error(error.message);
+  await studioData.removeStoredFiles([path]);
 }
 
 type MediaInsert = {
@@ -124,49 +143,33 @@ type MediaInsert = {
 };
 
 export async function insertMedia(input: MediaInsert) {
-  const { data, error } = await getSupabase()
-    .from("media")
-    .insert({
-      owner_type: input.ownerType,
-      owner_id: input.ownerId,
-      branch_id: input.branchId ?? null,
-      storage_path: input.path || `external/${crypto.randomUUID()}`,
-      url: input.url,
-      folder: input.folder,
-      sort_order: input.sortOrder ?? 0,
-    })
-    .select("id, url, storage_path")
-    .single();
-  fail(error);
-  return data as { id: string; url: string; storage_path: string };
+  return studioData.insert<{ id: string; url: string; storage_path: string }>("media", {
+    owner_type: input.ownerType,
+    owner_id: input.ownerId,
+    branch_id: input.branchId ?? null,
+    storage_path: input.path || `external/${crypto.randomUUID()}`,
+    url: input.url,
+    folder: input.folder,
+    sort_order: input.sortOrder ?? 0,
+  });
 }
 
 export async function listGallery(branchId: string): Promise<GalleryItem[]> {
-  const { data, error } = await getSupabase()
-    .from("media")
-    .select("id, url, storage_path, sort_order")
-    .eq("owner_type", "branch-gallery")
-    .eq("owner_id", branchId)
-    .order("sort_order", { ascending: true });
-  if (error) {
-    if (error.code === "PGRST205") return [];
-    throw new Error(error.message);
-  }
-  return (data ?? []).map((row) => ({
-    key: row.id as string,
-    id: row.id as string,
-    url: (row.url as string) ?? "",
-    path: (row.storage_path as string) ?? undefined,
+  const rows = await mediaRows("branch-gallery", branchId);
+  return rows.map((row) => ({
+    key: row.id,
+    id: row.id,
+    url: row.url ?? "",
+    path: row.storage_path ?? undefined,
   }));
 }
 
 export async function syncGallery(branchId: string, items: GalleryItem[], pendingOwnerId: string) {
-  const supabase = getSupabase();
-  const pending = await supabase
-    .from("media")
-    .update({ owner_id: branchId, branch_id: branchId })
-    .eq("owner_id", pendingOwnerId);
-  if (pending.error && pending.error.code !== "PGRST205") throw new Error(pending.error.message);
+  await studioData.updateWhere(
+    "media",
+    { owner_id: pendingOwnerId },
+    { owner_id: branchId, branch_id: branchId },
+  );
 
   const existing = await listGallery(branchId);
   const kept = new Set(items.map((item) => item.id).filter(Boolean) as string[]);
@@ -175,8 +178,7 @@ export async function syncGallery(branchId: string, items: GalleryItem[], pendin
     if (!row.id || kept.has(row.id)) continue;
     // Unused Cloudflare files are removed when the branch is saved.
     if (!isR2ObjectKey(row.path)) await removeStored(row.path).catch(() => undefined);
-    const removed = await supabase.from("media").delete().eq("id", row.id);
-    fail(removed.error);
+    await studioData.remove("media", row.id);
   }
 
   for (const [index, item] of items.entries()) {
@@ -193,11 +195,7 @@ export async function syncGallery(branchId: string, items: GalleryItem[], pendin
       });
       continue;
     }
-    const updated = await supabase
-      .from("media")
-      .update({ sort_order: index, branch_id: branchId })
-      .eq("id", item.id);
-    fail(updated.error);
+    await studioData.update("media", item.id, { sort_order: index, branch_id: branchId });
   }
 }
 
@@ -209,20 +207,11 @@ export type VenueImageRecord = {
 };
 
 export async function listVenueImages(branchId: string): Promise<VenueImageRecord[]> {
-  const { data, error } = await getSupabase()
-    .from("media")
-    .select("id, url, storage_path, sort_order")
-    .eq("owner_type", "branch-venue")
-    .eq("owner_id", branchId)
-    .order("sort_order", { ascending: true });
-  if (error) {
-    if (error.code === "PGRST205") return [];
-    throw new Error(error.message);
-  }
-  return (data ?? []).map((row) => ({
-    id: row.id as string,
-    url: (row.url as string) ?? "",
-    path: (row.storage_path as string) ?? undefined,
+  const rows = await mediaRows("branch-venue", branchId);
+  return rows.map((row) => ({
+    id: row.id,
+    url: row.url ?? "",
+    path: row.storage_path ?? undefined,
     sortOrder: Number(row.sort_order ?? 0),
   }));
 }
@@ -231,7 +220,6 @@ export async function syncVenueImages(
   branchId: string,
   venues: { imageUrl: string; imageKey?: string }[],
 ) {
-  const supabase = getSupabase();
   const existing = await listVenueImages(branchId);
   const kept = new Set<string>();
 
@@ -241,15 +229,11 @@ export async function syncVenueImages(
     const match = existing.find((row) => row.url === url);
     if (match) {
       kept.add(match.id);
-      const updated = await supabase
-        .from("media")
-        .update({
-          sort_order: index,
-          branch_id: branchId,
-          storage_path: venue.imageKey || match.path,
-        })
-        .eq("id", match.id);
-      fail(updated.error);
+      await studioData.update("media", match.id, {
+        sort_order: index,
+        branch_id: branchId,
+        storage_path: venue.imageKey || match.path,
+      });
       continue;
     }
     const inserted = await insertMedia({
@@ -266,60 +250,32 @@ export async function syncVenueImages(
 
   for (const row of existing) {
     if (kept.has(row.id)) continue;
-    const removed = await supabase.from("media").delete().eq("id", row.id);
-    fail(removed.error);
+    await studioData.remove("media", row.id);
   }
 }
 
 export async function getBranchVideo(branchId: string): Promise<string> {
-  const { data, error } = await getSupabase()
-    .from("media")
-    .select("url")
-    .eq("owner_type", "branch-video")
-    .eq("owner_id", branchId)
-    .order("sort_order", { ascending: true })
-    .limit(1);
-  if (error) {
-    if (error.code === "PGRST205") return "";
-    throw new Error(error.message);
-  }
-  return (data?.[0]?.url as string) ?? "";
+  const [row] = await mediaRows("branch-video", branchId);
+  return row?.url ?? "";
 }
 
 export async function syncBranchVideo(branchId: string, videoUrl: string) {
-  const supabase = getSupabase();
   const trimmed = videoUrl.trim();
-  const { data, error } = await supabase
-    .from("media")
-    .select("id")
-    .eq("owner_type", "branch-video")
-    .eq("owner_id", branchId)
-    .order("sort_order", { ascending: true });
-  if (error) {
-    if (error.code === "PGRST205") return;
-    throw new Error(error.message);
-  }
-  const existing = (data ?? []) as { id: string }[];
+  const existing = await mediaRows("branch-video", branchId);
 
   if (!trimmed) {
-    for (const row of existing) {
-      const removed = await supabase.from("media").delete().eq("id", row.id);
-      fail(removed.error);
-    }
+    for (const row of existing) await studioData.remove("media", row.id);
     return;
   }
 
   const [first, ...rest] = existing;
   if (first) {
-    const updated = await supabase
-      .from("media")
-      .update({ url: trimmed, branch_id: branchId, sort_order: 0 })
-      .eq("id", first.id);
-    fail(updated.error);
-    for (const extra of rest) {
-      const removed = await supabase.from("media").delete().eq("id", extra.id);
-      fail(removed.error);
-    }
+    await studioData.update("media", first.id, {
+      url: trimmed,
+      branch_id: branchId,
+      sort_order: 0,
+    });
+    for (const extra of rest) await studioData.remove("media", extra.id);
     return;
   }
 

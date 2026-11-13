@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 
-export function confirmDelete(label: string) {
+/** Asks in a toast. Resolves true only when the action button is pressed. */
+export function confirmAction(question: string, actionLabel: string) {
   return new Promise<boolean>((resolve) => {
     let settled = false;
     const finish = (value: boolean) => {
@@ -9,12 +10,16 @@ export function confirmDelete(label: string) {
       resolve(value);
     };
 
-    toast(`Delete ${label}?`, {
+    toast(question, {
       duration: 8000,
-      action: { label: "Delete", onClick: () => finish(true) },
+      action: { label: actionLabel, onClick: () => finish(true) },
       cancel: { label: "Cancel", onClick: () => finish(false) },
       onDismiss: () => finish(false),
       onAutoClose: () => finish(false),
     });
   });
+}
+
+export function confirmDelete(label: string) {
+  return confirmAction(`Delete ${label}?`, "Delete");
 }

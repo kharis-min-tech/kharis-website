@@ -34,7 +34,7 @@ export function AuthLayout({
           className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(70%_60%_at_30%_55%,black,transparent)]"
         />
         <div className="relative flex items-center gap-3">
-          <Mark className="h-10 w-10" />
+          <Mark tone="onDark" className="h-11 w-11" />
           <span className="text-sm font-bold tracking-[0.16em]">KHARIS CHURCH</span>
         </div>
         <figure className="relative max-w-md">
@@ -53,8 +53,8 @@ export function AuthLayout({
         <ThemeToggle variant="pill" className="absolute right-4 top-4 sm:right-6 sm:top-6" />
         <div className="w-full max-w-[25rem]">
           <div className="mb-6 flex flex-col items-center text-center">
-            <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-              <Mark className="h-6 w-6 rounded-md" />
+            <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+              <Mark className="h-9 w-9" />
               Kharis Church
             </div>
             <h1 className="mt-4 font-heading text-2xl font-bold tracking-tight">{title}</h1>
@@ -76,7 +76,10 @@ export function AuthLayout({
             <div className="mt-6 text-center text-sm text-muted-foreground">{footer}</div>
           ) : null}
         </div>
-        <p className="absolute bottom-5 text-xs text-muted-foreground">
+        <p className="absolute bottom-5 flex gap-4 text-xs text-muted-foreground">
+          <a href="/documentation" className="hover:text-foreground hover:underline">
+            Help
+          </a>
           <Link href="/cookies" className="hover:text-foreground hover:underline">
             Cookie policy
           </Link>

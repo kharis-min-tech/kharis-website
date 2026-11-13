@@ -19,6 +19,7 @@ export function ImageDrop({
   label,
   value,
   folder,
+  mediaBranchId,
   onChange,
   branch,
   onQueue,
@@ -26,6 +27,7 @@ export function ImageDrop({
   label: string;
   value: string;
   folder?: string;
+  mediaBranchId?: string | null;
   onChange: (url: string, key?: string) => void;
   branch?: { id: string | null; category: BranchImageCategory };
   onQueue?: (file: File) => void;
@@ -64,7 +66,7 @@ export function ImageDrop({
         });
         onChange(uploaded.publicUrl, uploaded.key);
       } else {
-        const uploaded = await uploadImage(file, folder ?? "uploads");
+        const uploaded = await uploadImage(file, folder ?? "uploads", undefined, mediaBranchId);
         if (value) await clearUrl(value);
         onChange(uploaded.url);
       }
@@ -302,11 +304,13 @@ export function VideoDrop({
   label,
   value,
   folder,
+  mediaBranchId,
   onChange,
 }: {
   label?: string;
   value: string;
   folder?: string;
+  mediaBranchId?: string | null;
   onChange: (url: string) => void | Promise<void>;
 }) {
   const [uploading, setUploading] = useState(false);
@@ -315,7 +319,7 @@ export function VideoDrop({
     if (!file) return;
     setUploading(true);
     try {
-      const uploaded = await uploadVideo(file, folder ?? "videos");
+      const uploaded = await uploadVideo(file, folder ?? "videos", undefined, mediaBranchId);
       if (value) await clearUrl(value);
       await onChange(uploaded.url);
       toast.success("Video uploaded");

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { kharisApiConfigured, postForm, siteGet } from "@/lib/kharis-api";
 import {
   cleanText,
   LIMITS,
@@ -175,12 +175,7 @@ export async function POST(request: Request) {
 
   message = withSiteLine(message, "Main site");
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  // The publishable key, not a service-role key: `anon` may INSERT into
-  // contact_messages and read nothing (supabase/migrations/003).
-  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !publishableKey) {
+  if (!kharisApiConfigured) {
     if (process.env.NODE_ENV === "development") {
       return localContactResponse({
         first_name: first,
@@ -193,41 +188,32 @@ export async function POST(request: Request) {
       });
     }
 
-    console.error("Missing Supabase server environment variables");
+    console.error("Missing NEXT_PUBLIC_KHARIS_API_URL");
     return NextResponse.json({ ok: false, error: "Server configuration error." }, { status: 500 });
   }
 
   // File the message under the branch in the directory, and in the KP2 inbox for KP2 branches.
   try {
-    const supabase = createClient(supabaseUrl, publishableKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    });
-    const { data: branchRows } = await supabase
-      .from("branches")
-      .select("id, name, workspace, contact_email");
-    const branches = (branchRows ?? []) as (BranchRow & { contact_email: string | null })[];
-    const filed = resolveBranch(branches as BranchRow[], data.branchId, branch);
+    const { data: branchRows } =
+      await siteGet<(BranchRow & { contact_email: string | null })[]>("/branches");
+    const branches = branchRows ?? [];
+    const filed = resolveBranch(branches, data.branchId, branch);
 
-    // No `.select()`: the insert-only policy gives `anon` no read access, so
-    // asking for the row back would fail.
-    const { error } = await supabase.from("contact_messages").insert({
-      first_name: first,
-      last_name: last,
+    // The API files the row the same way (branch match, KP2 inbox, "From:" line).
+    const { error } = await postForm("/api/contact", {
+      firstName: first,
+      lastName: last,
       email,
-      phone: phone || null,
+      phone,
       topic,
-      branch_id: filed.branch_id,
-      branch_name: filed.branch_name,
+      branchId: filed.branch_id ?? "",
+      branch: filed.branch_name ?? "",
       message,
-      workspace: filed.workspace,
-      status: "new",
+      site: "Main site",
     });
 
     if (error) {
-      console.error("Supabase contact insert error:", error);
+      console.error("Kharis API contact error:", error);
       if (process.env.NODE_ENV === "development") {
         return localContactResponse({
           first_name: first,
@@ -276,7 +262,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error("Supabase contact request failed:", error);
+    console.error("Kharis API contact request failed:", error);
     if (process.env.NODE_ENV === "development") {
       return localContactResponse({
         first_name: first,

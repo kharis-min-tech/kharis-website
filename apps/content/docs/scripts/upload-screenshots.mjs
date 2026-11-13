@@ -2,14 +2,14 @@
  * Uploads public/screenshots to the kharis-images R2 bucket and records their
  * images.kharis.org URLs in .vitepress/screenshot-urls.json.
  *
- * Dry run: node scripts/upload-screenshots.mjs
- * Upload:  node --env-file=../../.env.r2.local scripts/upload-screenshots.mjs --upload
+ * Dry run: node docs/scripts/upload-screenshots.mjs
+ * Upload:  npm run screenshots:upload   (from apps/content)
  */
 import { createHash } from "node:crypto";
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { uploadImages } from "../../../scripts/migrate-site-images.mjs";
+import { uploadImages } from "../../../../scripts/migrate-site-images.mjs";
 
 const docs = fileURLToPath(new URL("../", import.meta.url));
 const directory = resolve(docs, "public/screenshots");

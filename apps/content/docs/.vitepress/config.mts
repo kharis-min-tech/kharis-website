@@ -88,10 +88,14 @@ export default defineConfig({
   lang: "en-GB",
   title: "Content Studio",
   description: "Content management for Kharis Church: documentation for the Content Studio.",
-  cleanUrls: true,
+  // Served by the studio as static files from public/documentation, so pages keep their
+  // .html names: Next.js only serves public files at their exact path.
+  base: "/documentation/",
+  outDir: "../public/documentation",
+  cleanUrls: false,
   lastUpdated: false,
   head: [
-    ["link", { rel: "icon", type: "image/png", href: "/favicon.png" }],
+    ["link", { rel: "icon", type: "image/png", href: "/documentation/favicon.png" }],
     ["meta", { name: "theme-color", content: "#6D28D9", media: "(prefers-color-scheme: light)" }],
     ["meta", { name: "theme-color", content: "#0a0a0a", media: "(prefers-color-scheme: dark)" }],
     ["meta", { name: "robots", content: "noindex, nofollow" }],
@@ -115,7 +119,7 @@ export default defineConfig({
     docFooter: { prev: "Previous", next: "Next" },
     footer: {
       message:
-        'Content Studio: Content Management by Kharis Church · <a href="https://content.kharis.org">Open the studio</a> · <a href="https://docs.kairos.kharis.org">Kairos docs</a>',
+        'Content Studio: Content Management by Kharis Church · <a href="/">Open the studio</a> · <a href="https://docs.kairos.kharis.org">Kairos docs</a>',
     },
   },
 });

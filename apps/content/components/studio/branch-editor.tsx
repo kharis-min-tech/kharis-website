@@ -1,15 +1,23 @@
 "use client";
 
+import { Church, Plus } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import { ActiveFilterTabs, ShowInactiveToggle } from "@/components/studio/active-filter";
+import {
+  EmptyState,
+  ErrorNotice,
+  GridSkeleton,
+  IconTile,
+  SearchInput,
+  Toolbar,
+} from "@/components/studio/blocks";
 import { AreaField, SelectField, TextField, ToggleField } from "@/components/studio/fields";
 import { ImageDrop, MultiImageDrop, VideoDrop } from "@/components/studio/image-drop";
 import { PageHeader } from "@/components/studio/page-header";
 import { VenueLocation } from "@/components/studio/venue-location";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { branchTemplate } from "@/lib/branch-template";
 import {
   emptyService,
@@ -19,31 +27,47 @@ import {
   type BranchRow,
 } from "@/lib/branch-types";
 import {
-  deleteBranch,
+  activeCounts,
+  isActive,
+  matchesActiveFilter,
+  type ActiveFilter,
+} from "@/lib/active-filter";
+import {
   emptyBranch,
   listBranches,
   loadBranchDraft,
   saveBranch,
   saveBranchImageUrl,
+  setBranchActive,
   venueHasContent,
 } from "@/lib/branches-repo";
 import {
-  deleteBranchImageFolder,
   ensureBranchImageFolder,
   pruneBranchImageFolder,
   uploadBranchImage,
 } from "@/lib/branch-images";
-import { confirmDelete } from "@/lib/confirm";
+import { confirmAction } from "@/lib/confirm";
 import { syncBranchVideo, syncGallery, syncVenueImages } from "@/lib/media-repo";
-import { slugify } from "@/lib/utils";
+import { useStudioRole } from "@/lib/studio-role";
+import { cn, slugify } from "@/lib/utils";
 import { WORKSPACES } from "@/lib/workspaces";
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+/** "2 venues" or "2 venues (1 inactive)". */
+function countLabel(items: { is_active?: boolean | null }[], noun: string) {
+  const { active, inactive } = activeCounts(items, isActive);
+  const label = `${active} ${noun}${active === 1 ? "" : "s"}`;
+  return inactive ? `${label} (${inactive} inactive)` : label;
+}
+
 export function BranchEditor() {
+  const { isSuperAdmin, canEditBranch } = useStudioRole();
   const [rows, setRows] = useState<BranchRow[] | null>(null);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  const [view, setView] = useState<ActiveFilter>("active");
+  const [showInactive, setShowInactive] = useState({ venues: false, services: false });
   const [draft, setDraft] = useState<BranchDraft | null>(null);
   const [slugTouched, setSlugTouched] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -83,19 +107,27 @@ export function BranchEditor() {
     refresh();
   }, []);
 
+  const editable = useMemo(
+    () => (rows ?? []).filter((row) => canEditBranch(row.id)),
+    [rows, canEditBranch],
+  );
+
+  const counts = useMemo(() => activeCounts(editable, isActive), [editable]);
+
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    if (!rows) return [];
-    if (!needle) return rows;
-    return rows.filter((row) =>
-      `${row.name} ${row.slug} ${row.subtitle ?? ""}`.toLowerCase().includes(needle),
+    return editable.filter(
+      (row) =>
+        matchesActiveFilter(view, isActive(row)) &&
+        (!needle || `${row.name} ${row.slug} ${row.subtitle ?? ""}`.toLowerCase().includes(needle)),
     );
-  }, [query, rows]);
+  }, [query, view, editable]);
 
   async function openRow(row: BranchRow) {
     try {
       const next = await loadBranchDraft(row);
       clearPendingImages();
+      setShowInactive({ venues: false, services: false });
       setDraft(next);
       setSlugTouched(true);
       setOriginalIds({
@@ -109,6 +141,7 @@ export function BranchEditor() {
 
   function openNew() {
     clearPendingImages();
+    setShowInactive({ venues: false, services: false });
     setDraft(emptyBranch());
     setSlugTouched(false);
     setOriginalIds({ venues: [], services: [] });
@@ -223,27 +256,75 @@ export function BranchEditor() {
     }
   }
 
-  async function onDelete() {
-    if (!draft?.id) return;
-    const confirmed = await confirmDelete(draft.name || "this branch");
-    if (!confirmed) return;
+  async function onSetActive(active: boolean) {
+    if (!draft?.id || !isSuperAdmin) return;
+    const name = draft.name.trim() || "this branch";
+    if (!active) {
+      const confirmed = await confirmAction(
+        `Deactivate ${name}? It disappears from the websites and app. Venues, services, photos, events and messages are kept.`,
+        "Deactivate",
+      );
+      if (!confirmed) return;
+    }
     try {
-      await deleteBranchImageFolder(draft.id);
-      await deleteBranch(draft.id);
-      toast.success("Branch deleted");
+      await setBranchActive(draft.id, active);
+      toast.success(active ? `${name} reinstated` : `${name} deactivated`);
       setDraft(null);
       refresh();
     } catch (caught) {
-      toast.error(caught instanceof Error ? caught.message : "Delete failed");
+      toast.error(caught instanceof Error ? caught.message : "Could not update the branch");
     }
   }
+
+  function patchVenue(key: string, partial: Partial<BranchDraft["venues"][number]>) {
+    setDraft((current) =>
+      current
+        ? {
+            ...current,
+            venues: current.venues.map((item) =>
+              item.key === key ? { ...item, ...partial } : item,
+            ),
+          }
+        : current,
+    );
+  }
+
+  function patchService(key: string, partial: Partial<BranchDraft["services"][number]>) {
+    setDraft((current) =>
+      current
+        ? {
+            ...current,
+            services: current.services.map((item) =>
+              item.key === key ? { ...item, ...partial } : item,
+            ),
+          }
+        : current,
+    );
+  }
+
+  const savedRow = draft?.id ? rows?.find((row) => row.id === draft.id) : undefined;
+  const savedActive = savedRow ? isActive(savedRow) : true;
+  const inactiveVenues = draft ? draft.venues.filter((venue) => !venue.active).length : 0;
+  const inactiveServices = draft ? draft.services.filter((service) => !service.active).length : 0;
 
   return (
     <div>
       <PageHeader
-        title="Branches"
-        description="Campuses, venues, service times, and gallery photos. Addresses are stored on venues, which is what the websites show."
-        action={<Button onClick={openNew}>New branch</Button>}
+        icon={<IconTile icon={Church} className="h-12 w-12 rounded-2xl" />}
+        title={draft ? draft.name.trim() || "New branch" : "Branches"}
+        description={
+          draft
+            ? "Details, pastor, venues, service times and photos. Save when you're done."
+            : "Campuses, venues, service times, and gallery photos. Addresses are stored on venues, which is what the websites show."
+        }
+        action={
+          isSuperAdmin && !draft ? (
+            <Button onClick={openNew}>
+              <Plus className="h-4 w-4" />
+              New branch
+            </Button>
+          ) : undefined
+        }
       />
       {draft ? (
         <form className="space-y-8" onSubmit={onSave}>
@@ -326,7 +407,7 @@ export function BranchEditor() {
             />
             <div className="flex items-end">
               <ToggleField
-                label="Published"
+                label="Active (shown on the websites and app)"
                 checked={draft.published}
                 onChange={(published) => patch({ published })}
               />
@@ -421,6 +502,7 @@ export function BranchEditor() {
               label="Branch video"
               value={draft.videoUrl}
               folder="branch-videos"
+              mediaBranchId={draft.id ?? null}
               onChange={(videoUrl) => patch({ videoUrl })}
             />
             <p className="text-sm text-muted-foreground">
@@ -430,8 +512,15 @@ export function BranchEditor() {
           </div>
 
           <section className="space-y-4">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="font-heading text-lg font-semibold">Venues</h2>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <h2 className="font-heading text-lg font-semibold">Venues</h2>
+                <ShowInactiveToggle
+                  shown={showInactive.venues}
+                  count={inactiveVenues}
+                  onChange={(venues) => setShowInactive((current) => ({ ...current, venues }))}
+                />
+              </div>
               <Button
                 variant="outline"
                 onClick={() => patch({ venues: [...draft.venues, emptyVenue()] })}
@@ -439,124 +528,169 @@ export function BranchEditor() {
                 Add venue
               </Button>
             </div>
-            {draft.venues.map((venue, index) => (
-              <div key={venue.key} className="space-y-3 rounded-xl border border-border p-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium">Venue {index + 1}</p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      patch({ venues: draft.venues.filter((item) => item.key !== venue.key) })
-                    }
-                  >
-                    Remove
-                  </Button>
-                </div>
-                <div className="grid gap-3 md:grid-cols-2">
-                  <TextField
-                    label="Name"
-                    value={venue.name}
-                    onChange={(event) =>
+            {draft.venues.map((venue, index) => {
+              if (!venue.active && !showInactive.venues) return null;
+              const usedBy = draft.services.filter(
+                (service) => service.active && service.venueIndex === index,
+              ).length;
+              return (
+                <div
+                  key={venue.key}
+                  className={cn(
+                    "space-y-3 rounded-xl border border-border p-4 transition-opacity",
+                    !venue.active && "border-dashed bg-muted/30 opacity-75",
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium">
+                        {venue.name.trim() || `Venue ${index + 1}`}
+                      </p>
+                      {!venue.active ? <Badge tone="muted">Inactive</Badge> : null}
+                    </div>
+                    {venue.id ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => patchVenue(venue.key, { active: !venue.active })}
+                      >
+                        {venue.active ? "Deactivate" : "Reinstate"}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          patch({ venues: draft.venues.filter((item) => item.key !== venue.key) })
+                        }
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                  {!venue.active && usedBy ? (
+                    <p className="text-xs text-muted-foreground">
+                      {usedBy} active service{usedBy === 1 ? " still uses" : "s still use"} this
+                      venue. Move {usedBy === 1 ? "it" : "them"} to another venue so the address
+                      shows on the websites.
+                    </p>
+                  ) : null}
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <TextField
+                      label="Name"
+                      value={venue.name}
+                      onChange={(event) =>
+                        patch({
+                          venues: draft.venues.map((item) =>
+                            item.key === venue.key ? { ...item, name: event.target.value } : item,
+                          ),
+                        })
+                      }
+                    />
+                    <TextField
+                      label="City"
+                      value={venue.city}
+                      onChange={(event) =>
+                        patch({
+                          venues: draft.venues.map((item) =>
+                            item.key === venue.key ? { ...item, city: event.target.value } : item,
+                          ),
+                        })
+                      }
+                    />
+                    <TextField
+                      label="Address"
+                      value={venue.address}
+                      onChange={(event) =>
+                        patch({
+                          venues: draft.venues.map((item) =>
+                            item.key === venue.key
+                              ? { ...item, address: event.target.value }
+                              : item,
+                          ),
+                        })
+                      }
+                    />
+                    <TextField
+                      label="Postcode"
+                      value={venue.postcode}
+                      onChange={(event) =>
+                        patch({
+                          venues: draft.venues.map((item) =>
+                            item.key === venue.key
+                              ? { ...item, postcode: event.target.value }
+                              : item,
+                          ),
+                        })
+                      }
+                    />
+                    <TextField
+                      label="Parking"
+                      value={venue.parkingInfo}
+                      onChange={(event) =>
+                        patch({
+                          venues: draft.venues.map((item) =>
+                            item.key === venue.key
+                              ? { ...item, parkingInfo: event.target.value }
+                              : item,
+                          ),
+                        })
+                      }
+                    />
+                    <TextField
+                      label="Public transport"
+                      value={venue.transitInfo}
+                      onChange={(event) =>
+                        patch({
+                          venues: draft.venues.map((item) =>
+                            item.key === venue.key
+                              ? { ...item, transitInfo: event.target.value }
+                              : item,
+                          ),
+                        })
+                      }
+                    />
+                  </div>
+                  <VenueLocation
+                    venue={venue}
+                    onChange={(next) =>
                       patch({
-                        venues: draft.venues.map((item) =>
-                          item.key === venue.key ? { ...item, name: event.target.value } : item,
-                        ),
+                        venues: draft.venues.map((item) => (item.key === venue.key ? next : item)),
                       })
                     }
                   />
-                  <TextField
-                    label="City"
-                    value={venue.city}
-                    onChange={(event) =>
-                      patch({
-                        venues: draft.venues.map((item) =>
-                          item.key === venue.key ? { ...item, city: event.target.value } : item,
-                        ),
-                      })
-                    }
-                  />
-                  <TextField
-                    label="Address"
-                    value={venue.address}
-                    onChange={(event) =>
-                      patch({
-                        venues: draft.venues.map((item) =>
-                          item.key === venue.key ? { ...item, address: event.target.value } : item,
-                        ),
-                      })
-                    }
-                  />
-                  <TextField
-                    label="Postcode"
-                    value={venue.postcode}
-                    onChange={(event) =>
-                      patch({
-                        venues: draft.venues.map((item) =>
-                          item.key === venue.key ? { ...item, postcode: event.target.value } : item,
-                        ),
-                      })
-                    }
-                  />
-                  <TextField
-                    label="Parking"
-                    value={venue.parkingInfo}
-                    onChange={(event) =>
+                  <ImageDrop
+                    label="Venue photo"
+                    value={venue.imageUrl}
+                    branch={{ id: draft.id ?? null, category: "venue" }}
+                    onQueue={(file) => {
+                      pendingImages.current.venues[venue.key] = file;
+                    }}
+                    onChange={(imageUrl, imageKey) =>
                       patch({
                         venues: draft.venues.map((item) =>
                           item.key === venue.key
-                            ? { ...item, parkingInfo: event.target.value }
+                            ? { ...item, imageUrl, imageKey: imageKey ?? item.imageKey }
                             : item,
                         ),
                       })
                     }
                   />
-                  <TextField
-                    label="Public transport"
-                    value={venue.transitInfo}
-                    onChange={(event) =>
-                      patch({
-                        venues: draft.venues.map((item) =>
-                          item.key === venue.key
-                            ? { ...item, transitInfo: event.target.value }
-                            : item,
-                        ),
-                      })
-                    }
-                  />
                 </div>
-                <VenueLocation
-                  venue={venue}
-                  onChange={(next) =>
-                    patch({
-                      venues: draft.venues.map((item) => (item.key === venue.key ? next : item)),
-                    })
-                  }
-                />
-                <ImageDrop
-                  label="Venue photo"
-                  value={venue.imageUrl}
-                  branch={{ id: draft.id ?? null, category: "venue" }}
-                  onQueue={(file) => {
-                    pendingImages.current.venues[venue.key] = file;
-                  }}
-                  onChange={(imageUrl, imageKey) =>
-                    patch({
-                      venues: draft.venues.map((item) =>
-                        item.key === venue.key
-                          ? { ...item, imageUrl, imageKey: imageKey ?? item.imageKey }
-                          : item,
-                      ),
-                    })
-                  }
-                />
-              </div>
-            ))}
+              );
+            })}
           </section>
 
           <section className="space-y-4">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="font-heading text-lg font-semibold">Services</h2>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <h2 className="font-heading text-lg font-semibold">Services</h2>
+                <ShowInactiveToggle
+                  shown={showInactive.services}
+                  count={inactiveServices}
+                  onChange={(services) => setShowInactive((current) => ({ ...current, services }))}
+                />
+              </div>
               <Button
                 variant="outline"
                 onClick={() => patch({ services: [...draft.services, emptyService()] })}
@@ -564,83 +698,100 @@ export function BranchEditor() {
                 Add service
               </Button>
             </div>
-            {draft.services.map((service, index) => (
-              <div
-                key={service.key}
-                className="grid gap-3 rounded-xl border border-border p-4 md:grid-cols-4"
-              >
-                <SelectField
-                  label="Day"
-                  value={service.day}
-                  onChange={(event) =>
-                    patch({
-                      services: draft.services.map((item) =>
-                        item.key === service.key ? { ...item, day: event.target.value } : item,
-                      ),
-                    })
-                  }
+            {draft.services.map((service) =>
+              !service.active && !showInactive.services ? null : (
+                <div
+                  key={service.key}
+                  className={cn(
+                    "grid gap-3 rounded-xl border border-border p-4 transition-opacity md:grid-cols-4",
+                    !service.active && "border-dashed bg-muted/30 opacity-75",
+                  )}
                 >
-                  {DAYS.map((day) => (
-                    <option key={day}>{day}</option>
-                  ))}
-                </SelectField>
-                <TextField
-                  label="Time"
-                  type="time"
-                  value={service.time}
-                  onChange={(event) =>
-                    patch({
-                      services: draft.services.map((item) =>
-                        item.key === service.key ? { ...item, time: event.target.value } : item,
-                      ),
-                    })
-                  }
-                />
-                <TextField
-                  label="Label"
-                  value={service.label}
-                  onChange={(event) =>
-                    patch({
-                      services: draft.services.map((item) =>
-                        item.key === service.key ? { ...item, label: event.target.value } : item,
-                      ),
-                    })
-                  }
-                />
-                <SelectField
-                  label="Venue"
-                  value={String(service.venueIndex)}
-                  onChange={(event) =>
-                    patch({
-                      services: draft.services.map((item) =>
-                        item.key === service.key
-                          ? { ...item, venueIndex: Number(event.target.value) }
-                          : item,
-                      ),
-                    })
-                  }
-                >
-                  {draft.venues.map((venue, venueIndex) => (
-                    <option key={venue.key} value={venueIndex}>
-                      {venue.name || `Venue ${venueIndex + 1}`}
-                    </option>
-                  ))}
-                </SelectField>
-                <div className="md:col-span-4">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
+                  <SelectField
+                    label="Day"
+                    value={service.day}
+                    onChange={(event) =>
                       patch({
-                        services: draft.services.filter((_, itemIndex) => itemIndex !== index),
+                        services: draft.services.map((item) =>
+                          item.key === service.key ? { ...item, day: event.target.value } : item,
+                        ),
                       })
                     }
                   >
-                    Remove service
-                  </Button>
+                    {DAYS.map((day) => (
+                      <option key={day}>{day}</option>
+                    ))}
+                  </SelectField>
+                  <TextField
+                    label="Time"
+                    type="time"
+                    value={service.time}
+                    onChange={(event) =>
+                      patch({
+                        services: draft.services.map((item) =>
+                          item.key === service.key ? { ...item, time: event.target.value } : item,
+                        ),
+                      })
+                    }
+                  />
+                  <TextField
+                    label="Label"
+                    value={service.label}
+                    onChange={(event) =>
+                      patch({
+                        services: draft.services.map((item) =>
+                          item.key === service.key ? { ...item, label: event.target.value } : item,
+                        ),
+                      })
+                    }
+                  />
+                  <SelectField
+                    label="Venue"
+                    value={String(service.venueIndex)}
+                    onChange={(event) =>
+                      patch({
+                        services: draft.services.map((item) =>
+                          item.key === service.key
+                            ? { ...item, venueIndex: Number(event.target.value) }
+                            : item,
+                        ),
+                      })
+                    }
+                  >
+                    {draft.venues.map((venue, venueIndex) => (
+                      <option key={venue.key} value={venueIndex}>
+                        {venue.name || `Venue ${venueIndex + 1}`}
+                        {venue.active ? "" : " (inactive)"}
+                      </option>
+                    ))}
+                  </SelectField>
+                  <div className="flex items-center gap-2 md:col-span-4">
+                    {service.id ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => patchService(service.key, { active: !service.active })}
+                      >
+                        {service.active ? "Deactivate service" : "Reinstate service"}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          patch({
+                            services: draft.services.filter((item) => item.key !== service.key),
+                          })
+                        }
+                      >
+                        Remove service
+                      </Button>
+                    )}
+                    {!service.active ? <Badge tone="muted">Inactive</Badge> : null}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </section>
 
           <MultiImageDrop
@@ -661,55 +812,115 @@ export function BranchEditor() {
             <Button type="submit" disabled={saving}>
               {saving ? "Saving…" : "Save branch"}
             </Button>
-            {draft.id ? (
-              <Button variant="destructive" onClick={() => void onDelete()}>
-                Delete branch
-              </Button>
+            {draft.id && isSuperAdmin ? (
+              savedActive ? (
+                <Button variant="outline" onClick={() => void onSetActive(false)}>
+                  Deactivate branch
+                </Button>
+              ) : (
+                <Button variant="outline" onClick={() => void onSetActive(true)}>
+                  Reinstate branch
+                </Button>
+              )
             ) : null}
           </div>
         </form>
       ) : (
         <div>
-          <Input
-            value={query}
-            placeholder="Search branches"
-            onChange={(event) => setQuery(event.target.value)}
-            className="mb-4 max-w-sm"
-          />
+          <Toolbar>
+            <ActiveFilterTabs value={view} counts={counts} onChange={setView} />
+            <SearchInput
+              value={query}
+              placeholder="Search branches"
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            {rows && !error ? (
+              <span className="text-xs text-muted-foreground">
+                {visible.length} branch{visible.length === 1 ? "" : "es"}
+              </span>
+            ) : null}
+          </Toolbar>
           {rows === null ? (
-            <div className="space-y-3">
-              <Skeleton className="h-16" />
-              <Skeleton className="h-16" />
-            </div>
+            <GridSkeleton />
           ) : error ? (
-            <div className="rounded-xl border border-border p-6">
-              <p className="text-sm text-destructive">{error}</p>
-              <Button className="mt-3" variant="outline" onClick={refresh}>
-                Try again
-              </Button>
-            </div>
+            <ErrorNotice message={error} onRetry={refresh} />
           ) : visible.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">
-              No branches yet.
-            </div>
+            <EmptyState
+              icon={Church}
+              title={
+                !editable.length
+                  ? "No branches yet"
+                  : query.trim()
+                    ? "No matches"
+                    : view === "inactive"
+                      ? "No inactive branches"
+                      : "No active branches"
+              }
+            >
+              {editable.length
+                ? query.trim()
+                  ? "No branches match that search."
+                  : view === "inactive"
+                    ? "Deactivated branches show here so you can reinstate them."
+                    : "Every branch is deactivated. Open the Inactive tab to reinstate one."
+                : isSuperAdmin
+                  ? "Add the first campus with New branch."
+                  : "No branches are assigned to you yet. Ask a super admin to add one."}
+            </EmptyState>
           ) : (
-            <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+            <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {visible.map((row) => (
                 <li key={row.id}>
                   <button
                     type="button"
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-accent"
+                    className={cn(
+                      "group flex h-full w-full flex-col overflow-hidden rounded-xl border border-border bg-card text-left shadow-card transition hover:-translate-y-0.5 hover:border-brand-line hover:shadow-pop focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      !isActive(row) &&
+                        "opacity-70 grayscale-[35%] hover:opacity-100 hover:grayscale-0",
+                    )}
                     onClick={() => void openRow(row)}
                   >
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-medium">{row.name}</span>
-                      <span className="block truncate text-sm text-muted-foreground">
-                        {row.subtitle || row.slug}
+                    <span className="relative block h-28 w-full overflow-hidden border-b border-border bg-gradient-to-br from-brand-soft via-card to-gold-soft">
+                      {row.hero_image_url ? (
+                        <img
+                          src={row.hero_image_url}
+                          alt=""
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        />
+                      ) : (
+                        <Church className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-brand/40" />
+                      )}
+                    </span>
+                    <span className="flex flex-1 flex-col p-5">
+                      <span className="flex items-start justify-between gap-3">
+                        <span className="min-w-0">
+                          <span className="block truncate font-semibold">{row.name}</span>
+                          <span className="block truncate text-sm text-muted-foreground">
+                            {row.subtitle || row.slug}
+                          </span>
+                        </span>
+                        <Badge tone={isActive(row) ? "success" : "muted"}>
+                          {isActive(row) ? "Active" : "Inactive"}
+                        </Badge>
+                      </span>
+                      <span className="mt-3 space-y-0.5 text-xs text-muted-foreground">
+                        {row.pastor_name ? (
+                          <span className="block truncate">{row.pastor_name}</span>
+                        ) : null}
+                        {row.contact_email ? (
+                          <span className="block truncate">{row.contact_email}</span>
+                        ) : null}
+                        {row.contact_phone ? (
+                          <span className="block truncate">{row.contact_phone}</span>
+                        ) : null}
+                      </span>
+                      <span className="mt-auto flex items-center gap-3 pt-4 text-xs text-muted-foreground">
+                        <span>{countLabel(row.venues ?? [], "venue")}</span>
+                        <span aria-hidden>·</span>
+                        <span>{countLabel(row.services ?? [], "service")}</span>
                       </span>
                     </span>
-                    <Badge tone={row.is_active ? "default" : "muted"}>
-                      {row.is_active ? "Published" : "Draft"}
-                    </Badge>
                   </button>
                 </li>
               ))}

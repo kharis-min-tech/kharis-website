@@ -1,5 +1,5 @@
-import { fail, getSupabase } from "@/lib/supabase";
 import { insertMedia } from "@/lib/media-repo";
+import { studioData } from "@/lib/studio-data";
 
 export type DepartmentDefinition = {
   key: string;
@@ -157,19 +157,13 @@ export const DEPARTMENTS: DepartmentDefinition[] = [
 const DEPT_BY_ID = new Map(DEPARTMENTS.map((dept) => [dept.id, dept.key]));
 
 export async function listDepartmentVideos(): Promise<Record<string, string>> {
-  const { data, error } = await getSupabase()
-    .from("media")
-    .select("owner_id, folder, url")
-    .eq("owner_type", "department-video")
-    .order("sort_order", { ascending: true });
-
-  if (error) {
-    if (error.code === "PGRST205") return {};
-    throw new Error(error.message);
-  }
+  const rows = await studioData.list<{ owner_id: unknown; folder: unknown; url: unknown }>(
+    "media",
+    { where: { owner_type: "department-video" }, order: "sort_order" },
+  );
 
   const map: Record<string, string> = {};
-  for (const row of data ?? []) {
+  for (const row of rows) {
     const key =
       (typeof row.folder === "string" && row.folder) ||
       (typeof row.owner_id === "string" && DEPT_BY_ID.get(row.owner_id)) ||
@@ -186,41 +180,21 @@ export async function saveDepartmentVideo(departmentKey: string, videoUrl: strin
   const dept = DEPARTMENTS.find((item) => item.key === departmentKey);
   if (!dept) throw new Error(`Unknown department: ${departmentKey}`);
 
-  const supabase = getSupabase();
   const trimmed = videoUrl.trim();
-  const { data, error } = await supabase
-    .from("media")
-    .select("id")
-    .eq("owner_type", "department-video")
-    .eq("owner_id", dept.id)
-    .order("sort_order", { ascending: true });
-
-  if (error) {
-    if (error.code === "PGRST205") return;
-    throw new Error(error.message);
-  }
-
-  const existing = (data ?? []) as { id: string }[];
+  const existing = await studioData.list<{ id: string }>("media", {
+    where: { owner_type: "department-video", owner_id: dept.id },
+    order: "sort_order",
+  });
 
   if (!trimmed) {
-    for (const row of existing) {
-      const removed = await supabase.from("media").delete().eq("id", row.id);
-      fail(removed.error);
-    }
+    for (const row of existing) await studioData.remove("media", row.id);
     return;
   }
 
   const [first, ...rest] = existing;
   if (first) {
-    const updated = await supabase
-      .from("media")
-      .update({ url: trimmed, folder: dept.key, sort_order: 0 })
-      .eq("id", first.id);
-    fail(updated.error);
-    for (const extra of rest) {
-      const removed = await supabase.from("media").delete().eq("id", extra.id);
-      fail(removed.error);
-    }
+    await studioData.update("media", first.id, { url: trimmed, folder: dept.key, sort_order: 0 });
+    for (const extra of rest) await studioData.remove("media", extra.id);
     return;
   }
 

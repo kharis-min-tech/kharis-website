@@ -210,7 +210,7 @@ export default function DepartmentQuizPage() {
     });
   };
 
-  // Results go to Supabase and on to the branch inbox. Fire and forget: a
+  // Results go to the Kharis API and on to the branch inbox. Fire and forget: a
   // failed save must not block someone from seeing their departments.
   const submitResult = useCallback(
     (topMatches: string[]) => {

@@ -7,7 +7,7 @@ import {
   sundayVenue,
   venueAddress,
 } from "@/lib/branch-display";
-import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { kharisApiConfigured, siteGet } from "@/lib/kharis-api";
 import { BRANCH_FIXTURE } from "@/lib/branch-fixture";
 
 // ======================================================
@@ -175,15 +175,13 @@ type GalleryRow = {
 async function mediaByBranch() {
   const galleries = new Map<string, string[]>();
   const videos = new Map<string, string>();
-  const { data, error } = await supabase
-    .from("media")
-    .select("branch_id,owner_id,owner_type,url,sort_order")
-    .in("owner_type", ["branch-gallery", "branch-video"])
-    .order("sort_order", { ascending: true });
+  const { data, error } = await siteGet<GalleryRow[]>(
+    "/media?ownerType=branch-gallery,branch-video",
+  );
 
   if (error || !data) return { galleries, videos };
 
-  for (const row of data as GalleryRow[]) {
+  for (const row of data) {
     const id = row.branch_id || row.owner_id;
     if (!id) continue;
     if (row.owner_type === "branch-video") {
@@ -210,25 +208,15 @@ export const listBranchData = cache(async (): Promise<BranchData[]> => {
   // Without credentials every query fails and the page used to render an empty
   // directory and an empty globe. Fall back to the development fixture, the
   // same way testimonies and messages already do.
-  if (!supabaseConfigured) return BRANCH_FIXTURE;
+  if (!kharisApiConfigured) return BRANCH_FIXTURE;
 
   const [{ data, error }, { galleries, videos }] = await Promise.all([
-    supabase
-      .from("branches")
-      .select(
-        `
-      *,
-      venues (*),
-      services (*)
-    `,
-      )
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true }),
+    siteGet<BranchData[]>("/branches"),
     mediaByBranch(),
   ]);
 
   if (error) {
-    console.error("Failed to load branches from Supabase:", error);
+    console.error("Failed to load branches from the Kharis API:", error);
 
     return [];
   }
@@ -374,26 +362,16 @@ export async function getBranchBySlug(slug: string): Promise<BranchData | null> 
   // Same development fallback as listBranchData. Without this the branch
   // detail pages rendered "Branch unavailable" offline even though the
   // directory that links to them was fully populated.
-  if (!supabaseConfigured) {
+  if (!kharisApiConfigured) {
     return BRANCH_FIXTURE.find((branch) => branch.slug === slug) ?? null;
   }
 
-  const [{ data, error }, { galleries, videos }] = await Promise.all([
-    supabase
-      .from("branches")
-      .select(
-        `
-      *,
-      venues (*),
-      services (*)
-    `,
-      )
-      .eq("slug", slug)
-      .eq("is_active", true)
-      .single(),
+  const [{ data, error, status }, { galleries, videos }] = await Promise.all([
+    siteGet<BranchData>(`/branches/${encodeURIComponent(slug)}`),
     mediaByBranch(),
   ]);
 
+  if (status === 404) return null;
   if (error) {
     console.error(`Failed to load branch "${slug}":`, error);
 

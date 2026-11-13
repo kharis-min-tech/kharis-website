@@ -35,6 +35,7 @@ jobs:
       # Variables: Settings → Secrets and variables → Actions → Variables.
       NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_KHARIS_API_URL: ${{ vars.NEXT_PUBLIC_KHARIS_API_URL }}
       NEXT_PUBLIC_SITE_URL: https://content.kharis.org
     steps:
       - uses: actions/checkout@v4
@@ -53,6 +54,7 @@ jobs:
           : "${CLOUDFLARE_API_TOKEN:?set the CLOUDFLARE_API_TOKEN repo secret}"
           : "${NEXT_PUBLIC_SUPABASE_URL:?set the NEXT_PUBLIC_SUPABASE_URL repo variable}"
           : "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?set the NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY repo variable}"
+          : "${NEXT_PUBLIC_KHARIS_API_URL:?set the NEXT_PUBLIC_KHARIS_API_URL repo variable}"
 
       # opennextjs-cloudflare build && deploy. Worker runtime secrets
       # (GOOGLE_MAPS_API_KEY, the R2 binding, etc.) are not touched by a deploy.

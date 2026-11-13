@@ -73,27 +73,19 @@ export function resolveDepartmentVideoSource(rawUrl: string): ResolvedDepartment
 }
 
 export async function fetchCustomDepartmentVideos(): Promise<Record<string, string>> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!supabaseUrl || !supabaseKey) return {};
+  const apiUrl = (process.env.NEXT_PUBLIC_KHARIS_API_URL ?? "").trim().replace(/\/+$/, "");
+  if (!apiUrl) return {};
 
   try {
-    const res = await fetch(
-      `${supabaseUrl.replace(/\/+$/, "")}/rest/v1/media?select=owner_id,folder,url&owner_type=eq.department-video&order=sort_order.asc`,
-      {
-        headers: {
-          apikey: supabaseKey,
-          Authorization: `Bearer ${supabaseKey}`,
-        },
-        cache: "no-store",
-      },
-    );
+    const res = await fetch(`${apiUrl}/v1/site/media?ownerType=department-video`, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    });
     if (!res.ok) return {};
-    const rows = (await res.json()) as {
-      owner_id?: string | null;
-      folder?: string | null;
-      url?: string | null;
-    }[];
+    const body = (await res.json()) as {
+      data?: { owner_id?: string | null; folder?: string | null; url?: string | null }[];
+    };
+    const rows = body.data ?? [];
     const map: Record<string, string> = {};
     for (const row of rows) {
       const key =

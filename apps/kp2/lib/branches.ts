@@ -2,7 +2,7 @@ import { publicTransportInfo } from "../../../shared/public-transport";
 import { withBasePath } from "@/lib/base-path";
 import { resolveGivingLink } from "@/lib/giving";
 import { SITE_WORKSPACE } from "@/lib/site";
-import { supabaseSelect } from "@/lib/supabase";
+import { siteGet } from "@/lib/kharis-api";
 
 export type BranchService = {
   id: string;
@@ -356,11 +356,8 @@ type GalleryRow = {
 };
 
 async function mediaByBranch() {
-  const rows = await supabaseSelect<GalleryRow>(
-    "media",
-    "select=branch_id,owner_id,owner_type,url,sort_order&owner_type=in.(branch-gallery,branch-video)&order=sort_order.asc",
-    false,
-  );
+  const rows =
+    (await siteGet<GalleryRow[]>("/media?ownerType=branch-gallery,branch-video", false)) ?? [];
   const galleries = new Map<string, string[]>();
   const videos = new Map<string, string>();
   for (const row of rows) {
@@ -382,25 +379,17 @@ async function mediaByBranch() {
 
 export async function listBranches(): Promise<Branch[]> {
   const [rows, { galleries, videos }] = await Promise.all([
-    supabaseSelect<BranchRow>(
-      "branches",
-      "select=*,venues(*),services(*)&is_active=eq.true&order=sort_order.asc",
-      false,
-    ),
+    siteGet<BranchRow[]>("/branches", false),
     mediaByBranch(),
   ]);
-  return rows
+  return (rows ?? [])
     .filter(isKp2Location)
     .map((row) => toBranch(row, galleries.get(row.id) ?? [], videos.get(row.id) ?? ""));
 }
 
 export async function getBranch(slug: string): Promise<Branch | null> {
-  const rows = await supabaseSelect<BranchRow>(
-    "branches",
-    `select=*,venues(*),services(*)&slug=eq.${encodeURIComponent(slug)}&is_active=eq.true`,
-    false,
-  );
-  const row = rows[0];
+  if (!/^[a-z0-9-]{1,120}$/i.test(slug)) return null;
+  const row = await siteGet<BranchRow>(`/branches/${encodeURIComponent(slug)}`, false);
   if (!row || !isKp2Location(row)) return null;
   const { galleries, videos } = await mediaByBranch();
   return toBranch(row, galleries.get(row.id) ?? [], videos.get(row.id) ?? "");
