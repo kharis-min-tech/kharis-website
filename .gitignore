@@ -21,6 +21,8 @@ cloudflare-env.d.ts
 # build output
 build/
 *.tsbuildinfo
+# Content Studio docs, built from apps/content/docs by `npm run build`
+apps/content/public/documentation/
 
 # testing
 coverage/

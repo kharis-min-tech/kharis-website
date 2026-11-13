@@ -76,7 +76,10 @@ export function AuthLayout({
             <div className="mt-6 text-center text-sm text-muted-foreground">{footer}</div>
           ) : null}
         </div>
-        <p className="absolute bottom-5 text-xs text-muted-foreground">
+        <p className="absolute bottom-5 flex gap-4 text-xs text-muted-foreground">
+          <a href="/documentation" className="hover:text-foreground hover:underline">
+            Help
+          </a>
           <Link href="/cookies" className="hover:text-foreground hover:underline">
             Cookie policy
           </Link>

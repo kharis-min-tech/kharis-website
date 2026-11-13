@@ -27,7 +27,7 @@ const SCALE = 1.5;
 
 async function apiBase() {
   if (process.env.KHARIS_API_URL) return process.env.KHARIS_API_URL.replace(/\/+$/, "");
-  const env = await readFile(resolve(root, "../content/.env.local"), "utf8").catch(() => "");
+  const env = await readFile(resolve(root, "../.env.local"), "utf8").catch(() => "");
   const match = env.match(/^NEXT_PUBLIC_KHARIS_API_URL=(.+)$/m);
   return (match?.[1]?.trim().replace(/^["']|["']$/g, "") || "http://localhost:4000").replace(
     /\/+$/,

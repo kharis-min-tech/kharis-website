@@ -1,6 +1,6 @@
 "use client";
 
-import { Gauge, LogOut, Menu, X } from "lucide-react";
+import { BookOpen, ExternalLink, Gauge, LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -166,6 +166,17 @@ export function AdminShell({ email, children }: { email: string; children: React
                   </li>
                 );
               })}
+            </ul>
+
+            <p className="studio-eyebrow mb-1.5 mt-6 px-3">Help</p>
+            <ul className="space-y-0.5">
+              <li>
+                <a href="/documentation" target="_blank" rel="noopener" className={navItem}>
+                  <BookOpen className="h-4 w-4 opacity-80" />
+                  <span className="flex-1 truncate">Documentation</span>
+                  <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+                </a>
+              </li>
             </ul>
           </nav>
 

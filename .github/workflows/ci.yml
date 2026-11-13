@@ -32,7 +32,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       content: ${{ steps.filter.outputs.content }}
-      docs: ${{ steps.filter.outputs.docs }}
       kp2: ${{ steps.filter.outputs.kp2 }}
       main: ${{ steps.filter.outputs.main }}
     steps:
@@ -43,10 +42,6 @@ jobs:
           filters: |
             content:
               - 'apps/content/**'
-              - 'package.json'
-              - 'package-lock.json'
-            docs:
-              - 'apps/content-docs/**'
               - 'package.json'
               - 'package-lock.json'
             kp2:
@@ -101,29 +96,12 @@ jobs:
         run: npx eslint
       - name: Typecheck
         run: npx tsc --noEmit
+      # The /documentation VitePress site, written to public/documentation. Fails on dead links.
+      - name: Build docs
+        run: npx vitepress build docs
       # Next 16 defaults `next build` to Turbopack. Ship and verify with webpack.
       - name: Build
         run: npx next build --webpack
-
-  # The Content Studio docs, a VitePress site. The build fails on dead links.
-  docs:
-    needs: changes
-    if: needs.changes.outputs.docs == 'true'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/content-docs
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - name: Install
-        run: npm ci
-        working-directory: .
-      - name: Build
-        run: npm run build
 
   kp2:
     needs: changes
@@ -202,7 +180,7 @@ jobs:
   # Single required check. Always runs; fails only if a needed job actually
   # failed or was cancelled. Skipped (path-filtered-out) jobs are fine.
   ci-ok:
-    needs: [quality, content, docs, kp2, main]
+    needs: [quality, content, kp2, main]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -211,7 +189,6 @@ jobs:
           for r in \
             "${{ needs.quality.result }}" \
             "${{ needs.content.result }}" \
-            "${{ needs.docs.result }}" \
             "${{ needs.kp2.result }}" \
             "${{ needs.main.result }}"; do
             echo "job result: $r"
