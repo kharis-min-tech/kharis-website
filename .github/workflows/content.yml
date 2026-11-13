@@ -35,7 +35,8 @@ jobs:
       # Variables: Settings → Secrets and variables → Actions → Variables.
       NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-      NEXT_PUBLIC_KHARIS_API_URL: ${{ vars.NEXT_PUBLIC_KHARIS_API_URL }}
+      # kharis-web-backend. A repo Variable of the same name overrides this default.
+      NEXT_PUBLIC_KHARIS_API_URL: ${{ vars.NEXT_PUBLIC_KHARIS_API_URL || 'https://kharis-web-backend.nurjundaki.workers.dev' }}
       NEXT_PUBLIC_SITE_URL: https://content.kharis.org
     steps:
       - uses: actions/checkout@v4
