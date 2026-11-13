@@ -1,3 +1,5 @@
+import { isBranchId } from "./branch-image-paths";
+
 /**
  * Studio uploads that are not branch photos (videos, announcement, sermon,
  * testimony and event pictures). They live in the same `kharis-images` R2
@@ -18,6 +20,13 @@ export const MEDIA_FOLDERS = [
 
 export type MediaFolder = (typeof MEDIA_FOLDERS)[number];
 
+/**
+ * Folders whose uploads can belong to one branch, stored as
+ * site-media/{folder}/{branchId}/… so a branch admin can manage them.
+ * Every other folder, and older keys without a branch, are super admin only.
+ */
+export const BRANCH_MEDIA_FOLDERS = ["branch-videos", "events"] as const;
+
 export const MAX_MEDIA_IMAGE_BYTES = 8 * 1024 * 1024;
 // Cloudflare Workers reject request bodies over 100MB on the Free and Pro plans.
 export const MAX_MEDIA_VIDEO_BYTES = 95 * 1024 * 1024;
@@ -33,6 +42,10 @@ export const MEDIA_VIDEO_TYPES = ["video/mp4", "video/quicktime", "video/webm"] 
 
 export function isMediaFolder(value: string): value is MediaFolder {
   return (MEDIA_FOLDERS as readonly string[]).includes(value);
+}
+
+export function isBranchMediaFolder(value: string) {
+  return (BRANCH_MEDIA_FOLDERS as readonly string[]).includes(value);
 }
 
 export function isMediaContentType(value: string) {
@@ -54,8 +67,18 @@ export function safeMediaName(name: string) {
   return name.replace(/[^\w.-]+/g, "_").slice(0, 80) || "file";
 }
 
-export function mediaObjectKey(folder: MediaFolder, fileName: string) {
-  return `${MEDIA_PREFIX}${folder}/${crypto.randomUUID()}-${safeMediaName(fileName)}`;
+export function mediaObjectKey(folder: MediaFolder, fileName: string, branchId?: string | null) {
+  const scope =
+    branchId && isBranchMediaFolder(folder) && isBranchId(branchId) ? `${branchId}/` : "";
+  return `${MEDIA_PREFIX}${folder}/${scope}${crypto.randomUUID()}-${safeMediaName(fileName)}`;
+}
+
+/** The branch a site-media key was uploaded for, or null when it has none. */
+export function branchIdFromMediaKey(key: string | null | undefined) {
+  if (!isMediaObjectKey(key)) return null;
+  const [folder, branchId, name] = key.slice(MEDIA_PREFIX.length).split("/");
+  if (!folder || !branchId || !name) return null;
+  return isBranchMediaFolder(folder) && isBranchId(branchId) ? branchId : null;
 }
 
 /** Pulls site-media/... out of a saved address (https://images.kharis.org/... or /api/media/...). */

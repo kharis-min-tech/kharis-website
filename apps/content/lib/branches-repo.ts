@@ -6,13 +6,14 @@ import type {
   VenueDraft,
 } from "@/lib/branch-types";
 import { emptyService, emptyVenue } from "@/lib/branch-types";
+import { isActive } from "@/lib/active-filter";
 import {
   getBranchVideo,
   listGallery,
   listVenueImages,
   type VenueImageRecord,
 } from "@/lib/media-repo";
-import { fail, getSupabase } from "@/lib/supabase";
+import { studioData } from "@/lib/studio-data";
 import type { BranchOption } from "@/lib/types";
 import { isWorkspaceId, type WorkspaceId } from "@/lib/workspaces";
 
@@ -91,6 +92,7 @@ export function branchToDraft(
       transitInfo: venue.public_transport_info ?? "",
       imageUrl: image?.url ?? "",
       imageKey: image?.path ?? "",
+      active: isActive(venue),
     };
   });
 
@@ -112,7 +114,7 @@ export function branchToDraft(
     givingLink: row.giving_link ?? "",
     instagram: row.instagram ?? "",
     workspace: isWorkspaceId(row.workspace) ? row.workspace : "general",
-    published: Boolean(row.is_active),
+    published: isActive(row),
     sortOrder: String(row.sort_order ?? 0),
     venues: venueDrafts.length ? venueDrafts : [emptyVenue()],
     services: services.length
@@ -126,6 +128,7 @@ export function branchToDraft(
             0,
             venues.findIndex((venue) => venue.id === service.venue_id),
           ),
+          active: isActive(service),
         }))
       : [emptyService()],
     gallery,
@@ -133,12 +136,7 @@ export function branchToDraft(
 }
 
 export async function listBranches() {
-  const { data, error } = await getSupabase()
-    .from("branches")
-    .select("*, venues(*), services(*)")
-    .order("sort_order", { ascending: true });
-  fail(error);
-  return (data ?? []) as BranchRow[];
+  return studioData.list<BranchRow>("branches", { view: "full", order: "sort_order" });
 }
 
 export async function loadBranchDraft(row: BranchRow) {
@@ -151,9 +149,12 @@ export async function loadBranchDraft(row: BranchRow) {
 }
 
 export async function listBranchOptions(): Promise<BranchOption[]> {
-  const { data, error } = await getSupabase().from("branches").select("id, name").order("name");
-  fail(error);
-  return (data ?? []) as BranchOption[];
+  return studioData.list<BranchOption>("branches", { view: "options", order: "name" });
+}
+
+/** The branch name for pickers, marked when the branch is deactivated. */
+export function branchOptionLabel(branch: BranchOption) {
+  return isActive(branch) ? branch.name : `${branch.name} (inactive)`;
 }
 
 function venuePayload(branchId: string, venue: VenueDraft) {
@@ -171,17 +172,13 @@ function venuePayload(branchId: string, venue: VenueDraft) {
     longitude: longitude != null && Number.isFinite(longitude) ? longitude : null,
     parking_info: blank(venue.parkingInfo),
     public_transport_info: blank(venue.transitInfo),
+    is_active: venue.active,
   };
 }
 
 async function insertVenue(branchId: string, venue: VenueDraft) {
-  const { data, error } = await getSupabase()
-    .from("venues")
-    .insert(venuePayload(branchId, venue))
-    .select("id")
-    .single();
-  fail(error);
-  return (data as { id: string }).id;
+  const row = await studioData.insert<{ id: string }>("venues", venuePayload(branchId, venue));
+  return row.id;
 }
 
 async function insertService(
@@ -191,29 +188,23 @@ async function insertService(
   sortOrder: number,
 ) {
   const day = service.day || "Sunday";
-  const { data, error } = await getSupabase()
-    .from("services")
-    .insert({
-      branch_id: branchId,
-      name: blank(service.label) ?? day,
-      type: day.toLowerCase() === "sunday" ? "sunday" : "midweek",
-      day,
-      start_time: timeValue(service.time),
-      description: null,
-      sort_order: sortOrder,
-      is_active: true,
-      venue_id: venueId,
-    })
-    .select("id")
-    .single();
-  fail(error);
-  return (data as { id: string }).id;
+  const row = await studioData.insert<{ id: string }>("services", {
+    branch_id: branchId,
+    name: blank(service.label) ?? day,
+    type: day.toLowerCase() === "sunday" ? "sunday" : "midweek",
+    day,
+    start_time: timeValue(service.time),
+    description: null,
+    sort_order: sortOrder,
+    is_active: service.active,
+    venue_id: venueId,
+  });
+  return row.id;
 }
 
 async function deleteIds(table: "venues" | "services", ids: string[]) {
   if (!ids.length) return;
-  const { error } = await getSupabase().from(table).delete().in("id", ids);
-  fail(error);
+  await studioData.removeWhere(table, { id: ids });
 }
 
 export async function saveBranch(
@@ -244,12 +235,12 @@ export async function saveBranch(
     sort_order: Number.isFinite(sortOrder) ? sortOrder : 0,
     is_active: draft.published,
     workspace: draft.workspace,
-    ...(draft.id ? { id: draft.id } : {}),
   };
 
-  const saved = await getSupabase().from("branches").upsert(payload).select("id").single();
-  fail(saved.error);
-  const branchId = (saved.data as { id: string }).id;
+  // Branch admins may update their branch but not create one, so an upsert would be refused.
+  let branchId = draft.id ?? "";
+  if (branchId) await studioData.update("branches", branchId, payload);
+  else branchId = (await studioData.insert<{ id: string }>("branches", payload)).id;
 
   const oldVenueIds = originalIds.venues;
   const oldServiceIds = originalIds.services;
@@ -291,23 +282,13 @@ export async function saveBranchImageUrl(
   field: "hero_image_url" | "pastor_image_url",
   url: string,
 ) {
-  const { error } = await getSupabase()
-    .from("branches")
-    .update({ [field]: url })
-    .eq("id", branchId);
-  fail(error);
+  await studioData.update("branches", branchId, { [field]: url });
 }
 
-export async function deleteBranch(id: string) {
-  const supabase = getSupabase();
-  const services = await supabase.from("services").delete().eq("branch_id", id);
-  fail(services.error);
-  const venues = await supabase.from("venues").delete().eq("branch_id", id);
-  fail(venues.error);
-  const media = await supabase.from("media").delete().or(`branch_id.eq.${id},owner_id.eq.${id}`);
-  if (media.error && media.error.code !== "PGRST205") throw new Error(media.error.message);
-  const branch = await supabase.from("branches").delete().eq("id", id);
-  fail(branch.error);
+/** Deactivating hides the branch but keeps its venues, services, media, events and messages. */
+export async function setBranchActive(id: string, active: boolean) {
+  if (active) await studioData.update("branches", id, { is_active: true });
+  else await studioData.deactivateBranch(id);
 }
 
 export function workspaceForBranch(value: string | null | undefined): WorkspaceId {

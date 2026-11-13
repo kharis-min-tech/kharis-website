@@ -9,6 +9,14 @@
   box-shadow: 8px 8px 0 #151218;
 }
 
+/* Other-branches tiles sit on a sheet that already has a top shadow.
+   A second offset on the card makes that edge look doubled. */
+a.kp-other-branch.brutalist-border,
+a.kp-other-branch.brutalist-border:hover,
+a.kp-other-branch.brutalist-border:active {
+  box-shadow: none;
+}
+
 .kp-branch-card__media {
   position: relative;
   display: block;

@@ -14,6 +14,7 @@ export type VenueRow = {
   longitude: number | null;
   parking_info: string | null;
   public_transport_info: string | null;
+  is_active: boolean | null;
 };
 
 export type ServiceRow = {
@@ -66,6 +67,8 @@ export type VenueDraft = {
   transitInfo: string;
   imageUrl: string;
   imageKey: string;
+  /** False hides the venue from the websites and app without deleting it. */
+  active: boolean;
 };
 
 export type ServiceDraft = {
@@ -75,6 +78,8 @@ export type ServiceDraft = {
   time: string;
   label: string;
   venueIndex: number;
+  /** False hides the service from the websites and app without deleting it. */
+  active: boolean;
 };
 
 export type GalleryItem = {
@@ -136,6 +141,7 @@ export function emptyVenue(): VenueDraft {
     transitInfo: "",
     imageUrl: "",
     imageKey: "",
+    active: true,
   };
 }
 
@@ -146,5 +152,6 @@ export function emptyService(): ServiceDraft {
     time: "10:00",
     label: "",
     venueIndex: 0,
+    active: true,
   };
 }

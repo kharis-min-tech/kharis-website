@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { isBranchId } from "@/lib/branch-image-paths";
 import {
   MAX_MEDIA_IMAGE_BYTES,
   MAX_MEDIA_VIDEO_BYTES,
+  branchIdFromMediaKey,
+  isBranchMediaFolder,
   isMediaContentType,
   isMediaFolder,
   isMediaObjectKey,
@@ -10,15 +13,37 @@ import {
   mediaObjectKey,
 } from "@/lib/media-paths";
 import { branchImagePublicUrl, deleteMediaObject, storeMediaObject } from "@/lib/r2";
-import { studioUserFromRequest } from "@/lib/studio-auth";
+import {
+  studioCanEditBranch,
+  studioIsSuperAdmin,
+  studioUserFromRequest,
+  type StudioSession,
+} from "@/lib/studio-auth";
 
 export const dynamic = "force-dynamic";
+
+/** Super admins can use any folder. Branch admins only folders tied to a branch they edit. */
+async function forbiddenMedia(
+  studio: StudioSession,
+  branchId: string | null,
+  branchFolder: boolean,
+) {
+  if (branchId && (await studioCanEditBranch(studio, branchId))) return null;
+  if (await studioIsSuperAdmin(studio)) return null;
+  const error = branchId
+    ? "You can't edit this branch."
+    : branchFolder
+      ? "Choose one of your branches before uploading here."
+      : "Only super admins can change files here.";
+  return NextResponse.json({ error }, { status: 403 });
+}
 
 /**
  * Uploads a studio video or picture to Cloudflare R2 (kharis-images, site-media/).
  * The file is sent as the raw request body so it streams straight into R2.
  *   Content-Type: the file's MIME type
  *   X-Media-Folder: one of MEDIA_FOLDERS
+ *   X-Branch-Id: optional, for BRANCH_MEDIA_FOLDERS
  *   X-File-Name: original file name (URI encoded)
  * Responds with { key, publicUrl }. Only publicUrl is stored in Supabase.
  */
@@ -30,12 +55,21 @@ export async function POST(request: Request) {
 
   const contentType = (request.headers.get("content-type") || "").split(";")[0]!.trim();
   const folder = request.headers.get("x-media-folder") || "";
+  const branchId = (request.headers.get("x-branch-id") || "").trim() || null;
   const fileName = decodeURIComponent(request.headers.get("x-file-name") || "file");
   const size = Number(request.headers.get("content-length") || 0);
 
   if (!isMediaFolder(folder)) {
     return NextResponse.json({ error: "That upload folder is not supported." }, { status: 400 });
   }
+  if (branchId && (!isBranchMediaFolder(folder) || !isBranchId(branchId))) {
+    return NextResponse.json(
+      { error: "That branch can't be used for this upload." },
+      { status: 400 },
+    );
+  }
+  const forbidden = await forbiddenMedia(studio, branchId, isBranchMediaFolder(folder));
+  if (forbidden) return forbidden;
   if (!isMediaContentType(contentType)) {
     return NextResponse.json(
       { error: "Use an MP4, MOV or WebM video, or a JPEG, PNG, WebP, GIF or AVIF image." },
@@ -54,7 +88,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "The upload was empty." }, { status: 400 });
   }
 
-  const key = mediaObjectKey(folder, fileName);
+  const key = mediaObjectKey(folder, fileName, branchId);
   try {
     const stored = await storeMediaObject(key, request.body, contentType);
     if (!stored) {
@@ -81,6 +115,8 @@ export async function DELETE(request: Request) {
   if (!isMediaObjectKey(key)) {
     return NextResponse.json({ error: "That file cannot be removed here." }, { status: 400 });
   }
+  const forbidden = await forbiddenMedia(studio, branchIdFromMediaKey(key), false);
+  if (forbidden) return forbidden;
   try {
     await deleteMediaObject(key);
     return NextResponse.json({ removed: key });

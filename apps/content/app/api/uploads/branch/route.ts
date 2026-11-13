@@ -13,9 +13,20 @@ import {
   storeBranchImage,
 } from "@/lib/r2";
 import { branchImageKeyFromUrl } from "@/lib/branch-image-paths";
-import { studioUserFromRequest } from "@/lib/studio-auth";
+import {
+  studioBranch,
+  studioBranchMedia,
+  studioCanEditBranch,
+  studioUserFromRequest,
+  type StudioSession,
+} from "@/lib/studio-auth";
 
 export const dynamic = "force-dynamic";
+
+async function forbiddenUnlessEditable(studio: StudioSession, branchId: string) {
+  if (await studioCanEditBranch(studio, branchId)) return null;
+  return NextResponse.json({ error: "You can't edit this branch." }, { status: 403 });
+}
 
 export async function POST(request: Request) {
   const studio = await studioUserFromRequest(request);
@@ -54,18 +65,11 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
+  const forbidden = await forbiddenUnlessEditable(studio, branchId);
+  if (forbidden) return forbidden;
 
-  const branch = await studio.supabase
-    .from("branches")
-    .select("id")
-    .eq("id", branchId)
-    .maybeSingle();
-  if (branch.error) {
-    return NextResponse.json({ error: "The branch could not be checked." }, { status: 500 });
-  }
-  if (!branch.data) {
-    return NextResponse.json({ error: "That branch could not be found." }, { status: 404 });
-  }
+  const missing = await missingBranch(studio, branchId);
+  if (missing) return missing;
 
   try {
     const key = await ensureBranchImageFolder(branchId);
@@ -81,41 +85,43 @@ export async function POST(request: Request) {
   }
 }
 
-async function pruneBranchFolder(
-  branchId: string,
-  studio: NonNullable<Awaited<ReturnType<typeof studioUserFromRequest>>>,
-  deleteFolder: boolean,
-) {
+async function missingBranch(studio: StudioSession, branchId: string) {
+  const branch = await studioBranch(studio, branchId).catch(() => undefined);
+  if (branch === undefined) {
+    return NextResponse.json({ error: "The branch could not be checked." }, { status: 500 });
+  }
+  if (!branch) {
+    return NextResponse.json({ error: "That branch could not be found." }, { status: 404 });
+  }
+  return null;
+}
+
+async function pruneBranchFolder(branchId: string, studio: StudioSession, deleteFolder: boolean) {
   if (!isBranchId(branchId)) {
     return NextResponse.json({ error: "That branch could not be found." }, { status: 400 });
   }
-  const branch = await studio.supabase
-    .from("branches")
-    .select("id, hero_image_url, pastor_image_url")
-    .eq("id", branchId)
-    .maybeSingle();
-  if (branch.error) {
+  const forbidden = await forbiddenUnlessEditable(studio, branchId);
+  if (forbidden) return forbidden;
+  const branch = await studioBranch(studio, branchId).catch(() => undefined);
+  if (branch === undefined) {
     return NextResponse.json({ error: "The branch could not be checked." }, { status: 500 });
   }
-  if (!branch.data) {
+  if (!branch) {
     return NextResponse.json({ error: "That branch could not be found." }, { status: 404 });
   }
 
   const keep = new Set<string>();
   if (!deleteFolder) {
-    rememberImageKey(branch.data.hero_image_url, keep);
-    rememberImageKey(branch.data.pastor_image_url, keep);
-    const media = await studio.supabase
-      .from("media")
-      .select("url, storage_path")
-      .or(`branch_id.eq.${branchId},owner_id.eq.${branchId}`);
-    if (media.error && media.error.code !== "PGRST205") {
+    rememberImageKey(branch.hero_image_url, keep);
+    rememberImageKey(branch.pastor_image_url, keep);
+    const media = await studioBranchMedia(studio, branchId).catch(() => null);
+    if (!media) {
       return NextResponse.json(
         { error: "The branch images could not be checked." },
         { status: 500 },
       );
     }
-    for (const row of media.data ?? []) {
+    for (const row of media) {
       rememberImageKey(row.url, keep);
       rememberImageKey(row.storage_path, keep);
     }
@@ -137,10 +143,7 @@ function rememberImageKey(value: string | null | undefined, keep: Set<string>) {
   if (key) keep.add(key);
 }
 
-async function storeUploadedBranchImage(
-  request: Request,
-  studio: NonNullable<Awaited<ReturnType<typeof studioUserFromRequest>>>,
-) {
+async function storeUploadedBranchImage(request: Request, studio: StudioSession) {
   let form: FormData;
   try {
     form = await request.formData();
@@ -172,18 +175,11 @@ async function storeUploadedBranchImage(
   if (file.size <= 0 || file.size > MAX_BRANCH_IMAGE_BYTES) {
     return NextResponse.json({ error: "Images need to be 8MB or smaller." }, { status: 400 });
   }
+  const forbidden = await forbiddenUnlessEditable(studio, branchId);
+  if (forbidden) return forbidden;
 
-  const branch = await studio.supabase
-    .from("branches")
-    .select("id")
-    .eq("id", branchId)
-    .maybeSingle();
-  if (branch.error) {
-    return NextResponse.json({ error: "The branch could not be checked." }, { status: 500 });
-  }
-  if (!branch.data) {
-    return NextResponse.json({ error: "That branch could not be found." }, { status: 404 });
-  }
+  const missing = await missingBranch(studio, branchId);
+  if (missing) return missing;
 
   const key = branchImageObjectKey(branchId, category, file.type);
   try {

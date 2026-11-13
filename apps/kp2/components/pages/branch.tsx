@@ -1069,7 +1069,7 @@ function BranchPage({
                 <Link
                   key={item.slug}
                   href={`/branches/${item.slug}`}
-                  className="group overflow-hidden brutalist-border brutalist-shadow bg-surface-container-lowest block"
+                  className="group kp-other-branch overflow-hidden brutalist-border bg-surface-container-lowest block"
                 >
                   <div className="relative h-40 overflow-hidden bg-[#150934]">
                     {item.image ? (

@@ -130,6 +130,7 @@ export type LiveSettings = {
 export type BranchOption = {
   id: string;
   name: string;
+  is_active?: boolean | null;
 };
 
 export type WorkspaceScope = WorkspaceId;

@@ -1,3 +1,5 @@
+import type { StudioRole } from "@/lib/studio-api";
+
 export const WORKSPACE_IDS = ["general", "app", "kharis", "kp2"] as const;
 
 export type WorkspaceId = (typeof WORKSPACE_IDS)[number];
@@ -26,6 +28,7 @@ const generalNav: StudioNavItem[] = [
   { href: "/visitors", label: "Visitors" },
   { href: "/messages", label: "Messages" },
   { href: "/newsletter", label: "Newsletter" },
+  { href: "/users", label: "Users" },
 ];
 
 const appNav: StudioNavItem[] = [
@@ -64,7 +67,7 @@ export const WORKSPACES: StudioWorkspace[] = [
     id: "general",
     name: "General",
     description:
-      "Shared content: branches, sermons, testimonies, visitors, contact messages, and newsletter emails.",
+      "Shared content: branches, sermons, testimonies, visitors, contact messages, newsletter emails, and studio users.",
     nav: generalNav,
   },
   {
@@ -92,6 +95,40 @@ export const WORKSPACES: StudioWorkspace[] = [
 
 export function workspaceById(id: string | null | undefined) {
   return WORKSPACES.find((workspace) => workspace.id === id) ?? null;
+}
+
+/** The only sections a branch admin can use. RLS scopes their rows to their branches. */
+export const BRANCH_ADMIN_PAGES = ["/branches", "/events", "/messages", "/visitors"];
+
+function listLabels(nav: StudioNavItem[]) {
+  const labels = nav.map((item) => item.label);
+  if (labels.length < 2) return labels.join("");
+  return `${labels.slice(0, -1).join(", ")} and ${labels.at(-1)}`;
+}
+
+/** Workspaces and sections the role can open. A workspace with nothing left is hidden. */
+export function workspacesForRole(role: StudioRole): StudioWorkspace[] {
+  if (role === "super_admin") return WORKSPACES;
+  if (role !== "branch_admin") return [];
+  return WORKSPACES.flatMap((workspace) => {
+    const nav = workspace.nav.filter((item) => BRANCH_ADMIN_PAGES.includes(item.href));
+    if (!nav.length) return [];
+    return [{ ...workspace, nav, description: `${listLabels(nav)} for your branches.` }];
+  });
+}
+
+/** Whether the role may open a studio path. Anything else redirects to /. */
+export function canOpenPath(role: StudioRole, pathname: string) {
+  if (role === "super_admin") return true;
+  const workspaces = workspacesForRole(role);
+  if (!workspaces.length) return false;
+  if (pathname === "/") return true;
+  if (pathname.startsWith("/workspace/")) {
+    return workspaces.some((workspace) => pathname === `/workspace/${workspace.id}`);
+  }
+  return workspaces.some((workspace) =>
+    workspace.nav.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`)),
+  );
 }
 
 export function hrefWithWorkspace(href: string, workspace: WorkspaceId | null) {

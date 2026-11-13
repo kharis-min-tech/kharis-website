@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { MarkFilter } from "@/components/studio/mark";
 import { StudioFrame } from "@/components/studio/studio-frame";
 import { StudioToaster } from "@/components/studio/toaster";
 import "./globals.css";
@@ -29,7 +28,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
-        <MarkFilter />
         <StudioFrame>{children}</StudioFrame>
         <StudioToaster />
       </body>

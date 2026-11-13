@@ -1,39 +1,28 @@
 import { cn } from "@/lib/utils";
 
-const FILTER_ID = "kharis-mark-alpha";
+const LOGO_URL = "https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png";
 
 /**
- * The logo file is a white dove on an opaque light grey square. This filter keeps
- * only the near-white strokes (alpha from brightness) so the dove sits cleanly on
- * the violet tile in both themes. Rendered once in the root layout.
+ * The white line-art dove from the main site's nav bar. Its strokes break up
+ * below about 32px, so keep it at h-8 or larger.
  */
-export function MarkFilter() {
+export function Mark({
+  className,
+  tone = "auto",
+}: {
+  className?: string;
+  /** `auto` = dark dove in light mode, white in dark mode; `onDark` = always white */
+  tone?: "auto" | "onDark";
+}) {
   return (
-    <svg aria-hidden width="0" height="0" className="absolute">
-      <filter id={FILTER_ID} colorInterpolationFilters="sRGB">
-        <feColorMatrix
-          type="matrix"
-          values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  8.504 28.608 2.888 0 -39"
-        />
-      </filter>
-    </svg>
-  );
-}
-
-export function Mark({ className }: { className?: string }) {
-  return (
-    <span
+    <img
+      src={LOGO_URL}
+      alt="Kharis"
       className={cn(
-        "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(140deg,#8b5cf6_0%,#5b2fd6_55%,#3b1a8f_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_6px_16px_-6px_rgba(91,47,214,0.7)]",
+        "h-10 w-10 shrink-0 object-contain",
+        tone === "auto" && "brightness-0 dark:brightness-100",
         className,
       )}
-    >
-      <img
-        src="/kharis-logo.png"
-        alt="Kharis"
-        className="h-[74%] w-[74%] object-contain"
-        style={{ filter: `url(#${FILTER_ID})` }}
-      />
-    </span>
+    />
   );
 }
