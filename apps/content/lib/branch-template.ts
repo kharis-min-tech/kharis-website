@@ -37,7 +37,6 @@ function service(partial: Pick<ServiceDraft, "day" | "time" | "label">): Service
 export function branchTemplate(current: BranchDraft): BranchDraft {
   return {
     ...current,
-    city: current.city || "Sample City",
     shortDescription:
       current.shortDescription ||
       "A local church family gathering around Jesus, the Word, and prayer.",

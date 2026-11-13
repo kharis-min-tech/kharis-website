@@ -13,9 +13,12 @@ import {
   listVenueImages,
   type VenueImageRecord,
 } from "@/lib/media-repo";
+import { branchFamily, type BranchFamily } from "@/lib/branch-family";
 import { studioData } from "@/lib/studio-data";
 import type { BranchOption } from "@/lib/types";
 import { isWorkspaceId, type WorkspaceId } from "@/lib/workspaces";
+
+export const DEFAULT_COUNTRY = "United Kingdom";
 
 function blank(value: string) {
   const trimmed = value.trim();
@@ -31,11 +34,11 @@ function asRole(value: string | null | undefined): PastorRole {
   return value === "lead" ? "lead" : "pastor";
 }
 
-export function emptyBranch(): BranchDraft {
+export function emptyBranch(family: BranchFamily = "kharis"): BranchDraft {
   return {
     name: "",
     slug: "",
-    city: "",
+    country: DEFAULT_COUNTRY,
     shortDescription: "",
     description: "",
     heroImage: "",
@@ -48,7 +51,7 @@ export function emptyBranch(): BranchDraft {
     phone: "",
     givingLink: "",
     instagram: "",
-    workspace: "general",
+    family,
     published: false,
     sortOrder: "0",
     venues: [emptyVenue()],
@@ -100,7 +103,7 @@ export function branchToDraft(
     id: row.id,
     name: row.name ?? "",
     slug: row.slug ?? "",
-    city: row.subtitle ?? venueDrafts[0]?.city ?? "",
+    country: row.subtitle ?? (venueDrafts[0]?.country || DEFAULT_COUNTRY),
     shortDescription: row.short_description ?? "",
     description: row.description ?? "",
     heroImage: row.hero_image_url ?? "",
@@ -113,7 +116,7 @@ export function branchToDraft(
     phone: row.contact_phone ?? "",
     givingLink: row.giving_link ?? "",
     instagram: row.instagram ?? "",
-    workspace: isWorkspaceId(row.workspace) ? row.workspace : "general",
+    family: branchFamily(row),
     published: isActive(row),
     sortOrder: String(row.sort_order ?? 0),
     venues: venueDrafts.length ? venueDrafts : [emptyVenue()],
@@ -220,7 +223,7 @@ export async function saveBranch(
   const payload = {
     name,
     slug,
-    subtitle: blank(draft.city),
+    subtitle: blank(draft.country),
     short_description: blank(draft.shortDescription),
     description: blank(draft.description),
     hero_image_url: blank(draft.heroImage),
@@ -234,7 +237,7 @@ export async function saveBranch(
     giving_link: blank(draft.givingLink),
     sort_order: Number.isFinite(sortOrder) ? sortOrder : 0,
     is_active: draft.published,
-    workspace: draft.workspace,
+    workspace: draft.family,
   };
 
   // Branch admins may update their branch but not create one, so an upsert would be refused.
