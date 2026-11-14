@@ -44,10 +44,12 @@ async function forbiddenMedia(
  *   Content-Type: the file's MIME type
  *   X-Media-Folder: one of MEDIA_FOLDERS
  *   X-Branch-Id: optional, for BRANCH_MEDIA_FOLDERS
- *   X-Media-Subfolder: optional nest (e.g. department name); sanitised into the key
+ *   X-Media-Subfolder: optional nest (e.g. department name); sanitised into the key.
+ *     When omitted, uploads land under a YYYY-MM month folder for browsability.
  *   X-File-Name: original file name (URI encoded)
  * Responds with { key, publicUrl }. The media row in Supabase stores the publicUrl
- * (and ideally the key as storage_path); the file itself lives in R2.
+ * (and ideally the key as storage_path); the file itself lives in R2 under a
+ * readable key such as site-media/sermons/2026-11/{uuid}-talk.jpg.
  */
 export async function POST(request: Request) {
   const studio = await studioUserFromRequest(request);

@@ -181,9 +181,24 @@ export async function storeMediaObject(
   return { key };
 }
 
+/**
+ * Deletes one site-media object. Uses the Workers R2 binding `delete(key)`
+ * (or S3 DeleteObject in local/dev). Cloudflare deletes are strongly
+ * consistent and idempotent: deleting a missing key succeeds.
+ * @see https://developers.cloudflare.com/r2/api/workers/workers-api-reference/
+ * @see https://developers.cloudflare.com/r2/objects/delete-objects/
+ */
 export async function deleteMediaObject(key: string) {
   const store = await bucket();
-  if (!store || !isMediaObjectKey(key)) return false;
+  if (!store || !isMediaObjectKey(key) || key.includes("..")) return false;
+  await store.delete(key);
+  return true;
+}
+
+/** Deletes one branch-images object. Same R2 delete contract as deleteMediaObject. */
+export async function deleteBranchImageObject(key: string) {
+  const store = await bucket();
+  if (!store || !isR2ObjectKey(key) || key.includes("..")) return false;
   await store.delete(key);
   return true;
 }

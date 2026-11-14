@@ -67,10 +67,19 @@ export function safeMediaName(name: string) {
   return name.replace(/[^\w.-]+/g, "_").slice(0, 80) || "file";
 }
 
+/** UTC year-month nest so flat folder dumps stay browsable in R2. */
+export function mediaMonthScope(date = new Date()) {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
 /**
- * Object key under site-media/. Branch-scoped folders put the branch id next;
- * an optional subfolder (e.g. a department name) nests further. Both are
- * sanitised so ".." and odd characters cannot escape the prefix.
+ * Object key under site-media/. Layout (left → right):
+ *   site-media/{folder}/[{branchId}/]{subfolder|YYYY-MM}/{uuid}-{safeFileName}
+ * Branch-scoped folders put the branch id next. An explicit subfolder (e.g. a
+ * department name) is preferred; otherwise a YYYY-MM month folder is used so
+ * every upload has a readable nest. Segments are sanitised so ".." cannot escape.
  */
 export function mediaObjectKey(
   folder: MediaFolder,
@@ -81,7 +90,7 @@ export function mediaObjectKey(
   const branchScope =
     branchId && isBranchMediaFolder(folder) && isBranchId(branchId) ? `${branchId}/` : "";
   const nest = safeMediaName(subfolder ?? "");
-  const nestedScope = nest && nest !== "file" ? `${nest}/` : "";
+  const nestedScope = nest && nest !== "file" ? `${nest}/` : `${mediaMonthScope()}/`;
   return `${MEDIA_PREFIX}${folder}/${branchScope}${nestedScope}${crypto.randomUUID()}-${safeMediaName(fileName)}`;
 }
 
