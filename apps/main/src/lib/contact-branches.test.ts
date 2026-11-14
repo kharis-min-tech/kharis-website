@@ -247,6 +247,12 @@ describe("isKp2Branch", () => {
     expect(isKp2Branch({ name: "KP2 Romford" })).toBe(true);
     expect(isKp2Branch({ name: "London", workspace: null })).toBe(false);
     expect(isKp2Branch({ name: "KP2X" })).toBe(false);
+    expect(isKp2Branch({ name: "Barking", workspace: "general", group: "Kharis Phase 2" })).toBe(
+      true,
+    );
+    expect(isKp2Branch({ name: "Barking", workspace: "kharis", group: "Kharis Phase 2" })).toBe(
+      false,
+    );
   });
 });
 

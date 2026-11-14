@@ -7,6 +7,7 @@ import {
   sundayVenue,
   venueAddress,
 } from "@/lib/branch-display";
+import { isKp2Branch } from "@/lib/contact-branches";
 import { kharisApiConfigured, siteGet } from "@/lib/kharis-api";
 import { BRANCH_FIXTURE } from "@/lib/branch-fixture";
 
@@ -66,6 +67,8 @@ export interface BranchData {
   subtitle: string | null;
   /** "Kharis", or "Kharis Phase 2" for the KP2 young adults' branches. */
   group?: string | null;
+  /** "kp2" or "kharis" from the content studio; "general" leaves it to the name and group. */
+  workspace?: string | null;
 
   short_description: string | null;
   description: string | null;
@@ -287,7 +290,7 @@ export function toBranchItem(
     });
   }
 
-  const isKp2 = /phase 2/i.test(branch.group ?? "") || /^kp2\b/i.test(branch.name);
+  const isKp2 = isKp2Branch(branch);
   const name = branchDisplayName(branch.name);
   const place = name
     .replace(/^kp2\s+/i, "")

@@ -1,4 +1,4 @@
-import type { WorkspaceId } from "@/lib/workspaces";
+import type { BranchFamily } from "@/lib/branch-family";
 
 export type PastorRole = "pastor" | "lead";
 
@@ -35,6 +35,8 @@ export type BranchRow = {
   name: string;
   subtitle: string | null;
   workspace: string | null;
+  /** Read-only legacy grouping ("Kharis" or "Kharis Phase 2"). */
+  group?: string | null;
   short_description: string | null;
   description: string | null;
   hero_image_url: string | null;
@@ -93,7 +95,8 @@ export type BranchDraft = {
   id?: string;
   name: string;
   slug: string;
-  city: string;
+  /** Saved as the branch subtitle; the websites group branches by it. */
+  country: string;
   shortDescription: string;
   description: string;
   heroImage: string;
@@ -106,7 +109,7 @@ export type BranchDraft = {
   phone: string;
   givingLink: string;
   instagram: string;
-  workspace: WorkspaceId;
+  family: BranchFamily;
   published: boolean;
   sortOrder: string;
   venues: VenueDraft[];
