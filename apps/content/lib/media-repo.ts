@@ -50,6 +50,7 @@ async function uploadToR2(
   contentType: string,
   onProgress?: (percent: number) => void,
   branchId?: string | null,
+  subfolder?: string | null,
 ) {
   const target = isMediaFolder(folder) ? folder : "uploads";
   const token = await studioToken();
@@ -60,6 +61,8 @@ async function uploadToR2(
     xhr.setRequestHeader("Content-Type", contentType);
     xhr.setRequestHeader("X-Media-Folder", target);
     if (branchId && isBranchMediaFolder(target)) xhr.setRequestHeader("X-Branch-Id", branchId);
+    if (subfolder?.trim())
+      xhr.setRequestHeader("X-Media-Subfolder", encodeURIComponent(subfolder.trim()));
     xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
     xhr.upload.onprogress = (event) => {
       if (!event.lengthComputable || !onProgress) return;
@@ -88,10 +91,11 @@ export async function uploadImage(
   folder: string,
   onProgress?: (percent: number) => void,
   branchId?: string | null,
+  subfolder?: string | null,
 ) {
   if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
   if (file.size > MAX_MEDIA_IMAGE_BYTES) throw new Error("Images need to be 8MB or smaller.");
-  return uploadToR2(file, folder, file.type, onProgress, branchId);
+  return uploadToR2(file, folder, file.type, onProgress, branchId, subfolder);
 }
 
 export async function uploadVideo(
@@ -99,6 +103,7 @@ export async function uploadVideo(
   folder: string,
   onProgress?: (percent: number) => void,
   branchId?: string | null,
+  subfolder?: string | null,
 ) {
   const isVideo = file.type.startsWith("video/") || /\.(mp4|mov|m4v|webm)$/i.test(file.name);
   if (!isVideo) throw new Error("Choose a video file (.mp4, .mov, or .webm).");
@@ -113,7 +118,7 @@ export async function uploadVideo(
         ? "video/webm"
         : "video/mp4";
 
-  return uploadToR2(file, folder, contentType, onProgress, branchId);
+  return uploadToR2(file, folder, contentType, onProgress, branchId, subfolder);
 }
 
 export async function removeStored(path: string | null | undefined) {

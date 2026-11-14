@@ -1,3 +1,4 @@
+import { mediaKeyFromUrl } from "@/lib/media-paths";
 import { insertMedia } from "@/lib/media-repo";
 import { studioData } from "@/lib/studio-data";
 
@@ -176,11 +177,16 @@ export async function listDepartmentVideos(): Promise<Record<string, string>> {
   return map;
 }
 
-export async function saveDepartmentVideo(departmentKey: string, videoUrl: string) {
+export async function saveDepartmentVideo(
+  departmentKey: string,
+  videoUrl: string,
+  storagePath?: string | null,
+) {
   const dept = DEPARTMENTS.find((item) => item.key === departmentKey);
   if (!dept) throw new Error(`Unknown department: ${departmentKey}`);
 
   const trimmed = videoUrl.trim();
+  const path = mediaKeyFromUrl(storagePath || trimmed);
   const existing = await studioData.list<{ id: string }>("media", {
     where: { owner_type: "department-video", owner_id: dept.id },
     order: "sort_order",
@@ -193,7 +199,12 @@ export async function saveDepartmentVideo(departmentKey: string, videoUrl: strin
 
   const [first, ...rest] = existing;
   if (first) {
-    await studioData.update("media", first.id, { url: trimmed, folder: dept.key, sort_order: 0 });
+    await studioData.update("media", first.id, {
+      url: trimmed,
+      folder: dept.key,
+      sort_order: 0,
+      ...(path ? { storage_path: path } : {}),
+    });
     for (const extra of rest) await studioData.remove("media", extra.id);
     return;
   }
@@ -201,6 +212,7 @@ export async function saveDepartmentVideo(departmentKey: string, videoUrl: strin
   await insertMedia({
     ownerType: "department-video",
     ownerId: dept.id,
+    path,
     url: trimmed,
     folder: dept.key,
     sortOrder: 0,

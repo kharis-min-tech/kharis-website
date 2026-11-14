@@ -67,10 +67,22 @@ export function safeMediaName(name: string) {
   return name.replace(/[^\w.-]+/g, "_").slice(0, 80) || "file";
 }
 
-export function mediaObjectKey(folder: MediaFolder, fileName: string, branchId?: string | null) {
-  const scope =
+/**
+ * Object key under site-media/. Branch-scoped folders put the branch id next;
+ * an optional subfolder (e.g. a department name) nests further. Both are
+ * sanitised so ".." and odd characters cannot escape the prefix.
+ */
+export function mediaObjectKey(
+  folder: MediaFolder,
+  fileName: string,
+  branchId?: string | null,
+  subfolder?: string | null,
+) {
+  const branchScope =
     branchId && isBranchMediaFolder(folder) && isBranchId(branchId) ? `${branchId}/` : "";
-  return `${MEDIA_PREFIX}${folder}/${scope}${crypto.randomUUID()}-${safeMediaName(fileName)}`;
+  const nest = safeMediaName(subfolder ?? "");
+  const nestedScope = nest && nest !== "file" ? `${nest}/` : "";
+  return `${MEDIA_PREFIX}${folder}/${branchScope}${nestedScope}${crypto.randomUUID()}-${safeMediaName(fileName)}`;
 }
 
 /** The branch a site-media key was uploaded for, or null when it has none. */

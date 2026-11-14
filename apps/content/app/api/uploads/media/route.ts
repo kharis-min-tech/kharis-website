@@ -44,8 +44,10 @@ async function forbiddenMedia(
  *   Content-Type: the file's MIME type
  *   X-Media-Folder: one of MEDIA_FOLDERS
  *   X-Branch-Id: optional, for BRANCH_MEDIA_FOLDERS
+ *   X-Media-Subfolder: optional nest (e.g. department name); sanitised into the key
  *   X-File-Name: original file name (URI encoded)
- * Responds with { key, publicUrl }. Only publicUrl is stored in Supabase.
+ * Responds with { key, publicUrl }. The media row in Supabase stores the publicUrl
+ * (and ideally the key as storage_path); the file itself lives in R2.
  */
 export async function POST(request: Request) {
   const studio = await studioUserFromRequest(request);
@@ -56,6 +58,8 @@ export async function POST(request: Request) {
   const contentType = (request.headers.get("content-type") || "").split(";")[0]!.trim();
   const folder = request.headers.get("x-media-folder") || "";
   const branchId = (request.headers.get("x-branch-id") || "").trim() || null;
+  const subfolderHeader = request.headers.get("x-media-subfolder");
+  const subfolder = subfolderHeader ? decodeURIComponent(subfolderHeader).trim() || null : null;
   const fileName = decodeURIComponent(request.headers.get("x-file-name") || "file");
   const size = Number(request.headers.get("content-length") || 0);
 
@@ -88,7 +92,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "The upload was empty." }, { status: 400 });
   }
 
-  const key = mediaObjectKey(folder, fileName, branchId);
+  const key = mediaObjectKey(folder, fileName, branchId, subfolder);
   try {
     const stored = await storeMediaObject(key, request.body, contentType);
     if (!stored) {

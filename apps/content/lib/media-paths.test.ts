@@ -31,6 +31,14 @@ describe("mediaObjectKey", () => {
     const key = mediaObjectKey("events", "a.png", "../other");
     expect(key).toMatch(/^site-media\/events\/[0-9a-f-]{36}-a\.png$/);
   });
+
+  it("nests department videos under a sanitised department folder", () => {
+    const key = mediaObjectKey("department-videos", "intro.mp4", null, "Children's Church");
+    expect(key).toMatch(
+      /^site-media\/department-videos\/Children_s_Church\/[0-9a-f-]{36}-intro\.mp4$/,
+    );
+    expect(key).not.toContain("..");
+  });
 });
 
 describe("branchIdFromMediaKey", () => {

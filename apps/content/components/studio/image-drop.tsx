@@ -305,13 +305,16 @@ export function VideoDrop({
   value,
   folder,
   mediaBranchId,
+  subfolder,
   onChange,
 }: {
   label?: string;
   value: string;
   folder?: string;
   mediaBranchId?: string | null;
-  onChange: (url: string) => void | Promise<void>;
+  /** Optional nest under the folder, e.g. a department name for department-videos. */
+  subfolder?: string | null;
+  onChange: (url: string, key?: string) => void | Promise<void>;
 }) {
   const [uploading, setUploading] = useState(false);
 
@@ -319,9 +322,15 @@ export function VideoDrop({
     if (!file) return;
     setUploading(true);
     try {
-      const uploaded = await uploadVideo(file, folder ?? "videos", undefined, mediaBranchId);
+      const uploaded = await uploadVideo(
+        file,
+        folder ?? "videos",
+        undefined,
+        mediaBranchId,
+        subfolder,
+      );
       if (value) await clearUrl(value);
-      await onChange(uploaded.url);
+      await onChange(uploaded.url, uploaded.path);
       toast.success("Video uploaded");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Video upload failed");
