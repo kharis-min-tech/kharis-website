@@ -7,7 +7,8 @@ import {
   sundayVenue,
   venueAddress,
 } from "@/lib/branch-display";
-import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { isKp2Branch } from "@/lib/contact-branches";
+import { kharisApiConfigured, siteGet } from "@/lib/kharis-api";
 import { BRANCH_FIXTURE } from "@/lib/branch-fixture";
 
 // ======================================================
@@ -66,6 +67,8 @@ export interface BranchData {
   subtitle: string | null;
   /** "Kharis", or "Kharis Phase 2" for the KP2 young adults' branches. */
   group?: string | null;
+  /** "kp2" or "kharis" from the content studio; "general" leaves it to the name and group. */
+  workspace?: string | null;
 
   short_description: string | null;
   description: string | null;
@@ -92,6 +95,7 @@ export interface BranchData {
   venues: Venue[];
   services: Service[];
   gallery: string[];
+  video_url?: string | null;
 }
 
 // ======================================================
@@ -167,29 +171,35 @@ function formatTime(time?: string | null): string {
 type GalleryRow = {
   branch_id: string | null;
   owner_id: string | null;
+  owner_type?: string | null;
   url: string | null;
 };
 
-async function galleriesByBranch() {
-  const map = new Map<string, string[]>();
-  const { data, error } = await supabase
-    .from("media")
-    .select("branch_id,owner_id,url,sort_order")
-    .eq("owner_type", "branch-gallery")
-    .order("sort_order", { ascending: true });
+async function mediaByBranch() {
+  const galleries = new Map<string, string[]>();
+  const videos = new Map<string, string>();
+  const { data, error } = await siteGet<GalleryRow[]>(
+    "/media?ownerType=branch-gallery,branch-video",
+  );
 
-  if (error || !data) return map;
+  if (error || !data) return { galleries, videos };
 
-  for (const row of data as GalleryRow[]) {
+  for (const row of data) {
     const id = row.branch_id || row.owner_id;
+    if (!id) continue;
+    if (row.owner_type === "branch-video") {
+      const videoUrl = row.url?.trim() ?? "";
+      if (videoUrl && !videos.has(id)) videos.set(id, videoUrl);
+      continue;
+    }
     const url = remoteImage(row.url);
-    if (!id || !url) continue;
-    const list = map.get(id) ?? [];
+    if (!url) continue;
+    const list = galleries.get(id) ?? [];
     list.push(url);
-    map.set(id, list);
+    galleries.set(id, list);
   }
 
-  return map;
+  return { galleries, videos };
 }
 
 // ======================================================
@@ -201,25 +211,15 @@ export const listBranchData = cache(async (): Promise<BranchData[]> => {
   // Without credentials every query fails and the page used to render an empty
   // directory and an empty globe. Fall back to the development fixture, the
   // same way testimonies and messages already do.
-  if (!supabaseConfigured) return BRANCH_FIXTURE;
+  if (!kharisApiConfigured) return BRANCH_FIXTURE;
 
-  const [{ data, error }, galleries] = await Promise.all([
-    supabase
-      .from("branches")
-      .select(
-        `
-      *,
-      venues (*),
-      services (*)
-    `,
-      )
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true }),
-    galleriesByBranch(),
+  const [{ data, error }, { galleries, videos }] = await Promise.all([
+    siteGet<BranchData[]>("/branches"),
+    mediaByBranch(),
   ]);
 
   if (error) {
-    console.error("Failed to load branches from Supabase:", error);
+    console.error("Failed to load branches from the Kharis API:", error);
 
     return [];
   }
@@ -236,6 +236,7 @@ export const listBranchData = cache(async (): Promise<BranchData[]> => {
     ),
 
     gallery: galleries.get(branch.id) ?? [],
+    video_url: videos.get(branch.id) ?? null,
   }));
 
   return branches as BranchData[];
@@ -289,7 +290,7 @@ export function toBranchItem(
     });
   }
 
-  const isKp2 = /phase 2/i.test(branch.group ?? "") || /^kp2\b/i.test(branch.name);
+  const isKp2 = isKp2Branch(branch);
   const name = branchDisplayName(branch.name);
   const place = name
     .replace(/^kp2\s+/i, "")
@@ -364,26 +365,16 @@ export async function getBranchBySlug(slug: string): Promise<BranchData | null> 
   // Same development fallback as listBranchData. Without this the branch
   // detail pages rendered "Branch unavailable" offline even though the
   // directory that links to them was fully populated.
-  if (!supabaseConfigured) {
+  if (!kharisApiConfigured) {
     return BRANCH_FIXTURE.find((branch) => branch.slug === slug) ?? null;
   }
 
-  const [{ data, error }, galleries] = await Promise.all([
-    supabase
-      .from("branches")
-      .select(
-        `
-      *,
-      venues (*),
-      services (*)
-    `,
-      )
-      .eq("slug", slug)
-      .eq("is_active", true)
-      .single(),
-    galleriesByBranch(),
+  const [{ data, error, status }, { galleries, videos }] = await Promise.all([
+    siteGet<BranchData>(`/branches/${encodeURIComponent(slug)}`),
+    mediaByBranch(),
   ]);
 
+  if (status === 404) return null;
   if (error) {
     console.error(`Failed to load branch "${slug}":`, error);
 
@@ -403,6 +394,7 @@ export async function getBranchBySlug(slug: string): Promise<BranchData | null> 
     services: [...(data.services ?? [])].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)),
 
     gallery: galleries.get(data.id) ?? [],
+    video_url: videos.get(data.id) ?? null,
   } as BranchData;
 }
 

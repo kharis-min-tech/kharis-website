@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { siteGet } from "@/lib/kharis-api";
 
 export type EventSite = "kharis" | "kp2" | "app" | "general";
 
@@ -32,36 +32,14 @@ export interface DisplayEvent extends EventRow {
  * getEvents()         -> All events
  */
 export async function getEvents(site?: EventSite): Promise<EventRow[]> {
-  const query = supabase
-    .from("events")
-    .select(
-      `
-      id,
-      title,
-      description,
-      location,
-      branch_id,
-      branch_name,
-      start_time,
-      end_time,
-      recurrence,
-      recurrence_days,
-      recurrence_until,
-      is_featured,
-      image_url,
-      sites
-    `,
-    )
-    .order("start_time", { ascending: true });
-
-  const { data, error } = await query;
+  const { data, error } = await siteGet<EventRow[]>("/events");
 
   if (error) {
     console.error("Failed to load events:", error);
     return [];
   }
 
-  const events = (data ?? []) as EventRow[];
+  const events = data ?? [];
 
   if (!site) {
     return events;

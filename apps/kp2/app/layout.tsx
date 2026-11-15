@@ -54,6 +54,7 @@ const MATERIAL_ICONS = [
   "chevron_right",
   "church",
   "close",
+  "cookie",
   "credit_card",
   "dark_mode",
   "database",

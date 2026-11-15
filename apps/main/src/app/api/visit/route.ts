@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { kharisApiConfigured, postForm, siteGet } from "@/lib/kharis-api";
 import { cleanVisitText, visitorInsert, type VisitorInsert } from "@/lib/visit-submission";
 import { sendEmailSafely } from "../../../../../../shared/mailer";
 import {
@@ -89,23 +89,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: parsed.error }, { status: 400 });
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  // The publishable key, not a service-role key: `anon` may INSERT into
-  // visitors and read nothing (supabase/migrations/003).
-  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!supabaseUrl || !publishableKey) {
+  if (!kharisApiConfigured) {
     if (process.env.NODE_ENV === "development") return localVisitResponse(parsed.row);
-    console.error("Missing Supabase server environment variables");
+    console.error("Missing NEXT_PUBLIC_KHARIS_API_URL");
     return NextResponse.json({ ok: false, error: "Server configuration error." }, { status: 500 });
   }
 
   try {
-    const supabase = createClient(supabaseUrl, publishableKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
+    // The API builds the same visitors row from these fields.
+    const { error } = await postForm("/api/visitors", {
+      name: parsed.row.name,
+      email: parsed.row.email,
+      phone: parsed.row.phone ?? "",
+      branch: cleanVisitText(data.branch, 120),
+      gathering: cleanVisitText(data.gathering, 160),
+      children: data.children === true,
+      consent: true,
+      site: "Main site",
     });
-    const { error } = await supabase.from("visitors").insert(parsed.row);
     if (error) {
-      console.error("Supabase visitor insert error:", error);
+      console.error("Kharis API visitor error:", error);
       if (process.env.NODE_ENV === "development") return localVisitResponse(parsed.row);
       return NextResponse.json(
         { ok: false, error: "Unable to save your visit. Please try again." },
@@ -114,9 +117,9 @@ export async function POST(request: Request) {
     }
 
     // The visit is saved. Notifying the branch must never fail the request.
-    const { data: branchRows } = await supabase.from("branches").select("name, contact_email");
+    const { data: branchRows } = await siteGet<BranchContact[]>("/branches");
     const to = notifyAddress(
-      (branchRows ?? []) as BranchContact[],
+      branchRows ?? [],
       parsed.row.branch_name,
       process.env.FALLBACK_NOTIFY_EMAIL,
     );
@@ -137,7 +140,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("Supabase visitor request failed:", error);
+    console.error("Kharis API visitor request failed:", error);
     if (process.env.NODE_ENV === "development") return localVisitResponse(parsed.row);
     return NextResponse.json(
       { ok: false, error: "Unable to save your visit. Please try again." },

@@ -1,6 +1,6 @@
 import { publicAsset } from "@/lib/public-asset";
 import { SITE_WORKSPACE, SITE_WORKSPACES } from "@/lib/site";
-import { supabaseSelect } from "@/lib/supabase";
+import { siteGet } from "@/lib/kharis-api";
 
 export type EventCategory =
   "Weekly" | "Conference" | "Worship" | "Fellowship" | "Outreach" | "Social";
@@ -224,13 +224,7 @@ function toChurchEvent(event: DisplayEvent): ChurchEvent {
 }
 
 export async function getUpcomingEvents(): Promise<ChurchEvent[]> {
-  const rows = await supabaseSelect<EventRow>(
-    "events",
-    [
-      "select=id,title,description,location,branch_name,start_time,end_time,recurrence,recurrence_days,recurrence_until,is_featured,image_url,category,sites,workspace",
-      "order=start_time.asc",
-    ].join("&"),
-  );
+  const rows = (await siteGet<EventRow[]>("/events")) ?? [];
 
   const scoped = rows.filter(isForThisSite);
   return nextOccurrencePerSeries(expandEvents(scoped)).map(toChurchEvent);

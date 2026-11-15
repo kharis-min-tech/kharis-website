@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET(_request: Request, context: { params: Promise<{ key: string[] }> }) {
   const { key: parts } = await context.params;
   const key = parts.map((part) => decodeURIComponent(part)).join("/");
-  if (!key.startsWith("branch-images/") || key.includes("..")) {
+  if (!(key.startsWith("branch-images/") || key.startsWith("site-media/")) || key.includes("..")) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

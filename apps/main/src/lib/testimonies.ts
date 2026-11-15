@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { siteGet } from "@/lib/kharis-api";
 
 export type TestimonyWorkspace = "kharis" | "kp2";
 export type TestimonyFeatureType = "featured" | "giving";
@@ -13,15 +13,23 @@ export interface Testimony {
   is_anonymous: boolean;
 }
 
-const SAFE_TESTIMONY_FIELDS = `
-  name,
-  branch_name,
-  category,
-  short_description,
-  description,
-  image_url,
-  is_anonymous
-`;
+type TestimonyRow = Testimony & {
+  workspace: string | null;
+  is_featured: boolean | null;
+  is_featured_giving: boolean | null;
+};
+
+function toTestimony(row: TestimonyRow): Testimony {
+  return {
+    name: row.is_anonymous ? "Anonymous" : row.name,
+    branch_name: row.branch_name,
+    category: row.category,
+    short_description: row.short_description,
+    description: row.description,
+    image_url: row.image_url,
+    is_anonymous: row.is_anonymous,
+  };
+}
 
 const FALLBACK_FEATURED: Testimony[] = [
   {
@@ -93,11 +101,7 @@ export async function getTestimonies(
 ): Promise<Testimony[]> {
   const featureColumn = type === "giving" ? "is_featured_giving" : "is_featured";
 
-  const { data, error } = await supabase
-    .from("testimonies")
-    .select(SAFE_TESTIMONY_FIELDS)
-    .in("workspace", [workspace, "general"])
-    .eq(featureColumn, true);
+  const { data, error } = await siteGet<TestimonyRow[]>("/testimonies");
 
   if (error) {
     console.error(`Failed to load ${workspace} ${type} testimonies:`, error);
@@ -105,9 +109,11 @@ export async function getTestimonies(
     return type === "featured" ? FALLBACK_FEATURED : [];
   }
 
-  const rows = ((data ?? []) as Testimony[]).map((row) =>
-    row.is_anonymous ? { ...row, name: "Anonymous" } : row,
-  );
+  const rows = (data ?? [])
+    .filter(
+      (row) => (row.workspace === workspace || row.workspace === "general") && row[featureColumn],
+    )
+    .map(toTestimony);
 
   return rows.length > 0 || type !== "featured" ? rows : FALLBACK_FEATURED;
 }

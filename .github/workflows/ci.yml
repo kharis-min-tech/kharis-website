@@ -96,6 +96,9 @@ jobs:
         run: npx eslint
       - name: Typecheck
         run: npx tsc --noEmit
+      # The /documentation VitePress site, written to public/documentation. Fails on dead links.
+      - name: Build docs
+        run: npx vitepress build docs
       # Next 16 defaults `next build` to Turbopack. Ship and verify with webpack.
       - name: Build
         run: npx next build --webpack

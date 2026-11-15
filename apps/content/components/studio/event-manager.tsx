@@ -1,7 +1,17 @@
 "use client";
 
+import { CalendarDays, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import {
+  DateTile,
+  EmptyState,
+  ErrorNotice,
+  GridSkeleton,
+  IconTile,
+  SearchInput,
+  Toolbar,
+} from "@/components/studio/blocks";
 import { AreaField, SelectField, TextField, ToggleField } from "@/components/studio/fields";
 import { ImageDrop } from "@/components/studio/image-drop";
 import { PageHeader } from "@/components/studio/page-header";
@@ -9,11 +19,10 @@ import { Panel } from "@/components/studio/panel";
 import { PickWorkspace } from "@/components/studio/pick-workspace";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import { listBranchOptions } from "@/lib/branches-repo";
+import { branchOptionLabel, listBranchOptions } from "@/lib/branches-repo";
 import { confirmDelete } from "@/lib/confirm";
 import { deleteEvent, listEvents, saveEvent } from "@/lib/content-repo";
+import { useStudioRole } from "@/lib/studio-role";
 import type { BranchOption, EventCategory, EventRow, EventSite } from "@/lib/types";
 import { cn, formatWhen, splitTimestamp, toTimestamp } from "@/lib/utils";
 import { useWorkspaceId } from "@/lib/workspace-context";
@@ -45,7 +54,7 @@ type EventDraft = {
   imageUrl: string;
 };
 
-function blank(workspace: string): EventDraft {
+function blank(workspace: string, branchId = ""): EventDraft {
   const site = SITES.some((item) => item.id === workspace) ? [workspace as EventSite] : [];
   return {
     title: "",
@@ -54,7 +63,7 @@ function blank(workspace: string): EventDraft {
     time: "10:00",
     endTime: "",
     location: "",
-    branchId: "",
+    branchId,
     category: "general",
     recurrence: "none",
     days: [],
@@ -94,6 +103,7 @@ function fromRow(row: EventRow): EventDraft {
 
 export function EventManager() {
   const workspace = useWorkspaceId();
+  const { isSuperAdmin, canEditBranch } = useStudioRole();
   const [rows, setRows] = useState<EventRow[] | null>(null);
   const [branches, setBranches] = useState<BranchOption[]>([]);
   const [error, setError] = useState("");
@@ -125,16 +135,27 @@ export function EventManager() {
     };
   }, [workspace, saving]);
 
+  const branchChoices = useMemo(
+    () => branches.filter((branch) => canEditBranch(branch.id)),
+    [branches, canEditBranch],
+  );
+
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!rows) return [];
-    if (!needle) return rows;
-    return rows.filter((row) =>
+    const editable = isSuperAdmin ? rows : rows.filter((row) => canEditBranch(row.branch_id));
+    if (!needle) return editable;
+    return editable.filter((row) =>
       `${row.title} ${row.location ?? ""} ${row.branch_name ?? ""}`.toLowerCase().includes(needle),
     );
-  }, [query, rows]);
+  }, [query, rows, isSuperAdmin, canEditBranch]);
 
   if (!workspace) return <PickWorkspace />;
+
+  function openNew(scope: string) {
+    const onlyBranch = !isSuperAdmin && branchChoices.length === 1 ? branchChoices[0]!.id : "";
+    setDraft(blank(scope, onlyBranch));
+  }
 
   function patch(partial: Partial<EventDraft>) {
     setDraft((current) => (current ? { ...current, ...partial } : current));
@@ -145,6 +166,10 @@ export function EventManager() {
     if (!draft || !workspace) return;
     if (draft.recurrence === "weekly" && draft.days.length === 0) {
       toast.error("Choose at least one weekday.");
+      return;
+    }
+    if (!isSuperAdmin && !canEditBranch(draft.branchId)) {
+      toast.error("Choose one of your branches.");
       return;
     }
     const startTime = toTimestamp(draft.date, draft.time);
@@ -199,47 +224,106 @@ export function EventManager() {
       <PageHeader
         title="Events"
         description="Category, which sites show it, and an optional weekly repeat. Unpublished events are hidden because their site list is cleared."
-        action={<Button onClick={() => setDraft(blank(workspace))}>New event</Button>}
+        icon={<IconTile icon={CalendarDays} className="h-12 w-12 rounded-2xl" />}
+        action={
+          <Button onClick={() => openNew(workspace)}>
+            <Plus className="h-4 w-4" />
+            New event
+          </Button>
+        }
       />
-      <Input
-        value={query}
-        placeholder="Search events"
-        onChange={(event) => setQuery(event.target.value)}
-        className="mb-4 max-w-sm"
-      />
+      <Toolbar>
+        <SearchInput
+          value={query}
+          placeholder="Search events"
+          onChange={(event) => setQuery(event.target.value)}
+        />
+        {rows && !error ? (
+          <span className="text-xs text-muted-foreground">
+            {visible.length} event{visible.length === 1 ? "" : "s"}
+          </span>
+        ) : null}
+      </Toolbar>
       {rows === null ? (
-        <div className="space-y-3">
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
-        </div>
+        <GridSkeleton />
       ) : error ? (
-        <p className="text-sm text-destructive">{error}</p>
+        <ErrorNotice message={error} />
       ) : visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">
-          No events in this workspace.
-        </div>
-      ) : (
-        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
-          {visible.map((row) => (
-            <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
-              <button
-                type="button"
-                className="min-w-0 flex-1 text-left"
-                onClick={() => setDraft(fromRow(row))}
-              >
-                <span className="block truncate font-medium">{row.title}</span>
-                <span className="block truncate text-sm text-muted-foreground">
-                  {formatWhen(row.start_time)}
-                  {row.location ? ` · ${row.location}` : ""}
-                </span>
-              </button>
-              {row.recurrence === "weekly" ? <Badge tone="accent">Weekly</Badge> : null}
-              {(row.sites ?? []).length === 0 ? <Badge tone="muted">Hidden</Badge> : null}
-              <Button variant="ghost" size="sm" onClick={() => void onDelete(row)}>
-                Delete
+        <EmptyState
+          icon={CalendarDays}
+          title={query.trim() ? "No matches" : "No events yet"}
+          action={
+            query.trim() ? null : (
+              <Button onClick={() => openNew(workspace)}>
+                <Plus className="h-4 w-4" />
+                New event
               </Button>
-            </li>
-          ))}
+            )
+          }
+        >
+          {query.trim()
+            ? "Try a different search."
+            : isSuperAdmin
+              ? "No events in this workspace."
+              : "No events for your branches in this workspace yet."}
+        </EmptyState>
+      ) : (
+        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {visible.map((row) => {
+            const start = new Date(row.start_time);
+            const hidden = (row.sites ?? []).length === 0;
+            return (
+              <li
+                key={row.id}
+                className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition hover:border-brand-line"
+              >
+                <button
+                  type="button"
+                  className="flex flex-1 flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                  onClick={() => setDraft(fromRow(row))}
+                >
+                  {row.image_url ? (
+                    <img
+                      src={row.image_url}
+                      alt=""
+                      className="h-32 w-full border-b border-border object-cover"
+                      loading="lazy"
+                    />
+                  ) : null}
+                  <span className="flex items-start gap-3.5 p-5">
+                    {Number.isNaN(start.getTime()) ? null : <DateTile date={start} />}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-semibold">{row.title}</span>
+                      <span className="mt-0.5 block truncate text-sm text-muted-foreground">
+                        {formatWhen(row.start_time)}
+                      </span>
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {row.branch_name || row.location || "All campuses"}
+                      </span>
+                    </span>
+                  </span>
+                </button>
+                <div className="flex flex-wrap items-center gap-1.5 border-t border-border px-4 py-2.5">
+                  {row.category ? (
+                    <Badge tone="muted" className="capitalize">
+                      {row.category}
+                    </Badge>
+                  ) : null}
+                  {row.recurrence === "weekly" ? <Badge>Weekly</Badge> : null}
+                  {hidden ? <Badge tone="gold">Hidden</Badge> : null}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="ml-auto text-danger hover:bg-danger-soft"
+                    onClick={() => void onDelete(row)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Delete
+                  </Button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
       {draft ? (
@@ -285,13 +369,20 @@ export function EventManager() {
             />
             <SelectField
               label="Branch"
+              required={!isSuperAdmin}
               value={draft.branchId}
               onChange={(event) => patch({ branchId: event.target.value })}
             >
-              <option value="">No branch</option>
-              {branches.map((branch) => (
+              {isSuperAdmin ? (
+                <option value="">No branch (all campuses)</option>
+              ) : (
+                <option value="" disabled>
+                  Choose a branch
+                </option>
+              )}
+              {branchChoices.map((branch) => (
                 <option key={branch.id} value={branch.id}>
-                  {branch.name}
+                  {branchOptionLabel(branch)}
                 </option>
               ))}
             </SelectField>
@@ -326,8 +417,8 @@ export function EventManager() {
                       <label
                         key={label}
                         className={cn(
-                          "cursor-pointer rounded-md border border-border px-2 py-1 text-xs",
-                          checked && "border-primary bg-primary/15 text-primary",
+                          "cursor-pointer rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-brand-line has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
+                          checked && "border-brand-line bg-brand-soft text-brand",
                         )}
                       >
                         <input
@@ -390,6 +481,7 @@ export function EventManager() {
             <ImageDrop
               label="Cover image"
               folder="events"
+              mediaBranchId={draft.branchId || null}
               value={draft.imageUrl}
               onChange={(imageUrl) => patch({ imageUrl })}
             />

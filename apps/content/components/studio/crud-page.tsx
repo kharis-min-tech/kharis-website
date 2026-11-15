@@ -1,15 +1,32 @@
 "use client";
 
+import { Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import {
+  Avatar,
+  EmptyState,
+  ErrorNotice,
+  GridSkeleton,
+  IconTile,
+  SearchInput,
+  Toolbar,
+} from "@/components/studio/blocks";
 import { ImageDrop } from "@/components/studio/image-drop";
+import { sectionIcon } from "@/components/studio/nav-meta";
 import { PassagePicker } from "@/components/studio/passage-picker";
 import { PageHeader } from "@/components/studio/page-header";
 import { Panel } from "@/components/studio/panel";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { confirmDelete } from "@/lib/confirm";
+
+function initialsOf(name: string) {
+  const parts = name.split(/\s+/).filter((part) => /\w/.test(part));
+  if (parts.length >= 2) return `${parts[0]![0]}${parts[1]![0]}`;
+  return (parts[0] ?? "?").slice(0, 2);
+}
 
 export type Field =
   | {
@@ -41,9 +58,11 @@ export function CrudPage<T extends Row>({
   titleOf,
   metaOf,
   searchOf,
+  emptyText = "Nothing here yet.",
 }: {
   title: string;
   description?: string;
+  emptyText?: string;
   loadKey: string;
   fields: Field[];
   load: () => Promise<T[]>;
@@ -55,6 +74,7 @@ export function CrudPage<T extends Row>({
   metaOf?: (row: T) => string;
   searchOf: (row: T) => string;
 }) {
+  const pathname = usePathname();
   const [rows, setRows] = useState<T[] | null>(null);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
@@ -121,59 +141,95 @@ export function CrudPage<T extends Row>({
   return (
     <div>
       <PageHeader
+        icon={<IconTile icon={sectionIcon(pathname)} className="h-12 w-12 rounded-2xl" />}
         title={title}
         description={description}
-        action={<Button onClick={() => setEditing({ draft: blank() })}>New</Button>}
-      />
-      <Input
-        value={query}
-        placeholder="Search"
-        onChange={(event) => setQuery(event.target.value)}
-        className="mb-4 max-w-sm"
-      />
-      {rows === null ? (
-        <div className="space-y-3">
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
-        </div>
-      ) : error ? (
-        <div className="rounded-xl border border-border p-6">
-          <p className="text-sm text-destructive">{error}</p>
-          <Button className="mt-3" variant="outline" onClick={refresh}>
-            Try again
+        action={
+          <Button onClick={() => setEditing({ draft: blank() })}>
+            <Plus className="h-4 w-4" />
+            New
           </Button>
-        </div>
+        }
+      />
+      <Toolbar>
+        <SearchInput
+          value={query}
+          placeholder={`Search ${title.toLowerCase()}`}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+        {rows && !error ? (
+          <span className="text-xs text-muted-foreground">
+            {visible.length === rows.length
+              ? `${rows.length} total`
+              : `${visible.length} of ${rows.length}`}
+          </span>
+        ) : null}
+      </Toolbar>
+      {rows === null ? (
+        <GridSkeleton />
+      ) : error ? (
+        <ErrorNotice message={error} onRetry={refresh} />
       ) : visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-sm text-muted-foreground">
-          Nothing here yet.
-        </div>
+        <EmptyState
+          icon={rows.length ? Search : sectionIcon(pathname)}
+          title={rows.length ? "No matches" : "Nothing here yet"}
+          action={
+            rows.length ? null : (
+              <Button onClick={() => setEditing({ draft: blank() })}>
+                <Plus className="h-4 w-4" />
+                Add the first one
+              </Button>
+            )
+          }
+        >
+          {rows.length ? "Try a different search." : emptyText}
+        </EmptyState>
       ) : (
-        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
-          {visible.map((row) => (
-            <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
-              <button
-                type="button"
-                className="min-w-0 flex-1 text-left"
-                onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}
+        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {visible.map((row) => {
+            const name = titleOf(row) || "Untitled";
+            return (
+              <li
+                key={row.id}
+                className="group flex flex-col rounded-xl border border-border bg-card shadow-card transition hover:border-brand-line"
               >
-                <p className="truncate font-medium">{titleOf(row) || "Untitled"}</p>
-                {metaOf ? (
-                  <p className="truncate text-sm text-muted-foreground">{metaOf(row)}</p>
-                ) : null}
-              </button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}
-              >
-                Edit
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => void onDelete(row)}>
-                Delete
-              </Button>
-            </li>
-          ))}
+                <button
+                  type="button"
+                  className="flex min-w-0 flex-1 items-start gap-3.5 rounded-t-xl p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                  onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}
+                >
+                  <Avatar label={initialsOf(name)} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-semibold">{name}</span>
+                    {metaOf ? (
+                      <span className="mt-1 line-clamp-2 block text-sm text-muted-foreground">
+                        {metaOf(row)}
+                      </span>
+                    ) : null}
+                  </span>
+                </button>
+                <div className="flex items-center justify-end gap-1 border-t border-border px-3 py-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-danger hover:bg-danger-soft"
+                    onClick={() => void onDelete(row)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Delete
+                  </Button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
       {editing ? (

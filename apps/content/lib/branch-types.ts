@@ -1,4 +1,4 @@
-import type { WorkspaceId } from "@/lib/workspaces";
+import type { BranchFamily } from "@/lib/branch-family";
 
 export type PastorRole = "pastor" | "lead";
 
@@ -14,6 +14,7 @@ export type VenueRow = {
   longitude: number | null;
   parking_info: string | null;
   public_transport_info: string | null;
+  is_active: boolean | null;
 };
 
 export type ServiceRow = {
@@ -34,6 +35,8 @@ export type BranchRow = {
   name: string;
   subtitle: string | null;
   workspace: string | null;
+  /** Read-only legacy grouping ("Kharis" or "Kharis Phase 2"). */
+  group?: string | null;
   short_description: string | null;
   description: string | null;
   hero_image_url: string | null;
@@ -66,6 +69,8 @@ export type VenueDraft = {
   transitInfo: string;
   imageUrl: string;
   imageKey: string;
+  /** False hides the venue from the websites and app without deleting it. */
+  active: boolean;
 };
 
 export type ServiceDraft = {
@@ -75,6 +80,8 @@ export type ServiceDraft = {
   time: string;
   label: string;
   venueIndex: number;
+  /** False hides the service from the websites and app without deleting it. */
+  active: boolean;
 };
 
 export type GalleryItem = {
@@ -88,10 +95,12 @@ export type BranchDraft = {
   id?: string;
   name: string;
   slug: string;
-  city: string;
+  /** Saved as the branch subtitle; the websites group branches by it. */
+  country: string;
   shortDescription: string;
   description: string;
   heroImage: string;
+  videoUrl: string;
   pastorName: string;
   pastorRole: PastorRole;
   pastorPhoto: string;
@@ -100,7 +109,7 @@ export type BranchDraft = {
   phone: string;
   givingLink: string;
   instagram: string;
-  workspace: WorkspaceId;
+  family: BranchFamily;
   published: boolean;
   sortOrder: string;
   venues: VenueDraft[];
@@ -135,6 +144,7 @@ export function emptyVenue(): VenueDraft {
     transitInfo: "",
     imageUrl: "",
     imageKey: "",
+    active: true,
   };
 }
 
@@ -145,5 +155,6 @@ export function emptyService(): ServiceDraft {
     time: "10:00",
     label: "",
     venueIndex: 0,
+    active: true,
   };
 }

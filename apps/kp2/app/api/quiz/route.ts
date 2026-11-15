@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { QUIZ_BRANCHES, QUIZ_LANGUAGES } from "@/data/quiz";
-import { SITE_WORKSPACE } from "@/lib/site";
-import { supabaseInsert, supabaseSelect } from "@/lib/supabase";
+import { postForm, siteGet } from "@/lib/kharis-api";
 import { sendEmailSafely } from "../../../../../shared/mailer";
 import {
   findBranch,
@@ -55,32 +54,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "No departments matched." }, { status: 400 });
   }
 
-  const branches = await supabaseSelect<BranchContact>(
-    "branches",
-    "select=id,name,contact_email",
-    false,
-  );
+  const branches = (await siteGet<BranchContact[]>("/branches", false)) ?? [];
   const matched = findBranch(branches, branchName);
 
-  // The publishable key, not a service-role key: `anon` may INSERT into
-  // quiz_results and read nothing (supabase/migrations/003).
-  const result = await supabaseInsert(
-    "quiz_results",
-    {
-      branch_id: matched?.id ?? null,
-      branch_name: matched?.name ?? branchName,
-      language,
-      department_1: departments[0] || null,
-      department_2: departments[1] || null,
-      department_3: departments[2] || null,
-      site: "KP2",
-      workspace: SITE_WORKSPACE,
-    },
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-  );
+  const result = await postForm("/api/quiz", {
+    branchId: matched?.id ?? "",
+    branch: matched?.name ?? branchName,
+    lang: language,
+    departments: departments.filter(Boolean),
+    site: "KP2",
+  });
 
   if (!result.configured) {
-    console.error("Missing Supabase environment variables for quiz results.");
+    console.error("Missing NEXT_PUBLIC_KHARIS_API_URL for quiz results.");
     return NextResponse.json({ ok: false, error: "Server configuration error." }, { status: 503 });
   }
   if (!result.ok) {

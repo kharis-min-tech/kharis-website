@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseInsert, supabaseSelect } from "@/lib/supabase";
+import { postForm, siteGet } from "@/lib/kharis-api";
 import { cleanVisitText, visitorInsert } from "@/lib/visit-submission";
 import { sendEmailSafely } from "../../../../../shared/mailer";
 import {
@@ -38,15 +38,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: parsed.error }, { status: 400 });
   }
 
-  // The publishable key, not a service-role key: `anon` may INSERT into
-  // visitors and read nothing (supabase/migrations/003).
-  const result = await supabaseInsert(
-    "visitors",
-    parsed.row,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-  );
+  const result = await postForm("/api/visitors", {
+    name: parsed.row.name,
+    email: parsed.row.email,
+    phone: parsed.row.phone ?? "",
+    branch: cleanVisitText(data.branch, 120),
+    gathering: cleanVisitText(data.gathering, 160),
+    children: data.children === true,
+    consent: true,
+    site: "KP2",
+  });
   if (!result.configured) {
-    console.error("Missing Supabase environment variables for visits.");
+    console.error("Missing NEXT_PUBLIC_KHARIS_API_URL for visits.");
     return NextResponse.json(
       { ok: false, error: "Visits can't be saved from the site right now." },
       { status: 503 },
@@ -59,11 +62,7 @@ export async function POST(request: Request) {
     );
   }
   // The visit is saved. Notifying the branch must never fail the request.
-  const branches = await supabaseSelect<BranchContact>(
-    "branches",
-    "select=name,contact_email",
-    false,
-  );
+  const branches = (await siteGet<BranchContact[]>("/branches", false)) ?? [];
   const to = notifyAddress(branches, parsed.row.branch_name, process.env.FALLBACK_NOTIFY_EMAIL);
   if (to) {
     const mail = visitEmail({

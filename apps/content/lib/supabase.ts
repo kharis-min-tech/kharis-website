@@ -22,7 +22,3 @@ export function getSupabase(): SupabaseClient {
   }
   return client;
 }
-
-export function fail(error: { message: string } | null) {
-  if (error) throw new Error(error.message);
-}

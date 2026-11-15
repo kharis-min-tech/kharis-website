@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { kharisApiConfigured, postForm, siteGet } from "@/lib/kharis-api";
 import { QUIZ_BRANCHES, QUIZ_LANGUAGES } from "@/data/quiz";
 import { sendEmailSafely } from "../../../../../../shared/mailer";
 import {
@@ -54,36 +54,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "No departments matched." }, { status: 400 });
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  // The publishable key, not a service-role key: `anon` may INSERT into
-  // quiz_results and read nothing (supabase/migrations/003).
-  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!supabaseUrl || !publishableKey) {
-    console.error("Missing Supabase environment variables for quiz results");
+  if (!kharisApiConfigured) {
+    console.error("Missing NEXT_PUBLIC_KHARIS_API_URL for quiz results");
     return NextResponse.json({ ok: false, error: "Server configuration error." }, { status: 500 });
   }
 
   try {
-    const supabase = createClient(supabaseUrl, publishableKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-    const { data: branchRows } = await supabase.from("branches").select("id, name, contact_email");
-    const branches = (branchRows ?? []) as BranchContact[];
+    const { data: branchRows } = await siteGet<BranchContact[]>("/branches");
+    const branches = branchRows ?? [];
     const matched = findBranch(branches, branchName);
 
-    const { error } = await supabase.from("quiz_results").insert({
-      branch_id: matched?.id ?? null,
-      branch_name: matched?.name ?? branchName,
-      language,
-      department_1: departments[0] || null,
-      department_2: departments[1] || null,
-      department_3: departments[2] || null,
+    const { error } = await postForm("/api/quiz", {
+      branchId: matched?.id ?? "",
+      branch: matched?.name ?? branchName,
+      lang: language,
+      departments: departments.filter(Boolean),
       site: "Main site",
-      workspace: "kharis",
     });
 
     if (error) {
-      console.error("Supabase quiz insert error:", error);
+      console.error("Kharis API quiz error:", error);
       return NextResponse.json(
         { ok: false, error: "Unable to save your result." },
         { status: 500 },

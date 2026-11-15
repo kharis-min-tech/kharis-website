@@ -1,7 +1,7 @@
 import type { Testimonial } from "@/components/TestimonialCarousel";
 import { publicAsset } from "@/lib/public-asset";
 import { SITE_WORKSPACES } from "@/lib/site";
-import { supabaseSelect } from "@/lib/supabase";
+import { siteGet } from "@/lib/kharis-api";
 
 export type GivingTestimony = {
   name: string;
@@ -22,9 +22,6 @@ type TestimonyRow = {
   is_featured: boolean | null;
   is_featured_giving: boolean | null;
 };
-
-const SAFE_FIELDS =
-  "name,branch_name,category,short_description,description,image_url,is_anonymous,workspace,is_featured,is_featured_giving";
 
 const FALLBACK_IMAGES = [
   "https://images.kharis.org/site-images/kp2/fb9675c9cc674137/testimony-1.jpg",
@@ -155,10 +152,7 @@ const FALLBACK_ROWS: TestimonyRow[] = [
 ];
 
 async function loadPublished(): Promise<TestimonyRow[]> {
-  const rows = await supabaseSelect<TestimonyRow>(
-    "testimonies",
-    `select=${SAFE_FIELDS}&is_published=eq.true`,
-  );
+  const rows = (await siteGet<TestimonyRow[]>("/testimonies")) ?? [];
   const filtered = rows.filter((row) =>
     SITE_WORKSPACES.includes(row.workspace as (typeof SITE_WORKSPACES)[number]),
   );

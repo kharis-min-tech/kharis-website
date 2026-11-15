@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  branchIdFromImageKey,
   branchImageFolderKey,
   branchImageKeyFromUrl,
   branchImageObjectKey,
@@ -47,6 +48,12 @@ describe("branchImageObjectKey", () => {
     const key = branchImageObjectKey(UUID, "hero", "image/webp");
     expect(key).toMatch(new RegExp(`^branch-images/${UUID}/hero/[0-9a-f-]{36}\\.webp$`));
     expect(isR2ObjectKey(key)).toBe(true);
+  });
+  it("keeps a readable original file label when provided", () => {
+    const key = branchImageObjectKey(UUID, "hero", "image/jpeg", "Sunday Service!.JPG");
+    expect(key).toMatch(
+      new RegExp(`^branch-images/${UUID}/hero/[0-9a-f-]{36}-Sunday_Service_\\.jpg$`),
+    );
   });
   it("maps content types to file extensions", () => {
     expect(branchImageObjectKey(UUID, "gallery", "image/jpeg")).toMatch(/\.jpg$/);
@@ -99,5 +106,16 @@ describe("branchImageFolderKey", () => {
   it("is the .keep marker under the branch folder", () => {
     expect(branchImageFolderKey(UUID)).toBe(`branch-images/${UUID}/.keep`);
     expect(isR2ObjectKey(branchImageFolderKey(UUID))).toBe(true);
+  });
+});
+
+describe("branchIdFromImageKey", () => {
+  it("reads the branch id from a valid key", () => {
+    expect(branchIdFromImageKey(`branch-images/${UUID}/hero/a.jpg`)).toBe(UUID);
+  });
+  it("rejects foreign or malformed keys", () => {
+    expect(branchIdFromImageKey("site-media/x.jpg")).toBeNull();
+    expect(branchIdFromImageKey("branch-images/not-a-uuid/hero/a.jpg")).toBeNull();
+    expect(branchIdFromImageKey(null)).toBeNull();
   });
 });

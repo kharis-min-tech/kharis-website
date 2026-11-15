@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { SITE_WORKSPACE } from "@/lib/site";
-import { supabaseInsert, supabaseSelect } from "@/lib/supabase";
+import { postForm, siteGet } from "@/lib/kharis-api";
 import { CONTACT_TOPICS, withSiteLine } from "@/lib/contact";
 import { sendEmailSafely } from "../../../../../shared/mailer";
 import {
@@ -62,36 +61,25 @@ export async function POST(request: Request) {
 
   message = withSiteLine(message, "KP2");
 
-  const branches = await supabaseSelect<BranchContact>(
-    "branches",
-    "select=id,name,contact_email",
-    false,
-  );
+  const branches = (await siteGet<BranchContact[]>("/branches", false)) ?? [];
   const [match] = branch
     ? branches.filter((row) => row.name.trim().toLowerCase() === branch.trim().toLowerCase())
     : [];
 
-  const result = await supabaseInsert(
-    "contact_messages",
-    {
-      first_name: first,
-      last_name: last,
-      email,
-      phone: phone || null,
-      topic,
-      branch_id: match?.id ?? null,
-      branch_name: match?.name ?? (branch || null),
-      message,
-      workspace: SITE_WORKSPACE,
-      status: "new",
-    },
-    // The publishable key, not a service-role key: `anon` may INSERT into
-    // contact_messages and read nothing (supabase/migrations/003).
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-  );
+  const result = await postForm("/api/contact", {
+    firstName: first,
+    lastName: last,
+    email,
+    phone,
+    topic,
+    branchId: match?.id ?? "",
+    branch: match?.name ?? branch,
+    message,
+    site: "KP2",
+  });
 
   if (!result.configured) {
-    console.error("Missing Supabase environment variables for contact.");
+    console.error("Missing NEXT_PUBLIC_KHARIS_API_URL for contact.");
     return NextResponse.json(
       { ok: false, error: "Messages can't be sent from the site right now." },
       { status: 503 },

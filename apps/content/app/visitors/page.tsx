@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { CrudPage } from "@/components/studio/crud-page";
-import { listBranchOptions } from "@/lib/branches-repo";
+import { branchOptionLabel, listBranchOptions } from "@/lib/branches-repo";
 import { deleteVisitor, listVisitors, saveVisitor } from "@/lib/content-repo";
+import { useStudioRole } from "@/lib/studio-role";
 import type { BranchOption, VisitorRow } from "@/lib/types";
 import { visitorListNotes, visitorToDraft } from "@/lib/visitors";
 
@@ -14,12 +15,13 @@ function branchChoices(branches: BranchOption[]) {
     const name = branch.name.trim();
     if (!name || seen.has(name)) continue;
     seen.add(name);
-    options.push({ value: name, label: name });
+    options.push({ value: name, label: branchOptionLabel({ ...branch, name }) });
   }
   return options;
 }
 
 export default function VisitorsPage() {
+  const { isSuperAdmin, canEditBranch } = useStudioRole();
   const [branches, setBranches] = useState<BranchOption[]>([]);
 
   useEffect(() => {
@@ -33,11 +35,21 @@ export default function VisitorsPage() {
       title="Visitors"
       description="People who planned a visit on the main site or KP2. The message records the site, the gathering, and that they agreed to be contacted."
       loadKey="visitors"
+      emptyText={
+        isSuperAdmin
+          ? undefined
+          : "No visitors have planned a visit to your branches yet. New plans will show up here."
+      }
       fields={[
         { key: "name", label: "Name", kind: "text" },
         { key: "email", label: "Email", kind: "text" },
         { key: "phone", label: "Phone", kind: "text" },
-        { key: "branch_name", label: "Branch", kind: "select", options: branchChoices(branches) },
+        {
+          key: "branch_name",
+          label: "Branch",
+          kind: "select",
+          options: branchChoices(branches.filter((branch) => canEditBranch(branch.id))),
+        },
         { key: "message", label: "Message", kind: "textarea" },
       ]}
       load={listVisitors}

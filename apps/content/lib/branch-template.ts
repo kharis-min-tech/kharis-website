@@ -18,6 +18,7 @@ function venue(
       "The venue is reachable by public transport. Check local bus and rail times before you travel.",
     imageUrl: "",
     imageKey: "",
+    active: true,
   };
 }
 
@@ -28,6 +29,7 @@ function service(partial: Pick<ServiceDraft, "day" | "time" | "label">): Service
     time: partial.time,
     label: partial.label,
     venueIndex: 0,
+    active: true,
   };
 }
 
@@ -35,7 +37,6 @@ function service(partial: Pick<ServiceDraft, "day" | "time" | "label">): Service
 export function branchTemplate(current: BranchDraft): BranchDraft {
   return {
     ...current,
-    city: current.city || "Sample City",
     shortDescription:
       current.shortDescription ||
       "A local church family gathering around Jesus, the Word, and prayer.",

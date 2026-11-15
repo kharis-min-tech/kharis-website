@@ -179,10 +179,12 @@ export function isUkBranch(branch: ContactLocation): boolean {
  * KP2 or Kharis, from the workspace set in the content studio. Rows left on the default
  * "general" workspace fall back to their name ("KP2 London").
  */
-export function isKp2Branch(branch: Pick<ContactLocation, "name" | "workspace">): boolean {
+export function isKp2Branch(
+  branch: Pick<ContactLocation, "name" | "workspace"> & { group?: string | null },
+): boolean {
   if (branch.workspace === "kp2") return true;
   if (branch.workspace === "kharis") return false;
-  return /^KP2\b/i.test(branch.name.trim());
+  return /^KP2\b/i.test(branch.name.trim()) || /phase 2/i.test(branch.group ?? "");
 }
 
 /** Main Kharis branches first, then KP2, each group keeping the studio's order. */

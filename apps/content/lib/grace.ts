@@ -12,7 +12,8 @@ ${links}`;
   }).join("\n\n");
 
   return `# Content Studio map
-Content Studio (content.kharis.org) is where signed-in editors manage Kharis content. It does not create accounts.
+Content Studio (content.kharis.org) is where signed-in editors manage Kharis content.
+Super admins see every screen. Branch admins only see Branches, Events, Messages and Visitors for the branches they were given. Accounts with no role see nothing until a super admin gives them one.
 Start by choosing a workspace. Each section keeps the current workspace in the ?workspace= query.
 
 ${sections}
@@ -25,6 +26,7 @@ ${sections}
 - Sermons under General are studio records for the websites. The mobile app plays a different library, mirrored into Cloudflare. Search it under Mobile App → Sermon library, and schedule a day under Daily Message.
 - Daily Reading stores the scripture reference. The phone loads the passage from YouVersion. Check a reference under Mobile App → Bible. Testimonies can be General, Kharis Website, or KP2 Website.
 - Events, announcements, and (for the app) daily reading, daily message, daily prayers, Bible, sermon library, and live are inside the workspace they belong to.
+- Studio accounts live under General → Users (super admins only). Invite someone by email, choose their role and branches, send a password reset, or delete an account there. A branch admin who needs more access should ask a super admin.
 - You cannot save, delete, or upload for the editor. Point them to the screen and say what to open.
 `;
 }

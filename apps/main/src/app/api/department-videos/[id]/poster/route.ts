@@ -1,14 +1,10 @@
-import { DEPARTMENT_VIDEOS } from "@/data/department-videos";
-
 export const runtime = "nodejs";
+
+const VALID_DRIVE_ID = /^[a-zA-Z0-9_-]{10,100}$/;
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const isDepartmentVideo = DEPARTMENT_VIDEOS.some((item) =>
-    item.src.endsWith(`/api/department-videos/${id}`),
-  );
-
-  if (!isDepartmentVideo) {
+  if (!VALID_DRIVE_ID.test(id)) {
     return new Response("Poster not found", { status: 404 });
   }
 

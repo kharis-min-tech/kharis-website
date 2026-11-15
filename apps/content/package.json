@@ -4,9 +4,13 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev --port 3002",
-    "build": "next build --webpack",
+    "build": "vitepress build docs && next build --webpack",
     "start": "next start --port 3002",
     "lint": "eslint",
+    "docs:dev": "vitepress dev docs --port 3004",
+    "docs:build": "vitepress build docs",
+    "screenshots": "node docs/scripts/capture-screenshots.mjs",
+    "screenshots:upload": "node --env-file=../../.env.r2.local docs/scripts/upload-screenshots.mjs --upload",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
@@ -32,8 +36,10 @@
     "@types/react-dom": "^19.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.27",
+    "playwright-core": "^1.65.0",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.8.3",
+    "vitepress": "^1.6.4",
     "wrangler": "^4.148.0"
   }
 }

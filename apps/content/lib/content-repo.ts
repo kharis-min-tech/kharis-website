@@ -1,5 +1,5 @@
 import { describeReadingReference } from "@/lib/bible-reference";
-import { fail, getSupabase } from "@/lib/supabase";
+import { studioData, type StudioResource, type Where } from "@/lib/studio-data";
 import type {
   ContactMessage,
   ContactStatus,
@@ -27,12 +27,8 @@ function asSites(value: string[]): EventSite[] {
 }
 
 export async function listEvents(workspace: WorkspaceId) {
-  const { data, error } = await getSupabase()
-    .from("events")
-    .select("*")
-    .order("start_time", { ascending: false });
-  fail(error);
-  return ((data ?? []) as EventRow[]).filter((row) => {
+  const rows = await studioData.list<EventRow>("events", { order: "-start_time" });
+  return rows.filter((row) => {
     if (row.workspace === workspace) return true;
     if (!row.workspace && row.sites?.includes(workspace as EventSite)) return true;
     return false;
@@ -80,22 +76,15 @@ export async function saveEvent(input: EventInput) {
     workspace: input.workspace,
     ...(input.id ? { id: input.id } : {}),
   };
-  const { error } = await getSupabase().from("events").upsert(payload);
-  fail(error);
+  await studioData.upsert("events", payload);
 }
 
 export async function deleteEvent(id: string) {
-  const { error } = await getSupabase().from("events").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("events", id);
 }
 
 export async function listSermons() {
-  const { data, error } = await getSupabase()
-    .from("sermons")
-    .select("*")
-    .order("date", { ascending: false });
-  fail(error);
-  return (data ?? []) as SermonRow[];
+  return studioData.list<SermonRow>("sermons", { order: "-date" });
 }
 
 export async function saveSermon(row: Omit<SermonRow, "id"> & { id?: string }) {
@@ -112,23 +101,15 @@ export async function saveSermon(row: Omit<SermonRow, "id"> & { id?: string }) {
     published: Boolean(row.published),
     ...(row.id ? { id: row.id } : {}),
   };
-  const { error } = await getSupabase().from("sermons").upsert(payload);
-  fail(error);
+  await studioData.upsert("sermons", payload);
 }
 
 export async function deleteSermon(id: string) {
-  const { error } = await getSupabase().from("sermons").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("sermons", id);
 }
 
 export async function listNews(workspace: WorkspaceId) {
-  const { data, error } = await getSupabase()
-    .from("news")
-    .select("*")
-    .eq("workspace", workspace)
-    .order("created_at", { ascending: false });
-  fail(error);
-  return (data ?? []) as NewsRow[];
+  return studioData.list<NewsRow>("news", { where: { workspace }, order: "-created_at" });
 }
 
 export async function saveNews(row: Omit<NewsRow, "id"> & { id?: string }) {
@@ -141,23 +122,15 @@ export async function saveNews(row: Omit<NewsRow, "id"> & { id?: string }) {
     published: Boolean(row.published),
     ...(row.id ? { id: row.id } : {}),
   };
-  const { error } = await getSupabase().from("news").upsert(payload);
-  fail(error);
+  await studioData.upsert("news", payload);
 }
 
 export async function deleteNews(id: string) {
-  const { error } = await getSupabase().from("news").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("news", id);
 }
 
 export async function listTestimonies(workspace: WorkspaceId) {
-  const { data, error } = await getSupabase()
-    .from("testimonies")
-    .select("*")
-    .eq("workspace", workspace)
-    .order("name", { ascending: true });
-  fail(error);
-  return (data ?? []) as TestimonyRow[];
+  return studioData.list<TestimonyRow>("testimonies", { where: { workspace }, order: "name" });
 }
 
 export async function saveTestimony(row: Omit<TestimonyRow, "id"> & { id?: string }) {
@@ -176,43 +149,30 @@ export async function saveTestimony(row: Omit<TestimonyRow, "id"> & { id?: strin
     is_published: Boolean(row.is_published),
     ...(row.id ? { id: row.id } : {}),
   };
-  const { error } = await getSupabase().from("testimonies").upsert(payload);
-  fail(error);
+  await studioData.upsert("testimonies", payload);
 }
 
 export async function deleteTestimony(id: string) {
-  const { error } = await getSupabase().from("testimonies").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("testimonies", id);
 }
 
 export async function listVisitors() {
-  const { data, error } = await getSupabase()
-    .from("visitors")
-    .select("*")
-    .order("created_at", { ascending: false });
-  fail(error);
-  return (data ?? []) as VisitorRow[];
+  return studioData.list<VisitorRow>("visitors", { order: "-created_at" });
 }
 
 export async function saveVisitor(draft: VisitorDraft, id?: string) {
-  const { error } = await getSupabase().from("visitors").upsert(visitorPayload(draft, id));
-  fail(error);
+  await studioData.upsert("visitors", visitorPayload(draft, id));
 }
 
 export async function deleteVisitor(id: string) {
-  const { error } = await getSupabase().from("visitors").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("visitors", id);
 }
 
 export async function listDaily(workspace: WorkspaceId, kind: DailyKind) {
-  const { data, error } = await getSupabase()
-    .from("daily_entries")
-    .select("*")
-    .eq("workspace", workspace)
-    .eq("kind", kind)
-    .order("date", { ascending: false });
-  fail(error);
-  return (data ?? []) as DailyEntryRow[];
+  return studioData.list<DailyEntryRow>("daily_entries", {
+    where: { workspace, kind },
+    order: "-date",
+  });
 }
 
 export async function saveDaily(row: Omit<DailyEntryRow, "id"> & { id?: string }) {
@@ -230,22 +190,15 @@ export async function saveDaily(row: Omit<DailyEntryRow, "id"> & { id?: string }
     reference: row.reference?.trim() || null,
     ...(row.id ? { id: row.id } : {}),
   };
-  const { error } = await getSupabase().from("daily_entries").upsert(payload);
-  fail(error);
+  await studioData.upsert("daily_entries", payload);
 }
 
 export async function deleteDaily(id: string) {
-  const { error } = await getSupabase().from("daily_entries").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("daily_entries", id);
 }
 
 export async function listDailyMessages() {
-  const { data, error } = await getSupabase()
-    .from("daily_messages")
-    .select("*")
-    .order("date", { ascending: true });
-  fail(error);
-  return (data ?? []) as DailyMessageRow[];
+  return studioData.list<DailyMessageRow>("daily_messages", { order: "date" });
 }
 
 export async function saveDailyMessage(row: {
@@ -267,28 +220,22 @@ export async function saveDailyMessage(row: {
     note: row.note.trim() || null,
     ...(row.id ? { id: row.id } : {}),
   };
-  const query = row.id
-    ? getSupabase().from("daily_messages").update(payload).eq("id", row.id)
-    : getSupabase().from("daily_messages").upsert(payload, { onConflict: "date" });
-  const { error } = await query;
-  fail(error);
+  if (row.id) await studioData.update("daily_messages", row.id, payload);
+  else await studioData.upsert("daily_messages", payload, { onConflict: "date" });
 }
 
 export async function deleteDailyMessage(id: string) {
-  const { error } = await getSupabase().from("daily_messages").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("daily_messages", id);
 }
 
 const LIVE_KEY = "live_stream";
 
 export async function getLiveSettings(): Promise<LiveSettings> {
-  const { data, error } = await getSupabase()
-    .from("app_config")
-    .select("value")
-    .eq("key", LIVE_KEY)
-    .maybeSingle();
-  fail(error);
-  const value = (data?.value ?? {}) as Record<string, unknown>;
+  const [row] = await studioData.list<{ value: unknown }>("app_config", {
+    where: { key: LIVE_KEY },
+    limit: 1,
+  });
+  const value = (row?.value ?? {}) as Record<string, unknown>;
   return {
     url: typeof value.url === "string" ? value.url : "",
     isLive: Boolean(value.is_live ?? value.isLive),
@@ -297,22 +244,14 @@ export async function getLiveSettings(): Promise<LiveSettings> {
 }
 
 export async function saveLiveSettings(settings: LiveSettings) {
-  const { error } = await getSupabase()
-    .from("app_config")
-    .upsert({
-      key: LIVE_KEY,
-      value: { url: settings.url.trim(), is_live: settings.isLive, title: settings.title.trim() },
-    });
-  fail(error);
+  await studioData.upsert("app_config", {
+    key: LIVE_KEY,
+    value: { url: settings.url.trim(), is_live: settings.isLive, title: settings.title.trim() },
+  });
 }
 
 export async function listFeatured(workspace: WorkspaceId) {
-  const { data, error } = await getSupabase()
-    .from("featured_videos")
-    .select("*")
-    .eq("workspace", workspace);
-  fail(error);
-  return (data ?? []) as FeaturedVideoRow[];
+  return studioData.list<FeaturedVideoRow>("featured_videos", { where: { workspace } });
 }
 
 export async function saveFeatured(row: Omit<FeaturedVideoRow, "id"> & { id?: string }) {
@@ -324,13 +263,11 @@ export async function saveFeatured(row: Omit<FeaturedVideoRow, "id"> & { id?: st
     published: Boolean(row.published),
     ...(row.id ? { id: row.id } : {}),
   };
-  const { error } = await getSupabase().from("featured_videos").upsert(payload);
-  fail(error);
+  await studioData.upsert("featured_videos", payload);
 }
 
 export async function deleteFeatured(id: string) {
-  const { error } = await getSupabase().from("featured_videos").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("featured_videos", id);
 }
 
 export async function listMessages(filters: {
@@ -338,17 +275,14 @@ export async function listMessages(filters: {
   status?: string;
   search?: string;
 }) {
-  let query = getSupabase()
-    .from("contact_messages")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(300);
-  if (filters.workspace && filters.workspace !== "all")
-    query = query.eq("workspace", filters.workspace);
-  if (filters.status && filters.status !== "all") query = query.eq("status", filters.status);
-  const { data, error } = await query;
-  fail(error);
-  const rows = (data ?? []) as ContactMessage[];
+  const where: Where = {};
+  if (filters.workspace && filters.workspace !== "all") where.workspace = filters.workspace;
+  if (filters.status && filters.status !== "all") where.status = filters.status;
+  const rows = await studioData.list<ContactMessage>("contact_messages", {
+    where,
+    order: "-created_at",
+    limit: 300,
+  });
   const search = filters.search?.trim().toLowerCase();
   if (!search) return rows;
   return rows.filter((row) =>
@@ -359,46 +293,44 @@ export async function listMessages(filters: {
 }
 
 export async function setMessageStatus(id: string, status: ContactStatus) {
-  const { error } = await getSupabase().from("contact_messages").update({ status }).eq("id", id);
-  fail(error);
+  await studioData.update("contact_messages", id, { status });
 }
 
 export async function deleteMessage(id: string) {
-  const { error } = await getSupabase().from("contact_messages").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("contact_messages", id);
 }
 
 export async function listNewsletter(source?: string) {
-  let query = getSupabase()
-    .from("newsletter_subscribers")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(500);
-  if (source && source !== "general" && source !== "all") query = query.eq("source", source);
-  const { data, error } = await query;
-  fail(error);
-  return (data ?? []) as NewsletterSubscriber[];
+  const where: Where = source && source !== "general" && source !== "all" ? { source } : {};
+  return studioData.list<NewsletterSubscriber>("newsletter_subscribers", {
+    where,
+    order: "-created_at",
+    limit: 500,
+  });
 }
 
 export async function deleteNewsletter(id: string) {
-  const { error } = await getSupabase().from("newsletter_subscribers").delete().eq("id", id);
-  fail(error);
+  await studioData.remove("newsletter_subscribers", id);
+}
+
+/** Recent events across workspaces, for the overview. Weekly ones can start long ago. */
+export async function listEventSchedule(limit = 80) {
+  return studioData.list<EventRow>("events", { order: "-start_time", limit });
+}
+
+export async function listRecentMessages(limit = 5) {
+  return studioData.list<ContactMessage>("contact_messages", { order: "-created_at", limit });
 }
 
 export async function countNewMessages(workspace: WorkspaceId) {
-  const { count, error } = await getSupabase()
-    .from("contact_messages")
-    .select("*", { count: "exact", head: true })
-    .eq("workspace", workspace)
-    .eq("status", "new");
-  if (error) return null;
-  return count ?? 0;
+  return studioData.count("contact_messages", { workspace, status: "new" }).catch(() => null);
 }
 
-export async function countRows(table: string, filters: Record<string, string>) {
-  let query = getSupabase().from(table).select("*", { count: "exact", head: true });
-  for (const [key, value] of Object.entries(filters)) query = query.eq(key, value);
-  const { count, error } = await query;
-  if (error) return null;
-  return count ?? 0;
+export async function countRows(
+  table: StudioResource,
+  filters: Record<string, string>,
+  branchIds?: string[],
+) {
+  const where: Where = { ...filters, ...(branchIds ? { branch_id: branchIds } : {}) };
+  return studioData.count(table, where).catch(() => null);
 }

@@ -26,7 +26,7 @@ export default function CookiePolicyPage() {
   return (
     <article className="mx-auto min-h-screen max-w-3xl px-4 py-16 text-foreground">
       <p className="text-sm font-semibold text-muted-foreground">Kharis Content Studio</p>
-      <h1 className="mt-2 font-heading text-4xl font-extrabold tracking-tight">Cookie policy</h1>
+      <h1 className="mt-2 font-heading text-4xl font-bold tracking-tight">Cookie policy</h1>
       <p className="mt-3 text-sm text-muted-foreground">Last updated 10 November 2026</p>
       <div className="mt-8 space-y-4 leading-relaxed">
         <p>
@@ -40,7 +40,7 @@ export default function CookiePolicyPage() {
           not show a consent banner.
         </p>
       </div>
-      <h2 className="mt-10 font-heading text-2xl font-extrabold">What this studio stores</h2>
+      <h2 className="mt-10 font-heading text-2xl font-bold">What this studio stores</h2>
       <div className="mt-4 overflow-x-auto rounded-md border">
         <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
           <thead>
@@ -66,13 +66,13 @@ export default function CookiePolicyPage() {
         </table>
       </div>
       <div className="mt-10 space-y-4 leading-relaxed">
-        <h2 className="font-heading text-2xl font-extrabold">Other services</h2>
+        <h2 className="font-heading text-2xl font-bold">Other services</h2>
         <p>
           Signing in talks to Supabase from this browser. That is how the session above is created.
           Typefaces are loaded from Google Fonts. We do not use either connection for advertising.
           Address search and Grace run on our server after you are signed in.
         </p>
-        <h2 className="font-heading text-2xl font-extrabold">How to turn this off</h2>
+        <h2 className="font-heading text-2xl font-bold">How to turn this off</h2>
         <p>
           Sign out to end the studio session. You can also delete this site’s data in your browser.
           Blocking storage means you will need to sign in again on every visit, and the theme will

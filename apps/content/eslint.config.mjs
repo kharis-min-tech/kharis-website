@@ -32,6 +32,9 @@ const eslintConfig = [
       "next-env.d.ts",
       ".open-next/**",
       ".wrangler/**",
+      // The VitePress docs and their build output in public/documentation.
+      "docs/**",
+      "public/documentation/**",
     ],
   },
 ];

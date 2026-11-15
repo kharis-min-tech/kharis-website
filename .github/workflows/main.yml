@@ -34,8 +34,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: a94432b07dae8050b83efdec72a492a3
       # Public, baked into the client bundle at build time. Set as repo
       # Variables: Settings → Secrets and variables → Actions → Variables.
-      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_KHARIS_API_URL: ${{ vars.NEXT_PUBLIC_KHARIS_API_URL }}
       NEXT_PUBLIC_SITE_URL: https://kharis.org
       # Where KP2 links go. Until kharis.org/kp2 serves the new KP2 app, point at its preview.
       NEXT_PUBLIC_KP2_URL: ${{ vars.NEXT_PUBLIC_KP2_URL || 'https://kharis-kp2.itadmin-a94.workers.dev/kp2' }}
@@ -59,8 +58,7 @@ jobs:
       - name: Check deploy config
         run: |
           : "${CLOUDFLARE_API_TOKEN:?set the CLOUDFLARE_API_TOKEN repo secret}"
-          : "${NEXT_PUBLIC_SUPABASE_URL:?set the NEXT_PUBLIC_SUPABASE_URL repo variable}"
-          : "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?set the NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY repo variable}"
+          : "${NEXT_PUBLIC_KHARIS_API_URL:?set the NEXT_PUBLIC_KHARIS_API_URL repo variable}"
 
       # opennextjs-cloudflare build && deploy. Worker runtime secrets
       # (YOUTUBE_API_KEY, GEMINI_API_KEY) are not touched by a deploy.
