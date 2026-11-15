@@ -8,11 +8,17 @@ import {
 } from "@/lib/branch-image-paths";
 import {
   branchImagePublicUrl,
+  deleteBranchImageObject,
   ensureBranchImageFolder,
   deleteUnusedBranchImages,
   storeBranchImage,
 } from "@/lib/r2";
-import { branchImageKeyFromUrl } from "@/lib/branch-image-paths";
+import {
+  branchIdFromImageKey,
+  branchImageFolderKey,
+  branchImageKeyFromUrl,
+  isR2ObjectKey,
+} from "@/lib/branch-image-paths";
 import {
   studioBranch,
   studioBranchMedia,
@@ -51,8 +57,12 @@ export async function POST(request: Request) {
     ensureFolder?: unknown;
     prune?: unknown;
     deleteFolder?: unknown;
+    deleteKey?: unknown;
   };
   const branchId = typeof input.branchId === "string" ? input.branchId : "";
+  if (typeof input.deleteKey === "string") {
+    return deleteOneBranchImage(input.deleteKey, studio);
+  }
   if (input.prune === true || input.deleteFolder === true) {
     return pruneBranchFolder(branchId, studio, input.deleteFolder === true);
   }
@@ -94,6 +104,29 @@ async function missingBranch(studio: StudioSession, branchId: string) {
     return NextResponse.json({ error: "That branch could not be found." }, { status: 404 });
   }
   return null;
+}
+
+/** Removes one replaced or cleared branch photo from R2. */
+async function deleteOneBranchImage(key: string, studio: StudioSession) {
+  const branchId = branchIdFromImageKey(key);
+  if (
+    !branchId ||
+    !isR2ObjectKey(key) ||
+    key.includes("..") ||
+    key === branchImageFolderKey(branchId)
+  ) {
+    return NextResponse.json({ error: "That file cannot be removed here." }, { status: 400 });
+  }
+  const forbidden = await forbiddenUnlessEditable(studio, branchId);
+  if (forbidden) return forbidden;
+  const missing = await missingBranch(studio, branchId);
+  if (missing) return missing;
+  try {
+    await deleteBranchImageObject(key);
+    return NextResponse.json({ removed: key });
+  } catch {
+    return NextResponse.json({ error: "The file could not be removed." }, { status: 502 });
+  }
 }
 
 async function pruneBranchFolder(branchId: string, studio: StudioSession, deleteFolder: boolean) {
@@ -181,7 +214,7 @@ async function storeUploadedBranchImage(request: Request, studio: StudioSession)
   const missing = await missingBranch(studio, branchId);
   if (missing) return missing;
 
-  const key = branchImageObjectKey(branchId, category, file.type);
+  const key = branchImageObjectKey(branchId, category, file.type, file.name);
   try {
     const stored = await storeBranchImage(key, new Uint8Array(await file.arrayBuffer()), file.type);
     if (!stored) {

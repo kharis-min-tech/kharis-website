@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { isR2ObjectKey, type BranchImageCategory } from "@/lib/branch-image-paths";
+import { type BranchImageCategory } from "@/lib/branch-image-paths";
 import { uploadBranchImage } from "@/lib/branch-images";
 import { pathFromPublicUrl, removeStored, uploadImage, uploadVideo } from "@/lib/media-repo";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,7 @@ export function ImageDrop({
   value,
   folder,
   mediaBranchId,
+  subfolder,
   onChange,
   branch,
   onQueue,
@@ -28,6 +29,8 @@ export function ImageDrop({
   value: string;
   folder?: string;
   mediaBranchId?: string | null;
+  /** Optional nest under the folder, e.g. a title slug; otherwise the API uses YYYY-MM. */
+  subfolder?: string | null;
   onChange: (url: string, key?: string) => void;
   branch?: { id: string | null; category: BranchImageCategory };
   onQueue?: (file: File) => void;
@@ -64,11 +67,18 @@ export function ImageDrop({
           file,
           onProgress: setProgress,
         });
+        if (value) await clearUrl(value);
         onChange(uploaded.publicUrl, uploaded.key);
       } else {
-        const uploaded = await uploadImage(file, folder ?? "uploads", undefined, mediaBranchId);
+        const uploaded = await uploadImage(
+          file,
+          folder ?? "uploads",
+          undefined,
+          mediaBranchId,
+          subfolder,
+        );
         if (value) await clearUrl(value);
-        onChange(uploaded.url);
+        onChange(uploaded.url, uploaded.path);
       }
       toast.success("Image uploaded");
     } catch (error) {
@@ -283,8 +293,7 @@ export function MultiImageDrop({
                 className="absolute right-1 top-1 h-7 w-7"
                 aria-label="Remove gallery image"
                 onClick={() => {
-                  if (!isR2ObjectKey(item.path))
-                    void removeStored(item.path).catch(() => undefined);
+                  void removeStored(item.path || item.url).catch(() => undefined);
                   onChange(items.filter((_, itemIndex) => itemIndex !== index));
                 }}
               >
@@ -305,13 +314,16 @@ export function VideoDrop({
   value,
   folder,
   mediaBranchId,
+  subfolder,
   onChange,
 }: {
   label?: string;
   value: string;
   folder?: string;
   mediaBranchId?: string | null;
-  onChange: (url: string) => void | Promise<void>;
+  /** Optional nest under the folder, e.g. a department name for department-videos. */
+  subfolder?: string | null;
+  onChange: (url: string, key?: string) => void | Promise<void>;
 }) {
   const [uploading, setUploading] = useState(false);
 
@@ -319,9 +331,15 @@ export function VideoDrop({
     if (!file) return;
     setUploading(true);
     try {
-      const uploaded = await uploadVideo(file, folder ?? "videos", undefined, mediaBranchId);
+      const uploaded = await uploadVideo(
+        file,
+        folder ?? "videos",
+        undefined,
+        mediaBranchId,
+        subfolder,
+      );
       if (value) await clearUrl(value);
-      await onChange(uploaded.url);
+      await onChange(uploaded.url, uploaded.path);
       toast.success("Video uploaded");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Video upload failed");

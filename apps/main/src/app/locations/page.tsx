@@ -4,6 +4,10 @@ import { branchDisplayName, sundayVenue } from "@/lib/branch-display";
 import { LocationsClient } from "./LocationsClient";
 import { globeCityPhoto } from "@/lib/globe-imagery";
 
+/** Always fetch live branch data from the API Worker (never bake an empty directory). */
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Kharis Church Locations | Find a Branch Near You",
   description:

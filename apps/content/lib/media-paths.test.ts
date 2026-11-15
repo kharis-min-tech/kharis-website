@@ -1,5 +1,10 @@
-import { describe, expect, it } from "vitest";
-import { branchIdFromMediaKey, isBranchMediaFolder, mediaObjectKey } from "./media-paths";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  branchIdFromMediaKey,
+  isBranchMediaFolder,
+  mediaMonthScope,
+  mediaObjectKey,
+} from "./media-paths";
 
 const BRANCH = "6f1c2b8e-3c1a-4d2b-9e0f-1a2b3c4d5e6f";
 
@@ -13,10 +18,18 @@ describe("isBranchMediaFolder", () => {
 });
 
 describe("mediaObjectKey", () => {
-  it("puts branch uploads under the branch id", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-11-14T12:00:00Z"));
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("puts branch uploads under the branch id and a month nest", () => {
     const key = mediaObjectKey("events", "Easter poster.jpg", BRANCH);
     expect(key).toMatch(
-      new RegExp(`^site-media/events/${BRANCH}/[0-9a-f-]{36}-Easter_poster\\.jpg$`),
+      new RegExp(`^site-media/events/${BRANCH}/2026-11/[0-9a-f-]{36}-Easter_poster\\.jpg$`),
     );
     expect(branchIdFromMediaKey(key)).toBe(BRANCH);
   });
@@ -24,12 +37,26 @@ describe("mediaObjectKey", () => {
   it("ignores a branch id for folders that are not branch scoped", () => {
     const key = mediaObjectKey("sermons", "talk.mp4", BRANCH);
     expect(key).not.toContain(BRANCH);
+    expect(key).toMatch(/^site-media\/sermons\/2026-11\/[0-9a-f-]{36}-talk\.mp4$/);
     expect(branchIdFromMediaKey(key)).toBeNull();
   });
 
-  it("ignores a branch id that is not a uuid", () => {
+  it("ignores a branch id that is not a uuid and still nests by month", () => {
     const key = mediaObjectKey("events", "a.png", "../other");
-    expect(key).toMatch(/^site-media\/events\/[0-9a-f-]{36}-a\.png$/);
+    expect(key).toMatch(/^site-media\/events\/2026-11\/[0-9a-f-]{36}-a\.png$/);
+  });
+
+  it("nests department videos under a sanitised department folder", () => {
+    const key = mediaObjectKey("department-videos", "intro.mp4", null, "Children's Church");
+    expect(key).toMatch(
+      /^site-media\/department-videos\/Children_s_Church\/[0-9a-f-]{36}-intro\.mp4$/,
+    );
+    expect(key).not.toContain("..");
+    expect(key).not.toContain("2026-11");
+  });
+
+  it("exposes the current UTC year-month", () => {
+    expect(mediaMonthScope()).toBe("2026-11");
   });
 });
 

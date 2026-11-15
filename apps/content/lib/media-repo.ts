@@ -1,4 +1,4 @@
-import { isR2ObjectKey } from "@/lib/branch-image-paths";
+import { branchIdFromImageKey, branchImageKeyFromUrl } from "@/lib/branch-image-paths";
 import {
   MAX_MEDIA_IMAGE_BYTES,
   MAX_MEDIA_VIDEO_BYTES,
@@ -29,11 +29,13 @@ function mediaRows(ownerType: string, ownerId: string) {
 const PUBLIC_MARKER = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
 
 export function pathFromPublicUrl(url: string) {
-  const r2Key = mediaKeyFromUrl(url);
-  if (r2Key) return r2Key;
+  const mediaKey = mediaKeyFromUrl(url);
+  if (mediaKey) return mediaKey;
+  const branchKey = branchImageKeyFromUrl(url);
+  if (branchKey) return branchKey;
   const index = url.indexOf(PUBLIC_MARKER);
   if (index === -1) return null;
-  return decodeURIComponent(url.slice(index + PUBLIC_MARKER.length).split("?")[0] ?? "");
+  return decodeURIComponent(url.slice(index + PUBLIC_MARKER.length).split(/[?#]/)[0] ?? "");
 }
 
 async function studioToken() {
@@ -50,6 +52,7 @@ async function uploadToR2(
   contentType: string,
   onProgress?: (percent: number) => void,
   branchId?: string | null,
+  subfolder?: string | null,
 ) {
   const target = isMediaFolder(folder) ? folder : "uploads";
   const token = await studioToken();
@@ -60,6 +63,8 @@ async function uploadToR2(
     xhr.setRequestHeader("Content-Type", contentType);
     xhr.setRequestHeader("X-Media-Folder", target);
     if (branchId && isBranchMediaFolder(target)) xhr.setRequestHeader("X-Branch-Id", branchId);
+    if (subfolder?.trim())
+      xhr.setRequestHeader("X-Media-Subfolder", encodeURIComponent(subfolder.trim()));
     xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
     xhr.upload.onprogress = (event) => {
       if (!event.lengthComputable || !onProgress) return;
@@ -88,10 +93,11 @@ export async function uploadImage(
   folder: string,
   onProgress?: (percent: number) => void,
   branchId?: string | null,
+  subfolder?: string | null,
 ) {
   if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
   if (file.size > MAX_MEDIA_IMAGE_BYTES) throw new Error("Images need to be 8MB or smaller.");
-  return uploadToR2(file, folder, file.type, onProgress, branchId);
+  return uploadToR2(file, folder, file.type, onProgress, branchId, subfolder);
 }
 
 export async function uploadVideo(
@@ -99,6 +105,7 @@ export async function uploadVideo(
   folder: string,
   onProgress?: (percent: number) => void,
   branchId?: string | null,
+  subfolder?: string | null,
 ) {
   const isVideo = file.type.startsWith("video/") || /\.(mp4|mov|m4v|webm)$/i.test(file.name);
   if (!isVideo) throw new Error("Choose a video file (.mp4, .mov, or .webm).");
@@ -113,18 +120,30 @@ export async function uploadVideo(
         ? "video/webm"
         : "video/mp4";
 
-  return uploadToR2(file, folder, contentType, onProgress, branchId);
+  return uploadToR2(file, folder, contentType, onProgress, branchId, subfolder);
 }
 
 export async function removeStored(path: string | null | undefined) {
   if (!path || path.startsWith("external/")) return;
-  const r2Key = mediaKeyFromUrl(path);
-  if (r2Key) {
+  const mediaKey = mediaKeyFromUrl(path);
+  if (mediaKey) {
     const token = await studioToken();
     const response = await fetch("/api/uploads/media", {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ key: r2Key }),
+      body: JSON.stringify({ key: mediaKey }),
+    });
+    if (!response.ok) throw new Error("The old file could not be removed.");
+    return;
+  }
+  const branchKey = branchImageKeyFromUrl(path);
+  const branchId = branchIdFromImageKey(branchKey);
+  if (branchKey && branchId) {
+    const token = await studioToken();
+    const response = await fetch("/api/uploads/branch", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ branchId, deleteKey: branchKey }),
     });
     if (!response.ok) throw new Error("The old file could not be removed.");
     return;
@@ -176,8 +195,8 @@ export async function syncGallery(branchId: string, items: GalleryItem[], pendin
 
   for (const row of existing) {
     if (!row.id || kept.has(row.id)) continue;
-    // Unused Cloudflare files are removed when the branch is saved.
-    if (!isR2ObjectKey(row.path)) await removeStored(row.path).catch(() => undefined);
+    // Drop the R2 (or legacy Supabase) object as soon as the gallery item is removed.
+    await removeStored(row.path || row.url).catch(() => undefined);
     await studioData.remove("media", row.id);
   }
 
@@ -261,6 +280,7 @@ export async function getBranchVideo(branchId: string): Promise<string> {
 
 export async function syncBranchVideo(branchId: string, videoUrl: string) {
   const trimmed = videoUrl.trim();
+  const path = mediaKeyFromUrl(trimmed);
   const existing = await mediaRows("branch-video", branchId);
 
   if (!trimmed) {
@@ -274,6 +294,7 @@ export async function syncBranchVideo(branchId: string, videoUrl: string) {
       url: trimmed,
       branch_id: branchId,
       sort_order: 0,
+      ...(path ? { storage_path: path } : {}),
     });
     for (const extra of rest) await studioData.remove("media", extra.id);
     return;
@@ -283,6 +304,7 @@ export async function syncBranchVideo(branchId: string, videoUrl: string) {
     ownerType: "branch-video",
     ownerId: branchId,
     branchId,
+    path,
     url: trimmed,
     folder: "branches",
     sortOrder: 0,

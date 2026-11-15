@@ -40,9 +40,9 @@ export default function DepartmentVideosPage() {
     );
   }, [query]);
 
-  async function handleUpdateVideo(key: string, nextUrl: string) {
+  async function handleUpdateVideo(key: string, nextUrl: string, storagePath?: string) {
     try {
-      await saveDepartmentVideo(key, nextUrl);
+      await saveDepartmentVideo(key, nextUrl, storagePath);
       setSavedUrls((prev) => ({ ...(prev ?? {}), [key]: nextUrl }));
       toast.success(nextUrl ? `Saved ${key} video` : `Removed ${key} video`);
     } catch (caught) {
@@ -100,7 +100,8 @@ export default function DepartmentVideosPage() {
                 <VideoDrop
                   value={currentUrl}
                   folder="department-videos"
-                  onChange={(url) => handleUpdateVideo(dept.key, url)}
+                  subfolder={dept.key}
+                  onChange={(url, path) => handleUpdateVideo(dept.key, url, path)}
                 />
               </div>
             );
