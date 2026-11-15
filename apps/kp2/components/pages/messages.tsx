@@ -36,16 +36,13 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
           <div className="pointer-events-none absolute inset-0 hero-gradient max-xl:hidden" />
           <div className="pointer-events-none absolute inset-0 halftone-pattern text-white/5 max-xl:hidden" />
           <div className="relative z-10 mx-auto flex h-auto w-full min-w-0 max-w-7xl flex-col justify-end px-margin-mobile pb-8 pt-6 xl:h-full xl:px-margin-desktop xl:pb-10 xl:pt-24">
-            <div className="mb-5 inline-block w-fit max-w-full border-2 border-black bg-secondary-container px-4 py-1 font-label-md uppercase text-on-secondary-container md:mb-6">
-              Hunger &amp; Zeal for God
-            </div>
             <h1 className="mb-4 max-w-full break-words font-display-lg text-[1.75rem] uppercase leading-[0.95] tracking-tight text-white md:text-display-lg md:leading-none md:tracking-tighter">
               {featured ? displayMessageTitle(featured.title) : "Messages"}
             </h1>
             <p className="mb-6 max-w-2xl font-body-lg text-base leading-relaxed text-white/80 md:mb-8 md:text-body-lg">
               {featured
-                ? "Your hunger and zeal for God is your greatest advantage as a believer. Watch the newest teaching from Pastor David Antwi here or on YouTube."
-                : "Your hunger and zeal for God is your greatest advantage as a believer. Teachings from Pastor David Antwi will appear here as they go live."}
+                ? "Watch the newest teaching from Pastor David Antwi here or on YouTube."
+                : "Teachings from Pastor David Antwi will appear here as they go live."}
             </p>
             {featured ? (
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4">
@@ -95,7 +92,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
               </div>
               <p className="font-body-lg text-body-md text-on-surface-variant max-w-md">
                 What it takes to sustain the move of God is a text-driven, gospel-saturated,
-                Christ-exalting message. Catch every message on your favourite platform, or in the
+                Christ-exalting messages. Catch every message on your favourite platform, or in the
                 Kharis app.
               </p>
             </div>

@@ -85,33 +85,6 @@ export function TestimoniesBand({
     };
   }, [selected]);
 
-  const scrollByCard = (dir: -1 | 1) => {
-    const rail = railRef.current;
-    if (!rail) return;
-    const card = rail.querySelector<HTMLElement>(".kp-tst__card");
-    const gap =
-      parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap || "20") || 20;
-    const step = (card?.offsetWidth ?? 300) + gap;
-    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
-    if (maxScroll <= 2) return;
-    const edge = 8;
-
-    if (dir === 1) {
-      if (rail.scrollLeft >= maxScroll - edge) {
-        rail.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        rail.scrollTo({ left: Math.min(maxScroll, rail.scrollLeft + step), behavior: "smooth" });
-      }
-      return;
-    }
-
-    if (rail.scrollLeft <= edge) {
-      rail.scrollTo({ left: maxScroll, behavior: "smooth" });
-    } else {
-      rail.scrollTo({ left: Math.max(0, rail.scrollLeft - step), behavior: "smooth" });
-    }
-  };
-
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "touch" || e.button !== 0) return;
     const rail = railRef.current;
@@ -250,31 +223,6 @@ export function TestimoniesBand({
                 })}
               </div>
             </div>
-
-            {items.length > 1 ? (
-              <div className="kp-tst__arrows">
-                <button
-                  type="button"
-                  className="kp-tst__arrow"
-                  aria-label="Previous testimonies"
-                  onClick={() => scrollByCard(-1)}
-                >
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    arrow_back
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="kp-tst__arrow"
-                  aria-label="Next testimonies"
-                  onClick={() => scrollByCard(1)}
-                >
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    arrow_forward
-                  </span>
-                </button>
-              </div>
-            ) : null}
           </>
         ) : (
           <p className="kp-tst__empty">

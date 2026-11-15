@@ -12,14 +12,7 @@ const KHARIS_CHURCH_URL = "https://kharis.org/";
 
 const NAV_ITEMS: NavItem[] = [
   { label: "HOME", to: "/" },
-  {
-    label: "ABOUT",
-    to: "/mission",
-    children: [
-      { label: "MISSION", to: "/mission", blurb: "Our vision & mandate" },
-      { label: "GOVERNANCE", to: "/governance", blurb: "Policies & safeguarding" },
-    ],
-  },
+  { label: "ABOUT", to: "/mission" },
   {
     label: "COMMUNITY",
     to: "/departments",
@@ -28,7 +21,6 @@ const NAV_ITEMS: NavItem[] = [
       { label: "LIFE", to: "/life", blurb: "Groups & branch life" },
     ],
   },
-  { label: "EVENTS", to: "/events" },
   {
     label: "WATCH",
     to: "/messages",

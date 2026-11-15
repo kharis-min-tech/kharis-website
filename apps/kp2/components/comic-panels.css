@@ -208,7 +208,8 @@
   text-transform: uppercase;
 }
 
-.kp-panels__cell--a .kp-panels__caption {
+.kp-panels__cell--a .kp-panels__caption,
+.kp-panels__cell--d .kp-panels__caption {
   background: #f7be1d;
 }
 

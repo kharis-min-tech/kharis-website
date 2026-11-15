@@ -114,7 +114,7 @@ function GovernancePage() {
                 If something needs attention, tell us
               </h2>
               <p className="font-body-lg text-white/85 leading-relaxed">
-                Your report helps us keep our church family safe.
+                Your report helps us keep our church safe.
               </p>
             </div>
             <a

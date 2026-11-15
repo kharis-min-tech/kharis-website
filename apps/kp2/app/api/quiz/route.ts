@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     ? data.departments.slice(0, 3).map((d) => clean(d, 120))
     : [];
 
-  if (!BRANCHES.has(branchName)) {
+  if (branchName && !BRANCHES.has(branchName)) {
     return NextResponse.json({ ok: false, error: "Please choose a branch." }, { status: 400 });
   }
   if (!LANGUAGES.has(language)) {

@@ -60,13 +60,13 @@ export default function NotFound() {
             Take me home
           </Link>
           <Link
-            href="/events"
+            href="/life"
             className="btn-neo inline-flex items-center gap-2 border-4 border-[var(--on-surface)] bg-[var(--surface)] px-8 py-4 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[var(--on-surface)] shadow-[6px_6px_0_0_var(--on-surface)]"
           >
             <span className="material-symbols-outlined text-lg" aria-hidden="true">
-              event
+              groups
             </span>
-            See events
+            Life at KP2
           </Link>
           <Link
             href="/branches"

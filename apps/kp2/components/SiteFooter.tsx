@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { FooterWorld } from "@/components/FooterWorld";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { TIKTOK_URL } from "@/lib/social";
 const eaLogoLight = "https://images.kharis.org/site-images/kp2/7034e8bd749d082a/ea-logo-light.png";
@@ -146,6 +147,8 @@ export function SiteFooter() {
           />
         </div>
       </div>
+
+      <FooterWorld />
 
       <div className="relative z-10 mt-8 border-t-4 border-[#151218] bg-[#151218] text-[#fffdf5]">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-margin-mobile py-5 md:flex-row md:px-margin-desktop">

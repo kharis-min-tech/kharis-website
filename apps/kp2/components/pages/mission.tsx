@@ -152,7 +152,9 @@ function WhoWeAreBecoming() {
               aria-selected={mainTab === i}
               aria-controls={`about-panel-${t.id}`}
               tabIndex={mainTab === i ? 0 : -1}
-              onClick={() => selectChapter(i)}
+              onClick={() => {
+                if (mainTab !== i) selectChapter(i);
+              }}
               onKeyDown={(event) => {
                 const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
                 if (!keys.includes(event.key)) return;
@@ -167,10 +169,10 @@ function WhoWeAreBecoming() {
                 selectChapter(next);
                 document.getElementById(`about-tab-${MAIN_TABS[next]!.id}`)?.focus();
               }}
-              className={`kp-mission-tab no-accent-fill text-left p-6 rounded-none border-2 border-black brutalist-shadow transition-all duration-200 flex items-start gap-4 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+              className={`kp-mission-tab no-accent-fill text-left p-6 rounded-none border-2 border-black brutalist-shadow transition-all duration-200 flex items-start gap-4 ${
                 mainTab === i
-                  ? "bg-primary text-white"
-                  : "bg-surface text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
+                  ? "bg-primary text-white cursor-default"
+                  : "bg-surface text-on-background cursor-pointer hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none hover:bg-primary-fixed hover:text-on-primary-fixed"
               }`}
             >
               <span className="font-display-lg text-2xl leading-none opacity-70">
@@ -254,8 +256,11 @@ function WhoWeAreBecoming() {
                       <button
                         key={it.title}
                         type="button"
+                        disabled={subTab === i}
                         aria-pressed={subTab === i}
-                        onClick={() => setSubTab(i)}
+                        onClick={() => {
+                          if (subTab !== i) setSubTab(i);
+                        }}
                         className={`kp-pillars__item no-accent-fill${subTab === i ? " is-active" : ""}`}
                       >
                         <span className="kp-pillars__label">

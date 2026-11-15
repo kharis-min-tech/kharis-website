@@ -136,15 +136,6 @@ function MediaPage() {
           <p className="font-body-lg text-body-lg text-white max-w-md">
             Everywhere Kharis lives online.
           </p>
-          <Link
-            href="/messages"
-            className="kp-depth-button kp-button-gold mt-8 inline-flex items-center gap-2 bg-[#f7be1d] text-[#151218] font-label-comic text-sm uppercase px-7 py-4 border-4 border-[#151218] brutalist-shadow"
-          >
-            Watch messages
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">
-              arrow_forward
-            </span>
-          </Link>
         </div>
       </header>
 

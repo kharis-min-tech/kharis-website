@@ -178,19 +178,8 @@ export default function DepartmentQuizPage() {
   const t = useMemo(() => QUIZ_TRANSLATIONS[lang] ?? QUIZ_TRANSLATIONS.en, [lang]);
   const privacyData = useMemo(() => QUIZ_PRIVACY_CONTENT[lang] ?? QUIZ_PRIVACY_CONTENT.en, [lang]);
 
-  // Validation
-  const validateStart = useCallback(() => {
-    if (!branch) {
-      setBranchError(true);
-      return false;
-    }
-    setBranchError(false);
-    return true;
-  }, [branch]);
-
   // Start quiz
   const handleStart = () => {
-    if (!validateStart()) return;
     setAnswers(new Array(t.questions.length).fill(null));
     setScores({});
     setCurrentQuestion(0);
@@ -436,49 +425,6 @@ export default function DepartmentQuizPage() {
                       }}
                       className="space-y-6"
                     >
-                      {/* Branch Select Field */}
-                      <div className="flex flex-col gap-2">
-                        <label
-                          htmlFor="user-branch"
-                          className="font-label-md uppercase tracking-wider text-on-surface"
-                        >
-                          {t.branchLabel} <span className="text-error font-bold">*</span>
-                        </label>
-                        <div className="relative">
-                          <select
-                            id="user-branch"
-                            value={branch}
-                            onChange={(e) => {
-                              setBranch(e.target.value);
-                              if (branchError) setBranchError(false);
-                            }}
-                            aria-required="true"
-                            aria-invalid={branchError}
-                            className={`w-full appearance-none rounded-none border-2 border-black bg-surface p-4 pr-10 font-body-md font-bold text-on-surface input-focus shadow-[3px_3px_0_0_#000] ${
-                              branchError ? "border-error ring-2 ring-error" : ""
-                            }`}
-                          >
-                            <option value="" disabled>
-                              {t.branchPlaceholder}
-                            </option>
-                            {QUIZ_BRANCHES.map((b) => (
-                              <option key={b} value={b}>
-                                {b}
-                              </option>
-                            ))}
-                          </select>
-                          <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl text-on-surface">
-                            expand_more
-                          </span>
-                        </div>
-                        {branchError && (
-                          <p className="inline-flex items-center gap-1.5 text-xs font-bold text-error">
-                            <span className="material-symbols-outlined text-sm">error</span>
-                            {t.branchError}
-                          </p>
-                        )}
-                      </div>
-
                       {/* Submit CTA */}
                       <button
                         type="submit"
@@ -665,9 +611,11 @@ export default function DepartmentQuizPage() {
                         <p className="mt-1 text-sm text-on-surface-variant">{t.resultsSubtitle}</p>
                       </div>
 
-                      <div className="border-2 border-black bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface">
-                        📍 {branch || "Kharis Church"}
-                      </div>
+                      {branch ? (
+                        <div className="border-2 border-black bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface">
+                          📍 {branch}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
 

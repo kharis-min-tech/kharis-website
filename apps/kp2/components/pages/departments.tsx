@@ -74,7 +74,7 @@ function DepartmentsPage() {
                 Why We Serve
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm text-white/80">
-                Serving is worship. Respond to grace. Take your place. Get busy serving.
+                Serving is worship. Worship God through your Service to Him.
               </p>
             </div>
 
@@ -109,23 +109,6 @@ function DepartmentsPage() {
                   </p>
                 </div>
               ))}
-            </div>
-
-            <div className="mt-12 flex flex-col items-center gap-4 rounded-none border border-on-background/10 bg-surface p-8 text-center shadow-[6px_6px_0_0_#000] sm:flex-row sm:justify-between sm:text-left">
-              <div>
-                <h3 className="font-headline-md mb-1 text-headline-md text-on-surface">
-                  Still not sure where you fit?
-                </h3>
-                <p className="text-sm text-on-surface">
-                  Take the quiz and we&apos;ll help you find where you fit in the local branch.
-                </p>
-              </div>
-              <Link
-                href="/quiz"
-                className="shrink-0 rounded-none border border-on-background/10 bg-primary px-8 py-3 text-sm font-black uppercase tracking-wider text-on-primary text-center transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-              >
-                To the Quiz
-              </Link>
             </div>
           </div>
         </section>
