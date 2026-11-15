@@ -10,12 +10,21 @@ type CityPhoto = {
 
 /** City illustrations for globe callouts, separate from branch building photographs. */
 export const globeCityPhotos: Record<string, CityPhoto> = {
+  /*
+   * Tower Bridge, not the old purple-sunset skyline.
+   *
+   * These cards are a 232 by 118 crop, about 2:1, and that photograph was
+   * roughly three quarters sky with the buildings a thin dark band along the
+   * bottom: centre-cropped to the card, it was very nearly a picture of
+   * clouds. This frame is 2.00 on the nose, so it lands in the card almost
+   * uncropped, and the subject fills it the way the Accra arch fills its own.
+   */
   london: {
-    photo: siteImageUrls["/images/globe/london-skyline.webp"],
-    author: "flapcats",
-    source: "https://commons.wikimedia.org/wiki/File:London_Skyline_purple_sunset.jpg",
-    license: "CC BY-SA 4.0",
-    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+    photo: siteImageUrls["/images/globe/london-tower-bridge.webp"],
+    author: "Diliff",
+    source: "https://commons.wikimedia.org/wiki/File:Tower_Bridge_London_Feb_2006.jpg",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
   },
   birmingham: {
     photo: siteImageUrls["/images/globe/birmingham-skyline.webp"],
@@ -168,17 +177,20 @@ export function globeCityPhoto(slug: string): CityPhoto | undefined {
 /**
  * One photograph per country, shown on the globe's country marker card.
  *
- * These are people, not landmarks: the marker is the only place on the
- * Locations page where a branch gets to feel like a room full of faces rather
- * than a row of addresses. The Sunday photographs used to sit in a standalone
- * band under the globe where they decorated the page without helping anyone
- * choose a branch; they do more work here.
+ * Landmarks, and the same landmarks the city pins already use, so every card
+ * on the globe is the same kind of picture.
+ *
+ * These were Sunday congregation photographs, on the reasoning that a marker
+ * is the one place a branch can feel like a room full of faces. In practice
+ * it did not hold up: there were only two entries, the Ghana card was being
+ * given a photograph taken in LONDON, and Sierra Leone had none at all so it
+ * fell through to whichever branch happened to carry a building photo. Three
+ * markers, three different kinds of image, one of them of the wrong country.
  */
 const countryPhotos: Record<string, string> = {
-  "United Kingdom":
-    "https://images.kharis.org/site-images/main/8687dacfd8faa5e2/locations/london-sunday-laughter.jpg",
-  Ghana:
-    "https://images.kharis.org/site-images/main/894014bef2ca905c/locations/london-sunday-prayer.jpg",
+  "United Kingdom": globeCityPhotos.london!.photo,
+  Ghana: globeCityPhotos.accra!.photo,
+  "Sierra Leone": globeCityPhotos.freetown!.photo,
 };
 
 /** Falls back to whichever branch in that country has a photograph. */

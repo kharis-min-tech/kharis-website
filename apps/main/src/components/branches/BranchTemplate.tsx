@@ -12,9 +12,9 @@ import PlanVisitModal from "@/components/PlanVisitModal";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import BranchGallery from "@/components/branches/BranchGallery";
-import BranchMonthCalendar from "@/components/branches/BranchMonthCalendar";
 import BranchContactForm from "@/components/branches/BranchContactForm";
 import BranchMediaModal from "@/components/branches/BranchMediaModal";
+import { BranchNextGathering } from "@/components/branches/BranchNextGathering";
 
 import { branchIntroductions } from "@/data/branch-introductions";
 
@@ -73,413 +73,273 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
     src?: string;
   } | null>(null);
 
+  /*
+   * overflow-x is CLIPPED, not hidden. `hidden` makes this div a scroll
+   * container, and a scroll container that never scrolls is still the
+   * NEAREST one, so every animation-timeline: view() inside the page
+   * anchored to it and sat permanently "finished": the arrival animations
+   * were attached and never ran a frame. `clip` keeps the horizontal
+   * overflow off, which the full-bleed band needs, without creating a scroll
+   * container. It is what about.css, contact-page.css and give.css already
+   * use on their own page wrappers.
+   */
   return (
-    <div className="branch-page min-h-screen font-sans overflow-x-hidden flex flex-col text-[var(--branch-ink)]">
+    <div className="branch-page min-h-screen font-sans overflow-x-clip flex flex-col text-[var(--branch-ink)]">
       <SiteHeader tone="light" />
 
       {/* Main Content Area */}
       <main className="w-full">
-        <section className="branch-intro" aria-labelledby="branch-title">
-          <nav className="branch-intro__breadcrumb" aria-label="Breadcrumb">
-            <Link href="/locations">All locations</Link>
-            <span aria-hidden="true">/</span>
-            <span>{view.city}</span>
-          </nav>
-          <div className="branch-intro__grid">
-            <div className="branch-intro__copy">
-              <p className="branch-intro__eyebrow">One family. Right here in {view.city}.</p>
-              <h1 id="branch-title">
-                <span>Welcome to</span>
-                {currentBranch.name}
-              </h1>
-              <p className="branch-intro__description">{view.description}</p>
-              <div className="branch-intro__actions">
-                <button
-                  type="button"
-                  className="branch-action branch-action--primary k-cta"
-                  onClick={() => setIsPlanVisitOpen(true)}
-                >
-                  Plan your visit <ArrowRight size={18} aria-hidden="true" />
-                </button>
-                <a href="#services" className="branch-action k-cta">
-                  Times & directions <ArrowRight size={18} aria-hidden="true" />
-                </a>
-              </div>
-              <p className="branch-intro__note">Come as you are. There’s a place for you here.</p>
-            </div>
-            <div className="branch-intro__visual">
-              {view.hero ? (
-                <SiteImage
-                  src={view.hero}
-                  alt={`Church family at ${currentBranch.name}`}
-                  fill
-                  priority
-                  sizes="(max-width: 800px) 100vw, 52vw"
-                  className="branch-intro__photo"
-                />
-              ) : (
-                <div className="branch-intro__placeholder">
-                  Many branches.
-                  <br />
-                  One family.
+        {/* The dotted field: hero through the service times and map. One
+            wrapper rather than a background per section, so the 14px grid
+            stays in phase across the seam between them. */}
+        <div className="branch-field">
+          <section className="branch-intro" aria-labelledby="branch-title">
+            <nav className="branch-intro__breadcrumb" aria-label="Breadcrumb">
+              <Link href="/locations">All locations</Link>
+              <span aria-hidden="true">/</span>
+              <span>{view.city}</span>
+            </nav>
+            <div className="branch-intro__grid">
+              <div className="branch-intro__copy">
+                <h1 id="branch-title">
+                  <span>Welcome to</span>
+                  {currentBranch.name}
+                </h1>
+                <p className="branch-intro__description">{view.description}</p>
+                <div className="branch-intro__actions">
+                  <button
+                    type="button"
+                    className="branch-action branch-action--primary k-cta"
+                    onClick={() => setIsPlanVisitOpen(true)}
+                  >
+                    Plan your visit <ArrowRight size={18} aria-hidden="true" />
+                  </button>
+                  <a href="#services" className="branch-action k-cta">
+                    Times & directions <ArrowRight size={18} aria-hidden="true" />
+                  </a>
                 </div>
-              )}
-              <div className="branch-intro__caption branch-on-photo">
-                <span>Kharis Church</span>
-                <strong>{view.city}</strong>
+                <BranchNextGathering services={currentBranch.services ?? []} />
+              </div>
+              <div className="branch-intro__visual">
+                {view.hero ? (
+                  <SiteImage
+                    src={view.hero}
+                    alt={`Church family at ${currentBranch.name}`}
+                    fill
+                    preload
+                    sizes="(max-width: 800px) 100vw, 52vw"
+                    className="branch-intro__photo"
+                  />
+                ) : (
+                  <div className="branch-intro__placeholder">
+                    Many branches.
+                    <br />
+                    One family.
+                  </div>
+                )}
+                <div className="branch-intro__caption branch-on-photo">
+                  <span>Kharis Church</span>
+                  <strong>{view.city}</strong>
+                </div>
               </div>
             </div>
-          </div>
-          <nav className="branch-section-nav" aria-label="Explore this branch">
-            <a href="#services">Your Sunday</a>
-            <a href="#pastor">Meet the pastor</a>
-            <a href="#events">What’s on</a>
-            <a href="#contact">Say hello</a>
-          </nav>
-        </section>
+          </section>
 
-        {/* SERVICE TIMES & LOCATION BENTO GRID SECTION */}
-        <section
-          id="services"
-          className="branch-services py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
-        >
-          <div className="text-center mb-16">
-            <p className="branch-section-label">01 / Your Sunday starts here</p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)] mb-4">
-              Join Us This Sunday
-            </h2>
-            <p className="text-base font-medium text-[var(--branch-muted)] max-w-2xl mx-auto">
-              We can&apos;t wait to host you. Choose a service time that works best for you and your
-              family.
-            </p>
-          </div>
+          {/* SERVICE TIMES & LOCATION BENTO GRID SECTION */}
+          <section
+            id="services"
+            className="branch-services py-16 px-5 md:px-8 max-w-[1536px] mx-auto"
+          >
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)] mb-4">
+                Join Us This Sunday
+              </h2>
+              <p className="text-base font-medium text-[var(--branch-muted)] max-w-2xl mx-auto">
+                We can&apos;t wait for you to join us for an amazing time in God&apos;s presence.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-5 flex flex-col gap-6">
-              <div className="branch-service-card bg-[var(--branch-card)] p-6 sm:p-8 border border-[var(--branch-line)] shadow-sm h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-3 mb-8 pb-4 border-b border-[var(--branch-line)]">
-                    <div className="w-12 h-12 bg-[var(--branch-inset)] flex items-center justify-center text-[var(--branch-accent)]">
-                      <Clock className="w-6 h-6 stroke-[2.5]" />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-5 flex flex-col gap-6">
+                <div className="branch-service-card bg-[var(--branch-card)] p-6 sm:p-8 border border-[var(--branch-line)] shadow-sm h-full flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 mb-8 pb-4 border-b border-[var(--branch-line)]">
+                      <div className="w-12 h-12 bg-[var(--branch-inset)] flex items-center justify-center text-[var(--branch-accent)]">
+                        <Clock className="w-6 h-6 stroke-[2.5]" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-[var(--branch-ink)]!">
+                          Service Times
+                        </h3>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[var(--branch-ink)]!">
-                        Service Times
-                      </h3>
-                      <p className="text-xs font-semibold text-[var(--branch-muted)]">
-                        Sunday & Midweek Gathering
-                      </p>
-                    </div>
-                  </div>
 
-                  <div className="space-y-4">
-                    {sundayServices.length === 0 ? (
-                      <div className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[var(--branch-line)]">
-                        <div className="flex-shrink-0 w-20 text-center">
-                          <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
-                            TBC
-                          </span>
-                        </div>
-                        <div className="flex-grow pt-0.5">
-                          <h4 className="text-sm font-bold text-[var(--branch-ink)]! mb-1">
-                            Sunday gathering
-                          </h4>
-                          <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
-                            Service time will be confirmed soon.
-                          </p>
-                        </div>
-                      </div>
-                    ) : null}
-                    {sundayServices.map((service, index) => (
-                      <div
-                        key={index}
-                        onClick={() => setIsPlanVisitOpen(true)}
-                        className="flex items-start gap-4 p-4 hover:bg-[var(--branch-inset)] transition-colors group cursor-pointer border relative overflow-hidden bg-[var(--branch-inset)] border-[var(--branch-line)]"
-                      >
-                        <div className="flex-shrink-0 w-20 text-center">
-                          <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
-                            {formatServiceTime(service.start_time)}
-                          </span>
-                          <span className="text-[10px] font-extrabold text-[var(--branch-soft)] uppercase tracking-wider bg-[var(--branch-inset)] px-2 py-0.5"></span>
-                        </div>
-
-                        <div className="flex-grow pt-0.5">
-                          <h4 className="text-sm font-bold text-[var(--branch-ink)]! mb-1 group-hover:text-[var(--branch-accent)] transition-colors">
-                            {service.name}
-                          </h4>
-                          <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
-                            {service.description || "Details will be added soon."}
-                          </p>
-                        </div>
-
-                        <ChevronRight className="w-5 h-5 text-[var(--branch-muted)] group-hover:text-[var(--branch-ink)] transition-colors pt-1" />
-                      </div>
-                    ))}
-
-                    {midweekServices.length === 0 ? (
-                      <div className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[#e8a33d]/30">
-                        <div className="flex-shrink-0 w-20 text-center">
-                          <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
-                            TBC
-                          </span>
-                        </div>
-                        <div className="flex-grow pt-0.5">
-                          <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[var(--branch-accent)] mb-1">
-                            Midweek
-                          </span>
-                          <h4 className="text-sm font-bold text-[var(--branch-ink)] mb-1">
-                            Midweek gathering
-                          </h4>
-                          <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
-                            Midweek details will be added soon.
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      midweekServices.map((service) => (
-                        <div
-                          key={service.id}
-                          onClick={() => setIsPlanVisitOpen(true)}
-                          className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[#e8a33d]/30 hover:bg-[var(--branch-inset)] transition-colors group cursor-pointer relative overflow-hidden"
-                        >
+                    <div className="space-y-4">
+                      {sundayServices.length === 0 ? (
+                        <div className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[var(--branch-line)]">
                           <div className="flex-shrink-0 w-20 text-center">
                             <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
-                              {formatServiceTime(service.start_time) || "TBC"}
+                              TBC
                             </span>
                           </div>
                           <div className="flex-grow pt-0.5">
-                            <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[var(--branch-accent)] mb-1">
-                              {service.day || "Midweek"} · Midweek
+                            <h4 className="text-sm font-bold text-[var(--branch-ink)]! mb-1">
+                              Sunday gathering
+                            </h4>
+                            <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
+                              Service time will be confirmed soon.
+                            </p>
+                          </div>
+                        </div>
+                      ) : null}
+                      {sundayServices.map((service, index) => (
+                        <div
+                          key={index}
+                          onClick={() => setIsPlanVisitOpen(true)}
+                          className="flex items-start gap-4 p-4 hover:bg-[var(--branch-inset)] transition-colors group cursor-pointer border relative overflow-hidden bg-[var(--branch-inset)] border-[var(--branch-line)]"
+                        >
+                          <div className="flex-shrink-0 w-20 text-center">
+                            <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
+                              {formatServiceTime(service.start_time)}
                             </span>
-                            <h4 className="text-sm font-bold text-[var(--branch-ink)] mb-1 group-hover:text-[var(--branch-accent)] transition-colors">
-                              {service.name || "Midweek gathering"}
+                            <span className="text-[10px] font-extrabold text-[var(--branch-soft)] uppercase tracking-wider bg-[var(--branch-inset)] px-2 py-0.5"></span>
+                          </div>
+
+                          <div className="flex-grow pt-0.5">
+                            <h4 className="text-sm font-bold text-[var(--branch-ink)]! mb-1 group-hover:text-[var(--branch-accent)] transition-colors">
+                              {service.name}
                             </h4>
                             <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
                               {service.description || "Details will be added soon."}
                             </p>
                           </div>
+
                           <ChevronRight className="w-5 h-5 text-[var(--branch-muted)] group-hover:text-[var(--branch-ink)] transition-colors pt-1" />
                         </div>
-                      ))
+                      ))}
+
+                      {midweekServices.length === 0 ? (
+                        <div className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[var(--branch-line)]">
+                          <div className="flex-shrink-0 w-20 text-center">
+                            <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
+                              TBC
+                            </span>
+                          </div>
+                          <div className="flex-grow pt-0.5">
+                            <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[var(--branch-accent)] mb-1">
+                              Midweek
+                            </span>
+                            <h4 className="text-sm font-bold text-[var(--branch-ink)] mb-1">
+                              Midweek gathering
+                            </h4>
+                            <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
+                              Midweek details will be added soon.
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        midweekServices.map((service) => (
+                          <div
+                            key={service.id}
+                            onClick={() => setIsPlanVisitOpen(true)}
+                            className="flex items-start gap-4 p-4 bg-[var(--branch-inset)] border border-[var(--branch-line)] hover:bg-[var(--branch-inset)] transition-colors group cursor-pointer relative overflow-hidden"
+                          >
+                            <div className="flex-shrink-0 w-20 text-center">
+                              <span className="block text-2xl font-extrabold text-[var(--branch-accent)] mb-0.5">
+                                {formatServiceTime(service.start_time) || "TBC"}
+                              </span>
+                            </div>
+                            <div className="flex-grow pt-0.5">
+                              <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-[var(--branch-accent)] mb-1">
+                                {service.day || "Midweek"} · Midweek
+                              </span>
+                              <h4 className="text-sm font-bold text-[var(--branch-ink)] mb-1 group-hover:text-[var(--branch-accent)] transition-colors">
+                                {service.name || "Midweek gathering"}
+                              </h4>
+                              <p className="text-xs font-medium text-[var(--branch-soft)] leading-relaxed">
+                                {service.description || "Details will be added soon."}
+                              </p>
+                            </div>
+                            <ChevronRight className="w-5 h-5 text-[var(--branch-muted)] group-hover:text-[var(--branch-ink)] transition-colors pt-1" />
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-7 flex flex-col gap-6">
+                <div className="branch-map-card bg-[var(--branch-card)] p-3 border border-[var(--branch-line)] shadow-sm h-[500px] relative overflow-hidden group">
+                  <div className="absolute inset-3 overflow-hidden">
+                    {mapEmbedSrc ? (
+                      <iframe
+                        title={`Map of ${currentBranch.name}`}
+                        src={mapEmbedSrc}
+                        className="h-full w-full border-0"
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                      />
+                    ) : view.hero ? (
+                      <img
+                        src={view.hero}
+                        alt=""
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-black" />
                     )}
                   </div>
-                </div>
 
-                <div className="mt-8 pt-6 border-t border-[var(--branch-line)] flex justify-between items-center bg-[var(--branch-inset)] p-4">
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d4920a] opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-[#d4920a]"></span>
-                    </span>
-                    <span className="text-xs font-bold text-[var(--branch-ink)]">
-                      Warm welcome team on hand when you arrive
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setIsPlanVisitOpen(true)}
-                    className="text-[var(--branch-accent)] hover:underline text-xs font-bold cursor-pointer"
-                  >
-                    Plan your visit
-                  </button>
-                </div>
-              </div>
-            </div>
+                  <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
+                    <div className="bg-[var(--branch-card)]/95 backdrop-blur-md p-4 max-w-xs pointer-events-auto shadow-lg border border-[var(--branch-line)] text-[var(--branch-ink)]">
+                      <h4 className="font-bold text-sm text-[var(--branch-ink)]! mb-1">
+                        {currentBranch.name}
+                      </h4>
+                      <p className="font-medium text-xs text-[var(--branch-soft)] mb-3 leading-snug">
+                        {view.address}
+                      </p>
+                      {view.hasAddress ? (
+                        <a
+                          href={`https://maps.google.com/?q=${encodeURIComponent(view.address)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-[var(--branch-accent)] text-xs font-bold hover:underline"
+                        >
+                          <Navigation className="w-3.5 h-3.5" />
+                          <span>Get Directions</span>
+                        </a>
+                      ) : null}
+                    </div>
 
-            <div className="lg:col-span-7 flex flex-col gap-6">
-              <div className="branch-map-card bg-[var(--branch-card)] p-3 border border-[var(--branch-line)] shadow-sm h-[500px] relative overflow-hidden group">
-                <div className="absolute inset-3 overflow-hidden">
-                  {mapEmbedSrc ? (
-                    <iframe
-                      title={`Map of ${currentBranch.name}`}
-                      src={mapEmbedSrc}
-                      className="h-full w-full border-0"
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    />
-                  ) : view.hero ? (
-                    <img
-                      src={view.hero}
-                      alt=""
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-black" />
-                  )}
-                </div>
-
-                <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none">
-                  <div className="bg-[var(--branch-card)]/95 backdrop-blur-md p-4 max-w-xs pointer-events-auto shadow-lg border border-[var(--branch-line)] text-[var(--branch-ink)]">
-                    <h4 className="font-bold text-sm text-[var(--branch-ink)]! mb-1">
-                      {currentBranch.name}
-                    </h4>
-                    <p className="font-medium text-xs text-[var(--branch-soft)] mb-3 leading-snug">
-                      {view.address}
-                    </p>
-                    {view.hasAddress ? (
-                      <a
-                        href={`https://maps.google.com/?q=${encodeURIComponent(view.address)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[var(--branch-accent)] text-xs font-bold hover:underline"
-                      >
-                        <Navigation className="w-3.5 h-3.5" />
-                        <span>Get Directions</span>
-                      </a>
+                    {mapEmbedSrc ? (
+                      <div className="flex flex-col gap-2 pointer-events-auto">
+                        <button
+                          onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
+                          className="w-10 h-10 bg-[var(--branch-card)]/90 backdrop-blur-md flex items-center justify-center text-[var(--branch-ink)] hover:text-[var(--branch-accent)] transition-colors shadow-md border border-[var(--branch-line)] cursor-pointer"
+                          aria-label="Zoom In"
+                        >
+                          <Plus className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => setZoomLevel((z) => Math.max(z - 1, 10))}
+                          className="w-10 h-10 bg-[var(--branch-card)]/90 backdrop-blur-md flex items-center justify-center text-[var(--branch-ink)] hover:text-[var(--branch-accent)] transition-colors shadow-md border border-[var(--branch-line)] cursor-pointer"
+                          aria-label="Zoom Out"
+                        >
+                          <Minus className="w-5 h-5" />
+                        </button>
+                      </div>
                     ) : null}
                   </div>
-
-                  {mapEmbedSrc ? (
-                    <div className="flex flex-col gap-2 pointer-events-auto">
-                      <button
-                        onClick={() => setZoomLevel((z) => Math.min(z + 1, 18))}
-                        className="w-10 h-10 bg-[var(--branch-card)]/90 backdrop-blur-md flex items-center justify-center text-[var(--branch-ink)] hover:text-[var(--branch-accent)] transition-colors shadow-md border border-[var(--branch-line)] cursor-pointer"
-                        aria-label="Zoom In"
-                      >
-                        <Plus className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => setZoomLevel((z) => Math.max(z - 1, 10))}
-                        className="w-10 h-10 bg-[var(--branch-card)]/90 backdrop-blur-md flex items-center justify-center text-[var(--branch-ink)] hover:text-[var(--branch-accent)] transition-colors shadow-md border border-[var(--branch-line)] cursor-pointer"
-                        aria-label="Zoom Out"
-                      >
-                        <Minus className="w-5 h-5" />
-                      </button>
-                    </div>
-                  ) : null}
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* WELCOME / LEAD PASTOR SECTION */}
-        <section
-          id="pastor"
-          className="branch-pastor py-16 bg-[var(--branch-card)] border-y border-[var(--branch-line)]"
-        >
-          <div className="max-w-[1536px] mx-auto px-5 md:px-8">
-            <div
-              className={`grid grid-cols-1 gap-10 lg:gap-14 items-center ${view.portrait ? "md:grid-cols-12" : ""}`}
-            >
-              {view.portrait ? (
-                <div className="md:col-span-5 relative">
-                  <div className="relative aspect-4/5 overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
-                    <img
-                      src={view.portrait}
-                      alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <div className="absolute -bottom-4 -right-4 border border-[var(--branch-line)] bg-[var(--branch-card)] px-5 py-3 shadow-xl">
-                    <p className="text-xs font-extrabold uppercase tracking-wider text-[var(--branch-accent)]">
-                      {view.pastorRole}
-                    </p>
-                    <p className="text-sm font-bold text-[var(--branch-ink)]">{view.pastorName}</p>
-                  </div>
-                </div>
-              ) : null}
-
-              <div className={`${view.portrait ? "md:col-span-7" : ""} space-y-5`}>
-                <p className="branch-section-label">02 / A personal welcome</p>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-[var(--branch-ink)]!">
-                  Welcome to <span className="branch-pastor__name">{currentBranch.name}</span>
-                </h2>
-
-                <p className="text-sm font-bold uppercase tracking-wider text-[var(--branch-accent)]">
-                  {view.pastorRole} {view.pastorKnown ? `· ${view.pastorName}` : ""}
-                </p>
-
-                <p className="text-base font-medium leading-relaxed text-[var(--branch-soft)]">
-                  {view.welcome[0]}
-                </p>
-                <div
-                  id="branch-full-welcome"
-                  className={`branch-pastor__extended space-y-4${welcomeExpanded ? " branch-pastor__extended--open" : ""}`}
-                >
-                  {view.welcome.slice(1).map((para, i) => (
-                    <p
-                      key={i}
-                      className="text-base font-medium leading-relaxed text-[var(--branch-soft)]"
-                    >
-                      {para}
-                    </p>
-                  ))}
-                  <blockquote className="my-2 border-l-4 border-[#d4920a] pl-4 text-base font-medium italic leading-relaxed text-[var(--branch-ink)]">
-                    &ldquo;{view.quote}&rdquo;
-                  </blockquote>
-                </div>
-                <button
-                  type="button"
-                  className="branch-mobile-disclosure"
-                  aria-expanded={welcomeExpanded}
-                  aria-controls="branch-full-welcome"
-                  onClick={() => setWelcomeExpanded((expanded) => !expanded)}
-                >
-                  {welcomeExpanded ? "Show less" : "Read the full welcome"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {introduction ? (
-          <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-            <div className="mb-10 text-center">
-              <p className="eyebrow mb-3">Meet our branch</p>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
-                Welcome to {currentBranch.name}
-              </h2>
-            </div>
-            <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
-              <video
-                className="block aspect-video w-full"
-                src={introduction.src}
-                poster={introduction.poster}
-                controls
-                playsInline
-                preload="none"
-                aria-label={`${currentBranch.name} branch introduction`}
-              >
-                <a href={introduction.src}>Watch our branch introduction video</a>
-              </video>
             </div>
           </section>
-        ) : null}
+        </div>
 
-        {/* GALLERY */}
-        <BranchGallery
-          images={galleryImages}
-          city={view.city}
-          onImageClick={(src) => setMediaModal({ type: "image", src })}
-        />
-
-        {/* MONTHLY EVENTS CALENDAR */}
-        <BranchMonthCalendar
-          branch={currentBranch}
-          city={view.city}
-          address={view.address}
-          onRsvp={(title) => {
-            setSelectedEventRsvp(title);
-            setIsPlanVisitOpen(true);
-          }}
-        />
-
-        {/* CONTACT BRANCH */}
-        <BranchContactForm
-          branch={{
-            name: currentBranch.name,
-            city: view.city,
-            fullAddress: view.address,
-            email: currentBranch.contact_email,
-            phone: currentBranch.contact_phone,
-          }}
-        />
-
-        {/* TRANSIT & PARKING INFO SECTION */}
+        {/* WELCOME / LEAD PASTOR SECTION */}
         <section className="branch-travel py-16 bg-[var(--branch-card)] border-t border-[var(--branch-line)]">
           <div className="max-w-[1536px] mx-auto px-5 md:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -497,7 +357,7 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                 <div className="w-12 h-12 bg-[var(--branch-inset)] text-[var(--branch-accent)] flex items-center justify-center">
                   <Train className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-[var(--branch-ink)]!">Public Transit</h3>
+                <h3 className="text-xl font-bold text-[var(--branch-ink)]!">Public Transport</h3>
                 <p className="text-sm text-[var(--branch-soft)] font-medium leading-relaxed">
                   {view.transit}
                 </p>
@@ -516,10 +376,124 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
           </div>
         </section>
 
+        {/* The second dotted field: the pastor's word through to the end of
+            the contact form. The travel band between the two is left plain
+            on purpose, so the page reads as field / interlude / field. */}
+        <div className="branch-field">
+          <section id="pastor" className="branch-pastor py-16">
+            <div className="max-w-[1536px] mx-auto px-5 md:px-8">
+              <div
+                className={`grid grid-cols-1 gap-10 lg:gap-14 items-center ${view.portrait ? "md:grid-cols-12" : ""}`}
+              >
+                {view.portrait ? (
+                  <div className="md:col-span-5 relative">
+                    <div className="relative aspect-4/5 overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
+                      <img
+                        src={view.portrait}
+                        alt={view.pastorKnown ? view.pastorName : "Branch pastor"}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div className="absolute -bottom-4 -right-4 border border-[var(--branch-line)] bg-[var(--branch-card)] px-5 py-3 shadow-xl">
+                      <p className="text-xs font-extrabold uppercase tracking-wider text-[var(--branch-accent)]">
+                        {view.pastorRole}
+                      </p>
+                      <p className="text-sm font-bold text-[var(--branch-ink)]">
+                        {view.pastorName}
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className={`${view.portrait ? "md:col-span-7" : ""} space-y-5`}>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-[var(--branch-ink)]!">
+                    A word from <span className="branch-pastor__name">{view.pastorName}</span>
+                  </h2>
+
+                  <p className="text-base font-medium leading-relaxed text-[var(--branch-soft)]">
+                    {view.welcome[0]}
+                  </p>
+                  <div
+                    id="branch-full-welcome"
+                    className={`branch-pastor__extended space-y-4${welcomeExpanded ? " branch-pastor__extended--open" : ""}`}
+                  >
+                    {view.welcome.slice(1).map((para, i) => (
+                      <p
+                        key={i}
+                        className="text-base font-medium leading-relaxed text-[var(--branch-soft)]"
+                      >
+                        {para}
+                      </p>
+                    ))}
+                    <blockquote className="my-2 border-l-4 border-[var(--branch-accent)] pl-4 text-base font-medium italic leading-relaxed text-[var(--branch-ink)]">
+                      &ldquo;{view.quote}&rdquo;
+                    </blockquote>
+                  </div>
+                  <button
+                    type="button"
+                    className="branch-mobile-disclosure"
+                    aria-expanded={welcomeExpanded}
+                    aria-controls="branch-full-welcome"
+                    onClick={() => setWelcomeExpanded((expanded) => !expanded)}
+                  >
+                    {welcomeExpanded ? "Show less" : "Read the full welcome"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {introduction ? (
+            <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
+              <div className="mb-10 text-center">
+                <p className="eyebrow mb-3">Meet our branch</p>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
+                  Welcome to {currentBranch.name}
+                </h2>
+              </div>
+              <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
+                <video
+                  className="block aspect-video w-full"
+                  src={introduction.src}
+                  poster={introduction.poster}
+                  controls
+                  playsInline
+                  preload="none"
+                  aria-label={`${currentBranch.name} branch introduction`}
+                >
+                  <a href={introduction.src}>Watch our branch introduction video</a>
+                </video>
+              </div>
+            </section>
+          ) : null}
+
+          {/* GALLERY */}
+          <BranchGallery
+            images={galleryImages}
+            city={view.city}
+            onImageClick={(src) => setMediaModal({ type: "image", src })}
+          />
+
+          {/* CONTACT BRANCH */}
+          <BranchContactForm
+            branch={{
+              name: currentBranch.name,
+              city: view.city,
+              fullAddress: view.address,
+              email: currentBranch.contact_email,
+              phone: currentBranch.contact_phone,
+            }}
+          />
+        </div>
+
+        {/* TRANSIT & PARKING INFO SECTION */}
+
         {extraSections}
       </main>
 
-      <SiteFooter tone="onLight" />
+      <SiteFooter />
 
       <PlanVisitModal
         isOpen={isPlanVisitOpen}

@@ -128,7 +128,7 @@ export function EventDetailModal({ event, onClose }: Props) {
                   </span>
                   <div>
                     <strong>Kharis Church</strong>
-                    <p>Changing the world with a touch of His Grace</p>
+                    <p>Changing our world with a touch of His Grace</p>
                   </div>
                 </div>
               </div>

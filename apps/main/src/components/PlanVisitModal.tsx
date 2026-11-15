@@ -129,18 +129,21 @@ export default function PlanVisitModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: 12 }}
             transition={{ duration: reduce ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="bg-[#15131f] max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-[#2e2942] relative max-h-[90svh] overflow-y-auto rounded-2xl"
+            className="bg-[var(--surface-raised)] max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-[var(--line)] relative max-h-[90svh] overflow-y-auto "
           >
-            <div className="flex items-center justify-between pb-4 border-b border-[#2e2942]">
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--line)]">
               <div className="flex items-center gap-2.5">
-                <div className="p-2.5 bg-[#630ed4] text-white shadow-md shadow-[#630ed4]/30">
+                <div className="p-2.5 bg-[var(--purple)] text-white shadow-md shadow-[var(--purple)]/30">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 id="plan-visit-title" className="font-extrabold text-xl text-white!">
+                  {/* Was text-white, which only worked while this panel was
+                      hardcoded dark. It follows the theme now, so the title
+                      has to take the page's ink or it is white on white. */}
+                  <h3 id="plan-visit-title" className="font-extrabold text-xl text-[var(--fg)]!">
                     Plan Your Visit
                   </h3>
-                  <p className="text-xs font-semibold text-[#b2aec1]">
+                  <p className="text-xs font-semibold text-[var(--muted)]">
                     {branchName
                       ? `We are excited to host you at ${branchName}.`
                       : "We are excited to host you and your family."}
@@ -150,7 +153,7 @@ export default function PlanVisitModal({
               <button
                 onClick={onClose}
                 aria-label="Close visit form"
-                className="p-2 text-[#b2aec1] hover:text-[#f3f0f8] hover:bg-[#201d2e] transition-colors"
+                className="p-2 text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-1)] transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -158,13 +161,13 @@ export default function PlanVisitModal({
 
             {isSubmitted ? (
               <div className="py-12 text-center space-y-4">
-                <div className="w-16 h-16 bg-[#630ed4]/20 text-[#e8a33d] mx-auto flex items-center justify-center">
+                <div className="w-16 h-16 bg-[var(--purple)]/20 text-[var(--purple)] mx-auto flex items-center justify-center">
                   <Check className="w-8 h-8 stroke-[3]" />
                 </div>
-                <h4 className="text-2xl font-extrabold text-[#f3f0f8]">
+                <h4 className="text-2xl font-extrabold text-[var(--fg)]">
                   You are all set, {name.split(" ")[0]}!
                 </h4>
-                <p className="text-sm font-semibold text-[#b2aec1] max-w-sm mx-auto">
+                <p className="text-sm font-semibold text-[var(--muted)] max-w-sm mx-auto">
                   Our host team has your details and will follow up before your visit.
                 </p>
               </div>
@@ -173,7 +176,7 @@ export default function PlanVisitModal({
                 <div>
                   <label
                     htmlFor="visit-name"
-                    className="block text-xs font-bold uppercase tracking-wider text-[#e8a33d] mb-1"
+                    className="block text-xs font-bold uppercase tracking-wider text-[var(--fg-soft)] mb-1"
                   >
                     Full Name
                   </label>
@@ -184,14 +187,14 @@ export default function PlanVisitModal({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Sarah Jenkins"
-                    className="w-full px-4 py-3 border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
+                    className="w-full px-4 py-3 border border-[var(--line)] bg-[var(--surface-1)] text-sm font-bold text-[var(--fg)] focus:outline-none focus:ring-2 focus:ring-[var(--purple)]"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="visit-email"
-                    className="block text-xs font-bold uppercase tracking-wider text-[#e8a33d] mb-1"
+                    className="block text-xs font-bold uppercase tracking-wider text-[var(--fg-soft)] mb-1"
                   >
                     Email Address
                   </label>
@@ -202,14 +205,14 @@ export default function PlanVisitModal({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="e.g. sarah@example.com"
-                    className="w-full px-4 py-3 border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
+                    className="w-full px-4 py-3 border border-[var(--line)] bg-[var(--surface-1)] text-sm font-bold text-[var(--fg)] focus:outline-none focus:ring-2 focus:ring-[var(--purple)]"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="visit-phone"
-                    className="block text-xs font-bold uppercase tracking-wider text-[#e8a33d] mb-1"
+                    className="block text-xs font-bold uppercase tracking-wider text-[var(--fg-soft)] mb-1"
                   >
                     Phone (optional)
                   </label>
@@ -219,22 +222,22 @@ export default function PlanVisitModal({
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+44 7000 000000"
-                    className="w-full px-4 py-3 border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
+                    className="w-full px-4 py-3 border border-[var(--line)] bg-[var(--surface-1)] text-sm font-bold text-[var(--fg)] focus:outline-none focus:ring-2 focus:ring-[var(--purple)]"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="visit-gathering"
-                    className="block text-xs font-bold uppercase tracking-wider text-[#e8a33d] mb-1"
+                    className="block text-xs font-bold uppercase tracking-wider text-[var(--fg-soft)] mb-1"
                   >
-                    Which gathering will you attend?
+                    Which service will you be attending?
                   </label>
                   <select
                     id="visit-gathering"
                     value={eventLabel || date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-4 py-3 border border-[#2e2942] bg-[#1a1826] text-sm font-bold text-[#f3f0f8] focus:outline-none focus:ring-2 focus:ring-[#630ed4]"
+                    className="w-full px-4 py-3 border border-[var(--line)] bg-[var(--surface-1)] text-sm font-bold text-[var(--fg)] focus:outline-none focus:ring-2 focus:ring-[var(--purple)]"
                   >
                     {eventLabel ? <option value={eventLabel}>{eventLabel}</option> : null}
                     <option value="Next Sunday">Next Sunday service</option>
@@ -243,32 +246,19 @@ export default function PlanVisitModal({
                   </select>
                 </div>
 
-                <div className="flex items-center gap-3 p-3 bg-[#1a1826] border border-[#2e2942]">
+                <div className="flex items-center gap-3 p-3 bg-[var(--surface-1)] border border-[var(--line)]">
                   <input
                     type="checkbox"
                     id="kids"
                     checked={children}
                     onChange={(e) => setChildren(e.target.checked)}
-                    className="w-4 h-4 text-[#630ed4] focus:ring-[#630ed4] bg-[#15131f] border-[#2e2942]"
-                  />
-                  <label htmlFor="kids" className="text-xs font-bold text-[#f3f0f8] cursor-pointer">
-                    I will be bringing children (ages 0-12) for Kharis Kids
-                  </label>
-                </div>
-
-                <div className="flex items-start gap-3 p-3 bg-[#1a1826] border border-[#2e2942]">
-                  <input
-                    type="checkbox"
-                    id="visit-consent"
-                    checked={consent}
-                    onChange={(e) => setConsent(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 text-[#630ed4] focus:ring-[#630ed4] bg-[#15131f] border-[#2e2942]"
+                    className="w-4 h-4 text-[var(--purple)] focus:ring-[var(--purple)] bg-[var(--surface-raised)] border-[var(--line)]"
                   />
                   <label
-                    htmlFor="visit-consent"
-                    className="text-xs font-bold text-[#f3f0f8] cursor-pointer"
+                    htmlFor="kids"
+                    className="text-xs font-bold text-[var(--fg)] cursor-pointer"
                   >
-                    The branch can contact me about this visit if needed.
+                    I will be bringing children (ages 0-12) for the Children&apos;s Ministry.
                   </label>
                 </div>
 
@@ -279,7 +269,7 @@ export default function PlanVisitModal({
                 <button
                   type="submit"
                   disabled={busy || !consent}
-                  className="k-cta w-full py-4 bg-[#630ed4] hover:bg-[#2a035c] text-white font-extrabold text-base shadow-lg shadow-[#630ed4]/30 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
+                  className="k-cta w-full py-4 bg-[var(--purple)] hover:bg-[var(--purple-deep)] text-white font-extrabold text-base shadow-lg shadow-[var(--purple)]/30 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
                 >
                   <span>{busy ? "Sending…" : "Confirm my visit"}</span>
                   <ChevronRight className="w-5 h-5" />

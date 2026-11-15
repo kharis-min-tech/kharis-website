@@ -145,10 +145,6 @@ export function BandHero() {
             <h1 className="sr-only">Welcome to Kharis</h1>
             <HeroHeadline />
           </div>
-
-          <div className="band-hero__foot">
-            <p className="band-hero__tagline">Changing the world with a touch of His Grace.</p>
-          </div>
         </div>
       </div>
     </section>

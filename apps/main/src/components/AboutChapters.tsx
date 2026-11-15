@@ -16,7 +16,7 @@ import {
   Flame,
   Cross,
 } from "lucide-react";
-import { ABOUT } from "@/lib/about-content";
+import { ABOUT, LEADERSHIP_BEATS } from "@/lib/about-content";
 
 export type AboutChapterId = "mission" | "vision" | "leadership";
 
@@ -123,7 +123,10 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
 
   const select = useCallback((id: AboutChapterId) => {
     setActive(id);
-    window.history.replaceState({}, "", `/about#${id}`);
+    /* Keep whatever is already in the query string. Hard coding "/about" threw
+     * it away, which silently dropped ?view=scroll the moment anyone picked a
+     * chapter, and the page switched itself back to the book. */
+    window.history.replaceState({}, "", `/about${window.location.search}#${id}`);
   }, []);
 
   useEffect(() => {
@@ -144,20 +147,6 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
       <span id="mission" className="about-stage__hash" />
       <span id="vision" className="about-stage__hash" />
       <span id="leadership" className="about-stage__hash" />
-
-      <header className="about-stage__banner">
-        <div className="about-stage__banner-inner">
-          <motion.h2
-            className="about-stage__title"
-            initial={false}
-            whileInView={reduce ? undefined : { x: [28, 0], opacity: [0.4, 1] }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, ease }}
-          >
-            Who we are<span aria-hidden="true">.</span>
-          </motion.h2>
-        </div>
-      </header>
 
       <div className="about-jump about-jump--stage" aria-label="Explore About">
         <div className="about-jump__row" role="tablist" aria-label="Chapters">
@@ -398,25 +387,20 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
           Their story
         </motion.p>
         <div className="about-lead__story-body">
-          {(() => {
-            const sentences = leadership.body.split(/(?<=[.!?])\s+(?=[A-Z])/);
-            return [sentences.slice(0, 3), sentences.slice(3, 5), sentences.slice(5)]
-              .filter((group) => group.length > 0)
-              .map((group, index) => (
-                <motion.div
-                  key={index}
-                  className="about-lead__story-beat"
-                  initial={reduce ? false : { y: 18, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.5, delay: index * 0.1, ease }}
-                  whileHover={reduce ? undefined : { y: -4 }}
-                >
-                  <h4>{["Founded in 2003", "The Word at the centre", "A life together"][index]}</h4>
-                  <p>{group.join(" ")}</p>
-                </motion.div>
-              ));
-          })()}
+          {LEADERSHIP_BEATS.map((beat, index) => (
+            <motion.div
+              key={beat.title}
+              className="about-lead__story-beat"
+              initial={reduce ? false : { y: 18, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease }}
+              whileHover={reduce ? undefined : { y: -4 }}
+            >
+              <h4>{beat.title}</h4>
+              <p>{beat.body}</p>
+            </motion.div>
+          ))}
         </div>
         <motion.div
           className="about-lead__story-action"

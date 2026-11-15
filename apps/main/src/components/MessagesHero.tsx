@@ -8,10 +8,12 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import { Play, X } from "lucide-react";
+import { MousePointer2, X } from "lucide-react";
 import Image from "@/components/SiteImage";
+import { ABOUT } from "@/lib/about-content";
 import type { MessageVideo } from "@/lib/youtube";
 
+/** Reveal the preview promptly once YouTube reports playback. */
 /** Reveal the preview promptly once YouTube reports playback. */
 const PLAY_SETTLE_MS = 180;
 /** Matches the crossfade in messages-hub.css; pause only once the video is invisible. */
@@ -58,6 +60,28 @@ function watchSrc(id: string, start: number) {
   return `${YT_ORIGIN}/embed/${id}?${params}`;
 }
 
+/**
+ * Who preached it, from the "Title | Speaker | Scripture" convention the
+ * channel titles follow.
+ *
+ * Kharis's own pastors are named the way the church says them out loud,
+ * matched against lib/about-content so there is no second list of names to
+ * keep in step. A guest keeps whatever the video calls them.
+ *
+ * Null when the second segment is plainly not a person. That happens often
+ * enough ("Mercy, Repentance and Baptism | Acts 2:36-42") that printing it
+ * unchecked would invite people to listen to a chapter of the Bible.
+ */
+function speakerFrom(title: string): string | null {
+  const raw = title.split("|")[1]?.trim();
+  if (!raw || /[0-9:]/.test(raw) || raw.split(/\s+/).length > 4) return null;
+  const pastor = ABOUT.leadership.pastors.find(
+    (p) => p.name.replace(/^pastor\s+/i, "").toLowerCase() === raw.toLowerCase(),
+  );
+  if (!pastor) return raw;
+  return `Pastor ${pastor.name.replace(/^pastor\s+/i, "").split(/\s+/)[0]}`;
+}
+
 type Props = {
   message: MessageVideo;
 };
@@ -78,6 +102,8 @@ export function MessagesHero({ message }: Props) {
   const [typed, setTyped] = useState(0);
   const [typingStarted, setTypingStarted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  /** Nobody taps a mouse and nobody clicks a phone, so the cue says which. */
+  const [coarsePointer, setCoarsePointer] = useState(false);
   /** Keep the preview hidden until YouTube's transient controls clear. */
   const [warming, setWarming] = useState(false);
   const [settled, setSettled] = useState(false);
@@ -88,15 +114,22 @@ export function MessagesHero({ message }: Props) {
   const watching = watchStart !== null;
   const showPreview = allowed && warming && settled && inView && !watching;
   const title = message.title.split("|")[0]?.trim() || message.title;
+  const speaker = speakerFrom(message.title);
+  const cue = `${coarsePointer ? "Tap" : "Click"} to ${speaker ? `listen to ${speaker}` : "dive in"}`;
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const syncMotion = () => setReducedMotion(motionQuery.matches);
     syncMotion();
     motionQuery.addEventListener("change", syncMotion);
+    const pointerQuery = window.matchMedia("(pointer: coarse)");
+    const syncPointer = () => setCoarsePointer(pointerQuery.matches);
+    syncPointer();
+    pointerQuery.addEventListener("change", syncPointer);
     const startTimer = window.setTimeout(() => setTypingStarted(true), 100);
     return () => {
       motionQuery.removeEventListener("change", syncMotion);
+      pointerQuery.removeEventListener("change", syncPointer);
       window.clearTimeout(startTimer);
     };
   }, []);
@@ -318,7 +351,7 @@ export function MessagesHero({ message }: Props) {
         }
         alt=""
         fill
-        priority
+        preload
         sizes="100vw"
         className="msg-hero-poster"
         onError={() => setSharpPoster(false)}
@@ -340,7 +373,6 @@ export function MessagesHero({ message }: Props) {
       <div className="msg-hub__veil" aria-hidden />
 
       <div className="msg-hub__hero-copy">
-        <p className="msg-hub__eyebrow">Kharis Messages</p>
         <h1 className="msg-hub__title" aria-label="Teachings that feed your spirit.">
           <span className="msg-hub__title-line" aria-hidden="true">
             {firstLine}
@@ -355,12 +387,14 @@ export function MessagesHero({ message }: Props) {
           <button
             ref={watchBtnRef}
             type="button"
-            className="msg-hero-watch k-cta"
+            className="msg-hero-cue"
             onClick={openPlayer}
             aria-label={`Watch message: ${title}`}
           >
-            <Play className="msg-hero-watch__icon" strokeWidth={2.2} aria-hidden />
-            Watch latest message
+            <span className="msg-hero-cue__pointer" aria-hidden="true">
+              <MousePointer2 className="msg-hero-cue__arrow" strokeWidth={1.75} />
+            </span>
+            <span className="msg-hero-cue__text">{cue}</span>
           </button>
         </div>
       </div>

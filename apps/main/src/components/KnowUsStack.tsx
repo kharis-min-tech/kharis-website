@@ -45,7 +45,7 @@ const cards: Card[] = [
   },
   {
     title: "Our Way of Life",
-    href: "/events",
+    href: "/life",
     image:
       "https://images.kharis.org/site-images/main/e06e47b90f538fed/events/singles-ball/ballroom-overview.jpg",
     cta: "Learn more",

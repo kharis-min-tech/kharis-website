@@ -60,13 +60,13 @@ export function SiteFooter({ tone }: Props) {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/governance" className={linkHover}>
-                    Governance
+                  <Link href="/contact" className={linkHover}>
+                    Contact Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className={linkHover}>
-                    Contact Us
+                  <Link href="/governance" className={linkHover}>
+                    Governance
                   </Link>
                 </li>
               </ul>
@@ -76,7 +76,7 @@ export function SiteFooter({ tone }: Props) {
               <ul className={`site-footer__links ${muted}`}>
                 <li>
                   <Link href="/locations" className={linkHover}>
-                    Where we are
+                    Where you can find us
                   </Link>
                 </li>
                 <li>

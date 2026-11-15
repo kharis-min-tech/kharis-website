@@ -792,6 +792,62 @@ html[data-theme="dark"] .gv-yellow {
   translate: -50% 0;
 }
 
+/* The Accra page. It reuses the panel, the rows and the split below; this is
+ * only the heading above them, which the tab never needed because the desk
+ * supplied one. */
+.gv-accra {
+  padding: calc(var(--pad-lg, 5rem) + 4.5rem) var(--gutter, 1.25rem) var(--pad-lg, 5rem);
+}
+
+.gv-accra__inner {
+  width: min(62rem, 100%);
+  margin: 0 auto;
+}
+
+.gv-accra__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.gv-accra__back:is(:hover, :focus-visible) {
+  color: var(--fg);
+}
+
+.gv .gv-accra__title {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--fg);
+}
+
+.gv-accra__lede {
+  margin: 0.75rem 0 2rem;
+  max-width: 40rem;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* The panel on this page wraps the split rather than a tab's worth of copy,
+ * so it has no tall minimum to hold. */
+.gv-accra .gv-panel {
+  min-height: 0;
+}
+
+.gv-accra .gv-split {
+  margin-top: 0;
+}
+
 /* Ghana: bank and Mobile Money side by side. */
 .gv-split {
   display: grid;

@@ -1,28 +1,59 @@
-/* Shared surfaces keep every branch section in sync with the site theme. */
+/*
+ * The branch palette, now pointed at the site's own tokens.
+ *
+ * These were a parallel set of hard-coded values that near-missed the site
+ * everywhere: ink #21162e against the site's #1c1c1f, a #fbf9fd page against
+ * #ffffff, its own greys, its own lines. Close enough to look like a mistake
+ * rather than a choice, and the reason the branch pages read as a different
+ * website. Roughly 190 usages across these components, so re-pointing the
+ * eight tokens brings the whole page over without touching any of them.
+ *
+ * The names stay because the components are written against them, and they
+ * still earn their place: the page/card relationship below is a decision,
+ * not an alias.
+ */
 .branch-page {
-  --branch-yellow: #630ed4;
-  --branch-accent: #630ed4;
-  --branch-muted: #736580;
-  --branch-soft: #51455e;
-  --branch-ink: #21162e;
-  --branch-card: #fff;
-  --branch-inset: #f4eff9;
-  --branch-line: #e5dced;
-  --branch-band: #eee6f7;
-  background: #fbf9fd;
+  --branch-yellow: var(--purple);
+  --branch-accent: var(--purple);
+  --branch-muted: var(--muted);
+  --branch-soft: var(--fg-soft);
+  --branch-ink: var(--fg);
+  /* Paper on a desk, the same relationship the About book uses: the page is
+   * the quieter surface and a card is the lifted one. Previously both were
+   * near-white, so cards barely separated from the page they sat on. */
+  --branch-card: var(--surface-raised);
+  --branch-inset: var(--surface-1);
+  --branch-line: var(--line);
+  /* The one plain interlude between the two dotted fields. */
+  --branch-band: var(--surface-1);
+  /* Lettering for anything filled with --branch-accent. */
+  --branch-on-accent: #fff;
+  /* The edge of a secondary button.
+   *
+   * This was --branch-line, the hairline meant for separating panels, which
+   * measured 1.30:1 against the light field and 1.33:1 against the dark one.
+   * WCAG 1.4.11 asks 3:1 for the boundary of an interactive control, so
+   * "Times & directions" had effectively no edge and read as loose text
+   * rather than a button. Ink rather than the accent, because :hover already
+   * resolves to full ink: the edge now deepens toward its hover state
+   * instead of changing hue. 3.27:1 here, 3.47:1 after dark. */
+  --branch-edge: rgba(28, 28, 31, 0.5);
+  background: var(--surface-0);
   color: var(--branch-ink);
 }
 html[data-theme="dark"] .branch-page {
-  --branch-yellow: #ffde59;
-  --branch-accent: #ffde59;
-  --branch-muted: #bcaece;
-  --branch-soft: #cfc5dc;
-  --branch-ink: #faf7ff;
-  --branch-card: #1c1229;
-  --branch-inset: #ffffff06;
-  --branch-line: #ffffff18;
-  --branch-band: #20122f;
-  background: #0d0815;
+  /* Yellow is the accent after dark across the site: the locations headline,
+   * the globe, the book's rules. Purple at its dark value is too close to
+   * these surfaces to carry emphasis. */
+  --branch-yellow: var(--yellow);
+  --branch-accent: var(--yellow);
+  /* Dark ink on the yellow fill. White on it is about 1.6:1. */
+  --branch-on-accent: #1c1c1f;
+  --branch-card: var(--surface-raised);
+  --branch-inset: var(--surface-1);
+  --branch-band: var(--surface-1);
+  --branch-edge: rgba(243, 240, 247, 0.4);
+  background: var(--surface-0);
 }
 .branch-intro {
   max-width: 1440px;
@@ -89,23 +120,36 @@ html[data-theme="dark"] .branch-page {
   justify-content: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  border: 1px solid var(--branch-line);
+  border: 1px solid var(--branch-edge);
+  background: var(--branch-card);
   color: var(--branch-ink);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
 }
-.branch-action:hover {
-  background: #ffffff0a;
-  border-color: #ffffff60;
+/* Only the secondary button gets the wash. This used to be a bare
+ * .branch-action:hover, which at (0,2,0) outranked .branch-action--primary
+ * at (0,1,0), so hovering the primary button replaced its accent fill with a
+ * 4% white wash while the white lettering stayed — white on near-white in
+ * daylight. The button did not dim on hover, it disappeared. */
+.branch-action:not(.branch-action--primary):hover {
+  background: var(--branch-inset);
+  border-color: var(--branch-ink);
 }
+/* The primary keeps its accent fill: the shared rule above would otherwise
+ * hand it the panel surface. It is listed after so it wins on order, since
+ * both selectors carry the same weight. */
+/* Ink that belongs to the accent it sits on, rather than a fixed white: the
+ * accent is purple in daylight and YELLOW after dark, where white lettering
+ * on it measured about 1.6:1 and was unreadable at rest, never mind on
+ * hover. */
 .branch-action--primary {
   background: var(--branch-yellow);
-  color: #fff;
+  color: var(--branch-on-accent);
   border-color: var(--branch-yellow);
 }
 .branch-action--primary:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
 }
 .branch-action:focus-visible,
 .branch-section-nav a:focus-visible {
@@ -123,7 +167,8 @@ html[data-theme="dark"] .branch-page {
   aspect-ratio: 0.96;
   overflow: hidden;
   background: linear-gradient(135deg, #48236b, #190d2b);
-  border-radius: 2px 2px 80px 2px;
+  /* Square, like every other surface on the site. */
+  border-radius: 0;
 }
 .branch-intro__photo {
   object-fit: cover;
@@ -159,6 +204,147 @@ html[data-theme="dark"] .branch-page {
   line-height: 1.1;
   color: var(--branch-yellow);
 }
+/*
+ * The countdown to the next gathering.
+ *
+ * Set as type against a rule, in the hero. No badge, no pill, no fill: the
+ * site states facts in its own ink, and this is the one fact most people
+ * came to the page for. Its height is held while it resolves on the client
+ * so the hero does not jump when it appears.
+ *
+ * The hero band that used to sit below this is gone. It ran the home page's
+ * curved photo row on the branch's gallery, which looked good on its own and
+ * was wrong in context: the page already has "Moments From Our Family" doing
+ * exactly that job further down, so the two competed and the hero stopped
+ * being a hero.
+ */
+.branch-next {
+  min-height: 6.5rem;
+  margin: 2rem 0 0;
+  padding-left: 1.1rem;
+  border-left: 3px solid var(--branch-accent);
+}
+
+.branch-next__label {
+  margin: 0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--branch-accent);
+}
+
+.branch-next__when {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.7rem;
+  margin: 0.45rem 0 0;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--branch-ink);
+}
+
+.branch-next__day::first-letter {
+  text-transform: uppercase;
+}
+
+.branch-next__time {
+  color: var(--branch-accent);
+}
+
+.branch-next__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--branch-muted);
+}
+
+/* The countdown itself, kept quieter than the day and time it belongs to. */
+.branch-next__in::before {
+  content: "·";
+  margin-right: 0.5rem;
+}
+
+.branch-next__in {
+  color: var(--branch-ink);
+  font-weight: 700;
+}
+
+/* While a service is actually running. A dot that pulses, which is the only
+ * thing on the page that moves on its own, because it is the only thing that
+ * is genuinely happening. */
+.branch-next--live .branch-next__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.branch-next--live .branch-next__label::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--branch-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .branch-next--live .branch-next__label::before {
+    animation: branch-live 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes branch-live {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/*
+ * Sections arrive as they are scrolled into view.
+ *
+ * Driven by the scroll position itself through animation-timeline, the same
+ * mechanism already running the contact page's three steps. No JavaScript,
+ * no observer, nothing to clean up. Browsers without it simply show the
+ * content, which is why there is no fallback: the unanimated state IS the
+ * content.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .branch-service-card,
+    .branch-map-card,
+    .branch-travel .grid > div {
+      animation: branch-arrive linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 42%;
+    }
+    /* The second of a pair is a beat behind the first, so a row settles
+     * left to right rather than snapping into place all at once. */
+    .branch-map-card,
+    .branch-travel .grid > div:nth-child(2) {
+      animation-range: entry 8% entry 54%;
+    }
+  }
+}
+
+@keyframes branch-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .branch-section-nav {
   display: flex;
   flex-wrap: wrap;
@@ -202,14 +388,14 @@ html[data-theme="dark"] .branch-page {
 }
 .branch-service-card,
 .branch-map-card {
-  border-radius: 20px;
+  border-radius: 0;
   background: var(--branch-card);
   border-color: var(--branch-line);
   box-shadow: none;
 }
 .branch-pastor {
-  background: var(--branch-band);
-  border-color: var(--branch-line);
+  /* No fill and no rules: this sits on the dotted field now, and a solid
+   * band here would paint the dots out over half its height. */
   padding-block: clamp(3.5rem, 7vw, 6rem);
 }
 .branch-pastor > div,
@@ -225,10 +411,13 @@ html[data-theme="dark"] .branch-page {
   aspect-ratio: 21 / 8;
   overflow: hidden;
 }
-.branch-page .text-\[\#e8a33d\],
-.branch-page .text-\[\#d4920a\] {
-  color: var(--branch-yellow);
-}
+/* The rule that used to sit here repainted two hard-coded orange text
+ * utilities back to the accent. It was patching over an abandoned orange
+ * accent that was still wired through these components as borders, hover
+ * states and one eyebrow chip, which the rule did not reach: that is why
+ * "Say Hello" came out orange while "Life at Kharis London" came out yellow.
+ * The literals are gone from the components now, so there is nothing left to
+ * repaint. */
 .branch-page blockquote {
   border-color: var(--branch-yellow);
 }
@@ -236,7 +425,7 @@ html[data-theme="dark"] .branch-page {
   background: var(--branch-band);
 }
 .branch-travel .grid > div {
-  border-radius: 16px;
+  border-radius: 0;
   background: var(--branch-card);
 }
 @keyframes branch-copy-arrive {
@@ -310,20 +499,15 @@ html[data-theme="dark"] .branch-action--primary {
   position: relative;
   isolation: isolate;
 }
-.branch-intro::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-  width: min(60vw, 800px);
-  height: 650px;
-  top: 0;
-  right: -10%;
-  background: radial-gradient(ellipse, #a76ce525, transparent 68%);
-}
-.branch-intro__visual {
-  box-shadow: 16px 18px 0 var(--branch-band);
-}
+/*
+ * The decoration that used to live here is gone: a radial purple glow bleeding
+ * off the top right of the hero, and a hard 16px/18px offset block behind the
+ * photograph. Neither appears anywhere else on the site. Nothing on the home
+ * page, the About book, Life or Give sits on a tinted halo or casts a solid
+ * drop block; surfaces here are flat, square and separated by a line or by a
+ * change of surface token. Both read as stock template dressing rather than
+ * as this site.
+ */
 .branch-intro__eyebrow::before {
   content: "";
   display: inline-block;
@@ -341,9 +525,12 @@ html[data-theme="dark"] .branch-action--primary {
   font-weight: 700;
   margin-bottom: 1.25rem;
 }
+/* No accent ribbon along the top and no lifted shadow. A card on this site
+ * is a surface inside a line, the same as the statement of faith's pages and
+ * the Give panel. */
 .branch-service-card {
-  border-top: 3px solid var(--branch-accent);
-  box-shadow: 0 16px 48px #32115108;
+  border: 1px solid var(--branch-line);
+  box-shadow: none;
 }
 .branch-pastor {
   position: relative;
@@ -352,11 +539,11 @@ html[data-theme="dark"] .branch-action--primary {
 .branch-pastor blockquote {
   padding: 1.5rem;
   background: var(--branch-card);
-  border-radius: 0 16px 16px 0;
+  border-radius: 0;
 }
 .branch-page #events > div:last-child,
 .branch-page #contact form {
-  border-radius: 20px;
+  border-radius: 0;
 }
 .branch-page #contact input,
 .branch-page #contact textarea {
@@ -367,19 +554,26 @@ html[data-theme="dark"] .branch-action--primary {
 .branch-page #contact label {
   color: var(--branch-muted);
 }
+/* Same again for the travel cards: a line, not an accent ribbon, and they do
+ * not lift on hover. They are not links, and nothing else on the site floats
+ * a static panel towards the reader. */
 .branch-travel .grid > div {
-  border-top: 2px solid var(--branch-accent);
+  border: 1px solid var(--branch-line);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .branch-travel .grid > div {
-    transition:
-      transform 250ms ease,
-      box-shadow 250ms ease;
-  }
-  .branch-travel .grid > div:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 36px #32115112;
-  }
+
+/*
+ * The month list shows three gatherings until "Show all" is pressed.
+ *
+ * This collapse used to sit inside the max-width 767px block, so it only
+ * worked on a phone. On a desktop every occurrence of every weekly service
+ * rendered: four services times four or five weeks is roughly twenty five
+ * identical rows, a third of the page, with a "Show all" button above them
+ * that had nothing left to reveal. The component always built the preview
+ * set; only the rule that uses it was out of reach.
+ */
+.branch-events__list:not(.branch-events__list--expanded)
+  > .branch-event:not(.branch-event--preview) {
+  display: none;
 }
 .branch-page [class*="bg-[#630ed4]"] {
   --branch-ink: #fff;
@@ -416,9 +610,7 @@ html[data-theme="dark"] .branch-action--primary {
     outline: 2px solid var(--branch-accent);
     outline-offset: 4px;
   }
-  .branch-pastor__extended:not(.branch-pastor__extended--open),
-  .branch-events__list:not(.branch-events__list--expanded)
-    > .branch-event:not(.branch-event--preview) {
+  .branch-pastor__extended:not(.branch-pastor__extended--open) {
     display: none;
   }
   .branch-events__heading {
@@ -467,5 +659,65 @@ html[data-theme="dark"] .branch-action--primary {
     justify-self: start;
     min-height: 44px;
     padding: 0.5rem 0;
+  }
+}
+
+/*
+ * The dotted field.
+ *
+ * Two of these run down the page: hero through the service times and map,
+ * then the pastor's word through the contact form. The travel band between
+ * them stays plain, which is what makes them read as fields rather than as
+ * one undifferentiated texture.
+ *
+ * The tile is the site's existing one, from .gv-hero and .hello-close, so
+ * this introduces no new pattern: --line dots on --surface-0 at 14px.
+ */
+.branch-field {
+  background-color: var(--surface-0);
+  background-image: radial-gradient(circle, var(--line) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+}
+
+/*
+ * The photo rail, on the same footing as the testimonies rail.
+ *
+ * No scroll snapping: the drift sets scrollLeft every frame, and snapping
+ * fights that by dragging the strip back to the nearest tile. The grab
+ * cursor is the affordance for the drag the component supports, and the
+ * scrollbar is hidden because the rail is endless, so a thumb would report
+ * a position that means nothing.
+ */
+.branch-gallery__rail {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: none;
+  scroll-behavior: smooth;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  padding-inline: clamp(1.25rem, 5vw, 2rem);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.branch-gallery__rail:active {
+  cursor: grabbing;
+}
+.branch-gallery__rail::-webkit-scrollbar {
+  display: none;
+}
+.branch-gallery__tile {
+  flex: 0 0 min(78%, 22rem);
+}
+@media (min-width: 640px) {
+  .branch-gallery__tile {
+    flex-basis: min(46%, 22rem);
+  }
+}
+@media (min-width: 768px) {
+  .branch-gallery__tile {
+    flex-basis: min(24%, 24rem);
   }
 }

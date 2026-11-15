@@ -8,16 +8,14 @@ export type FaqItem = {
 };
 
 type Props = {
-  title?: string;
   items: FaqItem[];
 };
 
-export function MessagesFaq({ title = "Why listen to messages", items }: Props) {
+export function MessagesFaq({ items }: Props) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section className="msg-faq" aria-label={title}>
-      <h2 className="msg-faq__title">{title}</h2>
+    <section className="msg-faq">
       <div className="msg-faq__list">
         {items.map((item, i) => {
           const isOpen = open === i;

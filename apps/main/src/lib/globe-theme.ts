@@ -39,6 +39,12 @@ export const FOOTER_GLOBE_PALETTE = {
     spotColor: "#4c08a8",
     // Also the route colour. The inherited yellow was invisible on white.
     accent: "#4c08a8",
+    // Accent is also the fill of the "See branches" button on a marker card,
+    // and accentInk is the lettering on it. The inherited #1c1c1f is meant
+    // for the base palette's yellow accent; on this deep purple it was
+    // near-black on near-black, about 1.5:1, and the button read as an empty
+    // slab. Anything that changes `accent` has to set this with it.
+    accentInk: "#ffffff",
   },
   dark: {
     ...KHARIS_GLOBE_PALETTE,
@@ -79,7 +85,7 @@ export const GLOBE_CITIES = [
 ] as const;
 
 /**
- * Where we are going. The vision is 100 churches worldwide by 2030, and a
+ * Where we are going. The vision is 100 churches worldwide by 2033, and a
  * globe that only shows the six cities we are already in cannot say that.
  *
  * These are marked apart from the cities above by their label alone: the
@@ -129,4 +135,4 @@ export const GLOBE_VISION_CITIES = [
 ] as const;
 
 /** The suffix that marks a city as planned rather than planted. */
-export const VISION_YEAR = "2030";
+export const VISION_YEAR = "2033";

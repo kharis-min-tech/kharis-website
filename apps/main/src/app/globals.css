@@ -140,6 +140,19 @@
   background: var(--surface-0);
 }
 
+/* The mission reads as its own strip.
+ *
+ * It sits directly under the hero, whose panel leaves empty surface below
+ * the photographs, and against that it looked like the hero's own trailing
+ * whitespace rather than a section in its own right. A rule top and bottom
+ * is enough to close it off: full-bleed, because the lines are the edges of
+ * a band across the page, not a box drawn round the text. --line carries the
+ * theme, so it is purple on white in daylight and white on near-black after
+ * dark, the same hairline used everywhere else. */
+.mission-strip {
+  border-block: 1px solid var(--line);
+}
+
 /* One page surface per theme.
  *
  * This used to be --surface-1, so bands alternated white / #f4f1f8 in light
@@ -3824,9 +3837,11 @@ html[data-theme="dark"] .testimony-card__read {
   gap: 1.35rem;
 }
 
+/* Five columns for five platforms. It was four, so Amazon Music dropped onto
+ * a row of its own underneath the other four. */
 @media (min-width: 800px) {
   .msg-listen__steps {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1.5rem;
   }
 }
@@ -3870,14 +3885,21 @@ html[data-theme="dark"] .testimony-card__read {
   border-color: #1ed760;
   color: #06140a;
 }
-.msg-listen__step--google .msg-listen__step-icon {
-  background: #4285f4;
-  border-color: #4285f4;
-}
-
 .msg-listen__step--youtube .msg-listen__step-icon {
   background: #ff0000;
   border-color: #ff0000;
+}
+
+/* Amazon Music had no tile of its own, so it fell back to the bare
+ * .msg-listen__step-icon: a transparent box with a hairline border and white
+ * ink. Its mark is Amazon's wordmark rather than a symbol, all thin strokes,
+ * so unlike the other four it had nothing to sit on and read as empty.
+ * Teal with dark ink, carried over from the older platform tiles this row
+ * replaced. */
+.msg-listen__step--amazon .msg-listen__step-icon {
+  background: #25d1da;
+  border-color: #25d1da;
+  color: #0b1b2b;
 }
 
 .msg-listen__step strong {
@@ -3891,103 +3913,6 @@ html[data-theme="dark"] .testimony-card__read {
   font-weight: 600;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.55);
-}
-
-.msg-listen__platforms {
-  margin-top: clamp(2rem, 5vw, 3.25rem);
-  display: grid;
-  gap: 0.35rem;
-}
-
-@media (min-width: 720px) {
-  .msg-listen__platforms {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.5rem;
-  }
-}
-
-.msg-platform {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.1rem;
-  padding: 1.35rem 1.1rem;
-  text-decoration: none;
-  color: #fff;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
-}
-
-@media (min-width: 720px) {
-  .msg-platform {
-    border-top: 0;
-    border-left: 1px solid rgba(255, 255, 255, 0.12);
-    min-height: 13rem;
-  }
-  .msg-platform:first-child {
-    border-left-color: transparent;
-  }
-}
-
-.msg-platform:hover {
-  background: rgba(155, 123, 255, 0.08);
-  transform: translateY(-4px);
-}
-
-.msg-platform__icon {
-  display: grid;
-  place-items: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 0;
-  color: #fff;
-}
-
-.msg-platform--soundcloud .msg-platform__icon {
-  background: #ff5500;
-}
-.msg-platform--apple .msg-platform__icon {
-  background: #9227e8;
-}
-.msg-platform--spotify .msg-platform__icon {
-  background: #1db954;
-}
-.msg-platform--google .msg-platform__icon {
-  background: #4285f4;
-}
-.msg-platform--youtube .msg-platform__icon {
-  background: #ff0000;
-}
-.msg-platform--amazon .msg-platform__icon {
-  background: #25d1da;
-  color: #0b1b2b;
-}
-
-.msg-platform__copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.msg-platform__copy strong {
-  font-size: 1.05rem;
-  font-weight: 800;
-}
-
-.msg-platform__copy span {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.msg-listen__foot {
-  margin-top: 2.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
 }
 
 .msg-btn {
@@ -10603,7 +10528,12 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
 }
 
 .site-footer__policy--note {
-  color: var(--orange-ink);
+  /* Purple in daylight, yellow after dark (see .site-footer--dark below):
+   * the site's emphasis pair. This was --orange-ink, a brown that matched
+   * nothing else on the page. It now equals the colour of its sibling policy
+   * links in light, which is correct rather than redundant: the distinction
+   * this modifier carries is the dark-mode accent, not a second hue. */
+  color: var(--purple);
 }
 
 .site-footer__policy::after {
@@ -13568,9 +13498,18 @@ html[data-theme="dark"] .listen-card__detail {
 
 /* The dot grain stops at the globe so the particles are not competing with a
  * second field of dots behind them; the colour carries through unchanged. */
+/* The sphere is sized by this band, so this is the dial that makes the globe
+ * bigger. It was clamp(420px, 52vw, 680px), which on any wide screen hit the
+ * 680 cap and left the globe filling about two thirds of a band that had
+ * plenty of room left.
+ *
+ * The outer min() is the guard that the old value did not need: once the
+ * viewport-width term is this large, a wide-but-short window (1440 by 800,
+ * say) would otherwise ask for a band taller than the screen and push the
+ * branch list out of sight. Height never exceeds 78% of the viewport. */
 .locations-hero__globe {
   margin-top: 2.5rem;
-  height: clamp(420px, 52vw, 680px);
+  height: min(clamp(460px, 62vw, 900px), 78vh);
   background: var(--locations-hero-surface);
 }
 
@@ -13590,6 +13529,21 @@ html[data-theme="dark"] .listen-card__detail {
   line-height: 1.05;
   letter-spacing: -0.03em;
   color: var(--fg);
+}
+
+/* "Belong." carries the accent. It was inheriting --fg, so the whole line
+ * was one colour and the span marked nothing.
+ *
+ * Not var(--purple) alone: that token is already theme-aware, but it stays
+ * purple in both, and in the dark theme its #8a5ac8 sits close enough to the
+ * surface behind it to read as dimmer text rather than a highlight. Yellow
+ * carries there, and it is the colour the globe below is already drawn in. */
+.locations-hero__title span {
+  color: var(--purple);
+}
+
+html[data-theme="dark"] .locations-hero__title span {
+  color: var(--yellow);
 }
 
 .locations-hero__lead {
@@ -13731,6 +13685,23 @@ html[data-theme="dark"] .listen-card__detail {
 
 .locations-group__title span {
   margin-left: 0.35rem;
+  color: var(--muted);
+}
+
+/* A kind of branch within a country: KP2 today, whatever comes next without
+ * a change here. Subordinate to the country heading above it, so it is set
+ * quieter and in the muted ink rather than the accent. */
+.locations-subgroup + .locations-subgroup {
+  margin-top: 2.5rem;
+}
+
+.locations-subgroup__title {
+  margin-bottom: 1.1rem;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: var(--muted);
 }
 

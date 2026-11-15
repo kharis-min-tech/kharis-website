@@ -7,18 +7,15 @@ import { KHARIS_APP } from "@/lib/kharis-app";
 
 const LISTEN_STEPS = [
   {
-    title: "Open the app home",
-    detail: "See latest audio, video and playlists.",
+    title: "Open the app",
     screen: "home",
   },
   {
-    title: "Search any message",
-    detail: "Find the teaching you need in a tap.",
+    title: "Search for a message",
     screen: "messages",
   },
   {
     title: "Press play and go",
-    detail: "Listen anywhere you are.",
     screen: "player",
   },
 ] as const;
@@ -43,7 +40,6 @@ export function VisionSection() {
               <div className="listen-card__copy">
                 <p className="listen-card__step">Step {i + 1}</p>
                 <h3 className="listen-card__title">{step.title}</h3>
-                <p className="listen-card__detail">{step.detail}</p>
               </div>
 
               <div className="listen-phone">

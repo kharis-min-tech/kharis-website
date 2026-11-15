@@ -186,10 +186,7 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
             <h2 id="hello-write-title" className="hello-h2">
               Start with a <em>few lines.</em>
             </h2>
-            <p className="hello-write__sub">
-              Tell us what&apos;s on your heart. Your message goes to the Kharis team, marked for
-              the branch you choose.
-            </p>
+            <p className="hello-write__sub">Tell us what&apos;s on your heart.</p>
           </header>
 
           <div className="hello-paper">
@@ -226,7 +223,7 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
                   </p>
                 ) : null}
 
-                <p className="hello-letter__greeting">Hi Kharis,</p>
+                <p className="hello-letter__greeting">Hi,</p>
 
                 <p className="hello-letter__line">
                   My name is{" "}
@@ -362,17 +359,42 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
                   <button type="submit" className="btn-primary" disabled={busy}>
                     {busy ? "Sending…" : "Send my message"}
                   </button>
-                  <p>
-                    Rather talk face to face? Find a member of the team at the admin desk after any
-                    service.
-                  </p>
                 </div>
               </form>
             )}
           </div>
         </div>
 
+        {/* What happens next comes before the photograph, and on a narrow
+            screen before the letter itself. It used to sit at the foot of
+            this column, which on a wide screen put it level with the end of
+            the form and on a phone below it: the page explained how a
+            message is answered only once you had written and sent one. */}
         <aside className="hello-write__aside" aria-label="What happens next">
+          <ol className="hello-steps">
+            <li>
+              <span className="hello-steps__num" aria-hidden>
+                01
+              </span>
+              <h3>You write</h3>
+              <p>A few lines is plenty.</p>
+            </li>
+            <li>
+              <span className="hello-steps__num" aria-hidden>
+                02
+              </span>
+              <h3>It reaches the team</h3>
+              <p>Your message arrives with the Kharis team.</p>
+            </li>
+            <li>
+              <span className="hello-steps__num" aria-hidden>
+                03
+              </span>
+              <h3>We write back</h3>
+              <p>Look out for our reply.</p>
+            </li>
+          </ol>
+
           <figure className="hello-write__photo">
             <Image
               src="https://images.kharis.org/site-images/main/67210f0fba54b6a1/contact/after-service-conversation.jpg"
@@ -382,35 +404,6 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
             />
             <figcaption>After a Sunday service</figcaption>
           </figure>
-
-          <ol className="hello-steps">
-            <li>
-              <span className="hello-steps__num" aria-hidden>
-                01
-              </span>
-              <h3>You write</h3>
-              <p>
-                A few lines is plenty. Visiting, praying, hurting or curious, it all belongs here.
-              </p>
-            </li>
-            <li>
-              <span className="hello-steps__num" aria-hidden>
-                02
-              </span>
-              <h3>It reaches the team</h3>
-              <p>Your message arrives with the Kharis team, marked for the branch you picked.</p>
-            </li>
-            <li>
-              <span className="hello-steps__num" aria-hidden>
-                03
-              </span>
-              <h3>We write back</h3>
-              <p>
-                Look out for a reply by email. Visiting? We&apos;ll help you find your way on
-                Sunday.
-              </p>
-            </li>
-          </ol>
         </aside>
       </div>
     </section>

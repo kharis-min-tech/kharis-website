@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { AboutExperience } from "@/components/AboutExperience";
+import { AboutPageSwitch } from "@/components/AboutPageSwitch";
 import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "About | Kharis Church",
@@ -13,9 +12,8 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="bg-bg text-fg">
-      <SiteHeader />
       <Suspense fallback={null}>
-        <AboutExperience />
+        <AboutPageSwitch />
       </Suspense>
       <SiteFooter />
     </main>

@@ -25,7 +25,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
   const turnstile = useTurnstile("contact");
 
   const inputClass =
-    "w-full border border-[var(--branch-line)] bg-[var(--branch-inset)] px-4 py-3 text-sm font-medium text-[var(--branch-ink)] placeholder:text-[var(--branch-muted)] outline-none transition-colors focus:border-[#e8a33d]";
+    "w-full border border-[var(--branch-line)] bg-[var(--branch-inset)] px-4 py-3 text-sm font-medium text-[var(--branch-ink)] placeholder:text-[var(--branch-muted)] outline-none transition-colors focus:border-[var(--branch-accent)]";
   const labelClass =
     "mb-1.5 block text-xs font-bold uppercase tracking-wider text-[var(--branch-muted)]";
 
@@ -33,7 +33,7 @@ export function BranchContactForm({ branch }: BranchContactFormProps) {
     <section id="contact" className="py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
         <div className="lg:col-span-5 flex flex-col justify-center">
-          <div className="inline-flex w-fit items-center gap-1.5 border border-[var(--branch-line)] bg-[var(--branch-inset)] px-3.5 py-1 text-xs font-bold text-[var(--orange-ink)]">
+          <div className="inline-flex w-fit items-center gap-1.5 border border-[var(--branch-line)] bg-[var(--branch-inset)] px-3.5 py-1 text-xs font-bold text-[var(--branch-accent)]">
             <span>Say Hello</span>
           </div>
           <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">

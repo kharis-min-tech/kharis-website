@@ -408,7 +408,19 @@ html[data-theme="dark"] .hello-hero__shade {
   box-shadow: var(--paper-shadow);
 }
 
-/* The dove sits faintly in the corner, like a letterhead. */
+/* The dove sits faintly in the corner, like a letterhead.
+ *
+ * The file is a WHITE dove on transparent (RGBA, so inverting it gives a
+ * silhouette rather than a square). It was being drawn as-is at six percent
+ * on white paper, which is nothing at all, and the dark theme then applied
+ * invert(1), turning it black against a near-black card. It was invisible in
+ * both themes, for opposite reasons: the invert was the right idea pointed
+ * the wrong way. Light inverts it to dark ink; dark leaves it white.
+ *
+ * Masking it to take a themed colour would be tidier, but mask-image is
+ * subject to CORS and images.kharis.org sends no header, so the mask comes
+ * back empty and nothing paints at all. background-image has no such rule.
+ * Same wall the Life tunnel hit. */
 .hello-paper::after {
   content: "";
   position: absolute;
@@ -418,7 +430,8 @@ html[data-theme="dark"] .hello-hero__shade {
   aspect-ratio: 1;
   background: url("https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png")
     center / contain no-repeat;
-  opacity: 0.06;
+  filter: invert(1);
+  opacity: 0.12;
   pointer-events: none;
 }
 
@@ -703,10 +716,24 @@ html[data-theme="dark"] .hello-hero__shade {
   cursor: pointer;
 }
 
-/* Aside: a photograph, then what happens after you send. */
+/* Aside: what happens after you send, then a photograph.
+ *
+ * Side by side, the 7.5rem clears the section heading in the other column so
+ * the steps begin level with the first line of the letter.
+ *
+ * Stacked, the column goes ABOVE the letter. Below it, the three steps were
+ * explaining how a message gets answered to someone who had already written
+ * and sent one, which is the wrong way round and the reason any of this
+ * moved. */
 @media (min-width: 1024px) {
   .hello-write__aside {
     padding-top: 7.5rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hello-write__aside {
+    order: -1;
   }
 }
 
@@ -741,10 +768,12 @@ html[data-theme="dark"] .hello-hero__shade {
   color: #fff;
 }
 
+/* The steps lead the column now, so the spacing they used to put above
+ * themselves goes below, between them and the photograph. */
 .hello-steps {
   display: grid;
   gap: 1.75rem;
-  margin: 2.75rem 0 0;
+  margin: 0 0 2.75rem;
   padding: 0;
   list-style: none;
 }
@@ -1367,9 +1396,11 @@ html[data-theme="dark"] .hello-thanks__dove {
   filter: none;
 }
 
+/* The dove is already white, so here it is left alone. This is the rule that
+ * used to invert it, which was what made it vanish into the dark card. */
 html[data-theme="dark"] .hello-paper::after {
-  filter: invert(1);
-  opacity: 0.08;
+  filter: none;
+  opacity: 0.2;
 }
 
 html[data-theme="dark"] .hello-field {
