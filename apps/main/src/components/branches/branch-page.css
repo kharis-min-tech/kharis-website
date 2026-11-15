@@ -371,14 +371,14 @@ html[data-theme="dark"] .branch-page {
   font-weight: 650;
 }
 .branch-services,
-.branch-watch,
+.branch-gallery,
 .branch-page #contact {
   max-width: 1280px;
   padding-top: var(--pad-lg);
   padding-bottom: var(--pad-lg);
 }
 .branch-services > div:first-child,
-.branch-watch > div:first-child {
+.branch-gallery > div:first-child {
   text-align: left;
   max-width: 40rem;
   margin-bottom: 2.5rem;
@@ -698,7 +698,7 @@ html[data-theme="dark"] .branch-action--primary {
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   cursor: grab;
-  padding-inline: clamp(1.25rem, 5vw, 2rem);
+  padding-inline: 0;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }

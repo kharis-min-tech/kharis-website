@@ -39,6 +39,14 @@ function formatServiceTime(time?: string | null) {
   return `${displayHour}:${minute} ${ampm}`;
 }
 
+/**
+ * The YouTube id inside whatever a branch has been given as its video.
+ *
+ * Content Studio stores a free-text URL, so this accepts the bare id and the
+ * shapes people actually paste: watch links with other query parameters,
+ * youtu.be, /embed/, /v/, /shorts/ and /live/, with or without -nocookie.
+ * Anything else is not YouTube and is handled as a direct file instead.
+ */
 function youtubeVideoId(input?: string | null): string | null {
   const value = input?.trim() ?? "";
   if (!value) return null;
@@ -53,6 +61,9 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
   const currentBranch = branchData;
   const view = presentBranch(currentBranch);
   const introduction = branchIntroductions[currentBranch.slug];
+  /* Three ways a branch can have a film, in order of preference: a YouTube
+   * link from Content Studio, a direct file, or the hand-curated
+   * introduction already shipped with the site. */
   const youtubeId = youtubeVideoId(currentBranch.video_url);
   const directVideoUrl = !youtubeId ? currentBranch.video_url?.trim() || "" : "";
 
@@ -348,46 +359,6 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-        {youtubeId || directVideoUrl || introduction ? (
-          <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-            <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
-              {youtubeId ? (
-                <iframe
-                  className="block aspect-video w-full border-0"
-                  src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1&playsinline=1`}
-                  title={`A look at ${view.city}`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
-                />
-              ) : directVideoUrl ? (
-                <video
-                  className="block aspect-video w-full object-contain"
-                  src={directVideoUrl}
-                  poster={view.hero || undefined}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  aria-label={`A look at ${view.city}`}
-                >
-                  <a href={directVideoUrl}>Watch our branch video</a>
-                </video>
-              ) : introduction ? (
-                <video
-                  className="block aspect-video w-full"
-                  src={introduction.src}
-                  poster={introduction.poster}
-                  controls
-                  playsInline
-                  preload="none"
-                  aria-label={`${currentBranch.name} branch introduction`}
-                >
-                  <a href={introduction.src}>Watch our branch introduction video</a>
-                </video>
-              ) : null}
-            </div>
           </section>
         </div>
 
@@ -497,36 +468,63 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
             </div>
           </section>
 
-          {introduction ? (
-            <section id="watch" className="branch-watch py-16 px-5 md:px-8 max-w-[1536px] mx-auto">
-              <div className="mb-10 text-center">
-                <p className="eyebrow mb-3">Meet our branch</p>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
-                  Welcome to {currentBranch.name}
-                </h2>
+          {/* Life at the branch: the film and the photographs under one
+              heading. They answer the same question - what is this place
+              like - so a heading each read as two goes at the same thing.
+              The film leads when there is one; most branches have only the
+              photographs. */}
+          <section id="watch" className="branch-gallery mx-auto px-5 py-16 md:px-8">
+            <div className="mb-10">
+              <p className="eyebrow mb-3">Life at {currentBranch.name}</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--branch-ink)]">
+                Moments From Our Family
+              </h2>
+            </div>
+            {youtubeId || directVideoUrl || introduction ? (
+              <div className="relative mb-8 overflow-hidden border border-[var(--branch-line)] bg-black">
+                {youtubeId ? (
+                  <iframe
+                    className="block aspect-video w-full border-0"
+                    src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1&playsinline=1`}
+                    title={`A look at ${view.city}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                ) : directVideoUrl ? (
+                  <video
+                    className="block aspect-video w-full object-contain"
+                    src={directVideoUrl}
+                    poster={view.hero || undefined}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    aria-label={`A look at ${view.city}`}
+                  >
+                    <a href={directVideoUrl}>Watch our branch video</a>
+                  </video>
+                ) : introduction ? (
+                  <video
+                    className="block aspect-video w-full"
+                    src={introduction.src}
+                    poster={introduction.poster}
+                    controls
+                    playsInline
+                    preload="none"
+                    aria-label={`${currentBranch.name} branch introduction`}
+                  >
+                    <a href={introduction.src}>Watch our branch introduction video</a>
+                  </video>
+                ) : null}
               </div>
-              <div className="relative overflow-hidden border border-[var(--branch-line)] bg-black shadow-2xl">
-                <video
-                  className="block aspect-video w-full"
-                  src={introduction.src}
-                  poster={introduction.poster}
-                  controls
-                  playsInline
-                  preload="none"
-                  aria-label={`${currentBranch.name} branch introduction`}
-                >
-                  <a href={introduction.src}>Watch our branch introduction video</a>
-                </video>
-              </div>
-            </section>
-          ) : null}
-
-          {/* GALLERY */}
-          <BranchGallery
-            images={galleryImages}
-            city={view.city}
-            onImageClick={(src) => setMediaModal({ type: "image", src })}
-          />
+            ) : null}
+            <BranchGallery
+              images={galleryImages}
+              city={view.city}
+              hasFilm={Boolean(youtubeId || directVideoUrl || introduction)}
+              onImageClick={(src) => setMediaModal({ type: "image", src })}
+            />
+          </section>
 
           {/* CONTACT BRANCH */}
           <BranchContactForm

@@ -7,6 +7,8 @@ interface BranchGalleryProps {
   images: string[];
   city: string;
   onImageClick?: (src: string) => void;
+  /** Whether a film already leads this section. */
+  hasFilm?: boolean;
 }
 
 /** Pixels per millisecond the rail drifts. */
@@ -14,7 +16,7 @@ const DRIFT = 0.03;
 /** How long a tap on an arrow holds the drift, in ms. */
 const MANUAL_HOLD = 2600;
 
-export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps) {
+export function BranchGallery({ images, city, onImageClick, hasFilm }: BranchGalleryProps) {
   const rail = useRef<HTMLDivElement>(null);
   const interacting = useRef(false);
   const manualUntil = useRef(0);
@@ -166,16 +168,19 @@ export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps
     ? Array.from({ length: images.length < 4 ? 4 : 2 }, () => images).flat()
     : images;
 
-  return (
-    <section className="mx-auto max-w-[1536px] py-16">
-      <div className="mb-10 px-5 text-center md:px-8">
-        <h2 className="text-3xl font-extrabold text-[var(--branch-ink)] sm:text-4xl">
-          Moments From Our Family
-        </h2>
-      </div>
+  /* The rail only. The section, its heading and the film that may lead it
+   * belong to BranchTemplate, which shows the two together under one
+   * heading: they answer the same question about a branch, and a heading
+   * each made them read as two goes at the same thing. */
+  /* The placeholder stands in for photographs when a branch has none. With
+   * a film above it there is already something to look at, so standing in
+   * would just add an empty panel under it. */
+  if (images.length === 0 && hasFilm) return null;
 
+  return (
+    <>
       {images.length === 0 ? (
-        <div className="px-5 md:px-8">
+        <div>
           <div className="branch-gallery-empty">
             <div className="branch-card__fallback">
               <img
@@ -260,7 +265,7 @@ export function BranchGallery({ images, city, onImageClick }: BranchGalleryProps
           ) : null}
         </div>
       )}
-    </section>
+    </>
   );
 }
 
