@@ -436,9 +436,7 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
           <div className="msg-app-strip__inner">
             <div className="msg-app-strip__copy">
               <p className="msg-app-strip__title">Find all messages in the Kharis app</p>
-              <p className="msg-app-strip__sub">
-                Free on iPhone and Android.
-              </p>
+              <p className="msg-app-strip__sub">Free on iPhone and Android.</p>
             </div>
             <AppStoreButtons />
           </div>
@@ -469,7 +467,6 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
             </a>
           ))}
         </div>
-
       </section>
 
       <MessagesFaq items={WHY_FAQ} />

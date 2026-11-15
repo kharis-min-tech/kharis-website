@@ -95,8 +95,8 @@ export function ContactHero() {
           <span className="hello-hero__brand">Home of Grace</span>
         </h1>
         <p className="hello-hero__intro">
-          Planning your first Sunday, need prayer, or wondering where you
-          fit? We would love to hear from you.
+          Planning your first Sunday, need prayer, or wondering where you fit? We would love to hear
+          from you.
         </p>
         <div className="hello-hero__ctas btn-pair">
           <a href="#write" className="btn-primary">

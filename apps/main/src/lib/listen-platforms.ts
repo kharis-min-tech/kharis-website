@@ -9,7 +9,7 @@ export const LISTEN_PLATFORMS: ListenPlatform[] = [
   {
     id: "soundcloud",
     name: "SoundCloud",
-    href: "https://soundcloud.com/kharismedia"
+    href: "https://soundcloud.com/kharismedia",
   },
   {
     id: "apple",
