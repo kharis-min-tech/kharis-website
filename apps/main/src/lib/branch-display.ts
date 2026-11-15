@@ -124,7 +124,14 @@ export function presentBranch(branch: BranchData) {
     "your city";
   const storedDescription = clean(branch.short_description) || clean(branch.description);
   const description = storedDescription || placeholderDescription(city);
-  const tagline = clean(branch.hero_subtitle) || "Christians boldly holding their Bible.";
+  /*
+   * The fallback was "Christians boldly holding their Bible." — a fragment
+   * with no verb, and it was being glued to the front of the welcome
+   * paragraph below, so every branch without a hero_subtitle opened with a
+   * broken sentence. A branch that has not written its own line should fall
+   * back to a sentence, not to a caption.
+   */
+  const tagline = clean(branch.hero_subtitle) || "We hold the Bible at the centre of all we do.";
   const pastorName = clean(branch.pastor_name);
   const pastorBio = clean(branch.pastor_bio);
   const address = [venueAddress(venue), clean(venue?.postcode ?? undefined)]

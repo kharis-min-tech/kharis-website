@@ -90,21 +90,17 @@ export function ContactHero() {
       <div className="hello-hero__shade" aria-hidden />
 
       <div className="hello-hero__copy">
-        <p className="hello-hero__eyebrow">Contact Kharis</p>
         <h1 id="hello-title" className="hello-hero__title">
           <span className="hello-hero__lead">Say hello to the</span>{" "}
           <span className="hello-hero__brand">Home of Grace</span>
         </h1>
         <p className="hello-hero__intro">
-          Planning your first Sunday, carrying something that needs prayer, or wondering where you
-          fit? Write to us. Someone from the Kharis family will write back.
+          Planning your first Sunday, need prayer, or wondering where you fit? We would love to hear
+          from you.
         </p>
         <div className="hello-hero__ctas btn-pair">
           <a href="#write" className="btn-primary">
             Write to us
-          </a>
-          <a href="#branches" className="btn-secondary">
-            Find your branch
           </a>
         </div>
       </div>

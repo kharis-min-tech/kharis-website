@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { LifeDetail } from "@/components/LifeDetail";
 import { LIFE_SLUGS, lifeBySlug, type LifeSlug } from "@/lib/life-content";
 
-const MODAL_SLUGS = new Set<LifeSlug>(["k-group", "baptism", "fasting", "marriage"]);
+const MODAL_SLUGS = new Set<LifeSlug>(["k-group", "fasting", "marriage"]);
 
 type Props = { params: Promise<{ slug: string }> };
 

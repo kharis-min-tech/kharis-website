@@ -4,8 +4,6 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Icon } from "@/components/Icon";
 import { lifeBySlug, type LifeSlug } from "@/lib/life-content";
 import { LifeDetailModal } from "@/components/LifeDetailModal";
-import { BelongStory } from "@/components/BelongStory";
-import { CommunityDoors } from "@/components/CommunityDoors";
 import { LifeCloserMarquee } from "@/components/LifeCloserMarquee";
 import { useReducedMotion } from "framer-motion";
 import { usePageSnap } from "@/lib/page-snap";
@@ -175,16 +173,9 @@ export function LifeExperience({ branches }: { branches: LifeBranch[] }) {
       window.location.replace("/life/departments");
       return;
     }
-    if (slug === "baptism" || slug === "fasting" || slug === "marriage" || slug === "k-group") {
+    if (slug === "fasting" || slug === "marriage" || slug === "k-group") {
       setModalSlug(slug);
     }
-  }, []);
-
-  const openModal = useCallback((slug: "baptism" | "fasting") => {
-    setModalSlug(slug);
-    const url = new URL(window.location.href);
-    url.searchParams.set("open", slug);
-    window.history.replaceState(null, "", url);
   }, []);
 
   const closeModal = useCallback(() => {
@@ -198,10 +189,6 @@ export function LifeExperience({ branches }: { branches: LifeBranch[] }) {
 
   return (
     <div className="life-refresh">
-      <CommunityDoors />
-
-      <BelongStory onLearnMore={openModal} />
-
       <CloserPanel branches={branches} />
       <LifeDetailModal category={modalCategory} onClose={closeModal} />
     </div>

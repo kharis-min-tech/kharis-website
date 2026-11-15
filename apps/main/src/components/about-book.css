@@ -1,0 +1,708 @@
+/*
+ * "Kharis: Who we are" as a book. Scoped to .about-book.
+ *
+ * The geometry, in one paragraph: the scene carries the perspective, the book
+ * is a flat plane two pages wide inside it, and every leaf is an absolutely
+ * positioned half sitting on the right hand side with its transform origin on
+ * the gutter. Turning a leaf is rotateY(-180deg) about that origin, which
+ * swings it over to the left and shows its back face. Both faces are
+ * backface-visibility: hidden, so each one is only visible from its own side.
+ *
+ * The one number everything else follows is --leaf-h. The page width comes
+ * off it through the aspect, and the book is two of those wide.
+ */
+
+.about-book {
+  position: relative;
+  padding: calc(var(--pad-lg, 5rem) + 4.5rem) var(--gutter, 1.25rem) var(--pad-lg, 5rem);
+
+  /* The desk the book lies on, and the paper it is made of. These two have to
+   * be clearly apart or there is no book, only type floating on a band: the
+   * first pass had the leaf on --surface-raised and the band on --surface-1,
+   * three points apart in the dark, and the gutter shading between two pages
+   * that nobody could see the edges of just looked like a hole.
+   *
+   * Daylight paper is warmer than the screen's white, because paper is. */
+  background: var(--surface-1);
+  --leaf-bg: #fcfbf7;
+  --leaf-tint: #f4efe3;
+  --cover-bg: #17121f;
+  --gutter-shade: rgba(28, 18, 48, 0.3);
+  --accent: var(--purple);
+
+  /* The book, as large as the window will take.
+   *
+   * The height is driven by the viewport height, then capped by its WIDTH as
+   * well, because the book is about one and a half times as wide as it is
+   * tall and the turn arrows sit outside the boards. Without the 56vw cap, a
+   * tall narrow window (1280 by 1440, say) would hit the 52rem ceiling and
+   * push both arrows past the edges of the screen. */
+  --leaf-h: min(clamp(32rem, 86vh, 52rem), 56vw);
+  --leaf-w: calc(var(--leaf-h) / 1.34);
+  --spine-w: 1.1rem;
+}
+
+html[data-theme="dark"] .about-book {
+  /* Darkest surface for the desk, a lifted one for the paper, so the book has
+   * a body at night too. */
+  background: var(--surface-0);
+  --leaf-bg: var(--surface-2);
+  --leaf-tint: #241c38;
+  --cover-bg: #090611;
+  /* Softer than daylight's: shading on a dark page has no white to work
+   * against, so the same strength reads as a gap rather than a binding. */
+  --gutter-shade: rgba(0, 0, 0, 0.5);
+  --accent: var(--yellow);
+}
+
+/* The scene holds the perspective and the tilt the pointer writes into it. */
+.about-book__scene {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--leaf-h);
+  perspective: 2800px;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+}
+
+.about-book__book {
+  position: relative;
+  width: calc(var(--leaf-w) * 2);
+  height: var(--leaf-h);
+  transform-style: preserve-3d;
+  transform: translateX(var(--shut-shift, 0)) rotateX(var(--tilt-x))
+    rotateY(calc(var(--shut-rot, 0deg) + var(--tilt-y)));
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Shut, only the right half carries anything, so the whole book slides half a
+ * page left to put the cover in the middle of the scene.
+ *
+ * The rotation is not decoration. The spine is a plane standing at ninety
+ * degrees to the cover, so face on it is exactly edge on and invisible, and
+ * the book loses the one thing that makes it look like an object. Turning it
+ * a little brings its left edge forward and the spine into view. It unwinds
+ * to zero as the book opens, because a spread wants to be seen flat. */
+.about-book__book.is-shut {
+  --shut-shift: calc(var(--leaf-w) / -2);
+  --shut-rot: 14deg;
+}
+
+/* The block of paper the leaves sit on, so a half is never a hole mid turn. */
+.about-book__base {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: var(--leaf-bg);
+  z-index: 1;
+}
+
+.about-book__base--left {
+  left: 0;
+  border-radius: 3px 0 0 3px;
+  box-shadow:
+    inset -1.5rem 0 2rem -1.5rem var(--gutter-shade),
+    -0.4rem 1.2rem 3rem -1.4rem rgba(10, 4, 24, 0.55);
+}
+
+.about-book__base--right {
+  left: 50%;
+  border-radius: 0 3px 3px 0;
+  box-shadow:
+    inset 1.5rem 0 2rem -1.5rem var(--gutter-shade),
+    0.4rem 1.2rem 3rem -1.4rem rgba(10, 4, 24, 0.55);
+}
+
+/* The book is shut, so the left half is not paper yet, it is the far cover. */
+.is-shut .about-book__base--left {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* The spine: a plane standing on the gutter, turned to face left. It is what
+ * gives the shut book its thickness, and the only reason it reads as an
+ * object with a back half rather than a single card. */
+.about-book__spine {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--spine-w);
+  height: 100%;
+  transform-origin: left center;
+  transform: rotateY(-90deg);
+  /* Bound in the brand purple rather than the colour of the boards. A spine
+   * the same tone as the cover is invisible even once the book is turned to
+   * show it, which defeats the point of having one. */
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--purple) 55%, black) 0%,
+    var(--purple) 50%,
+    color-mix(in srgb, var(--purple) 62%, black) 100%
+  );
+  z-index: 30;
+}
+
+/* A leaf. The origin on the gutter is the whole mechanism. */
+.about-book__leaf {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 0.95s cubic-bezier(0.56, 0.02, 0.33, 1);
+}
+
+.about-book__leaf.is-turned {
+  transform: rotateY(-180deg);
+}
+
+/* A face. Hidden from behind, which is what lets one sheet carry two pages.
+ * The wash is very slight, but paper is never one flat value, and a page of
+ * type on a dead flat ground is most of what makes a screen look like a
+ * document rather than a book. */
+.about-book__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.8rem, 2.8vw, 3rem) clamp(1.8rem, 2.6vw, 2.8rem) 2.8rem;
+  background:
+    radial-gradient(
+      120% 80% at 0% 0%,
+      color-mix(in srgb, var(--leaf-tint) 55%, transparent) 0%,
+      transparent 58%
+    ),
+    var(--leaf-bg);
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+/* Recto: the gutter is its left edge. Verso: its right. The shading sells the
+ * curve of the paper into the binding more than any texture would. */
+.about-book__face--front {
+  border-radius: 0 3px 3px 0;
+  box-shadow: inset 1.5rem 0 2rem -1.5rem var(--gutter-shade);
+}
+
+.about-book__face--back {
+  transform: rotateY(180deg);
+  border-radius: 3px 0 0 3px;
+  box-shadow: inset -1.5rem 0 2rem -1.5rem var(--gutter-shade);
+}
+
+/* The column of type, between the running head and the folio. */
+.about-book__col {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Space held open to match the facing page, so a list continuing across the
+ * gutter starts level with the one it continues. See Ghost in AboutBook.tsx.
+ * visibility, not display or opacity: display would not reserve the height,
+ * and opacity would leave it in the accessibility tree. */
+.about-book__ghost {
+  visibility: hidden;
+}
+
+/* A flex item may be squeezed below its own content, which on a column of
+ * type means a heading quietly losing its second line. Only the photographs
+ * are allowed to give: they set flex: 1 further down and take the slack. */
+.about-book__col > * {
+  flex: none;
+}
+
+/* For a page carrying one short thing, which belongs in the middle of the
+ * leaf rather than hanging off the top of it. */
+.about-book__col.is-centred {
+  justify-content: center;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+/* The running head, with the accent rule that carries the brand through pages
+ * that are otherwise all type. */
+.about-book__runner {
+  position: relative;
+  margin: 0 0 1.4rem;
+  padding-bottom: 0.6rem;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.about-book__runner::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2.2rem;
+  height: 2px;
+  background: var(--accent);
+}
+
+.about-book__folio {
+  position: absolute;
+  right: clamp(1.8rem, 2.6vw, 2.8rem);
+  bottom: 1.3rem;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.about-book__face--back .about-book__folio {
+  right: auto;
+  left: clamp(1.8rem, 2.6vw, 2.8rem);
+}
+
+/* The cover. Dark boards, a photograph held well back behind the lettering. */
+.about-book__cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(1.8rem, 3vw, 2.8rem);
+  background: var(--cover-bg);
+  border-radius: 0 4px 4px 0;
+  overflow: hidden;
+}
+
+.about-book__cover-photo {
+  object-position: center 32%;
+  opacity: 0.52;
+}
+
+/* Keeps the lettering off the photograph's own contrast. */
+.about-book__cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--cover-bg) 14%,
+    color-mix(in srgb, var(--cover-bg) 70%, transparent) 50%,
+    color-mix(in srgb, var(--cover-bg) 22%, transparent) 100%
+  );
+}
+
+.about-book__cover-ink {
+  position: relative;
+  z-index: 1;
+}
+
+.about-book__cover-word {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+
+.about-book__cover-title {
+  margin: 0;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(2.2rem, 3.6vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #fff;
+}
+
+.about-book__cover-tag {
+  margin: 0.7rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.about-book__endpaper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+/* "Open the book". Covers the shut cover, so the whole board is the target. */
+.about-book__open {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: clamp(1.8rem, 3vw, 2.8rem);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.about-book__open span {
+  padding: 0.5rem 0.95rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.about-book__open:is(:hover, :focus-visible) span {
+  border-color: var(--yellow);
+  background: rgba(255, 222, 89, 0.14);
+}
+
+/* Inner pages. */
+.about-book__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  color: var(--fg);
+}
+
+.about-book__title--sm {
+  margin: 0.1rem 0 0.4rem;
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+}
+
+.about-book__lead {
+  margin: 0 0 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.52;
+  color: var(--fg);
+}
+
+/* The opening of the mission statement, which is the one paragraph on the
+ * whole page that people actually have to read. */
+.about-book__lead--drop::first-letter {
+  float: left;
+  margin: 0.34rem 0.5rem 0 0;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 3.1rem;
+  font-weight: 800;
+  line-height: 0.76;
+  color: var(--accent);
+}
+
+.about-book__body,
+.about-book__intro {
+  margin: 0 0 0.9rem;
+  font-size: 0.86rem;
+  line-height: 1.62;
+  color: var(--muted);
+}
+
+.about-book__intro {
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.about-book__label {
+  margin: 0 0 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* The two words, each on its own tinted ground. They take half the leaf each
+ * rather than sitting at their natural height, because two short blocks
+ * floating in the middle of a page was most of the white space the first
+ * draft was carrying. */
+.about-book__greek {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.6rem 1.6rem;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--leaf-tint) 70%, transparent);
+}
+
+.about-book__word {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.4rem, 2.3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--fg);
+}
+
+.about-book__meaning {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* A numeral in front of a list item. Numbering the statement of faith and the
+ * vision is most of what turns either from a block into something you can see
+ * the shape of before you read it. */
+.about-book__num {
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+/* The statement of faith, four entries to a page, numbered 01 to 08 across
+ * the spread. */
+.about-book__faith {
+  margin: 0;
+}
+
+.about-book__faith > div {
+  margin-bottom: 1rem;
+}
+
+.about-book__faith dt {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-bottom: 0.2rem;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--fg);
+}
+
+.about-book__faith dd {
+  margin: 0 0 0 1.85rem;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* The four things the mission is carried out by, each with its icon. */
+.about-book__pillars {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.about-book__pillars li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.about-book__pillar-icon {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.about-book__pillars h4 {
+  margin: 0.15rem 0 0.2rem;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--fg);
+}
+
+.about-book__pillars p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* The verse a mission point rests on, set as a reference after the line
+ * rather than as a pull quote, because four pull quotes do not fit a page. */
+.about-book__verse {
+  margin-top: 0.25rem !important;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent) !important;
+}
+
+/* The eight marks of the vision, numbered straight across the spread. */
+.about-book__points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.95rem;
+}
+
+.about-book__points li {
+  display: grid;
+  grid-template-columns: 1.85rem 1fr;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* A plate: the photograph runs to the edges of the page. A full bleed plate
+ * carries no running head and no folio, in a book or here, and the folio was
+ * landing as grey type on the photograph where nobody could read it. */
+.about-book__plate {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+
+.about-book__face:has(.about-book__plate) {
+  padding: 0;
+}
+
+.about-book__face:has(.about-book__plate) :is(.about-book__runner, .about-book__folio) {
+  display: none;
+}
+
+/* A photograph set into a page of type. It sits at the foot of the column and
+ * takes whatever height is left, which is what keeps these pages full without
+ * a fixed measurement that would have to be re-tuned per page. */
+.about-book__inset {
+  position: relative;
+  flex: 1;
+  min-height: 6rem;
+  margin: 0.6rem 0 0;
+  overflow: hidden;
+}
+
+/* A pastor's portrait at the head of their spotlight. */
+.about-book__portrait {
+  position: relative;
+  flex: 1;
+  min-height: 9rem;
+  margin: 0 0 1.1rem;
+  overflow: hidden;
+}
+
+.about-book__role {
+  margin: 0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.about-book__focus {
+  margin: 0 0 0.6rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+  line-height: 1.45;
+  color: var(--fg);
+}
+
+/* The three beats of the founders' story. */
+.about-book__beats {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.about-book__beats h4 {
+  margin: 0 0 0.25rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--accent);
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--fg);
+}
+
+.about-book__beats p {
+  margin: 0;
+  padding-left: 0.75rem;
+  font-size: 0.84rem;
+  line-height: 1.58;
+  color: var(--muted);
+}
+
+/* Turn controls, outside the boards. */
+.about-book__turn {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 2.75rem;
+  height: 2.75rem;
+  transform: translateY(-50%);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-0);
+  color: var(--fg);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.about-book__turn--prev {
+  right: calc(50% + var(--leaf-w) + 1.25rem);
+}
+
+.about-book__turn--next {
+  left: calc(50% + var(--leaf-w) + 1.25rem);
+}
+
+.about-book__turn:is(:hover, :focus-visible) {
+  border-color: var(--accent);
+}
+
+.about-book__turn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Contents. Says how long the book is, and jumps straight to a spread. */
+.about-book__contents {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  width: min(62rem, 100%);
+  margin: 2rem auto 0;
+}
+
+.about-book__chip {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.about-book__chip:is(:hover, :focus-visible) {
+  color: var(--fg);
+  border-color: var(--line-strong);
+}
+
+.about-book__chip.is-on {
+  color: var(--fg);
+  border-color: var(--accent);
+}

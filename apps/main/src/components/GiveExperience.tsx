@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "@/components/SiteImage";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import {
@@ -8,16 +9,14 @@ import {
   ArrowUp,
   ArrowUpRight,
   BatteryFull,
-  Check,
   ChevronLeft,
-  Copy,
-  Phone,
   Plus,
   SignalHigh,
   UserRound,
   Wifi,
 } from "lucide-react";
-import { BANK, BANK_ACCRA, MOMO, TEXT_GIVE, type GivingBranch } from "@/lib/giving";
+import { CopyRow } from "@/components/GiveCopyRow";
+import { BANK, TEXT_GIVE, type GivingBranch } from "@/lib/giving";
 import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import "./give.css";
@@ -25,11 +24,16 @@ import "./give.css";
 const TEXT_AMOUNTS = [5, 10, 15, 20] as const;
 const BRANCH_KEY = "kharis-give-branch";
 
+/**
+ * Three ways anyone can give. "From Ghana" used to be a fourth, which put a
+ * single branch's bank details beside three options open to everybody; it
+ * lives at /give/accra now, reached by picking Accra from the branch list
+ * below, exactly as every other branch is reached.
+ */
 const WAYS = [
   { id: "online", label: "Online", hint: "By card, through your branch" },
   { id: "bank", label: "Bank transfer", hint: "One-off or monthly, from the UK" },
   { id: "text", label: "Text", hint: `UK mobiles, up to £${TEXT_GIVE.maxPounds}` },
-  { id: "ghana", label: "From Ghana", hint: "CalBank and Mobile Money" },
 ] as const;
 
 type Way = (typeof WAYS)[number]["id"];
@@ -39,40 +43,7 @@ function shortName(branch: GivingBranch) {
   return branch.name.replace(/^Kharis Church /, "").replace(/^Kharis Phase 2 /, "KP2 ");
 }
 
-function CopyRow({ label, value, hint }: { label: string; value: string; hint?: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
-    } catch {
-      setCopied(false);
-    }
-  };
-
-  return (
-    <div className="gv-row">
-      <dt>{label}</dt>
-      <dd>
-        {value}
-        {hint ? <span className="gv-row__hint">{hint}</span> : null}
-      </dd>
-      <button
-        type="button"
-        className={`gv-row__copy${copied ? " is-done" : ""}`}
-        onClick={copy}
-        aria-label={copied ? `${label} copied` : `Copy ${label.toLowerCase()}`}
-      >
-        {copied ? <Check aria-hidden /> : <Copy aria-hidden />}
-        <span aria-hidden>{copied ? "Copied" : "Copy"}</span>
-      </button>
-    </div>
-  );
-}
-
-function OnlinePanel({ branches, onGhana }: { branches: GivingBranch[]; onGhana: () => void }) {
+function OnlinePanel({ branches }: { branches: GivingBranch[] }) {
   const [picked, setPicked] = useState("");
   const branch = branches.find((b) => b.name === picked);
 
@@ -98,8 +69,7 @@ function OnlinePanel({ branches, onGhana }: { branches: GivingBranch[]; onGhana:
     <>
       <h3>Give to your branch online</h3>
       <p className="gv-panel__lede">
-        Pick your branch and you&apos;ll go straight to its secure giving page on Tithe.ly, where
-        you can give by card once or every month.
+        Pick your branch and you&apos;ll go straight to its secure giving page.
       </p>
       <label className="gv-select">
         <span>Your branch</span>
@@ -126,11 +96,16 @@ function OnlinePanel({ branches, onGhana }: { branches: GivingBranch[]; onGhana:
             <ArrowUpRight aria-hidden className="h-4 w-4" />
           </a>
         ) : branch.kind === "ghana" ? (
+          /* Accra has no card page of its own, so this goes to the page that
+           * carries its CalBank and Mobile Money details. A link, not a
+           * navigation fired by the select changing: arrowing through a
+           * native select fires change on every option it passes, which
+           * would throw a keyboard user off this page at "Accra". */
           <>
-            <button type="button" className="btn-give" onClick={onGhana}>
-              Show the Ghana details
+            <Link href="/give/accra" className="btn-give">
+              Give to {shortName(branch)}
               <ArrowRight aria-hidden className="h-4 w-4" />
-            </button>
+            </Link>
             <p className="gv-panel__note">Accra gives by CalBank transfer or Mobile Money.</p>
           </>
         ) : (
@@ -250,43 +225,6 @@ function TextPanel() {
   );
 }
 
-function GhanaPanel() {
-  return (
-    <>
-      <h3>Giving from Ghana</h3>
-      <p className="gv-panel__lede">
-        Kharis Accra gives through CalBank or Mobile Money. Both go to the church in Ghana.
-      </p>
-      <div className="gv-split">
-        <div>
-          <p className="gv-split__label">CalBank transfer</p>
-          <dl className="gv-rows">
-            <CopyRow label="Account name" value={BANK_ACCRA.accountName} />
-            <CopyRow label="Account number" value={BANK_ACCRA.accountNumber} />
-            <CopyRow label="Bank" value={BANK_ACCRA.bank} />
-            <CopyRow
-              label="SWIFT / BIC"
-              value={BANK_ACCRA.swift}
-              hint={`or ${BANK_ACCRA.swiftLong} if your bank asks for 11 characters`}
-            />
-          </dl>
-        </div>
-        <div>
-          <p className="gv-split__label">Mobile Money</p>
-          <dl className="gv-rows">
-            <CopyRow label="Account name" value={MOMO.accountName} />
-            <CopyRow label="USSD code" value={MOMO.ussd} />
-          </dl>
-          <a href={`tel:${MOMO.ussd.replace(/#/g, "%23")}`} className="gv-dial">
-            <Phone aria-hidden />
-            Dial {MOMO.ussd}
-          </a>
-        </div>
-      </div>
-    </>
-  );
-}
-
 export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
   const [way, setWay] = useState<Way>("online");
   const [hasSwitched, setHasSwitched] = useState(false);
@@ -328,11 +266,6 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
     showWay(WAYS[next]!.id, true);
   };
 
-  const showGhana = () => {
-    showWay("ghana", true);
-    deskRef.current?.scrollIntoView({ block: "start" });
-  };
-
   return (
     <div className="gv">
       <header className="gv-hero">
@@ -359,7 +292,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
               Give to your branch
             </a>
             <a href="#building" className="btn-secondary">
-              Build Spurgeon&apos;s Centre
+              Spurgeon&apos;s Centre Project
             </a>
           </div>
         </div>
@@ -395,7 +328,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
 
       <section id="ways" ref={deskRef} className="gv-desk" aria-labelledby="ways-title">
         <div className="gv-head">
-          <p className="gv-kicker">Four ways to give</p>
+          <p className="gv-kicker">Three ways to give</p>
           <h2 id="ways-title">Pick what suits you</h2>
         </div>
 
@@ -447,10 +380,9 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
-                {way === "online" ? <OnlinePanel branches={branches} onGhana={showGhana} /> : null}
+                {way === "online" ? <OnlinePanel branches={branches} /> : null}
                 {way === "bank" ? <BankPanel /> : null}
                 {way === "text" ? <TextPanel /> : null}
-                {way === "ghana" ? <GhanaPanel /> : null}
               </motion.div>
             </motion.div>
           </div>
@@ -491,7 +423,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
                 rel="noopener noreferrer"
                 className="btn-give"
               >
-                Give to the building
+                Build with us
               </a>
               <a
                 href={SPURGEONS_CENTRE.pledgeUrl}

@@ -10,11 +10,6 @@ import { KP2_URL } from "@/lib/kp2";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 import { getHeaderOverlay, subscribeHeaderOverlay } from "@/lib/header-overlay";
 
-const aboutChildren = [
-  { label: "About Us", href: "/about" },
-  { label: "Governance", href: "/governance" },
-] as const;
-
 type NavLink = {
   label: string;
   href?: string;
@@ -23,7 +18,7 @@ type NavLink = {
 
 const links: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about", children: aboutChildren },
+  { label: "About", href: "/about" },
   { label: "KP2", href: KP2_URL },
   { label: "Messages", href: "/messages" },
   { label: "Life", href: "/life" },

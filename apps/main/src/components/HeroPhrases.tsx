@@ -21,7 +21,14 @@ const TextRotator = dynamic(() => import("@/vendor/text-rotator/AnimatedTextRota
 /** Campaign yellow, matching "Kharis" in the welcome line. */
 const ACCENT = "#ffde59";
 
-export const HERO_PHRASES = ["Gospel Centred", "Bible Believing", "Revival Seeking"] as const;
+export const HERO_PHRASES = [
+  "Christ Centered",
+  "Bible Believing",
+  "Revival Seeking",
+  "Purpose Driven",
+  "People Developing",
+  "Disciple Making",
+] as const;
 
 export function HeroPhrases() {
   return (

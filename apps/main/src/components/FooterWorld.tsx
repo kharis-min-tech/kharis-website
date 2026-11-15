@@ -161,17 +161,17 @@ export function FooterWorld({ dark = false }: Props) {
           repeated so the loop never seams. */}
       <div
         className="footer-strap"
-        aria-label="Changing the world with a touch of His Grace. One hundred churches worldwide by 2030."
+        aria-label="Changing our world with a touch of His Grace. One hundred churches worldwide by 2033."
       >
         <div className="footer-strap__track" aria-hidden>
           {[0, 1].map((copy) => (
             <span className="footer-strap__pair" key={copy}>
               <span className="footer-strap__line">
-                Changing the world with a touch of His&nbsp;Grace.
+                Changing our world with a touch of His&nbsp;Grace.
                 <span className="footer-strap__dot">&bull;</span>
               </span>
               <span className="footer-strap__line footer-strap__line--vision">
-                100 churches worldwide by&nbsp;2030.
+                100 churches worldwide by&nbsp;2033.
                 <span className="footer-strap__dot">&bull;</span>
               </span>
             </span>

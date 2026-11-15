@@ -20,7 +20,6 @@
  */
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, type CSSProperties } from "react";
 import { HeroHeadline } from "./HeroHeadline";
 import { PanoramaRow, type PanoramaImage } from "./PanoramaRow";
@@ -43,7 +42,7 @@ import "./hero-band.css";
  * this layout comes from does not, and nor does anything else on the site.
  */
 const BAND = {
-  tileHeight: 34,
+  tileHeight: 38,
   aspectRatio: 1.77,
   curve: 80,
   /* The reference ships 6. `gap` is a share of the tile's HEIGHT, not its
@@ -145,18 +144,6 @@ export function BandHero() {
           <div className="band-hero__head">
             <h1 className="sr-only">Welcome to Kharis</h1>
             <HeroHeadline />
-          </div>
-
-          <div className="band-hero__foot">
-            <p className="band-hero__tagline">Changing the world with a touch of His Grace.</p>
-            <div className="band-hero__ctas">
-              <Link href="/locations" className="btn-primary">
-                Find a Branch
-              </Link>
-              <a href="#messages" className="btn-ghost">
-                Watch Messages
-              </a>
-            </div>
           </div>
         </div>
       </div>

@@ -80,7 +80,10 @@ export function AtomicGlobeBranches({
         group.map((b) => b.photo),
       ),
       ctaLabel: "See branches",
-      ctaLink: "#branches",
+      /* The country rides along in the hash so the list it scrolls to is
+       * filtered to the country whose card was clicked. LocationsClient
+       * reads the suffix; a bare "#branches" still just scrolls. */
+      ctaLink: `#branches:${encodeURIComponent(name)}`,
     }));
   }, [branches, country, group, hrefFor]);
 
@@ -118,7 +121,11 @@ export function AtomicGlobeBranches({
       // Both values keep the whole sphere inside the band. Above roughly 1.2
       // the poles start being sliced off by the viewport, which is the same
       // clipping the old globe suffered from.
-      zoom: country === "world" ? 0.95 : 1.15,
+      //
+      // The overview was 0.95, left over from a shorter band. With the band
+      // taller it was leaving a wide margin of empty surface; 1.05 fills more
+      // of it and is still well under what the filtered view already uses.
+      zoom: country === "world" ? 1.05 : 1.15,
       offsetX: 0,
       offsetY: 0,
       allowTiltDrag: true,

@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { BranchItem } from "@/lib/branches";
 import { AtomicGlobeBranches } from "@/components/branches/AtomicGlobeBranches";
 import type { GlobeBranch } from "@/lib/globe-branches";
@@ -18,6 +18,24 @@ interface Props {
 type Origin = { lat: number; lng: number };
 
 const KP2 = "KP2";
+
+/**
+ * The ordinary churches. Any other family is a KIND of branch within a
+ * country, not a place of its own, so it is listed under that country as a
+ * labelled subsection rather than beside it.
+ *
+ * KP2 used to be a filter sitting in the row next to United Kingdom, Ghana
+ * and Sierra Leone, which asked people to choose between a country and an
+ * age group. Nothing below names KP2: families are read off the data and
+ * anything new appears on its own, under its country, with no code to
+ * change.
+ */
+const PRIMARY_FAMILY = "Kharis";
+
+/** How a family is introduced. A family with no entry here uses its own name. */
+const FAMILY_LABELS: Record<string, string> = {
+  [KP2]: "Kharis Phase 2",
+};
 
 /** KP2 branches have their own pages on the KP2 site. */
 const branchHref = (branch: BranchItem) =>
@@ -40,10 +58,20 @@ export function LocationsClient({ items, full }: Props) {
   const [locating, setLocating] = useState(false);
   const [geoNote, setGeoNote] = useState("");
 
+  /* Every country we meet in, including one that so far has only a KP2
+   * branch: a country is a country whoever is gathering there. */
   const countries = useMemo(() => {
-    const seen = items.filter((b) => b.family !== KP2).map((b) => b.country);
+    const seen = items.map((b) => b.country);
     return [...new Set(seen)].sort((a, b) =>
       a === "United Kingdom" ? -1 : b === "United Kingdom" ? 1 : a.localeCompare(b),
+    );
+  }, [items]);
+
+  /** Read off the data, ordinary churches first, so a new kind needs no code. */
+  const families = useMemo(() => {
+    const seen = [...new Set(items.map((b) => b.family))];
+    return seen.sort((a, b) =>
+      a === PRIMARY_FAMILY ? -1 : b === PRIMARY_FAMILY ? 1 : a.localeCompare(b),
     );
   }, [items]);
 
@@ -54,9 +82,8 @@ export function LocationsClient({ items, full }: Props) {
         ...countries.map((c) => ({
           id: c,
           label: c,
-          count: items.filter((b) => b.family !== KP2 && b.country === c).length,
+          count: items.filter((b) => b.country === c).length,
         })),
-        { id: KP2, label: "KP2 young adults", count: items.filter((b) => b.family === KP2).length },
       ].filter((f) => f.count > 0),
     [items, countries],
   );
@@ -64,13 +91,7 @@ export function LocationsClient({ items, full }: Props) {
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
     return items
-      .filter((b) =>
-        filter === "all"
-          ? true
-          : filter === KP2
-            ? b.family === KP2
-            : b.family !== KP2 && b.country === filter,
-      )
+      .filter((b) => filter === "all" || b.country === filter)
       .filter(
         (b) =>
           !q ||
@@ -87,21 +108,62 @@ export function LocationsClient({ items, full }: Props) {
       }));
   }, [items, filter, query, origin]);
 
-  // Nearest first once we know where the visitor is; otherwise grouped by country, KP2 last.
+  /*
+   * Nearest first once we know where the visitor is; otherwise by country,
+   * and inside each country by family: the ordinary churches first and
+   * unlabelled, because they are what "a Kharis church in Ghana" means, then
+   * a labelled section for every other kind.
+   */
   const groups = useMemo(() => {
     if (origin) {
       const sorted = [...shown].sort((a, b) => (a.miles ?? Infinity) - (b.miles ?? Infinity));
-      return sorted.length ? [{ title: "Nearest to you", rows: sorted }] : [];
+      return sorted.length
+        ? [{ title: "Nearest to you", sections: [{ key: "near", label: null, rows: sorted }] }]
+        : [];
     }
-    return [...countries, KP2]
-      .map((title) => ({
-        title: title === KP2 ? "KP2 · young adults" : title,
-        rows: shown.filter(({ branch }) =>
-          title === KP2 ? branch.family === KP2 : branch.family !== KP2 && branch.country === title,
-        ),
+    return countries
+      .map((country) => ({
+        title: country,
+        sections: families
+          .map((family) => ({
+            key: family,
+            label: family === PRIMARY_FAMILY ? null : (FAMILY_LABELS[family] ?? family),
+            rows: shown.filter(
+              ({ branch }) => branch.country === country && branch.family === family,
+            ),
+          }))
+          .filter((section) => section.rows.length),
       }))
-      .filter((g) => g.rows.length);
-  }, [shown, origin, countries]);
+      .filter((group) => group.sections.length);
+  }, [shown, origin, countries, families]);
+
+  /*
+   * The globe's country cards link to "#branches:<country>", and this is the
+   * half that gives that suffix meaning: select the country, then scroll.
+   *
+   * They used to link to a bare "#branches", which jumped to a list still
+   * showing every branch in the world, so choosing Ghana on the globe and
+   * then choosing Ghana again in the filter row was two steps for one
+   * intention. Setting `filter` also aims the globe, which is the same thing
+   * the filter row does, so the two stay in step.
+   *
+   * The hash is put back to plain "#branches" afterwards: hashchange only
+   * fires when the hash actually changes, and without this, clicking the
+   * same country twice would be silent the second time.
+   */
+  useEffect(() => {
+    const apply = () => {
+      const match = /^#branches:(.+)$/.exec(window.location.hash);
+      if (!match) return;
+      const country = decodeURIComponent(match[1]!);
+      if (items.some((b) => b.country === country)) setFilter(country);
+      window.history.replaceState(null, "", "#branches");
+      document.getElementById("branches")?.scrollIntoView({ behavior: "smooth" });
+    };
+    apply();
+    window.addEventListener("hashchange", apply);
+    return () => window.removeEventListener("hashchange", apply);
+  }, [items]);
 
   const locate = () => {
     if (!navigator.geolocation) {
@@ -134,8 +196,10 @@ export function LocationsClient({ items, full }: Props) {
       <section className="locations-hero">
         <div className="locations-hero__intro">
           <p className="locations-hero__eyebrow">Locations</p>
-          <h1 className="locations-hero__title">Many branches. One family.</h1>
-          <p className="locations-hero__lead">Your Kharis family across the world</p>
+          <h1 className="locations-hero__title">
+            Don&apos;t just believe. <span>Belong.</span>
+          </h1>
+          <p className="locations-hero__lead">The Christian life is a one another life.</p>
 
           <form
             role="search"
@@ -176,7 +240,7 @@ export function LocationsClient({ items, full }: Props) {
         <div className="locations-hero__globe">
           <AtomicGlobeBranches
             branches={full}
-            country={filter === "all" || filter === KP2 ? "world" : filter}
+            country={filter === "all" ? "world" : filter}
             hrefFor={(branch) =>
               items.find((item) => item.id === branch.slug)?.family === KP2
                 ? kp2BranchUrl(branch.slug)
@@ -226,16 +290,23 @@ export function LocationsClient({ items, full }: Props) {
           groups.map((group) => (
             <div key={group.title} className="locations-group">
               <h3 className="locations-group__title">{group.title}</h3>
-              <ul className="locations-grid">
-                {group.rows.map(({ branch, miles }) => (
-                  <BranchCard
-                    key={branch.id}
-                    branch={branch}
-                    miles={miles}
-                    showCountry={Boolean(origin)}
-                  />
-                ))}
-              </ul>
+              {group.sections.map((section) => (
+                <div key={section.key} className="locations-subgroup">
+                  {section.label ? (
+                    <h4 className="locations-subgroup__title">{section.label}</h4>
+                  ) : null}
+                  <ul className="locations-grid">
+                    {section.rows.map(({ branch, miles }) => (
+                      <BranchCard
+                        key={branch.id}
+                        branch={branch}
+                        miles={miles}
+                        showCountry={Boolean(origin)}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           ))
         )}

@@ -75,4 +75,32 @@ export const HERO_SLIDES: HeroSlide[] = [
     src: "https://images.kharis.org/site-images/main/ca959585decb8ff4/hero/outreach-community.jpg",
     alt: "Kharis community outreach day in a local playground",
   },
+  /* The five photographs that used to carry the "This is Kharis" character
+     section. That section has gone; the pictures were too good to lose, so
+     they ride the hero band instead. */
+  {
+    type: "image",
+    src: "https://images.kharis.org/site-images/main/850b7f32a7f6712c/joyful-worship.jpg",
+    alt: "Joyful worship at a Kharis service",
+  },
+  {
+    type: "image",
+    src: "https://images.kharis.org/site-images/main/79f53822455f01b0/branch-slide-2.jpg",
+    alt: "The congregation lifting Christ in worship",
+  },
+  {
+    type: "image",
+    src: "https://images.kharis.org/site-images/main/b65991e38ead9ab1/biblical-open-bible.jpg",
+    alt: "An open Bible held during a Kharis service",
+  },
+  {
+    type: "image",
+    src: "https://images.kharis.org/site-images/main/6cecd6b024bd301a/love-greeting.jpg",
+    alt: "Members greeting one another at a Kharis gathering",
+  },
+  {
+    type: "image",
+    src: "https://images.kharis.org/site-images/main/16b531253b8a325e/grace-filled-prayer.jpg",
+    alt: "Praying together at a Kharis service",
+  },
 ];

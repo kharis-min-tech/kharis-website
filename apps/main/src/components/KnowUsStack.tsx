@@ -28,7 +28,7 @@ const cards: Card[] = [
     reveal: "left",
   },
   {
-    title: "Young Adults",
+    title: "A New Generation",
     href: KP2_URL,
     image: "https://images.kharis.org/site-images/main/012b86affad979dd/home/kp2-community.webp",
     cta: "Visit KP2",
@@ -36,15 +36,7 @@ const cards: Card[] = [
     reveal: "up",
   },
   {
-    title: "Become a Believer",
-    href: "/life/baptism",
-    image: "https://images.kharis.org/site-images/main/13c9297f7be9a14a/baptism-water.jpg",
-    cta: "Take the step",
-    position: "object-[46%_center]",
-    reveal: "up",
-  },
-  {
-    title: "Get Involved",
+    title: "How We Serve God",
     href: "/life/departments",
     image: "https://images.kharis.org/site-images/main/de005ef42ce5304e/get-involved-sax.jpg",
     cta: "Join a team",
@@ -52,8 +44,8 @@ const cards: Card[] = [
     reveal: "right",
   },
   {
-    title: "Events",
-    href: "/events",
+    title: "Our Way of Life",
+    href: "/life",
     image:
       "https://images.kharis.org/site-images/main/e06e47b90f538fed/events/singles-ball/ballroom-overview.jpg",
     cta: "Learn more",
@@ -69,13 +61,15 @@ export function KnowUsStack() {
     <section id="know" className="section band band--1 overflow-x-clip">
       <div className="section__inner">
         <Reveal variant="blur" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
-          <p className="eyebrow">Family</p>
           <h2 className="section-title mt-2">
             Get to Know <span className="kharis-word">Kharis</span>
           </h2>
         </Reveal>
 
-        <RevealStagger className="know-grid grid grid-cols-1 gap-4 sm:grid-cols-2" stagger={0.14}>
+        <RevealStagger
+          className="know-grid grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-6 lg:gap-7"
+          stagger={0.14}
+        >
           {cards.map((card) => (
             <RevealItem key={card.title} variant={card.reveal} distance={64} className="h-full">
               <motion.a

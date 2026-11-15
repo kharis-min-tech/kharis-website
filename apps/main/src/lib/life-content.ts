@@ -1,6 +1,6 @@
 export type LifeTone = "gold" | "dark" | "purple" | "cream";
 
-export type LifeSlug = "k-group" | "baptism" | "fasting" | "marriage" | "children" | "departments";
+export type LifeSlug = "k-group" | "fasting" | "marriage" | "children" | "departments";
 
 export type LifeSection = {
   title: string;
@@ -100,39 +100,8 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
       },
     ],
     contact: LIFE_KGROUP_EMAIL,
-    next: "baptism",
-    cta: { label: "Find a K-Group", href: "/contact" },
-  },
-  {
-    slug: "baptism",
-    title: "Baptism",
-    shortTitle: "Baptism",
-    badge: "Next step",
-    href: "/life/baptism",
-    card: "A public declaration that you identify with Jesus Christ’s death, burial and resurrection, walking in newness of life.",
-    image: LIFE_BAPTISM_IMAGE,
-    imageAlt: "A Kharis baptism candidate emerging from the water with hands raised",
-    tone: "cream",
-    layout: "photo",
-    icon: "droplets",
-    intro:
-      "Baptism is a public declaration a person makes to identify with Jesus Christ’s death, burial and resurrection. While baptism doesn’t grant you salvation, that comes by faith alone. Jesus commanded believers to get baptised.",
-    quote: {
-      text: "Or do you not know that as many of us as were baptised into Christ Jesus were baptised into His death? Therefore we were buried with Him through baptism into death, that just as Christ was raised from the dead by the glory of the Father, even so we also should walk in newness of life.",
-      source: "Romans 6:3-4",
-    },
-    sections: [
-      {
-        title: "Jesus commanded believers to get baptised",
-        body: "Salvation is God’s free gift, received by faith. Baptism is the next step of obedience. In Matthew 28:19, Jesus says: Go therefore and make disciples of all the nations, baptising them in the name of the Father and of the Son and of the Holy Spirit.",
-      },
-      {
-        title: "Baptism classes",
-        body: "To get baptised, contact your local branch. Before your baptism, you’ll have the opportunity to learn more through our baptism classes. You can also listen to Pastor David’s teaching, Baptism: Newness of Life in Christ.",
-      },
-    ],
     next: "fasting",
-    cta: { label: "Talk with us about baptism", href: "/life?open=baptism&followup=1" },
+    cta: { label: "Find a K-Group", href: "/contact" },
   },
   {
     slug: "fasting",
@@ -278,12 +247,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
 ] as const;
 
 /** Cards shown on the Life landing grid (K-Group / marriage hidden from UI). */
-export const LIFE_VISIBLE_SLUGS = new Set<LifeSlug>([
-  "baptism",
-  "fasting",
-  "children",
-  "departments",
-]);
+export const LIFE_VISIBLE_SLUGS = new Set<LifeSlug>(["fasting", "children", "departments"]);
 
 export const LIFE_PHOTO_CARDS = LIFE_CATEGORIES.filter(
   (c) => c.layout === "photo" && LIFE_VISIBLE_SLUGS.has(c.slug),

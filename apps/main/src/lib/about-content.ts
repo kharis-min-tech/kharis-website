@@ -13,6 +13,9 @@ export const ABOUT = {
     word: "λειτουργία, ας, ἡ",
     meaning: "With various services providing units",
   },
+  /* Not rendered anywhere. This is the line the Grace assistant is given as
+   * its description of the church, in lib/chat-context.ts. It was removed
+   * from the About page deliberately; the bot still needs it. */
   aboutBlurb:
     "While ministering to the total person, we seek to deepen people’s commitment to God and to spiritual values such as holiness, prayer, evangelism, Christ-centred living, Bible study and fellowship.",
   faith: [
@@ -50,7 +53,7 @@ export const ABOUT = {
     },
   ],
   mission: {
-    title: "Our Mission Statement",
+    title: "Our Mission",
     lead: "We are a friendly, caring and exciting family church that seeks to influence our society with the reality of God’s love and the reliability of His principles by ministering to the spiritual, physical, social and emotional needs of people who care to experience God in a dynamic and a living way.",
     deepen:
       "While ministering to the total person, we seek to deepen people’s commitment to God and to spiritual values such as Holiness, Prayer, Evangelism, Christ-Centred Living, Bible Study and Fellowship, qualities we believe are essential to being an effective and fruitful disciple of Christ our Lord.",
@@ -104,8 +107,8 @@ export const ABOUT = {
     ],
   },
   vision: {
-    title: "Our Vision Statement",
-    lead: "Changing the world with a touch of His Grace",
+    title: "Our Vision",
+    lead: "Changing our world with a touch of His Grace",
     intro: "The Kharis we see:",
     points: [
       "Is Christ Centred, Purpose Driven, People Developing and Disciple Making",
@@ -127,9 +130,9 @@ export const ABOUT = {
         name: "Pastor David Antwi",
         role: "Founder & Lead Pastor",
         image:
-          "https://images.kharis.org/site-images/main/e666a073b590b3ff/leadership/pastor-david-sunday.jpg",
-        imageWidth: 1800,
-        imageHeight: 1199,
+          "https://images.kharis.org/site-images/main/e9e8dcb4b016d8b0/leadership/pastor-david-preaching-3.jpg",
+        imageWidth: 2048,
+        imageHeight: 1365,
         focus: "Teaching the Word and establishing believers in their faith",
         blurb:
           "Pastor David co-founded Kharis in 2003. He leads with a deep love for Scripture, teaching and serving so people encounter God in a living way and grow as disciples of Christ.",
@@ -139,7 +142,7 @@ export const ABOUT = {
         name: "Pastor Awo Antwi",
         role: "Co-founder & Senior Associate Pastor",
         image:
-          "https://images.kharis.org/site-images/main/ef23a725426d6b26/leadership/pastor-awo-preaching.jpg",
+          "https://images.kharis.org/site-images/main/4357479d442c3577/leadership/pastor-awo-preaching.jpg",
         imageWidth: 1365,
         imageHeight: 2048,
         focus: "People, family, and raising the next generation",
@@ -149,6 +152,26 @@ export const ABOUT = {
     ],
   },
 } as const;
+
+/**
+ * The founders' story, cut into the three beats it is told in.
+ *
+ * The cut lives here rather than in a component because both tellings use it:
+ * the scrolling page's Leadership panel and the book's closing spread. It was
+ * written inline in AboutChapters, which meant the book could not reach it
+ * without copying a regex and three headings that would then have to be kept
+ * in step by hand.
+ *
+ * The split is on sentence boundaries, so editing leadership.body reflows the
+ * beats; only add or remove whole sentences and the headings keep their sense.
+ */
+export const LEADERSHIP_BEATS: ReadonlyArray<{ title: string; body: string }> = (() => {
+  const sentences = ABOUT.leadership.body.split(/(?<=[.!?])\s+(?=[A-Z])/);
+  const titles = ["Founded in 2003", "The Word at the centre", "A life together"];
+  return [sentences.slice(0, 3), sentences.slice(3, 5), sentences.slice(5)]
+    .filter((group) => group.length > 0)
+    .map((group, index) => ({ title: titles[index], body: group.join(" ") }));
+})();
 
 export const GOVERNANCE = {
   title: "Policies to protect everyone",

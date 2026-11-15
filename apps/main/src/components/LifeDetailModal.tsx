@@ -208,19 +208,7 @@ function LifeScrollJourney({
           {
             title: category.title,
             label: "THE HEART OF IT",
-            body:
-              category.slug === "baptism"
-                ? category.intro
-                    .replace(
-                      "Baptism is a public declaration a person makes to identify with ",
-                      "A public declaration a person makes to identify with ",
-                    )
-                    .replace(
-                      " While baptism doesn’t grant you salvation, that comes by faith alone.",
-                      " It doesn’t grant salvation, which comes by faith alone.",
-                    )
-                    .replace(" Jesus commanded believers to get baptised.", "")
-                : category.intro,
+            body: category.intro,
           },
         ]
       : []),
@@ -228,10 +216,7 @@ function LifeScrollJourney({
       ? [{ title: "Scripture", label: category.quote.source, body: `“${category.quote.text}”` }]
       : []),
     ...category.sections.map((section) => ({
-      title:
-        category.slug === "baptism" && section.title.startsWith("Jesus commanded")
-          ? "Jesus commanded"
-          : section.title,
+      title: section.title,
       label: category.badge,
       body: section.body,
       items: section.items,
@@ -387,7 +372,6 @@ export function LifeDetailModal({ category, onClose }: Props) {
   const videoTitle = slug ? lifeModalVideoTitle(slug) : (category?.title ?? "Kharis Life");
   const videoKind = slug ? lifeModalVideoKind(slug) : "youtube";
   const videoStart = slug ? lifeModalVideoStart(slug) : 0;
-  const isBaptism = category?.slug === "baptism";
   const isDepartments = category?.slug === "departments";
 
   if (!mounted) return null;
@@ -467,50 +451,25 @@ export function LifeDetailModal({ category, onClose }: Props) {
               </section>
 
               <section className="life-reader__end" aria-label="Continue your journey">
-                {isBaptism ? (
-                  <motion.div
-                    className="life-reader__family"
-                    initial={reduce ? false : { opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.35 }}
-                    transition={revealTransition(0.85)}
-                  >
-                    <h3>Let&apos;s talk baptism.</h3>
-                    <p className="life-reader__family-copy">
-                      Baptism begins with a conversation at your local branch, not a form. Tell them
-                      you&apos;re interested and they&apos;ll walk you through what comes next.
-                    </p>
-                    <Link
-                      href="/contact?topic=Baptism"
-                      className="life-refresh__button"
-                      onClick={onClose}
-                    >
-                      TALK TO MY BRANCH <Icon name="arrow" className="h-4 w-4" />
-                    </Link>
-                  </motion.div>
-                ) : (
-                  <>
-                    <motion.h3
-                      initial={reduce ? false : { opacity: 0, y: 24 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false, amount: 0.4 }}
-                      transition={revealTransition(0.9, 0.08)}
-                    >
-                      {isDepartments ? "Find your place to serve." : `${ctaLabel}.`}
-                    </motion.h3>
-                    <motion.div
-                      initial={reduce ? false : { opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false, amount: 0.4 }}
-                      transition={revealTransition(0.85, 0.16)}
-                    >
-                      <Link href={ctaHref} className="life-refresh__button" onClick={onClose}>
-                        {ctaLabel.toUpperCase()}
-                        <Icon name="arrow" className="h-4 w-4" />
-                      </Link>
-                    </motion.div>
-                  </>
-                )}
+                <motion.h3
+                  initial={reduce ? false : { opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.4 }}
+                  transition={revealTransition(0.9, 0.08)}
+                >
+                  {isDepartments ? "Find your place to serve." : `${ctaLabel}.`}
+                </motion.h3>
+                <motion.div
+                  initial={reduce ? false : { opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.4 }}
+                  transition={revealTransition(0.85, 0.16)}
+                >
+                  <Link href={ctaHref} className="life-refresh__button" onClick={onClose}>
+                    {ctaLabel.toUpperCase()}
+                    <Icon name="arrow" className="h-4 w-4" />
+                  </Link>
+                </motion.div>
               </section>
             </div>
           </motion.div>
