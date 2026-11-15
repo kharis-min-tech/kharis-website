@@ -2,6 +2,7 @@ import Page from "@/components/pages/branches";
 import { listBranches } from "@/lib/branches";
 import { pageMeta } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata = pageMeta({

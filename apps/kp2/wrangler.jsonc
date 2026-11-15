@@ -3,8 +3,11 @@
   "name": "kharis-kp2",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-06",
-  // Required: Supabase/YouTube/Gemini clients pull in Node built-ins.
-  "compatibility_flags": ["nodejs_compat"],
+  // nodejs_compat: Supabase/YouTube/Gemini pull in Node built-ins.
+  // global_fetch_strictly_public: allow this Worker to fetch the API Worker on the
+  // same *.workers.dev zone. Without it, /branches renders empty (Cloudflare error 1042).
+  // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#global-fetch-strictly-public
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS",

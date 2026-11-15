@@ -3,8 +3,10 @@
   "name": "kharis-content",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-06",
-  // Required: Supabase clients pull in Node built-ins.
-  "compatibility_flags": ["nodejs_compat"],
+  // nodejs_compat: Supabase clients pull in Node built-ins.
+  // global_fetch_strictly_public: allow Worker→Worker fetches on the same *.workers.dev zone.
+  // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#global-fetch-strictly-public
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS",
