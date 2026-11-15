@@ -8,11 +8,7 @@ import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import { KP2_PHOTOS } from "@/lib/photography";
 import "@/components/giving-experience.css";
 
-function GivingPage({
-  branches,
-}: {
-  branches: GivingLocation[];
-}) {
+function GivingPage({ branches }: { branches: GivingLocation[] }) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
       <SiteHeader />

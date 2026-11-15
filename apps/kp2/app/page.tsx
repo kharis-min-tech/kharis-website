@@ -12,10 +12,7 @@ export const metadata = pageMeta({
 });
 
 export default async function Home() {
-  const [testimonials, branches] = await Promise.all([
-    getHomeTestimonials(),
-    listBranches(),
-  ]);
+  const [testimonials, branches] = await Promise.all([getHomeTestimonials(), listBranches()]);
   const branchPins = branches.map(({ slug, name, lat, lng }) => ({ slug, name, lat, lng }));
   return <Page testimonials={testimonials} branchPins={branchPins} />;
 }

@@ -29,3 +29,4 @@ apps/kp2/data/*.json
 # they shipped in, minified, so that re-fetching the source and re-applying our
 # KHARIS PATCH edits stays a readable diff. Reformatting them would destroy that.
 apps/main/src/vendor
+apps/kp2/vendor

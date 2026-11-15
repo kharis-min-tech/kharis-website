@@ -14,8 +14,6 @@ export const metadata = pageMeta({
 export default async function Giving() {
   const branches = await listBranches();
   return (
-    <Page
-      branches={branches.map(({ slug, name, givingLink }) => ({ slug, name, givingLink }))}
-    />
+    <Page branches={branches.map(({ slug, name, givingLink }) => ({ slug, name, givingLink }))} />
   );
 }
