@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -48,27 +47,15 @@ const TOPIC_ICONS: Record<string, LucideIcon> = {
 const WHY_FAQ = [
   {
     q: "Why should I listen to messages?",
-    a: "The Bible says faith comes by hearing, and hearing by the Word of God. This shows that faith is not a one-time event but a continuous process. Good preaching does not just build faith. It also helps spiritual maturity, guarding believers against being led astray by false teaching.",
+    a: "The Bible says faith comes by hearing, and hearing by the Word of God (Romans 10:17). This shows that faith is not a one-time event but a continuous process. Good preaching does not just build faith. It also helps spiritual maturity, guarding believers against being led astray by false teaching.",
   },
   {
     q: "What makes Kharis messages different?",
     a: "They are Christ-centric, text-driven, and gospel-saturated, with a focus on what the Bible is actually saying and revealing Christ through it, helping you to become a firm, sound believer.",
   },
   {
-    q: "Where can I watch?",
-    a: "Watch on this Messages page or on YouTube. Prefer audio? Listen on SoundCloud, Apple Podcasts, Spotify, or Amazon Music.",
-  },
-  {
-    q: "How often are new messages added?",
-    a: "New teachings are added weekly from Sunday services and series. Browse the rows below for the newest and older archive messages.",
-  },
-  {
-    q: "Can I go deeper in the Word at home?",
-    a: "Yes. Keep the Word on your lips and in your heart (Joshua 1:8). Replay teachings until truth settles, then share what God is saying.",
-  },
-  {
     q: "Is Scripture really for my situation?",
-    a: "All Scripture is God-breathed and useful for teaching, correcting, and training in righteousness (2 Timothy 3:16). The Word is living and active (Hebrews 4:12).",
+    a: "All Scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness, that the man of God may be complete, thoroughly equipped for every good work (2 Timothy 3:16-17).",
   },
 ];
 
@@ -164,7 +151,6 @@ function AppStoreButtons() {
       >
         <Icon name="apple" className="msg-app-btn__icon" />
         <span className="msg-app-btn__copy">
-          <span className="msg-app-btn__kicker">All messages on the</span>
           <strong>App Store</strong>
         </span>
       </a>
@@ -176,7 +162,6 @@ function AppStoreButtons() {
       >
         <Icon name="android" className="msg-app-btn__icon" />
         <span className="msg-app-btn__copy">
-          <span className="msg-app-btn__kicker">All messages on</span>
           <strong>Google Play</strong>
         </span>
       </a>
@@ -450,10 +435,8 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         <aside className="msg-app-strip" aria-label={KHARIS_APP.name}>
           <div className="msg-app-strip__inner">
             <div className="msg-app-strip__copy">
-              <p className="msg-app-strip__title">Watch all messages in the Kharis app</p>
-              <p className="msg-app-strip__sub">
-                Every teaching, including ones not listed here. Free on iPhone and Android.
-              </p>
+              <p className="msg-app-strip__title">Find all messages in the Kharis app</p>
+              <p className="msg-app-strip__sub">Free on iPhone and Android.</p>
             </div>
             <AppStoreButtons />
           </div>
@@ -461,16 +444,15 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
       )}
 
       <section id="listen" className="msg-listen" aria-label="Listen platforms">
-        <p className="msg-listen__eyebrow">Catch every message</p>
         <h2 className="msg-listen__title">
           Listen <span>anywhere.</span>
         </h2>
-        <p className="msg-listen__lede">Same Word. Pick the app you already open every day.</p>
+        <p className="msg-listen__lede">Available on all platforms on all devices.</p>
 
         <MessagesDeviceCluster messages={listenMessages} />
 
         <div className="msg-listen__steps">
-          {LISTEN_PLATFORMS.slice(0, 4).map((p) => (
+          {LISTEN_PLATFORMS.slice(0, 5).map((p) => (
             <a
               key={p.id}
               href={p.href}
@@ -482,23 +464,8 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
                 <PlatformIcon id={p.id} className="h-8 w-8 md:h-9 md:w-9" />
               </span>
               <strong>{p.name}</strong>
-              <span>{p.hint}</span>
             </a>
           ))}
-        </div>
-
-        <div className="msg-listen__foot">
-          <Link href="/" className="msg-btn msg-btn--ghost">
-            Back home
-          </Link>
-          <a
-            href="https://www.youtube.com/@davidantwi"
-            target="_blank"
-            rel="noreferrer"
-            className="msg-btn msg-btn--primary"
-          >
-            Full YouTube channel
-          </a>
         </div>
       </section>
 

@@ -1,0 +1,506 @@
+/*
+ * "Step into life at Kharis". Scoped to .life-tunnel.
+ *
+ * The tunnel's own backdrop is the page surface, so the stage does not read
+ * as a black box dropped into the page - it reads as the page receding.
+ */
+
+.life-tunnel {
+  /* Read back by LifeTunnel and handed to the component, which needs a real
+   * colour rather than a custom property. */
+  --life-tunnel-paper: var(--surface-0);
+
+  position: relative;
+  padding: 0 0 var(--pad-lg, 5rem);
+  background: var(--surface-0);
+}
+
+html[data-theme="dark"] .life-tunnel {
+  --life-tunnel-paper: var(--surface-0);
+}
+
+/* The invitation sits dead centre inside the tunnel. pointer-events are off
+ * so a click still reaches the walls behind it; only the button takes them
+ * back. Once running it clears out of the way entirely. */
+.life-tunnel__copy {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  pointer-events: none;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.life-tunnel__stage.is-running .life-tunnel__copy {
+  opacity: 0;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+.life-tunnel__eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+html[data-theme="dark"] .life-tunnel__eyebrow {
+  color: var(--yellow);
+}
+
+.life-tunnel__title {
+  margin: 0;
+  font-size: clamp(2rem, 5.2vw, 3.75rem);
+  line-height: 1.05;
+  color: var(--fg);
+}
+
+.life-tunnel__title span {
+  color: var(--purple);
+}
+
+html[data-theme="dark"] .life-tunnel__title span {
+  color: var(--yellow);
+}
+
+.life-tunnel__lede {
+  margin: 1rem auto 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* The stage takes the screen. This is the first thing a visitor meets on
+ * /life and it is meant to hold all of their attention, so it runs the full
+ * viewport and edge to edge rather than sitting in a bordered box. */
+.life-tunnel__stage,
+.life-tunnel__placeholder {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 34rem;
+  overflow: hidden;
+  background: var(--surface-0);
+}
+
+.life-tunnel__placeholder {
+  display: block;
+}
+
+/* The tile captions. The component gives every tile .tunnel-tile and adds
+ * .tunnel-tile--selectable when it can be opened. */
+.life-tunnel .tunnel-tile {
+  position: absolute;
+}
+
+/* The caption fades in as its tile approaches. --near is written by the
+ * component each frame: 1 at the camera, 0 by the half way point.
+ *
+ * It is deliberately small and quiet. The readout at the foot of the tunnel
+ * is what names things now, and at speed the walls are going past too fast
+ * to read anyway: a large caption on every one of them was just noise
+ * travelling across the screen. This is a quiet confirmation of what the
+ * readout is saying, not the label doing the work. */
+.life-tunnel .tunnel-tile__label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.35rem 0.45rem;
+  /* Quieter than the tile itself, so it never competes with the photograph. */
+  opacity: calc(var(--near, 1) * 0.8);
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  color: #fff;
+  text-align: left;
+  /* The caption sits on a photograph that could be anything, so it carries
+   * its own ground rather than relying on the picture being dark. */
+  background: linear-gradient(0deg, rgba(10, 4, 24, 0.72) 0%, rgba(10, 4, 24, 0) 100%);
+  pointer-events: none;
+}
+
+.life-tunnel .tunnel-tile--selectable {
+  transition: outline-color 0.18s ease;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+}
+
+.life-tunnel .tunnel-tile--selectable:is(:hover, :focus-visible) {
+  outline-color: var(--yellow);
+}
+
+/* The list. Real content, not a fallback. */
+.life-tunnel__list {
+  max-width: var(--page-max, 72rem);
+  margin: 3rem auto 0;
+}
+
+.life-tunnel__list-title {
+  margin: 0 0 1.25rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+.life-tunnel__list ul {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .life-tunnel__list ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .life-tunnel__list ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.life-tunnel__list button {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 100%;
+  padding: 1rem 1.1rem;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: var(--surface-0);
+  color: var(--fg);
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.life-tunnel__list button:is(:hover, :focus-visible) {
+  border-color: var(--purple);
+  transform: translateY(-2px);
+}
+
+html[data-theme="dark"] .life-tunnel__list button:is(:hover, :focus-visible) {
+  border-color: var(--yellow);
+}
+
+.life-tunnel__list-name {
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.life-tunnel__list-blurb {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* The activity sheet. */
+.life-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.life-panel__scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(10, 4, 24, 0.66);
+  backdrop-filter: blur(3px);
+  cursor: pointer;
+}
+
+.life-panel__sheet {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  width: min(60rem, 100%);
+  max-height: min(88vh, 54rem);
+  overflow: auto;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-0);
+}
+
+@media (min-width: 860px) {
+  .life-panel__sheet {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.life-panel__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(10, 4, 24, 0.72);
+  color: #fff;
+  cursor: pointer;
+}
+
+.life-panel__media {
+  margin: 0;
+  min-height: 14rem;
+}
+
+.life-panel__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 14rem;
+  object-fit: cover;
+}
+
+.life-panel__body {
+  padding: 1.75rem 1.5rem 2rem;
+}
+
+.life-panel__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  color: var(--fg);
+}
+
+.life-panel__blurb {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--purple);
+}
+
+html[data-theme="dark"] .life-panel__blurb {
+  color: var(--yellow);
+}
+
+.life-panel__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1.25rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.life-panel__facts dt {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.life-panel__facts dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.life-panel__copy {
+  margin: 1.25rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--fg);
+}
+
+.life-panel__gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.life-panel__gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.life-panel__cta {
+  margin-top: 1.5rem;
+}
+
+/* Scales up now it sits in the middle of a full screen rather than above a
+ * boxed stage. */
+.life-tunnel__copy .life-tunnel__title {
+  font-size: clamp(2.4rem, 7vw, 5rem);
+}
+
+.life-tunnel__copy .life-tunnel__lede {
+  margin-top: 0.9rem;
+  max-width: 30rem;
+}
+
+/* Our own start control, in the brand rather than the component's black
+ * pill, and the one thing in the copy layer that takes clicks. */
+.life-tunnel__start {
+  margin-top: 2rem;
+  padding: 1rem 2.25rem;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  border: 0;
+  background: var(--purple);
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+html[data-theme="dark"] .life-tunnel__start {
+  background: var(--yellow);
+  color: #1c1c1f;
+}
+
+.life-tunnel__start:is(:hover, :focus-visible) {
+  transform: translateY(-2px);
+}
+
+/* The running hint. Appears only once you are moving, and stays out of the
+ * way at the foot of the tunnel. */
+.life-tunnel__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 1.75rem;
+  z-index: 3;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  transform: translateX(-50%);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface-0) 70%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s ease 0.4s;
+}
+
+.life-tunnel__hint.is-on {
+  opacity: 1;
+}
+
+/* The list is below the fold now, so it gets its own breathing room. */
+.life-tunnel__list {
+  padding-inline: var(--gutter, 1.25rem);
+}
+
+/* The readout. Names whatever is under the pointer, in one place that is
+ * always legible, so choosing a wall is a decision rather than a gamble. */
+.life-tunnel__hint strong {
+  display: block;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.life-tunnel__hint span {
+  display: block;
+}
+
+.life-tunnel__hint {
+  min-width: 18rem;
+  text-align: center;
+  transition:
+    opacity 0.7s ease 0.4s,
+    background 0.2s ease;
+}
+
+/* Scroll prompt. The tunnel fills the screen, so without this a visitor can
+ * reasonably believe it is the whole page. Appears with the running hint,
+ * not over the invitation, where it would compete with Step inside. */
+.life-tunnel__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 5.25rem;
+  z-index: 3;
+  transform: translateX(-50%);
+  padding: 0.55rem 1.1rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface-0) 72%, transparent);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.7s ease 0.6s,
+    border-color 0.2s ease;
+}
+
+.life-tunnel__scroll.is-on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.life-tunnel__scroll:is(:hover, :focus-visible) {
+  border-color: var(--purple);
+}
+
+html[data-theme="dark"] .life-tunnel__scroll:is(:hover, :focus-visible) {
+  border-color: var(--yellow);
+}
+
+/* "Everything we do" is a section of the page now, not a caption under a
+ * showpiece, so it is titled and introduced like one. */
+.life-tunnel__list {
+  margin-top: 5rem;
+}
+
+.life-tunnel__list-title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--fg);
+  text-align: center;
+}
+
+.life-tunnel__list-lede {
+  margin: 0 auto 2.5rem;
+  max-width: 36rem;
+  font-size: clamp(0.95rem, 1.5vw, 1.08rem);
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+}

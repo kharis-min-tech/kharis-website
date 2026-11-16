@@ -5,7 +5,7 @@ import { Fragment, useRef, useSyncExternalStore } from "react";
 import { Reveal } from "@/components/Reveal";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 
-const WORDS = ["Establishing", "believers", "and", "strengthening", "churches."];
+const WORDS = ["Changing", "our", "world", "with", "a", "touch", "of", "His", "Grace"] as const;
 
 export function MissionSection() {
   const ref = useRef<HTMLElement>(null);
@@ -17,7 +17,7 @@ export function MissionSection() {
   });
 
   return (
-    <section ref={ref} className="section band band--0 relative overflow-hidden">
+    <section ref={ref} className="mission-strip section band band--0 relative overflow-hidden">
       <div className="section__inner text-center">
         <Reveal variant="up" distance={28} duration={0.8} className="mb-4">
           <p className="eyebrow">Our Mission</p>
@@ -25,7 +25,7 @@ export function MissionSection() {
 
         <h2
           aria-label={WORDS.join(" ")}
-          className="section-title mission-section-title mx-auto max-w-none text-center text-[clamp(1.15rem,3.2vw,2.85rem)]"
+          className="section-title mission-section-title mx-auto max-w-none text-center text-[clamp(1.5rem,4.4vw,4rem)]"
         >
           {WORDS.map((word, i) => (
             <Fragment key={`${word}-${i}`}>

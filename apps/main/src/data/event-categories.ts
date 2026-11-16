@@ -9,7 +9,7 @@
  *
  * Photos live in /public/images, videos in /public/videos. `media.video` is optional;
  * `media.poster` is the photo (and the still shown while a video loads).
- * `gallery` takes any number of photos (6–12 works well).
+ * `gallery` takes any number of photos (6 to 12 works well).
  *
  * Keep every `alt` describing what is actually in the photo. Branch-specific dates and
  * venues belong in branch event records; never invent dates for past events.
@@ -305,7 +305,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     media: {
       poster:
         "https://images.kharis.org/site-images/main/69361724ac3b9413/events/ltbs-team-caps.jpg",
-      alt: "Three smiling team members in Let the Bible Speak caps and T-shirts, one wearing LTBS 2026 sunglasses",
+      alt: "Three smiling team members in Let the Bible Speak caps and T-shirts, one wearing Let the Bible Speak Conference 2026 sunglasses",
       position: "50% 0%",
     },
     headline: "Let the Bible Speak",

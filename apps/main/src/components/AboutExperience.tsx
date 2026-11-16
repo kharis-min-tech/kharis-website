@@ -4,7 +4,7 @@ import Image from "@/components/SiteImage";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaithStack } from "@/components/FaithStack";
-import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
+import { RevealItem, RevealStagger } from "@/components/Reveal";
 import { AboutChapters, isAboutChapterId, type AboutChapterId } from "@/components/AboutChapters";
 import { ABOUT } from "@/lib/about-content";
 import "./about.css";
@@ -36,9 +36,7 @@ export function AboutExperience() {
           <div className="about-hero__veil" />
         </div>
         <div className="about-hero__copy">
-          <p className="about-hero__eyebrow">Kharis Ministries</p>
-          <h1 className="about-hero__brand">Kharis</h1>
-          <p className="about-hero__tag">Changing the world with a touch of His Grace.</p>
+          <h1 className="about-hero__brand">Who we are.</h1>
         </div>
       </header>
 
@@ -55,9 +53,6 @@ export function AboutExperience() {
             <p className="about-ety__meaning">{ABOUT.ministriesGreek.meaning}</p>
           </RevealItem>
         </RevealStagger>
-        <Reveal className="about-ety__blurb-wrap" delay={0.15} once={true} distance={28}>
-          <p className="about-ety__blurb">{ABOUT.aboutBlurb}</p>
-        </Reveal>
       </section>
 
       <AboutChapters initialId={chapterId} />

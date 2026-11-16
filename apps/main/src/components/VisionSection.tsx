@@ -7,18 +7,15 @@ import { KHARIS_APP } from "@/lib/kharis-app";
 
 const LISTEN_STEPS = [
   {
-    title: "Open the app home",
-    detail: "See latest audio, video and playlists.",
+    title: "Open the app",
     screen: "home",
   },
   {
-    title: "Search any message",
-    detail: "Find the teaching you need in a tap.",
+    title: "Search for a message",
     screen: "messages",
   },
   {
     title: "Press play and go",
-    detail: "Listen anywhere you are.",
     screen: "player",
   },
 ] as const;
@@ -28,19 +25,13 @@ export function VisionSection() {
     <section id="vision" className="listen-band section section--lg band band--1">
       <div className="section__inner relative z-10">
         <Reveal variant="up" distance={28} className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">Get the app</p>
-          <h2 className="section-title mt-2">Church in your pocket.</h2>
+          <p className="eyebrow">Stay plugged in</p>
+          <h2 className="section-title mt-2">Messages on the go.</h2>
           <p className="mx-auto mt-4 max-w-xl text-[0.98rem] font-semibold leading-relaxed text-muted">
-            Download the Kharis app, then listen to any message in three simple steps: home, search,
-            and play.
+            Romans 10:17. Faith comes by hearing, and hearing by the word of God.
           </p>
 
-          <div className="btn-pair mt-7">
-            <a href="#messages" className="btn-secondary">
-              Watch messages
-            </a>
-          </div>
-          <p className="mt-3 text-xs font-medium text-muted">Available on iPhone &amp; Android</p>
+          <p className="mt-5 text-xs font-medium text-muted">Available on iPhone &amp; Android</p>
         </Reveal>
 
         <Reveal variant="up" delay={0.08} className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
@@ -49,7 +40,6 @@ export function VisionSection() {
               <div className="listen-card__copy">
                 <p className="listen-card__step">Step {i + 1}</p>
                 <h3 className="listen-card__title">{step.title}</h3>
-                <p className="listen-card__detail">{step.detail}</p>
               </div>
 
               <div className="listen-phone">

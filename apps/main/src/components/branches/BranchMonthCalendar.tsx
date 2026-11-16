@@ -105,7 +105,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
                 setShowAll(false);
               }}
               aria-label="Previous month"
-              className="flex h-9 w-9 items-center justify-center border border-white/15 text-[var(--branch-ink)]! transition-colors hover:border-[#e8a33d] hover:text-[var(--branch-accent)] cursor-pointer"
+              className="flex h-9 w-9 items-center justify-center border border-white/15 text-[var(--branch-ink)]! transition-colors hover:border-[var(--branch-accent)] hover:text-[var(--branch-accent)] cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -115,7 +115,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
                 setShowAll(false);
               }}
               aria-label="Next month"
-              className="flex h-9 w-9 items-center justify-center border border-white/15 text-[var(--branch-ink)]! transition-colors hover:border-[#e8a33d] hover:text-[var(--branch-accent)] cursor-pointer"
+              className="flex h-9 w-9 items-center justify-center border border-white/15 text-[var(--branch-ink)]! transition-colors hover:border-[var(--branch-accent)] hover:text-[var(--branch-accent)] cursor-pointer"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -143,7 +143,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
           {entries.map((entry) => (
             <div
               key={entry.key}
-              className={`branch-event${preview.has(entry.key) ? " branch-event--preview" : ""} group flex flex-col gap-4 border border-[var(--branch-line)] bg-[var(--branch-inset)] p-4 transition-colors hover:border-[#e8a33d]/40 hover:bg-[var(--branch-card)] sm:flex-row sm:items-center`}
+              className={`branch-event${preview.has(entry.key) ? " branch-event--preview" : ""} group flex flex-col gap-4 border border-[var(--branch-line)] bg-[var(--branch-inset)] p-4 transition-colors hover:border-[var(--branch-accent)] hover:bg-[var(--branch-card)] sm:flex-row sm:items-center`}
             >
               <div className="branch-event__date flex w-full items-center gap-4 sm:w-40">
                 <div className="branch-event__day flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center bg-[#630ed4] text-white!">
@@ -183,7 +183,7 @@ export function BranchMonthCalendar({ branch, onRsvp, city, address }: BranchMon
 
               <button
                 onClick={() => onRsvp(entry.title)}
-                className="branch-event__rsvp k-cta flex-shrink-0 bg-[var(--branch-inset)] px-5 py-2.5 text-xs font-bold text-[var(--branch-ink)]! transition-colors hover:bg-[#d4920a] cursor-pointer"
+                className="branch-event__rsvp k-cta flex-shrink-0 bg-[var(--branch-inset)] px-5 py-2.5 text-xs font-bold text-[var(--branch-ink)]! transition-colors hover:bg-[var(--branch-accent)] hover:text-[var(--branch-on-accent)] cursor-pointer"
               >
                 I&apos;m Coming
               </button>

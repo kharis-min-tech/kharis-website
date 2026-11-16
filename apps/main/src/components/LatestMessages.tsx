@@ -43,7 +43,6 @@ export function LatestMessages({ featured, others }: Props) {
     <section id="messages" className="section band band--0">
       <div className="section__inner">
         <Reveal variant="up" className="mx-auto mb-5 max-w-2xl text-center md:mb-6">
-          <p className="eyebrow">Teachings</p>
           <h2 className="section-title mt-2">Latest Messages</h2>
         </Reveal>
 
@@ -67,14 +66,6 @@ export function LatestMessages({ featured, others }: Props) {
               <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,2.4vw,1.75rem)] font-bold leading-snug text-fg">
                 {featured.title}
               </h3>
-              <div className="latest-messages__actions btn-pair">
-                <a href="/messages" className="btn-primary">
-                  Browse All Messages
-                </a>
-                <a href="/messages#listen" data-no-smooth-nav className="btn-secondary">
-                  Listen on Podcasts
-                </a>
-              </div>
             </div>
           </Reveal>
 
@@ -105,6 +96,12 @@ export function LatestMessages({ featured, others }: Props) {
               </RevealItem>
             ))}
           </RevealStagger>
+        </div>
+
+        <div className="latest-messages__actions">
+          <a href="/messages" className="btn-primary">
+            Browse All Messages
+          </a>
         </div>
       </div>
     </section>

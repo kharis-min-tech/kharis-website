@@ -26,23 +26,6 @@ export function ContactExperience({ locations }: Props) {
         }}
         focusSignal={focusSignal}
       />
-      <section className="hello-close" aria-labelledby="hello-close-title">
-        <div className="hello-close__panel">
-          <div className="hello-close__content">
-            <p className="hello-eyebrow">Between Sundays</p>
-            <h2 id="hello-close-title" className="hello-h2">
-              Join the revival online
-            </h2>
-            <p className="hello-close__copy">
-              Pastor David&apos;s messages, live services and the latest from the Kharis family,
-              wherever you are in the world.
-            </p>
-            <p className="hello-close__press">
-              Press and media: <a href="mailto:media@kharis.org">media@kharis.org</a>
-            </p>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

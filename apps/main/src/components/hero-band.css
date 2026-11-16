@@ -13,9 +13,10 @@
   position: relative;
   display: flex;
   align-items: stretch;
-  /* Leaves the header its own strip of page surface above the panel, the way
-   * every other section on the site is treated. */
-  padding: 4.5rem 1rem 1rem;
+  /* Vertical only. The panel runs the full width of the viewport, so there
+   * is no side gutter; the top strip still leaves the header its own band of
+   * page surface above the photographs. */
+  padding: 4.5rem 0 1rem;
   min-height: 100svh;
   background: var(--surface-0);
   box-sizing: border-box;
@@ -27,7 +28,7 @@ html[data-theme="dark"] .band-hero {
 
 @media (min-width: 768px) {
   .band-hero {
-    padding: 5.25rem 1.5rem 1.5rem;
+    padding: 5.25rem 0 1.5rem;
   }
 }
 
@@ -36,10 +37,10 @@ html[data-theme="dark"] .band-hero {
   flex: 1;
   overflow: hidden;
   min-height: 30rem;
-  /* Square, like the rest of the site and like the sample this layout comes
-   * from. The carousel's own reference look rounds both the panel and the
-   * tiles; neither is rounded here. */
-  border: 1px solid var(--line);
+  /* No border and no side gutter: the panel is the full width of the page,
+   * so an edge drawn round it would be a line down the screen's own margin
+   * rather than the outline of a card. Square regardless, like the rest of
+   * the site and like the sample this layout comes from. */
   background: var(--surface-0);
   /* The carousel sizes itself against its container, so the panel has to be
    * the thing with a height. */
@@ -127,11 +128,14 @@ html[data-theme="dark"] .band-hero {
   text-shadow: none !important;
 }
 
+/* The only line under the headline now that the buttons have gone, so it
+ * is given the room they were taking. */
 .band-hero__tagline {
   margin: 0;
-  max-width: 34rem;
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
-  font-weight: 600;
+  max-width: 44rem;
+  font-size: clamp(1.25rem, 2.4vw, 1.9rem);
+  font-weight: 650;
+  line-height: 1.3;
   color: var(--muted);
 }
 

@@ -140,41 +140,134 @@
   margin-top: 1.6rem;
 }
 
-.msg-hero-watch {
+/* The cue.
+ *
+ * The whole hero has been the click target all along, so a filled purple
+ * button sitting on top of it was a second control for the thing the page
+ * was already offering, and it cut a hard rectangle out of the photograph.
+ * This is an invitation instead: a line of type, a cursor that clicks, and
+ * no surface of its own.
+ *
+ * It stays a real <button>. "Not a button" is about how it looks, and the
+ * section's tabindex would carry the keyboard but would not announce itself
+ * to anyone who cannot see the photograph behind it. */
+.msg-hero-cue {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  min-height: 3rem;
-  padding: 0.8rem 1.4rem;
+  padding: 0.3rem 0;
   border: 0;
-  border-radius: 0;
-  background: #630ed4;
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 800;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 0.95rem;
+  font-weight: 600;
   letter-spacing: 0.01em;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
   cursor: pointer;
-  box-shadow:
-    0 2px 0 #3d0591,
-    0 12px 28px rgba(0, 0, 0, 0.35);
+  transition: color 200ms ease;
 }
 
-.msg-hero-watch:hover,
-.msg-hero-watch:focus-visible {
-  background: #6f1fe0;
-  transform: translateY(-2px);
+.msg-hero-cue:is(:hover, :focus-visible) {
+  color: #fff;
 }
 
-.msg-hero-watch:focus-visible,
+.msg-hero-cue:focus-visible,
 .msg-hero-player__close:focus-visible {
   outline: 2px solid var(--yellow, #ffde59);
   outline-offset: 3px;
 }
 
-.msg-hero-watch__icon {
-  width: 1.05rem;
-  height: 1.05rem;
+.msg-hero-cue__text {
+  position: relative;
+}
+
+/* A hairline that draws in from the left on hover. On a surface that is
+ * already clickable, that is all the affordance a line of type needs. */
+.msg-hero-cue__text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.22rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 340ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.msg-hero-cue:is(:hover, :focus-visible) .msg-hero-cue__text::after {
+  transform: scaleX(1);
+}
+
+/* The cursor, and the ring it leaves behind when it presses. */
+.msg-hero-cue__pointer {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.msg-hero-cue__arrow {
+  width: 0.95rem;
+  height: 0.95rem;
   fill: currentColor;
+  animation: msg-cue-press 3.2s cubic-bezier(0.3, 0.7, 0.3, 1) infinite;
+}
+
+.msg-hero-cue__pointer::after {
+  content: "";
+  position: absolute;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  animation: msg-cue-ring 3.2s ease-out infinite;
+}
+
+/* One gesture on one clock: the cursor goes down, and the ring leaves from
+ * the instant it lands, so it reads as the press causing the ripple rather
+ * than two loops that happen to overlap.
+ *
+ * The press is deliberately unhurried. A first pass dipped between 4 and 20
+ * percent of the cycle and the cursor was only in motion for about six
+ * frames: measurably animating, and far too quick to read as anything but a
+ * twitch. Down over roughly 220ms, back up over 350ms. */
+@keyframes msg-cue-press {
+  0%,
+  8%,
+  26%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  15% {
+    transform: translate(0.08rem, 0.08rem) scale(0.84);
+  }
+}
+
+@keyframes msg-cue-ring {
+  0%,
+  14% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  21% {
+    opacity: 0.7;
+  }
+  44%,
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .msg-hero-cue__arrow,
+  .msg-hero-cue__pointer::after {
+    animation: none;
+  }
 }
 
 .msg-hub__hero .msg-hub__veil {

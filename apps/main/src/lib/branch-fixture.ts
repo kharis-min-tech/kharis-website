@@ -217,6 +217,124 @@ function serviceFor(seed: Seed): Service {
   };
 }
 
+const IMG = "https://images.kharis.org/site-images/main";
+
+/**
+ * One branch filled in, so the branch PAGE can be looked at.
+ *
+ * The seeds above are enough for the directory and the globe, which only need
+ * a name and a coordinate. A branch page is a different question: it asks for
+ * a hero, a pastor with a portrait and a bio, several services across the
+ * week, a venue that knows about parking and trains, and a gallery. With the
+ * bare seed every one of those sections either collapsed or fell back to
+ * "coming soon", so the page could not be judged at all.
+ *
+ * Only London. Every other branch keeps the thin seed, which is also useful:
+ * it is exactly what a newly added branch looks like before anyone fills it
+ * in, and the page has to survive that too.
+ *
+ * The photographs are real Kharis ones, because layout cannot be judged
+ * against grey boxes. The words are not: they are sample copy at roughly the
+ * length real copy would run to, and the contact details are reserved
+ * example.invalid addresses. This whole file is only reachable when Supabase
+ * is unconfigured, which is to say never in production.
+ */
+const LONDON_MOCK: Partial<BranchData> = {
+  subtitle: "Sample branch (development data)",
+  short_description:
+    "A church family in the heart of London, gathering every Sunday to worship, to sit under the Word, and to look after one another through the week.",
+  description:
+    "Kharis London has met in the city since 2003. Sundays are unhurried and warm: worship, teaching you can take into Monday, and time afterwards over coffee with people who will remember your name. Through the week we gather in smaller rooms to pray, to study, and to carry whatever each of us is carrying.",
+  hero_image_url: `${IMG}/60262eef48c53cc5/locations/london-sunday-smiles.jpg`,
+  pastor_name: "Pastor Sample Name",
+  pastor_role: "Branch Pastor",
+  pastor_image_url: `${IMG}/e666a073b590b3ff/leadership/pastor-david-sunday.jpg`,
+  pastor_bio:
+    "Come as you are. You will not be singled out, asked for anything, or left standing on your own.",
+  instagram: "https://instagram.com/example",
+  gallery: [
+    `${IMG}/8687dacfd8faa5e2/locations/london-sunday-laughter.jpg`,
+    `${IMG}/894014bef2ca905c/locations/london-sunday-prayer.jpg`,
+    `${IMG}/fd4b6a19fbb8f4d3/events/sunday-worship-hands.jpg`,
+    `${IMG}/2bf8a23f06e5bb67/events/hero-worship.jpg`,
+    `${IMG}/548f1d84de49653b/contact/after-service-handshake.jpg`,
+    `${IMG}/8527db06a4968c60/give/thanksgiving-hands-raised.jpg`,
+  ],
+  venues: [
+    {
+      id: "london-sunday-venue",
+      branch_id: "london",
+      name: "Sunday Service",
+      address_line1: "Kharis Centre, 120 Sample Street",
+      address_line2: "Southwark",
+      city: "London",
+      postcode: "SE1 0AA",
+      country: "United Kingdom",
+      latitude: 51.5074,
+      longitude: -0.1278,
+      parking_info:
+        "Free on the street after 6.30pm and all day Sunday. A small car park behind the building fills by 10am, and there is a multi-storey five minutes' walk away.",
+      public_transport_info:
+        "Two minutes from London Bridge (Jubilee and Northern lines, and National Rail). Buses 43, 141 and 521 stop outside.",
+      directions_text: null,
+    },
+  ],
+  services: [
+    {
+      id: "london-sunday-1",
+      branch_id: "london",
+      name: "First Service",
+      type: "sunday",
+      day: "Sunday",
+      start_time: "09:00",
+      end_time: "10:45",
+      venue_id: "london-sunday-venue",
+      description: "Quieter, and the easiest one to slip into if you are visiting.",
+      sort_order: 0,
+      is_active: true,
+    },
+    {
+      id: "london-sunday-2",
+      branch_id: "london",
+      name: "Second Service",
+      type: "sunday",
+      day: "Sunday",
+      start_time: "11:30",
+      end_time: "13:30",
+      venue_id: "london-sunday-venue",
+      description: "Our fullest gathering, with children's church running alongside.",
+      sort_order: 1,
+      is_active: true,
+    },
+    {
+      id: "london-prayer",
+      branch_id: "london",
+      name: "Midweek Prayer",
+      type: "midweek",
+      day: "Tuesday",
+      start_time: "19:00",
+      end_time: "20:00",
+      venue_id: "london-sunday-venue",
+      description: "On Zoom and in the building.",
+      sort_order: 2,
+      is_active: true,
+    },
+    {
+      id: "london-bible-study",
+      branch_id: "london",
+      name: "Bible Study",
+      type: "midweek",
+      day: "Thursday",
+      start_time: "19:30",
+      end_time: "21:00",
+      venue_id: "london-sunday-venue",
+      description: "Working through a book of the Bible together.",
+      sort_order: 3,
+      is_active: true,
+    },
+  ],
+};
+
 export const BRANCH_FIXTURE: BranchData[] = SEEDS.map((seed, index) => ({
   id: seed.slug,
   name: seed.name,
@@ -241,4 +359,5 @@ export const BRANCH_FIXTURE: BranchData[] = SEEDS.map((seed, index) => ({
   venues: [venueFor(seed)],
   services: [serviceFor(seed)],
   gallery: [],
+  ...(seed.slug === "london" ? LONDON_MOCK : {}),
 }));
