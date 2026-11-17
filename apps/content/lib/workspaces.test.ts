@@ -34,14 +34,15 @@ describe("workspacesForRole", () => {
   it("does not change the shared workspace list", () => {
     workspacesForRole("branch_admin");
     const general = WORKSPACES.find((workspace) => workspace.id === "general");
-    expect(general?.nav.some((item) => item.href === "/sermons")).toBe(true);
+    expect(general?.nav.some((item) => item.href === "/sermons")).toBe(false);
+    expect(general?.nav.some((item) => item.href === "/newsletter")).toBe(true);
   });
 });
 
 describe("canOpenPath", () => {
   it("lets super admins open anything", () => {
     expect(canOpenPath("super_admin", "/users")).toBe(true);
-    expect(canOpenPath("super_admin", "/sermons")).toBe(true);
+    expect(canOpenPath("super_admin", "/newsletter")).toBe(true);
   });
 
   it("blocks every page for accounts with no role", () => {

@@ -31,21 +31,20 @@ import { PlansPageMap } from "@/components/studio/plans-page-map";
 import { SermonPicker } from "@/components/studio/sermon-picker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input, Label } from "@/components/ui/input";
+import { Input, Label, Select } from "@/components/ui/input";
 import { confirmDelete } from "@/lib/confirm";
 import {
   PLAN_AUDIENCE_SUGGESTIONS,
   PLAN_ITEM_TYPES,
-  PLAN_MODES,
   PLAN_PACES,
   PLAN_STATUSES,
-  allowedItemTypes,
   daySummary,
   duplicateContentPlan,
   emptyContentPlan,
   emptyPlanDay,
   emptyPlanItem,
   emptyQuizQuestion,
+  inferPlanMode,
   itemTypeLabel,
   modeLabel,
   paceLabel,
@@ -54,13 +53,19 @@ import {
   type PlanDay,
   type PlanItem,
   type PlanItemType,
-  type PlanMode,
   type PlanPace,
   type PlanQuizItem,
   type PlanStatus,
 } from "@/lib/content-plans";
 import { deleteContentPlan, listContentPlans, saveContentPlan } from "@/lib/content-plans-repo";
-import { PLAN_STEPS, checkPlan, issuesFor, type PlanStep } from "@/lib/plan-checks";
+import {
+  PLAN_STEPS,
+  checkPlan,
+  issuesFor,
+  planStepSatisfied,
+  visiblePlanSteps,
+  type PlanStep,
+} from "@/lib/plan-checks";
 import type { CatalogueSermon } from "@/lib/sermon-catalogue";
 import { cn } from "@/lib/utils";
 import { useWorkspaceId } from "@/lib/workspace-context";
@@ -133,9 +138,18 @@ export function PlansEditor() {
   }, [plans, query, statusFilter]);
 
   const issues = useMemo(() => (draft ? checkPlan(draft) : []), [draft]);
-  const stepIndex = PLAN_STEPS.findIndex((item) => item.id === step);
+  const inferredMode = useMemo(() => (draft ? inferPlanMode(draft) : "mixed"), [draft]);
+  const visibleSteps = useMemo(() => (draft ? visiblePlanSteps(draft) : []), [draft]);
+  const stepIndex = Math.max(0, visibleSteps.indexOf(step));
   const activeDay = draft?.days[activeDayIndex] ?? draft?.days[0] ?? null;
-  const addableTypes = draft ? allowedItemTypes(draft.mode) : PLAN_ITEM_TYPES;
+  const addableTypes = PLAN_ITEM_TYPES;
+
+  useEffect(() => {
+    if (!draft) return;
+    if (!visibleSteps.includes(step)) {
+      setStep(visibleSteps[visibleSteps.length - 1] ?? "basics");
+    }
+  }, [draft, step, visibleSteps]);
 
   if (!workspace) return <PickWorkspace />;
 
@@ -264,8 +278,9 @@ export function PlansEditor() {
           placeholder="Search plans"
           onChange={(event) => setQuery(event.target.value)}
         />
-        <SelectField
-          label="Status"
+        <Select
+          aria-label="Status"
+          className="w-auto min-w-[10rem]"
           value={statusFilter}
           onChange={(event) => setStatusFilter(event.target.value as "all" | PlanStatus)}
         >
@@ -275,7 +290,7 @@ export function PlansEditor() {
               {statusLabel(status)}
             </option>
           ))}
-        </SelectField>
+        </Select>
         {plans && !error ? (
           <span className="text-xs text-muted-foreground">
             {visible.length} plan{visible.length === 1 ? "" : "s"}
@@ -387,17 +402,29 @@ export function PlansEditor() {
       {draft ? (
         <Panel title={draft.title.trim() || "New plan"} onClose={() => setDraft(null)}>
           <form className="space-y-4" onSubmit={onSave}>
-            <ol className="grid gap-2 sm:grid-cols-4" aria-label="Steps">
-              {PLAN_STEPS.map((item, index) => {
-                const stepIssues = issuesFor(issues, item.id);
+            <ol
+              className={cn(
+                "grid gap-2",
+                visibleSteps.length <= 2
+                  ? "sm:grid-cols-2"
+                  : visibleSteps.length === 3
+                    ? "sm:grid-cols-3"
+                    : "sm:grid-cols-4",
+              )}
+              aria-label="Steps"
+            >
+              {visibleSteps.map((stepId, index) => {
+                const item = PLAN_STEPS.find((entry) => entry.id === stepId)!;
+                const stepIssues = issuesFor(issues, stepId);
                 const hasError = stepIssues.some((issue) => issue.level === "error");
-                const current = item.id === step;
+                const satisfied = planStepSatisfied(draft, stepId);
+                const current = stepId === step;
                 return (
-                  <li key={item.id}>
+                  <li key={stepId}>
                     <button
                       type="button"
                       aria-current={current ? "step" : undefined}
-                      onClick={() => setStep(item.id)}
+                      onClick={() => setStep(stepId)}
                       className={cn(
                         "flex h-full w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition",
                         current
@@ -412,19 +439,33 @@ export function PlansEditor() {
                             ? "bg-danger text-white"
                             : stepIssues.length
                               ? "bg-gold-soft text-gold ring-1 ring-inset ring-gold-line"
-                              : "bg-success-soft text-success ring-1 ring-inset ring-success-line",
+                              : satisfied
+                                ? "bg-success-soft text-success ring-1 ring-inset ring-success-line"
+                                : "bg-muted text-muted-foreground ring-1 ring-inset ring-border",
                         )}
                       >
-                        {stepIssues.length ? index + 1 : <Check className="h-3.5 w-3.5" />}
+                        {hasError && (triedSave || current) ? (
+                          index + 1
+                        ) : stepIssues.length ? (
+                          index + 1
+                        ) : satisfied ? (
+                          <Check className="h-3.5 w-3.5" />
+                        ) : (
+                          index + 1
+                        )}
                       </span>
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-semibold">{item.label}</span>
                         <span className="block truncate text-[11px] text-muted-foreground">
                           {stepIssues.length
                             ? `${stepIssues.length} to check`
-                            : current
-                              ? "Looks good"
-                              : "Done"}
+                            : satisfied
+                              ? current
+                                ? "Looks good"
+                                : "Done"
+                              : current
+                                ? "In progress"
+                                : "Waiting"}
                         </span>
                       </span>
                     </button>
@@ -437,12 +478,14 @@ export function PlansEditor() {
               <div className="min-w-0 rounded-xl border border-border bg-card p-5 shadow-card sm:p-6">
                 <header className="mb-5">
                   <p className="studio-eyebrow">
-                    Step {stepIndex + 1} of {PLAN_STEPS.length}
+                    Step {stepIndex + 1} of {visibleSteps.length}
                   </p>
                   <h2 className="font-heading text-xl font-semibold">
-                    {PLAN_STEPS[stepIndex]?.label}
+                    {PLAN_STEPS.find((item) => item.id === step)?.label}
                   </h2>
-                  <p className="text-sm text-muted-foreground">{PLAN_STEPS[stepIndex]?.hint}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {PLAN_STEPS.find((item) => item.id === step)?.hint}
+                  </p>
                 </header>
 
                 <section hidden={step !== "basics"} className="space-y-4">
@@ -458,27 +501,10 @@ export function PlansEditor() {
                     value={draft.summary}
                     onChange={(event) => patch({ summary: event.target.value })}
                   />
-                  <SelectField
-                    label="Mode"
-                    value={draft.mode}
-                    onChange={(event) => {
-                      const mode = event.target.value as PlanMode;
-                      const allowed = allowedItemTypes(mode);
-                      patch({
-                        mode,
-                        days: draft.days.map((day) => ({
-                          ...day,
-                          items: day.items.filter((item) => allowed.includes(item.type)),
-                        })),
-                      });
-                    }}
-                  >
-                    {PLAN_MODES.map((mode) => (
-                      <option key={mode} value={mode}>
-                        {modeLabel(mode)}
-                      </option>
-                    ))}
-                  </SelectField>
+                  <p className="rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+                    Mode is set automatically from the day content:{" "}
+                    <span className="font-medium text-foreground">{modeLabel(inferredMode)}</span>
+                  </p>
                   <SelectField
                     label="Pace"
                     value={draft.pace}
@@ -792,7 +818,7 @@ export function PlansEditor() {
                       <span className="font-medium">
                         {draft.days.reduce((sum, day) => sum + day.items.length, 0)}
                       </span>{" "}
-                      items · {modeLabel(draft.mode)}
+                      items · {modeLabel(inferredMode)}
                     </p>
                   </div>
                 </section>
@@ -802,13 +828,13 @@ export function PlansEditor() {
                     type="button"
                     variant="outline"
                     disabled={stepIndex <= 0}
-                    onClick={() => setStep(PLAN_STEPS[stepIndex - 1]!.id)}
+                    onClick={() => setStep(visibleSteps[stepIndex - 1]!)}
                   >
                     <ArrowLeft className="h-4 w-4" />
                     Back
                   </Button>
-                  {stepIndex < PLAN_STEPS.length - 1 ? (
-                    <Button type="button" onClick={() => setStep(PLAN_STEPS[stepIndex + 1]!.id)}>
+                  {stepIndex < visibleSteps.length - 1 ? (
+                    <Button type="button" onClick={() => setStep(visibleSteps[stepIndex + 1]!)}>
                       Next
                       <ArrowRight className="h-4 w-4" />
                     </Button>

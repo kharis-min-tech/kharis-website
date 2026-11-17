@@ -73,6 +73,8 @@ export default function TestimoniesPage() {
       searchOf={(row) =>
         `${row.name} ${row.branch_name ?? ""} ${row.category ?? ""} ${row.description ?? ""}`
       }
+      imageOf={(row) => row.image_url}
+      publishedOf={(row) => Boolean(row.is_published)}
       save={(draft, id) =>
         saveTestimony({
           id,

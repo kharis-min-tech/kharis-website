@@ -464,23 +464,6 @@ export function buildFixtures({ branches, now = new Date() }) {
     { id: "dm-4", date: dateOnly(now, -1), sermon_id: "cat-2", note: null },
   ];
 
-  const featured_videos = [
-    {
-      id: "fv-1",
-      workspace: "kharis",
-      title: "Welcome to Kharis Church",
-      video_url: "https://www.youtube.com/watch?v=welcome",
-      published: true,
-    },
-    {
-      id: "fv-2",
-      workspace: "kharis",
-      title: "Christmas at Kharis",
-      video_url: "https://www.youtube.com/watch?v=christmas",
-      published: false,
-    },
-  ];
-
   const app_config = [
     {
       key: "live_stream",
@@ -546,7 +529,6 @@ export function buildFixtures({ branches, now = new Date() }) {
       sermons,
       daily_entries,
       daily_messages,
-      featured_videos,
       app_config,
     },
     users,

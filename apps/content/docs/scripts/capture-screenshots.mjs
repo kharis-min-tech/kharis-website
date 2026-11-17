@@ -86,16 +86,10 @@ const SHOTS = [
   },
   { name: "visitors", path: "/visitors?workspace=general", ready: "text=Ruth Appiah" },
   { name: "newsletter", path: "/newsletter?workspace=general", ready: "text=esther.k@example.com" },
-  { name: "sermons", path: "/sermons?workspace=general", ready: "text=Walking in Grace" },
   {
     name: "department-videos",
     path: "/department-videos?workspace=general",
     ready: "input[placeholder^='Search 24 departments']",
-  },
-  {
-    name: "featured-video",
-    path: "/featured-video?workspace=kharis",
-    ready: "text=Welcome to Kharis Church",
   },
   {
     name: "grace",
@@ -118,16 +112,6 @@ const SHOTS = [
     },
   },
   { name: "daily-prayers", path: "/daily-prayers?workspace=app", ready: "text=For our city" },
-  { name: "bible", path: "/bible?workspace=app", ready: "text=Daily readings" },
-  {
-    name: "sermon-library",
-    path: "/sermon-library?workspace=app",
-    ready: "text=Search",
-    act: async (page) => {
-      await page.getByPlaceholder("Title, speaker or scripture").fill("grace");
-      await page.getByText("Amazing Grace").waitFor();
-    },
-  },
   { name: "live", path: "/live?workspace=app", ready: "text=Live now" },
   { name: "users", path: "/users?workspace=general", ready: "text=london.admin@kharis.org" },
   {

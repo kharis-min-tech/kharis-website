@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import {
   daySummary,
+  inferPlanMode,
   itemTypeLabel,
   modeLabel,
   paceLabel,
@@ -20,7 +21,14 @@ import {
   type ContentPlan,
   type PlanItem,
 } from "@/lib/content-plans";
-import { PLAN_STEPS, issuesFor, type PlanIssue, type PlanStep } from "@/lib/plan-checks";
+import {
+  PLAN_STEPS,
+  issuesFor,
+  planStepSatisfied,
+  visiblePlanSteps,
+  type PlanIssue,
+  type PlanStep,
+} from "@/lib/plan-checks";
 import { cn } from "@/lib/utils";
 
 function itemLine(item: PlanItem) {
@@ -61,6 +69,8 @@ export function PlansPageMap({
     plan.estimatedMinutesPerDay && plan.estimatedMinutesPerDay > 0
       ? `~${plan.estimatedMinutesPerDay} min/day`
       : null;
+  const mode = inferPlanMode(plan);
+  const steps = visiblePlanSteps(plan);
 
   return (
     <div className="rounded-xl border border-border bg-card p-4 shadow-card">
@@ -93,7 +103,7 @@ export function PlansPageMap({
               {plan.title.trim() || "Plan title"}
             </p>
             <p className="mt-0.5 truncate text-[10px] text-white/80">
-              {[modeLabel(plan.mode), minutes, paceLabel(plan.pace)].filter(Boolean).join(" · ")}
+              {[modeLabel(mode), minutes, paceLabel(plan.pace)].filter(Boolean).join(" · ")}
             </p>
           </div>
         </div>
@@ -156,26 +166,30 @@ export function PlansPageMap({
       </div>
 
       <ul className="mt-4 space-y-1.5">
-        {PLAN_STEPS.map((item) => {
-          const stepIssues = issuesFor(issues, item.id);
+        {steps.map((stepId) => {
+          const item = PLAN_STEPS.find((entry) => entry.id === stepId)!;
+          const stepIssues = issuesFor(issues, stepId);
           const errors = stepIssues.filter((issue) => issue.level === "error").length;
           const warnings = stepIssues.filter((issue) => issue.level === "warning").length;
+          const satisfied = planStepSatisfied(plan, stepId);
           return (
-            <li key={item.id}>
+            <li key={stepId}>
               <button
                 type="button"
-                onClick={() => onStep(item.id)}
+                onClick={() => onStep(stepId)}
                 className={cn(
                   "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition hover:bg-muted",
-                  step === item.id && "bg-brand-soft",
+                  step === stepId && "bg-brand-soft",
                 )}
               >
                 {errors ? (
                   <CircleAlert className="h-3.5 w-3.5 text-danger" />
                 ) : warnings ? (
                   <TriangleAlert className="h-3.5 w-3.5 text-gold" />
-                ) : (
+                ) : satisfied ? (
                   <CircleCheck className="h-3.5 w-3.5 text-success" />
+                ) : (
+                  <span className="h-3.5 w-3.5 rounded-full border border-border" />
                 )}
                 <span className="font-medium">{item.label}</span>
                 <span className="ml-auto text-muted-foreground">
@@ -183,7 +197,9 @@ export function PlansPageMap({
                     ? `${errors} error${errors === 1 ? "" : "s"}`
                     : warnings
                       ? `${warnings} note${warnings === 1 ? "" : "s"}`
-                      : "OK"}
+                      : satisfied
+                        ? "OK"
+                        : "Waiting"}
                 </span>
               </button>
             </li>

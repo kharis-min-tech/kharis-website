@@ -188,6 +188,21 @@ export function allowedItemTypes(mode: PlanMode): PlanItemType[] {
   return ["scripture", "message", "video", "quiz", "info"];
 }
 
+/** Derive mode from scripture/message items so authors don't pick it by hand. */
+export function inferPlanMode(plan: Pick<ContentPlan, "days">): PlanMode {
+  let hasScripture = false;
+  let hasMessage = false;
+  for (const day of plan.days) {
+    for (const item of day.items) {
+      if (item.type === "scripture") hasScripture = true;
+      if (item.type === "message") hasMessage = true;
+    }
+  }
+  if (hasScripture && !hasMessage) return "scriptures";
+  if (hasMessage && !hasScripture) return "messages";
+  return "mixed";
+}
+
 export function daySummary(day: PlanDay) {
   const counts: Partial<Record<PlanItemType, number>> = {};
   for (const item of day.items) {
@@ -344,29 +359,29 @@ function parseDay(value: unknown, mode: PlanMode, index: number): PlanDay | null
 function parsePlan(value: unknown): ContentPlan | null {
   if (!value || typeof value !== "object") return null;
   const row = value as Record<string, unknown>;
-  const modeRaw = asString(row.mode) as PlanMode;
-  const mode = PLAN_MODES.includes(modeRaw) ? modeRaw : "mixed";
   const statusRaw = asString(row.status) as PlanStatus;
   const status = PLAN_STATUSES.includes(statusRaw) ? statusRaw : "draft";
   const paceRaw = asString(row.pace) as PlanPace;
   const pace = PLAN_PACES.includes(paceRaw) ? paceRaw : "self_paced";
   const daysRaw = Array.isArray(row.days) ? row.days : [];
+  // Parse with mixed so scripture and message items both survive; mode is inferred.
   const days = daysRaw
-    .map((day, index) => parseDay(day, mode, index))
+    .map((day, index) => parseDay(day, "mixed", index))
     .filter((day): day is PlanDay => Boolean(day));
+  const safeDays = days.length ? days : [emptyPlanDay(0)];
   return {
     id: asString(row.id).trim() || newKey(),
     title: asString(row.title).trim(),
     summary: asString(row.summary),
     coverImageUrl: asString(row.coverImageUrl).trim(),
-    mode,
+    mode: inferPlanMode({ days: safeDays }),
     status,
     pace,
     startDate: asString(row.startDate).trim(),
     audience: parseAudience(row.audience),
     estimatedMinutesPerDay: asNullableInt(row.estimatedMinutesPerDay),
     sequentialUnlock: Boolean(row.sequentialUnlock),
-    days: days.length ? days : [emptyPlanDay(0)],
+    days: safeDays,
     updatedAt: asString(row.updatedAt).trim(),
   };
 }
@@ -443,19 +458,22 @@ export function normalizeContentPlan(
   plan: ContentPlan,
   now = new Date().toISOString(),
 ): ContentPlan {
-  const mode = PLAN_MODES.includes(plan.mode) ? plan.mode : "mixed";
-  const allowed = allowedItemTypes(mode);
   const pace = PLAN_PACES.includes(plan.pace) ? plan.pace : "self_paced";
   const status = PLAN_STATUSES.includes(plan.status) ? plan.status : "draft";
   const audience = [
     ...new Set(plan.audience.map((tag) => tag.trim().toLowerCase()).filter(Boolean)),
   ];
+  const days = (plan.days.length ? plan.days : [emptyPlanDay(0)]).map((day, index) => ({
+    id: day.id || newKey(),
+    title: day.title.trim() || `Day ${index + 1}`,
+    items: day.items.map(normalizeItem),
+  }));
   return {
     id: plan.id || newKey(),
     title: plan.title.trim(),
     summary: plan.summary.trim(),
     coverImageUrl: plan.coverImageUrl.trim(),
-    mode,
+    mode: inferPlanMode({ days }),
     status,
     pace,
     startDate: pace === "calendar" ? plan.startDate.trim() : "",
@@ -465,11 +483,7 @@ export function normalizeContentPlan(
         ? null
         : Math.max(0, Math.round(plan.estimatedMinutesPerDay)),
     sequentialUnlock: Boolean(plan.sequentialUnlock),
-    days: (plan.days.length ? plan.days : [emptyPlanDay(0)]).map((day, index) => ({
-      id: day.id || newKey(),
-      title: day.title.trim() || `Day ${index + 1}`,
-      items: day.items.filter((item) => allowed.includes(item.type)).map(normalizeItem),
-    })),
+    days,
     updatedAt: now,
   };
 }

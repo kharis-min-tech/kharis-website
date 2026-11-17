@@ -3,14 +3,12 @@ import { studioRequest } from "./studio-api";
 /** Tables the Kharis API lets the studio use (/v1/studio/data/:resource). */
 export type StudioResource =
   | "events"
-  | "sermons"
   | "news"
   | "testimonies"
   | "visitors"
   | "daily_entries"
   | "daily_messages"
   | "app_config"
-  | "featured_videos"
   | "contact_messages"
   | "newsletter_subscribers"
   | "branches"

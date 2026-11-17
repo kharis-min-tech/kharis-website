@@ -24,7 +24,6 @@ const generalNav: StudioNavItem[] = [
   { href: "/branches", label: "Branches" },
   { href: "/department-videos", label: "Department Videos" },
   { href: "/documents", label: "Documents" },
-  { href: "/sermons", label: "Sermons" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/visitors", label: "Visitors" },
   { href: "/messages", label: "Messages" },
@@ -39,26 +38,19 @@ const appNav: StudioNavItem[] = [
   { href: "/daily-message", label: "Daily Message" },
   { href: "/daily-prayers", label: "Daily Prayers" },
   { href: "/plans", label: "Plans" },
-  { href: "/bible", label: "Bible" },
-  { href: "/sermon-library", label: "Sermon library" },
   { href: "/live", label: "Live" },
 ];
 
 const kharisNav: StudioNavItem[] = [
   { href: "/branches", label: "Branches" },
-  { href: "/department-videos", label: "Department Videos" },
-  { href: "/documents", label: "Documents" },
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
-  { href: "/featured-video", label: "Featured Video" },
   { href: "/announcements", label: "Announcements" },
   { href: "/messages", label: "Messages" },
 ];
 
 const kp2Nav: StudioNavItem[] = [
   { href: "/branches", label: "Branches" },
-  { href: "/department-videos", label: "Department Videos" },
-  { href: "/documents", label: "Documents" },
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/announcements", label: "Announcements" },
@@ -71,21 +63,20 @@ export const WORKSPACES: StudioWorkspace[] = [
     id: "general",
     name: "General",
     description:
-      "Shared content: branches, sermons, testimonies, visitors, contact messages, newsletter emails, and studio users.",
+      "Shared content: branches, testimonies, visitors, contact messages, newsletter emails, and studio users.",
     nav: generalNav,
   },
   {
     id: "app",
     name: "Mobile App",
     description:
-      "App events, announcements, daily reading, daily messages, daily prayers, plans, Bible references, the sermon library, and live stream.",
+      "App events, announcements, daily reading, daily messages, daily prayers, plans, and live stream.",
     nav: appNav,
   },
   {
     id: "kharis",
     name: "Kharis Website",
-    description:
-      "Website events, testimonies, featured video, announcements, and contact messages for kharis.org.",
+    description: "Website events, testimonies, announcements, and contact messages for kharis.org.",
     nav: kharisNav,
   },
   {

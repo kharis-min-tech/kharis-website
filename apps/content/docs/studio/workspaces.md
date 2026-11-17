@@ -6,12 +6,12 @@ A workspace is where content belongs. Open one from the **Workspaces** list in t
 
 ## The four workspaces
 
-| Workspace      | Sections                                                                                               |
-| -------------- | ------------------------------------------------------------------------------------------------------ |
-| General        | Branches, Department Videos, Sermons, Testimonies, Visitors, Messages, Newsletter, Users               |
-| Mobile App     | Events, Announcements, Daily Reading, Daily Message, Daily Prayers, Plans, Bible, Sermon library, Live |
-| Kharis Website | Branches, Department Videos, Events, Testimonies, Featured Video, Announcements, Messages              |
-| KP2 Website    | Branches, Department Videos, Events, Testimonies, Announcements, Messages, Newsletter                  |
+| Workspace      | Sections                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------ |
+| General        | Branches, Department Videos, Documents, Testimonies, Visitors, Messages, Newsletter, Users |
+| Mobile App     | Events, Announcements, Daily Reading, Daily Message, Daily Prayers, Plans, Live            |
+| Kharis Website | Branches, Events, Testimonies, Announcements, Messages                                     |
+| KP2 Website    | Branches, Events, Testimonies, Announcements, Messages, Newsletter                         |
 
 ## The workspace page
 
@@ -24,8 +24,8 @@ Some sections show the same list in every workspace. Others show each workspace 
 | Section           | Behaviour                                                      |
 | ----------------- | -------------------------------------------------------------- |
 | Branches          | One list of campuses, wherever you open it                     |
-| Department Videos | One set of 24 videos, wherever you open it                     |
-| Sermons           | One list, under General                                        |
+| Department Videos | One set of 24 videos, under General only                       |
+| Documents         | Governance and fasting PDFs, under General only                |
 | Visitors          | One list, under General                                        |
 | Events            | Each workspace has its own events                              |
 | Announcements     | Each workspace has its own announcements                       |
