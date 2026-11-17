@@ -74,7 +74,7 @@ const SHOTS = [
     path: "/announcements?workspace=kharis",
     ready: "text=Christmas service times",
   },
-  { name: "testimonies", path: "/testimonies?workspace=kharis", ready: "text=Abena Ofori" },
+  { name: "testimonies", path: "/testimonies?workspace=general", ready: "text=Abena Ofori" },
   {
     name: "messages",
     path: "/messages?workspace=kharis",
@@ -85,7 +85,6 @@ const SHOTS = [
     },
   },
   { name: "visitors", path: "/visitors?workspace=general", ready: "text=Ruth Appiah" },
-  { name: "newsletter", path: "/newsletter?workspace=general", ready: "text=esther.k@example.com" },
   {
     name: "department-videos",
     path: "/department-videos?workspace=general",
