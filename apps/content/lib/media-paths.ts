@@ -16,6 +16,8 @@ export const MEDIA_FOLDERS = [
   "testimonies",
   "events",
   "uploads",
+  "documents",
+  "plans",
 ] as const;
 
 export type MediaFolder = (typeof MEDIA_FOLDERS)[number];
@@ -30,6 +32,7 @@ export const BRANCH_MEDIA_FOLDERS = ["branch-videos", "events"] as const;
 export const MAX_MEDIA_IMAGE_BYTES = 8 * 1024 * 1024;
 // Cloudflare Workers reject request bodies over 100MB on the Free and Pro plans.
 export const MAX_MEDIA_VIDEO_BYTES = 95 * 1024 * 1024;
+export const MAX_MEDIA_DOCUMENT_BYTES = 20 * 1024 * 1024;
 
 export const MEDIA_IMAGE_TYPES = [
   "image/jpeg",
@@ -39,6 +42,7 @@ export const MEDIA_IMAGE_TYPES = [
   "image/avif",
 ] as const;
 export const MEDIA_VIDEO_TYPES = ["video/mp4", "video/quicktime", "video/webm"] as const;
+export const MEDIA_DOCUMENT_TYPES = ["application/pdf"] as const;
 
 export function isMediaFolder(value: string): value is MediaFolder {
   return (MEDIA_FOLDERS as readonly string[]).includes(value);
@@ -51,12 +55,17 @@ export function isBranchMediaFolder(value: string) {
 export function isMediaContentType(value: string) {
   return (
     (MEDIA_IMAGE_TYPES as readonly string[]).includes(value) ||
-    (MEDIA_VIDEO_TYPES as readonly string[]).includes(value)
+    (MEDIA_VIDEO_TYPES as readonly string[]).includes(value) ||
+    (MEDIA_DOCUMENT_TYPES as readonly string[]).includes(value)
   );
 }
 
 export function isVideoContentType(value: string) {
   return (MEDIA_VIDEO_TYPES as readonly string[]).includes(value);
+}
+
+export function isDocumentContentType(value: string) {
+  return (MEDIA_DOCUMENT_TYPES as readonly string[]).includes(value);
 }
 
 export function isMediaObjectKey(key: string | null | undefined): key is `site-media/${string}` {

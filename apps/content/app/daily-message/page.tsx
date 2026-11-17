@@ -1,29 +1,26 @@
 "use client";
 
+import { SunMedium } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { EmptyState, ErrorNotice, IconTile, SectionCard } from "@/components/studio/blocks";
 import { AreaField, TextField } from "@/components/studio/fields";
 import { PageHeader } from "@/components/studio/page-header";
 import { PickWorkspace } from "@/components/studio/pick-workspace";
+import { SermonPicker } from "@/components/studio/sermon-picker";
 import { Button } from "@/components/ui/button";
-import { Input, Label } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { confirmDelete } from "@/lib/confirm";
 import { deleteDailyMessage, listDailyMessages, saveDailyMessage } from "@/lib/content-repo";
-import { lookupSermons, searchSermons } from "@/lib/sermon-search";
+import { lookupSermons } from "@/lib/sermon-search";
 import type { CatalogueSermon } from "@/lib/sermon-catalogue";
 import type { DailyMessageRow } from "@/lib/types";
 import { useWorkspaceId } from "@/lib/workspace-context";
-import { cn } from "@/lib/utils";
 
 function todayIso() {
   const now = new Date();
   const pad = (value: number) => String(value).padStart(2, "0");
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-}
-
-function sermonLine(sermon: CatalogueSermon) {
-  return [sermon.speaker, sermon.date, sermon.scripture].filter(Boolean).join(" · ");
 }
 
 export default function DailyMessagePage() {
@@ -33,9 +30,6 @@ export default function DailyMessagePage() {
   const [error, setError] = useState("");
   const [date, setDate] = useState(todayIso);
   const [picked, setPicked] = useState<CatalogueSermon | null>(null);
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<CatalogueSermon[]>([]);
-  const [searching, setSearching] = useState(false);
   const [note, setNote] = useState("");
   const [editingId, setEditingId] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
@@ -69,35 +63,6 @@ export default function DailyMessagePage() {
     refresh();
   }, [refresh]);
 
-  useEffect(() => {
-    const needle = query.trim();
-    if (needle.length < 2) {
-      setResults([]);
-      return;
-    }
-    let cancelled = false;
-    const timer = window.setTimeout(() => {
-      setSearching(true);
-      searchSermons(needle)
-        .then((sermons) => {
-          if (!cancelled) setResults(sermons);
-        })
-        .catch((caught) => {
-          if (!cancelled) {
-            setResults([]);
-            toast.error(caught instanceof Error ? caught.message : "Search failed.");
-          }
-        })
-        .finally(() => {
-          if (!cancelled) setSearching(false);
-        });
-    }, 250);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
-    };
-  }, [query]);
-
   if (!workspace) return <PickWorkspace />;
 
   const today = todayIso();
@@ -130,7 +95,6 @@ export default function DailyMessagePage() {
       toast.success(editingId ? "Message updated" : "Message scheduled");
       setEditingId(undefined);
       setPicked(null);
-      setQuery("");
       setNote("");
       refresh();
     } catch (caught) {
@@ -144,7 +108,6 @@ export default function DailyMessagePage() {
     setEditingId(row.id);
     setDate(row.date.slice(0, 10));
     setNote(row.note ?? "");
-    setQuery("");
     const match = row.sermon_id ? known[row.sermon_id] : undefined;
     setPicked(
       match ??
@@ -174,161 +137,78 @@ export default function DailyMessagePage() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-      <form className="space-y-4" onSubmit={onSave}>
-        <PageHeader
-          title="Daily message"
-          description="Choose a sermon from the Cloudflare catalogue for a date. The app plays that message. Saving the same date again replaces that day."
-        />
-        <TextField
-          label="Date"
-          type="date"
-          required
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-        />
-        <SermonPicker
-          query={query}
-          onQuery={setQuery}
-          searching={searching}
-          results={results}
-          picked={picked}
-          onPick={(sermon) => {
-            setPicked(sermon);
-            setQuery("");
-            setResults([]);
-          }}
-          onClear={() => setPicked(null)}
-        />
-        <AreaField label="Note" value={note} onChange={(event) => setNote(event.target.value)} />
-        <div className="flex gap-2">
-          <Button type="submit" disabled={saving}>
-            {saving ? "Saving…" : editingId ? "Update" : "Schedule"}
-          </Button>
-          {editingId ? (
-            <Button
-              variant="outline"
-              onClick={() => {
-                setEditingId(undefined);
-                setPicked(null);
-                setNote("");
-              }}
-            >
-              Cancel
-            </Button>
-          ) : null}
-        </div>
-      </form>
-      <div>
-        {rows === null ? (
-          <Skeleton className="h-40" />
-        ) : error ? (
-          <p className="text-sm text-destructive">{error}</p>
-        ) : (
-          <div className="space-y-6">
-            <MessageGroup
-              title="Upcoming"
-              rows={upcoming}
-              titleFor={titleFor}
-              onEdit={edit}
-              onDelete={remove}
-            />
-            <MessageGroup
-              title="Earlier"
-              rows={earlier}
-              titleFor={titleFor}
-              onEdit={edit}
-              onDelete={remove}
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function SermonPicker({
-  query,
-  onQuery,
-  searching,
-  results,
-  picked,
-  onPick,
-  onClear,
-}: {
-  query: string;
-  onQuery: (value: string) => void;
-  searching: boolean;
-  results: CatalogueSermon[];
-  picked: CatalogueSermon | null;
-  onPick: (sermon: CatalogueSermon) => void;
-  onClear: () => void;
-}) {
-  const needle = query.trim();
-  return (
     <div>
-      <Label htmlFor="sermon-search">Sermon</Label>
-      {picked ? (
-        <div className="mb-3 rounded-xl border border-primary/40 bg-primary/5 p-3">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-medium">{picked.title}</p>
-              <p className="mt-0.5 text-sm text-muted-foreground">
-                {sermonLine(picked) || "From the sermon catalogue"}
-              </p>
-            </div>
-            <Button type="button" variant="outline" size="sm" onClick={onClear}>
-              Change
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <p className="mb-2 text-xs text-muted-foreground">
-          Search the catalogue by title, speaker, or scripture, then choose a sermon.
-        </p>
-      )}
-      <Input
-        id="sermon-search"
-        value={query}
-        placeholder="Search title, speaker or scripture"
-        onChange={(event) => onQuery(event.target.value)}
+      <PageHeader
+        icon={<IconTile icon={SunMedium} className="h-12 w-12 rounded-2xl" />}
+        title="Daily message"
+        description="Choose a sermon from the Cloudflare catalogue for a date. The app plays that message. Saving the same date again replaces that day."
       />
-      {searching ? (
-        <p className="mt-2 text-xs text-muted-foreground">Searching the catalogue…</p>
-      ) : null}
-      {!searching && needle.length >= 2 && results.length === 0 ? (
-        <p className="mt-2 text-sm text-muted-foreground">No sermons match “{needle}”.</p>
-      ) : null}
-      {results.length > 0 ? (
-        <ul className="mt-2 max-h-80 overflow-auto rounded-xl border border-border bg-card">
-          {results.map((sermon) => {
-            const selected = picked?.id === sermon.id;
-            return (
-              <li key={sermon.id} className="border-b border-border last:border-b-0">
-                <button
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
+        <SectionCard
+          title={editingId ? "Update schedule" : "Schedule a day"}
+          className="studio-card-enter"
+          bodyClassName="p-5"
+        >
+          <form className="space-y-4" onSubmit={onSave}>
+            <TextField
+              label="Date"
+              type="date"
+              required
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+            />
+            <SermonPicker picked={picked} onPick={setPicked} onClear={() => setPicked(null)} />
+            <AreaField
+              label="Note"
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button type="submit" disabled={saving}>
+                {saving ? "Saving…" : editingId ? "Update" : "Schedule"}
+              </Button>
+              {editingId ? (
+                <Button
                   type="button"
-                  className={cn(
-                    "w-full px-3 py-3 text-left transition-colors hover:bg-accent",
-                    selected && "bg-primary/10",
-                  )}
-                  onClick={() => onPick(sermon)}
+                  variant="outline"
+                  onClick={() => {
+                    setEditingId(undefined);
+                    setPicked(null);
+                    setNote("");
+                  }}
                 >
-                  <span className="block font-medium">{sermon.title}</span>
-                  <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                    {sermon.speaker ? <span>{sermon.speaker}</span> : null}
-                    {sermon.date ? <span>{sermon.date}</span> : null}
-                    {sermon.scripture ? (
-                      <span className="rounded-full bg-muted px-2 py-0.5 text-foreground">
-                        {sermon.scripture}
-                      </span>
-                    ) : null}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
+                  Cancel
+                </Button>
+              ) : null}
+            </div>
+          </form>
+        </SectionCard>
+
+        <div className="space-y-6">
+          {rows === null ? (
+            <Skeleton className="h-40" />
+          ) : error ? (
+            <ErrorNotice message={error} onRetry={refresh} />
+          ) : (
+            <>
+              <MessageGroup
+                title="Upcoming"
+                rows={upcoming}
+                titleFor={titleFor}
+                onEdit={edit}
+                onDelete={remove}
+              />
+              <MessageGroup
+                title="Earlier"
+                rows={earlier}
+                titleFor={titleFor}
+                onEdit={edit}
+                onDelete={remove}
+              />
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -347,12 +227,13 @@ function MessageGroup({
   onDelete: (row: DailyMessageRow) => void;
 }) {
   return (
-    <section>
-      <h2 className="font-heading text-lg font-semibold">{title}</h2>
+    <SectionCard title={title} className="studio-card-enter" bodyClassName="p-5">
       {rows.length === 0 ? (
-        <p className="mt-2 text-sm text-muted-foreground">None scheduled.</p>
+        <EmptyState title="None scheduled">
+          Schedule a catalogue sermon for a date on the left.
+        </EmptyState>
       ) : (
-        <ul className="mt-3 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-background">
           {rows.map((row) => (
             <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
               <div className="min-w-0 flex-1">
@@ -374,6 +255,6 @@ function MessageGroup({
           ))}
         </ul>
       )}
-    </section>
+    </SectionCard>
   );
 }

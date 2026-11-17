@@ -5,7 +5,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-const POLICIES = [
+export type GovernancePolicy = {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+  href?: string;
+};
+
+const DEFAULT_POLICIES: GovernancePolicy[] = [
   {
     id: "safeguarding",
     icon: "shield_person",
@@ -37,12 +45,11 @@ const POLICIES = [
   },
 ];
 
-function GovernancePage() {
+function GovernancePage({ policies = DEFAULT_POLICIES }: { policies?: GovernancePolicy[] }) {
   return (
     <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
       <SiteHeader />
 
-      {/* Hero */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pt-28 md:pt-32 pb-8 md:pb-10">
         <div className="max-w-4xl">
           <span className="inline-block bg-secondary-container text-on-secondary-container font-label-md px-4 py-1 border-heavy mb-6 uppercase tracking-widest">
@@ -57,10 +64,9 @@ function GovernancePage() {
         </div>
       </section>
 
-      {/* Policy grid */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
-          {POLICIES.map((policy) => {
+          {policies.map((policy) => {
             const card = (
               <>
                 <div className="w-16 h-16 bg-[#f2eef7] dark:bg-[#2a2430] border-heavy rounded-none flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform">
@@ -82,7 +88,22 @@ function GovernancePage() {
             );
             const className =
               "no-accent-fill scroll-mt-28 block text-inherit bg-surface-container-lowest rounded-none border-2 border-black brutalist-shadow p-8 transition-all group hover:-translate-y-1";
-            if ("href" in policy && policy.href) {
+            if (policy.href) {
+              const external = policy.href.startsWith("http");
+              if (external) {
+                return (
+                  <a
+                    key={policy.id}
+                    id={policy.id}
+                    href={policy.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={className}
+                  >
+                    {card}
+                  </a>
+                );
+              }
               return (
                 <Link key={policy.id} id={policy.id} href={policy.href} className={className}>
                   {card}
@@ -98,7 +119,6 @@ function GovernancePage() {
         </div>
       </section>
 
-      {/* Report an incident banner */}
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pb-24">
         <div className="kp-brand-panel relative overflow-hidden rounded-none p-8 md:p-12 lg:p-16">
           <div className="absolute -top-16 -right-16 w-64 h-64 rounded-none bg-white/5"></div>

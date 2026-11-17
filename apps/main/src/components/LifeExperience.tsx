@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Icon } from "@/components/Icon";
 import { lifeBySlug, type LifeSlug } from "@/lib/life-content";
-import { LifeDetailModal } from "@/components/LifeDetailModal";
+import { LifeDetailModal, type FastingDownloads } from "@/components/LifeDetailModal";
 import { LifeCloserMarquee } from "@/components/LifeCloserMarquee";
 import { useReducedMotion } from "framer-motion";
 import { usePageSnap } from "@/lib/page-snap";
@@ -160,7 +160,13 @@ function CloserPanel({ branches }: { branches: LifeBranch[] }) {
   );
 }
 
-export function LifeExperience({ branches }: { branches: LifeBranch[] }) {
+export function LifeExperience({
+  branches,
+  fastingDownloads,
+}: {
+  branches: LifeBranch[];
+  fastingDownloads?: FastingDownloads;
+}) {
   /* Snap between the page's scroll stages (sections declare points with data-snap). */
   const reduceMotion = useReducedMotion();
   usePageSnap(!reduceMotion);
@@ -190,7 +196,11 @@ export function LifeExperience({ branches }: { branches: LifeBranch[] }) {
   return (
     <div className="life-refresh">
       <CloserPanel branches={branches} />
-      <LifeDetailModal category={modalCategory} onClose={closeModal} />
+      <LifeDetailModal
+        category={modalCategory}
+        onClose={closeModal}
+        fastingDownloads={fastingDownloads}
+      />
     </div>
   );
 }

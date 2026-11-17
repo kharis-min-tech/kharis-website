@@ -1,5 +1,6 @@
-import Page from "@/components/pages/governance";
+import Page, { type GovernancePolicy } from "@/components/pages/governance";
 import { pageMeta } from "@/lib/seo";
+import { fetchSiteDocuments } from "@/lib/site-documents";
 
 export const metadata = pageMeta({
   title: "Governance",
@@ -8,4 +9,28 @@ export const metadata = pageMeta({
   path: "/governance",
 });
 
-export default Page;
+const ICONS: Record<string, string> = {
+  safeguarding: "shield_person",
+  privacy: "lock",
+  cookies: "cookie",
+  disclaimer: "info",
+};
+
+export default async function GovernanceRoute() {
+  const documents = await fetchSiteDocuments();
+  const policies: GovernancePolicy[] = (
+    ["safeguarding", "privacy", "cookies", "disclaimer"] as const
+  ).map((id) => {
+    const slot = documents.policies[id];
+    const pdfUrl = slot.url.trim();
+    return {
+      id,
+      icon: ICONS[id] ?? "info",
+      title: slot.title,
+      description: slot.blurb,
+      href: pdfUrl || (id === "cookies" ? "/cookies" : undefined),
+    };
+  });
+
+  return <Page policies={policies} />;
+}

@@ -9,6 +9,7 @@ import { SECTION_HINTS, WORKSPACE_ICONS, sectionIcon } from "@/components/studio
 import { PageHeader } from "@/components/studio/page-header";
 import { buttonClasses } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { listContentPlans } from "@/lib/content-plans-repo";
 import { countRows } from "@/lib/content-repo";
 import { useStudioRole, type StudioAccess } from "@/lib/studio-role";
 import { hrefWithWorkspace, workspacesForRole, type WorkspaceId } from "@/lib/workspaces";
@@ -19,7 +20,6 @@ const COUNTS: Record<
 > = {
   "/branches": (_workspace, access) =>
     access.isSuperAdmin ? countRows("branches", {}) : Promise.resolve(access.branchIds.length),
-  "/sermons": () => countRows("sermons", {}),
   "/visitors": () => countRows("visitors", {}),
   "/events": (workspace, access) =>
     countRows("events", { workspace }, access.isSuperAdmin ? undefined : access.branchIds),
@@ -28,10 +28,14 @@ const COUNTS: Record<
   "/daily": (workspace) => countRows("daily_entries", { workspace, kind: "reading" }),
   "/daily-prayers": (workspace) => countRows("daily_entries", { workspace, kind: "prayer" }),
   "/daily-message": () => countRows("daily_messages", {}),
-  "/bible": () => Promise.resolve(null),
-  "/sermon-library": () => Promise.resolve(null),
+  "/plans": async () => {
+    try {
+      return (await listContentPlans()).length;
+    } catch {
+      return null;
+    }
+  },
   "/live": () => countRows("app_config", { key: "live_stream" }),
-  "/featured-video": (workspace) => countRows("featured_videos", { workspace }),
   "/messages": (workspace) => countRows("contact_messages", { workspace }),
   "/newsletter": (workspace) =>
     workspace === "general"

@@ -21,6 +21,7 @@ import { Panel } from "@/components/studio/panel";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import { confirmDelete } from "@/lib/confirm";
+import { cn } from "@/lib/utils";
 
 function initialsOf(name: string) {
   const parts = name.split(/\s+/).filter((part) => /\w/.test(part));
@@ -45,6 +46,16 @@ export type Draft = Record<string, string>;
 
 type Row = { id: string };
 
+export type PublishFilter = "all" | "published" | "draft";
+
+const PUBLISH_FILTERS: PublishFilter[] = ["all", "published", "draft"];
+
+const PUBLISH_LABELS: Record<PublishFilter, string> = {
+  all: "All",
+  published: "Published",
+  draft: "Draft",
+};
+
 export function CrudPage<T extends Row>({
   title,
   description,
@@ -58,6 +69,8 @@ export function CrudPage<T extends Row>({
   titleOf,
   metaOf,
   searchOf,
+  imageOf,
+  publishedOf,
   emptyText = "Nothing here yet.",
 }: {
   title: string;
@@ -73,11 +86,15 @@ export function CrudPage<T extends Row>({
   titleOf: (row: T) => string;
   metaOf?: (row: T) => string;
   searchOf: (row: T) => string;
+  imageOf?: (row: T) => string | null | undefined;
+  /** When set, shows All / Published / Draft tabs. */
+  publishedOf?: (row: T) => boolean;
 }) {
   const pathname = usePathname();
   const [rows, setRows] = useState<T[] | null>(null);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  const [publishFilter, setPublishFilter] = useState<PublishFilter>("all");
   const [editing, setEditing] = useState<{ id?: string; draft: Draft } | null>(null);
   const [saving, setSaving] = useState(false);
   const [tick, setTick] = useState(0);
@@ -103,12 +120,27 @@ export function CrudPage<T extends Row>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadKey, tick]);
 
+  const publishCounts = useMemo(() => {
+    const counts: Record<PublishFilter, number> = { all: 0, published: 0, draft: 0 };
+    if (!rows || !publishedOf) return counts;
+    counts.all = rows.length;
+    for (const row of rows) {
+      if (publishedOf(row)) counts.published += 1;
+      else counts.draft += 1;
+    }
+    return counts;
+  }, [rows, publishedOf]);
+
   const visible = useMemo(() => {
-    const needle = query.trim().toLowerCase();
     if (!rows) return [];
-    if (!needle) return rows;
-    return rows.filter((row) => searchOf(row).toLowerCase().includes(needle));
-  }, [query, rows, searchOf]);
+    const needle = query.trim().toLowerCase();
+    return rows.filter((row) => {
+      if (publishedOf && publishFilter === "published" && !publishedOf(row)) return false;
+      if (publishedOf && publishFilter === "draft" && publishedOf(row)) return false;
+      if (!needle) return true;
+      return searchOf(row).toLowerCase().includes(needle);
+    });
+  }, [query, rows, searchOf, publishedOf, publishFilter]);
 
   async function onSave(event: React.FormEvent) {
     event.preventDefault();
@@ -157,6 +189,30 @@ export function CrudPage<T extends Row>({
           placeholder={`Search ${title.toLowerCase()}`}
           onChange={(event) => setQuery(event.target.value)}
         />
+        {publishedOf ? (
+          <div
+            role="tablist"
+            aria-label="Publish filter"
+            className="inline-flex rounded-lg border border-border bg-card p-0.5"
+          >
+            {PUBLISH_FILTERS.map((item) => (
+              <button
+                key={item}
+                type="button"
+                role="tab"
+                aria-selected={publishFilter === item}
+                onClick={() => setPublishFilter(item)}
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground",
+                  publishFilter === item && "bg-brand-soft text-brand hover:text-brand",
+                )}
+              >
+                {PUBLISH_LABELS[item]}
+                <span className="ml-1.5 tabular-nums opacity-70">{publishCounts[item]}</span>
+              </button>
+            ))}
+          </div>
+        ) : null}
         {rows && !error ? (
           <span className="text-xs text-muted-foreground">
             {visible.length === rows.length
@@ -182,30 +238,42 @@ export function CrudPage<T extends Row>({
             )
           }
         >
-          {rows.length ? "Try a different search." : emptyText}
+          {rows.length ? "Try a different search or filter." : emptyText}
         </EmptyState>
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {visible.map((row) => {
+          {visible.map((row, index) => {
             const name = titleOf(row) || "Untitled";
+            const image = imageOf?.(row)?.trim() || "";
             return (
               <li
                 key={row.id}
-                className="group flex flex-col rounded-xl border border-border bg-card shadow-card transition hover:border-brand-line"
+                className="studio-card-enter group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition hover:border-brand-line"
+                style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}
               >
                 <button
                   type="button"
-                  className="flex min-w-0 flex-1 items-start gap-3.5 rounded-t-xl p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                  className="flex min-w-0 flex-1 flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                   onClick={() => setEditing({ id: row.id, draft: toDraft(row) })}
                 >
-                  <Avatar label={initialsOf(name)} />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">{name}</span>
-                    {metaOf ? (
-                      <span className="mt-1 line-clamp-2 block text-sm text-muted-foreground">
-                        {metaOf(row)}
-                      </span>
-                    ) : null}
+                  {image ? (
+                    <img
+                      src={image}
+                      alt=""
+                      className="h-32 w-full border-b border-border object-cover"
+                      loading="lazy"
+                    />
+                  ) : null}
+                  <span className="flex items-start gap-3.5 p-5">
+                    {image ? null : <Avatar label={initialsOf(name)} />}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-semibold">{name}</span>
+                      {metaOf ? (
+                        <span className="mt-1 line-clamp-2 block text-sm text-muted-foreground">
+                          {metaOf(row)}
+                        </span>
+                      ) : null}
+                    </span>
                   </span>
                 </button>
                 <div className="flex items-center justify-end gap-1 border-t border-border px-3 py-2">

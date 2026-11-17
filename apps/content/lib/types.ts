@@ -22,19 +22,6 @@ export type EventRow = {
   workspace: string | null;
 };
 
-export type SermonRow = {
-  id: string;
-  title: string;
-  speaker: string | null;
-  date: string | null;
-  series: string | null;
-  description: string | null;
-  video_url: string | null;
-  audio_url: string | null;
-  thumbnail: string | null;
-  published: boolean | null;
-};
-
 export type NewsRow = {
   id: string;
   workspace: string | null;
@@ -94,14 +81,6 @@ export type DailyMessageRow = {
   date: string;
   sermon_id: string | null;
   note: string | null;
-};
-
-export type FeaturedVideoRow = {
-  id: string;
-  workspace: string | null;
-  title: string | null;
-  video_url: string | null;
-  published: boolean | null;
 };
 
 export type ContactStatus = "new" | "read" | "archived";

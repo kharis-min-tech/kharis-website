@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { isBranchId } from "@/lib/branch-image-paths";
 import {
+  MAX_MEDIA_DOCUMENT_BYTES,
   MAX_MEDIA_IMAGE_BYTES,
   MAX_MEDIA_VIDEO_BYTES,
   branchIdFromMediaKey,
   isBranchMediaFolder,
+  isDocumentContentType,
   isMediaContentType,
   isMediaFolder,
   isMediaObjectKey,
@@ -78,15 +80,29 @@ export async function POST(request: Request) {
   if (forbidden) return forbidden;
   if (!isMediaContentType(contentType)) {
     return NextResponse.json(
-      { error: "Use an MP4, MOV or WebM video, or a JPEG, PNG, WebP, GIF or AVIF image." },
+      {
+        error:
+          "Use an MP4, MOV or WebM video, a JPEG, PNG, WebP, GIF or AVIF image, or a PDF document.",
+      },
       { status: 400 },
     );
   }
   const video = isVideoContentType(contentType);
-  const limit = video ? MAX_MEDIA_VIDEO_BYTES : MAX_MEDIA_IMAGE_BYTES;
+  const document = isDocumentContentType(contentType);
+  const limit = video
+    ? MAX_MEDIA_VIDEO_BYTES
+    : document
+      ? MAX_MEDIA_DOCUMENT_BYTES
+      : MAX_MEDIA_IMAGE_BYTES;
   if (!size || size > limit) {
     return NextResponse.json(
-      { error: video ? "Videos need to be 95MB or smaller." : "Images need to be 8MB or smaller." },
+      {
+        error: video
+          ? "Videos need to be 95MB or smaller."
+          : document
+            ? "PDFs need to be 20MB or smaller."
+            : "Images need to be 8MB or smaller.",
+      },
       { status: 413 },
     );
   }

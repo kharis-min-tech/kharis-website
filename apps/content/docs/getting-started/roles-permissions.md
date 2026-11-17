@@ -26,7 +26,7 @@ That is also why a failed access check never falls back to full access. If the s
 - Create, edit, deactivate, and reinstate any branch
 - Add events with no branch, for all campuses
 - Read and manage every message, visitor, and newsletter address
-- Edit sermons, testimonies, announcements, the featured video, department videos, and all app content
+- Edit testimonies, announcements, department videos, documents, newsletter emails, and all app content
 - Invite users, change roles and branches, send password resets, and delete accounts
 
 ::: warning Keep at least two super admins
@@ -52,7 +52,7 @@ A branch admin is given a list of branches when they are invited. Everything the
 
 - Create a new branch, or deactivate and reinstate one
 - Add an event without a branch
-- Open Announcements, Testimonies, Sermons, Newsletter, Department Videos, Featured Video, any Mobile App daily content, Live, or Users
+- Open Announcements, Testimonies, Newsletter, Department Videos, Documents, any Mobile App daily content, Live, or Users
 - See another branch's events, messages, or visitors
 
 ::: tip Each workspace shrinks to fit

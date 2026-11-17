@@ -6,7 +6,19 @@ import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { ContentIcon } from "@/components/ContentIcon";
 import { GOVERNANCE } from "@/lib/about-content";
 
-export function GovernanceExperience() {
+export type GovernancePolicyCard = {
+  id: string;
+  title: string;
+  blurb: string;
+  icon: string;
+  href?: string;
+};
+
+export function GovernanceExperience({
+  policies = GOVERNANCE.policies as unknown as GovernancePolicyCard[],
+}: {
+  policies?: GovernancePolicyCard[];
+}) {
   return (
     <div className="gov-page">
       <header className="gov-hero">
@@ -19,10 +31,16 @@ export function GovernanceExperience() {
 
       <section className="gov-policies" aria-label="Policy documents">
         <RevealStagger className="gov-policies__grid" stagger={0.1}>
-          {GOVERNANCE.policies.map((policy) => (
+          {policies.map((policy) => (
             <RevealItem key={policy.id} id={policy.id} className="gov-policy">
-              {"href" in policy ? (
-                <a href={policy.href} className="gov-policy__link">
+              {policy.href ? (
+                <a
+                  href={policy.href}
+                  className="gov-policy__link"
+                  {...(policy.href.startsWith("http")
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                >
                   <span className="gov-policy__icon">
                     <ContentIcon name={policy.icon} className="h-10 w-10" />
                   </span>
