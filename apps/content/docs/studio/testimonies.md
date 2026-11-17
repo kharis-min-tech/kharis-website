@@ -1,12 +1,12 @@
 # Testimonies
 
-Testimonies are stories of what God has done, told by members of the church. Each workspace keeps its own: General, Kharis Website, or KP2 Website. Unpublished testimonies stay in review until you publish them.
+Testimonies are stories of what God has done, told by members of the church. **General** lists every testimony across the sites so you can edit them all. Kharis Website and KP2 Website each show only that site's list. Unpublished testimonies stay in review until you publish them.
 
 <Screenshot name="testimonies" alt="Testimonies page with a card per testimony showing the branch, featured slot and Published or Draft" />
 
 ## Testimony cards
 
-Each card shows the name, then the branch, the **featured slot**, and whether it's **Published** or a **Draft**.
+Each card shows the name, then (on General) the site, the branch, the **featured slot**, and whether it's **Published** or a **Draft**.
 
 ## Adding a testimony
 
@@ -15,6 +15,7 @@ Press **New**.
 | Field             | Notes                                               |
 | ----------------- | --------------------------------------------------- |
 | Name              | Required. Shown unless the testimony is anonymous   |
+| Site              | On General only: which website or app it belongs to |
 | Branch            | The campus the person attends                       |
 | Category          | For example Healing, Provision, Salvation           |
 | Short description | The one or two lines shown on cards                 |
@@ -35,15 +36,7 @@ Set the slot on each testimony you want there. Several can share a slot; a testi
 
 ## Which site shows it
 
-| Saved under    | Shown on                |
-| -------------- | ----------------------- |
-| General        | Both kharis.org and KP2 |
-| Kharis Website | kharis.org only         |
-| KP2 Website    | kharis.org/kp2 only     |
-
-::: tip Share a story with both sites
-Save it under **General**. There's no need to add it twice.
-:::
+On General, set **Site** to Kharis, KP2, the app, or General. Kharis Website and KP2 Website always save under that site.
 
 ::: warning Check before publishing
 A testimony often names a person, a family situation, or a health condition. Make sure the person has agreed to it being public, and use **Anonymous** if they'd rather not be named.

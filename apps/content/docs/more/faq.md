@@ -46,10 +46,6 @@ YouVersion. The studio only stores the reference, such as **Romans 8:1-11**, and
 
 No. **Reply** opens your own email app with the reply ready to write, so the conversation stays in your mailbox.
 
-### Can I see who signed up for the newsletter on KP2 only?
-
-Yes. Open **KP2 Website**, then **Newsletter**. Under **General**, you see every site's signups together.
-
 ### A visitor said "Do not contact". Can we still welcome them?
 
 Yes, on the day. Don't call, text, or email them.

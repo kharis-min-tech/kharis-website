@@ -10,7 +10,6 @@ export type StudioResource =
   | "daily_messages"
   | "app_config"
   | "contact_messages"
-  | "newsletter_subscribers"
   | "branches"
   | "venues"
   | "services"

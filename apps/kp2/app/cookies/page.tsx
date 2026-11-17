@@ -82,8 +82,8 @@ export default function CookiePolicyPage() {
           </p>
           <h2 className="font-headline-md text-headline-md uppercase text-on-surface">Forms</h2>
           <p>
-            Contact, visit, newsletter, and testimony forms send what you type to our server. That
-            information is not stored as a cookie on your device.
+            Contact, visit, and testimony forms send what you type to our server. That information
+            is not stored as a cookie on your device.
           </p>
           <h2 className="font-headline-md text-headline-md uppercase text-on-surface">
             How to turn this off

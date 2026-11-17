@@ -25,7 +25,6 @@ const groups: { text: string; items: Page[] }[] = [
       ["Testimonies", "/studio/testimonies", "quote"],
       ["Messages", "/studio/messages", "inbox"],
       ["Visitors", "/studio/visitors", "userPlus"],
-      ["Newsletter", "/studio/newsletter", "mail"],
       ["Department Videos", "/studio/department-videos", "clapper"],
       ["Ask Grace", "/studio/ask-grace", "chat"],
     ],

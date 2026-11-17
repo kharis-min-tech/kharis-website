@@ -321,17 +321,6 @@
   }
 
   document.addEventListener(
-    "submit",
-    function (event) {
-      var form = event.target;
-      if (form && form.getAttribute && form.getAttribute("data-newsletter")) {
-        event.preventDefault();
-      }
-    },
-    true,
-  );
-
-  document.addEventListener(
     "click",
     function (event) {
       var target = event.target && event.target.closest && event.target.closest("[data-ui]");
