@@ -10,8 +10,7 @@ Which studio screen feeds which part of the websites and the app.
 | Events                           | [Events](/studio/events), with **Kharis website** ticked                       |
 | Home page testimonies            | [Testimonies](/studio/testimonies) in General or Kharis Website, slot **Home** |
 | Testimonies with giving          | Testimonies, slot **Giving**                                                   |
-| Home page video                  | Kharis Website → [Featured Video](/studio/featured-video)                      |
-| Department Discovery Quiz videos | [Department Videos](/studio/department-videos)                                 |
+| Department Discovery Quiz videos | General → [Department Videos](/studio/department-videos)                       |
 
 ## kharis.org/kp2
 

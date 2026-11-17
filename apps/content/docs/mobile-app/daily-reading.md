@@ -27,8 +27,4 @@ Under the passage, the studio confirms what the app will open, for example **Ope
 
 Books are grouped into **Old Testament** and **New Testament**. For one-chapter books such as Jude, the chapter is fixed at **Chapter 1**.
 
-## Checking your readings
-
-[Bible](/mobile-app/bible) lists the next eight readings and flags any reference the app won't be able to open. Check it after planning a week ahead.
-
 Super admins only.

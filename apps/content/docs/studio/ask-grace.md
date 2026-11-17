@@ -20,7 +20,7 @@ Grace answers in a sentence or two, with a link straight to the screen. She know
 **Can do:**
 
 - Tell you which workspace and section something lives in
-- Explain the difference between similar screens, such as Sermons and Sermon Library
+- Explain the difference between similar screens, such as Daily Reading and Daily Message
 - Link you to the page
 
 **Cannot do:**

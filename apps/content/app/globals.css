@@ -7,8 +7,12 @@
 /* Kairos palette: violet brand, warm gold highlights, near-black dark mode.
    Each tone has a text colour, a soft fill and a line (border) colour. */
 :root {
-  --font-dm-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-maven: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-dm-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-maven: "Maven Pro", ui-sans-serif, system-ui, sans-serif;
+  --pointer-x: 62%;
+  --pointer-y: 28%;
+  --pointer-parallax-x: 0px;
+  --pointer-parallax-y: 0px;
   --background: #f6f6f9;
   --foreground: #17171c;
   --card: #ffffff;
@@ -160,4 +164,264 @@ h3,
   .studio-panel {
     animation: none;
   }
+
+  .studio-atmosphere-spotlight,
+  .studio-atmosphere-grid,
+  .studio-atmosphere-nodes,
+  .auth-atmosphere-spotlight,
+  .auth-atmosphere-spotlight-dark,
+  .auth-atmosphere-grid,
+  .auth-atmosphere-grid-dark,
+  .auth-atmosphere-nodes,
+  .auth-atmosphere-nodes-dark,
+  .auth-form-card {
+    transition: none !important;
+  }
+
+  .studio-atmosphere-grid,
+  .studio-atmosphere-nodes,
+  .auth-atmosphere-grid,
+  .auth-atmosphere-grid-dark,
+  .auth-atmosphere-nodes,
+  .auth-atmosphere-nodes-dark {
+    transform: none !important;
+  }
+
+  .studio-card-enter,
+  .auth-form-enter,
+  .auth-orbit,
+  .auth-atmosphere-scan {
+    animation: none !important;
+  }
+}
+
+/* Soft brand atmosphere behind the main studio pane. */
+.studio-atmosphere-base {
+  background:
+    radial-gradient(55% 45% at 15% 0%, rgba(98, 54, 220, 0.07), transparent 70%),
+    radial-gradient(40% 35% at 95% 10%, rgba(234, 160, 8, 0.05), transparent 65%);
+}
+
+.dark .studio-atmosphere-base {
+  background:
+    radial-gradient(55% 45% at 15% 0%, rgba(139, 108, 250, 0.12), transparent 70%),
+    radial-gradient(40% 35% at 95% 10%, rgba(246, 181, 78, 0.05), transparent 65%);
+}
+
+.studio-atmosphere-spotlight {
+  background: radial-gradient(
+    42% 36% at var(--pointer-x) var(--pointer-y),
+    rgba(98, 54, 220, 0.14),
+    transparent 70%
+  );
+  transition: background 80ms linear;
+}
+
+.dark .studio-atmosphere-spotlight {
+  background: radial-gradient(
+    42% 36% at var(--pointer-x) var(--pointer-y),
+    rgba(164, 139, 250, 0.16),
+    transparent 70%
+  );
+}
+
+.studio-atmosphere-grid {
+  background-image:
+    linear-gradient(rgba(98, 54, 220, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(98, 54, 220, 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(65% 55% at var(--pointer-x) var(--pointer-y), black, transparent 75%);
+  transform: translate(var(--pointer-parallax-x), var(--pointer-parallax-y));
+  transition: transform 120ms linear;
+}
+
+.dark .studio-atmosphere-grid {
+  background-image:
+    linear-gradient(rgba(164, 139, 250, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(164, 139, 250, 0.09) 1px, transparent 1px);
+}
+
+.studio-atmosphere-nodes {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(98, 54, 220, 0.22) 1.1px,
+    transparent 1.3px
+  );
+  background-size: 72px 72px;
+  background-position: calc(var(--pointer-parallax-x) * -0.6) calc(var(--pointer-parallax-y) * -0.6);
+  mask-image: radial-gradient(55% 50% at var(--pointer-x) var(--pointer-y), black, transparent 72%);
+  opacity: 0.55;
+}
+
+.dark .studio-atmosphere-nodes {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(246, 181, 78, 0.28) 1.1px,
+    transparent 1.3px
+  );
+  opacity: 0.35;
+}
+
+@keyframes studio-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.studio-card-enter {
+  animation: studio-card-in 200ms ease-out both;
+}
+
+/* Auth / sign-in atmosphere (stronger than the logged-in shell). */
+.auth-atmosphere-base {
+  background:
+    radial-gradient(60% 50% at 80% 10%, rgba(98, 54, 220, 0.1), transparent 70%),
+    radial-gradient(45% 40% at 10% 90%, rgba(234, 160, 8, 0.06), transparent 65%);
+}
+
+.dark .auth-atmosphere-base {
+  background:
+    radial-gradient(60% 50% at 80% 10%, rgba(139, 108, 250, 0.14), transparent 70%),
+    radial-gradient(45% 40% at 10% 90%, rgba(246, 181, 78, 0.06), transparent 65%);
+}
+
+.auth-atmosphere-base-dark {
+  background:
+    radial-gradient(65% 55% at 18% 58%, rgba(14, 116, 144, 0.45), transparent 72%),
+    radial-gradient(50% 40% at 78% 18%, rgba(67, 56, 202, 0.38), transparent 70%),
+    radial-gradient(35% 30% at 90% 80%, rgba(246, 181, 78, 0.1), transparent 65%);
+}
+
+.auth-atmosphere-static-mask {
+  mask-image: radial-gradient(70% 60% at 70% 30%, black, transparent 75%);
+  transform: none !important;
+}
+
+.auth-atmosphere-spotlight {
+  background: radial-gradient(
+    48% 40% at var(--pointer-x) var(--pointer-y),
+    rgba(98, 54, 220, 0.18),
+    transparent 72%
+  );
+  transition: background 80ms linear;
+}
+
+.dark .auth-atmosphere-spotlight {
+  background: radial-gradient(
+    48% 40% at var(--pointer-x) var(--pointer-y),
+    rgba(164, 139, 250, 0.2),
+    transparent 72%
+  );
+}
+
+.auth-atmosphere-spotlight-dark {
+  background: radial-gradient(
+    50% 42% at var(--pointer-x) var(--pointer-y),
+    rgba(125, 211, 252, 0.22),
+    transparent 70%
+  );
+  transition: background 80ms linear;
+}
+
+.auth-atmosphere-grid,
+.auth-atmosphere-grid-dark {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(70% 60% at var(--pointer-x) var(--pointer-y), black, transparent 78%);
+  transform: translate(var(--pointer-parallax-x), var(--pointer-parallax-y));
+  transition: transform 120ms linear;
+}
+
+.auth-atmosphere-grid {
+  background-image:
+    linear-gradient(rgba(98, 54, 220, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(98, 54, 220, 0.1) 1px, transparent 1px);
+}
+
+.dark .auth-atmosphere-grid {
+  background-image:
+    linear-gradient(rgba(164, 139, 250, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(164, 139, 250, 0.12) 1px, transparent 1px);
+}
+
+.auth-atmosphere-nodes,
+.auth-atmosphere-nodes-dark {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(246, 181, 78, 0.35) 1.2px,
+    transparent 1.4px
+  );
+  background-size: 64px 64px;
+  background-position: calc(var(--pointer-parallax-x) * -0.8) calc(var(--pointer-parallax-y) * -0.8);
+  mask-image: radial-gradient(55% 50% at var(--pointer-x) var(--pointer-y), black, transparent 72%);
+  opacity: 0.5;
+}
+
+.auth-atmosphere-nodes {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(98, 54, 220, 0.28) 1.2px,
+    transparent 1.4px
+  );
+}
+
+.auth-atmosphere-scan {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(164, 139, 250, 0.07) 48%,
+    transparent 52%
+  );
+  background-size: 100% 220%;
+  animation: auth-scan 7s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes auth-scan {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 0% 100%;
+  }
+}
+
+.auth-orbit {
+  animation: auth-orbit-spin 28s linear infinite;
+}
+
+.auth-orbit-delayed {
+  animation-duration: 40s;
+  animation-direction: reverse;
+}
+
+@keyframes auth-orbit-spin {
+  from {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+.auth-form-enter {
+  animation: studio-card-in 320ms ease-out both;
+}
+
+.auth-form-card {
+  box-shadow:
+    var(--shadow-pop),
+    0 0 0 1px rgba(98, 54, 220, 0.04),
+    0 0 60px -20px rgba(98, 54, 220, 0.35);
+  transition: box-shadow 160ms ease;
+}
+
+.auth-form-card:focus-within {
+  box-shadow:
+    var(--shadow-pop),
+    0 0 0 1px rgba(98, 54, 220, 0.18),
+    0 0 80px -12px rgba(98, 54, 220, 0.45);
 }

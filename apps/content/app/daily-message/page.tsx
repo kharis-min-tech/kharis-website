@@ -1,7 +1,9 @@
 "use client";
 
+import { SunMedium } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { EmptyState, ErrorNotice, IconTile, SectionCard } from "@/components/studio/blocks";
 import { AreaField, TextField } from "@/components/studio/fields";
 import { PageHeader } from "@/components/studio/page-header";
 import { PickWorkspace } from "@/components/studio/pick-workspace";
@@ -135,62 +137,77 @@ export default function DailyMessagePage() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-      <form className="space-y-4" onSubmit={onSave}>
-        <PageHeader
-          title="Daily message"
-          description="Choose a sermon from the Cloudflare catalogue for a date. The app plays that message. Saving the same date again replaces that day."
-        />
-        <TextField
-          label="Date"
-          type="date"
-          required
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-        />
-        <SermonPicker picked={picked} onPick={setPicked} onClear={() => setPicked(null)} />
-        <AreaField label="Note" value={note} onChange={(event) => setNote(event.target.value)} />
-        <div className="flex gap-2">
-          <Button type="submit" disabled={saving}>
-            {saving ? "Saving…" : editingId ? "Update" : "Schedule"}
-          </Button>
-          {editingId ? (
-            <Button
-              variant="outline"
-              onClick={() => {
-                setEditingId(undefined);
-                setPicked(null);
-                setNote("");
-              }}
-            >
-              Cancel
-            </Button>
-          ) : null}
+    <div>
+      <PageHeader
+        icon={<IconTile icon={SunMedium} className="h-12 w-12 rounded-2xl" />}
+        title="Daily message"
+        description="Choose a sermon from the Cloudflare catalogue for a date. The app plays that message. Saving the same date again replaces that day."
+      />
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
+        <SectionCard
+          title={editingId ? "Update schedule" : "Schedule a day"}
+          className="studio-card-enter"
+          bodyClassName="p-5"
+        >
+          <form className="space-y-4" onSubmit={onSave}>
+            <TextField
+              label="Date"
+              type="date"
+              required
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+            />
+            <SermonPicker picked={picked} onPick={setPicked} onClear={() => setPicked(null)} />
+            <AreaField
+              label="Note"
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button type="submit" disabled={saving}>
+                {saving ? "Saving…" : editingId ? "Update" : "Schedule"}
+              </Button>
+              {editingId ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingId(undefined);
+                    setPicked(null);
+                    setNote("");
+                  }}
+                >
+                  Cancel
+                </Button>
+              ) : null}
+            </div>
+          </form>
+        </SectionCard>
+
+        <div className="space-y-6">
+          {rows === null ? (
+            <Skeleton className="h-40" />
+          ) : error ? (
+            <ErrorNotice message={error} onRetry={refresh} />
+          ) : (
+            <>
+              <MessageGroup
+                title="Upcoming"
+                rows={upcoming}
+                titleFor={titleFor}
+                onEdit={edit}
+                onDelete={remove}
+              />
+              <MessageGroup
+                title="Earlier"
+                rows={earlier}
+                titleFor={titleFor}
+                onEdit={edit}
+                onDelete={remove}
+              />
+            </>
+          )}
         </div>
-      </form>
-      <div>
-        {rows === null ? (
-          <Skeleton className="h-40" />
-        ) : error ? (
-          <p className="text-sm text-destructive">{error}</p>
-        ) : (
-          <div className="space-y-6">
-            <MessageGroup
-              title="Upcoming"
-              rows={upcoming}
-              titleFor={titleFor}
-              onEdit={edit}
-              onDelete={remove}
-            />
-            <MessageGroup
-              title="Earlier"
-              rows={earlier}
-              titleFor={titleFor}
-              onEdit={edit}
-              onDelete={remove}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
@@ -210,12 +227,13 @@ function MessageGroup({
   onDelete: (row: DailyMessageRow) => void;
 }) {
   return (
-    <section>
-      <h2 className="font-heading text-lg font-semibold">{title}</h2>
+    <SectionCard title={title} className="studio-card-enter" bodyClassName="p-5">
       {rows.length === 0 ? (
-        <p className="mt-2 text-sm text-muted-foreground">None scheduled.</p>
+        <EmptyState title="None scheduled">
+          Schedule a catalogue sermon for a date on the left.
+        </EmptyState>
       ) : (
-        <ul className="mt-3 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-background">
           {rows.map((row) => (
             <li key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
               <div className="min-w-0 flex-1">
@@ -237,6 +255,6 @@ function MessageGroup({
           ))}
         </ul>
       )}
-    </section>
+    </SectionCard>
   );
 }

@@ -20,7 +20,6 @@ const COUNTS: Record<
 > = {
   "/branches": (_workspace, access) =>
     access.isSuperAdmin ? countRows("branches", {}) : Promise.resolve(access.branchIds.length),
-  "/sermons": () => countRows("sermons", {}),
   "/visitors": () => countRows("visitors", {}),
   "/events": (workspace, access) =>
     countRows("events", { workspace }, access.isSuperAdmin ? undefined : access.branchIds),
@@ -36,10 +35,7 @@ const COUNTS: Record<
       return null;
     }
   },
-  "/bible": () => Promise.resolve(null),
-  "/sermon-library": () => Promise.resolve(null),
   "/live": () => countRows("app_config", { key: "live_stream" }),
-  "/featured-video": (workspace) => countRows("featured_videos", { workspace }),
   "/messages": (workspace) => countRows("contact_messages", { workspace }),
   "/newsletter": (workspace) =>
     workspace === "general"

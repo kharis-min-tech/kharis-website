@@ -32,9 +32,9 @@ They're super admin screens. Branch admins see Branches, Events, Messages, and V
 
 No. Open the event and tick **KP2 website** under **Show on**. One event can appear on every site.
 
-### What's the difference between Sermons and Sermon Library?
+### Where do app sermons live?
 
-**Sermons** under General are the records shown on the websites. **Sermon Library** is the separate catalogue the app plays from, mirrored from the church's sermon host. See [Sermon Library](/mobile-app/sermon-library).
+Schedule a day under [Daily Message](/mobile-app/daily-message). Search picks from the catalogue mirrored into Cloudflare from the church's sermon host.
 
 ### Where does the Bible text in the app come from?
 

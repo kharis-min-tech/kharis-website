@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Avatar } from "@/components/studio/blocks";
 import { Mark } from "@/components/studio/mark";
 import { WORKSPACE_ICONS, sectionIcon } from "@/components/studio/nav-meta";
+import { StudioAtmosphere } from "@/components/studio/studio-atmosphere";
 import { ThemeToggle } from "@/components/studio/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { countNewMessages } from "@/lib/content-repo";
@@ -201,7 +202,8 @@ export function AdminShell({ email, children }: { email: string; children: React
           </div>
         </aside>
 
-        <div className="min-w-0">
+        <div className="relative min-w-0">
+          <StudioAtmosphere className="z-0" />
           <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/85 px-4 py-2.5 backdrop-blur md:hidden">
             <Button
               variant="ghost"
@@ -214,7 +216,7 @@ export function AdminShell({ email, children }: { email: string; children: React
             <Mark className="h-8 w-8" />
             <span className="font-heading text-sm font-bold">Content Studio</span>
           </header>
-          <main className="mx-auto w-full max-w-[90rem] px-4 py-6 sm:px-6 md:px-10 md:py-9">
+          <main className="relative z-10 mx-auto w-full max-w-[90rem] px-4 py-6 sm:px-6 md:px-10 md:py-9">
             {allowed ? children : null}
           </main>
         </div>

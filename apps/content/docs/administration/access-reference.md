@@ -8,7 +8,7 @@ Every section of the studio, by workspace, and who can open it. Accounts with **
 | ----------------- | ----------- | -------------------------- |
 | Branches          | ✓           | Their branches             |
 | Department Videos | ✓           |                            |
-| Sermons           | ✓           |                            |
+| Documents         | ✓           |                            |
 | Testimonies       | ✓           |                            |
 | Visitors          | ✓           | Visitors to their branches |
 | Messages          | ✓           | Messages to their branches |
@@ -17,41 +17,36 @@ Every section of the studio, by workspace, and who can open it. Accounts with **
 
 ## Mobile App
 
-| Section        | Super admin | Branch admin              |
-| -------------- | ----------- | ------------------------- |
-| Events         | ✓           | Events for their branches |
-| Announcements  | ✓           |                           |
-| Daily Reading  | ✓           |                           |
-| Daily Message  | ✓           |                           |
-| Daily Prayers  | ✓           |                           |
-| Plans          | ✓           |                           |
-| Bible          | ✓           |                           |
-| Sermon library | ✓           |                           |
-| Live           | ✓           |                           |
+| Section       | Super admin | Branch admin              |
+| ------------- | ----------- | ------------------------- |
+| Events        | ✓           | Events for their branches |
+| Announcements | ✓           |                           |
+| Daily Reading | ✓           |                           |
+| Daily Message | ✓           |                           |
+| Daily Prayers | ✓           |                           |
+| Plans         | ✓           |                           |
+| Live          | ✓           |                           |
 
 ## Kharis Website
 
-| Section           | Super admin | Branch admin               |
-| ----------------- | ----------- | -------------------------- |
-| Branches          | ✓           | Their branches             |
-| Department Videos | ✓           |                            |
-| Events            | ✓           | Events for their branches  |
-| Testimonies       | ✓           |                            |
-| Featured Video    | ✓           |                            |
-| Announcements     | ✓           |                            |
-| Messages          | ✓           | Messages to their branches |
+| Section       | Super admin | Branch admin               |
+| ------------- | ----------- | -------------------------- |
+| Branches      | ✓           | Their branches             |
+| Events        | ✓           | Events for their branches  |
+| Testimonies   | ✓           |                            |
+| Announcements | ✓           |                            |
+| Messages      | ✓           | Messages to their branches |
 
 ## KP2 Website
 
-| Section           | Super admin | Branch admin               |
-| ----------------- | ----------- | -------------------------- |
-| Branches          | ✓           | Their branches             |
-| Department Videos | ✓           |                            |
-| Events            | ✓           | Events for their branches  |
-| Testimonies       | ✓           |                            |
-| Announcements     | ✓           |                            |
-| Messages          | ✓           | Messages to their branches |
-| Newsletter        | ✓           |                            |
+| Section       | Super admin | Branch admin               |
+| ------------- | ----------- | -------------------------- |
+| Branches      | ✓           | Their branches             |
+| Events        | ✓           | Events for their branches  |
+| Testimonies   | ✓           |                            |
+| Announcements | ✓           |                            |
+| Messages      | ✓           | Messages to their branches |
+| Newsletter    | ✓           |                            |
 
 ## Actions only super admins can take
 

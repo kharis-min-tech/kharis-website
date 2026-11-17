@@ -1,18 +1,11 @@
 import { describeReadingReference } from "./bible-reference";
-import {
-  allowedItemTypes,
-  daySummary,
-  type ContentPlan,
-  type PlanDay,
-  type PlanItem,
-  type PlanMode,
-} from "./content-plans";
+import { daySummary, type ContentPlan, type PlanDay, type PlanItem } from "./content-plans";
 
 export const PLAN_STEPS = [
   {
     id: "basics",
     label: "Basics",
-    hint: "Title, mode, summary and cover",
+    hint: "Title, summary and cover",
   },
   {
     id: "days",
@@ -39,18 +32,34 @@ export type PlanIssue = {
   message: string;
 };
 
-function itemAllowed(mode: PlanMode, item: PlanItem) {
-  return allowedItemTypes(mode).includes(item.type);
+function hasDayContent(plan: ContentPlan) {
+  return plan.days.some((day) => day.items.length > 0);
 }
 
-function checkItem(item: PlanItem, mode: PlanMode, dayLabel: string, issues: PlanIssue[]) {
+function daysConfigured(plan: ContentPlan) {
+  return plan.days.length > 1 || plan.days.some((day) => day.items.length > 0);
+}
+
+/** Which wizard steps to show — hide Days/Publish until they matter. */
+export function visiblePlanSteps(plan: ContentPlan): PlanStep[] {
+  const steps: PlanStep[] = ["basics"];
+  if (plan.title.trim() || daysConfigured(plan)) steps.push("days");
+  if (plan.title.trim() || hasDayContent(plan)) steps.push("content");
+  if (hasDayContent(plan) || plan.status !== "draft") steps.push("publish");
+  return steps;
+}
+
+/** True when a step is meaningfully finished (green check), not just free of errors. */
+export function planStepSatisfied(plan: ContentPlan, step: PlanStep) {
+  if (step === "basics") return Boolean(plan.title.trim());
+  if (step === "days") return daysConfigured(plan);
+  if (step === "content") return hasDayContent(plan);
+  return plan.status === "published" || plan.status === "archived";
+}
+
+function checkItem(item: PlanItem, dayLabel: string, issues: PlanIssue[]) {
   const error = (message: string) => issues.push({ step: "content", level: "error", message });
   const warn = (message: string) => issues.push({ step: "content", level: "warning", message });
-
-  if (!itemAllowed(mode, item)) {
-    error(`${dayLabel}: remove ${item.type} items, or switch the plan mode.`);
-    return;
-  }
 
   if (item.type === "scripture") {
     if (!item.reference.trim()) {
@@ -135,7 +144,7 @@ export function checkPlan(plan: ContentPlan): PlanIssue[] {
 
   for (const [index, day] of plan.days.entries()) {
     const label = day.title.trim() || `Day ${index + 1}`;
-    for (const item of day.items) checkItem(item, plan.mode, label, issues);
+    for (const item of day.items) checkItem(item, label, issues);
   }
 
   if (plan.status === "published") {

@@ -9,10 +9,8 @@ import type {
   EventCategory,
   EventRow,
   EventSite,
-  FeaturedVideoRow,
   LiveSettings,
   NewsRow,
-  SermonRow,
   TestimonyRow,
   VisitorRow,
   NewsletterSubscriber,
@@ -81,31 +79,6 @@ export async function saveEvent(input: EventInput) {
 
 export async function deleteEvent(id: string) {
   await studioData.remove("events", id);
-}
-
-export async function listSermons() {
-  return studioData.list<SermonRow>("sermons", { order: "-date" });
-}
-
-export async function saveSermon(row: Omit<SermonRow, "id"> & { id?: string }) {
-  if (!row.title.trim()) throw new Error("A sermon needs a title.");
-  const payload = {
-    title: row.title.trim(),
-    speaker: row.speaker?.trim() || null,
-    date: row.date || null,
-    series: row.series?.trim() || null,
-    description: row.description?.trim() || null,
-    video_url: row.video_url?.trim() || null,
-    audio_url: row.audio_url?.trim() || null,
-    thumbnail: row.thumbnail?.trim() || null,
-    published: Boolean(row.published),
-    ...(row.id ? { id: row.id } : {}),
-  };
-  await studioData.upsert("sermons", payload);
-}
-
-export async function deleteSermon(id: string) {
-  await studioData.remove("sermons", id);
 }
 
 export async function listNews(workspace: WorkspaceId) {
@@ -248,26 +221,6 @@ export async function saveLiveSettings(settings: LiveSettings) {
     key: LIVE_KEY,
     value: { url: settings.url.trim(), is_live: settings.isLive, title: settings.title.trim() },
   });
-}
-
-export async function listFeatured(workspace: WorkspaceId) {
-  return studioData.list<FeaturedVideoRow>("featured_videos", { where: { workspace } });
-}
-
-export async function saveFeatured(row: Omit<FeaturedVideoRow, "id"> & { id?: string }) {
-  if (!row.video_url?.trim()) throw new Error("Add a video URL.");
-  const payload = {
-    workspace: row.workspace,
-    title: row.title?.trim() || null,
-    video_url: row.video_url.trim(),
-    published: Boolean(row.published),
-    ...(row.id ? { id: row.id } : {}),
-  };
-  await studioData.upsert("featured_videos", payload);
-}
-
-export async function deleteFeatured(id: string) {
-  await studioData.remove("featured_videos", id);
 }
 
 export async function listMessages(filters: {

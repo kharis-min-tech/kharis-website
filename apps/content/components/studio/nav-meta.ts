@@ -1,5 +1,4 @@
 import {
-  BookMarked,
   BookOpen,
   CalendarDays,
   Church,
@@ -9,10 +8,8 @@ import {
   HeartHandshake,
   Inbox,
   LayoutGrid,
-  Library,
   Mail,
   Megaphone,
-  Mic,
   Quote,
   Radio,
   Route,
@@ -21,7 +18,6 @@ import {
   SunMedium,
   UserCog,
   UserPlus,
-  Video,
   type LucideIcon,
 } from "lucide-react";
 import type { WorkspaceId } from "@/lib/workspaces";
@@ -30,7 +26,6 @@ export const SECTION_ICONS: Record<string, LucideIcon> = {
   "/branches": Church,
   "/department-videos": Clapperboard,
   "/documents": FileText,
-  "/sermons": Mic,
   "/testimonies": Quote,
   "/visitors": UserPlus,
   "/messages": Inbox,
@@ -41,10 +36,7 @@ export const SECTION_ICONS: Record<string, LucideIcon> = {
   "/daily-message": SunMedium,
   "/daily-prayers": HeartHandshake,
   "/plans": Route,
-  "/bible": BookMarked,
-  "/sermon-library": Library,
   "/live": Radio,
-  "/featured-video": Video,
   "/users": UserCog,
 };
 
@@ -52,7 +44,6 @@ export const SECTION_HINTS: Record<string, string> = {
   "/branches": "Campuses, venues, service times and photos.",
   "/department-videos": "Ministry and department videos.",
   "/documents": "Governance and fasting PDF uploads.",
-  "/sermons": "Sermon records shown on the websites.",
   "/testimonies": "Stories of what God has done.",
   "/visitors": "People who planned a visit.",
   "/messages": "Contact form inbox.",
@@ -63,10 +54,7 @@ export const SECTION_HINTS: Record<string, string> = {
   "/daily-message": "A sermon scheduled for each day.",
   "/daily-prayers": "Prayer points for each day.",
   "/plans": "Multi-day programmes for the future app.",
-  "/bible": "Check a Bible reference.",
-  "/sermon-library": "Search the app's sermon library.",
   "/live": "Live stream link and status.",
-  "/featured-video": "The video on the home page.",
   "/users": "Studio accounts, roles and branches.",
 };
 

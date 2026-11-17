@@ -31,10 +31,9 @@ What you see in Content Studio follows from the role on your account. There are 
 | Testimonies       | Stories for the websites, including the home and giving slots                         |
 | Messages          | The contact form inbox for kharis.org and kharis.org/kp2                              |
 | Visitors          | People who used Plan Your Visit, and whether they agreed to be contacted              |
-| Newsletter        | Email addresses from the newsletter signup                                            |
-| Sermons           | Sermon records shown on the websites                                                  |
+| Newsletter        | Email addresses from the newsletter signup (General: every site; KP2: KP2 only)       |
 | Department Videos | The 24 ministry videos on the Department Discovery Quiz                               |
-| Featured Video    | The video on a website's home page                                                    |
-| Mobile App        | Daily reading, daily message, daily prayers, plans, Bible check, sermon library, live |
+| Documents         | Governance and fasting PDF uploads                                                    |
+| Mobile App        | Daily reading, daily message, daily prayers, plans, live                              |
 | Users             | Studio accounts, their roles, and their branches                                      |
 | Ask Grace         | A built-in guide that points you to the right screen                                  |
