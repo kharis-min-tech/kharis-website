@@ -22,14 +22,15 @@ Which studio screen feeds which part of the websites and the app.
 
 ## The Kharis app
 
-| In the app     | Edited in                                           |
-| -------------- | --------------------------------------------------- |
-| Events         | Events, with **Mobile app** ticked                  |
-| Announcements  | Mobile App → [Announcements](/studio/announcements) |
-| Daily reading  | [Daily Reading](/mobile-app/daily-reading)          |
-| Daily message  | [Daily Message](/mobile-app/daily-message)          |
-| Daily prayer   | [Daily Prayers](/mobile-app/daily-prayers)          |
-| Live broadcast | [Live](/mobile-app/live)                            |
+| In the app      | Edited in                                               |
+| --------------- | ------------------------------------------------------- |
+| Events          | Events, with **Mobile app** ticked                      |
+| Announcements   | Mobile App → [Announcements](/studio/announcements)     |
+| Daily reading   | [Daily Reading](/mobile-app/daily-reading)              |
+| Daily message   | [Daily Message](/mobile-app/daily-message)              |
+| Daily prayer    | [Daily Prayers](/mobile-app/daily-prayers)              |
+| Multi-day plans | [Plans](/mobile-app/plans) (authored now; app UI later) |
+| Live broadcast  | [Live](/mobile-app/live)                                |
 
 ## Coming in, not going out
 

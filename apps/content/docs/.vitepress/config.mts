@@ -38,6 +38,7 @@ const groups: { text: string; items: Page[] }[] = [
       ["Daily Reading", "/mobile-app/daily-reading", "book"],
       ["Daily Message", "/mobile-app/daily-message", "sun"],
       ["Daily Prayers", "/mobile-app/daily-prayers", "prayer"],
+      ["Plans", "/mobile-app/plans", "route"],
       ["Bible", "/mobile-app/bible", "bible"],
       ["Sermon Library", "/mobile-app/sermon-library", "library"],
       ["Live", "/mobile-app/live", "radio"],

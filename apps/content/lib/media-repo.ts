@@ -1,5 +1,6 @@
 import { branchIdFromImageKey, branchImageKeyFromUrl } from "@/lib/branch-image-paths";
 import {
+  MAX_MEDIA_DOCUMENT_BYTES,
   MAX_MEDIA_IMAGE_BYTES,
   MAX_MEDIA_VIDEO_BYTES,
   isBranchMediaFolder,
@@ -121,6 +122,20 @@ export async function uploadVideo(
         : "video/mp4";
 
   return uploadToR2(file, folder, contentType, onProgress, branchId, subfolder);
+}
+
+export async function uploadDocument(
+  file: File,
+  folder = "documents",
+  onProgress?: (percent: number) => void,
+  subfolder?: string | null,
+) {
+  const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+  if (!isPdf) throw new Error("Choose a PDF file.");
+  if (file.size > MAX_MEDIA_DOCUMENT_BYTES) {
+    throw new Error("PDFs need to be 20MB or smaller.");
+  }
+  return uploadToR2(file, folder, "application/pdf", onProgress, null, subfolder);
 }
 
 export async function removeStored(path: string | null | undefined) {

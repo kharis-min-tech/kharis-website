@@ -24,6 +24,7 @@ Every section of the studio, by workspace, and who can open it. Accounts with **
 | Daily Reading  | ✓           |                           |
 | Daily Message  | ✓           |                           |
 | Daily Prayers  | ✓           |                           |
+| Plans          | ✓           |                           |
 | Bible          | ✓           |                           |
 | Sermon library | ✓           |                           |
 | Live           | ✓           |                           |

@@ -9,6 +9,7 @@ import { SECTION_HINTS, WORKSPACE_ICONS, sectionIcon } from "@/components/studio
 import { PageHeader } from "@/components/studio/page-header";
 import { buttonClasses } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { listContentPlans } from "@/lib/content-plans-repo";
 import { countRows } from "@/lib/content-repo";
 import { useStudioRole, type StudioAccess } from "@/lib/studio-role";
 import { hrefWithWorkspace, workspacesForRole, type WorkspaceId } from "@/lib/workspaces";
@@ -28,6 +29,13 @@ const COUNTS: Record<
   "/daily": (workspace) => countRows("daily_entries", { workspace, kind: "reading" }),
   "/daily-prayers": (workspace) => countRows("daily_entries", { workspace, kind: "prayer" }),
   "/daily-message": () => countRows("daily_messages", {}),
+  "/plans": async () => {
+    try {
+      return (await listContentPlans()).length;
+    } catch {
+      return null;
+    }
+  },
   "/bible": () => Promise.resolve(null),
   "/sermon-library": () => Promise.resolve(null),
   "/live": () => countRows("app_config", { key: "live_stream" }),

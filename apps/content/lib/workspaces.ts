@@ -23,6 +23,7 @@ export type StudioWorkspace = {
 const generalNav: StudioNavItem[] = [
   { href: "/branches", label: "Branches" },
   { href: "/department-videos", label: "Department Videos" },
+  { href: "/documents", label: "Documents" },
   { href: "/sermons", label: "Sermons" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/visitors", label: "Visitors" },
@@ -37,6 +38,7 @@ const appNav: StudioNavItem[] = [
   { href: "/daily", label: "Daily Reading" },
   { href: "/daily-message", label: "Daily Message" },
   { href: "/daily-prayers", label: "Daily Prayers" },
+  { href: "/plans", label: "Plans" },
   { href: "/bible", label: "Bible" },
   { href: "/sermon-library", label: "Sermon library" },
   { href: "/live", label: "Live" },
@@ -45,6 +47,7 @@ const appNav: StudioNavItem[] = [
 const kharisNav: StudioNavItem[] = [
   { href: "/branches", label: "Branches" },
   { href: "/department-videos", label: "Department Videos" },
+  { href: "/documents", label: "Documents" },
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/featured-video", label: "Featured Video" },
@@ -55,6 +58,7 @@ const kharisNav: StudioNavItem[] = [
 const kp2Nav: StudioNavItem[] = [
   { href: "/branches", label: "Branches" },
   { href: "/department-videos", label: "Department Videos" },
+  { href: "/documents", label: "Documents" },
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/announcements", label: "Announcements" },
@@ -74,7 +78,7 @@ export const WORKSPACES: StudioWorkspace[] = [
     id: "app",
     name: "Mobile App",
     description:
-      "App events, announcements, daily reading, daily messages, daily prayers, Bible references, the sermon library, and live stream.",
+      "App events, announcements, daily reading, daily messages, daily prayers, plans, Bible references, the sermon library, and live stream.",
     nav: appNav,
   },
   {

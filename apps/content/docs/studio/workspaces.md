@@ -6,12 +6,12 @@ A workspace is where content belongs. Open one from the **Workspaces** list in t
 
 ## The four workspaces
 
-| Workspace      | Sections                                                                                        |
-| -------------- | ----------------------------------------------------------------------------------------------- |
-| General        | Branches, Department Videos, Sermons, Testimonies, Visitors, Messages, Newsletter, Users        |
-| Mobile App     | Events, Announcements, Daily Reading, Daily Message, Daily Prayers, Bible, Sermon library, Live |
-| Kharis Website | Branches, Department Videos, Events, Testimonies, Featured Video, Announcements, Messages       |
-| KP2 Website    | Branches, Department Videos, Events, Testimonies, Announcements, Messages, Newsletter           |
+| Workspace      | Sections                                                                                               |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| General        | Branches, Department Videos, Sermons, Testimonies, Visitors, Messages, Newsletter, Users               |
+| Mobile App     | Events, Announcements, Daily Reading, Daily Message, Daily Prayers, Plans, Bible, Sermon library, Live |
+| Kharis Website | Branches, Department Videos, Events, Testimonies, Featured Video, Announcements, Messages              |
+| KP2 Website    | Branches, Department Videos, Events, Testimonies, Announcements, Messages, Newsletter                  |
 
 ## The workspace page
 

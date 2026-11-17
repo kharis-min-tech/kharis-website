@@ -182,8 +182,8 @@ export function BranchEditor() {
       startEditing(
         next,
         {
-          venues: (row.venues ?? []).map((venue) => venue.id),
-          services: (row.services ?? []).map((service) => service.id),
+        venues: (row.venues ?? []).map((venue) => venue.id),
+        services: (row.services ?? []).map((service) => service.id),
         },
         true,
       );
@@ -370,7 +370,7 @@ export function BranchEditor() {
         `Deactivate ${name}? It disappears from the websites and app. Venues, services, photos, events and messages are kept.`,
         "Deactivate",
       );
-      if (!confirmed) return;
+    if (!confirmed) return;
     }
     try {
       await setBranchActive(draft.id, active);
@@ -580,18 +580,18 @@ export function BranchEditor() {
                   )}
                 </fieldset>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <TextField
+            <TextField
                     label="Branch name"
-                    name="name"
+              name="name"
                     placeholder={draft.family === "kp2" ? "e.g. KP2 London" : "e.g. London"}
-                    value={draft.name}
-                    onChange={(event) => {
-                      const name = event.target.value;
-                      patch({ name, slug: slugTouched ? draft.slug : slugify(name) });
-                    }}
-                  />
+              value={draft.name}
+              onChange={(event) => {
+                const name = event.target.value;
+                patch({ name, slug: slugTouched ? draft.slug : slugify(name) });
+              }}
+            />
                   <div>
-                    <TextField
+            <TextField
                       label="Country"
                       name="country"
                       list="branch-countries"
@@ -613,14 +613,14 @@ export function BranchEditor() {
                     </span>
                     <Input
                       id="slug"
-                      name="slug"
+              name="slug"
                       className="border-0 shadow-none focus-visible:ring-0"
-                      value={draft.slug}
-                      onChange={(event) => {
-                        setSlugTouched(true);
-                        patch({ slug: slugify(event.target.value) });
-                      }}
-                    />
+              value={draft.slug}
+              onChange={(event) => {
+                setSlugTouched(true);
+                patch({ slug: slugify(event.target.value) });
+              }}
+            />
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {savedRow && draft.slug !== savedRow.slug
@@ -630,21 +630,21 @@ export function BranchEditor() {
                         : "Filled in from the branch name."}
                   </p>
                 </div>
-                <AreaField
-                  label="Short description"
-                  name="shortDescription"
+              <AreaField
+                label="Short description"
+                name="shortDescription"
                   rows={2}
                   placeholder="One or two sentences for branch cards and search results."
-                  value={draft.shortDescription}
-                  onChange={(event) => patch({ shortDescription: event.target.value })}
-                />
-                <AreaField
+                value={draft.shortDescription}
+                onChange={(event) => patch({ shortDescription: event.target.value })}
+              />
+              <AreaField
                   label="Welcome text (optional)"
-                  name="description"
+                name="description"
                   placeholder="A longer welcome shown near the top of the branch page."
-                  value={draft.description}
-                  onChange={(event) => patch({ description: event.target.value })}
-                />
+                value={draft.description}
+                onChange={(event) => patch({ description: event.target.value })}
+              />
                 {!draft.id ? (
                   <ToggleField
                     label="Show on the websites as soon as it is saved"
@@ -655,62 +655,62 @@ export function BranchEditor() {
                 <details className="rounded-lg border border-border px-4 py-3 text-sm">
                   <summary className="cursor-pointer font-medium">Advanced</summary>
                   <div className="mt-3 max-w-xs">
-                    <TextField
+            <TextField
                       label="List position"
-                      name="sortOrder"
-                      type="number"
+              name="sortOrder"
+              type="number"
                       step={1}
-                      value={draft.sortOrder}
-                      onChange={(event) => patch({ sortOrder: event.target.value })}
-                    />
+              value={draft.sortOrder}
+              onChange={(event) => patch({ sortOrder: event.target.value })}
+            />
                     <p className="mt-1 text-xs text-muted-foreground">
                       Lower numbers appear first in branch lists.
                     </p>
-                  </div>
+            </div>
                 </details>
-              </section>
+          </section>
 
               <section hidden={step !== "pastor"} className="space-y-4">
                 {stepErrors("pastor")}
-                <div className="grid gap-4 md:grid-cols-2">
-                  <TextField
-                    label="Name"
-                    name="pastorName"
+            <div className="grid gap-4 md:grid-cols-2">
+              <TextField
+                label="Name"
+                name="pastorName"
                     placeholder="Leave empty to show “Coming soon”"
-                    value={draft.pastorName}
-                    onChange={(event) => patch({ pastorName: event.target.value })}
-                  />
-                  <SelectField
-                    label="Role"
-                    name="pastorRole"
-                    value={draft.pastorRole}
-                    onChange={(event) =>
-                      patch({ pastorRole: event.target.value as BranchDraft["pastorRole"] })
-                    }
-                  >
-                    <option value="pastor">Pastor</option>
-                    <option value="lead">Branch Lead</option>
-                  </SelectField>
-                </div>
+                value={draft.pastorName}
+                onChange={(event) => patch({ pastorName: event.target.value })}
+              />
+              <SelectField
+                label="Role"
+                name="pastorRole"
+                value={draft.pastorRole}
+                onChange={(event) =>
+                  patch({ pastorRole: event.target.value as BranchDraft["pastorRole"] })
+                }
+              >
+                <option value="pastor">Pastor</option>
+                <option value="lead">Branch Lead</option>
+              </SelectField>
+            </div>
                 {draft.pastorName.trim() ? (
-                  <p className="text-sm text-muted-foreground">
-                    Shown on the site as {pastorPreview(draft.pastorName, draft.pastorRole)}.
-                  </p>
+            <p className="text-sm text-muted-foreground">
+              Shown on the site as {pastorPreview(draft.pastorName, draft.pastorRole)}.
+            </p>
                 ) : null}
-                <AreaField
-                  label="Bio"
-                  name="pastorBio"
-                  value={draft.pastorBio}
-                  onChange={(event) => patch({ pastorBio: event.target.value })}
-                />
-                <ImageDrop
-                  label="Pastor photo"
-                  value={draft.pastorPhoto}
-                  branch={{ id: draft.id ?? null, category: "pastor" }}
-                  onChange={(pastorPhoto) => patch({ pastorPhoto })}
+            <AreaField
+              label="Bio"
+              name="pastorBio"
+              value={draft.pastorBio}
+              onChange={(event) => patch({ pastorBio: event.target.value })}
+            />
+            <ImageDrop
+              label="Pastor photo"
+              value={draft.pastorPhoto}
+              branch={{ id: draft.id ?? null, category: "pastor" }}
+              onChange={(pastorPhoto) => patch({ pastorPhoto })}
                   onQueue={(file) => queuePreview("pastor", file)}
-                />
-              </section>
+            />
+          </section>
 
               <section hidden={step !== "visit"} className="space-y-6">
                 {stepErrors("visit")}
@@ -730,17 +730,17 @@ export function BranchEditor() {
                       <p className="text-xs text-muted-foreground">
                         The address, map and travel tips people see. The first venue is the main
                         one.
-                      </p>
-                    </div>
-                    <Button
-                      variant="outline"
+            </p>
+          </div>
+              <Button
+                variant="outline"
                       size="sm"
-                      onClick={() => patch({ venues: [...draft.venues, emptyVenue()] })}
-                    >
+                onClick={() => patch({ venues: [...draft.venues, emptyVenue()] })}
+              >
                       <Plus className="h-4 w-4" />
-                      Add venue
-                    </Button>
-                  </div>
+                Add venue
+              </Button>
+            </div>
                   {draft.venues.map((venue, index) => {
                     const usedBy = draft.services.filter(
                       (service) => service.active && service.venueIndex === index,
@@ -771,19 +771,19 @@ export function BranchEditor() {
                               {venue.active ? "Deactivate" : "Reinstate"}
                             </Button>
                           ) : draft.venues.length > 1 ? (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
                                 patch({
                                   venues: draft.venues.filter((item) => item.key !== venue.key),
                                 })
-                              }
-                            >
-                              Remove
-                            </Button>
+                    }
+                  >
+                    Remove
+                  </Button>
                           ) : null}
-                        </div>
+                </div>
                         {!venue.active && usedBy ? (
                           <p className="text-xs text-muted-foreground">
                             {usedBy} active service{usedBy === 1 ? " still uses" : "s still use"}{" "}
@@ -791,54 +791,54 @@ export function BranchEditor() {
                             address shows on the websites.
                           </p>
                         ) : null}
-                        <div className="grid gap-3 md:grid-cols-2">
-                          <TextField
+                <div className="grid gap-3 md:grid-cols-2">
+                  <TextField
                             label="Venue name"
                             placeholder="e.g. Barking Community Hall"
-                            value={venue.name}
-                            onChange={(event) =>
+                    value={venue.name}
+                    onChange={(event) =>
                               patchVenue(venue.key, { name: event.target.value })
-                            }
-                          />
-                          <TextField
+                    }
+                  />
+                  <TextField
                             label="Town or city"
-                            value={venue.city}
-                            onChange={(event) =>
+                    value={venue.city}
+                    onChange={(event) =>
                               patchVenue(venue.key, { city: event.target.value })
-                            }
-                          />
-                          <TextField
+                    }
+                  />
+                  <TextField
                             label="Street address"
-                            value={venue.address}
-                            onChange={(event) =>
+                    value={venue.address}
+                    onChange={(event) =>
                               patchVenue(venue.key, { address: event.target.value })
-                            }
-                          />
-                          <TextField
-                            label="Postcode"
-                            value={venue.postcode}
-                            onChange={(event) =>
+                    }
+                  />
+                  <TextField
+                    label="Postcode"
+                    value={venue.postcode}
+                    onChange={(event) =>
                               patchVenue(venue.key, { postcode: event.target.value })
-                            }
-                          />
-                          <TextField
+                    }
+                  />
+                  <TextField
                             label="Parking (optional)"
-                            value={venue.parkingInfo}
-                            onChange={(event) =>
+                    value={venue.parkingInfo}
+                    onChange={(event) =>
                               patchVenue(venue.key, { parkingInfo: event.target.value })
-                            }
-                          />
-                          <TextField
+                    }
+                  />
+                  <TextField
                             label="Public transport (optional)"
-                            value={venue.transitInfo}
-                            onChange={(event) =>
+                    value={venue.transitInfo}
+                    onChange={(event) =>
                               patchVenue(venue.key, { transitInfo: event.target.value })
-                            }
-                          />
-                        </div>
-                        <VenueLocation
-                          venue={venue}
-                          onChange={(next) =>
+                    }
+                  />
+                </div>
+                <VenueLocation
+                  venue={venue}
+                  onChange={(next) =>
                             setDraft((current) =>
                               current
                                 ? {
@@ -849,26 +849,26 @@ export function BranchEditor() {
                                   }
                                 : current,
                             )
-                          }
-                        />
-                        <ImageDrop
+                  }
+                />
+                <ImageDrop
                           label="Venue photo (optional)"
-                          value={venue.imageUrl}
-                          branch={{ id: draft.id ?? null, category: "venue" }}
-                          onQueue={(file) => {
+                  value={venue.imageUrl}
+                  branch={{ id: draft.id ?? null, category: "venue" }}
+                  onQueue={(file) => {
                             if (!pendingImages.current.venues[venue.key]) {
                               setQueuedVenuePhotos((count) => count + 1);
                             }
-                            pendingImages.current.venues[venue.key] = file;
-                          }}
-                          onChange={(imageUrl, imageKey) =>
+                    pendingImages.current.venues[venue.key] = file;
+                  }}
+                  onChange={(imageUrl, imageKey) =>
                             patchVenue(venue.key, {
                               imageUrl,
                               imageKey: imageKey ?? venue.imageKey,
-                            })
-                          }
-                        />
-                      </div>
+                    })
+                  }
+                />
+              </div>
                     );
                   })}
                 </div>
@@ -890,63 +890,63 @@ export function BranchEditor() {
                         Sunday services fill “Join us this Sunday”. Other days show as midweek.
                       </p>
                     </div>
-                    <Button
-                      variant="outline"
+              <Button
+                variant="outline"
                       size="sm"
-                      onClick={() => patch({ services: [...draft.services, emptyService()] })}
-                    >
+                onClick={() => patch({ services: [...draft.services, emptyService()] })}
+              >
                       <Plus className="h-4 w-4" />
-                      Add service
-                    </Button>
-                  </div>
+                Add service
+              </Button>
+            </div>
                   {draft.services.map((service) => (
-                    <div
-                      key={service.key}
+              <div
+                key={service.key}
                       hidden={!service.active && !showInactive.services}
                       className={cn(
                         "grid gap-3 rounded-xl border border-border p-4 transition-opacity md:grid-cols-4",
                         !service.active && "border-dashed bg-muted/30 opacity-75",
                       )}
-                    >
-                      <SelectField
-                        label="Day"
-                        value={service.day}
+              >
+                <SelectField
+                  label="Day"
+                  value={service.day}
                         onChange={(event) => patchService(service.key, { day: event.target.value })}
-                      >
-                        {DAYS.map((day) => (
-                          <option key={day}>{day}</option>
-                        ))}
-                      </SelectField>
-                      <TextField
-                        label="Time"
-                        type="time"
-                        value={service.time}
-                        onChange={(event) =>
+                >
+                  {DAYS.map((day) => (
+                    <option key={day}>{day}</option>
+                  ))}
+                </SelectField>
+                <TextField
+                  label="Time"
+                  type="time"
+                  value={service.time}
+                  onChange={(event) =>
                           patchService(service.key, { time: event.target.value })
-                        }
-                      />
-                      <TextField
+                  }
+                />
+                <TextField
                         label="Name (optional)"
                         placeholder="e.g. Sunday Service"
-                        value={service.label}
-                        onChange={(event) =>
+                  value={service.label}
+                  onChange={(event) =>
                           patchService(service.key, { label: event.target.value })
-                        }
-                      />
-                      <SelectField
-                        label="Venue"
-                        value={String(service.venueIndex)}
-                        onChange={(event) =>
+                  }
+                />
+                <SelectField
+                  label="Venue"
+                  value={String(service.venueIndex)}
+                  onChange={(event) =>
                           patchService(service.key, { venueIndex: Number(event.target.value) })
-                        }
-                      >
-                        {draft.venues.map((venue, venueIndex) => (
-                          <option key={venue.key} value={venueIndex}>
-                            {venue.name || `Venue ${venueIndex + 1}`}
+                  }
+                >
+                  {draft.venues.map((venue, venueIndex) => (
+                    <option key={venue.key} value={venueIndex}>
+                      {venue.name || `Venue ${venueIndex + 1}`}
                             {venue.active ? "" : " (inactive)"}
-                          </option>
-                        ))}
-                      </SelectField>
+                    </option>
+                  ))}
+                </SelectField>
                       <div className="flex items-center gap-2 md:col-span-4">
                         {service.id ? (
                           <Button
@@ -957,24 +957,24 @@ export function BranchEditor() {
                             {service.active ? "Deactivate service" : "Reinstate service"}
                           </Button>
                         ) : (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              patch({
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      patch({
                                 services: draft.services.filter((item) => item.key !== service.key),
-                              })
-                            }
-                          >
-                            Remove service
-                          </Button>
+                      })
+                    }
+                  >
+                    Remove service
+                  </Button>
                         )}
                         {!service.active ? <Badge tone="muted">Inactive</Badge> : null}
-                      </div>
-                    </div>
-                  ))}
                 </div>
-              </section>
+              </div>
+            ))}
+                </div>
+          </section>
 
               <section hidden={step !== "media"} className="space-y-6">
                 {stepErrors("media")}
@@ -998,12 +998,12 @@ export function BranchEditor() {
                     main photo is shown there.
                   </p>
                 </div>
-                <MultiImageDrop
-                  branchId={draft.id ?? null}
-                  items={draft.gallery}
-                  onChange={(gallery) => patch({ gallery })}
-                  onQueueFiles={(files) => {
-                    pendingImages.current.gallery.push(...files);
+          <MultiImageDrop
+            branchId={draft.id ?? null}
+            items={draft.gallery}
+            onChange={(gallery) => patch({ gallery })}
+            onQueueFiles={(files) => {
+              pendingImages.current.gallery.push(...files);
                     setPreviews((current) => ({
                       ...current,
                       galleryQueued: current.galleryQueued + files.length,
@@ -1065,7 +1065,7 @@ export function BranchEditor() {
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Back
-                </Button>
+            </Button>
                 {stepIndex < BRANCH_STEPS.length - 1 ? (
                   <Button
                     variant="outline"
@@ -1073,18 +1073,18 @@ export function BranchEditor() {
                   >
                     Next: {BRANCH_STEPS[stepIndex + 1]!.label}
                     <ArrowRight className="h-4 w-4" />
-                  </Button>
-                ) : null}
+              </Button>
+            ) : null}
                 <span className="ml-auto flex items-center gap-3">
                   {dirty ? (
                     <span className="text-xs text-muted-foreground">Unsaved changes</span>
                   ) : null}
                   <Button type="submit" disabled={saving || (!dirty && Boolean(draft.id))}>
                     {saving ? "Saving…" : draft.id ? "Save changes" : "Save branch"}
-                  </Button>
-                </span>
+              </Button>
+                      </span>
               </footer>
-            </div>
+        </div>
 
             <aside className="lg:sticky lg:top-6 lg:self-start">
               <BranchPageMap

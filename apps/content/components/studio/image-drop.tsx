@@ -1,13 +1,19 @@
 "use client";
 
-import { ImagePlus, Video, X } from "lucide-react";
+import { FileText, ImagePlus, Video, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { type BranchImageCategory } from "@/lib/branch-image-paths";
 import { uploadBranchImage } from "@/lib/branch-images";
-import { pathFromPublicUrl, removeStored, uploadImage, uploadVideo } from "@/lib/media-repo";
+import {
+  pathFromPublicUrl,
+  removeStored,
+  uploadDocument,
+  uploadImage,
+  uploadVideo,
+} from "@/lib/media-repo";
 import { cn } from "@/lib/utils";
 
 async function clearUrl(url: string) {
@@ -424,6 +430,117 @@ export function VideoDrop({
             <input
               type="file"
               accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm"
+              className="sr-only"
+              disabled={uploading}
+              onChange={(event) => {
+                void takeFile(event.target.files?.[0]);
+                event.target.value = "";
+              }}
+            />
+          </label>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function PdfDrop({
+  label,
+  value,
+  subfolder,
+  onChange,
+}: {
+  label?: string;
+  value: string;
+  subfolder?: string | null;
+  onChange: (url: string, key?: string) => void | Promise<void>;
+}) {
+  const [uploading, setUploading] = useState(false);
+
+  async function takeFile(file: File | undefined) {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const uploaded = await uploadDocument(file, "documents", undefined, subfolder);
+      if (value) await clearUrl(value);
+      await onChange(uploaded.url, uploaded.path);
+      toast.success("PDF uploaded");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "PDF upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function clear() {
+    if (value) await clearUrl(value);
+    await onChange("");
+  }
+
+  const fileName = value ? decodeURIComponent(value.split("/").pop()?.split("?")[0] || "PDF") : "";
+
+  return (
+    <div className="space-y-2">
+      {label ? <p className="text-sm font-medium">{label}</p> : null}
+      <div>
+        {value ? (
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-3">
+            <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
+            <div className="min-w-0 flex-1">
+              <a
+                href={value}
+                target="_blank"
+                rel="noreferrer"
+                className="block truncate text-sm font-medium text-primary underline-offset-2 hover:underline"
+              >
+                {fileName}
+              </a>
+              <p className="text-xs text-muted-foreground">PDF ready on the site</p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <label
+                className={cn(
+                  "inline-flex h-9 cursor-pointer items-center rounded-md border border-input bg-background px-3 text-sm font-medium",
+                  uploading && "pointer-events-none opacity-60",
+                )}
+              >
+                {uploading ? "Uploading…" : "Replace"}
+                <input
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  className="sr-only"
+                  disabled={uploading}
+                  onChange={(event) => {
+                    void takeFile(event.target.files?.[0]);
+                    event.target.value = "";
+                  }}
+                />
+              </label>
+              <Button type="button" variant="outline" size="sm" onClick={() => void clear()}>
+                <X className="mr-1 h-4 w-4" />
+                Remove
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <label
+            className={cn(
+              "flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-background px-4 py-4 text-center text-sm text-muted-foreground",
+              uploading && "opacity-60",
+            )}
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => {
+              event.preventDefault();
+              void takeFile(event.dataTransfer.files[0]);
+            }}
+          >
+            <FileText className="h-5 w-5" />
+            <span>
+              {uploading ? "Uploading PDF…" : "Drop a PDF, or click to choose from your computer"}
+            </span>
+            <input
+              type="file"
+              accept="application/pdf,.pdf"
               className="sr-only"
               disabled={uploading}
               onChange={(event) => {

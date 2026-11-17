@@ -27,9 +27,15 @@ import {
   youtubeWatchUrl,
 } from "@/lib/life-videos";
 
+export type FastingDownloads = {
+  booklet?: { title: string; url: string };
+  schedule?: { title: string; url: string };
+};
+
 type Props = {
   category: LifeCategory | null;
   onClose: () => void;
+  fastingDownloads?: FastingDownloads;
 };
 
 function FastingBackgroundPreview() {
@@ -339,7 +345,7 @@ function JourneyPassage({
   );
 }
 
-export function LifeDetailModal({ category, onClose }: Props) {
+export function LifeDetailModal({ category, onClose, fastingDownloads }: Props) {
   const reduce = useReducedMotion();
   const readerScrollRef = useRef<HTMLDivElement>(null);
   const revealTransition = (duration: number, delay = 0) =>
@@ -459,6 +465,39 @@ export function LifeDetailModal({ category, onClose }: Props) {
                 >
                   {isDepartments ? "Find your place to serve." : `${ctaLabel}.`}
                 </motion.h3>
+                {category.slug === "fasting" &&
+                (fastingDownloads?.booklet?.url || fastingDownloads?.schedule?.url) ? (
+                  <motion.div
+                    className="life-reader__downloads"
+                    initial={reduce ? false : { opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.4 }}
+                    transition={revealTransition(0.8, 0.1)}
+                  >
+                    {fastingDownloads.booklet?.url ? (
+                      <a
+                        href={fastingDownloads.booklet.url}
+                        className="life-refresh__button"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {(fastingDownloads.booklet.title || "Download booklet").toUpperCase()}
+                        <ExternalLink aria-hidden className="h-4 w-4" />
+                      </a>
+                    ) : null}
+                    {fastingDownloads.schedule?.url ? (
+                      <a
+                        href={fastingDownloads.schedule.url}
+                        className="life-refresh__button"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {(fastingDownloads.schedule.title || "Download schedule").toUpperCase()}
+                        <ExternalLink aria-hidden className="h-4 w-4" />
+                      </a>
+                    ) : null}
+                  </motion.div>
+                ) : null}
                 <motion.div
                   initial={reduce ? false : { opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
