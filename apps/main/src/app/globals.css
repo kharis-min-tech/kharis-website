@@ -9865,6 +9865,12 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
   border-top: 1px solid rgba(29, 27, 32, 0.14);
 }
 
+.life-reader__downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .life-reader__end > p {
   color: #5b2bd1;
 }

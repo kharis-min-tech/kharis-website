@@ -4,6 +4,10 @@ What's changed in Content Studio, newest first.
 
 ## November 2026
 
+### Plans
+
+- New **Mobile App → Plans** screen for multi-day programmes: scriptures only, messages only, or a mix, plus videos, quizzes and info blocks. Author them now for a future app release. See [Plans](/mobile-app/plans).
+
 ### Roles
 
 - Every account now has a role: **Super admin**, **Branch admin**, or **No access**. See [Roles & Permissions](/getting-started/roles-permissions).

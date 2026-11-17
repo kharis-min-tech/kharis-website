@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { CalendarDays, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Check, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -12,6 +12,7 @@ import {
   SearchInput,
   Toolbar,
 } from "@/components/studio/blocks";
+import { EventPageMap } from "@/components/studio/event-page-map";
 import { AreaField, SelectField, TextField, ToggleField } from "@/components/studio/fields";
 import { ImageDrop } from "@/components/studio/image-drop";
 import { PageHeader } from "@/components/studio/page-header";
@@ -22,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { branchOptionLabel, listBranchOptions } from "@/lib/branches-repo";
 import { confirmDelete } from "@/lib/confirm";
 import { deleteEvent, listEvents, saveEvent } from "@/lib/content-repo";
+import { EVENT_STEPS, checkEvent, issuesFor, type EventStep } from "@/lib/event-checks";
 import { useStudioRole } from "@/lib/studio-role";
 import type { BranchOption, EventCategory, EventRow, EventSite } from "@/lib/types";
 import { cn, formatWhen, splitTimestamp, toTimestamp } from "@/lib/utils";
@@ -110,6 +112,8 @@ export function EventManager() {
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState<EventDraft | null>(null);
   const [saving, setSaving] = useState(false);
+  const [step, setStep] = useState<EventStep>("basics");
+  const [triedSave, setTriedSave] = useState(false);
 
   useEffect(() => {
     if (!workspace) return;
@@ -150,22 +154,54 @@ export function EventManager() {
     );
   }, [query, rows, isSuperAdmin, canEditBranch]);
 
+  const issues = useMemo(
+    () => (draft ? checkEvent(draft, { requireBranch: !isSuperAdmin }) : []),
+    [draft, isSuperAdmin],
+  );
+
+  const stepIndex = EVENT_STEPS.findIndex((item) => item.id === step);
+
   if (!workspace) return <PickWorkspace />;
 
   function openNew(scope: string) {
     const onlyBranch = !isSuperAdmin && branchChoices.length === 1 ? branchChoices[0]!.id : "";
+    setTriedSave(false);
+    setStep("basics");
     setDraft(blank(scope, onlyBranch));
+  }
+
+  function openEdit(row: EventRow) {
+    setTriedSave(false);
+    setStep("basics");
+    setDraft(fromRow(row));
   }
 
   function patch(partial: Partial<EventDraft>) {
     setDraft((current) => (current ? { ...current, ...partial } : current));
   }
 
+  function stepErrors(current: EventStep) {
+    if (!triedSave) return null;
+    const list = issuesFor(issues, current);
+    if (!list.length) return null;
+    return (
+      <ul className="mb-4 space-y-1 rounded-lg border border-danger-line bg-danger-soft px-3 py-2 text-sm text-danger">
+        {list.map((issue) => (
+          <li key={issue.message}>{issue.message}</li>
+        ))}
+      </ul>
+    );
+  }
+
   async function onSave(event: React.FormEvent) {
     event.preventDefault();
     if (!draft || !workspace) return;
-    if (draft.recurrence === "weekly" && draft.days.length === 0) {
-      toast.error("Choose at least one weekday.");
+    setTriedSave(true);
+    const nextIssues = checkEvent(draft, { requireBranch: !isSuperAdmin });
+    const firstError = nextIssues.find((issue) => issue.level === "error");
+    if (firstError) {
+      setStep(firstError.step);
+      toast.error(firstError.message);
       return;
     }
     if (!isSuperAdmin && !canEditBranch(draft.branchId)) {
@@ -218,6 +254,10 @@ export function EventManager() {
       toast.error(caught instanceof Error ? caught.message : "Delete failed");
     }
   }
+
+  const branchName =
+    branches.find((branch) => branch.id === draft?.branchId)?.name ??
+    (draft?.branchId ? "" : "All campuses");
 
   return (
     <div>
@@ -280,7 +320,7 @@ export function EventManager() {
                 <button
                   type="button"
                   className="flex flex-1 flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
-                  onClick={() => setDraft(fromRow(row))}
+                  onClick={() => openEdit(row)}
                 >
                   {row.image_url ? (
                     <img
@@ -329,165 +369,289 @@ export function EventManager() {
       {draft ? (
         <Panel title={draft.id ? "Edit event" : "New event"} onClose={() => setDraft(null)}>
           <form className="space-y-4" onSubmit={onSave}>
-            <TextField
-              label="Title"
-              required
-              value={draft.title}
-              onChange={(event) => patch({ title: event.target.value })}
-            />
-            <AreaField
-              label="Description"
-              value={draft.description}
-              onChange={(event) => patch({ description: event.target.value })}
-            />
-            <div className="grid gap-3 sm:grid-cols-3">
-              <TextField
-                label="Date"
-                type="date"
-                required
-                value={draft.date}
-                onChange={(event) => patch({ date: event.target.value })}
-              />
-              <TextField
-                label="Start"
-                type="time"
-                required
-                value={draft.time}
-                onChange={(event) => patch({ time: event.target.value })}
-              />
-              <TextField
-                label="End"
-                type="time"
-                value={draft.endTime}
-                onChange={(event) => patch({ endTime: event.target.value })}
-              />
-            </div>
-            <TextField
-              label="Location"
-              value={draft.location}
-              onChange={(event) => patch({ location: event.target.value })}
-            />
-            <SelectField
-              label="Branch"
-              required={!isSuperAdmin}
-              value={draft.branchId}
-              onChange={(event) => patch({ branchId: event.target.value })}
-            >
-              {isSuperAdmin ? (
-                <option value="">No branch (all campuses)</option>
-              ) : (
-                <option value="" disabled>
-                  Choose a branch
-                </option>
-              )}
-              {branchChoices.map((branch) => (
-                <option key={branch.id} value={branch.id}>
-                  {branchOptionLabel(branch)}
-                </option>
-              ))}
-            </SelectField>
-            <SelectField
-              label="Category"
-              value={draft.category}
-              onChange={(event) => patch({ category: event.target.value as EventCategory })}
-            >
-              {CATEGORIES.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </SelectField>
-            <SelectField
-              label="Repeats"
-              value={draft.recurrence}
-              onChange={(event) =>
-                patch({ recurrence: event.target.value as EventDraft["recurrence"] })
-              }
-            >
-              <option value="none">Does not repeat</option>
-              <option value="weekly">Weekly</option>
-            </SelectField>
-            {draft.recurrence === "weekly" ? (
-              <div className="space-y-3">
-                <p className="text-sm font-medium">Weekdays</p>
-                <div className="flex flex-wrap gap-2">
-                  {WEEKDAYS.map((label, index) => {
-                    const checked = draft.days.includes(index);
-                    return (
-                      <label
-                        key={label}
+            <ol className="grid gap-2 sm:grid-cols-4" aria-label="Steps">
+              {EVENT_STEPS.map((item, index) => {
+                const stepIssues = issuesFor(issues, item.id);
+                const hasError = stepIssues.some((issue) => issue.level === "error");
+                const current = item.id === step;
+                return (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      aria-current={current ? "step" : undefined}
+                      onClick={() => setStep(item.id)}
+                      className={cn(
+                        "flex h-full w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition",
+                        current
+                          ? "border-brand-line bg-brand-soft shadow-card"
+                          : "border-border bg-card hover:border-brand-line",
+                      )}
+                    >
+                      <span
                         className={cn(
-                          "cursor-pointer rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-brand-line has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
-                          checked && "border-brand-line bg-brand-soft text-brand",
+                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+                          hasError && (triedSave || current)
+                            ? "bg-danger text-white"
+                            : stepIssues.length
+                              ? "bg-gold-soft text-gold ring-1 ring-inset ring-gold-line"
+                              : "bg-success-soft text-success ring-1 ring-inset ring-success-line",
                         )}
                       >
-                        <input
-                          type="checkbox"
-                          className="sr-only"
-                          checked={checked}
-                          onChange={() =>
-                            patch({
-                              days: checked
-                                ? draft.days.filter((day) => day !== index)
-                                : [...draft.days, index].sort(),
-                            })
-                          }
-                        />
-                        {label}
-                      </label>
-                    );
-                  })}
-                </div>
-                <TextField
-                  label="Repeat until"
-                  type="date"
-                  value={draft.until}
-                  onChange={(event) => patch({ until: event.target.value })}
-                />
-              </div>
-            ) : null}
-            <fieldset>
-              <legend className="mb-2 text-sm font-medium">Show on</legend>
-              <div className="flex flex-wrap gap-4">
-                {SITES.map((site) => (
-                  <label key={site.id} className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 accent-[var(--primary)]"
-                      checked={draft.sites.includes(site.id)}
-                      onChange={(event) =>
-                        patch({
-                          sites: event.target.checked
-                            ? [...draft.sites, site.id]
-                            : draft.sites.filter((item) => item !== site.id),
-                        })
-                      }
+                        {stepIssues.length ? index + 1 : <Check className="h-3.5 w-3.5" />}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-semibold">{item.label}</span>
+                        <span className="block truncate text-[11px] text-muted-foreground">
+                          {stepIssues.length
+                            ? `${stepIssues.length} to check`
+                            : current
+                              ? "Looks good"
+                              : "Done"}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_260px]">
+              <div className="min-w-0 rounded-xl border border-border bg-card p-5 shadow-card sm:p-6">
+                <header className="mb-5">
+                  <p className="studio-eyebrow">
+                    Step {stepIndex + 1} of {EVENT_STEPS.length}
+                  </p>
+                  <h2 className="font-heading text-xl font-semibold">
+                    {EVENT_STEPS[stepIndex]?.label}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">{EVENT_STEPS[stepIndex]?.hint}</p>
+                </header>
+
+                <section hidden={step !== "basics"} className="space-y-4">
+                  {stepErrors("basics")}
+                  <TextField
+                    label="Title"
+                    required
+                    value={draft.title}
+                    onChange={(event) => patch({ title: event.target.value })}
+                  />
+                  <AreaField
+                    label="Description"
+                    value={draft.description}
+                    onChange={(event) => patch({ description: event.target.value })}
+                  />
+                  <SelectField
+                    label="Category"
+                    value={draft.category}
+                    onChange={(event) => patch({ category: event.target.value as EventCategory })}
+                  >
+                    {CATEGORIES.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </SelectField>
+                </section>
+
+                <section hidden={step !== "when"} className="space-y-4">
+                  {stepErrors("when")}
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <TextField
+                      label="Date"
+                      type="date"
+                      required
+                      value={draft.date}
+                      onChange={(event) => patch({ date: event.target.value })}
                     />
-                    {site.label}
-                  </label>
-                ))}
+                    <TextField
+                      label="Start"
+                      type="time"
+                      required
+                      value={draft.time}
+                      onChange={(event) => patch({ time: event.target.value })}
+                    />
+                    <TextField
+                      label="End"
+                      type="time"
+                      value={draft.endTime}
+                      onChange={(event) => patch({ endTime: event.target.value })}
+                    />
+                  </div>
+                  <TextField
+                    label="Location"
+                    value={draft.location}
+                    onChange={(event) => patch({ location: event.target.value })}
+                  />
+                  <SelectField
+                    label="Branch"
+                    required={!isSuperAdmin}
+                    value={draft.branchId}
+                    onChange={(event) => patch({ branchId: event.target.value })}
+                  >
+                    {isSuperAdmin ? (
+                      <option value="">No branch (all campuses)</option>
+                    ) : (
+                      <option value="" disabled>
+                        Choose a branch
+                      </option>
+                    )}
+                    {branchChoices.map((branch) => (
+                      <option key={branch.id} value={branch.id}>
+                        {branchOptionLabel(branch)}
+                      </option>
+                    ))}
+                  </SelectField>
+                </section>
+
+                <section hidden={step !== "repeat"} className="space-y-4">
+                  {stepErrors("repeat")}
+                  <SelectField
+                    label="Repeats"
+                    value={draft.recurrence}
+                    onChange={(event) =>
+                      patch({ recurrence: event.target.value as EventDraft["recurrence"] })
+                    }
+                  >
+                    <option value="none">Does not repeat</option>
+                    <option value="weekly">Weekly</option>
+                  </SelectField>
+                  {draft.recurrence === "weekly" ? (
+                    <div className="space-y-3">
+                      <p className="text-sm font-medium">Weekdays</p>
+                      <div className="flex flex-wrap gap-2">
+                        {WEEKDAYS.map((label, index) => {
+                          const checked = draft.days.includes(index);
+                          return (
+                            <label
+                              key={label}
+                              className={cn(
+                                "cursor-pointer rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-brand-line has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
+                                checked && "border-brand-line bg-brand-soft text-brand",
+                              )}
+                            >
+                              <input
+                                type="checkbox"
+                                className="sr-only"
+                                checked={checked}
+                                onChange={() =>
+                                  patch({
+                                    days: checked
+                                      ? draft.days.filter((day) => day !== index)
+                                      : [...draft.days, index].sort(),
+                                  })
+                                }
+                              />
+                              {label}
+                            </label>
+                          );
+                        })}
+                      </div>
+                      <TextField
+                        label="Repeat until"
+                        type="date"
+                        value={draft.until}
+                        onChange={(event) => patch({ until: event.target.value })}
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      This event happens once on the date you chose.
+                    </p>
+                  )}
+                </section>
+
+                <section hidden={step !== "publish"} className="space-y-4">
+                  {stepErrors("publish")}
+                  <fieldset>
+                    <legend className="mb-2 text-sm font-medium">Show on</legend>
+                    <div className="flex flex-wrap gap-4">
+                      {SITES.map((site) => (
+                        <label key={site.id} className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            className="h-4 w-4 accent-[var(--primary)]"
+                            checked={draft.sites.includes(site.id)}
+                            onChange={(event) =>
+                              patch({
+                                sites: event.target.checked
+                                  ? [...draft.sites, site.id]
+                                  : draft.sites.filter((item) => item !== site.id),
+                              })
+                            }
+                          />
+                          {site.label}
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                  <ToggleField
+                    label="Published"
+                    checked={draft.published}
+                    onChange={(published) => patch({ published })}
+                  />
+                  <ToggleField
+                    label="Featured"
+                    checked={draft.featured}
+                    onChange={(featured) => patch({ featured })}
+                  />
+                  <ImageDrop
+                    label="Cover image"
+                    folder="events"
+                    mediaBranchId={draft.branchId || null}
+                    value={draft.imageUrl}
+                    onChange={(imageUrl) => patch({ imageUrl })}
+                  />
+                </section>
+
+                <footer className="mt-8 flex flex-wrap items-center gap-2 border-t border-border pt-5">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={stepIndex === 0}
+                    onClick={() => setStep(EVENT_STEPS[stepIndex - 1]!.id)}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                  </Button>
+                  {stepIndex < EVENT_STEPS.length - 1 ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setStep(EVENT_STEPS[stepIndex + 1]!.id)}
+                    >
+                      Next: {EVENT_STEPS[stepIndex + 1]!.label}
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  ) : null}
+                  <Button type="submit" className="ml-auto" disabled={saving}>
+                    {saving ? "Saving…" : "Save event"}
+                  </Button>
+                </footer>
               </div>
-            </fieldset>
-            <ToggleField
-              label="Published"
-              checked={draft.published}
-              onChange={(published) => patch({ published })}
-            />
-            <ToggleField
-              label="Featured"
-              checked={draft.featured}
-              onChange={(featured) => patch({ featured })}
-            />
-            <ImageDrop
-              label="Cover image"
-              folder="events"
-              mediaBranchId={draft.branchId || null}
-              value={draft.imageUrl}
-              onChange={(imageUrl) => patch({ imageUrl })}
-            />
-            <Button type="submit" disabled={saving}>
-              {saving ? "Saving…" : "Save event"}
-            </Button>
+
+              <aside className="lg:sticky lg:top-4 lg:self-start">
+                <EventPageMap
+                  draft={{
+                    title: draft.title,
+                    description: draft.description,
+                    date: draft.date,
+                    time: draft.time,
+                    location: draft.location,
+                    branchName,
+                    category: draft.category,
+                    recurrence: draft.recurrence,
+                    days: draft.days,
+                    sites: draft.sites,
+                    published: draft.published,
+                    featured: draft.featured,
+                    imageUrl: draft.imageUrl,
+                  }}
+                  step={step}
+                  issues={issues}
+                  onStep={setStep}
+                />
+              </aside>
+            </div>
           </form>
         </Panel>
       ) : null}
