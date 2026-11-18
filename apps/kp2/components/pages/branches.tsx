@@ -3,7 +3,7 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { ComicMap } from "@/components/ComicMap";
+import { ComicMap, type MapPlace } from "@/components/ComicMap";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,6 +20,21 @@ function searchText(branch: Branch) {
     .toLowerCase();
 }
 
+const PLACES: { id: MapPlace; label: string }[] = [
+  { id: "world", label: "Whole world" },
+  { id: "uk", label: "United Kingdom" },
+  { id: "ghana", label: "Ghana" },
+  { id: "sierra-leone", label: "Sierra Leone" },
+];
+
+function inPlace(region: string, place: MapPlace) {
+  if (place === "world") return true;
+  const value = region.toLowerCase();
+  if (place === "uk") return /united kingdom|\buk\b|england|scotland|wales/.test(value);
+  if (place === "ghana") return value.includes("ghana");
+  return value.includes("sierra");
+}
+
 function milesBetween(aLat: number, aLng: number, bLat: number, bLng: number) {
   const toRad = (value: number) => (value * Math.PI) / 180;
   const earth = 3958.8;
@@ -34,20 +49,27 @@ function milesBetween(aLat: number, aLng: number, bLat: number, bLng: number) {
 function BranchesPage({ branches }: { branches: Branch[] }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [place, setPlace] = useState<MapPlace>("uk");
+  const [openRegions, setOpenRegions] = useState(false);
   const [origin, setOrigin] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
   const [error, setError] = useState("");
+  const placeLabel = PLACES.find((item) => item.id === place)?.label ?? "Whole world";
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const rows = branches.filter((branch) => !q || searchText(branch).includes(q));
+    const rows = branches.filter((branch) => {
+      const hay = searchText(branch);
+      const matchesQuery = !q || hay.includes(q);
+      return matchesQuery && inPlace(branch.region, place);
+    });
     if (!origin) return rows;
     return [...rows].sort((a, b) => {
       const aMiles = hasCoords(a) ? milesBetween(origin.lat, origin.lng, a.lat, a.lng) : Infinity;
       const bMiles = hasCoords(b) ? milesBetween(origin.lat, origin.lng, b.lat, b.lng) : Infinity;
       return aMiles - bMiles;
     });
-  }, [branches, origin, query]);
+  }, [branches, origin, place, query]);
 
   const nearest = origin ? visible.find((branch) => hasCoords(branch)) : null;
   const nearestMiles =
@@ -82,37 +104,83 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
       <main className="pt-[74px]">
         <section className="kp-find" aria-label="Map of Kharis Phase 2 branches">
           <h1 className="sr-only">Find a Kharis Phase 2 branch near you</h1>
+          <form
+            className="kp-find__bar"
+            role="search"
+            onSubmit={(event) => {
+              event.preventDefault();
+              document.getElementById("kp-branch-list")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            <div className="kp-find__search">
+              <span className="material-symbols-outlined kp-find__icon">search</span>
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Town, postcode or branch name"
+                aria-label="Search branches by town, postcode or name"
+                autoComplete="postal-code"
+              />
+              {query ? (
+                <button
+                  type="button"
+                  className="kp-find__clear"
+                  aria-label="Clear search"
+                  onClick={() => setQuery("")}
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              ) : null}
+            </div>
+            <button type="button" className="kp-find__near" onClick={locate} disabled={locating}>
+              {locating ? "Finding you…" : origin ? "Nearest first" : "Near me"}
+            </button>
+          </form>
 
-          <ComicMap
-            query={query}
-            onQueryChange={setQuery}
-            onLocate={locate}
-            locating={locating}
-            hasOrigin={Boolean(origin)}
-            originCoords={origin}
-            pins={visible.filter(hasCoords).map((branch) => {
-              const { sunday } = splitServices(branch.services);
-              const sun = sunday[0] ?? branch.serviceTimes[0];
-              const miles = origin
-                ? milesBetween(origin.lat, origin.lng, branch.lat, branch.lng)
-                : null;
-              return {
+          <div className="relative">
+            <details
+              className="kp-find__picker"
+              open={openRegions}
+              onToggle={(event) => setOpenRegions(event.currentTarget.open)}
+            >
+              <summary>
+                <span>
+                  <span>Explore our family</span>
+                  <strong>{placeLabel}</strong>
+                </span>
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  expand_more
+                </span>
+              </summary>
+              <div className="kp-find__menu" role="menu">
+                {PLACES.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={place === item.id}
+                    onClick={() => {
+                      setPlace(item.id);
+                      setOpenRegions(false);
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </details>
+            <ComicMap
+              place={place}
+              pins={visible.filter(hasCoords).map((branch) => ({
                 slug: branch.slug,
                 name: branch.name,
-                city: branch.city,
-                region: branch.region,
-                address: [branch.address, branch.postcode].filter(Boolean).join(", "),
-                postcode: branch.postcode,
-                pastor: branch.pastor,
-                blurb: branch.blurb,
-                serviceSummary: sun ? `${sun.day} ${sun.time}` : undefined,
-                miles,
                 lat: branch.lat,
                 lng: branch.lng,
-              };
-            })}
-            onSelect={(slug) => router.push(`/branches/${slug}`)}
-          />
+              }))}
+              onSelect={(slug) => router.push(`/branches/${slug}`)}
+            />
+          </div>
 
           {error ? (
             <p className="kp-find__note" role="status">
@@ -126,6 +194,14 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
               </button>
             </p>
           ) : null}
+
+          <div className="kp-find__tags" aria-label="Explore a branch">
+            {visible.map((branch) => (
+              <Link key={branch.slug} href={`/branches/${branch.slug}`}>
+                {branch.name} <span aria-hidden="true">↗</span>
+              </Link>
+            ))}
+          </div>
         </section>
 
         <section className="mx-auto w-full max-w-[1536px] px-margin-mobile md:px-margin-desktop pt-12 md:pt-16 pb-20">

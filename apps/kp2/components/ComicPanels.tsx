@@ -9,9 +9,9 @@ import "./comic-panels.css";
 
 type Panel = {
   id: string;
+  caption: string;
   headline: string;
   subtext: string;
-  past: boolean;
   poster: GalleryPhoto;
   gallery: GalleryPhoto[];
 };
@@ -20,42 +20,10 @@ const IMG = "https://images.kharis.org/site-images/main";
 
 const PANELS: Panel[] = [
   {
-    id: "midweek",
-    headline: "Midweek Service",
-    subtext: "The Word and prayer, right in the middle of your week.",
-    past: false,
-    poster: KP2_PHOTOS.midweekHall,
-    gallery: [
-      KP2_PHOTOS.midweekPrayer,
-      KP2_PHOTOS.midweekWorship,
-      KP2_PHOTOS.midweekKeys,
-      KP2_PHOTOS.midweekJoy,
-      KP2_PHOTOS.midweekGreeting,
-      KP2_PHOTOS.midweekSharing,
-    ],
-  },
-  {
-    id: "family-fun-day",
-    headline: "Family Fun Day",
-    subtext: "A time of joyful fellowship for the entire Kharis family.",
-    past: true,
-    poster: {
-      src: `${IMG}/3423ef762f6c2481/events/family-fun-day-race.jpg`,
-      alt: "Church members, some in black and gold 316 jerseys, racing across an outdoor court as families watch",
-      position: "48% 50%",
-    },
-    gallery: [
-      {
-        src: `${IMG}/3423ef762f6c2481/events/family-fun-day-race.jpg`,
-        alt: "Members racing across the court on Family Fun Day",
-      },
-    ],
-  },
-  {
-    id: "praise-night",
-    headline: "Praise Night",
-    subtext: "A whole night set apart for praise and worship.",
-    past: true,
+    id: "events",
+    caption: "Gatherings & fellowships",
+    headline: "Events",
+    subtext: "Praise Night, Family Fun Day, Bring A Soul Sunday and many more moments together.",
     poster: {
       src: `${IMG}/c92b67201f985207/events/praise-night-stage.jpg`,
       alt: "Singers leading praise on stage beside a large screen, with a packed hall of worshippers in front of them",
@@ -66,15 +34,56 @@ const PANELS: Panel[] = [
         src: `${IMG}/c92b67201f985207/events/praise-night-stage.jpg`,
         alt: "Singers on stage leading a packed hall in praise",
       },
+      {
+        src: `${IMG}/3423ef762f6c2481/events/family-fun-day-race.jpg`,
+        alt: "Members racing across the court on Family Fun Day",
+      },
+      KP2_PHOTOS.midweekHall,
+      KP2_PHOTOS.midweekWorship,
+      KP2_PHOTOS.midweekPrayer,
+      KP2_PHOTOS.midweekJoy,
+      KP2_PHOTOS.bassDance,
+    ],
+  },
+  {
+    id: "departments",
+    caption: "Serve the Lord",
+    headline: "Departments",
+    subtext: "Serving is part of our worship — music, drama, spoken word, media, welcome and more.",
+    poster: KP2_PHOTOS.serviceSaxophone,
+    gallery: [
+      KP2_PHOTOS.serviceSaxophone,
+      KP2_PHOTOS.serviceChoir,
+      KP2_PHOTOS.bassDrama,
+      KP2_PHOTOS.bassSpokenWord,
+      KP2_PHOTOS.serviceCamera,
+      KP2_PHOTOS.serviceSound,
+      KP2_PHOTOS.welcomeGroup,
+    ],
+  },
+  {
+    id: "baptism",
+    caption: "New life in Christ",
+    headline: "Baptism",
+    subtext:
+      "A public declaration of faith in Jesus — celebrating new life in Christ with the KP2 family.",
+    poster: KP2_PHOTOS.baptismJoy,
+    gallery: [
+      KP2_PHOTOS.baptismJoy,
+      KP2_PHOTOS.baptismCelebration,
+      KP2_PHOTOS.baptismCeremony,
+      KP2_PHOTOS.baptismTeam,
+      KP2_PHOTOS.baptismFamily,
     ],
   },
   {
     id: "jesus-campaign",
-    headline: "Jesus Campaign",
+    caption: "The Gospel in our cities",
+    headline: "Outreach",
     subtext: "Taking the Glorious Gospel of Christ to the streets of our cities.",
-    past: true,
     poster: KP2_PHOTOS.outreachConversation,
     gallery: [
+      KP2_PHOTOS.outreachConversation,
       KP2_PHOTOS.outreachTeam,
       KP2_PHOTOS.outreachSharing,
       KP2_PHOTOS.outreachSpeaker,
@@ -84,14 +93,14 @@ const PANELS: Panel[] = [
   },
 ];
 
-export function ComicPanels({ midweekWhen }: { midweekWhen: string }) {
+export function ComicPanels({ midweekWhen: _midweekWhen }: { midweekWhen?: string }) {
   const [ref, phase] = useRevealOnView<HTMLDivElement>(0.2);
   const [openId, setOpenId] = useState<string | null>(null);
   const close = useCallback(() => setOpenId(null), []);
   const open = PANELS.find((p) => p.id === openId);
 
   return (
-    <section className="kp-panels" aria-label="More KP2 gatherings">
+    <section className="kp-panels" aria-label="Life at Kharis Phase 2">
       <p className="kp-panels__narration">Meanwhile, through the week &amp; the year…</p>
       <div ref={ref} className={`kp-panels__page is-${phase}`}>
         <ul className="kp-panels__grid">
@@ -114,9 +123,7 @@ export function ComicPanels({ midweekWhen }: { midweekWhen: string }) {
                   />
                 </div>
                 <div className="kp-panels__safe">
-                  <p className="kp-panels__caption">
-                    {panel.past ? "Past event · Coming back soon" : midweekWhen}
-                  </p>
+                  <p className="kp-panels__caption">{panel.caption}</p>
                   <div className="kp-panels__copy">
                     <h3 id={`kp-panel-${panel.id}`} className="kp-panels__title">
                       {panel.headline}

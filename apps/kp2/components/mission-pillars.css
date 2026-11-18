@@ -51,7 +51,12 @@
     background-color 0.25s ease;
 }
 
-.kp-pillars__list .kp-pillars__item:hover {
+.kp-pillars__list .kp-pillars__item.is-active {
+  cursor: default;
+  pointer-events: none;
+}
+
+.kp-pillars__list .kp-pillars__item:not(.is-active):hover {
   padding-left: 0.75rem;
   background: rgba(247, 190, 29, 0.14);
 }
@@ -102,7 +107,7 @@
   transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.kp-pillars__item:hover .kp-pillars__title {
+.kp-pillars__item:not(.is-active):hover .kp-pillars__title {
   background-size: 100% 14%;
 }
 

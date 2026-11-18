@@ -17,12 +17,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = STATIC_PATHS.map((path) => ({
     url: path === "/" ? origin : `${origin}${path}`,
     lastModified: now,
-    changeFrequency:
-      path === "/" || path === "/events" || path === "/messages" ? "daily" : "weekly",
+    changeFrequency: path === "/" || path === "/life" || path === "/messages" ? "daily" : "weekly",
     priority:
       path === "/"
         ? 1
-        : path === "/events" || path === "/messages" || path === "/branches"
+        : path === "/life" || path === "/messages" || path === "/branches"
           ? 0.85
           : 0.7,
   }));

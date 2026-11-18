@@ -10,20 +10,20 @@ import { KP2_PHOTOS } from "@/lib/photography";
 const WHY_SERVE = [
   {
     icon: "favorite",
-    title: "Get busy serving",
-    text: "Jesus came to serve. We serve because we have been served. Get busy serving.",
+    title: "Serve like Jesus",
+    text: "Jesus said He came not to be served but to serve, and to give His life for many. We serve because He served us first, and our love for others is our response to His love for us.",
     ref: "Matthew 20:28",
   },
   {
     icon: "diversity_3",
-    title: "Find your place",
-    text: "Every gift belongs in the body. Take your place and become family.",
+    title: "Every part matters",
+    text: "The church is one body with many parts, and no part can say it doesn’t need another. Whatever you’re gifted at, you’re needed here, and when one of us hurts or rejoices, we all do.",
     ref: "1 Corinthians 12:12-27",
   },
   {
     icon: "volunteer_activism",
-    title: "Work as unto the Lord",
-    text: "Work with all your heart, as working for the Lord. We are passionate about God and His word.",
+    title: "Serve as for the Lord",
+    text: "Whatever you do, do it wholeheartedly, as if working for the Lord and not for people. No act of service is small, because it is ultimately offered to Christ, who promises a reward that lasts.",
     ref: "Colossians 3:23-24",
   },
 ];
@@ -51,8 +51,8 @@ function DepartmentsPage() {
               Get busy serving.
             </h1>
             <p className="mt-6 max-w-xl text-lg text-white">
-              Find where your gift meets the mission. Take the quiz and discover where you could
-              serve in your local branch.
+              Every gift has a home at KP2. Take the quiz and discover where you could serve in your
+              local branch.
             </p>
             <Link
               href="/quiz"
@@ -74,7 +74,7 @@ function DepartmentsPage() {
                 Why We Serve
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm text-white/80">
-                Serving is worship. Respond to grace. Take your place. Get busy serving.
+                Serving is one of the ways we worship. Everything we do for others, we do for Him.
               </p>
             </div>
 
@@ -109,23 +109,6 @@ function DepartmentsPage() {
                   </p>
                 </div>
               ))}
-            </div>
-
-            <div className="mt-12 flex flex-col items-center gap-4 rounded-none border border-on-background/10 bg-surface p-8 text-center shadow-[6px_6px_0_0_#000] sm:flex-row sm:justify-between sm:text-left">
-              <div>
-                <h3 className="font-headline-md mb-1 text-headline-md text-on-surface">
-                  Still not sure where you fit?
-                </h3>
-                <p className="text-sm text-on-surface">
-                  Take the quiz and we&apos;ll help you find where you fit in the local branch.
-                </p>
-              </div>
-              <Link
-                href="/quiz"
-                className="shrink-0 rounded-none border border-on-background/10 bg-primary px-8 py-3 text-sm font-black uppercase tracking-wider text-on-primary text-center transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-              >
-                To the Quiz
-              </Link>
             </div>
           </div>
         </section>

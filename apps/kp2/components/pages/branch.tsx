@@ -808,10 +808,10 @@ function BranchPage({
               </p>
             </div>
             <Link
-              href="/events"
+              href="/life"
               className="font-body-md text-[12px] font-bold uppercase tracking-wide text-primary shrink-0"
             >
-              See all events
+              See Life at KP2
             </Link>
           </div>
           <div className="grid md:grid-cols-2 gap-6">

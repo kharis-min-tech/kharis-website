@@ -6,17 +6,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { GivingMethods, type GivingLocation } from "@/components/GivingMethods";
 import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import { KP2_PHOTOS } from "@/lib/photography";
-import type { GivingTestimony } from "@/lib/testimonies";
-import { TestimoniesBand } from "@/components/TestimoniesBand";
 import "@/components/giving-experience.css";
 
-function GivingPage({
-  testimonies,
-  branches,
-}: {
-  testimonies: GivingTestimony[];
-  branches: GivingLocation[];
-}) {
+function GivingPage({ branches }: { branches: GivingLocation[] }) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
       <SiteHeader />
@@ -127,16 +119,6 @@ function GivingPage({
             </div>
           </div>
         </section>
-
-        {testimonies.length > 0 ? (
-          <TestimoniesBand
-            id="living-testimonies"
-            eyebrow="Stories"
-            title="Living Testimonies"
-            intro="Real testimonies from the Kharis family."
-            items={testimonies.map((t) => ({ quote: t.quote, name: t.name, meta: t.role }))}
-          />
-        ) : null}
       </main>
       <SiteFooter />
       <ThemeToggle />

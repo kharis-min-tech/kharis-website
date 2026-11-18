@@ -3,9 +3,8 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import "./hero-title.css";
 
-const LINE = "THIS IS CHURCH";
-const PHRASE = "FOR THIS GENERATION.";
-const ENTRANCES = ["wipe", "fade-up", "tracking", "words", "blur-in"] as const;
+const LINE = "A GENERATION";
+const PHRASES = ["ON FIRE FOR JESUS."] as const;
 
 const START_DELAY_MS = 500;
 const TYPE_MS = 70;
@@ -18,7 +17,7 @@ type Phase = "in" | "hold" | "out";
 export function HeroTitle() {
   const [typed, setTyped] = useState(0);
   const [ready, setReady] = useState(false);
-  const [entrance, setEntrance] = useState(0);
+  const [phraseIndex, setPhraseIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("in");
   const [reduced, setReduced] = useState(false);
 
@@ -56,20 +55,19 @@ export function HeroTitle() {
     at(PHRASE_DELAY_MS + PHRASE_HOLD_MS, () => setPhase("out"));
     at(PHRASE_DELAY_MS + PHRASE_HOLD_MS + OUT_MS, () => {
       setPhase("in");
-      setEntrance((current) => (current + 1) % ENTRANCES.length);
+      setPhraseIndex((current) => (current + 1) % PHRASES.length);
     });
     return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [ready, entrance, reduced]);
+  }, [ready, phraseIndex, reduced]);
 
-  const anim = ENTRANCES[entrance]!;
-  const words = PHRASE.split(" ");
+  const phrase = PHRASES[phraseIndex]!;
   const out = phase === "out" ? " is-out" : "";
   const delay = { animationDelay: `${PHRASE_DELAY_MS}ms` } as CSSProperties;
 
   return (
     <h1 className="kp-hero-title font-display-xl text-[44px] sm:text-[60px] md:text-display-xl uppercase leading-none z-30">
       <span className="sr-only">
-        {LINE} {PHRASE}
+        {LINE} {PHRASES[0]}
       </span>
       <span className="kp-hero-title__line" aria-hidden="true">
         <span className="kp-hero-type">
@@ -86,25 +84,14 @@ export function HeroTitle() {
       <span className="kp-hero-title__phrase" aria-hidden="true">
         {ready ? (
           <span
-            key={entrance}
-            className={`kp-hero-phrase kp-hero-phrase--${anim}${out}`}
+            key={phraseIndex}
+            className={`kp-hero-phrase kp-hero-phrase--fade-up${out}`}
             style={delay}
           >
-            {anim === "words"
-              ? words.map((word, index) => (
-                  <span
-                    key={word}
-                    className="kp-hero-phrase__word"
-                    style={{ animationDelay: `${PHRASE_DELAY_MS + index * 180}ms` }}
-                  >
-                    {word}
-                    {index < words.length - 1 ? "\u00a0" : null}
-                  </span>
-                ))
-              : PHRASE}
+            {phrase}
           </span>
         ) : (
-          <span className="kp-hero-phrase kp-hero-phrase--reserve">{PHRASE}</span>
+          <span className="kp-hero-phrase kp-hero-phrase--reserve">{PHRASES[0]}</span>
         )}
       </span>
     </h1>

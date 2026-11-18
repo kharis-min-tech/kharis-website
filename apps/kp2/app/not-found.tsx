@@ -39,13 +39,27 @@ export default function NotFound() {
         </div>
 
         {/* Sticker-style tag */}
-        <div className="mt-2 -rotate-2 border-4 border-[var(--on-surface)] bg-[var(--secondary-container)] px-5 py-2 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[var(--on-secondary-container)] shadow-[4px_4px_0_0_var(--on-surface)]">
+        <div
+          className="mt-2 -rotate-2 border-4 border-[var(--on-surface)] bg-[var(--secondary-container)] px-5 py-2 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[#17131f] shadow-[4px_4px_0_0_var(--on-surface)]"
+          style={{ color: "#17131f" }}
+        >
           Faith looks different here — but this page is lost
         </div>
 
         <p className="mt-8 max-w-xl font-[var(--font-body-md)] text-lg leading-relaxed text-[var(--on-surface-variant)]">
           Looks like the link broke, the page moved, or God is telling you to head back to the
           altar. No worries — we&apos;ll get you right.
+        </p>
+
+        <p className="mt-6 max-w-xl border-l-4 border-[var(--primary)] bg-[var(--surface-container)] px-5 py-4 text-left font-[var(--font-body-md)] text-base leading-relaxed text-[var(--on-surface)]">
+          While we find your way back, hold on to this promise: “They that wait upon the Lord shall
+          renew their strength.”{" "}
+          <Link
+            href="https://www.biblegateway.com/passage/?search=Isaiah%2040%3A31&version=KJV"
+            className="font-bold text-[var(--primary)] underline underline-offset-4"
+          >
+            Isaiah 40:31 (KJV)
+          </Link>
         </p>
 
         {/* Action buttons with brutalist 3D press */}
@@ -60,19 +74,24 @@ export default function NotFound() {
             Take me home
           </Link>
           <Link
-            href="/events"
+            href="/life"
             className="btn-neo inline-flex items-center gap-2 border-4 border-[var(--on-surface)] bg-[var(--surface)] px-8 py-4 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[var(--on-surface)] shadow-[6px_6px_0_0_var(--on-surface)]"
           >
             <span className="material-symbols-outlined text-lg" aria-hidden="true">
-              event
+              groups
             </span>
-            See events
+            Life at KP2
           </Link>
           <Link
             href="/branches"
-            className="btn-neo inline-flex items-center gap-2 border-4 border-[var(--on-surface)] bg-[var(--secondary-container)] px-8 py-4 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[var(--on-secondary-container)] shadow-[6px_6px_0_0_var(--on-surface)]"
+            className="btn-neo inline-flex items-center gap-2 border-4 border-[var(--on-surface)] bg-[var(--secondary-container)] px-8 py-4 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[#17131f] shadow-[6px_6px_0_0_var(--on-surface)]"
+            style={{ color: "#17131f" }}
           >
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">
+            <span
+              className="material-symbols-outlined text-lg"
+              aria-hidden="true"
+              style={{ color: "#17131f" }}
+            >
               pin_drop
             </span>
             Find a branch
@@ -81,7 +100,7 @@ export default function NotFound() {
 
         {/* Monospace hint */}
         <p className="mt-12 font-[Space_Mono,monospace] text-xs uppercase tracking-widest text-[var(--on-surface-variant)]">
-          / error 404 · kharis &nbsp;/&nbsp; page not found
+          / error 404 · KP2 &nbsp;/&nbsp; page not found
         </p>
       </div>
     </section>

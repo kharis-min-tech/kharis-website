@@ -16,17 +16,12 @@ import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { type Testimonial } from "@/components/TestimonialCarousel";
 import { TestimoniesBand } from "@/components/TestimoniesBand";
-import { LatestMessages } from "@/components/LatestMessages";
-import { VisitInstead } from "@/components/VisitInstead";
-import { type MessageVideo } from "@/lib/youtube";
 
 function Index({
   testimonials,
-  messages,
   branchPins,
 }: {
   testimonials: Testimonial[];
-  messages: MessageVideo[];
   branchPins: LocationPin[];
 }) {
   const introRef = useRef<HTMLElement>(null);
@@ -124,28 +119,15 @@ function Index({
         <div className="kp-home-hero-copy absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none px-margin-mobile md:px-margin-desktop text-center mt-0 md:mt-[-10vh]">
           <div className="bg-[#f7be1d] px-4 sm:px-6 py-2 sm:py-3 mb-5 md:mb-8 pointer-events-auto shadow-[4px_4px_0px_0px_rgba(19,16,22,1)] border-2 border-[#151218] rotate-[-2deg] max-w-full">
             <span className="font-label-comic text-[11px] sm:text-label-comic text-[#3f2e00] uppercase tracking-widest">
-              Preach Christ Crucified.
+              Christ our foundation.
             </span>
           </div>
           <HeroTitle />
           <p className="font-body-lg text-base sm:text-body-lg text-[#e8e0e9] mt-5 md:mt-6 max-w-2xl bg-[#151218]/40 backdrop-blur-md p-4 border border-[#958da1]/30 pointer-events-auto rounded">
-            A spirit-filled, revival-seeking church. We are young people serving God with passion,
-            gathering to encounter Jesus and live transformed lives.
+            A revival-seeking church of young people who have genuinely encountered Christ,
+            passionate about God’s Word, and committed to carrying out the assignment He has given
+            us.
           </p>
-          <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 pointer-events-auto w-full sm:w-auto max-w-sm sm:max-w-none">
-            <Link
-              href="/branches"
-              className="kp-depth-button kp-button-light bg-[#d2bbff] !text-black font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 brutalist-shadow border-2 border-[#151218] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
-            >
-              FIND A BRANCH
-            </Link>
-            <Link
-              href="/mission"
-              className="kp-depth-button kp-button-purple bg-[#2c292f] text-[#e8e0e9] border-2 border-[#958da1] font-label-comic text-label-comic uppercase px-6 sm:px-8 py-4 hover:bg-[#37333a] transition-colors flex items-center justify-center"
-            >
-              LEARN MORE
-            </Link>
-          </div>
         </div>
       </header>
       <main className="relative z-20 overflow-hidden bg-white">
@@ -178,7 +160,7 @@ function Index({
                   fontSize: "clamp(0.7rem, 1.1vw, 1rem)",
                 }}
               >
-                Passionate for God and His Word
+                Everything starts here.
               </div>
             </div>
             <div
@@ -200,7 +182,7 @@ function Index({
                 className="font-body-lg text-gray-600 leading-relaxed max-w-2xl"
                 style={{ fontSize: "clamp(1rem, 1.45vw, 1.6rem)" }}
               >
-                We are a new breed of Christian who are passionate about Jesus and not afraid to
+                We are a new breed of Christians who are passionate about Jesus and not afraid to
                 show it. We believe in the sound teaching of Christ, the bible is our final
                 authority, and Christ is the centre of our lives.
               </p>
@@ -264,9 +246,9 @@ function Index({
         <TestimoniesBand
           id="testimonies"
           className="border-b-4 border-gray-900"
-          eyebrow="Salvation · Healing · Miracles"
+          eyebrow="Transformed lives"
           title="Testimonies"
-          intro="Salvation and life transformation, healing, and miracles — what God is doing in this house."
+          intro="God is faithful! See what He is doing in this house."
           items={testimonials.map((t) => ({
             quote: t.quote,
             title: t.title,
@@ -274,39 +256,6 @@ function Index({
             meta: t.location,
           }))}
         />
-
-        <section
-          className="relative z-10 bg-white dark:bg-[#151218] border-b-4 border-gray-900"
-          id="media"
-        >
-          <LatestMessages messages={messages} />
-
-          {messages.length === 0 ? (
-            <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pb-16 relative z-10">
-              <VisitInstead
-                title="No teachings just yet"
-                action={
-                  <div className="mt-6 flex flex-wrap justify-center gap-3">
-                    <Link
-                      href="/events#kp-sun-title"
-                      className="kp-depth-button kp-button-purple kp-empty-panel__cta !mt-0"
-                    >
-                      Sunday service
-                    </Link>
-                    <Link
-                      href="/branches"
-                      className="kp-depth-button kp-button-gold kp-empty-panel__cta !mt-0"
-                    >
-                      Find a branch
-                    </Link>
-                  </div>
-                }
-              >
-                Sunday service is where the Word is preached. Find a branch and come this week.
-              </VisitInstead>
-            </div>
-          ) : null}
-        </section>
 
         <section
           className="py-16 sm:py-20 lg:py-24 bg-[#f2eef7] dark:bg-[#1a1625] border-b-4 border-gray-900 relative overflow-hidden transition-colors duration-300"
@@ -319,27 +268,11 @@ function Index({
                 Get The App
               </span>
               <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-7xl uppercase text-gray-900 dark:text-[#e8e0e9] leading-none mb-6 transition-colors duration-300">
-                Church in your pocket.
+                Messages On The Go
               </h2>
               <p className="font-body-lg text-body-lg text-gray-600 dark:text-[#ccc3d8] transition-colors duration-300">
-                Download the Kharis app, then listen to any message in three simple steps: home,
-                search, and play.
+                Romans 10:17. Faith comes by hearing, and hearing by the word of God.
               </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
-                <a
-                  href="#app-stores"
-                  className="kp-depth-button kp-button-gold bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all inline-flex items-center gap-2"
-                >
-                  Download the app
-                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                </a>
-                <Link
-                  href="/messages"
-                  className="kp-depth-button kp-button-light bg-white dark:bg-[#2c2833] text-[#630ed4] dark:text-[#d2bbff] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
-                >
-                  Watch messages
-                </Link>
-              </div>
               <p className="font-body-md text-sm text-gray-500 dark:text-[#958da1] mt-4 transition-colors duration-300">
                 Available on iPhone &amp; Android
               </p>
@@ -394,40 +327,6 @@ function Index({
                   <p className="font-headline-lg text-base leading-tight">Download for Android</p>
                 </div>
               </a>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-12 md:py-16 bg-white relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="kp-branch-panel kp-brand-panel relative overflow-hidden text-center">
-              <div className="kp-branch-dove" aria-hidden="true" />
-              <p className="kp-branch-eyebrow">Still deciding?</p>
-              <h2 className="kp-branch-title font-display-xl">
-                Can&apos;t decide which
-                <span>branch to come to?</span>
-              </h2>
-              <p className="kp-branch-copy font-body-lg">
-                You don&apos;t have to figure it out alone. Reach out and we&apos;ll help you find a
-                Kharis family near you, or guide you to your first Sunday.
-              </p>
-              <div className="kp-branch-actions relative z-10 flex flex-col sm:flex-row items-stretch justify-center gap-5">
-                <Link
-                  href="/contact"
-                  className="kp-depth-button kp-button-light inline-flex items-center justify-center bg-white text-[#630ed4] px-8 py-4 rounded-none font-label-comic text-sm uppercase tracking-wide border-2 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all min-w-[180px]"
-                >
-                  Contact Us
-                </Link>
-                <Link
-                  href="/branches"
-                  className="kp-depth-button kp-button-gold gap-2 px-8 py-4 font-label-comic text-sm uppercase tracking-wide min-w-[180px]"
-                >
-                  Find a Branch
-                  <span className="material-symbols-outlined text-lg" aria-hidden="true">
-                    arrow_forward
-                  </span>
-                </Link>
-              </div>
             </div>
           </div>
         </section>

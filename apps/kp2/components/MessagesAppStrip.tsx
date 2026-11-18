@@ -25,11 +25,11 @@ function AndroidIcon() {
 
 export function MessagesAppStrip() {
   return (
-    <aside className="kp-app-strip" aria-label="Watch all messages in the Kharis app">
+    <aside className="kp-app-strip" aria-label="Listen to all messages in the Kharis app">
       <div className="kp-app-strip__copy">
-        <p className="kp-app-strip__title">Watch all messages in the Kharis app</p>
+        <p className="kp-app-strip__title">Listen to all messages in the Kharis app</p>
         <p className="kp-app-strip__sub">
-          Every teaching, including ones not listed here. Free on iPhone and Android.
+          Every teaching is available. Free on iPhone and Android.
         </p>
       </div>
       <div className="kp-app-strip__actions">

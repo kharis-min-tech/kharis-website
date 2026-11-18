@@ -1,5 +1,4 @@
 import Page from "@/components/pages/giving";
-import { getGivingTestimonials } from "@/lib/testimonies";
 import { pageMeta } from "@/lib/seo";
 import { listBranches } from "@/lib/branches";
 
@@ -13,11 +12,8 @@ export const metadata = pageMeta({
 });
 
 export default async function Giving() {
-  const [testimonies, branches] = await Promise.all([getGivingTestimonials(), listBranches()]);
+  const branches = await listBranches();
   return (
-    <Page
-      testimonies={testimonies}
-      branches={branches.map(({ slug, name, givingLink }) => ({ slug, name, givingLink }))}
-    />
+    <Page branches={branches.map(({ slug, name, givingLink }) => ({ slug, name, givingLink }))} />
   );
 }

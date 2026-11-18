@@ -1,0 +1,107 @@
+/* —— Footer world ————————————————————————————————————————————
+ * The Locations page's AtomicGlobe, cropped to its upper half so it closes
+ * the page as a horizon rather than a floating ball. The component centres
+ * the sphere in its frame, so the frame is made twice as tall as the window
+ * onto it and the equator lands on the bottom edge.
+ */
+.footer-world-block {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.footer-world {
+  --dome: clamp(170px, 24vw, 360px);
+  position: relative;
+  width: 100%;
+  height: var(--dome);
+  overflow: hidden;
+}
+
+/* The crop shows a bit more than half the sphere so both the UK cluster and
+ * the West African cities sit on screen at once. */
+.footer-world__inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--dome) * 1.5);
+}
+
+/* No DOM markers on the footer globe; spots are lit in the dot field via
+ * AtomicGlobe's `spotRadius` option. */
+.footer-world div[style*="will-change"] {
+  display: none !important;
+}
+
+/* —— Strapline ————————————————————————————————————————————————
+ * Two identical copies in the track, shifted by -50% so the marquee loops
+ * without a seam.
+ */
+.footer-strap {
+  position: relative;
+  width: 100%;
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.footer-strap__track {
+  display: flex;
+  width: max-content;
+  animation: footer-strap-run var(--cycle, 52s) linear infinite;
+}
+
+.footer-strap__pair {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.footer-strap__line {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  font-family: var(--font-hanken), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.4rem, 4.2vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: #1c1c1f;
+  white-space: nowrap;
+}
+
+.dark .footer-strap__line,
+.site-footer--dark .footer-strap__line {
+  color: #fff;
+}
+
+.footer-strap__line--vision,
+.footer-strap__dot {
+  color: #630ed4;
+}
+
+.dark .footer-strap__line--vision,
+.dark .footer-strap__dot,
+.site-footer--dark .footer-strap__line--vision,
+.site-footer--dark .footer-strap__dot {
+  color: #ffde59;
+}
+
+.footer-strap__dot {
+  margin: 0 0.6em;
+}
+
+@keyframes footer-strap-run {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-strap__track {
+    animation: none;
+  }
+}

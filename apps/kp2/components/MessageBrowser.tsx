@@ -24,6 +24,17 @@ export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
         (topic === "all" || matchesTopic(message, topic)) && matchesQuery(message, search),
     );
   }, [filtering, messages, search, topic]);
+  const moreToExplore = useMemo(() => {
+    if (!filtering || visible.length >= 3) return [];
+    return messages
+      .filter((message) => !visible.some((match) => match.id === message.id))
+      .sort(
+        (a, b) =>
+          Number(topic !== "all" && matchesTopic(b, topic)) -
+          Number(topic !== "all" && matchesTopic(a, topic)),
+      )
+      .slice(0, 3 - visible.length);
+  }, [filtering, messages, topic, visible]);
 
   const clear = () => {
     setTopic("all");
@@ -100,6 +111,7 @@ export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
         <div className="kp-browse">
           <p className="kp-browse__count" aria-live="polite">
             {visible.length === 1 ? "1 message" : `${visible.length} messages`}
+            {moreToExplore.length > 0 ? ` · ${moreToExplore.length} more from the archive` : ""}
             {filtering ? (
               <button type="button" onClick={clear}>
                 Clear
@@ -110,6 +122,14 @@ export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
             <div className="kp-browse__grid">
               {visible.map((message) => (
                 <MessageCard key={message.id} message={message} />
+              ))}
+              {moreToExplore.map((message) => (
+                <div key={`more-${message.id}`} className="relative">
+                  <span className="absolute left-3 top-3 z-10 border border-black bg-[#f7be1d] px-2 py-1 text-[0.65rem] font-extrabold uppercase tracking-wider text-[#151218] shadow-[2px_2px_0_#151218]">
+                    More to explore
+                  </span>
+                  <MessageCard message={message} />
+                </div>
               ))}
             </div>
           ) : (

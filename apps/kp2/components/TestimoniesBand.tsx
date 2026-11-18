@@ -63,6 +63,7 @@ export function TestimoniesBand({
   const [selected, setSelected] = useState<{ item: TestimonyItem; accentIndex: number } | null>(
     null,
   );
+  const pauseAutoplayUntil = useRef(0);
   const dragRef = useRef({
     active: false,
     moved: false,
@@ -85,32 +86,59 @@ export function TestimoniesBand({
     };
   }, [selected]);
 
-  const scrollByCard = (dir: -1 | 1) => {
+  useEffect(() => {
     const rail = railRef.current;
-    if (!rail) return;
-    const card = rail.querySelector<HTMLElement>(".kp-tst__card");
-    const gap =
-      parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap || "20") || 20;
-    const step = (card?.offsetWidth ?? 300) + gap;
-    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
-    if (maxScroll <= 2) return;
-    const edge = 8;
+    if (!rail || items.length < 2) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) return;
 
-    if (dir === 1) {
-      if (rail.scrollLeft >= maxScroll - edge) {
+    const pause = () => {
+      pauseAutoplayUntil.current = Date.now() + 20_000;
+    };
+    rail.addEventListener("pointerenter", pause);
+    rail.addEventListener("pointerleave", pause);
+    rail.addEventListener("focusin", pause);
+    rail.addEventListener("focusout", pause);
+    rail.addEventListener("pointerdown", pause);
+    rail.addEventListener("touchstart", pause, { passive: true });
+
+    let visible = false;
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        visible = Boolean(entry?.isIntersecting);
+      },
+      { threshold: 0.35 },
+    );
+    visibilityObserver.observe(rail);
+
+    const timer = window.setInterval(() => {
+      if (!visible || selected || Date.now() < pauseAutoplayUntil.current) return;
+      const firstCard = rail.querySelector<HTMLElement>(".kp-tst__card");
+      if (!firstCard) return;
+      const styles = window.getComputedStyle(rail);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
+      const step = firstCard.getBoundingClientRect().width + gap;
+      const maxScroll = rail.scrollWidth - rail.clientWidth;
+      if (maxScroll <= 0) return;
+
+      if (rail.scrollLeft >= maxScroll - step / 2) {
         rail.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        rail.scrollTo({ left: Math.min(maxScroll, rail.scrollLeft + step), behavior: "smooth" });
+        rail.scrollBy({ left: step, behavior: "smooth" });
       }
-      return;
-    }
+    }, 15_000);
 
-    if (rail.scrollLeft <= edge) {
-      rail.scrollTo({ left: maxScroll, behavior: "smooth" });
-    } else {
-      rail.scrollTo({ left: Math.max(0, rail.scrollLeft - step), behavior: "smooth" });
-    }
-  };
+    return () => {
+      window.clearInterval(timer);
+      visibilityObserver.disconnect();
+      rail.removeEventListener("pointerenter", pause);
+      rail.removeEventListener("pointerleave", pause);
+      rail.removeEventListener("focusin", pause);
+      rail.removeEventListener("focusout", pause);
+      rail.removeEventListener("pointerdown", pause);
+      rail.removeEventListener("touchstart", pause);
+    };
+  }, [items.length, selected]);
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "touch" || e.button !== 0) return;
@@ -250,31 +278,6 @@ export function TestimoniesBand({
                 })}
               </div>
             </div>
-
-            {items.length > 1 ? (
-              <div className="kp-tst__arrows">
-                <button
-                  type="button"
-                  className="kp-tst__arrow"
-                  aria-label="Previous testimonies"
-                  onClick={() => scrollByCard(-1)}
-                >
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    arrow_back
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="kp-tst__arrow"
-                  aria-label="Next testimonies"
-                  onClick={() => scrollByCard(1)}
-                >
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    arrow_forward
-                  </span>
-                </button>
-              </div>
-            ) : null}
           </>
         ) : (
           <p className="kp-tst__empty">

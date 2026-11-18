@@ -24,8 +24,8 @@ const MAIN_TABS = [
     label: "Our Mission",
     sub: "Why we exist",
     icon: "favorite",
-    headline: "Influence society with the reality of God's love",
-    body: "We are a friendly, caring and exciting family church that seeks to influence our society with the reality of God's love and the reliability of His principles by ministering to the spiritual, physical, social and emotional needs of people who care to experience God in a dynamic and a living way.",
+    headline: "We seek to deepen people's commitment to God",
+    body: "We are a friendly, caring and exciting family church that seeks to influence our society with the reality of God's love and the reliability of His principles.",
     eyebrow: "Our Mission",
     items: [
       {
@@ -152,7 +152,9 @@ function WhoWeAreBecoming() {
               aria-selected={mainTab === i}
               aria-controls={`about-panel-${t.id}`}
               tabIndex={mainTab === i ? 0 : -1}
-              onClick={() => selectChapter(i)}
+              onClick={() => {
+                if (mainTab !== i) selectChapter(i);
+              }}
               onKeyDown={(event) => {
                 const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
                 if (!keys.includes(event.key)) return;
@@ -167,10 +169,10 @@ function WhoWeAreBecoming() {
                 selectChapter(next);
                 document.getElementById(`about-tab-${MAIN_TABS[next]!.id}`)?.focus();
               }}
-              className={`kp-mission-tab no-accent-fill text-left p-6 rounded-none border-2 border-black brutalist-shadow transition-all duration-200 flex items-start gap-4 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+              className={`kp-mission-tab no-accent-fill text-left p-6 rounded-none border-2 border-black brutalist-shadow transition-all duration-200 flex items-start gap-4 ${
                 mainTab === i
-                  ? "bg-primary text-white"
-                  : "bg-surface text-on-background hover:bg-primary-fixed hover:text-on-primary-fixed"
+                  ? "bg-primary text-white cursor-default"
+                  : "bg-surface text-on-background cursor-pointer hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none hover:bg-primary-fixed hover:text-on-primary-fixed"
               }`}
             >
               <span className="font-display-lg text-2xl leading-none opacity-70">
@@ -254,8 +256,11 @@ function WhoWeAreBecoming() {
                       <button
                         key={it.title}
                         type="button"
+                        disabled={subTab === i}
                         aria-pressed={subTab === i}
-                        onClick={() => setSubTab(i)}
+                        onClick={() => {
+                          if (subTab !== i) setSubTab(i);
+                        }}
                         className={`kp-pillars__item no-accent-fill${subTab === i ? " is-active" : ""}`}
                       >
                         <span className="kp-pillars__label">
@@ -502,15 +507,10 @@ function AboutPage() {
         <ParallaxHeroImage src={ABOUT_HERO} alt="" className="object-[center_40%]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25"></div>
         <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
-          <p className="font-label-md uppercase tracking-[0.28em] text-[#f7be1d] mb-4">
-            Kharis Phase 2
-          </p>
+          <p className="font-label-md uppercase tracking-[0.28em] text-[#f7be1d] mb-4">We are...</p>
           <h1 className="font-display-lg uppercase leading-none text-white mb-4">
-            <TypedText text="Kharis" />
+            <TypedText text="Kharis Phase 2" />
           </h1>
-          <p className="font-body-lg text-body-lg text-white max-w-md">
-            Changing the world with a touch of His grace.
-          </p>
         </div>
       </section>
 
@@ -544,11 +544,6 @@ function AboutPage() {
                 </p>
               </div>
             </div>
-            <p className="font-body-lg text-on-surface-variant max-w-3xl mt-8 md:mt-10 leading-relaxed">
-              While ministering to the total person, we seek to deepen people&apos;s commitment to
-              God and to spiritual values such as holiness, prayer, evangelism, Christ-centred
-              living, Bible study and fellowship.
-            </p>
           </div>
         </section>
 
