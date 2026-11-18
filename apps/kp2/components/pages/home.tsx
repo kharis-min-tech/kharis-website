@@ -117,7 +117,17 @@ function Index({
         <div className="kp-home-hero__veil absolute inset-0 z-20 bg-[#151218]/55 md:bg-transparent"></div>
 
         <div className="kp-home-hero-copy absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none px-margin-mobile md:px-margin-desktop text-center mt-0 md:mt-[-10vh]">
+          <div className="bg-[#f7be1d] px-4 sm:px-6 py-2 sm:py-3 mb-5 md:mb-8 pointer-events-auto shadow-[4px_4px_0px_0px_rgba(19,16,22,1)] border-2 border-[#151218] rotate-[-2deg] max-w-full">
+            <span className="font-label-comic text-[11px] sm:text-label-comic text-[#3f2e00] uppercase tracking-widest">
+              Christ our foundation.
+            </span>
+          </div>
           <HeroTitle />
+          <p className="font-body-lg text-base sm:text-body-lg text-[#e8e0e9] mt-5 md:mt-6 max-w-2xl bg-[#151218]/40 backdrop-blur-md p-4 border border-[#958da1]/30 pointer-events-auto rounded">
+            A revival-seeking church of young people who have genuinely encountered Christ,
+            passionate about God’s Word, and committed to carrying out the assignment He has given
+            us.
+          </p>
         </div>
       </header>
       <main className="relative z-20 overflow-hidden bg-white">
@@ -150,7 +160,7 @@ function Index({
                   fontSize: "clamp(0.7rem, 1.1vw, 1rem)",
                 }}
               >
-                Passionate for God and His Word
+                Everything starts here.
               </div>
             </div>
             <div
@@ -236,9 +246,9 @@ function Index({
         <TestimoniesBand
           id="testimonies"
           className="border-b-4 border-gray-900"
-          eyebrow="Salvation · Healing · Miracles"
+          eyebrow="Transformed lives"
           title="Testimonies"
-          intro="Salvation and life transformation, healing, and miracles — what God is doing in this house."
+          intro="God is faithful! See what He is doing in this house."
           items={testimonials.map((t) => ({
             quote: t.quote,
             title: t.title,
@@ -261,24 +271,8 @@ function Index({
                 Messages On The Go
               </h2>
               <p className="font-body-lg text-body-lg text-gray-600 dark:text-[#ccc3d8] transition-colors duration-300">
-                Download the Kharis app, then listen to any message in three simple steps: home,
-                search, and play.
+                Romans 10:17. Faith comes by hearing, and hearing by the word of God.
               </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
-                <a
-                  href="#app-stores"
-                  className="kp-depth-button kp-button-gold bg-[#f7be1d] text-[#151218] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all inline-flex items-center gap-2"
-                >
-                  Download the app
-                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                </a>
-                <Link
-                  href="/messages"
-                  className="kp-depth-button kp-button-light bg-white dark:bg-[#2c2833] text-[#630ed4] dark:text-[#d2bbff] px-6 sm:px-8 py-3 font-label-comic text-sm uppercase border-4 border-gray-900 brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
-                >
-                  Watch messages
-                </Link>
-              </div>
               <p className="font-body-md text-sm text-gray-500 dark:text-[#958da1] mt-4 transition-colors duration-300">
                 Available on iPhone &amp; Android
               </p>

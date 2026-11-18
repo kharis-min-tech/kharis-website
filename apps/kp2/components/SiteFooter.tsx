@@ -30,7 +30,7 @@ const COLUMNS: FooterColumn[] = [
     title: "Get Involved",
     titleColor: "text-on-background",
     links: [
-      { label: "Volunteer at Kharis", to: "/departments" },
+      { label: "Serve at Kharis", to: "/departments" },
       { label: "Departmental Quiz", to: "/quiz" },
     ],
   },
@@ -66,9 +66,6 @@ export function SiteFooter() {
             KHARIS
             <span className="text-on-background"> PHASE 2.</span>
           </div>
-          <p className="font-body-md text-on-surface-variant max-w-xs">
-            Changing the world with a touch of His grace.
-          </p>
           <div className="flex gap-3 pt-2">
             <a
               className="w-11 h-11 bg-background comic-border flex items-center justify-center text-on-background brutalist-shadow hover:-translate-y-1 transition-transform"
@@ -125,34 +122,11 @@ export function SiteFooter() {
         ))}
       </div>
 
-      <div className="relative z-10 flex flex-col items-center gap-3 px-margin-mobile md:px-margin-desktop">
-        <span className="font-label-md text-xs uppercase tracking-widest text-on-surface-variant">
-          Member of
-        </span>
-        <div className="w-full max-w-[220px]">
-          <img
-            src={eaLogoLight}
-            alt="Evangelical Alliance — together making Jesus known"
-            className="block dark:hidden w-full h-auto"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src={eaLogoDark}
-            alt=""
-            aria-hidden="true"
-            className="hidden dark:block w-full h-auto"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </div>
-
       <FooterWorld />
 
       <div className="relative z-10 mt-8 border-t-4 border-[#151218] bg-[#151218] text-[#fffdf5]">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-margin-mobile py-5 md:flex-row md:px-margin-desktop">
-          <p className="text-center font-body-md text-xs uppercase tracking-wide md:text-left">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center justify-items-center gap-4 px-margin-mobile py-5 text-center xl:grid-cols-[minmax(0,1fr)_auto_auto] xl:justify-items-stretch xl:text-left md:px-margin-desktop">
+          <p className="font-body-md text-xs uppercase tracking-wide xl:text-left">
             © 2026 Kharis Ministries
             <span className="mx-2 text-[#f7be1d]" aria-hidden="true">
               |
@@ -163,7 +137,7 @@ export function SiteFooter() {
             </span>
             Charity number 1139291
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3 xl:justify-self-center">
             <Link
               href="/cookies"
               className="no-accent-fill inline-flex border-[3px] border-[#fffdf5] bg-[#ffde59] px-3 py-1 font-headline-md text-sm uppercase tracking-wide text-[#151218] shadow-[3px_3px_0_#fffdf5] transition-transform hover:-translate-y-0.5"
@@ -183,6 +157,21 @@ export function SiteFooter() {
               Privacy Policy
             </Link>
           </div>
+          <img
+            src={eaLogoLight}
+            alt="Evangelical Alliance — together making Jesus known"
+            className="block h-auto w-[min(78vw,300px)] dark:hidden xl:justify-self-end"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            src={eaLogoDark}
+            alt=""
+            aria-hidden="true"
+            className="hidden h-auto w-[min(78vw,300px)] dark:block xl:justify-self-end"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       </div>
     </footer>

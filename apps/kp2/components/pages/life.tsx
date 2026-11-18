@@ -24,13 +24,13 @@ function LifePage() {
           <div className="kp-ev-hero__veil" aria-hidden="true" />
           <div className="kp-ev-hero__dots" aria-hidden="true" />
           <div className="kp-ev-hero__copy">
-            <p className="kp-ev-hero__eyebrow">Kharis Phase 2</p>
+            <p className="kp-ev-hero__eyebrow">Grow · Serve · Belong</p>
             <h1 className="kp-ev-hero__heading">
               Life at <span>Kharis Phase 2</span>
             </h1>
             <p className="kp-ev-hero__tag" style={{ maxWidth: "42rem" }}>
-              Life at Kharis Phase 2 goes beyond Sundays. We grow, serve, and build relationships in
-              Christ together as a family. See what life at KP2 looks like.
+              Beyond Sundays, we grow, serve, and build relationships in Christ together as a
+              family.
             </p>
           </div>
         </header>

@@ -806,9 +806,35 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
   background: var(--kp-app-card);
   border: 2px solid #221039;
   box-shadow: 5px 5px 0 #221039;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 .dark .kp-app-step {
   --kp-app-card: #1f1c24;
+}
+.kp-app-step-number {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+  color: #630ed4;
+}
+.dark .kp-app-step-number {
+  color: #c7a7ff;
+}
+@media (hover: hover) and (pointer: fine) {
+  .kp-app-step:hover {
+    background: #f4edff;
+    border-color: #b99bff;
+    box-shadow: 5px 5px 0 #d9c7ff;
+    transform: translateY(-3px);
+  }
+  .dark .kp-app-step:hover {
+    background: #2b2238;
+    border-color: #b99bff;
+    box-shadow: 5px 5px 0 #493665;
+  }
 }
 .kp-app-step-copy {
   width: 100%;
@@ -819,7 +845,7 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
 .kp-app-step .kp-app-step-number {
   margin: 0 0 0.6rem;
   font-size: 0.7rem;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.15em;
   color: #630ed4;
 }
@@ -829,8 +855,16 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
 .kp-app-step h3 {
   font-size: clamp(1.35rem, 2.3vw, 1.85rem);
   line-height: 1.2;
-  text-transform: uppercase;
+  text-transform: none;
   margin-bottom: 0.5rem;
+}
+.kp-app-step h3.font-headline-lg {
+  text-transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kp-app-step {
+    transition: none;
+  }
 }
 .kp-app-step-detail {
   max-width: 26ch;

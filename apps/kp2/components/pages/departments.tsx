@@ -10,20 +10,20 @@ import { KP2_PHOTOS } from "@/lib/photography";
 const WHY_SERVE = [
   {
     icon: "favorite",
-    title: "Get busy serving",
-    text: "Jesus came to serve. We serve because we have been served. Get busy serving.",
+    title: "Serve like Jesus",
+    text: "Jesus said He came not to be served but to serve, and to give His life for many. We serve because He served us first, and our love for others is our response to His love for us.",
     ref: "Matthew 20:28",
   },
   {
     icon: "diversity_3",
-    title: "Find your place",
-    text: "Every gift belongs in the body. Take your place and become family.",
+    title: "Every part matters",
+    text: "The church is one body with many parts, and no part can say it doesn’t need another. Whatever you’re gifted at, you’re needed here, and when one of us hurts or rejoices, we all do.",
     ref: "1 Corinthians 12:12-27",
   },
   {
     icon: "volunteer_activism",
-    title: "Work as unto the Lord",
-    text: "Work with all your heart, as working for the Lord. We are passionate about God and His word.",
+    title: "Serve as for the Lord",
+    text: "Whatever you do, do it wholeheartedly, as if working for the Lord and not for people. No act of service is small, because it is ultimately offered to Christ, who promises a reward that lasts.",
     ref: "Colossians 3:23-24",
   },
 ];
@@ -51,8 +51,8 @@ function DepartmentsPage() {
               Get busy serving.
             </h1>
             <p className="mt-6 max-w-xl text-lg text-white">
-              Find where your gift meets the mission. Take the quiz and discover where you could
-              serve in your local branch.
+              Every gift has a home at KP2. Take the quiz and discover where you could serve in your
+              local branch.
             </p>
             <Link
               href="/quiz"
@@ -74,7 +74,7 @@ function DepartmentsPage() {
                 Why We Serve
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm text-white/80">
-                Serving is worship. Worship God through your Service to Him.
+                Serving is one of the ways we worship. Everything we do for others, we do for Him.
               </p>
             </div>
 

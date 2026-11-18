@@ -42,7 +42,7 @@ export function KpLoadingMark() {
       <p className="kp-loading-wordmark">
         KHARIS <span>PHASE 2.</span>
       </p>
-      <p className="kp-loading-caption">Preach Christ Crucified.</p>
+      <p className="kp-loading-caption">Christ our hope.</p>
     </div>
   );
 }

@@ -72,8 +72,8 @@
 .kp-know__grid {
   flex: 1 1 auto;
   display: grid;
-  grid-template-columns: 38fr 31fr 31fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
   gap: 12px;
   margin: 0;
   padding: 0;
@@ -87,10 +87,6 @@
     opacity 0.5s ease-out,
     transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   transition-delay: calc(var(--i, 0) * 100ms);
-}
-
-.kp-know__cell--a {
-  grid-row: span 2;
 }
 
 .kp-know__page.is-armed .kp-know__cell {
@@ -183,10 +179,6 @@
   text-shadow: 4px 4px 0 #151218;
 }
 
-.kp-know__cell--a .kp-know__name {
-  font-size: clamp(2.2rem, 4.2vw, 4rem);
-}
-
 .kp-know__blurb {
   margin-top: 0.55rem;
   max-width: 22rem;
@@ -242,16 +234,10 @@
   }
 
   .kp-know__grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: none;
     grid-auto-rows: 16rem;
     gap: 12px;
-  }
-
-  .kp-know__cell--a {
-    grid-column: 1 / -1;
-    grid-row: auto;
-    min-height: 20rem;
   }
 }
 
