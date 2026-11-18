@@ -3,3 +3,15 @@
   opacity: 1;
   transform: none;
 }
+
+.kp-listen__slot {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+}
+
+.kp-listen__slot > .kp-platform-card {
+  flex: 1 1 auto;
+  min-height: 19rem;
+  height: 100%;
+}

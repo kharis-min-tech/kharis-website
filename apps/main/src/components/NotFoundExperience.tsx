@@ -1,236 +1,259 @@
 "use client";
 
 import Link from "next/link";
-import { useReducedMotion } from "framer-motion";
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type MouseEvent,
-  type TouchEvent,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-type Offset = { x: number; y: number };
+type GamePhase = "ready" | "playing" | "over";
+type GameFrame = { doveY: number; obstacleX: number; points: number };
+
+const initialFrame: GameFrame = { doveY: 170, obstacleX: 660, points: 0 };
 
 export function NotFoundExperience() {
-  const sceneRef = useRef<HTMLDivElement>(null);
-  const target = useRef<Offset>({ x: 0, y: 0 });
-  const current = useRef<Offset>({ x: 0, y: 0 });
-  const hovering = useRef(false);
-  const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 });
-  const reduce = useReducedMotion();
+  const [phase, setPhase] = useState<GamePhase>("ready");
+  const [frame, setFrame] = useState(initialFrame);
+  const phaseRef = useRef<GamePhase>("ready");
+  const doveY = useRef(initialFrame.doveY);
+  const velocityY = useRef(0);
+  const obstacleX = useRef(initialFrame.obstacleX);
+  const points = useRef(0);
 
-  const onMove = useCallback(
-    (e: MouseEvent | TouchEvent) => {
-      if (reduce) return;
-      const el = sceneRef.current;
-      if (!el) return;
-      hovering.current = true;
-      const rect = el.getBoundingClientRect();
-      const clientX = "touches" in e ? (e.touches[0]?.clientX ?? 0) : e.clientX;
-      const clientY = "touches" in e ? (e.touches[0]?.clientY ?? 0) : e.clientY;
-      target.current = {
-        x: ((clientX - rect.left) / rect.width - 0.5) * 2,
-        y: ((clientY - rect.top) / rect.height - 0.5) * 2,
-      };
-    },
-    [reduce],
-  );
-
-  const onLeave = useCallback(() => {
-    hovering.current = false;
-    target.current = { x: 0, y: 0 };
+  const startGame = useCallback(() => {
+    doveY.current = initialFrame.doveY;
+    velocityY.current = 0;
+    obstacleX.current = initialFrame.obstacleX;
+    points.current = 0;
+    setFrame(initialFrame);
+    phaseRef.current = "playing";
+    setPhase("playing");
   }, []);
 
+  const flap = useCallback(() => {
+    if (phaseRef.current === "playing") velocityY.current = -6.8;
+  }, []);
+
+  const handleGameAction = useCallback(() => {
+    if (phaseRef.current !== "playing") {
+      startGame();
+      return;
+    }
+    flap();
+  }, [flap, startGame]);
+
   useEffect(() => {
-    if (reduce) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.code !== "Space" && event.code !== "ArrowUp") return;
+      const target = event.target;
+      if (target instanceof HTMLElement && /INPUT|TEXTAREA|BUTTON|A/.test(target.tagName)) return;
+      event.preventDefault();
+      handleGameAction();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleGameAction]);
+
+  useEffect(() => {
+    if (phase !== "playing") return;
     let raf = 0;
-    let t = 0;
-    const tick = () => {
-      t += 0.016;
-      const idleX = hovering.current ? 0 : Math.sin(t * 0.55) * 0.35;
-      const idleY = hovering.current ? 0 : Math.cos(t * 0.4) * 0.25;
-      const goalX = target.current.x + idleX;
-      const goalY = target.current.y + idleY;
-      current.current = {
-        x: current.current.x + (goalX - current.current.x) * 0.08,
-        y: current.current.y + (goalY - current.current.y) * 0.08,
+    let previousTime = 0;
+
+    const tick = (time: number) => {
+      if (!previousTime) previousTime = time;
+      const step = Math.min((time - previousTime) / 16.67, 2);
+      previousTime = time;
+
+      velocityY.current = Math.min(8, velocityY.current + 0.38 * step);
+      doveY.current = Math.max(20, Math.min(280, doveY.current + velocityY.current * step));
+      obstacleX.current -= Math.min(7.4, 5.1 + points.current * 0.18) * step;
+      if (obstacleX.current < -46) {
+        obstacleX.current = 660;
+        points.current += 1;
+      }
+
+      const obstacleOverlapsDove = obstacleX.current < 153 && obstacleX.current > 76;
+      const hitTower = obstacleOverlapsDove && (doveY.current < 96 || doveY.current > 204);
+      const nextFrame = {
+        doveY: doveY.current,
+        obstacleX: obstacleX.current,
+        points: points.current,
       };
-      setOffset({ ...current.current });
+
+      if (hitTower) {
+        phaseRef.current = "over";
+        setPhase("over");
+        setFrame(nextFrame);
+        return;
+      }
+
+      setFrame(nextFrame);
       raf = requestAnimationFrame(tick);
     };
+
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [reduce]);
+  }, [phase]);
 
-  const parallaxVars = {
-    ["--nx" as string]: offset.x,
-    ["--ny" as string]: offset.y,
-  } as CSSProperties;
+  const actionLabel = phase === "ready" ? "Play" : phase === "over" ? "Play again" : "Flap";
+  const statusText =
+    phase === "ready"
+      ? "Tap Play or press Space to guide the dove."
+      : phase === "over"
+        ? `You scored ${frame.points} ${frame.points === 1 ? "point" : "points"}. Give it another go!`
+        : `${frame.points} ${frame.points === 1 ? "point" : "points"} collected. Keep flying!`;
 
   return (
     <section className="not-found" aria-labelledby="not-found-title">
-      <div
-        ref={sceneRef}
-        className="not-found__scene"
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        onTouchMove={onMove}
-        onTouchEnd={onLeave}
-        aria-hidden
-        style={parallaxVars}
-      >
-        <div className="not-found__glow" style={{ ["--nd" as string]: 8 } as CSSProperties} />
-        <div
-          className="not-found__orb not-found__orb--a"
-          style={{ ["--nd" as string]: 18 } as CSSProperties}
-        />
-        <div
-          className="not-found__orb not-found__orb--b"
-          style={{ ["--nd" as string]: -14 } as CSSProperties}
-        />
-        <div
-          className="not-found__orb not-found__orb--c"
-          style={{ ["--nd" as string]: 22 } as CSSProperties}
-        />
+      <div className="not-found__game" role="group" aria-label="404 dove flight game">
+        <div className="not-found__game-head">
+          <div>
+            <p className="not-found__game-kicker">ERROR 404</p>
+            <p className="not-found__game-hint">Guide the dove through the church towers.</p>
+          </div>
+          <p className="not-found__game-404" aria-label="Error 404">
+            404
+          </p>
+          <p className="not-found__score" aria-label={`Points ${frame.points}`}>
+            <span>POINTS</span>
+            <strong>{String(frame.points).padStart(2, "0")}</strong>
+          </p>
+        </div>
 
         <svg
-          className="not-found__art"
-          viewBox="0 0 640 360"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+          className="not-found__game-art"
+          viewBox="0 0 640 300"
+          role="img"
+          aria-label="A dove flies between church towers. In the background: But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles, they shall run, and not be weary; and they shall walk, and not faint. Isaiah 40:31, King James Version."
         >
-          <g className="not-found__layer" style={{ ["--nd" as string]: 6 }}>
-            <path
-              d="M0 260 C80 210 140 230 220 200 C300 170 360 230 440 195 C520 160 580 210 640 190 L640 360 L0 360 Z"
-              fill="url(#nfHillFar)"
-              opacity="0.55"
-            />
-          </g>
-
-          <g className="not-found__layer" style={{ ["--nd" as string]: 14 }}>
-            <path
-              d="M0 290 C120 250 200 300 320 270 C440 240 520 300 640 275 L640 360 L0 360 Z"
-              fill="url(#nfHillNear)"
-            />
-            <ellipse cx="320" cy="300" rx="210" ry="28" fill="rgba(99, 14, 212,0.08)" />
-          </g>
-
-          <g className="not-found__layer not-found__twinkle" style={{ ["--nd" as string]: 28 }}>
-            <circle cx="90" cy="70" r="3.5" fill="#d4920a" />
-            <circle cx="520" cy="55" r="2.5" fill="#630ed4" />
-            <circle cx="570" cy="120" r="3" fill="#d4920a" opacity="0.7" />
-            <circle cx="70" cy="140" r="2" fill="#630ed4" opacity="0.6" />
-            <path
-              d="M160 100 l4 10 10 1 -8 7 3 10 -9-6 -9 6 3-10 -8-7 10-1 z"
-              fill="#d4920a"
-              opacity="0.85"
-            />
-            <path
-              d="M480 150 l3 8 8 1 -6 5 2 8 -7-5 -7 5 2-8 -6-5 8-1 z"
-              fill="#630ed4"
-              opacity="0.7"
-            />
-          </g>
-
-          <g className="not-found__layer not-found__sign" style={{ ["--nd" as string]: 36 }}>
-            <rect
-              x="198"
-              y="88"
-              width="244"
-              height="132"
-              rx="22"
-              fill="#fff"
-              stroke="rgba(99, 14, 212,0.14)"
-              strokeWidth="3"
-            />
-            <rect x="210" y="100" width="220" height="108" rx="16" fill="url(#nfCard)" />
-            <text
-              x="320"
-              y="178"
-              textAnchor="middle"
-              fontFamily="var(--font-display), system-ui, sans-serif"
-              fontSize="78"
-              fontWeight="800"
-              fill="#630ed4"
-              letterSpacing="-4"
-            >
-              404
-            </text>
-            <rect x="308" y="220" width="24" height="70" rx="6" fill="#4c08a8" />
-            <rect x="286" y="284" width="68" height="14" rx="7" fill="#630ed4" opacity="0.35" />
-          </g>
-
-          <g className="not-found__layer not-found__figure" style={{ ["--nd" as string]: 44 }}>
-            <ellipse cx="140" cy="278" rx="28" ry="8" fill="rgba(10, 4, 18,0.12)" />
-            <circle cx="140" cy="208" r="22" fill="#f2eef7" stroke="#630ed4" strokeWidth="3" />
-            <path d="M140 230 v48" stroke="#630ed4" strokeWidth="5" strokeLinecap="round" />
-            <path
-              d="M140 250 l-22 18 M140 250 l22 18"
-              stroke="#630ed4"
-              strokeWidth="5"
-              strokeLinecap="round"
-            />
-            <path
-              d="M140 278 l-14 28 M140 278 l14 28"
-              stroke="#630ed4"
-              strokeWidth="5"
-              strokeLinecap="round"
-            />
-            <circle cx="178" cy="178" r="18" fill="#d4920a" />
-            <text x="178" y="185" textAnchor="middle" fontSize="20" fontWeight="800" fill="#1c1c1f">
-              ?
-            </text>
-          </g>
-
-          <g className="not-found__layer not-found__map" style={{ ["--nd" as string]: 50 }}>
-            <rect
-              x="470"
-              y="210"
-              width="86"
-              height="64"
-              rx="10"
-              fill="#fff8ee"
-              stroke="#d4920a"
-              strokeWidth="2.5"
-              transform="rotate(-12 513 242)"
-            />
-            <path
-              d="M488 236 h40 M508 220 v40"
-              stroke="#630ed4"
-              strokeWidth="2"
-              strokeLinecap="round"
-              transform="rotate(-12 508 240)"
-              opacity="0.55"
-            />
-            <circle
-              cx="508"
-              cy="240"
-              r="8"
-              fill="none"
-              stroke="#630ed4"
-              strokeWidth="2"
-              transform="rotate(-12 508 240)"
-            />
-          </g>
-
           <defs>
-            <linearGradient id="nfHillFar" x1="0" y1="180" x2="0" y2="360">
-              <stop stopColor="#f2eef7" />
-              <stop offset="1" stopColor="#ddd5e8" />
+            <linearGradient id="dove-sky" x1="0" y1="0" x2="1" y2="1">
+              <stop stopColor="#fff8ed" />
+              <stop offset="1" stopColor="#eee5f8" />
             </linearGradient>
-            <linearGradient id="nfHillNear" x1="0" y1="250" x2="0" y2="360">
-              <stop stopColor="#630ed4" stopOpacity="0.18" />
-              <stop offset="1" stopColor="#630ed4" stopOpacity="0.06" />
-            </linearGradient>
-            <linearGradient id="nfCard" x1="210" y1="100" x2="430" y2="208">
-              <stop stopColor="#fff" />
-              <stop offset="1" stopColor="#f8f6fa" />
+            <linearGradient id="dove-path" x1="0" y1="0" x2="0" y2="1">
+              <stop stopColor="#ded2ee" />
+              <stop offset="1" stopColor="#c8b4e3" />
             </linearGradient>
           </defs>
+          <rect width="640" height="300" fill="url(#dove-sky)" />
+          <text
+            x="515"
+            y="204"
+            textAnchor="middle"
+            fill="#6f2fd2"
+            opacity=".16"
+            fontSize="112"
+            fontWeight="900"
+          >
+            404
+          </text>
+          <g aria-hidden="true">
+            <rect x="24" y="14" width="592" height="116" rx="10" fill="#fff" opacity=".88" />
+            <text x="44" y="40" fill="#33233f" fontSize="14" fontWeight="700">
+              But they that wait upon the LORD shall renew their strength;
+            </text>
+            <text x="44" y="61" fill="#33233f" fontSize="14" fontWeight="700">
+              they shall mount up with wings as eagles, they shall run,
+            </text>
+            <text x="44" y="82" fill="#33233f" fontSize="14" fontWeight="700">
+              and not be weary; and they shall walk, and not faint.
+            </text>
+            <text x="44" y="111" fill="#684393" fontSize="12" fontWeight="800" letterSpacing="1.4">
+              ISAIAH 40:31 · KJV
+            </text>
+          </g>
+          <path d="M0 206 Q95 162 190 199 T380 189 T640 190 V300 H0Z" fill="#fff" opacity=".55" />
+          <path d="M0 252 Q150 220 304 245 T640 232 V300 H0Z" fill="url(#dove-path)" />
+          <path
+            d="M0 272 H640"
+            stroke="#6c4c92"
+            strokeWidth="4"
+            strokeDasharray="12 12"
+            opacity=".42"
+          />
+
+          <g opacity=".18" fill="#4d3470">
+            <path d="M280 209 V155 L302 133 L324 155 V209Z" />
+            <path d="M294 151 V123 L302 109 L310 123 V151Z" />
+            <path d="M355 209 V168 L374 148 L393 168 V209Z" />
+          </g>
+
+          <g transform={`translate(0 ${frame.doveY - initialFrame.doveY})`}>
+            <ellipse cx="115" cy="155" rx="27" ry="6" fill="#27183c" opacity=".14" />
+            <g className={phase === "playing" ? "not-found__dove-flutter" : ""}>
+              <path
+                d="M95 145 L75 128 L80 148 L69 161 L99 159Z"
+                fill="#fff"
+                stroke="#6f2fd2"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <ellipse
+                cx="112"
+                cy="142"
+                rx="27"
+                ry="16"
+                fill="#fff"
+                stroke="#6f2fd2"
+                strokeWidth="2"
+              />
+              <path
+                className="not-found__dove-wing"
+                d="M99 140 Q83 115 99 105 Q122 102 132 130 Q119 127 106 141Z"
+                fill="#f4effb"
+                stroke="#6f2fd2"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M97 121 Q108 113 119 123 M94 129 Q106 121 122 131"
+                fill="none"
+                stroke="#c9b4e4"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <circle cx="133" cy="132" r="11" fill="#fff" stroke="#6f2fd2" strokeWidth="2" />
+              <path
+                d="M142 132 L154 136 L142 140Z"
+                fill="#fff"
+                stroke="#6f2fd2"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
+              <circle cx="136" cy="130" r="1.7" fill="#211a27" />
+            </g>
+          </g>
+
+          <g transform={`translate(${frame.obstacleX} 0)`} fill="#6034a0">
+            <path d="M0 0 H46 V67 L23 89 L0 67Z" />
+            <path d="M0 300 H46 V229 L23 207 L0 229Z" />
+            <path
+              d="M12 45 h8 v16 h-8z M27 45 h8 v16 h-8z M12 239 h8 v16 h-8z M27 239 h8 v16 h-8z"
+              fill="#f6c94a"
+              opacity=".86"
+            />
+            <path d="M23 0 V-17 M19 -12 h8 M23 283 V300" stroke="#d4920a" strokeWidth="4" />
+          </g>
         </svg>
+
+        <div className="not-found__game-footer">
+          <p className="not-found__game-status" aria-live="polite">
+            {statusText}
+          </p>
+          <button className="not-found__jump" type="button" onClick={handleGameAction}>
+            <span aria-hidden="true">{phase === "playing" ? "↑" : "▶"}</span>
+            {actionLabel}
+          </button>
+        </div>
+        <p className="not-found__controls">
+          Space or ↑ to flap · tap the button on mobile ·{" "}
+          <a
+            className="not-found__verse-link"
+            href="https://www.biblegateway.com/passage/?search=Isaiah%2040%3A31&version=KJV"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Read Isaiah 40:31 (KJV)
+          </a>
+        </p>
       </div>
 
       <div className="not-found__copy">

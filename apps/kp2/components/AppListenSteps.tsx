@@ -2,20 +2,20 @@ import { AppPhonePreview } from "../../../shared/AppPhonePreview";
 
 const LISTEN_STEPS = [
   {
-    title: "See The Latest",
-    detail: "Listen to the latest messages and see church updates.",
+    step: "Step 1",
+    title: "Open the app",
     screen: "home",
     alt: "Kharis app home with latest audio, video and playlists",
   },
   {
-    title: "Search for any message",
-    detail: "Find the teaching you need in a few taps.",
+    step: "Step 2",
+    title: "Search for a message",
     screen: "messages",
     alt: "Kharis app messages list with search",
   },
   {
-    title: "Hear The Word",
-    detail: "Be blessed, wherever you are.",
+    step: "Step 3",
+    title: "Press play and go",
     screen: "player",
     alt: "Kharis app audio player",
   },
@@ -27,8 +27,8 @@ export function AppListenSteps() {
       {LISTEN_STEPS.map((step) => (
         <article key={step.title} className="kp-app-step">
           <div className="kp-app-step-copy">
+            <p className="kp-app-step-number">{step.step}</p>
             <h3 className="font-headline-lg">{step.title}</h3>
-            <p className="kp-app-step-detail font-body-md">{step.detail}</p>
           </div>
           <div className="kp-app-phone">
             <AppPhonePreview

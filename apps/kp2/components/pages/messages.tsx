@@ -9,9 +9,12 @@ import { MessageBrowser } from "@/components/MessageBrowser";
 import "@/components/listen-row.css";
 import { MutedHeroVideo } from "@/components/MutedHeroVideo";
 import { displayMessageTitle, youtubeWatchUrl, type MessageVideo } from "@/lib/youtube";
+import { useState } from "react";
 
 function MessagesPage({ messages }: { messages: MessageVideo[] }) {
   const featured = messages[0];
+  const [fullPlayback, setFullPlayback] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   return (
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
@@ -23,6 +26,8 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
               id={featured.id}
               thumbnail={featured.thumbnail}
               title={featured.title}
+              fullPlayback={fullPlayback}
+              paused={paused}
             />
           ) : (
             <div
@@ -33,21 +38,38 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
               }}
             />
           )}
-          <div className="pointer-events-none absolute inset-0 hero-gradient max-xl:hidden" />
-          <div className="pointer-events-none absolute inset-0 halftone-pattern text-white/5 max-xl:hidden" />
+          {!fullPlayback ? (
+            <>
+              <div className="pointer-events-none absolute inset-0 hero-gradient max-xl:hidden" />
+              <div className="pointer-events-none absolute inset-0 halftone-pattern text-white/5 max-xl:hidden" />
+            </>
+          ) : null}
           <div className="relative z-10 mx-auto flex h-auto w-full min-w-0 max-w-7xl flex-col justify-end px-margin-mobile pb-8 pt-6 xl:h-full xl:px-margin-desktop xl:pb-10 xl:pt-24">
-            <h1 className="mb-4 max-w-full break-words font-display-lg text-[1.75rem] uppercase leading-[0.95] tracking-tight text-white md:text-display-lg md:leading-none md:tracking-tighter">
-              {featured ? displayMessageTitle(featured.title) : "Messages"}
-            </h1>
-            <p className="mb-6 max-w-2xl font-body-lg text-base leading-relaxed text-white/80 md:mb-8 md:text-body-lg">
-              {featured
-                ? "Watch the newest teaching from Pastor David Antwi here or on YouTube."
-                : "Teachings from Pastor David Antwi will appear here as they go live."}
-            </p>
+            {!fullPlayback ? (
+              <>
+                <h1 className="mb-4 max-w-full break-words font-display-lg text-[1.75rem] uppercase leading-[0.95] tracking-tight text-white md:text-display-lg md:leading-none md:tracking-tighter">
+                  {featured ? displayMessageTitle(featured.title) : "Messages"}
+                </h1>
+                <p className="mb-6 max-w-2xl font-body-lg text-base leading-relaxed text-white/80 md:mb-8 md:text-body-lg">
+                  {featured
+                    ? "Watch the newest teaching from Pastor David Antwi here or on YouTube."
+                    : "Teachings from Pastor David Antwi will appear here as they go live."}
+                </p>
+              </>
+            ) : null}
             {featured ? (
-              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4">
-                <a
-                  href="#latest-messages"
+              <div className="flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!fullPlayback) {
+                      setFullPlayback(true);
+                      setPaused(false);
+                    } else {
+                      setFullPlayback(false);
+                      setPaused(false);
+                    }
+                  }}
                   className="kp-depth-button kp-button-purple group flex w-full items-center justify-center gap-3 border-2 border-black bg-primary px-8 py-4 font-headline-md text-white hard-shadow btn-press sm:w-auto"
                 >
                   <span
@@ -55,10 +77,23 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                     style={{ fontVariationSettings: "'FILL' 1" }}
                     aria-hidden="true"
                   >
-                    volume_up
+                    {fullPlayback ? "arrow_back" : "play_arrow"}
                   </span>
-                  WATCH NOW
-                </a>
+                  {!fullPlayback ? "PLAY MESSAGE" : "STOP MESSAGE"}
+                </button>
+                {fullPlayback ? (
+                  <button
+                    type="button"
+                    onClick={() => setPaused((value) => !value)}
+                    aria-label={paused ? "Resume message" : "Pause message"}
+                    title={paused ? "Resume message" : "Pause message"}
+                    className="kp-depth-button kp-button-light keep-light inline-flex h-12 w-12 shrink-0 items-center justify-center border-2 border-black bg-white text-primary hard-shadow btn-press"
+                  >
+                    <span className="material-symbols-outlined" aria-hidden="true">
+                      {paused ? "play_arrow" : "pause"}
+                    </span>
+                  </button>
+                ) : null}
                 <a
                   href={youtubeWatchUrl(featured.id)}
                   target="_blank"
@@ -96,7 +131,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                 Kharis app.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-gutter">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-gutter">
               {[
                 {
                   label: "Kharis App",
@@ -132,6 +167,15 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   href: "https://youtube.com/@davidantwi",
                   icon: "smart_display",
                   card: "bg-[#FF0000] text-white",
+                  muted: "text-white/90",
+                },
+                {
+                  label: "Amazon Music",
+                  copy: "Listen to Christian teaching on Amazon Music.",
+                  cta: "Listen on Amazon Music",
+                  href: "https://music.amazon.com/podcasts/60953161-8353-4278-a33c-592454d9157d/messages-by-david-antwi",
+                  icon: "music_note",
+                  card: "bg-[#232f3e] text-white",
                   muted: "text-white/90",
                 },
               ].map(({ label, copy, cta, href, icon, card, muted }) => (

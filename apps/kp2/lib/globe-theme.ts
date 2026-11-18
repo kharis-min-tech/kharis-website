@@ -79,7 +79,7 @@ export const GLOBE_CITIES = [
 ] as const;
 
 /**
- * Where we are going. The vision is 100 churches worldwide by 2030, and a
+ * Where we are going. The vision is 100 churches worldwide by 2033, and a
  * globe that only shows the six cities we are already in cannot say that.
  *
  * These are marked apart from the cities above by their label alone: the
@@ -129,4 +129,4 @@ export const GLOBE_VISION_CITIES = [
 ] as const;
 
 /** The suffix that marks a city as planned rather than planted. */
-export const VISION_YEAR = "2030";
+export const VISION_YEAR = "2033";

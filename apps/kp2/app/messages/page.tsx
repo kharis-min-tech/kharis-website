@@ -12,6 +12,6 @@ export const metadata = pageMeta({
 });
 
 export default async function Messages() {
-  const messages = await fetchPastorMessages(48);
+  const messages = await fetchPastorMessages(72);
   return <Page messages={messages} />;
 }

@@ -5,7 +5,9 @@ import { ambientStartSeconds } from "@/lib/youtube";
 
 type YTPlayer = {
   mute: () => void;
+  unMute: () => void;
   playVideo: () => void;
+  pauseVideo: () => void;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   getDuration: () => number;
   destroy: () => void;
@@ -70,16 +72,25 @@ export function MutedHeroVideo({
   id,
   thumbnail,
   title,
+  fullPlayback,
+  paused,
 }: {
   id: string;
   thumbnail: string;
   title: string;
+  fullPlayback: boolean;
+  paused: boolean;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const [live, setLive] = useState(false);
   // Phones stay on the still. The iframe is wide, heavy, and what knocks the copy out of line.
   const [posterOnly, setPosterOnly] = useState(true);
+  const fullPlaybackRef = useRef(fullPlayback);
+  const pausedRef = useRef(paused);
+  const fullPlaybackStartedRef = useRef(false);
+  fullPlaybackRef.current = fullPlayback;
+  pausedRef.current = paused;
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 1279px), (prefers-reduced-motion: reduce)");
@@ -90,8 +101,6 @@ export function MutedHeroVideo({
   }, []);
 
   useEffect(() => {
-    if (posterOnly) return;
-
     const wrap = wrapRef.current;
     if (!wrap) return;
 
@@ -109,7 +118,7 @@ export function MutedHeroVideo({
         width: "100%",
         height: "100%",
         playerVars: {
-          autoplay: 1,
+          autoplay: 0,
           mute: 1,
           controls: 0,
           disablekb: 1,
@@ -124,17 +133,31 @@ export function MutedHeroVideo({
         events: {
           onReady: async (event) => {
             if (cancelled) return;
-            event.target.mute();
-            const duration = await waitForDuration(event.target);
-            if (cancelled) return;
-            const start = ambientStartSeconds(duration);
-            if (start > 0) event.target.seekTo(start, true);
-            event.target.playVideo();
+            if (fullPlaybackRef.current) {
+              fullPlaybackStartedRef.current = true;
+              event.target.unMute();
+              event.target.seekTo(0, true);
+              if (pausedRef.current) event.target.pauseVideo();
+              else event.target.playVideo();
+              return;
+            }
+            if (!posterOnly) {
+              event.target.mute();
+              const duration = await waitForDuration(event.target);
+              if (cancelled || fullPlaybackRef.current) return;
+              const start = ambientStartSeconds(duration);
+              if (start > 0) event.target.seekTo(start, true);
+              event.target.playVideo();
+            }
           },
           onStateChange: (event) => {
             if (cancelled) return;
             if (event.data === YT_PLAYING) setLive(true);
             if (event.data === YT_ENDED) {
+              if (fullPlaybackRef.current) {
+                setLive(false);
+                return;
+              }
               const start = ambientStartSeconds(event.target.getDuration());
               event.target.seekTo(start, true);
               event.target.playVideo();
@@ -158,6 +181,28 @@ export function MutedHeroVideo({
     };
   }, [id, title, posterOnly]);
 
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
+    if (!fullPlayback) {
+      fullPlaybackStartedRef.current = false;
+      player.pauseVideo();
+      setLive(false);
+    } else {
+      if (!fullPlaybackStartedRef.current) {
+        fullPlaybackStartedRef.current = true;
+        player.seekTo(0, true);
+        setLive(false);
+      }
+      player.unMute();
+      if (paused) {
+        player.pauseVideo();
+      } else {
+        player.playVideo();
+      }
+    }
+  }, [fullPlayback, paused, posterOnly]);
+
   return (
     <div className="kp-msg-hero__media relative aspect-video w-full shrink-0 overflow-hidden bg-on-background xl:absolute xl:inset-0 xl:aspect-auto">
       <img
@@ -167,18 +212,16 @@ export function MutedHeroVideo({
           live ? "opacity-0" : "opacity-100"
         }`}
       />
-      {posterOnly ? null : (
-        <div
-          className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
-            live ? "opacity-100" : "opacity-0"
-          }`}
-          aria-hidden={!live}
-        >
-          <div className="absolute left-1/2 top-1/2 aspect-video h-[56.25vw] w-[177.78%] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 [&>iframe]:h-full [&>iframe]:w-full">
-            <div ref={wrapRef} className="h-full w-full [&>iframe]:h-full [&>iframe]:w-full" />
-          </div>
+      <div
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
+          live ? "opacity-100" : "opacity-0"
+        }`}
+        aria-hidden={!live}
+      >
+        <div className="absolute left-1/2 top-1/2 aspect-video h-[56.25vw] w-[177.78%] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 [&>iframe]:h-full [&>iframe]:w-full">
+          <div ref={wrapRef} className="h-full w-full [&>iframe]:h-full [&>iframe]:w-full" />
         </div>
-      )}
+      </div>
     </div>
   );
 }

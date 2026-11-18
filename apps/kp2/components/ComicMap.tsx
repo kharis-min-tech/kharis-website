@@ -132,6 +132,15 @@ function overlaps(
 
 function drawPin(ctx: CanvasRenderingContext2D, x: number, y: number, hot: boolean) {
   const radius = hot ? 8 : 6;
+  ctx.save();
+  ctx.shadowColor = hot ? "rgba(255, 255, 255, 0.9)" : "rgba(124, 58, 237, 0.7)";
+  ctx.shadowBlur = hot ? 20 : 12;
+  ctx.fillStyle = hot ? "rgba(255,255,255,.25)" : "rgba(177, 130, 255, .2)";
+  ctx.beginPath();
+  ctx.arc(x, y, radius + 8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
   ctx.fillStyle = "#151218";
   ctx.beginPath();
   ctx.arc(x + 3, y + 3, radius + 2, 0, Math.PI * 2);
@@ -226,34 +235,69 @@ export function ComicMap({
       const { zoom, panX, panY } = view.current;
       const frame = frameFor(zoom, panX, panY);
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "#110b1a";
+      const backdrop = ctx.createRadialGradient(
+        width * 0.48,
+        height * 0.42,
+        12,
+        width * 0.48,
+        height * 0.42,
+        Math.max(width, height) * 0.84,
+      );
+      backdrop.addColorStop(0, "#30204a");
+      backdrop.addColorStop(0.55, "#1d1230");
+      backdrop.addColorStop(1, "#100a18");
+      ctx.fillStyle = backdrop;
       ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = "rgba(210, 187, 255, 0.16)";
-      for (let y = 8; y < height; y += 16) {
-        const offset = Math.floor(y / 16) % 2 ? 8 : 0;
-        for (let x = offset; x < width; x += 16) ctx.fillRect(x, y, 2, 2);
+      ctx.strokeStyle = "rgba(226, 210, 255, 0.055)";
+      ctx.lineWidth = 1;
+      for (let y = 42; y < height; y += 72) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
       }
 
       const shadow = isWorld ? 5 : 8;
       ctx.lineJoin = "round";
       ctx.save();
+      ctx.translate(shadow + 5, shadow + 7);
+      trace(ctx, BASE, frame);
+      ctx.fillStyle = "#6b45a1";
+      ctx.shadowColor = "rgba(5, 2, 10, 0.48)";
+      ctx.shadowBlur = 24;
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
       ctx.translate(shadow, shadow);
       trace(ctx, BASE, frame);
-      ctx.fillStyle = "#000";
+      ctx.fillStyle = "#21152f";
       ctx.fill();
       ctx.restore();
 
       trace(ctx, BASE, frame);
-      ctx.fillStyle = "#f6e7a8";
+      const landFill = ctx.createLinearGradient(0, frame.y, 0, frame.y + height);
+      landFill.addColorStop(0, "#fff4c7");
+      landFill.addColorStop(0.52, "#f6e7a8");
+      landFill.addColorStop(1, "#e6cf7e");
+      ctx.fillStyle = landFill;
       ctx.fill();
       ctx.lineWidth = isWorld ? 1.5 : 2.5;
-      ctx.strokeStyle = "#151218";
+      ctx.strokeStyle = "rgba(36, 24, 48, .75)";
       ctx.stroke();
 
       trace(ctx, highlight, frame);
-      ctx.fillStyle = "#f7be1d";
+      const focusFill = ctx.createLinearGradient(0, frame.y, 0, frame.y + height);
+      focusFill.addColorStop(0, "#ffe875");
+      focusFill.addColorStop(0.58, "#f7be1d");
+      focusFill.addColorStop(1, "#e49c08");
+      ctx.fillStyle = focusFill;
       ctx.fill();
       ctx.lineWidth = isWorld ? 2 : 4;
+      ctx.strokeStyle = "#8c5404";
+      ctx.stroke();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(255,255,255,.72)";
       ctx.stroke();
 
       const family = getComputedStyle(canvas).fontFamily || '"Hanken Grotesk", sans-serif';

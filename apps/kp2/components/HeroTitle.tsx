@@ -3,8 +3,8 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import "./hero-title.css";
 
-const LINE = "THIS IS CHURCH";
-const PHRASES = ["FOR THIS GENERATION.", "FOR THE YOUTH.", "FOR THE FUTURE."] as const;
+const LINE = "A GENERATION";
+const PHRASES = ["ON FIRE FOR JESUS."] as const;
 
 const START_DELAY_MS = 500;
 const TYPE_MS = 70;

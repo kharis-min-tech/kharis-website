@@ -63,6 +63,7 @@ export function TestimoniesBand({
   const [selected, setSelected] = useState<{ item: TestimonyItem; accentIndex: number } | null>(
     null,
   );
+  const pauseAutoplayUntil = useRef(0);
   const dragRef = useRef({
     active: false,
     moved: false,
@@ -84,6 +85,60 @@ export function TestimoniesBand({
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selected]);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || items.length < 2) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) return;
+
+    const pause = () => {
+      pauseAutoplayUntil.current = Date.now() + 20_000;
+    };
+    rail.addEventListener("pointerenter", pause);
+    rail.addEventListener("pointerleave", pause);
+    rail.addEventListener("focusin", pause);
+    rail.addEventListener("focusout", pause);
+    rail.addEventListener("pointerdown", pause);
+    rail.addEventListener("touchstart", pause, { passive: true });
+
+    let visible = false;
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        visible = Boolean(entry?.isIntersecting);
+      },
+      { threshold: 0.35 },
+    );
+    visibilityObserver.observe(rail);
+
+    const timer = window.setInterval(() => {
+      if (!visible || selected || Date.now() < pauseAutoplayUntil.current) return;
+      const firstCard = rail.querySelector<HTMLElement>(".kp-tst__card");
+      if (!firstCard) return;
+      const styles = window.getComputedStyle(rail);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
+      const step = firstCard.getBoundingClientRect().width + gap;
+      const maxScroll = rail.scrollWidth - rail.clientWidth;
+      if (maxScroll <= 0) return;
+
+      if (rail.scrollLeft >= maxScroll - step / 2) {
+        rail.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        rail.scrollBy({ left: step, behavior: "smooth" });
+      }
+    }, 15_000);
+
+    return () => {
+      window.clearInterval(timer);
+      visibilityObserver.disconnect();
+      rail.removeEventListener("pointerenter", pause);
+      rail.removeEventListener("pointerleave", pause);
+      rail.removeEventListener("focusin", pause);
+      rail.removeEventListener("focusout", pause);
+      rail.removeEventListener("pointerdown", pause);
+      rail.removeEventListener("touchstart", pause);
+    };
+  }, [items.length, selected]);
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "touch" || e.button !== 0) return;
