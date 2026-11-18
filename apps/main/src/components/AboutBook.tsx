@@ -61,10 +61,11 @@
  */
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "@/components/SiteImage";
 import { ContentIcon } from "@/components/ContentIcon";
 import { ABOUT, LEADERSHIP_BEATS } from "@/lib/about-content";
+import siteImageUrls from "@/lib/site-image-urls.json";
 import "./about-book.css";
 
 /**
@@ -93,8 +94,6 @@ const PHOTO = {
 } as const;
 
 type Face = {
-  /** Shown in the running head. The cover and the endpaper have none. */
-  title?: string;
   /** Printed page number. The cover, the plates and the endpaper carry none. */
   folio?: number;
   /** Set on a page whose type should sit in the middle of the leaf. */
@@ -130,25 +129,6 @@ function Plate({ src, alt, position }: { src: string; alt: string; position?: st
         style={position ? { objectPosition: position } : undefined}
       />
     </figure>
-  );
-}
-
-/**
- * An invisible copy of the opening block on the facing page, so a list that
- * carries on across the gutter starts level with the one it continues: 05
- * sits on the same line as 01 rather than riding up where the heading is not.
- *
- * It is the real elements with the real text, because that is the only way to
- * reserve exactly the height the facing page spends, at any width and however
- * the words happen to wrap. They are paragraphs rather than headings so the
- * outline gains nothing to repeat, and visibility: hidden keeps the space
- * while dropping them out of the accessibility tree.
- */
-function Ghost({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="about-book__ghost" aria-hidden="true">
-      {children}
-    </div>
   );
 }
 
@@ -193,7 +173,7 @@ function Pastor({ pastor }: { pastor: (typeof ABOUT.leadership.pastors)[number] 
         <Image src={pastor.image} alt={pastor.name} fill sizes="34vw" className="object-cover" />
       </figure>
       <p className="about-book__role">{pastor.role}</p>
-      <h3 className="about-book__title about-book__title--sm">{pastor.name}</h3>
+      <h4 className="about-book__title about-book__title--sm">{pastor.name}</h4>
       <p className="about-book__focus">{pastor.focus}</p>
       <p className="about-book__body">{pastor.blurb}</p>
     </>
@@ -225,7 +205,6 @@ const FACES: Face[] = [
 
   /* 1 and 2: a plate facing the two words it stands for. */
   {
-    title: "What Kharis means",
     render: () => (
       <Plate
         src={PHOTO.grace}
@@ -234,14 +213,11 @@ const FACES: Face[] = [
     ),
   },
   {
-    title: "What Kharis means",
     folio: 2,
     centre: true,
     render: () => (
       <>
-        {/* The spread's heading lives in the running head visually, so the
-            outline gets it here rather than losing a level. */}
-        <h3 className="sr-only">What Kharis means</h3>
+        <h3 className="about-book__title about-book__title--chapter">What Kharis means</h3>
         <div className="about-book__greek">
           <p className="about-book__label">{ABOUT.brandWord}</p>
           <p className="about-book__word">{ABOUT.greek.word}</p>
@@ -258,32 +234,26 @@ const FACES: Face[] = [
 
   /* 3 and 4: the statement of faith, numbered straight through the spread. */
   {
-    title: "What we believe",
     folio: 3,
     render: () => (
       <>
         <h3 className="about-book__title">What we believe</h3>
         <Statement items={BELIEFS_LEFT} from={1} />
-        <Inset src={PHOTO.bible} alt="An open Bible held up in both hands during a service" />
       </>
     ),
   },
   {
-    title: "What we believe",
     folio: 4,
     render: () => (
       <>
-        <Ghost>
-          <p className="about-book__title">What we believe</p>
-        </Ghost>
-        <Statement items={BELIEFS_RIGHT} from={5} />
+        <Statement items={BELIEFS_RIGHT} from={BELIEFS_LEFT.length + 1} />
+        <Inset src={PHOTO.bible} alt="An open Bible held up in both hands during a service" />
       </>
     ),
   },
 
   /* 5 and 6: the mission, and the four things it is carried out by. */
   {
-    title: "Our mission",
     folio: 5,
     render: () => (
       <>
@@ -298,7 +268,6 @@ const FACES: Face[] = [
     ),
   },
   {
-    title: "Our mission",
     folio: 6,
     render: () => (
       <ul className="about-book__pillars">
@@ -320,12 +289,11 @@ const FACES: Face[] = [
 
   /* 7 and 8: the vision, its eight marks numbered across the spread. */
   {
-    title: "Our vision",
     folio: 7,
     render: () => (
       <>
         <h3 className="about-book__title">{ABOUT.vision.title}</h3>
-        <p className="about-book__lead">{ABOUT.vision.lead}</p>
+        <p className="about-book__lead italic">{ABOUT.vision.lead}</p>
         <p className="about-book__intro">{ABOUT.vision.intro}</p>
         <ol className="about-book__points">
           {VISION_LEFT.map((point, i) => (
@@ -337,24 +305,22 @@ const FACES: Face[] = [
             </li>
           ))}
         </ol>
+        <Inset
+          src={siteImageUrls["/images/vision-campaign.jpg"]}
+          alt="Kharis members taking part in the Jesus Campaign"
+        />
       </>
     ),
   },
   {
-    title: "Our vision",
     folio: 8,
     render: () => (
       <>
-        <Ghost>
-          <p className="about-book__title">{ABOUT.vision.title}</p>
-          <p className="about-book__lead">{ABOUT.vision.lead}</p>
-          <p className="about-book__intro">{ABOUT.vision.intro}</p>
-        </Ghost>
         <ol className="about-book__points">
           {VISION_RIGHT.map((point, i) => (
             <li key={point}>
               <span className="about-book__num" aria-hidden="true">
-                {pad(i + 5)}
+                {pad(i + VISION_LEFT.length + 1)}
               </span>
               {point}
             </li>
@@ -370,19 +336,21 @@ const FACES: Face[] = [
 
   /* 9 and 10: a spotlight each, the two of them facing one another. */
   {
-    title: "Our leadership",
     folio: 9,
-    render: () => <Pastor pastor={ABOUT.leadership.pastors[0]} />,
+    render: () => (
+      <>
+        <h3 className="about-book__title">Our leadership</h3>
+        <Pastor pastor={ABOUT.leadership.pastors[0]} />
+      </>
+    ),
   },
   {
-    title: "Our leadership",
     folio: 10,
     render: () => <Pastor pastor={ABOUT.leadership.pastors[1]} />,
   },
 
   /* 11 and 12: the journey they have made together. */
   {
-    title: "Their story",
     render: () => (
       <Plate
         src={PHOTO.together}
@@ -394,7 +362,6 @@ const FACES: Face[] = [
     ),
   },
   {
-    title: "Their story",
     folio: 12,
     render: () => (
       <>
@@ -443,6 +410,8 @@ const CONTENTS = [
   { turn: 6, label: "Their story" },
 ];
 
+const PAGE_TURN_MS = 950;
+
 export function AboutBook() {
   const [turned, setTurned] = useState(0);
   /** The leaf in flight, lifted above the stack so it does not clip through. */
@@ -463,7 +432,7 @@ export function AboutBook() {
       setFlipping(next > turned ? next - 1 : next);
       setTurned(next);
       window.clearTimeout(settle.current);
-      settle.current = window.setTimeout(() => setFlipping(null), 950);
+      settle.current = window.setTimeout(() => setFlipping(null), PAGE_TURN_MS);
     },
     [turned],
   );
@@ -531,9 +500,15 @@ export function AboutBook() {
   }, []);
 
   const spread = CONTENTS[turned];
+  const nextButton = useRef<HTMLButtonElement>(null);
 
   return (
-    <section className="about-book" aria-label="Kharis: who we are" ref={bookRef}>
+    <section
+      className="about-book"
+      aria-label="Kharis: who we are"
+      ref={bookRef}
+      style={{ "--normal-page-turn-duration": `${PAGE_TURN_MS}ms` } as CSSProperties}
+    >
       <div className="about-book__scene" ref={sceneRef}>
         <div
           className={`about-book__book${turned === 0 ? " is-shut" : ""}`}
@@ -563,10 +538,7 @@ export function AboutBook() {
                 className={`about-book__leaf${isTurned ? " is-turned" : ""}`}
                 style={{ zIndex: z }}
               >
-                <div className="about-book__face about-book__face--front">
-                  {leaf.front.title ? (
-                    <p className="about-book__runner">{leaf.front.title}</p>
-                  ) : null}
+                <div className="about-book__face about-book__face--front" inert={i !== turned}>
                   <div className={`about-book__col${leaf.front.centre ? " is-centred" : ""}`}>
                     {leaf.front.render()}
                   </div>
@@ -575,10 +547,7 @@ export function AboutBook() {
                   ) : null}
                 </div>
                 {leaf.back ? (
-                  <div className="about-book__face about-book__face--back">
-                    {leaf.back.title ? (
-                      <p className="about-book__runner">{leaf.back.title}</p>
-                    ) : null}
+                  <div className="about-book__face about-book__face--back" inert={i !== turned - 1}>
                     <div className={`about-book__col${leaf.back.centre ? " is-centred" : ""}`}>
                       {leaf.back.render()}
                     </div>
@@ -598,7 +567,10 @@ export function AboutBook() {
             <button
               type="button"
               className="about-book__open"
-              onClick={() => go(1)}
+              onClick={() => {
+                go(1);
+                nextButton.current?.focus({ preventScroll: true });
+              }}
               style={{ zIndex: 40 }}
             >
               <span>Open the book</span>
@@ -617,6 +589,7 @@ export function AboutBook() {
         </button>
         <button
           type="button"
+          ref={nextButton}
           className="about-book__turn about-book__turn--next"
           onClick={() => go(turned + 1)}
           disabled={turned === MAX_TURN}
@@ -629,13 +602,12 @@ export function AboutBook() {
       {/* A visible contents. A book with no sense of its length is a page turn
           with no end in sight, and it doubles as the way to reach a spread
           directly by keyboard. */}
-      <div className="about-book__contents" role="tablist" aria-label="Contents">
+      <div className="about-book__contents" role="group" aria-label="Book contents">
         {CONTENTS.map((item) => (
           <button
             key={item.turn}
             type="button"
-            role="tab"
-            aria-selected={item.turn === turned}
+            aria-current={item.turn === turned ? "page" : undefined}
             className={`about-book__chip${item.turn === turned ? " is-on" : ""}`}
             onClick={() => go(item.turn)}
           >

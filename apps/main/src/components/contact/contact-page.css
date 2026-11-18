@@ -254,7 +254,7 @@ html[data-theme="dark"] .hello-hero__shade {
 }
 
 .hello-hero__intro {
-  margin: 1.4rem 0 0;
+  margin: clamp(1.75rem, 4vw, 2.25rem) 0 0;
   max-width: 33rem;
   font-size: clamp(1rem, 1.5vw, 1.15rem);
   font-weight: 500;
