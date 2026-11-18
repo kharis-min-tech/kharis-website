@@ -3,7 +3,7 @@
 import Image from "@/components/SiteImage";
 import { useSearchParams } from "next/navigation";
 import { type FormEvent, useEffect, useRef, useState } from "react";
-import { branchDisplayName, isKp2Branch, type ContactLocation } from "@/lib/contact-branches";
+import { branchDisplayName, type ContactLocation } from "@/lib/contact-branches";
 import {
   buildContactPrefill,
   clearGraceHandoff,
@@ -300,24 +300,11 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
                       onChange={(e) => onBranchChange(e.target.value)}
                     >
                       <option value="">not decided yet</option>
-                      <optgroup label="Kharis">
-                        {branches
-                          .filter((b) => !isKp2Branch(b))
-                          .map((b) => (
-                            <option key={b.id} value={b.name}>
-                              {branchDisplayName(b.name)}
-                            </option>
-                          ))}
-                      </optgroup>
-                      {branches.some(isKp2Branch) ? (
-                        <optgroup label="KP2">
-                          {branches.filter(isKp2Branch).map((b) => (
-                            <option key={b.id} value={b.name}>
-                              {branchDisplayName(b.name)}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ) : null}
+                      {branches.map((b) => (
+                        <option key={b.id} value={b.name}>
+                          {branchDisplayName(b.name)}
+                        </option>
+                      ))}
                     </select>
                     .
                   </span>

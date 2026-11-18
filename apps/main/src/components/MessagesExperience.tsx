@@ -19,7 +19,6 @@ import {
 import { Icon } from "@/components/Icon";
 import { MessageHoverTile } from "@/components/MessageHoverTile";
 import { MessagesDeviceCluster } from "@/components/MessagesDeviceCluster";
-import { MessagesFaq } from "@/components/MessagesFaq";
 import { MessagesHero } from "@/components/MessagesHero";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { KHARIS_APP } from "@/lib/kharis-app";
@@ -43,21 +42,6 @@ const TOPIC_ICONS: Record<string, LucideIcon> = {
   "just-men": Users,
   fragrance: Flower,
 };
-
-const WHY_FAQ = [
-  {
-    q: "Why should I listen to messages?",
-    a: "The Bible says faith comes by hearing, and hearing by the Word of God (Romans 10:17). This shows that faith is not a one-time event but a continuous process. Good preaching does not just build faith. It also helps spiritual maturity, guarding believers against being led astray by false teaching.",
-  },
-  {
-    q: "What makes Kharis messages different?",
-    a: "They are Christ-centric, text-driven, and gospel-saturated, with a focus on what the Bible is actually saying and revealing Christ through it, helping you to become a firm, sound believer.",
-  },
-  {
-    q: "Is Scripture really for my situation?",
-    a: "All Scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness, that the man of God may be complete, thoroughly equipped for every good work (2 Timothy 3:16-17).",
-  },
-];
 
 /** Curated Pastor David posters for Listen Anywhere (maxres quality, no “God” titles). */
 const LISTEN_DEVICE_POSTERS: MessageVideo[] = [
@@ -468,8 +452,6 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
           ))}
         </div>
       </section>
-
-      <MessagesFaq items={WHY_FAQ} />
     </div>
   );
 }

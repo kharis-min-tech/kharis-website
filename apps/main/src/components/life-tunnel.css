@@ -148,72 +148,147 @@ html[data-theme="dark"] .life-tunnel__title span {
   margin: 3rem auto 0;
 }
 
-.life-tunnel__list-title {
-  margin: 0 0 1.25rem;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-align: center;
+.life-tunnel__programme {
+  --programme-accent: var(--purple);
+  max-width: 64rem;
+  margin: clamp(1.75rem, 5vw, 3.75rem) auto 0;
+  border-top: 1px solid var(--line);
 }
 
-.life-tunnel__list ul {
+html[data-theme="dark"] .life-tunnel__programme {
+  --programme-accent: var(--yellow);
+}
+
+.life-tunnel__chapter {
+  border-bottom: 1px solid var(--line);
+}
+
+.life-tunnel__chapter summary {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.25rem 1.25rem;
+  align-items: center;
+  min-height: 4.5rem;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  list-style: none;
+  cursor: pointer;
+}
+
+.life-tunnel__chapter summary::-webkit-details-marker {
+  display: none;
+}
+
+.life-tunnel__chapter summary:hover,
+.life-tunnel__chapter[open] summary {
+  background: var(--surface-1);
+}
+
+.life-tunnel__chapter-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.35rem, 3.3vw, 2.45rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.life-tunnel__chapter[open] .life-tunnel__chapter-title {
+  color: var(--programme-accent);
+}
+
+.life-tunnel__chapter-preview {
+  grid-column: 1;
+  color: var(--muted);
+}
+
+.life-tunnel__chapter-toggle {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  width: 2.25rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid var(--line);
+  color: var(--programme-accent);
+}
+
+.life-tunnel__chapter-toggle::before,
+.life-tunnel__chapter-toggle::after {
+  grid-area: 1 / 1;
+  width: 0.8rem;
+  height: 2px;
+  background: currentColor;
+  content: "";
+}
+
+.life-tunnel__chapter-toggle::after {
+  transform: rotate(90deg);
+}
+
+.life-tunnel__chapter[open] .life-tunnel__chapter-toggle::after {
+  transform: none;
+}
+
+.life-tunnel__directory {
+  display: grid;
+  gap: 0 2.25rem;
   margin: 0;
-  padding: 0;
+  padding: 0 clamp(1rem, 3vw, 1.75rem) 1rem;
   list-style: none;
 }
 
-@media (min-width: 640px) {
-  .life-tunnel__list ul {
-    grid-template-columns: repeat(2, 1fr);
+@media (min-width: 720px) {
+  .life-tunnel__chapter summary {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
+  }
+
+  .life-tunnel__chapter-preview {
+    grid-column: 2;
+  }
+
+  .life-tunnel__chapter-toggle {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .life-tunnel__directory {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1024px) {
-  .life-tunnel__list ul {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.life-tunnel__list button {
+.life-tunnel__directory button {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   width: 100%;
-  padding: 1rem 1.1rem;
-  text-align: left;
-  border: 1px solid var(--line);
-  background: var(--surface-0);
+  height: 100%;
+  min-height: 3.5rem;
+  padding: 0.75rem 0.25rem;
+  border-bottom: 1px solid var(--line);
   color: var(--fg);
+  text-align: left;
   cursor: pointer;
-  transition:
-    border-color 0.18s ease,
-    transform 0.18s ease;
 }
 
-.life-tunnel__list button:is(:hover, :focus-visible) {
-  border-color: var(--purple);
-  transform: translateY(-2px);
+.life-tunnel__directory button:hover {
+  background: var(--surface-1);
 }
 
-html[data-theme="dark"] .life-tunnel__list button:is(:hover, :focus-visible) {
-  border-color: var(--yellow);
-}
-
-.life-tunnel__list-name {
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: 1.02rem;
-  font-weight: 800;
-}
-
-.life-tunnel__list-blurb {
-  font-size: 0.86rem;
-  font-weight: 600;
+.life-tunnel__activity-description {
+  display: block;
+  margin-top: 0.2rem;
   color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.life-tunnel__row-arrow {
+  flex: none;
+  color: var(--programme-accent);
+}
+
+.life-tunnel__programme :is(summary, button):focus-visible {
+  outline: 2px solid var(--programme-accent);
+  outline-offset: -2px;
 }
 
 /* The activity sheet. */
@@ -449,6 +524,7 @@ html[data-theme="dark"] .life-tunnel__start {
   left: 50%;
   bottom: 5.25rem;
   z-index: 3;
+  min-height: 2.75rem;
   transform: translateX(-50%);
   padding: 0.55rem 1.1rem;
   font-size: 0.74rem;
@@ -479,13 +555,8 @@ html[data-theme="dark"] .life-tunnel__scroll:is(:hover, :focus-visible) {
   border-color: var(--yellow);
 }
 
-/* "Everything we do" is a section of the page now, not a caption under a
- * showpiece, so it is titled and introduced like one. */
-.life-tunnel__list {
-  margin-top: 5rem;
-}
-
 .life-tunnel__list-title {
+  scroll-margin-top: 5.5rem;
   margin: 0 0 0.75rem;
   font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
   font-size: clamp(1.75rem, 3.6vw, 2.75rem);
@@ -496,11 +567,15 @@ html[data-theme="dark"] .life-tunnel__scroll:is(:hover, :focus-visible) {
   text-align: center;
 }
 
-.life-tunnel__list-lede {
-  margin: 0 auto 2.5rem;
-  max-width: 36rem;
-  font-size: clamp(0.95rem, 1.5vw, 1.08rem);
-  font-weight: 600;
-  color: var(--muted);
-  text-align: center;
+.life-tunnel__browse {
+  display: block;
+  min-height: 2.75rem;
+  margin: 0.4rem auto 0;
+  color: var(--fg);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  pointer-events: auto;
+  cursor: pointer;
 }

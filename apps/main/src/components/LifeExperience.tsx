@@ -1,175 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Icon } from "@/components/Icon";
+import { useCallback, useEffect, useState } from "react";
 import { lifeBySlug, type LifeSlug } from "@/lib/life-content";
 import { LifeDetailModal, type FastingDownloads } from "@/components/LifeDetailModal";
-import { LifeCloserMarquee } from "@/components/LifeCloserMarquee";
-import { useReducedMotion } from "framer-motion";
-import { usePageSnap } from "@/lib/page-snap";
 import "./life-refresh.css";
 import "./life-alone.css";
-import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../shared/form-fields";
-import { HoneypotField, useTurnstile } from "../../../../shared/form-widgets";
 
-export type LifeBranch = { id: string; name: string };
-
-function CloserPanel({ branches }: { branches: LifeBranch[] }) {
-  const [email, setEmail] = useState("");
-  const [branch, setBranch] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [savedLocally, setSavedLocally] = useState(false);
-  const [error, setError] = useState("");
-  const [emailAttempted, setEmailAttempted] = useState(false);
-  const [honeypot, setHoneypot] = useState("");
-  const turnstile = useTurnstile("contact");
-
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setEmailAttempted(true);
-    setError("");
-    if (!branch) {
-      setError("Please choose the branch closest to you.");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-    setBusy(true);
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          [HONEYPOT_FIELD]: honeypot,
-          [TURNSTILE_FIELD]: turnstile.token,
-          name: "Kharis Life visitor",
-          email: email.trim(),
-          topic: "General",
-          branch,
-          branchId: branches.find((b) => b.name === branch)?.id,
-          message:
-            "I'd like to get plugged into Kharis Life. Please connect me with next steps at my local branch.",
-        }),
-      });
-      const result = (await response.json()) as {
-        ok?: boolean;
-        error?: string;
-        storage?: string;
-      };
-      if (!response.ok || !result.ok) {
-        setError(result.error || "Please check your email and try again.");
-        return;
-      }
-      setSavedLocally(result.storage === "local-development");
-      setSent(true);
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      turnstile.reset();
-      setBusy(false);
-    }
-  };
-
-  return (
-    <section className="life-alone" aria-labelledby="life-refresh-closer-title">
-      {/* The marquee repeats the headline for show; screen readers get it once from the h2. */}
-      <h2 id="life-refresh-closer-title" className="sr-only">
-        Don&apos;t do life alone
-      </h2>
-      <LifeCloserMarquee text="DON'T DO LIFE ALONE" />
-
-      <div className="life-alone__row">
-        <p className="life-alone__copy">
-          Whether you are ready for baptism, wanting to serve in the house, or looking for a place
-          to belong, there is space for you here.
-        </p>
-        <div className="life-alone__action">
-          {sent ? (
-            <p className="life-alone__success" role="status">
-              {savedLocally
-                ? "Thanks for reaching out. Someone from your local Kharis branch will be in touch soon."
-                : "Thank you. We'll connect you with a local branch."}
-            </p>
-          ) : (
-            <form className="life-alone__form" onSubmit={onSubmit} noValidate>
-              <label className="sr-only" htmlFor="life-refresh-branch">
-                Your nearest branch
-              </label>
-              <select
-                id="life-refresh-branch"
-                className="life-alone__branch"
-                required
-                value={branch}
-                aria-invalid={emailAttempted && !branch}
-                aria-describedby={error ? "life-refresh-email-error" : undefined}
-                onChange={(event) => {
-                  setBranch(event.target.value);
-                  if (error) setError("");
-                }}
-              >
-                <option value="" disabled>
-                  Your branch
-                </option>
-                {branches.map((b) => (
-                  <option key={b.id} value={b.name}>
-                    {b.name}
-                  </option>
-                ))}
-              </select>
-              <label className="sr-only" htmlFor="life-refresh-email">
-                Your email address
-              </label>
-              <input
-                id="life-refresh-email"
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="Your email address"
-                value={email}
-                aria-invalid={emailAttempted && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())}
-                aria-describedby={error ? "life-refresh-email-error" : undefined}
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                  if (error) setError("");
-                }}
-              />
-              {turnstile.widget}
-              <HoneypotField value={honeypot} onChange={setHoneypot} />
-              <button type="submit" className="life-alone__button" disabled={busy}>
-                {busy ? "Sending…" : "GET PLUGGED IN"}
-                <Icon name="arrow" className="h-4 w-4" />
-              </button>
-              {error ? (
-                <p id="life-refresh-email-error" className="life-alone__error" role="alert">
-                  {error}
-                </p>
-              ) : null}
-            </form>
-          )}
-          <p className="life-alone__note">
-            We&apos;ll connect you with a local branch, or <span>BECOME A MEMBER</span> when
-            you&apos;re ready.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function LifeExperience({
-  branches,
-  fastingDownloads,
-}: {
-  branches: LifeBranch[];
-  fastingDownloads?: FastingDownloads;
-}) {
-  /* Snap between the page's scroll stages (sections declare points with data-snap). */
-  const reduceMotion = useReducedMotion();
-  usePageSnap(!reduceMotion);
+export function LifeExperience({ fastingDownloads }: { fastingDownloads?: FastingDownloads }) {
   const [modalSlug, setModalSlug] = useState<LifeSlug | null>(null);
 
   useEffect(() => {
@@ -194,13 +31,10 @@ export function LifeExperience({
   const modalCategory = modalSlug ? (lifeBySlug(modalSlug) ?? null) : null;
 
   return (
-    <div className="life-refresh">
-      <CloserPanel branches={branches} />
-      <LifeDetailModal
-        category={modalCategory}
-        onClose={closeModal}
-        fastingDownloads={fastingDownloads}
-      />
-    </div>
+    <LifeDetailModal
+      category={modalCategory}
+      onClose={closeModal}
+      fastingDownloads={fastingDownloads}
+    />
   );
 }

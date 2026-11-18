@@ -1,3 +1,5 @@
+import { SPURGEONS_CENTRE } from "./spurgeons";
+
 export const BANK = {
   accountName: "Kharis Ministries",
   accountNumber: "80608335",
@@ -163,7 +165,7 @@ export const GIVING_BRANCHES: GivingBranch[] = [
     kind: "online",
     url: tithely("a79fdf6d-6849-4751-95ba-dd248b953ea5"),
   },
-  { name: "Spurgeon's Centre building fund", kind: "building" },
+  { name: SPURGEONS_CENTRE.publicName, kind: "building" },
 ];
 
 type StudioBranch = { slug: string; giving_link: string | null };

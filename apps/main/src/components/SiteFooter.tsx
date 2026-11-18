@@ -1,5 +1,6 @@
 "use client";
 
+import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { EvangelicalAllianceMark } from "@/components/EvangelicalAllianceMark";
@@ -106,7 +107,7 @@ export function SiteFooter({ tone }: Props) {
                 </li>
                 <li>
                   <Link href="/give#building" className={linkHover}>
-                    Spurgeon&rsquo;s Centre
+                    {SPURGEONS_CENTRE.publicName}
                   </Link>
                 </li>
               </ul>
