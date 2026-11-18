@@ -63,9 +63,9 @@ export function HeroPhrases() {
              on has to be passed explicitly for that reason. */
           loop
           // Time per letter when the effect is typewriter.
-          stagger={0.07}
-          hold={1.8}
-          exitDuration={0.3}
+          stagger={0.1}
+          hold={3}
+          exitDuration={0.45}
         />
       </span>
     </span>

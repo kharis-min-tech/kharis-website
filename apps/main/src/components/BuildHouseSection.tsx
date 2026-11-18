@@ -20,7 +20,7 @@ export function BuildHouseSection() {
 
       <div className="section section--lg relative z-10 flex min-h-[58vh] items-center justify-center text-center">
         <Reveal variant="blur" duration={1.1} className="mx-auto w-full max-w-3xl md:max-w-4xl">
-          <p className="eyebrow give-eyebrow">Spurgeon&apos;s Centre</p>
+          <p className="eyebrow give-eyebrow">{SPURGEONS_CENTRE.publicName}</p>
           <h2 className="section-title mt-3 !text-[clamp(2rem,4.6vw,3.4rem)] !text-white">
             We&rsquo;ve purchased our new home
           </h2>
@@ -56,7 +56,7 @@ export function BuildHouseSection() {
               rel="noopener noreferrer"
               className="give-more"
             >
-              See the project at spurgeonscentre.org
+              Learn about the building project
             </a>
           </p>
         </Reveal>

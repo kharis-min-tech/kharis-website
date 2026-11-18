@@ -167,11 +167,11 @@ export function FooterWorld({ dark = false }: Props) {
           {[0, 1].map((copy) => (
             <span className="footer-strap__pair" key={copy}>
               <span className="footer-strap__line">
-                Changing our world with a touch of His&nbsp;Grace.
+                Changing our world with a touch of His&nbsp;Grace
                 <span className="footer-strap__dot">&bull;</span>
               </span>
               <span className="footer-strap__line footer-strap__line--vision">
-                100 churches worldwide by&nbsp;2033.
+                100 churches worldwide by&nbsp;2033
                 <span className="footer-strap__dot">&bull;</span>
               </span>
             </span>

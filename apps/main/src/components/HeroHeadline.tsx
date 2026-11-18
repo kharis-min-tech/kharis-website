@@ -11,8 +11,8 @@ const FULL_LENGTH = WELCOME.length + BRAND.length;
 const LEAD = "We are";
 
 const START_DELAY_MS = 500;
-const TYPE_MS = 80;
-const WELCOME_HOLD_MS = 2600;
+const TYPE_MS = 105;
+const WELCOME_HOLD_MS = 3400;
 
 /** Layout is inline so the headline stays centred even if the stylesheet is stale. */
 const LEAD_STYLE: CSSProperties = {
