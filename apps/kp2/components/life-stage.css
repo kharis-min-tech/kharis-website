@@ -1,0 +1,299 @@
+/*
+ * Life at KP2 hero: "sticker slam + photo scatter".
+ * The entrance starts as the dove intro or comic page turn clears: the headline rises line by
+ * line, the sticker slaps on, the tagline follows and photo prints pop out around the copy.
+ * Scrolling drifts the prints away (framer-motion) before the comic page deals in. Reduced
+ * motion and no-JS visitors get the finished layout straight away.
+ */
+
+.kp-life-stage .kp-ev-hero__copy {
+  position: relative;
+  z-index: 1;
+}
+
+/* The shared hero rise would play behind the intro overlay; the stage times it instead. */
+.kp-life-stage .kp-ev-hero__copy > * {
+  animation: none;
+}
+
+.kp-life-stage .kp-ev-hero__heading span {
+  color: inherit;
+}
+
+.kp-life-stage .kp-ev-hero__heading .kp-life-stage__line--accent {
+  color: #f7be1d;
+}
+
+/* Each line is its own mask. The clip reaches past the line box, so the hard ink
+   text-shadow and Anton's tall caps are never trimmed once the line has landed. */
+.kp-life-stage__line {
+  clip-path: inset(-0.35em -0.5em -0.16em -0.5em);
+}
+
+/* ---------- Photo prints ---------- */
+
+.kp-life-stage__prints {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* LifeHero measures the room above the copy before any print shows, and hides a print that
+   would land on the copy at this screen size. Without JavaScript the prints stay hidden. */
+.kp-life-stage__prints:not([data-measured]),
+.kp-life-stage__print[data-clash] {
+  visibility: hidden;
+}
+
+.kp-life-stage__print {
+  --room: var(--kp-free, 20rem);
+  position: absolute;
+}
+
+/* A photo print: cream paper edge inside a 3px ink border, with KP2's hard offset shadow. */
+.kp-life-stage__card {
+  padding: 6px;
+  background: #fffdf5;
+  border: 3px solid #151218;
+  box-shadow: 6px 6px 0 #151218;
+  rotate: var(--tilt, 0deg);
+}
+
+.kp-life-stage__photo {
+  position: relative;
+  aspect-ratio: var(--ratio, 4 / 5);
+  overflow: hidden;
+  background: #2a104b;
+}
+
+.kp-life-stage__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.35) contrast(1.05);
+}
+
+/* The comic panels' halftone dots. */
+.kp-life-stage__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(rgba(0, 0, 0, 0.18) 1.2px, transparent 1.3px) 0 0 / 7px 7px;
+}
+
+.dark .kp-life-stage__card {
+  border-color: #000;
+  box-shadow: var(--kp-glow);
+}
+
+/* Desktop: two prints share the band above the copy and three sit to its right. Widths in
+   the band follow the measured room; 18px covers the paper edge and border. */
+.kp-life-stage__print--welcome {
+  --tilt: 2deg;
+  --from-x: 1rem;
+  --from-y: 5rem;
+  left: 7%;
+  top: calc(var(--room) * 0.16);
+  width: clamp(6rem, calc((var(--room) * 0.68 - 18px) * 0.8), 11rem);
+}
+
+.kp-life-stage__print--outreach {
+  --tilt: -4deg;
+  --from-x: -3rem;
+  --from-y: 6rem;
+  left: 36%;
+  top: calc(var(--room) * 0.06);
+  width: clamp(6rem, calc((var(--room) * 0.78 - 18px) * 0.8), 12.5rem);
+}
+
+.kp-life-stage__print--sax {
+  --tilt: 3deg;
+  --from-x: -6rem;
+  --from-y: 5rem;
+  right: 21%;
+  top: 11%;
+  width: clamp(9rem, 14.5vw, 15rem);
+}
+
+.kp-life-stage__print--baptism {
+  --ratio: 5 / 4;
+  --tilt: 5deg;
+  --from-x: -8rem;
+  --from-y: 6rem;
+  right: 4%;
+  top: 5%;
+  width: clamp(10rem, 16.5vw, 17rem);
+}
+
+.kp-life-stage__print--praise {
+  --ratio: 5 / 4;
+  --tilt: -3deg;
+  --from-x: -7rem;
+  --from-y: 1rem;
+  right: 5.5%;
+  top: 53%;
+  width: clamp(10rem, 17vw, 18rem);
+}
+
+/* Tablet: three prints in the band above the copy. */
+@media (max-width: 1099px) {
+  .kp-life-stage__print--welcome,
+  .kp-life-stage__print--praise {
+    display: none;
+  }
+
+  .kp-life-stage__print {
+    --from-x: 0rem;
+    --from-y: 4rem;
+  }
+
+  .kp-life-stage__print--outreach {
+    left: 6%;
+    top: calc(var(--room) * 0.12);
+    width: clamp(5.5rem, calc((var(--room) * 0.72 - 18px) * 0.8), 11rem);
+  }
+
+  .kp-life-stage__print--sax {
+    left: 37%;
+    right: auto;
+    top: calc(var(--room) * 0.05);
+    width: clamp(5.5rem, calc((var(--room) * 0.8 - 18px) * 0.8), 12rem);
+  }
+
+  .kp-life-stage__print--baptism {
+    right: 6%;
+    top: calc(var(--room) * 0.2);
+    width: clamp(6.5rem, calc((var(--room) * 0.6 - 18px) * 1.25), 14rem);
+  }
+}
+
+/* Phones: the same three, smaller, kept clear of the copy. */
+@media (max-width: 699px) {
+  .kp-life-stage__print--outreach {
+    left: 4%;
+    top: calc(var(--room) * 0.14);
+    width: clamp(5.5rem, min(30vw, calc((var(--room) * 0.7 - 18px) * 0.8)), 8.5rem);
+  }
+
+  .kp-life-stage__print--sax {
+    left: 35%;
+    top: calc(var(--room) * 0.04);
+    width: clamp(5.5rem, min(30vw, calc((var(--room) * 0.72 - 18px) * 0.8)), 8.5rem);
+  }
+
+  .kp-life-stage__print--baptism {
+    right: 3%;
+    top: calc(var(--room) * 0.3);
+    width: clamp(6rem, min(34vw, calc((var(--room) * 0.5 - 18px) * 1.25)), 9.5rem);
+  }
+}
+
+/* A print shows once its photo has decoded (LifeHero), and is dropped if the photo fails. */
+.kp-life-stage__print[data-photo="loading"] .kp-life-stage__card {
+  visibility: hidden;
+}
+
+.kp-life-stage__print[data-photo="broken"] {
+  display: none;
+}
+
+/* ---------- Entrance ----------
+   "intro" (first load): the dove intro clears at 2.2s on the same clock (refinements.css), so the
+   entrance waits for it here in CSS and never depends on hydration. "wait": held under a comic
+   page turn. "go": replayed by LifeHero once the turn clears or the intro is skipped. */
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .kp-life-stage[data-entrance="intro"] {
+    --cue: 2200ms;
+  }
+
+  .kp-life-stage[data-entrance="go"] {
+    --cue: 0ms;
+  }
+
+  /* The photo starts settling as the cover lifts, not behind it. */
+  .kp-life-stage[data-entrance="intro"] .kp-ev-hero__img {
+    animation-delay: var(--cue);
+  }
+
+  .kp-life-stage[data-entrance="wait"] .kp-ev-hero__img {
+    animation-play-state: paused;
+  }
+
+  .kp-life-stage[data-entrance="wait"] .kp-life-stage__line > span {
+    transform: translateY(118%);
+  }
+
+  .kp-life-stage[data-entrance="wait"] .kp-ev-hero__eyebrow,
+  .kp-life-stage[data-entrance="wait"] .kp-ev-hero__tag,
+  .kp-life-stage[data-entrance="wait"] .kp-life-stage__card {
+    opacity: 0;
+  }
+
+  .kp-life-stage:not([data-entrance="wait"]) .kp-life-stage__line > span {
+    animation: kp-life-line-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) calc(var(--cue) + 80ms)
+      backwards;
+  }
+
+  .kp-life-stage:not([data-entrance="wait"]) .kp-life-stage__line--accent > span {
+    animation-delay: calc(var(--cue) + 200ms);
+  }
+
+  .kp-life-stage:not([data-entrance="wait"]) .kp-ev-hero__eyebrow {
+    --slap-r: -2deg;
+    --slap-shadow: 4px;
+    animation: kp-sticker-slap 560ms calc(var(--cue) + 560ms) backwards;
+  }
+
+  .kp-life-stage:not([data-entrance="wait"]) .kp-ev-hero__tag {
+    animation: kp-ev-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) calc(var(--cue) + 700ms) backwards;
+  }
+
+  .kp-life-stage:not([data-entrance="wait"]) .kp-life-stage__card {
+    animation: kp-life-print-pop 640ms calc(var(--cue) + 860ms + var(--order, 0) * 90ms) backwards;
+  }
+
+  /* Photo arrived after its slot (slow network or hydration): pop in on its own rather than snap. */
+  .kp-life-stage .kp-life-stage__print[data-photo="late"] .kp-life-stage__card {
+    animation: kp-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--order, 0) * 70ms) backwards;
+  }
+}
+
+@keyframes kp-life-line-rise {
+  from {
+    transform: translateY(118%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Prints burst out from the copy, overshoot their resting tilt, then settle on the table. */
+@keyframes kp-life-print-pop {
+  0% {
+    opacity: 0;
+    translate: var(--from-x, -3rem) var(--from-y, 4rem);
+    scale: 0.55;
+    rotate: calc(var(--tilt, 0deg) - 14deg);
+    animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
+  }
+  55% {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1.05;
+    rotate: calc(var(--tilt, 0deg) + 2deg);
+    animation-timing-function: ease-in-out;
+  }
+  80% {
+    scale: 0.985;
+    rotate: calc(var(--tilt, 0deg) - 0.75deg);
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    rotate: var(--tilt, 0deg);
+  }
+}
