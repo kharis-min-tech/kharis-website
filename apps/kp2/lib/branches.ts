@@ -95,7 +95,15 @@ function placeholderDescription(city: string) {
   return `A thriving congregation serving ${city}. Experience uplifting worship, relevant biblical teaching, and deep kingdom connections.`;
 }
 
-const CAMPUS_NAMES = ["london", "birmingham", "manchester", "barking", "peterborough", "romford"];
+const CAMPUS_NAMES = [
+  "london",
+  "birmingham",
+  "manchester",
+  "barking",
+  "peterborough",
+  "romford",
+  "southampton",
+];
 
 function ownBlurb(stored: string, city: string) {
   const text = stored.trim();
@@ -197,6 +205,7 @@ const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
   manchester: { lat: 53.4808, lng: -2.2426 },
   peterborough: { lat: 52.5695, lng: -0.2405 },
   romford: { lat: 51.5776, lng: 0.1784 },
+  southampton: { lat: 50.9097, lng: -1.4044 },
 };
 
 function cityFallbackCoords(city: string) {
@@ -377,22 +386,317 @@ async function mediaByBranch() {
   return { galleries, videos };
 }
 
+const FALLBACK_KP2_ROWS: BranchRow[] = [
+  {
+    id: "kp2-london",
+    slug: "kp2-london",
+    name: "KP2 London",
+    subtitle: "England",
+    group: "Kharis Phase 2",
+    workspace: SITE_WORKSPACE,
+    short_description: "Our central London youth and young adults hub.",
+    description: null,
+    hero_image_url: null,
+    pastor_name: "Pastor David Antwi",
+    pastor_role: "pastor",
+    pastor_image_url: null,
+    pastor_bio: null,
+    contact_email: "info@kharis.org",
+    contact_phone: null,
+    instagram: "kharisphasetwo",
+    giving_link: null,
+    sort_order: 1,
+    venues: [
+      {
+        id: "kp2-london-venue",
+        name: "Kharis London Hub",
+        address_line1: "London",
+        address_line2: null,
+        city: "London",
+        postcode: "SE15",
+        country: "United Kingdom",
+        latitude: 51.5074,
+        longitude: -0.1278,
+        parking_info: null,
+        public_transport_info: null,
+      },
+    ],
+    services: [
+      {
+        id: "kp2-london-sun",
+        name: "Sunday Service",
+        type: "sunday",
+        day: "Sunday",
+        start_time: "13:30",
+        description: "Worship, the Word and fellowship.",
+        sort_order: 1,
+        is_active: true,
+        venue_id: "kp2-london-venue",
+      },
+    ],
+  },
+  {
+    id: "kp2-barking",
+    slug: "kp2-barking",
+    name: "KP2 Barking",
+    subtitle: "England",
+    group: "Kharis Phase 2",
+    workspace: SITE_WORKSPACE,
+    short_description: "A vibrant congregation serving Barking and East London.",
+    description: null,
+    hero_image_url: null,
+    pastor_name: null,
+    pastor_role: "lead",
+    pastor_image_url: null,
+    pastor_bio: null,
+    contact_email: "info@kharis.org",
+    contact_phone: null,
+    instagram: "kharisphasetwo",
+    giving_link: null,
+    sort_order: 2,
+    venues: [
+      {
+        id: "kp2-barking-venue",
+        name: "Barking Hub",
+        address_line1: "Barking",
+        address_line2: null,
+        city: "Barking",
+        postcode: "IG11",
+        country: "United Kingdom",
+        latitude: 51.539,
+        longitude: 0.0805,
+        parking_info: null,
+        public_transport_info: null,
+      },
+    ],
+    services: [
+      {
+        id: "kp2-barking-sun",
+        name: "Sunday Service",
+        type: "sunday",
+        day: "Sunday",
+        start_time: "13:30",
+        description: "Worship, the Word and fellowship.",
+        sort_order: 1,
+        is_active: true,
+        venue_id: "kp2-barking-venue",
+      },
+    ],
+  },
+  {
+    id: "kp2-romford",
+    slug: "kp2-romford",
+    name: "KP2 Romford",
+    subtitle: "England",
+    group: "Kharis Phase 2",
+    workspace: SITE_WORKSPACE,
+    short_description: "A thriving youth and young adults family in Romford.",
+    description: null,
+    hero_image_url: null,
+    pastor_name: null,
+    pastor_role: "lead",
+    pastor_image_url: null,
+    pastor_bio: null,
+    contact_email: "info@kharis.org",
+    contact_phone: null,
+    instagram: "kharisphasetwo",
+    giving_link: null,
+    sort_order: 3,
+    venues: [
+      {
+        id: "kp2-romford-venue",
+        name: "Romford Hub",
+        address_line1: "Romford",
+        address_line2: null,
+        city: "Romford",
+        postcode: "RM1",
+        country: "United Kingdom",
+        latitude: 51.5776,
+        longitude: 0.1784,
+        parking_info: null,
+        public_transport_info: null,
+      },
+    ],
+    services: [
+      {
+        id: "kp2-romford-sun",
+        name: "Sunday Service",
+        type: "sunday",
+        day: "Sunday",
+        start_time: "13:30",
+        description: "Worship, the Word and fellowship.",
+        sort_order: 1,
+        is_active: true,
+        venue_id: "kp2-romford-venue",
+      },
+    ],
+  },
+  {
+    id: "kp2-birmingham",
+    slug: "kp2-birmingham",
+    name: "KP2 Birmingham",
+    subtitle: "England",
+    group: "Kharis Phase 2",
+    workspace: SITE_WORKSPACE,
+    short_description: "Serving students and young adults across Birmingham and the West Midlands.",
+    description: null,
+    hero_image_url: null,
+    pastor_name: null,
+    pastor_role: "lead",
+    pastor_image_url: null,
+    pastor_bio: null,
+    contact_email: "info@kharis.org",
+    contact_phone: null,
+    instagram: "kharisphasetwo",
+    giving_link: null,
+    sort_order: 4,
+    venues: [
+      {
+        id: "kp2-birmingham-venue",
+        name: "Birmingham Hub",
+        address_line1: "Birmingham",
+        address_line2: null,
+        city: "Birmingham",
+        postcode: "B1",
+        country: "United Kingdom",
+        latitude: 52.4862,
+        longitude: -1.8904,
+        parking_info: null,
+        public_transport_info: null,
+      },
+    ],
+    services: [
+      {
+        id: "kp2-birmingham-sun",
+        name: "Sunday Service",
+        type: "sunday",
+        day: "Sunday",
+        start_time: "13:30",
+        description: "Worship, the Word and fellowship.",
+        sort_order: 1,
+        is_active: true,
+        venue_id: "kp2-birmingham-venue",
+      },
+    ],
+  },
+  {
+    id: "kp2-peterborough",
+    slug: "kp2-peterborough",
+    name: "KP2 Peterborough",
+    subtitle: "England",
+    group: "Kharis Phase 2",
+    workspace: SITE_WORKSPACE,
+    short_description: "Raising a new breed of Christians in Peterborough.",
+    description: null,
+    hero_image_url: null,
+    pastor_name: null,
+    pastor_role: "lead",
+    pastor_image_url: null,
+    pastor_bio: null,
+    contact_email: "info@kharis.org",
+    contact_phone: null,
+    instagram: "kharisphasetwo",
+    giving_link: null,
+    sort_order: 5,
+    venues: [
+      {
+        id: "kp2-peterborough-venue",
+        name: "Peterborough Hub",
+        address_line1: "Peterborough",
+        address_line2: null,
+        city: "Peterborough",
+        postcode: "PE1",
+        country: "United Kingdom",
+        latitude: 52.5695,
+        longitude: -0.2405,
+        parking_info: null,
+        public_transport_info: null,
+      },
+    ],
+    services: [
+      {
+        id: "kp2-peterborough-sun",
+        name: "Sunday Service",
+        type: "sunday",
+        day: "Sunday",
+        start_time: "13:30",
+        description: "Worship, the Word and fellowship.",
+        sort_order: 1,
+        is_active: true,
+        venue_id: "kp2-peterborough-venue",
+      },
+    ],
+  },
+  {
+    id: "kp2-southampton",
+    slug: "kp2-southampton",
+    name: "KP2 Southampton",
+    subtitle: "England",
+    group: "Kharis Phase 2",
+    workspace: SITE_WORKSPACE,
+    short_description: "Our South Coast hub for students and young people in Southampton.",
+    description: null,
+    hero_image_url: null,
+    pastor_name: null,
+    pastor_role: "lead",
+    pastor_image_url: null,
+    pastor_bio: null,
+    contact_email: "info@kharis.org",
+    contact_phone: null,
+    instagram: "kharisphasetwo",
+    giving_link: null,
+    sort_order: 6,
+    venues: [
+      {
+        id: "kp2-southampton-venue",
+        name: "Southampton Hub",
+        address_line1: "Southampton",
+        address_line2: null,
+        city: "Southampton",
+        postcode: "SO14",
+        country: "United Kingdom",
+        latitude: 50.9097,
+        longitude: -1.4044,
+        parking_info: null,
+        public_transport_info: null,
+      },
+    ],
+    services: [
+      {
+        id: "kp2-southampton-sun",
+        name: "Sunday Service",
+        type: "sunday",
+        day: "Sunday",
+        start_time: "13:30",
+        description: "Worship, the Word and fellowship.",
+        sort_order: 1,
+        is_active: true,
+        venue_id: "kp2-southampton-venue",
+      },
+    ],
+  },
+];
+
 export async function listBranches(): Promise<Branch[]> {
   const [rows, { galleries, videos }] = await Promise.all([
     siteGet<BranchRow[]>("/branches", false),
     mediaByBranch(),
   ]);
-  return (rows ?? [])
-    .filter(isKp2Location)
-    .map((row) => toBranch(row, galleries.get(row.id) ?? [], videos.get(row.id) ?? ""));
+  const kp2Rows = (rows ?? []).filter(isKp2Location);
+  const source = kp2Rows.length > 0 ? kp2Rows : FALLBACK_KP2_ROWS;
+  return source.map((row) => toBranch(row, galleries.get(row.id) ?? [], videos.get(row.id) ?? ""));
 }
 
 export async function getBranch(slug: string): Promise<Branch | null> {
   if (!/^[a-z0-9-]{1,120}$/i.test(slug)) return null;
   const row = await siteGet<BranchRow>(`/branches/${encodeURIComponent(slug)}`, false);
-  if (!row || !isKp2Location(row)) return null;
+  const resolved =
+    row && isKp2Location(row)
+      ? row
+      : (FALLBACK_KP2_ROWS.find((item) => item.slug === slug) ?? null);
+  if (!resolved) return null;
   const { galleries, videos } = await mediaByBranch();
-  return toBranch(row, galleries.get(row.id) ?? [], videos.get(row.id) ?? "");
+  return toBranch(resolved, galleries.get(resolved.id) ?? [], videos.get(resolved.id) ?? "");
 }
 
 export async function listBranchSlugs(): Promise<string[]> {
