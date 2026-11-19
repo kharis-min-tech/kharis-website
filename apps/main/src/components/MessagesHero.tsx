@@ -1,437 +1,256 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
-} from "react";
-import { MousePointer2, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Pause, Play, Square } from "lucide-react";
 import Image from "@/components/SiteImage";
-import { ABOUT } from "@/lib/about-content";
+import { youtubeWatchUrl } from "@/lib/life-videos";
 import type { MessageVideo } from "@/lib/youtube";
 
-/** Reveal the preview promptly once YouTube reports playback. */
-/** Reveal the preview promptly once YouTube reports playback. */
-const PLAY_SETTLE_MS = 180;
-/** Matches the crossfade in messages-hub.css; pause only once the video is invisible. */
-const FADE_MS = 320;
-/** Autoplay is sometimes ignored (notably on phones), so keep asking while it should run. */
-const PLAY_RETRY_MS = 2500;
-const MIN_VISIBLE_RATIO = 0.35;
-const HEADLINE_FIRST = "Teachings that";
-const HEADLINE_SECOND_PREFIX = "feed your ";
-const HEADLINE_LAST_WORD = "spirit.";
-const HEADLINE_HOLD_AT = HEADLINE_FIRST.length + HEADLINE_SECOND_PREFIX.length;
-const HEADLINE_LENGTH = HEADLINE_HOLD_AT + HEADLINE_LAST_WORD.length;
-const HEADLINE_TYPE_MS = 45;
+const PREVIEW_MEDIA = "(min-width: 1280px) and (prefers-reduced-motion: no-preference)";
+const PREVIEW_START = 10 * 60;
 
-const YT_ORIGIN = "https://www.youtube-nocookie.com";
-
-function previewSrc(id: string) {
-  const params = new URLSearchParams({
-    autoplay: "1",
-    mute: "1",
-    controls: "0",
-    modestbranding: "1",
-    rel: "0",
-    playsinline: "1",
-    iv_load_policy: "3",
-    cc_load_policy: "0",
-    disablekb: "1",
-    fs: "0",
-    start: "0",
-    enablejsapi: "1",
-    origin: window.location.origin,
-  });
-  return `${YT_ORIGIN}/embed/${id}?${params}`;
-}
-
-function watchSrc(id: string, start: number) {
-  const params = new URLSearchParams({
-    autoplay: "1",
-    rel: "0",
-    modestbranding: "1",
-    playsinline: "1",
-    start: String(start),
-  });
-  return `${YT_ORIGIN}/embed/${id}?${params}`;
-}
-
-/**
- * Who preached it, from the "Title | Speaker | Scripture" convention the
- * channel titles follow.
- *
- * Kharis's own pastors are named the way the church says them out loud,
- * matched against lib/about-content so there is no second list of names to
- * keep in step. A guest keeps whatever the video calls them.
- *
- * Null when the second segment is plainly not a person. That happens often
- * enough ("Mercy, Repentance and Baptism | Acts 2:36-42") that printing it
- * unchecked would invite people to listen to a chapter of the Bible.
- */
-function speakerFrom(title: string): string | null {
-  const raw = title.split("|")[1]?.trim();
-  if (!raw || /[0-9:]/.test(raw) || raw.split(/\s+/).length > 4) return null;
-  const pastor = ABOUT.leadership.pastors.find(
-    (p) => p.name.replace(/^pastor\s+/i, "").toLowerCase() === raw.toLowerCase(),
-  );
-  if (!pastor) return raw;
-  return `Pastor ${pastor.name.replace(/^pastor\s+/i, "").split(/\s+/)[0]}`;
-}
-
-type Props = {
-  message: MessageVideo;
+type Player = {
+  destroy: () => void;
+  getDuration: () => number;
+  playVideo: () => void;
+  pauseVideo: () => void;
+  mute: () => void;
+  unMute: () => void;
+  seekTo: (seconds: number, seekAhead: boolean) => void;
 };
 
-export function MessagesHero({ message }: Props) {
-  const heroRef = useRef<HTMLElement>(null);
-  const frameRef = useRef<HTMLIFrameElement>(null);
-  const watchBtnRef = useRef<HTMLButtonElement>(null);
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const settleTimer = useRef<number | null>(null);
-  const pauseTimer = useRef<number | null>(null);
-  const playingRef = useRef(false);
-  const wantPlay = useRef(false);
-
-  const [allowed, setAllowed] = useState(false);
-  const [sharpPoster, setSharpPoster] = useState(true);
-  const [inView, setInView] = useState(true);
-  const [typed, setTyped] = useState(0);
-  const [typingStarted, setTypingStarted] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  /** Nobody taps a mouse and nobody clicks a phone, so the cue says which. */
-  const [coarsePointer, setCoarsePointer] = useState(false);
-  /** Keep the preview hidden until YouTube's transient controls clear. */
-  const [warming, setWarming] = useState(false);
-  const [settled, setSettled] = useState(false);
-  /** The player stopped on its own: hide at once so YouTube's overlay never fades through. */
-  const [cut, setCut] = useState(false);
-  const [watchStart, setWatchStart] = useState<number | null>(null);
-
-  const watching = watchStart !== null;
-  const showPreview = allowed && warming && settled && inView && !watching;
-  const title = message.title.split("|")[0]?.trim() || message.title;
-  const speaker = speakerFrom(message.title);
-  const cue = `${coarsePointer ? "Tap" : "Click"} to ${speaker ? `listen to ${speaker}` : "dive in"}`;
-
-  useEffect(() => {
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const syncMotion = () => setReducedMotion(motionQuery.matches);
-    syncMotion();
-    motionQuery.addEventListener("change", syncMotion);
-    const pointerQuery = window.matchMedia("(pointer: coarse)");
-    const syncPointer = () => setCoarsePointer(pointerQuery.matches);
-    syncPointer();
-    pointerQuery.addEventListener("change", syncPointer);
-    const startTimer = window.setTimeout(() => setTypingStarted(true), 100);
-    return () => {
-      motionQuery.removeEventListener("change", syncMotion);
-      pointerQuery.removeEventListener("change", syncPointer);
-      window.clearTimeout(startTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setTyped(HEADLINE_LENGTH);
-      return;
-    }
-    const typeLimit = HEADLINE_LENGTH;
-    if (!typingStarted || typed >= typeLimit) return;
-    const timer = window.setTimeout(
-      () => setTyped((current) => Math.min(typeLimit, current + 1)),
-      HEADLINE_TYPE_MS,
-    );
-    return () => window.clearTimeout(timer);
-  }, [reducedMotion, settled, typed, typingStarted]);
-
-  const firstLine = HEADLINE_FIRST.slice(0, Math.min(typed, HEADLINE_FIRST.length));
-  const secondTyped = Math.max(0, typed - HEADLINE_FIRST.length);
-  const secondLine = `${HEADLINE_SECOND_PREFIX}${HEADLINE_LAST_WORD}`.slice(0, secondTyped);
-  const typingFirstLine = !reducedMotion && typed < HEADLINE_FIRST.length;
-  const typingSecondLine =
-    !reducedMotion && typed >= HEADLINE_FIRST.length && typed < HEADLINE_LENGTH;
-
-  const command = useCallback((func: string, args: unknown[] = []) => {
-    const frame = frameRef.current;
-    // Skip until the iframe has actually navigated to YouTube (avoids origin mismatch noise).
-    if (!frame?.contentWindow) return;
-    try {
-      if (new URL(frame.src).origin !== YT_ORIGIN) return;
-      frame.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), YT_ORIGIN);
-    } catch {
-      /* iframe not ready */
-    }
-  }, []);
-
-  const resume = useCallback(() => {
-    if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
-    command("mute");
-    command("playVideo");
-  }, [command]);
-
-  const onHeroClick = (event: ReactMouseEvent<HTMLElement>) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    if (target.closest("[role='dialog'], button, a")) return;
-    openPlayer();
-  };
-
-  const onHeroKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
-    if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " "))
-      return;
-    event.preventDefault();
-    openPlayer();
-  };
-
-  /** Pausing makes YouTube show its play overlay, so only pause once the video is already hidden. */
-  const pauseLater = useCallback(
-    (ms: number) => {
-      if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
-      pauseTimer.current = window.setTimeout(() => command("pauseVideo"), ms);
+type PlayerApi = {
+  Player: new (
+    mount: HTMLElement,
+    options: {
+      videoId: string;
+      playerVars: Record<string, string | number>;
+      events: {
+        onReady: (event: { target: Player }) => void;
+        onStateChange: (event: { data: number }) => void;
+        onError: () => void;
+      };
     },
-    [command],
-  );
+  ) => Player;
+};
 
-  const scheduleSettle = useCallback((ms: number) => {
-    if (settleTimer.current) window.clearTimeout(settleTimer.current);
-    settleTimer.current = window.setTimeout(() => {
-      setSettled(true);
-      setCut(false);
-    }, ms);
-  }, []);
+let playerApi: Promise<PlayerApi> | undefined;
 
-  useEffect(() => {
-    // The preview is muted, allowing browsers to autoplay it without a sound gesture.
-    setAllowed(true);
-    return () => {
-      if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
-      if (settleTimer.current) window.clearTimeout(settleTimer.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setInView(!!entry && entry.intersectionRatio >= MIN_VISIBLE_RATIO),
-      { threshold: [0, MIN_VISIBLE_RATIO, 0.6, 1] },
-    );
-    io.observe(hero);
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!inView) setWatchStart(null);
-  }, [inView]);
-
-  // Keep the muted video playing while visible; the preview stays hidden until startup chrome clears.
-  useEffect(() => {
-    if (!allowed) return;
-    if (!inView || watching) {
-      wantPlay.current = false;
-      setWarming(false);
-      setSettled(false);
-      pauseLater(FADE_MS + 50);
-      return;
-    }
-    wantPlay.current = true;
-    setWarming(true);
-    setSettled(false);
-    setCut(false);
-    resume();
-  }, [inView, allowed, watching, resume, pauseLater]);
-
-  useEffect(() => {
-    if (!allowed) return;
-    const id = window.setInterval(() => {
-      if (wantPlay.current && !playingRef.current) command("playVideo");
-    }, PLAY_RETRY_MS);
-    return () => window.clearInterval(id);
-  }, [allowed, command]);
-
-  useEffect(() => {
-    const onMessage = (e: MessageEvent) => {
-      if (e.origin !== YT_ORIGIN || e.source !== frameRef.current?.contentWindow) return;
-      let data: { event?: string; info?: unknown };
-      try {
-        data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
-      } catch {
-        return;
-      }
-      if (data.event === "onReady" && wantPlay.current) resume();
-      let state: number | undefined;
-      if (data.event === "onStateChange" && typeof data.info === "number") state = data.info;
-      if (data.event === "infoDelivery" && data.info && typeof data.info === "object") {
-        const info = data.info as { playerState?: number; currentTime?: number };
-        state = info.playerState;
-      }
-      if (state === undefined) return;
-      // YouTube reports buffering while it is already playing. Keep the settled
-      // frame visible through that brief stall so the hero never flashes black.
-      if (state === 3 && settled) {
-        playingRef.current = false;
-        return;
-      }
-      const isPlaying = state === 1;
-      if (isPlaying === playingRef.current) return;
-      playingRef.current = isPlaying;
-      if (settleTimer.current) window.clearTimeout(settleTimer.current);
-      if (!isPlaying) {
-        setSettled(false);
-        setCut(true);
-        return;
-      }
-      command("unloadModule", ["captions"]);
-      scheduleSettle(PLAY_SETTLE_MS);
-    };
-    window.addEventListener("message", onMessage);
-    return () => {
-      window.removeEventListener("message", onMessage);
-      if (settleTimer.current) window.clearTimeout(settleTimer.current);
-    };
-  }, [command, resume, scheduleSettle, settled]);
-
-  const onFrameLoad = () => {
-    const win = frameRef.current?.contentWindow;
-    if (!win) return;
-    win.postMessage(
-      JSON.stringify({ event: "listening", id: "msg-hero", channel: "widget" }),
-      YT_ORIGIN,
-    );
-    win.postMessage(
-      JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }),
-      YT_ORIGIN,
-    );
+function loadPlayerApi() {
+  const host = window as Window & {
+    YT?: PlayerApi;
+    onYouTubeIframeAPIReady?: () => void;
   };
-
-  const openPlayer = () => {
-    wantPlay.current = false;
-    command("pauseVideo");
-    setWatchStart(0);
-  };
-
-  const closePlayer = useCallback(() => setWatchStart(null), []);
-
-  const wasWatching = useRef(false);
-  useEffect(() => {
-    if (!watching) {
-      const lost = !document.activeElement || document.activeElement === document.body;
-      if (wasWatching.current && lost) watchBtnRef.current?.focus({ preventScroll: true });
-      wasWatching.current = false;
-      return;
-    }
-    wasWatching.current = true;
-    closeBtnRef.current?.focus({ preventScroll: true });
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closePlayer();
+  if (host.YT?.Player) return Promise.resolve(host.YT);
+  playerApi ??= new Promise((resolve, reject) => {
+    const previous = host.onYouTubeIframeAPIReady;
+    host.onYouTubeIframeAPIReady = () => {
+      previous?.();
+      if (host.YT?.Player) resolve(host.YT);
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [watching, closePlayer]);
+    const script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
+    script.async = true;
+    script.onerror = () => {
+      script.remove();
+      host.onYouTubeIframeAPIReady = previous;
+      playerApi = undefined;
+      reject(new Error("YouTube player could not load."));
+    };
+    document.head.append(script);
+  });
+  return playerApi;
+}
+
+type Mode = "idle" | "preview" | "playing" | "paused";
+
+export function MessagesHero({ message }: { message: MessageVideo }) {
+  const hero = useRef<HTMLElement>(null);
+  const playerMount = useRef<HTMLDivElement>(null);
+  const action = useRef<HTMLButtonElement>(null);
+  const [allowPreview, setAllowPreview] = useState(false);
+  const [watching, setWatching] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [player, setPlayer] = useState<Player | null>(null);
+  const [hasOpenedPlayer, setHasOpenedPlayer] = useState(false);
+  const [sharpPoster, setSharpPoster] = useState(true);
+  const currentMode = useRef<Mode | null>(null);
+  const title = message.title.split("|")[0]?.trim() || message.title;
+  const load = allowPreview || hasOpenedPlayer;
+  const mode: Mode = watching ? (paused ? "paused" : "playing") : allowPreview ? "preview" : "idle";
+
+  useEffect(() => {
+    const element = hero.current;
+    if (!element) return;
+    const media = window.matchMedia(PREVIEW_MEDIA);
+    let inView = false;
+    const sync = () => setAllowPreview(media.matches && inView);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.intersectionRatio >= 0.35;
+        sync();
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(element);
+    media.addEventListener("change", sync);
+    return () => {
+      observer.disconnect();
+      media.removeEventListener("change", sync);
+    };
+  }, []);
+
+  useEffect(() => {
+    const container = playerMount.current;
+    if (!load || !container) return;
+    let disposed = false;
+    let instance: Player | undefined;
+    const mount = document.createElement("div");
+    container.append(mount);
+    loadPlayerApi()
+      .then(({ Player }) => {
+        if (disposed) return;
+        instance = new Player(mount, {
+          videoId: message.id,
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            playsinline: 1,
+            rel: 0,
+            origin: window.location.origin,
+          },
+          events: {
+            onReady: ({ target }) => {
+              if (!disposed) setPlayer(target);
+            },
+            onStateChange: ({ data }) => {
+              if (disposed) return;
+              if (data === 1) setVisible(true);
+              if (data === 0) setVisible(false);
+            },
+            onError: () => {
+              if (!disposed) setFailed(true);
+            },
+          },
+        });
+      })
+      .catch(() => {
+        if (!disposed) setFailed(true);
+      });
+
+    return () => {
+      disposed = true;
+      instance?.destroy();
+      mount.remove();
+      currentMode.current = null;
+      setPlayer(null);
+      setVisible(false);
+    };
+  }, [load, message.id]);
+
+  useEffect(() => {
+    if (!player || failed) return;
+    const previous = currentMode.current;
+    currentMode.current = mode;
+    if (mode === "playing") {
+      player.unMute();
+      if (previous !== "paused") player.seekTo(0, true);
+      player.playVideo();
+    } else if (mode === "paused" || mode === "idle") {
+      player.pauseVideo();
+    } else {
+      player.mute();
+      if (previous !== "preview") {
+        const duration = player.getDuration();
+        player.seekTo(duration >= PREVIEW_START + 120 ? PREVIEW_START : 0, true);
+      }
+      player.playVideo();
+    }
+  }, [failed, mode, player]);
+
+  function togglePlayback() {
+    if (!watching) setHasOpenedPlayer(true);
+    setPaused(false);
+    setWatching(!watching);
+  }
 
   return (
     <section
-      ref={heroRef}
-      className="msg-hub__hero"
-      aria-label={`Watch the latest Kharis message: ${title}`}
-      tabIndex={0}
-      data-preview={showPreview || undefined}
-      data-preview-cut={cut || undefined}
-      data-watching={watching || undefined}
-      onClick={onHeroClick}
-      onKeyDown={onHeroKeyDown}
-    >
-      <Image
-        src={
-          sharpPoster ? `https://i.ytimg.com/vi/${message.id}/maxresdefault.jpg` : message.thumbnail
+      ref={hero}
+      className="msg-hub__hero msg-hub__hero--featured"
+      data-preview={visible && mode !== "idle" && !failed ? true : undefined}
+      data-playing={watching || undefined}
+      aria-label={title}
+      onKeyDown={(event) => {
+        if (watching && event.key === "Escape") {
+          togglePlayback();
+          action.current?.focus({ preventScroll: true });
         }
-        alt=""
-        fill
-        preload
-        sizes="100vw"
-        className="msg-hero-poster"
-        onError={() => setSharpPoster(false)}
-      />
-      <div className="msg-hero-preview" aria-hidden inert>
-        {allowed && (
-          <iframe
-            ref={frameRef}
-            src={previewSrc(message.id)}
-            title="Message preview"
-            className="msg-hero-preview__frame"
-            allow="autoplay; encrypted-media"
-            tabIndex={-1}
-            onLoad={onFrameLoad}
-          />
+      }}
+    >
+      <div className="msg-hero-media">
+        <Image
+          src={
+            sharpPoster
+              ? `https://i.ytimg.com/vi/${encodeURIComponent(message.id)}/maxresdefault.jpg`
+              : message.thumbnail
+          }
+          alt=""
+          fill
+          preload
+          sizes="100vw"
+          className="msg-hero-poster"
+          onError={() => setSharpPoster(false)}
+        />
+        <div className="msg-hero-preview" aria-hidden inert>
+          <div className="msg-hero-preview__frame" ref={playerMount} />
+        </div>
+        <div className="msg-hub__veil" aria-hidden />
+      </div>
+
+      <div className="msg-featured-content">
+        <h1 className={watching ? "sr-only" : "msg-hub__title"}>{title}</h1>
+        {!watching && (
+          <p className="msg-featured-description">Watch the latest teaching here or on YouTube.</p>
         )}
-      </div>
-
-      <div className="msg-hub__veil" aria-hidden />
-
-      <div className="msg-hub__hero-copy">
-        <h1 className="msg-hub__title" aria-label="Teachings that feed your spirit.">
-          <span className="msg-hub__title-line" aria-hidden="true">
-            {firstLine}
-            {typingFirstLine && <span className="msg-hub__typing-caret" />}
-          </span>
-          <span className="msg-hub__title-line" aria-hidden="true">
-            {secondLine}
-            {typingSecondLine && <span className="msg-hub__typing-caret" />}
-          </span>
-        </h1>
-        <div className="msg-hero-watch-wrap">
-          <button
-            ref={watchBtnRef}
-            type="button"
-            className="msg-hero-cue"
-            onClick={openPlayer}
-            aria-label={`Watch message: ${title}`}
-          >
-            <span className="msg-hero-cue__pointer" aria-hidden="true">
-              <MousePointer2 className="msg-hero-cue__arrow" strokeWidth={1.75} />
-            </span>
-            <span className="msg-hero-cue__text">{cue}</span>
+        {failed && (
+          <p className="msg-featured-description" role="status">
+            The video player is unavailable. You can still watch on YouTube.
+          </p>
+        )}
+        <div className="msg-featured-actions">
+          <button ref={action} type="button" className="msg-hero-action" onClick={togglePlayback}>
+            {watching ? (
+              <Square size={16} aria-hidden />
+            ) : (
+              <Play size={16} fill="currentColor" aria-hidden />
+            )}
+            {watching ? "Stop message" : "Play message"}
           </button>
+          {watching && !failed && (
+            <button
+              type="button"
+              className="msg-hero-action msg-hero-action--secondary"
+              onClick={() => setPaused(!paused)}
+            >
+              {paused ? <Play size={16} aria-hidden /> : <Pause size={16} aria-hidden />}
+              {paused ? "Resume message" : "Pause message"}
+            </button>
+          )}
+          <a
+            className="msg-hero-action msg-hero-action--secondary"
+            href={youtubeWatchUrl(message.id)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            YouTube
+          </a>
         </div>
       </div>
-
-      {watchStart !== null && (
-        <div
-          className="msg-hero-player"
-          role="dialog"
-          aria-label={`Watch ${title}`}
-          onClick={(event) => {
-            if (event.target === event.currentTarget) closePlayer();
-          }}
-        >
-          <div className="msg-hero-player__box">
-            <div className="msg-hero-player__bar">
-              <p className="msg-hero-player__title">{title}</p>
-              <button
-                ref={closeBtnRef}
-                type="button"
-                className="msg-hero-player__close k-cta"
-                onClick={closePlayer}
-                aria-label="Close message"
-              >
-                <X strokeWidth={2.2} aria-hidden />
-              </button>
-            </div>
-            <div className="msg-hero-player__frame">
-              <iframe
-                src={watchSrc(message.id, watchStart)}
-                title={title}
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

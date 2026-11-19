@@ -434,14 +434,6 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
                 Make a pledge
               </a>
             </div>
-            <a
-              href={SPURGEONS_CENTRE.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="gv-build__more"
-            >
-              Learn about the building project
-            </a>
           </div>
         </div>
       </section>
