@@ -39,7 +39,7 @@ const PANELS: Panel[] = [
     position: "50% 25%",
   },
   {
-    href: "/departments",
+    href: "/quiz",
     title: "Our service to God",
     src: KP2_PHOTOS.serviceSaxophone.src,
     alt: KP2_PHOTOS.serviceSaxophone.alt,

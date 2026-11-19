@@ -8,7 +8,7 @@ import { MessagesAppStrip } from "@/components/MessagesAppStrip";
 import { MessageBrowser } from "@/components/MessageBrowser";
 import "@/components/listen-row.css";
 import { MutedHeroVideo } from "@/components/MutedHeroVideo";
-import { displayMessageTitle, youtubeWatchUrl, type MessageVideo } from "@/lib/youtube";
+import { youtubeWatchUrl, type MessageVideo } from "@/lib/youtube";
 import { useState } from "react";
 
 function MessagesPage({ messages }: { messages: MessageVideo[] }) {
@@ -48,13 +48,8 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             {!fullPlayback ? (
               <>
                 <h1 className="mb-4 max-w-full break-words font-display-lg text-[1.75rem] uppercase leading-[0.95] tracking-tight text-white md:text-display-lg md:leading-none md:tracking-tighter">
-                  {featured ? displayMessageTitle(featured.title) : "Messages"}
+                  Messages
                 </h1>
-                <p className="mb-6 max-w-2xl font-body-lg text-base leading-relaxed text-white/80 md:mb-8 md:text-body-lg">
-                  {featured
-                    ? "Watch the newest teaching from Pastor David Antwi here or on YouTube."
-                    : "Teachings from Pastor David Antwi will appear here as they go live."}
-                </p>
               </>
             ) : null}
             {featured ? (
@@ -125,11 +120,21 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   Other Ways To Listen
                 </h2>
               </div>
-              <p className="font-body-lg text-body-md text-on-surface-variant max-w-md">
-                What it takes to sustain the move of God is a text-driven, gospel-saturated,
-                Christ-exalting messages. Catch every message on your favourite platform, or in the
-                Kharis app.
-              </p>
+              <blockquote className="relative max-w-md border-l-4 border-primary bg-surface-container-low px-6 py-5 text-on-surface-variant shadow-[4px_4px_0_#151218]">
+                <span
+                  className="material-symbols-outlined mb-2 block text-4xl leading-none text-primary"
+                  aria-hidden="true"
+                >
+                  format_quote
+                </span>
+                <p className="font-body-lg text-body-md leading-relaxed">
+                  “What sustains the move of God is text-driven, gospel-saturated, Christ-exalting
+                  teaching.”
+                </p>
+                <cite className="mt-3 block font-label-sm not-italic uppercase tracking-wider text-on-surface">
+                  — Pastor David Antwi
+                </cite>
+              </blockquote>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-gutter">
               {[

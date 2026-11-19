@@ -198,3 +198,9 @@ export function kharisFirst<T extends Pick<ContactLocation, "name" | "workspace"
 export function branchDisplayName(name: string): string {
   return name.replace(/^Chelmesford\b/, "Chelmsford");
 }
+
+/** Town name used to sort the shared branch picker. */
+export function contactBranchTown(branch: Pick<ContactLocation, "name" | "workspace">): string {
+  const name = branchDisplayName(branch.name);
+  return isKp2Branch(branch) ? name.replace(/^KP2\s+/i, "") : name;
+}

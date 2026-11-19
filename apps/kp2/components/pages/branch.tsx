@@ -56,6 +56,8 @@ function GalleryCarousel({
   const [canScroll, setCanScroll] = useState(images.length > 1);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   const updateEdges = useCallback(() => {
     const el = scroller.current;
@@ -71,6 +73,30 @@ function GalleryCarousel({
     return () => window.removeEventListener("resize", updateEdges);
   }, [images.length, updateEdges]);
 
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (paused || reducedMotion || images.length < 2) return;
+    const advance = () => {
+      const el = scroller.current;
+      const card = el?.querySelector("button");
+      if (!el || !card) return;
+      const styles = window.getComputedStyle(el);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
+      const step = card.getBoundingClientRect().width + gap;
+      const reachedEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
+      el.scrollTo({ left: reachedEnd ? 0 : el.scrollLeft + step, behavior: "smooth" });
+    };
+    const timer = window.setInterval(advance, 11_000);
+    return () => window.clearInterval(timer);
+  }, [images.length, paused, reducedMotion]);
+
   function scrollByCard(direction: 1 | -1) {
     const el = scroller.current;
     const card = el?.querySelector("button");
@@ -79,7 +105,19 @@ function GalleryCarousel({
   }
 
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(true);
+      }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false);
+      }}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
+    >
       <div
         ref={scroller}
         onScroll={updateEdges}
@@ -844,7 +882,7 @@ function BranchPage({
             {campusEvents.length === 0 ? (
               <div className="md:col-span-2">
                 <VisitInstead
-                  title="Sunday is the gathering"
+                  title="Join us this Sunday"
                   action={
                     <div className="mt-6 flex flex-wrap justify-center gap-3">
                       <Link

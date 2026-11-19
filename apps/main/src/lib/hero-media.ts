@@ -1,3 +1,5 @@
+import siteImageUrls from "@/lib/site-image-urls.json";
+
 /**
  * The homepage hero media.
  *
@@ -19,15 +21,14 @@ export type HeroSlide = {
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
-    type: "video",
-    src: "/videos/hero-a.mp4?v=2",
-    poster: "https://images.kharis.org/site-images/main/59beb230d62d3613/hero-a-poster.jpg",
-    alt: "The congregation gathered at a Kharis service",
+    type: "image",
+    src: siteImageUrls["/images/locations/london-sunday-smiles.jpg"],
+    alt: "Members of Kharis London smiling during a service",
   },
   {
     type: "image",
-    src: "https://images.kharis.org/site-images/main/e9df39abff1c7e6d/hero/sunday-service-stage.jpg",
-    alt: "Pastor raising his Bible on stage at Kharis Sunday Service",
+    src: siteImageUrls["/images/events/sunday-pastor-open-bible.jpg"],
+    alt: "Pastor David preaching with an open Bible at a Kharis service",
   },
   {
     type: "image",
@@ -45,10 +46,9 @@ export const HERO_SLIDES: HeroSlide[] = [
     alt: "Preaching with arms outstretched and an open Bible in hand",
   },
   {
-    type: "video",
-    src: "/videos/hero-b.mp4?v=2",
-    poster: "https://images.kharis.org/site-images/main/81043753566f149e/hero-b-poster.jpg",
-    alt: "Worship at a Kharis gathering",
+    type: "image",
+    src: siteImageUrls["/images/contact/easter-welcome-wave.jpg"],
+    alt: "People waving as they arrive for a Kharis Easter service",
   },
   {
     type: "image",

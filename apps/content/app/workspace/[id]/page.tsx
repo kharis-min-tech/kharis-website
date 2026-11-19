@@ -24,7 +24,10 @@ const COUNTS: Record<
   "/events": (workspace, access) =>
     countRows("events", { workspace }, access.isSuperAdmin ? undefined : access.branchIds),
   "/announcements": (workspace) => countRows("news", { workspace }),
-  "/testimonies": (workspace) => countRows("testimonies", { workspace }),
+  "/testimonies": (workspace) =>
+    workspace === "general"
+      ? countRows("testimonies", {})
+      : countRows("testimonies", { workspace }),
   "/daily": (workspace) => countRows("daily_entries", { workspace, kind: "reading" }),
   "/daily-prayers": (workspace) => countRows("daily_entries", { workspace, kind: "prayer" }),
   "/daily-message": () => countRows("daily_messages", {}),
@@ -37,10 +40,6 @@ const COUNTS: Record<
   },
   "/live": () => countRows("app_config", { key: "live_stream" }),
   "/messages": (workspace) => countRows("contact_messages", { workspace }),
-  "/newsletter": (workspace) =>
-    workspace === "general"
-      ? countRows("newsletter_subscribers", {})
-      : countRows("newsletter_subscribers", { source: workspace }),
 };
 
 export default function WorkspacePage() {

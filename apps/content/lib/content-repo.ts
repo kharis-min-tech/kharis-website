@@ -13,7 +13,6 @@ import type {
   NewsRow,
   TestimonyRow,
   VisitorRow,
-  NewsletterSubscriber,
 } from "@/lib/types";
 import type { WorkspaceId } from "@/lib/workspaces";
 import { visitorPayload, type VisitorDraft } from "@/lib/visitors";
@@ -102,8 +101,12 @@ export async function deleteNews(id: string) {
   await studioData.remove("news", id);
 }
 
+/** General lists every testimony; other workspaces only their own. */
 export async function listTestimonies(workspace: WorkspaceId) {
-  return studioData.list<TestimonyRow>("testimonies", { where: { workspace }, order: "name" });
+  return studioData.list<TestimonyRow>("testimonies", {
+    where: workspace === "general" ? {} : { workspace },
+    order: "name",
+  });
 }
 
 export async function saveTestimony(row: Omit<TestimonyRow, "id"> & { id?: string }) {
@@ -251,19 +254,6 @@ export async function setMessageStatus(id: string, status: ContactStatus) {
 
 export async function deleteMessage(id: string) {
   await studioData.remove("contact_messages", id);
-}
-
-export async function listNewsletter(source?: string) {
-  const where: Where = source && source !== "general" && source !== "all" ? { source } : {};
-  return studioData.list<NewsletterSubscriber>("newsletter_subscribers", {
-    where,
-    order: "-created_at",
-    limit: 500,
-  });
-}
-
-export async function deleteNewsletter(id: string) {
-  await studioData.remove("newsletter_subscribers", id);
 }
 
 /** Recent events across workspaces, for the overview. Weekly ones can start long ago. */

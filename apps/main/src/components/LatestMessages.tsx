@@ -46,7 +46,7 @@ export function LatestMessages({ featured, others }: Props) {
           <h2 className="section-title mt-2">Latest Messages</h2>
         </Reveal>
 
-        <div className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr] lg:gap-8">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-8">
           <Reveal variant="left" distance={48}>
             <a
               href={`https://www.youtube.com/watch?v=${featured.id}`}
@@ -63,7 +63,7 @@ export function LatestMessages({ featured, others }: Props) {
             </a>
 
             <div className="mt-5 text-center">
-              <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,2.4vw,1.75rem)] font-bold leading-snug text-fg">
+              <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,2.4vw,1.75rem)] font-bold leading-snug text-fg [overflow-wrap:anywhere]">
                 {featured.title}
               </h3>
             </div>
@@ -89,7 +89,7 @@ export function LatestMessages({ featured, others }: Props) {
                       sizes="(max-width: 1024px) 50vw, 220px"
                     />
                   </div>
-                  <p className="line-clamp-2 p-3 text-center text-xs font-bold leading-snug text-fg md:text-sm">
+                  <p className="p-3 text-center text-xs font-bold leading-snug text-fg [overflow-wrap:anywhere] md:text-sm">
                     {msg.title}
                   </p>
                 </a>

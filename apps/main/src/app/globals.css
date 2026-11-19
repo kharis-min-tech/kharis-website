@@ -10525,12 +10525,11 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
   min-height: 44px;
   padding: 0 0.05rem;
   color: var(--purple);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
   line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
 }
 
 .site-footer__policy--note {
@@ -13563,6 +13562,7 @@ html[data-theme="dark"] .locations-hero__title span {
 
 .locations-search {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   margin: 2rem auto 0;
   max-width: 38rem;
@@ -13599,6 +13599,10 @@ html[data-theme="dark"] .locations-hero__title span {
   margin-top: 0.85rem;
   font-size: 0.85rem;
   font-weight: 600;
+  color: var(--purple);
+}
+
+html[data-theme="dark"] .locations-hero__note {
   color: var(--yellow);
 }
 
@@ -14100,23 +14104,6 @@ html[data-theme="dark"] .life-reader__journey-heading {
 html[data-theme="dark"] .life-modal--reader,
 html[data-theme="dark"] .life-modal--reader .life-modal__scrim {
   background: var(--surface-1);
-}
-
-/* —— Department Discovery Quiz (/quiz) —— */
-html:not([data-theme="dark"]) .quiz-page h1,
-html:not([data-theme="dark"]) .quiz-page h2,
-html:not([data-theme="dark"]) .quiz-page h3,
-html:not([data-theme="dark"]) .quiz-page h4 {
-  color: #1c1c1f !important;
-  -webkit-text-fill-color: #1c1c1f !important;
-}
-
-html[data-theme="dark"] .quiz-page h1,
-html[data-theme="dark"] .quiz-page h2,
-html[data-theme="dark"] .quiz-page h3,
-html[data-theme="dark"] .quiz-page h4 {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
 }
 
 /* —— Footer world ————————————————————————————————————————————

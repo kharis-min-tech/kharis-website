@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { CHURCH_VALUES } from "@/lib/church-values";
 
 /**
  * The rotating "We are …" line in the hero.
@@ -21,14 +22,7 @@ const TextRotator = dynamic(() => import("@/vendor/text-rotator/AnimatedTextRota
 /** Campaign yellow, matching "Kharis" in the welcome line. */
 const ACCENT = "#ffde59";
 
-export const HERO_PHRASES = [
-  "Christ Centered",
-  "Bible Believing",
-  "Revival Seeking",
-  "Purpose Driven",
-  "People Developing",
-  "Disciple Making",
-] as const;
+const HERO_PHRASES = Object.values(CHURCH_VALUES);
 
 export function HeroPhrases() {
   return (
@@ -63,9 +57,9 @@ export function HeroPhrases() {
              on has to be passed explicitly for that reason. */
           loop
           // Time per letter when the effect is typewriter.
-          stagger={0.07}
-          hold={1.8}
-          exitDuration={0.3}
+          stagger={0.1}
+          hold={3}
+          exitDuration={0.45}
         />
       </span>
     </span>

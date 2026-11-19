@@ -246,16 +246,6 @@ export function buildFixtures({ branches, now = new Date() }) {
     },
   ];
 
-  const newsletter_subscribers = [
-    ["sub-1", "esther.k@example.com", "kp2", -1],
-    ["sub-2", "kwabena.o@example.com", "kharis", -2],
-    ["sub-3", "abigail.n@example.com", "kharis", -4],
-    ["sub-4", "theo.mensah@example.com", "kp2", -5],
-    ["sub-5", "linda.a@example.com", "kharis", -8],
-    ["sub-6", "isaac.b@example.com", "kp2", -12],
-    ["sub-7", "naomi.d@example.com", "kharis", -15],
-  ].map(([id, email, source, days]) => ({ id, email, source, created_at: at(now, days, 13) }));
-
   const news = [
     {
       id: "news-1",
@@ -523,7 +513,6 @@ export function buildFixtures({ branches, now = new Date() }) {
       events,
       contact_messages,
       visitors,
-      newsletter_subscribers,
       news,
       testimonies,
       sermons,

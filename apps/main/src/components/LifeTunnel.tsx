@@ -16,10 +16,60 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { CHURCH_VALUES } from "@/lib/church-values";
 import { activeLifeActivities, type LifeActivity } from "@/lib/life-activities";
-import { glidePageTo } from "@/lib/page-snap";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
+import { useDialog } from "@/lib/use-dialog";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import "./life-tunnel.css";
+
+const programme = [
+  {
+    title: CHURCH_VALUES.christCentered,
+    preview: "Taking the next step in following Christ",
+    activities: ["baptism"],
+  },
+  {
+    title: CHURCH_VALUES.bibleBelieving,
+    preview: "Learning and sharing the Word",
+    activities: ["let-the-bible-speak-conference", "k-group"],
+  },
+  {
+    title: CHURCH_VALUES.revivalSeeking,
+    preview: "Seeking God together and sharing the gospel",
+    activities: ["fasting", "jesus-campaign"],
+  },
+  {
+    title: CHURCH_VALUES.purposeDriven,
+    preview: "Putting faith to work through service and innovation",
+    activities: ["departments", "innovation-project"],
+  },
+  {
+    title: CHURCH_VALUES.peopleDeveloping,
+    preview: "Careers, money, technology and wellbeing",
+    activities: ["careers-fair", "finance-seminar", "ai-in-the-workplace", "health-seminar"],
+  },
+  {
+    title: CHURCH_VALUES.discipleMaking,
+    preview: "Growing together through relationships, fellowship and sport",
+    activities: [
+      "singles-seminar",
+      "marriage",
+      "cook-along",
+      "christmas-jumper",
+      "sports-day",
+      "football-tournament",
+    ],
+  },
+] satisfies {
+  title: string;
+  preview: string;
+  activities: LifeActivity["slug"][];
+}[];
+
+const programmeSlugs = new Set<LifeActivity["slug"]>(
+  programme.flatMap((chapter) => chapter.activities),
+);
 
 /**
  * Client-only: it measures itself, drives a requestAnimationFrame loop and
@@ -31,30 +81,8 @@ const ImageTunnel = dynamic(() => import("@/vendor/image-tunnel/InfiniteImageTun
   loading: () => <div className="life-tunnel__placeholder" aria-hidden />,
 });
 
-/** Matches the media query the vendored component honours internally. */
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduced(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-  return reduced;
-}
-
 function ActivityPanel({ activity, onClose }: { activity: LifeActivity; onClose: () => void }) {
-  const closeRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    closeRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  const panelRef = useDialog(true, onClose);
 
   return (
     <div className="life-panel" role="dialog" aria-modal="true" aria-labelledby="life-panel-title">
@@ -65,8 +93,8 @@ function ActivityPanel({ activity, onClose }: { activity: LifeActivity; onClose:
         tabIndex={-1}
         onClick={onClose}
       />
-      <div className="life-panel__sheet">
-        <button ref={closeRef} type="button" className="life-panel__close" onClick={onClose}>
+      <div ref={panelRef} className="life-panel__sheet" tabIndex={-1}>
+        <button type="button" className="life-panel__close" onClick={onClose}>
           Close
         </button>
 
@@ -102,11 +130,17 @@ export function LifeTunnel() {
   const theme = useSyncExternalStore(subscribeSiteTheme, getSiteTheme, () => "light" as const);
   const reduced = usePrefersReducedMotion();
   const shellRef = useRef<HTMLElement>(null);
+  const listTitle = useRef<HTMLHeadingElement>(null);
+  const runningBrowse = useRef<HTMLButtonElement>(null);
   const [backdrop, setBackdrop] = useState<string | undefined>();
   const [open, setOpen] = useState<LifeActivity | null>(null);
   const [started, setStarted] = useState(false);
   const [hovered, setHovered] = useState<LifeActivity | null>(null);
   const [nearest, setNearest] = useState<LifeActivity | null>(null);
+
+  useEffect(() => {
+    if (started) runningBrowse.current?.focus({ preventScroll: true });
+  }, [started]);
 
   /* The tunnel needs a real colour, not a custom property, so the page's own
    * surface token is read back off the section after the theme has applied.
@@ -145,19 +179,28 @@ export function LifeTunnel() {
     setNearest(item?.activity ?? null);
   }, []);
 
-  /* The page should not scroll underneath an open activity. */
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [open]);
-
   /* Hovering is a deliberate question about one wall, so it wins. With no
    * pointer on anything, the tunnel names whatever it is carrying you past. */
   const showing = hovered ?? nearest;
+  const programmeActivities = activities.filter((activity) => activity.slug !== "children");
+  const activitiesBySlug = new Map(
+    programmeActivities.map((activity) => [activity.slug, activity]),
+  );
+  const ungroupedSlugs = programmeActivities
+    .filter((activity) => !programmeSlugs.has(activity.slug))
+    .map((activity) => activity.slug);
+
+  const openActivity = (button: HTMLButtonElement, activity: LifeActivity) => {
+    button.focus({ preventScroll: true });
+    setOpen(activity);
+  };
+
+  const browseActivities = () => {
+    const heading = listTitle.current;
+    if (!heading) return;
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({ block: "start" });
+  };
 
   return (
     /* Labelled directly rather than by id: the heading lives inside the
@@ -195,7 +238,7 @@ export function LifeTunnel() {
           {/* The invitation, dead centre, inside the tunnel. It pulls back to
               a single line once you are moving so the tunnel has the screen,
               which is the whole point of it being here rather than above. */}
-          <div className="life-tunnel__copy" aria-hidden={started}>
+          <div className="life-tunnel__copy" inert={started}>
             <h2 id="life-tunnel-title" className="life-tunnel__title">
               Step into <span>life at Kharis</span>
             </h2>
@@ -203,17 +246,19 @@ export function LifeTunnel() {
             <button type="button" className="life-tunnel__start" onClick={() => setStarted(true)}>
               Step inside
             </button>
+            <button type="button" className="life-tunnel__browse" onClick={browseActivities}>
+              Browse activities
+            </button>
           </div>
 
           <button
             type="button"
+            ref={runningBrowse}
             className={`life-tunnel__scroll${started ? " is-on" : ""}`}
-            onClick={() => {
-              const list = document.getElementById("life-everything");
-              if (list) glidePageTo(list.getBoundingClientRect().top + window.scrollY);
-            }}
+            onClick={browseActivities}
+            tabIndex={started ? undefined : -1}
           >
-            Scroll for the full picture
+            Browse activities
           </button>
 
           <p className={`life-tunnel__hint${started ? " is-on" : ""}`} aria-hidden>
@@ -232,22 +277,48 @@ export function LifeTunnel() {
       {/* The same activities, as plain content. Always present: this is what
           a keyboard, a screen reader and a crawler use, and it is all there
           is when someone has asked for reduced motion. */}
-      <div className="life-tunnel__list" id="life-everything" data-snap="start">
-        <h2 className="life-tunnel__list-title">Everything we do</h2>
-        <p className="life-tunnel__list-lede">
-          The seminars and the sports day sit alongside baptism, fasting and serving, because it is
-          one life rather than two.
-        </p>
-        <ul>
-          {activities.map((a) => (
-            <li key={a.slug}>
-              <button type="button" onClick={() => setOpen(a)}>
-                <span className="life-tunnel__list-name">{a.title}</span>
-                <span className="life-tunnel__list-blurb">{a.blurb}</span>
-              </button>
-            </li>
+      <div className="life-tunnel__list" id="life-everything">
+        <h2 ref={listTitle} tabIndex={-1} className="life-tunnel__list-title">
+          Life at Kharis
+        </h2>
+        <div className="life-tunnel__programme">
+          {programme.map(({ title, preview, activities: slugs }, index) => (
+            <details key={title} className="life-tunnel__chapter" open={index === 0}>
+              <summary>
+                <span className="life-tunnel__chapter-title">{title}</span>
+                <span className="life-tunnel__chapter-preview">{preview}</span>
+                <span className="life-tunnel__chapter-toggle" aria-hidden />
+              </summary>
+              <ul className="life-tunnel__directory">
+                {(index === programme.length - 1 ? [...slugs, ...ungroupedSlugs] : slugs).map(
+                  (slug) => {
+                    const activity = activitiesBySlug.get(slug);
+                    if (!activity) return null;
+                    return (
+                      <li key={slug}>
+                        <button
+                          type="button"
+                          aria-haspopup="dialog"
+                          onClick={(event) => openActivity(event.currentTarget, activity)}
+                        >
+                          <span>
+                            <strong>{activity.title}</strong>
+                            <span className="life-tunnel__activity-description">
+                              {activity.blurb}
+                            </span>
+                          </span>
+                          <span className="life-tunnel__row-arrow" aria-hidden>
+                            ↗
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  },
+                )}
+              </ul>
+            </details>
           ))}
-        </ul>
+        </div>
       </div>
 
       {open ? <ActivityPanel activity={open} onClose={() => setOpen(null)} /> : null}

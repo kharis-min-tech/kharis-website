@@ -18,6 +18,21 @@ const CAPTURES = {
     top: 72,
     alt: "Kharis app audio player",
   },
+  "current-home": {
+    src: "https://images.kharis.org/site-images/main/4275eecdf5e5a12c/app-steps/kharis-app-current-home.png",
+    alt: "Kharis Church app home screen with branch updates, the daily Bible reading and Moments",
+    current: true,
+  },
+  "current-messages": {
+    src: "https://images.kharis.org/site-images/main/9c878f218f77a199/app-steps/kharis-app-current-messages.png",
+    alt: "Kharis Church app Messages screen with a featured sermon, browsing tabs and saved collections",
+    current: true,
+  },
+  "current-bible": {
+    src: "https://images.kharis.org/site-images/main/60f1b5d6513363dd/app-steps/kharis-app-current-bible.png",
+    alt: "Kharis Church app Bible screen with Scripture search, highlights and notes",
+    current: true,
+  },
 } as const;
 
 type Props = {
@@ -29,6 +44,23 @@ type Props = {
 /** Fits the app capture below the camera, excluding the old image's bezel and notch. */
 export function AppPhonePreview({ screen, alt, sizes = "235px" }: Props) {
   const capture = CAPTURES[screen];
+  if ("current" in capture) {
+    return (
+      <div className={styles.currentFrame} data-app-phone={screen}>
+        <div className={styles.currentScreen}>
+          <Image
+            src={capture.src}
+            alt={alt ?? capture.alt}
+            width={780}
+            height={1688}
+            className={styles.currentImage}
+            sizes={sizes}
+            unoptimized
+          />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={styles.frame} data-app-phone={screen}>
       <div className={styles.screen} data-app-phone-screen>

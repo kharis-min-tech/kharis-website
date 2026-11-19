@@ -14,24 +14,28 @@ const NAV_ITEMS: NavItem[] = [
   { label: "HOME", to: "/" },
   { label: "ABOUT", to: "/mission" },
   {
-    label: "MINISTRIES",
-    to: "/departments",
+    label: "COMMUNITY",
+    to: "/quiz",
     children: [
-      { label: "DEPARTMENTS", to: "/departments", blurb: "Find a place to serve" },
+      { label: "DEPARTMENTS", to: "/quiz", blurb: "Find a place to serve" },
       { label: "LIFE", to: "/life", blurb: "Groups & branch life" },
     ],
   },
   {
     label: "WATCH",
     to: "/messages",
-    children: [
-      { label: "MESSAGES", to: "/messages", blurb: "Recent sermons" },
-      { label: "SOCIAL MEDIA", to: "/media", blurb: "Follow the feeds" },
-    ],
+    children: [{ label: "MESSAGES", to: "/messages", blurb: "Recent sermons" }],
   },
   { label: "GIVE", to: "/giving" },
   { label: "Kharis Church", to: KHARIS_CHURCH_URL, external: true },
-  { label: "CONTACT", to: "/contact" },
+  {
+    label: "CONNECT",
+    to: "/contact",
+    children: [
+      { label: "CONTACT", to: "/contact", blurb: "Get in touch" },
+      { label: "SOCIAL MEDIA", to: "/media", blurb: "Follow the feeds" },
+    ],
+  },
 ];
 
 const linkBase =

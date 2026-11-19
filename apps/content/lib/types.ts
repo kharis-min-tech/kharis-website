@@ -57,13 +57,6 @@ export type VisitorRow = {
   created_at?: string | null;
 };
 
-export type NewsletterSubscriber = {
-  id: string;
-  email: string;
-  source: string;
-  created_at?: string | null;
-};
-
 export type DailyKind = "reading" | "prayer";
 
 export type DailyEntryRow = {

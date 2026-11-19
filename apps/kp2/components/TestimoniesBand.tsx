@@ -64,6 +64,7 @@ export function TestimoniesBand({
     null,
   );
   const pauseAutoplayUntil = useRef(0);
+  const interactionState = useRef({ hovered: false, focused: false });
   const dragRef = useRef({
     active: false,
     moved: false,
@@ -92,15 +93,29 @@ export function TestimoniesBand({
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reducedMotion.matches) return;
 
-    const pause = () => {
-      pauseAutoplayUntil.current = Date.now() + 20_000;
+    const pauseAfterInteraction = () => {
+      pauseAutoplayUntil.current = Date.now() + 10_000;
     };
-    rail.addEventListener("pointerenter", pause);
-    rail.addEventListener("pointerleave", pause);
-    rail.addEventListener("focusin", pause);
-    rail.addEventListener("focusout", pause);
-    rail.addEventListener("pointerdown", pause);
-    rail.addEventListener("touchstart", pause, { passive: true });
+    const onPointerEnter = () => {
+      interactionState.current.hovered = true;
+    };
+    const onPointerLeave = () => {
+      interactionState.current.hovered = false;
+    };
+    const onFocusIn = () => {
+      interactionState.current.focused = true;
+    };
+    const onFocusOut = (event: FocusEvent) => {
+      if (!rail.contains(event.relatedTarget as Node | null)) {
+        interactionState.current.focused = false;
+      }
+    };
+    rail.addEventListener("pointerenter", onPointerEnter);
+    rail.addEventListener("pointerleave", onPointerLeave);
+    rail.addEventListener("focusin", onFocusIn);
+    rail.addEventListener("focusout", onFocusOut);
+    rail.addEventListener("pointerdown", pauseAfterInteraction);
+    rail.addEventListener("touchstart", pauseAfterInteraction, { passive: true });
 
     let visible = false;
     const visibilityObserver = new IntersectionObserver(
@@ -112,7 +127,14 @@ export function TestimoniesBand({
     visibilityObserver.observe(rail);
 
     const timer = window.setInterval(() => {
-      if (!visible || selected || Date.now() < pauseAutoplayUntil.current) return;
+      if (
+        !visible ||
+        selected ||
+        interactionState.current.hovered ||
+        interactionState.current.focused ||
+        Date.now() < pauseAutoplayUntil.current
+      )
+        return;
       const firstCard = rail.querySelector<HTMLElement>(".kp-tst__card");
       if (!firstCard) return;
       const styles = window.getComputedStyle(rail);
@@ -126,17 +148,17 @@ export function TestimoniesBand({
       } else {
         rail.scrollBy({ left: step, behavior: "smooth" });
       }
-    }, 15_000);
+    }, 12_000);
 
     return () => {
       window.clearInterval(timer);
       visibilityObserver.disconnect();
-      rail.removeEventListener("pointerenter", pause);
-      rail.removeEventListener("pointerleave", pause);
-      rail.removeEventListener("focusin", pause);
-      rail.removeEventListener("focusout", pause);
-      rail.removeEventListener("pointerdown", pause);
-      rail.removeEventListener("touchstart", pause);
+      rail.removeEventListener("pointerenter", onPointerEnter);
+      rail.removeEventListener("pointerleave", onPointerLeave);
+      rail.removeEventListener("focusin", onFocusIn);
+      rail.removeEventListener("focusout", onFocusOut);
+      rail.removeEventListener("pointerdown", pauseAfterInteraction);
+      rail.removeEventListener("touchstart", pauseAfterInteraction);
     };
   }, [items.length, selected]);
 

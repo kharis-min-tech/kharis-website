@@ -56,7 +56,7 @@ UK bank: ${BANK.accountName}, account ${BANK.accountNumber}, sort code ${BANK.so
 Text (UK): ${TEXT_GIVE.keyword} followed by the amount to ${TEXT_GIVE.number}, up to £${TEXT_GIVE.maxPounds}
 Accra: ${BANK_ACCRA.accountName}, ${BANK_ACCRA.bank} ${BANK_ACCRA.accountNumber}
 MoMo: ${MOMO.accountName}, dial ${MOMO.ussd}
-Building fund (Spurgeon's Centre): ${SPURGEONS_CENTRE.giveUrl}
+${SPURGEONS_CENTRE.publicName}: ${SPURGEONS_CENTRE.giveUrl}
 `);
 
   try {

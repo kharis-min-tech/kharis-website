@@ -4,6 +4,7 @@ import { useDeferredValue, useMemo, useState } from "react";
 import { MessageCard } from "@/components/LatestMessages";
 import { VisitInstead } from "@/components/VisitInstead";
 import { MESSAGE_TOPICS, matchesQuery, matchesTopic } from "@/lib/message-filters";
+import { buildMessageShelves } from "@/lib/message-shelves";
 import type { MessageVideo } from "@/lib/youtube";
 
 export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
@@ -18,23 +19,12 @@ export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
   );
   const filtering = topic !== "all" || search !== "";
   const visible = useMemo(() => {
-    const pool = filtering ? messages : messages.slice(4);
-    return pool.filter(
+    return messages.filter(
       (message) =>
         (topic === "all" || matchesTopic(message, topic)) && matchesQuery(message, search),
     );
-  }, [filtering, messages, search, topic]);
-  const moreToExplore = useMemo(() => {
-    if (!filtering || visible.length >= 3) return [];
-    return messages
-      .filter((message) => !visible.some((match) => match.id === message.id))
-      .sort(
-        (a, b) =>
-          Number(topic !== "all" && matchesTopic(b, topic)) -
-          Number(topic !== "all" && matchesTopic(a, topic)),
-      )
-      .slice(0, 3 - visible.length);
-  }, [filtering, messages, topic, visible]);
+  }, [messages, search, topic]);
+  const shelves = useMemo(() => buildMessageShelves(messages.slice(4)), [messages]);
 
   const clear = () => {
     setTopic("all");
@@ -111,34 +101,42 @@ export function MessageBrowser({ messages }: { messages: MessageVideo[] }) {
         <div className="kp-browse">
           <p className="kp-browse__count" aria-live="polite">
             {visible.length === 1 ? "1 message" : `${visible.length} messages`}
-            {moreToExplore.length > 0 ? ` · ${moreToExplore.length} more from the archive` : ""}
             {filtering ? (
               <button type="button" onClick={clear}>
                 Clear
               </button>
             ) : null}
           </p>
-          {visible.length > 0 ? (
+          {filtering && visible.length > 0 ? (
             <div className="kp-browse__grid">
               {visible.map((message) => (
                 <MessageCard key={message.id} message={message} />
               ))}
-              {moreToExplore.map((message) => (
-                <div key={`more-${message.id}`} className="relative">
-                  <span className="absolute left-3 top-3 z-10 border border-black bg-[#f7be1d] px-2 py-1 text-[0.65rem] font-extrabold uppercase tracking-wider text-[#151218] shadow-[2px_2px_0_#151218]">
-                    More to explore
-                  </span>
-                  <MessageCard message={message} />
-                </div>
-              ))}
             </div>
-          ) : (
+          ) : filtering ? (
             <div className="kp-browse__empty">
               <h3>No messages match that</h3>
               <p>Try another topic or a shorter search.</p>
               <button type="button" onClick={clear}>
                 Clear filters
               </button>
+            </div>
+          ) : (
+            <div className="space-y-14">
+              {shelves.map((shelf) => (
+                <section key={shelf.id} aria-label={shelf.title}>
+                  <h3 className="mb-5 border-b-2 border-on-background pb-3 font-display-lg text-2xl uppercase tracking-tight text-on-background sm:text-3xl">
+                    {shelf.title}
+                  </h3>
+                  {shelf.rows.map((row, rowIndex) => (
+                    <div key={`${shelf.id}-${rowIndex}`} className="kp-browse__grid mb-6">
+                      {row.map((message) => (
+                        <MessageCard key={message.id} message={message} />
+                      ))}
+                    </div>
+                  ))}
+                </section>
+              ))}
             </div>
           )}
         </div>

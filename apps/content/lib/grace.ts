@@ -21,8 +21,8 @@ ${sections}
 ## How editing works
 - Branches, including photos, pastor, venues, services, and gallery, live under General → Branches. Open a branch, edit, then save.
 - Contact form messages live under Messages inside the Kharis Website and KP2 Website workspaces. New messages show a count on that item. Each message starts with From: Main site or From: KP2.
-- Newsletter emails live under General → Newsletter (every signup). KP2 Website → Newsletter shows KP2 signups only.
 - Visitors live under General → Visitors. The message starts with the site (Main site or KP2) and whether they agreed to be contacted. Branch is a dropdown of real branches.
+- Testimonies: General lists every site's stories so you can edit them all. Kharis Website and KP2 Website each show only that site's testimonies.
 - Schedule an app sermon day under Mobile App → Daily Message (search the mirrored catalogue there).
 - Daily Reading stores the scripture reference. The phone loads the passage from YouVersion. Testimonies can be General, Kharis Website, or KP2 Website.
 - Events, announcements, and (for the app) daily reading, daily message, daily prayers, plans, and live are inside the workspace they belong to.

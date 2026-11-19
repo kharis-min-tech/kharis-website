@@ -115,7 +115,7 @@ function OnlinePanel({ branches }: { branches: GivingBranch[] }) {
             rel="noopener noreferrer"
             className="btn-give"
           >
-            Give to Spurgeon&apos;s Centre
+            Give to the {SPURGEONS_CENTRE.publicName}
             <ArrowUpRight aria-hidden className="h-4 w-4" />
           </a>
         )}
@@ -292,7 +292,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
               Give to your branch
             </a>
             <a href="#building" className="btn-secondary">
-              Spurgeon&apos;s Centre Project
+              {SPURGEONS_CENTRE.publicName}
             </a>
           </div>
         </div>
@@ -394,13 +394,13 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
           <div className="gv-build__art">
             <Image
               src="https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg"
-              alt="An artist's impression of the renovated Spurgeon's Centre in South London"
+              alt="An artist's impression of the proposed renovations in South London"
               fill
               sizes="(max-width: 899px) 92vw, 44vw"
             />
           </div>
           <div className="gv-build__copy">
-            <p className="gv-eyebrow">Spurgeon&apos;s Centre</p>
+            <p className="gv-eyebrow">{SPURGEONS_CENTRE.publicName}</p>
             <h2 id="building-title">
               We&rsquo;ve purchased <span className="gv-yellow">our new home</span>
             </h2>
@@ -434,14 +434,6 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
                 Make a pledge
               </a>
             </div>
-            <a
-              href={SPURGEONS_CENTRE.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="gv-build__more"
-            >
-              See the project at spurgeonscentre.org
-            </a>
           </div>
         </div>
       </section>
