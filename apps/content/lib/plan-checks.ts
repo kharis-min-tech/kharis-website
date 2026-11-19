@@ -41,7 +41,7 @@ function daysConfigured(plan: ContentPlan) {
 }
 
 /** Full wizard path — always Basics → Days → Day content → Publish. */
-export function visiblePlanSteps(_plan: ContentPlan): PlanStep[] {
+export function visiblePlanSteps(): PlanStep[] {
   return PLAN_STEPS.map((item) => item.id);
 }
 

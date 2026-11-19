@@ -139,7 +139,7 @@ export function PlansEditor() {
 
   const issues = useMemo(() => (draft ? checkPlan(draft) : []), [draft]);
   const inferredMode = useMemo(() => (draft ? inferPlanMode(draft) : "mixed"), [draft]);
-  const visibleSteps = useMemo(() => (draft ? visiblePlanSteps(draft) : []), [draft]);
+  const visibleSteps = useMemo(() => (draft ? visiblePlanSteps() : []), [draft]);
   const stepIndex = Math.max(0, visibleSteps.indexOf(step));
   const activeDay = draft?.days[activeDayIndex] ?? draft?.days[0] ?? null;
   const addableTypes = PLAN_ITEM_TYPES;
