@@ -16,7 +16,7 @@ That's the design principle behind Content Studio, and the verse on its sign-in 
 
 **One place, every surface.** Branches, events, announcements, and testimonies are written once and shown wherever they belong. An event can appear on the main website, the KP2 site, and the app at the same time, from a single entry.
 
-**Role-aware by default.** A branch admin sees their branches and nothing else. They cannot open the newsletter list or another campus's messages, because the screens are not there for them and the database refuses the request even if they try.
+**Role-aware by default.** A branch admin sees their branches and nothing else. They cannot open another campus's messages, because the screens are not there for them and the database refuses the request even if they try.
 
 **Safe changes.** Branches, venues, and services are deactivated rather than deleted, so nothing is lost by accident. Every delete asks first.
 

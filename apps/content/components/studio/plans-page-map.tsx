@@ -70,7 +70,7 @@ export function PlansPageMap({
       ? `~${plan.estimatedMinutesPerDay} min/day`
       : null;
   const mode = inferPlanMode(plan);
-  const steps = visiblePlanSteps(plan);
+  const steps = visiblePlanSteps();
 
   return (
     <div className="rounded-xl border border-border bg-card p-4 shadow-card">

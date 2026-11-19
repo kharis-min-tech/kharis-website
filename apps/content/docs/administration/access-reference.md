@@ -12,7 +12,6 @@ Every section of the studio, by workspace, and who can open it. Accounts with **
 | Testimonies       | ✓           |                            |
 | Visitors          | ✓           | Visitors to their branches |
 | Messages          | ✓           | Messages to their branches |
-| Newsletter        | ✓           |                            |
 | Users             | ✓           |                            |
 
 ## Mobile App
@@ -46,7 +45,6 @@ Every section of the studio, by workspace, and who can open it. Accounts with **
 | Testimonies   | ✓           |                            |
 | Announcements | ✓           |                            |
 | Messages      | ✓           | Messages to their branches |
-| Newsletter    | ✓           |                            |
 
 ## Actions only super admins can take
 

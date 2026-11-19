@@ -25,7 +25,6 @@ const groups: { text: string; items: Page[] }[] = [
       ["Testimonies", "/studio/testimonies", "quote"],
       ["Messages", "/studio/messages", "inbox"],
       ["Visitors", "/studio/visitors", "userPlus"],
-      ["Newsletter", "/studio/newsletter", "mail"],
       ["Department Videos", "/studio/department-videos", "clapper"],
       ["Ask Grace", "/studio/ask-grace", "chat"],
     ],
@@ -112,11 +111,11 @@ export default defineConfig({
     sidebar,
     outline: { level: [2, 3], label: "On this page" },
     search: { provider: "local" },
-    socialLinks: [{ icon: "github", link: "https://github.com/kharis-min-tech/kharis-website" }],
+    socialLinks: [],
     docFooter: { prev: "Previous", next: "Next" },
     footer: {
       message:
-        'Content Studio: Content Management by Kharis Church · <a href="/">Open the studio</a> · <a href="https://docs.kairos.kharis.org">Kairos docs</a>',
+        'Content Studio: Content Management by Kharis Church · <a href="/">Open the studio</a>',
     },
   },
 });

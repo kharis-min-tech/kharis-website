@@ -1057,32 +1057,42 @@ export function BranchEditor() {
                 </p>
               </section>
 
-              <footer className="mt-8 flex flex-wrap items-center gap-2 border-t border-border pt-5">
-                <Button
-                  variant="outline"
-                  disabled={stepIndex === 0}
-                  onClick={() => setStep(BRANCH_STEPS[stepIndex - 1]!.id)}
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back
-                </Button>
-                {stepIndex < BRANCH_STEPS.length - 1 ? (
+              <footer className="mt-8 flex items-center justify-between gap-3 border-t border-border pt-5">
+                <div className="flex items-center gap-2">
                   <Button
+                    type="button"
                     variant="outline"
-                    onClick={() => setStep(BRANCH_STEPS[stepIndex + 1]!.id)}
+                    size="sm"
+                    disabled={stepIndex === 0}
+                    onClick={() => setStep(BRANCH_STEPS[stepIndex - 1]!.id)}
                   >
-                    Next: {BRANCH_STEPS[stepIndex + 1]!.label}
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
                   </Button>
-                ) : null}
-                <span className="ml-auto flex items-center gap-3">
+                  {stepIndex < BRANCH_STEPS.length - 1 ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setStep(BRANCH_STEPS[stepIndex + 1]!.id)}
+                    >
+                      Next
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  ) : null}
+                </div>
+                <div className="flex shrink-0 items-center gap-3">
                   {dirty ? (
                     <span className="text-xs text-muted-foreground">Unsaved changes</span>
                   ) : null}
-                  <Button type="submit" disabled={saving || (!dirty && Boolean(draft.id))}>
+                  <Button
+                    type="submit"
+                    size="sm"
+                    disabled={saving || (!dirty && Boolean(draft.id))}
+                  >
                     {saving ? "Saving…" : draft.id ? "Save changes" : "Save branch"}
                   </Button>
-                </span>
+                </div>
               </footer>
             </div>
 

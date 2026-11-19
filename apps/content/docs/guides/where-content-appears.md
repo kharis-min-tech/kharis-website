@@ -4,13 +4,13 @@ Which studio screen feeds which part of the websites and the app.
 
 ## kharis.org
 
-| On the site                      | Edited in                                                                      |
-| -------------------------------- | ------------------------------------------------------------------------------ |
-| Locations and each branch's page | General → [Branches](/studio/branches)                                         |
-| Events                           | [Events](/studio/events), with **Kharis website** ticked                       |
-| Home page testimonies            | [Testimonies](/studio/testimonies) in General or Kharis Website, slot **Home** |
-| Testimonies with giving          | Testimonies, slot **Giving**                                                   |
-| Department Discovery Quiz videos | General → [Department Videos](/studio/department-videos)                       |
+| On the site                      | Edited in                                                                    |
+| -------------------------------- | ---------------------------------------------------------------------------- |
+| Locations and each branch's page | General → [Branches](/studio/branches)                                       |
+| Events                           | [Events](/studio/events), with **Kharis website** ticked                     |
+| Home page testimonies            | [Testimonies](/studio/testimonies) (General lists every site; slot **Home**) |
+| Testimonies with giving          | Testimonies, slot **Giving**                                                 |
+| Department Discovery Quiz videos | General → [Department Videos](/studio/department-videos)                     |
 
 ## kharis.org/kp2
 
@@ -35,11 +35,10 @@ Which studio screen feeds which part of the websites and the app.
 
 Some screens collect what people send from the websites rather than publishing anything:
 
-| From the websites | Arrives in                       |
-| ----------------- | -------------------------------- |
-| Contact forms     | [Messages](/studio/messages)     |
-| Plan Your Visit   | [Visitors](/studio/visitors)     |
-| Newsletter signup | [Newsletter](/studio/newsletter) |
+| From the websites | Arrives in                   |
+| ----------------- | ---------------------------- |
+| Contact forms     | [Messages](/studio/messages) |
+| Plan Your Visit   | [Visitors](/studio/visitors) |
 
 ::: tip Not sure?
 Ask [Grace](/studio/ask-grace). Tell her what you want to change and she'll link you to the screen.
