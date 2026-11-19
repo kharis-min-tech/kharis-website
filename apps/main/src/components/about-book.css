@@ -678,6 +678,26 @@ html[data-theme="dark"] .about-book {
   left: calc(50% + var(--leaf-w) + 1.25rem);
 }
 
+@media (max-width: 48rem) {
+  .about-book__scene {
+    padding-bottom: 3.5rem;
+  }
+
+  .about-book__turn {
+    top: auto;
+    bottom: 0;
+    transform: none;
+  }
+
+  .about-book__turn--prev {
+    right: calc(50% + 0.25rem);
+  }
+
+  .about-book__turn--next {
+    left: calc(50% + 0.25rem);
+  }
+}
+
 .about-book__turn:is(:hover, :focus-visible) {
   border-color: var(--accent);
 }

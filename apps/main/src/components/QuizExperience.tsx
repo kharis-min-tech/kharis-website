@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
-  AlertCircle,
   ArrowLeft,
   ArrowRight,
   BookOpen,
@@ -13,42 +12,28 @@ import {
   ChevronDown,
   Compass,
   Grid,
-  Info,
-  Lock,
-  Mail,
-  MapPin,
   Play,
   Quote,
   RotateCcw,
   Search,
-  Settings,
-  Shield,
   Sparkles,
   Trophy,
-  X,
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import {
-  QUIZ_BRANCHES,
   QUIZ_LANGUAGES,
-  QUIZ_PRIVACY_CONTENT,
   QUIZ_SLIDESHOW_IMAGES,
   QUIZ_TRANSLATIONS,
   UPCOMING_LANGUAGES,
-  type PrivacySection,
-  type PrivacySubsection,
   type QuizOption,
   type SupportedLanguage,
 } from "@/data/quiz";
 import { getSiteTheme, subscribeSiteTheme, type SiteTheme } from "@/lib/theme";
-import { useDialog } from "@/lib/use-dialog";
 import {
   fetchCustomDepartmentVideos,
   resolveDepartmentVideoSource,
 } from "@/data/department-videos";
 import "./quiz.css";
-import { TURNSTILE_FIELD } from "../../../../shared/form-fields";
-import { useTurnstile } from "../../../../shared/form-widgets";
 
 function DepartmentVideoPlayer({ rawUrl, title }: { rawUrl: string; title: string }) {
   const source = resolveDepartmentVideoSource(rawUrl);
@@ -86,7 +71,6 @@ const QUIZ_STORAGE_KEY = "kharis_quiz_state_v1";
 type PersistedQuizState = {
   lang?: SupportedLanguage;
   screen?: "start" | "quiz" | "result";
-  branch?: string;
   currentQuestion?: number;
   answers?: (QuizOption | null)[];
   scores?: Record<string, number>;
@@ -96,17 +80,15 @@ export function QuizExperience() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
   const [screen, setScreen] = useState<"start" | "quiz" | "result">("start");
   const [activeSlide, setActiveSlide] = useState(0);
+  const previousSlide =
+    (activeSlide - 1 + QUIZ_SLIDESHOW_IMAGES.length) % QUIZ_SLIDESHOW_IMAGES.length;
+  const hasRotated = useRef(false);
   const [hydrated, setHydrated] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   // Site theme subscription (light vs dark mode)
   const theme = useSyncExternalStore(subscribeSiteTheme, getSiteTheme, () => "light" as SiteTheme);
   const isDark = theme === "dark";
-
-  // User details state
-  const [branch, setBranch] = useState("");
-  const [branchError, setBranchError] = useState(false);
-  const turnstile = useTurnstile("quiz", "interaction-only");
 
   // Quiz progression state
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -124,9 +106,6 @@ export function QuizExperience() {
         const parsed = JSON.parse(raw) as PersistedQuizState;
         if (parsed.lang && parsed.lang in QUIZ_TRANSLATIONS) {
           setLang(parsed.lang);
-        }
-        if (typeof parsed.branch === "string") {
-          setBranch(parsed.branch);
         }
         if (Array.isArray(parsed.answers)) {
           setAnswers(parsed.answers);
@@ -162,7 +141,6 @@ export function QuizExperience() {
       const payload: PersistedQuizState = {
         lang,
         screen,
-        branch,
         currentQuestion,
         answers,
         scores,
@@ -171,7 +149,7 @@ export function QuizExperience() {
     } catch {
       // Ignore storage write errors
     }
-  }, [hydrated, lang, screen, branch, currentQuestion, answers, scores]);
+  }, [hydrated, lang, screen, currentQuestion, answers, scores]);
 
   useEffect(() => {
     let cancelled = false;
@@ -188,38 +166,21 @@ export function QuizExperience() {
   const [expandedExploreDept, setExpandedExploreDept] = useState<string | null>(null);
   const [exploreFilter, setExploreFilter] = useState("");
 
-  // Privacy modal state + accessible focus management
-  const [showPrivacy, setShowPrivacy] = useState(false);
-  const closePrivacy = useCallback(() => setShowPrivacy(false), []);
-  const privacyDialogRef = useDialog(showPrivacy, closePrivacy);
-
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const t = useMemo(() => QUIZ_TRANSLATIONS[lang] ?? QUIZ_TRANSLATIONS.en, [lang]);
-  const privacyData = useMemo(() => QUIZ_PRIVACY_CONTENT[lang] ?? QUIZ_PRIVACY_CONTENT.en, [lang]);
-
   // Background slideshow rotation (8s per slide, cycles through all 9 mixed slides before repeating)
   useEffect(() => {
     if (prefersReducedMotion || QUIZ_SLIDESHOW_IMAGES.length <= 1) return;
     const timer = window.setInterval(() => {
+      hasRotated.current = true;
       setActiveSlide((prev) => (prev + 1) % QUIZ_SLIDESHOW_IMAGES.length);
     }, 8000);
     return () => window.clearInterval(timer);
   }, [prefersReducedMotion]);
 
-  // Validation
-  const validateStart = useCallback(() => {
-    if (!branch) {
-      setBranchError(true);
-      return false;
-    }
-    setBranchError(false);
-    return true;
-  }, [branch]);
-
   // Start quiz
   const handleStart = () => {
-    if (!validateStart()) return;
     setAnswers(new Array(t.questions.length).fill(null));
     setScores({});
     setCurrentQuestion(0);
@@ -242,29 +203,6 @@ export function QuizExperience() {
     });
   };
 
-  // Results go to the Kharis API and on to the branch inbox. Fire and forget: a
-  // failed save must not block someone from seeing their departments.
-  const submitResult = useCallback(
-    (topMatches: string[]) => {
-      try {
-        void fetch("/api/quiz", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            branch,
-            lang,
-            departments: topMatches,
-            [TURNSTILE_FIELD]: turnstile.token,
-          }),
-          keepalive: true,
-        }).catch(() => {});
-      } catch {
-        // Suppress network errors
-      }
-    },
-    [branch, lang, turnstile.token],
-  );
-
   // Finish quiz & calculate scores
   const handleFinishQuiz = useCallback(
     (completedAnswers: (QuizOption | null)[]) => {
@@ -277,12 +215,6 @@ export function QuizExperience() {
       });
       setScores(newScores);
 
-      const top3 = Object.entries(newScores)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 3)
-        .map(([dept]) => dept);
-
-      submitResult(top3);
       setScreen("result");
       if (containerRef.current) {
         containerRef.current.scrollIntoView({
@@ -291,7 +223,7 @@ export function QuizExperience() {
         });
       }
     },
-    [submitResult, prefersReducedMotion],
+    [prefersReducedMotion],
   );
 
   // Navigation handlers
@@ -334,8 +266,6 @@ export function QuizExperience() {
     setScores({});
     setCurrentQuestion(0);
     setActiveVideo(null);
-    setBranch("");
-    setBranchError(false);
     setScreen("start");
     if (containerRef.current) {
       containerRef.current.scrollIntoView({
@@ -384,21 +314,26 @@ export function QuizExperience() {
       {/* Hero: KP2-style full-bleed photo slideshow header */}
       <header className="quiz-hero">
         <div className="quiz-hero__media">
-          {QUIZ_SLIDESHOW_IMAGES.map((slide, idx) => (
-            <Image
-              key={slide.src}
-              src={slide.src}
-              alt={idx === activeSlide ? slide.alt : ""}
-              aria-hidden={idx !== activeSlide}
-              fill
-              priority={idx === 0}
-              quality={95}
-              sizes="100vw"
-              unoptimized={slide.src.startsWith("/")}
-              className={`quiz-hero__img ${idx === activeSlide ? "is-active" : ""}`}
-              style={{ objectPosition: slide.position }}
-            />
-          ))}
+          {QUIZ_SLIDESHOW_IMAGES.map((slide, idx) =>
+            idx === activeSlide ||
+            (!prefersReducedMotion &&
+              (activeSlide !== 0 || hasRotated.current) &&
+              idx === previousSlide) ? (
+              <Image
+                key={slide.src}
+                src={slide.src}
+                alt={idx === activeSlide ? slide.alt : ""}
+                aria-hidden={idx !== activeSlide}
+                fill
+                priority={idx === 0}
+                quality={90}
+                sizes="100vw"
+                unoptimized={slide.src.startsWith("/")}
+                className={`quiz-hero__img ${idx === activeSlide ? "is-active" : ""}`}
+                style={{ objectPosition: slide.position }}
+              />
+            ) : null,
+          )}
           <div className="quiz-hero__veil" aria-hidden="true" />
         </div>
 
@@ -490,128 +425,14 @@ export function QuizExperience() {
                     </p>
                   </div>
 
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleStart();
-                    }}
-                    className="space-y-6"
+                  <button
+                    type="button"
+                    onClick={handleStart}
+                    className="quiz-btn-primary group w-full mt-4"
                   >
-                    {/* Branch Select */}
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="user-branch-select"
-                        className={`block text-xs font-extrabold uppercase tracking-[0.12em] ${
-                          isDark ? "text-white/85" : "text-[#1c1c1f]"
-                        }`}
-                      >
-                        {t.branchLabel}{" "}
-                        <span className={isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}>*</span>
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="user-branch-select"
-                          value={branch}
-                          onChange={(e) => {
-                            setBranch(e.target.value);
-                            if (branchError) setBranchError(false);
-                          }}
-                          aria-required="true"
-                          aria-invalid={branchError}
-                          className={`w-full appearance-none rounded-none border px-4 py-3.5 pr-10 text-sm sm:text-base font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#630ed4]/40 cursor-pointer ${
-                            isDark ? "bg-white/[0.04] text-white" : "bg-[#f8f6fa] text-[#1c1c1f]"
-                          } ${
-                            branchError
-                              ? "border-rose-500 ring-2 ring-rose-500/30"
-                              : isDark
-                                ? "border-white/20 hover:border-white/35 focus:border-[#630ed4]"
-                                : "border-purple-900/20 hover:border-[#630ed4] focus:border-[#630ed4]"
-                          }`}
-                        >
-                          <option
-                            value=""
-                            disabled
-                            className={
-                              isDark ? "bg-[#151022] text-white/40" : "bg-white text-gray-400"
-                            }
-                          >
-                            {t.branchPlaceholder}
-                          </option>
-                          {QUIZ_BRANCHES.map((b: string) => (
-                            <option
-                              key={b}
-                              value={b}
-                              className={
-                                isDark ? "bg-[#151022] text-white" : "bg-white text-[#1c1c1f]"
-                              }
-                            >
-                              {b}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown
-                          className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 ${
-                            isDark ? "text-white/70" : "text-[#3a3a40]"
-                          }`}
-                        />
-                      </div>
-                      {branchError && (
-                        <p className="flex items-center gap-1.5 text-xs font-bold text-rose-500 pt-1">
-                          <AlertCircle className="h-3.5 w-3.5" />
-                          {t.branchError}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Submit CTA Button */}
-                    <button type="submit" className="quiz-btn-primary group w-full mt-4">
-                      <span>{t.startButton}</span>
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </button>
-
-                    {/* Privacy Note */}
-                    <div className="pt-2 text-center">
-                      <p
-                        className={`text-xs font-semibold ${
-                          isDark ? "text-white/55" : "text-[#4a4a52]"
-                        }`}
-                      >
-                        {t.privacyAgreement.includes("{policy}") ? (
-                          <>
-                            {t.privacyAgreement.split("{policy}")[0]}
-                            <button
-                              type="button"
-                              onClick={() => setShowPrivacy(true)}
-                              className={`font-extrabold underline underline-offset-2 transition-colors cursor-pointer ${
-                                isDark
-                                  ? "text-[#c4b0ff] hover:text-white"
-                                  : "text-[#630ed4] hover:text-[#4c08a8]"
-                              }`}
-                            >
-                              {t.privacyPolicyLink}
-                            </button>
-                            {t.privacyAgreement.split("{policy}")[1]}
-                          </>
-                        ) : (
-                          <>
-                            {t.privacyAgreement}{" "}
-                            <button
-                              type="button"
-                              onClick={() => setShowPrivacy(true)}
-                              className={`font-extrabold underline underline-offset-2 transition-colors cursor-pointer ${
-                                isDark
-                                  ? "text-[#c4b0ff] hover:text-white"
-                                  : "text-[#630ed4] hover:text-[#4c08a8]"
-                              }`}
-                            >
-                              {t.privacyPolicyLink}
-                            </button>
-                            .
-                          </>
-                        )}
-                      </p>
-                    </div>
-                  </form>
+                    <span>{t.startButton}</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -815,17 +636,6 @@ export function QuizExperience() {
                       >
                         {t.resultsSubtitle}
                       </p>
-                    </div>
-
-                    <div
-                      className={`inline-flex items-center gap-1.5 border px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wider ${
-                        isDark
-                          ? "border-white/20 bg-white/5 text-white"
-                          : "border-purple-900/15 bg-[#f2eef7] text-[#630ed4]"
-                      }`}
-                    >
-                      <MapPin className="h-3.5 w-3.5" />
-                      <span>{branch || "Kharis Church"}</span>
                     </div>
                   </div>
                 </div>
@@ -1202,175 +1012,6 @@ export function QuizExperience() {
           </div>
         </section>
       </div>
-
-      {/* Privacy Policy Modal */}
-      {showPrivacy && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="privacy-modal-heading"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md animate-in fade-in duration-200"
-          onClick={closePrivacy}
-        >
-          <div
-            ref={privacyDialogRef}
-            tabIndex={-1}
-            onClick={(e) => e.stopPropagation()}
-            className={`flex max-h-[85vh] w-full max-w-2xl flex-col border shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 focus:outline-none ${
-              isDark
-                ? "border-white/20 bg-[#120b1f] text-white"
-                : "border-purple-900/20 bg-white text-[#1c1c1f]"
-            }`}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/15 bg-[#630ed4] px-7 py-5 text-white">
-              <div>
-                <h3
-                  id="privacy-modal-heading"
-                  className="text-xl sm:text-2xl font-extrabold !text-white"
-                >
-                  {privacyData.title}
-                </h3>
-                <p className="mt-1 text-xs font-semibold text-white/85">{privacyData.subtitle}</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowPrivacy(false)}
-                className="border border-white/30 bg-white/10 p-2 text-white hover:bg-white hover:text-[#630ed4] transition-colors cursor-pointer"
-                aria-label={privacyData.backButton || "Close"}
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Body */}
-            <div
-              className={`overflow-y-auto p-7 space-y-6 text-sm font-medium leading-relaxed ${
-                isDark ? "text-white/80" : "text-[#4a4a52]"
-              }`}
-            >
-              {privacyData.sections.map((section: PrivacySection, idx: number) => (
-                <div key={idx} className="space-y-3">
-                  <h4
-                    className={`flex items-center gap-2.5 text-base font-extrabold border-b pb-2 ${
-                      isDark
-                        ? "!text-white border-white/10"
-                        : "!text-[#1c1c1f] border-purple-900/10"
-                    }`}
-                  >
-                    {section.icon === "info" && (
-                      <Info className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`} />
-                    )}
-                    {section.icon === "database" && (
-                      <Compass
-                        className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`}
-                      />
-                    )}
-                    {section.icon === "settings" && (
-                      <Settings
-                        className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`}
-                      />
-                    )}
-                    {section.icon === "lock" && (
-                      <Lock className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`} />
-                    )}
-                    {section.icon === "shield" && (
-                      <Shield
-                        className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`}
-                      />
-                    )}
-                    {section.icon === "mail" && (
-                      <Mail className={`h-4 w-4 ${isDark ? "text-[#c4b0ff]" : "text-[#630ed4]"}`} />
-                    )}
-                    <span>{section.heading}</span>
-                  </h4>
-
-                  {section.paragraphs?.map((p: string, pIdx: number) => (
-                    <p key={pIdx}>{p}</p>
-                  ))}
-
-                  {section.subsections?.map((sub: PrivacySubsection, sIdx: number) => (
-                    <div key={sIdx} className="pl-3 space-y-1">
-                      <p className={`font-bold ${isDark ? "text-white" : "text-[#1c1c1f]"}`}>
-                        {sub.title}
-                      </p>
-                      <ul
-                        className={`list-disc pl-5 space-y-1 ${
-                          isDark ? "text-white/75" : "text-[#4a4a52]"
-                        }`}
-                      >
-                        {sub.items.map((item: string, iIdx: number) => (
-                          <li key={iIdx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-
-                  {section.items && (
-                    <ul
-                      className={`list-disc pl-5 space-y-1 ${
-                        isDark ? "text-white/75" : "text-[#4a4a52]"
-                      }`}
-                    >
-                      {section.items.map((item: string, iIdx: number) => (
-                        <li key={iIdx}>{item}</li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {section.contact && (
-                    <div
-                      className={`border-l-4 border-[#630ed4] p-4 space-y-1 ${
-                        isDark ? "bg-white/[0.04] text-white" : "bg-[#f2eef7] text-[#1c1c1f]"
-                      }`}
-                    >
-                      <p className="font-bold">{section.contact.officer}</p>
-                      <p className={isDark ? "text-white/75" : "text-[#4a4a52]"}>
-                        Email:{" "}
-                        <a
-                          href={`mailto:${section.contact.email}`}
-                          className={`font-bold underline ${
-                            isDark
-                              ? "text-[#c4b0ff] hover:text-white"
-                              : "text-[#630ed4] hover:text-[#4c08a8]"
-                          }`}
-                        >
-                          {section.contact.email}
-                        </a>
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              <p
-                className={`text-center text-xs pt-4 border-t ${
-                  isDark ? "text-white/45 border-white/10" : "text-[#77737a] border-purple-900/10"
-                }`}
-              >
-                {privacyData.lastUpdated}
-              </p>
-            </div>
-
-            {/* Footer */}
-            <div
-              className={`border-t p-5 flex justify-end ${
-                isDark ? "border-white/10 bg-black/40" : "border-purple-900/10 bg-[#f8f6fa]"
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => setShowPrivacy(false)}
-                className="quiz-btn-primary"
-              >
-                {privacyData.backButton}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* Keeps a fresh Turnstile token ready for the result submission. */}
-      {turnstile.widget}
     </div>
   );
 }

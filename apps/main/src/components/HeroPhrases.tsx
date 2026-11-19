@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { CHURCH_VALUES } from "@/lib/church-values";
 
 /**
  * The rotating "We are …" line in the hero.
@@ -21,14 +22,7 @@ const TextRotator = dynamic(() => import("@/vendor/text-rotator/AnimatedTextRota
 /** Campaign yellow, matching "Kharis" in the welcome line. */
 const ACCENT = "#ffde59";
 
-export const HERO_PHRASES = [
-  "Christ Centered",
-  "Bible Believing",
-  "Revival Seeking",
-  "Purpose Driven",
-  "People Developing",
-  "Disciple Making",
-] as const;
+const HERO_PHRASES = Object.values(CHURCH_VALUES);
 
 export function HeroPhrases() {
   return (
