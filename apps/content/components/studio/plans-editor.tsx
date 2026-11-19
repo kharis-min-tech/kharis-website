@@ -823,30 +823,39 @@ export function PlansEditor() {
                   </div>
                 </section>
 
-                <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-border pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={stepIndex <= 0}
-                    onClick={() => setStep(visibleSteps[stepIndex - 1]!)}
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Back
-                  </Button>
-                  {stepIndex < visibleSteps.length - 1 ? (
-                    <Button type="button" onClick={() => setStep(visibleSteps[stepIndex + 1]!)}>
-                      Next
-                      <ArrowRight className="h-4 w-4" />
+                <footer className="mt-6 flex items-center justify-between gap-3 border-t border-border pt-5">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={stepIndex <= 0}
+                      onClick={() => setStep(visibleSteps[stepIndex - 1]!)}
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      Back
                     </Button>
-                  ) : (
-                    <Button type="submit" disabled={saving}>
+                    {stepIndex < visibleSteps.length - 1 ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setStep(visibleSteps[stepIndex + 1]!)}
+                      >
+                        Next
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    ) : null}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <Button type="button" variant="ghost" size="sm" onClick={() => setDraft(null)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" size="sm" disabled={saving}>
                       {saving ? "Saving…" : "Save plan"}
                     </Button>
-                  )}
-                  <Button type="button" variant="ghost" onClick={() => setDraft(null)}>
-                    Cancel
-                  </Button>
-                </div>
+                  </div>
+                </footer>
               </div>
 
               <aside className="lg:sticky lg:top-4 lg:self-start">

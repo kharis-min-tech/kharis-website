@@ -72,7 +72,7 @@ jobs:
         run: npm test
       # Blocks only on CRITICAL vulnerabilities in production deps. High/moderate
       # and dev-only issues come through weekly Dependabot PRs instead. Next is
-      # pinned to 16.4.2, which clears the current critical advisories.
+      # pinned to 16.4.6 (Google font loader fix + critical advisory clears).
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=critical
 

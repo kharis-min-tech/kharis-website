@@ -40,13 +40,9 @@ function daysConfigured(plan: ContentPlan) {
   return plan.days.length > 1 || plan.days.some((day) => day.items.length > 0);
 }
 
-/** Which wizard steps to show — hide Days/Publish until they matter. */
-export function visiblePlanSteps(plan: ContentPlan): PlanStep[] {
-  const steps: PlanStep[] = ["basics"];
-  if (plan.title.trim() || daysConfigured(plan)) steps.push("days");
-  if (plan.title.trim() || hasDayContent(plan)) steps.push("content");
-  if (hasDayContent(plan) || plan.status !== "draft") steps.push("publish");
-  return steps;
+/** Full wizard path — always Basics → Days → Day content → Publish. */
+export function visiblePlanSteps(_plan: ContentPlan): PlanStep[] {
+  return PLAN_STEPS.map((item) => item.id);
 }
 
 /** True when a step is meaningfully finished (green check), not just free of errors. */

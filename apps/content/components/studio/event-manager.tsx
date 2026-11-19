@@ -603,27 +603,31 @@ export function EventManager() {
                   />
                 </section>
 
-                <footer className="mt-8 flex flex-wrap items-center gap-2 border-t border-border pt-5">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={stepIndex === 0}
-                    onClick={() => setStep(EVENT_STEPS[stepIndex - 1]!.id)}
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Back
-                  </Button>
-                  {stepIndex < EVENT_STEPS.length - 1 ? (
+                <footer className="mt-8 flex items-center justify-between gap-3 border-t border-border pt-5">
+                  <div className="flex items-center gap-2">
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => setStep(EVENT_STEPS[stepIndex + 1]!.id)}
+                      size="sm"
+                      disabled={stepIndex === 0}
+                      onClick={() => setStep(EVENT_STEPS[stepIndex - 1]!.id)}
                     >
-                      Next: {EVENT_STEPS[stepIndex + 1]!.label}
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowLeft className="h-4 w-4" />
+                      Back
                     </Button>
-                  ) : null}
-                  <Button type="submit" className="ml-auto" disabled={saving}>
+                    {stepIndex < EVENT_STEPS.length - 1 ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setStep(EVENT_STEPS[stepIndex + 1]!.id)}
+                      >
+                        Next
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    ) : null}
+                  </div>
+                  <Button type="submit" size="sm" className="shrink-0" disabled={saving}>
                     {saving ? "Saving…" : "Save event"}
                   </Button>
                 </footer>
