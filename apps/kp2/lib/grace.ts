@@ -5,7 +5,7 @@ const PAGES = [
   ["Find a branch", "/kp2/branches"],
   ["Mission", "/kp2/mission"],
   ["Governance", "/kp2/governance"],
-  ["Departments", "/kp2/departments"],
+  ["Department Discovery Quiz", "/kp2/quiz"],
   ["Life", "/kp2/life"],
   ["Messages", "/kp2/messages"],
   ["Social media", "/kp2/media"],

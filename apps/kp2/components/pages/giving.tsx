@@ -15,7 +15,7 @@ function GivingPage({ branches }: { branches: GivingLocation[] }) {
       <main className="pt-[74px]">
         <section className="kp-giving-hero">
           <div className="kp-giving-hero__copy">
-            <p className="kp-giving-kicker">Giving at KP2</p>
+            <p className="kp-giving-kicker">Giving at Kharis</p>
             <h1 className="font-display-lg uppercase">
               Sow <span>bountifully.</span>
             </h1>
@@ -32,7 +32,7 @@ function GivingPage({ branches }: { branches: GivingLocation[] }) {
                 Give to your branch
               </a>
               <a href="#building" className="kp-giving-button kp-giving-button--light">
-                Build Spurgeon&apos;s Centre
+                Spurgeon&apos;s Centre
               </a>
             </div>
           </div>
@@ -66,7 +66,7 @@ function GivingPage({ branches }: { branches: GivingLocation[] }) {
                 className="relative block w-full aspect-[4/3] object-cover border-4 border-black"
               />
               <span className="absolute -top-4 left-4 bg-primary text-white border-2 border-black font-label-sm uppercase px-3 py-1 -rotate-2">
-                Building fund
+                Spurgeon&apos;s Centre
               </span>
             </figure>
             <div>
@@ -94,7 +94,7 @@ function GivingPage({ branches }: { branches: GivingLocation[] }) {
                   rel="noopener noreferrer"
                   className="kp-depth-button kp-button-gold inline-flex items-center justify-center bg-[#f7be1d] text-[#151218] px-8 py-4 font-label-comic text-base uppercase border-4 border-black brutalist-shadow hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
                 >
-                  Give to the building
+                  Build with us
                 </a>
                 <a
                   href={SPURGEONS_CENTRE.pledgeUrl}
@@ -105,17 +105,6 @@ function GivingPage({ branches }: { branches: GivingLocation[] }) {
                   Make a pledge
                 </a>
               </div>
-              <a
-                href={SPURGEONS_CENTRE.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-label-md uppercase text-white/80 underline underline-offset-4 hover:text-[#f7be1d]"
-              >
-                See the project at spurgeonscentre.org
-                <span className="material-symbols-outlined text-base" aria-hidden="true">
-                  open_in_new
-                </span>
-              </a>
             </div>
           </div>
         </section>

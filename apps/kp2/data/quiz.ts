@@ -18,6 +18,7 @@ export type QuizDepartment = {
 };
 
 export const QUIZ_HERO_IMAGES = [
+  { src: KP2_PHOTOS.serviceSaxophone.src, alt: KP2_PHOTOS.serviceSaxophone.alt },
   { src: KP2_PHOTOS.serviceChoir.src, alt: "The choir singing together on stage" },
   {
     src: KP2_PHOTOS.serviceTogether.src,
