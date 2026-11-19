@@ -6,12 +6,12 @@ A workspace is where content belongs. Open one from the **Workspaces** list in t
 
 ## The four workspaces
 
-| Workspace      | Sections                                                                                   |
-| -------------- | ------------------------------------------------------------------------------------------ |
-| General        | Branches, Department Videos, Documents, Testimonies, Visitors, Messages, Newsletter, Users |
-| Mobile App     | Events, Announcements, Daily Reading, Daily Message, Daily Prayers, Plans, Live            |
-| Kharis Website | Branches, Events, Testimonies, Announcements, Messages                                     |
-| KP2 Website    | Branches, Events, Testimonies, Announcements, Messages, Newsletter                         |
+| Workspace      | Sections                                                                        |
+| -------------- | ------------------------------------------------------------------------------- |
+| General        | Branches, Department Videos, Documents, Testimonies, Visitors, Messages, Users  |
+| Mobile App     | Events, Announcements, Daily Reading, Daily Message, Daily Prayers, Plans, Live |
+| Kharis Website | Branches, Events, Testimonies, Announcements, Messages                          |
+| KP2 Website    | Branches, Events, Testimonies, Announcements, Messages                          |
 
 ## The workspace page
 
@@ -21,17 +21,16 @@ Each workspace has a home page with a card per section. Cards show how many item
 
 Some sections show the same list in every workspace. Others show each workspace its own.
 
-| Section           | Behaviour                                                      |
-| ----------------- | -------------------------------------------------------------- |
-| Branches          | One list of campuses, wherever you open it                     |
-| Department Videos | One set of 24 videos, under General only                       |
-| Documents         | Governance and fasting PDFs, under General only                |
-| Visitors          | One list, under General                                        |
-| Events            | Each workspace has its own events                              |
-| Announcements     | Each workspace has its own announcements                       |
-| Testimonies       | Each workspace has its own testimonies                         |
-| Messages          | Opens on the workspace's inbox, with a filter to see others    |
-| Newsletter        | General shows every signup; KP2 Website shows KP2 signups only |
+| Section           | Behaviour                                                    |
+| ----------------- | ------------------------------------------------------------ |
+| Branches          | One list of campuses, wherever you open it                   |
+| Department Videos | One set of 24 videos, under General only                     |
+| Documents         | Governance and fasting PDFs, under General only              |
+| Visitors          | One list, under General                                      |
+| Events            | Each workspace has its own events                            |
+| Announcements     | Each workspace has its own announcements                     |
+| Testimonies       | General lists every site; Kharis and KP2 show that site only |
+| Messages          | Opens on the workspace's inbox, with a filter to see others  |
 
 ## Choosing a workspace
 

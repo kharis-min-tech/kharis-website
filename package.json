@@ -30,7 +30,9 @@
     "overrides.next": "Pin the same patched Next.js release across all apps. OpenNext requires Next.js 16.4.1 or later for preview manifest compatibility."
   },
   "overrides": {
-    "next": "16.4.6"
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "eslint-config-prettier": "^10.1.8",

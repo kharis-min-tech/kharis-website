@@ -35,14 +35,15 @@ describe("workspacesForRole", () => {
     workspacesForRole("branch_admin");
     const general = WORKSPACES.find((workspace) => workspace.id === "general");
     expect(general?.nav.some((item) => item.href === "/sermons")).toBe(false);
-    expect(general?.nav.some((item) => item.href === "/newsletter")).toBe(true);
+    expect(general?.nav.some((item) => item.href === "/newsletter")).toBe(false);
+    expect(general?.nav.some((item) => item.href === "/testimonies")).toBe(true);
   });
 });
 
 describe("canOpenPath", () => {
   it("lets super admins open anything", () => {
     expect(canOpenPath("super_admin", "/users")).toBe(true);
-    expect(canOpenPath("super_admin", "/newsletter")).toBe(true);
+    expect(canOpenPath("super_admin", "/testimonies")).toBe(true);
   });
 
   it("blocks every page for accounts with no role", () => {
@@ -63,6 +64,7 @@ describe("canOpenPath", () => {
     expect(canOpenPath("branch_admin", "/users")).toBe(false);
     expect(canOpenPath("branch_admin", "/sermons")).toBe(false);
     expect(canOpenPath("branch_admin", "/newsletter")).toBe(false);
+    expect(canOpenPath("branch_admin", "/testimonies")).toBe(false);
     expect(canOpenPath("branch_admin", "/workspace/unknown")).toBe(false);
     expect(canOpenPath("branch_admin", "/branchesx")).toBe(false);
   });
