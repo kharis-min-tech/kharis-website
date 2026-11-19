@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useRef } from "react";
-import { Mark } from "@/components/studio/mark";
 import { StudioAtmosphere } from "@/components/studio/studio-atmosphere";
 import { ThemeToggle } from "@/components/studio/theme-toggle";
 import { cn } from "@/lib/utils";
@@ -30,7 +29,7 @@ export function AuthLayout({
     <div className="grid min-h-screen lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
       <aside
         ref={bannerRef}
-        className="relative hidden overflow-hidden bg-[#071018] text-white lg:flex lg:flex-col lg:justify-between lg:p-10 xl:p-12"
+        className="relative hidden overflow-hidden bg-[#071018] text-white lg:flex lg:flex-col lg:justify-center lg:p-10 xl:p-12"
       >
         <StudioAtmosphere tone="authDark" className="z-0" containerRef={bannerRef} />
         <div
@@ -41,10 +40,6 @@ export function AuthLayout({
           aria-hidden
           className="auth-orbit auth-orbit-delayed pointer-events-none absolute -left-10 top-1/2 h-[20rem] w-[20rem] -translate-y-1/2 rounded-full border border-[#5ec8ff]/18"
         />
-        <div className="relative z-10 flex items-center gap-3">
-          <Mark tone="onDark" className="h-11 w-11" />
-          <span className="text-sm font-bold tracking-[0.16em]">KHARIS CHURCH</span>
-        </div>
         <figure className="relative z-10 max-w-md">
           <p className="studio-eyebrow mb-4 text-white/45">Content Studio</p>
           <blockquote className="font-heading text-[2rem] font-medium leading-snug tracking-tight text-white/90 xl:text-[2.35rem]">
@@ -56,7 +51,6 @@ export function AuthLayout({
             <span className="h-px w-8 bg-white/30" />1 CHRONICLES 22:5
           </figcaption>
         </figure>
-        <p className="relative z-10 text-xs text-white/40">content.kharis.org</p>
       </aside>
 
       <main className="relative flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-16 sm:px-8">
@@ -64,11 +58,7 @@ export function AuthLayout({
         <ThemeToggle variant="pill" className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6" />
         <div className="auth-form-enter relative z-10 w-full max-w-[25rem]">
           <div className="mb-6 flex flex-col items-center text-center">
-            <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-              <Mark className="h-9 w-9" />
-              Kharis Church
-            </div>
-            <h1 className="mt-4 font-heading text-2xl font-bold tracking-tight">{title}</h1>
+            <h1 className="font-heading text-2xl font-bold tracking-tight">{title}</h1>
             {description ? (
               <div className="mt-1.5 text-sm text-muted-foreground">{description}</div>
             ) : null}
