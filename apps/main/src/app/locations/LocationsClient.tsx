@@ -89,15 +89,17 @@ export function LocationsClient({ items, full }: Props) {
   );
 
   const shown = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = query.trim().toLowerCase().replace(/\s+/g, " ");
+    const postcode = q.replace(/\s/g, "");
     return items
       .filter((b) => filter === "all" || b.country === filter)
       .filter(
         (b) =>
           !q ||
-          [b.name, b.place, b.city, b.postcode, b.address].some((v) =>
-            v?.toLowerCase().includes(q),
-          ),
+          [b.name, b.place, b.city, b.address].some((value) =>
+            value?.toLowerCase().replace(/\s+/g, " ").includes(q),
+          ) ||
+          b.postcode?.toLowerCase().replace(/\s/g, "").includes(postcode),
       )
       .map((b) => ({
         branch: b,
@@ -118,7 +120,12 @@ export function LocationsClient({ items, full }: Props) {
     if (origin) {
       const sorted = [...shown].sort((a, b) => (a.miles ?? Infinity) - (b.miles ?? Infinity));
       return sorted.length
-        ? [{ title: "Nearest to you", sections: [{ key: "near", label: null, rows: sorted }] }]
+        ? [
+            {
+              title: "Nearest to you",
+              sections: [{ key: "near", label: null, rows: sorted }],
+            },
+          ]
         : [];
     }
     return countries
@@ -206,8 +213,12 @@ export function LocationsClient({ items, full }: Props) {
             className="locations-search"
             onSubmit={(e) => {
               e.preventDefault();
-              e.currentTarget.querySelector("input")?.blur();
-              document.getElementById("branches")?.scrollIntoView({ behavior: "smooth" });
+              document.getElementById("branches-title")?.focus({ preventScroll: true });
+              document.getElementById("branches")?.scrollIntoView({
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "auto"
+                  : "smooth",
+              });
             }}
           >
             <label htmlFor="branch-search" className="sr-only">
@@ -222,10 +233,18 @@ export function LocationsClient({ items, full }: Props) {
               autoComplete="postal-code"
               className="locations-search__input"
             />
-            <button type="button" className="btn-give" onClick={locate} disabled={locating}>
+            <button type="submit" className="btn-give">
+              Search
+            </button>
+            <button type="button" className="btn-secondary" onClick={locate} disabled={locating}>
               {locating ? "Finding you…" : origin ? "Nearest first" : "Near me"}
             </button>
           </form>
+          {query.trim() ? (
+            <p className="locations-hero__note" role="status">
+              {shown.length === 1 ? "1 branch found" : `${shown.length} branches found`}
+            </p>
+          ) : null}
           {geoNote ? (
             <p className="locations-hero__note" role="status">
               {geoNote}
@@ -253,7 +272,7 @@ export function LocationsClient({ items, full }: Props) {
       <section id="branches" className="locations-list" aria-labelledby="branches-title">
         <div className="locations-list__head">
           <p className="eyebrow">Every branch</p>
-          <h2 id="branches-title" className="section-title mt-2">
+          <h2 id="branches-title" tabIndex={-1} className="section-title mt-2">
             Where we meet on Sunday
           </h2>
         </div>
