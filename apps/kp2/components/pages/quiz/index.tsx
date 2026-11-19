@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { withBasePath } from "@/lib/base-path";
 import { AnimatedHeight } from "@/components/AnimatedHeight";
 import { DepartmentIllustration } from "@/components/DepartmentIllustration";
@@ -9,6 +10,7 @@ import { TypedText } from "@/components/TypedText";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { WhyWeServe } from "@/components/WhyWeServe";
 import {
   QUIZ_BRANCHES,
   QUIZ_LANGUAGES,
@@ -64,7 +66,7 @@ const QUIZ_STORAGE_KEY = "kharis_kp2_quiz_state_v1";
 
 type PersistedQuizState = {
   lang?: SupportedLanguage;
-  screen?: "start" | "quiz" | "result";
+  screen?: "quiz" | "result";
   branch?: string;
   currentQuestion?: number;
   answers?: (QuizOption | null)[];
@@ -73,7 +75,7 @@ type PersistedQuizState = {
 
 export default function DepartmentQuizPage() {
   const [lang, setLang] = useState<SupportedLanguage>("en");
-  const [screen, setScreen] = useState<"start" | "quiz" | "result">("start");
+  const [screen, setScreen] = useState<"quiz" | "result">("quiz");
   const [hydrated, setHydrated] = useState(false);
 
   // User input state
@@ -166,6 +168,18 @@ export default function DepartmentQuizPage() {
   const [heroSlide, setHeroSlide] = useState(0);
 
   const quizCardRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!hydrated || window.location.hash !== "#questions") return;
+    const frame = window.requestAnimationFrame(() => {
+      quizCardRef.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+        block: "start",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [hydrated]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -177,18 +191,6 @@ export default function DepartmentQuizPage() {
 
   const t = useMemo(() => QUIZ_TRANSLATIONS[lang] ?? QUIZ_TRANSLATIONS.en, [lang]);
   const privacyData = useMemo(() => QUIZ_PRIVACY_CONTENT[lang] ?? QUIZ_PRIVACY_CONTENT.en, [lang]);
-
-  // Start quiz
-  const handleStart = () => {
-    setAnswers(new Array(t.questions.length).fill(null));
-    setScores({});
-    setCurrentQuestion(0);
-    setActiveVideo(null);
-    setScreen("quiz");
-    if (quizCardRef.current) {
-      quizCardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
 
   // Select option
   const handleSelectOption = (option: QuizOption) => {
@@ -266,7 +268,7 @@ export default function DepartmentQuizPage() {
     if (currentQuestion > 0) {
       setCurrentQuestion((prev) => prev - 1);
     } else {
-      setScreen("start");
+      router.push("/departments");
     }
     if (quizCardRef.current) {
       quizCardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -286,7 +288,7 @@ export default function DepartmentQuizPage() {
     setActiveVideo(null);
     setBranch("");
     setBranchError(false);
-    setScreen("start");
+    setScreen("quiz");
     if (quizCardRef.current) {
       quizCardRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -395,83 +397,12 @@ export default function DepartmentQuizPage() {
         {/* Quiz Flow Card Section */}
         <section
           ref={quizCardRef}
-          className="relative z-10 bg-surface px-margin-mobile py-stack-lg md:px-margin-desktop"
+          id="questions"
+          className="relative z-10 scroll-mt-24 bg-surface px-margin-mobile py-stack-lg md:px-margin-desktop"
         >
           <div className="mx-auto max-w-3xl">
             <AnimatedHeight>
-              {/* 1. START SCREEN */}
-              {screen === "start" && (
-                <div
-                  key="start"
-                  className="kp-content-enter relative overflow-hidden border-4 border-black bg-surface-container-lowest p-6 sm:p-10 brutalist-shadow-lg"
-                >
-                  <div className="halftone-bg pointer-events-none absolute top-0 right-0 -mr-12 -mt-12 h-36 w-36 opacity-30" />
-
-                  <div className="relative z-10">
-                    <div className="mb-6 border-b-2 border-black pb-4">
-                      <span className="mb-2 inline-block rounded-none border border-black bg-primary px-3 py-0.5 text-[11px] font-black uppercase tracking-widest text-on-primary">
-                        {t.stepBadge}
-                      </span>
-                      <h2 className="font-display-lg text-2xl sm:text-3xl uppercase leading-tight text-on-surface">
-                        {t.startHeading}
-                      </h2>
-                      <p className="mt-2 text-sm text-on-surface-variant">{t.startDescription}</p>
-                    </div>
-
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleStart();
-                      }}
-                      className="space-y-6"
-                    >
-                      {/* Submit CTA */}
-                      <button
-                        type="submit"
-                        className="kp-depth-button kp-button-purple group flex w-full items-center justify-center gap-3 rounded-none border-2 border-black bg-primary py-4 px-8 text-center font-display-lg text-xl uppercase tracking-wider text-on-primary shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-                      >
-                        <span>{t.startButton}</span>
-                        <span className="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1">
-                          arrow_forward
-                        </span>
-                      </button>
-
-                      {/* Privacy Note */}
-                      <div className="text-center pt-2">
-                        <p className="text-xs text-on-surface-variant font-medium">
-                          {t.privacyAgreement.includes("{policy}") ? (
-                            <>
-                              {t.privacyAgreement.split("{policy}")[0]}
-                              <button
-                                type="button"
-                                onClick={() => setShowPrivacy(true)}
-                                className="font-bold text-primary underline underline-offset-2 hover:text-on-background transition-colors cursor-pointer"
-                              >
-                                {t.privacyPolicyLink}
-                              </button>
-                              {t.privacyAgreement.split("{policy}")[1]}
-                            </>
-                          ) : (
-                            <>
-                              {t.privacyAgreement}{" "}
-                              <button
-                                type="button"
-                                onClick={() => setShowPrivacy(true)}
-                                className="font-bold text-primary underline underline-offset-2 hover:text-on-background transition-colors cursor-pointer"
-                              >
-                                {t.privacyPolicyLink}
-                              </button>
-                              .
-                            </>
-                          )}
-                        </p>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              )}
-
-              {/* 2. QUIZ SCREEN */}
+              {/* The first quiz question is ready as soon as this page opens. */}
               {screen === "quiz" && (
                 <div
                   key={`quiz-${currentQuestion}`}
@@ -897,6 +828,36 @@ export default function DepartmentQuizPage() {
             </AnimatedHeight>
           </div>
         </section>
+        <div className="bg-surface px-margin-mobile pb-stack-md md:px-margin-desktop">
+          <p className="mx-auto max-w-3xl text-center text-xs font-medium text-on-surface-variant">
+            {t.privacyAgreement.includes("{policy}") ? (
+              <>
+                {t.privacyAgreement.split("{policy}")[0]}
+                <button
+                  type="button"
+                  onClick={() => setShowPrivacy(true)}
+                  className="font-bold text-primary underline underline-offset-2 hover:text-on-background"
+                >
+                  {t.privacyPolicyLink}
+                </button>
+                {t.privacyAgreement.split("{policy}")[1]}
+              </>
+            ) : (
+              <>
+                {t.privacyAgreement}{" "}
+                <button
+                  type="button"
+                  onClick={() => setShowPrivacy(true)}
+                  className="font-bold text-primary underline underline-offset-2 hover:text-on-background"
+                >
+                  {t.privacyPolicyLink}
+                </button>
+                .
+              </>
+            )}
+          </p>
+        </div>
+        <WhyWeServe />
       </main>
 
       {/* Privacy Policy Modal */}

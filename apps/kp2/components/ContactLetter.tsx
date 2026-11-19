@@ -130,7 +130,7 @@ export function ContactLetter({
               </div>
             ) : (
               <form onSubmit={onSubmit} noValidate>
-                <p className="kp-letter__greeting">Hi Kharis,</p>
+                <p className="kp-letter__greeting">Hi there,</p>
 
                 <p className="kp-letter__line">
                   My name is{" "}
@@ -263,10 +263,6 @@ export function ContactLetter({
                   <button type="submit" className="kp-letter__button" disabled={busy}>
                     {busy ? "Sending…" : "Send my message"}
                   </button>
-                  <p>
-                    Rather talk face to face? Find a member of the team at the admin desk after any
-                    service.
-                  </p>
                 </div>
               </form>
             )}
@@ -310,10 +306,9 @@ export function ContactLetter({
                 03
               </span>
               <div>
-                <h3>We write back</h3>
+                <h3>Look out for a reply</h3>
                 <p>
-                  Look out for a reply by email. Visiting? We&apos;ll help you find your way on
-                  Sunday.
+                  We&apos;ll reply by email. Visiting? We&apos;ll help you find your way on Sunday.
                 </p>
               </div>
             </li>

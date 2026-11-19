@@ -23,21 +23,16 @@ const COLUMNS: FooterColumn[] = [
       { label: "Mission", to: "/mission" },
       { label: "Governance", to: "/governance" },
       { label: "Kharis Church", to: KHARIS_MAIN_URL, external: true },
-      { label: "Contact", to: "/contact" },
     ],
   },
   {
     title: "Get Involved",
     titleColor: "text-on-background",
     links: [
-      { label: "Serve at Kharis", to: "/departments" },
-      { label: "Departmental Quiz", to: "/quiz" },
+      { label: "Serve at Kharis", to: "/quiz" },
+      { label: "Find a Location", to: "/branches" },
+      { label: "Contact", to: "/contact" },
     ],
-  },
-  {
-    title: "Join Us",
-    titleColor: "text-primary",
-    links: [{ label: "Find a Location", to: "/branches" }],
   },
   {
     title: "Finance",
@@ -59,7 +54,7 @@ export function SiteFooter() {
         aria-hidden="true"
       ></div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-gutter gap-y-10 px-margin-mobile md:px-margin-desktop py-14 max-w-7xl mx-auto relative z-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-gutter gap-y-10 px-margin-mobile md:px-margin-desktop py-14 max-w-7xl mx-auto relative z-10">
         {/* Brand */}
         <div className="col-span-2 md:col-span-3 lg:col-span-2 space-y-4">
           <div className="font-display-xl text-4xl md:text-5xl text-primary tracking-tighter leading-none">
