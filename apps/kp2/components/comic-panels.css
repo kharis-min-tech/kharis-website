@@ -54,15 +54,49 @@
   pointer-events: none;
   filter: drop-shadow(3px 0 0 #151218) drop-shadow(-3px 0 0 #151218) drop-shadow(0 3px 0 #151218)
     drop-shadow(0 -3px 0 #151218);
-  transition:
-    opacity 0.5s ease-out,
-    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition-delay: calc(var(--i, 0) * 110ms);
 }
 
-.kp-panels__page.is-armed .kp-panels__cell {
+/* Panels deal onto the page as they arrive (useDealIn): each pops up from its own centre with a
+   small spin and settles flat, then its caption sticker slaps on. The narration slaps on first. */
+.kp-panels__narration[data-deal="armed"],
+.kp-panels__cell[data-deal="armed"] {
   opacity: 0;
-  transform: scale(0.94) rotate(-1deg);
+}
+
+.kp-panels__narration[data-deal="in"] {
+  --slap-r: -1.5deg;
+  --slap-shadow: 4px;
+  animation: kp-sticker-slap 560ms backwards;
+}
+
+.kp-panels__cell[data-deal="in"] {
+  animation: kp-panel-deal 620ms calc(var(--deal-order, 0) * 120ms) backwards;
+}
+
+.kp-panels__cell[data-deal="in"] .kp-panels__caption {
+  --slap-r: 0deg;
+  --slap-shadow: 3px;
+  animation: kp-sticker-slap 520ms calc(var(--deal-order, 0) * 120ms + 320ms) backwards;
+}
+
+@keyframes kp-panel-deal {
+  0% {
+    opacity: 0;
+    transform: translateY(2.5rem) rotate(var(--deal-r, -2deg)) scale(0.9);
+    animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-0.3rem) rotate(calc(var(--deal-r, -2deg) * -0.2)) scale(1.015);
+    animation-timing-function: ease-in-out;
+  }
+  80% {
+    transform: translateY(0.1rem) scale(0.997);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .kp-panels__cell--a {
@@ -80,6 +114,8 @@
   --sy: 0%;
   --sw: 47%;
   --sh: 48%;
+  --deal-r: -3deg;
+  transform-origin: 25% 25%;
 }
 
 .kp-panels__cell--b {
@@ -97,6 +133,8 @@
   --sy: 0%;
   --sw: 47%;
   --sh: 48%;
+  --deal-r: 2.5deg;
+  transform-origin: 75% 25%;
 }
 
 .kp-panels__cell--c {
@@ -114,6 +152,8 @@
   --sy: 54%;
   --sw: 47%;
   --sh: 46%;
+  --deal-r: 2deg;
+  transform-origin: 25% 75%;
 }
 
 .kp-panels__cell--d {
@@ -131,6 +171,8 @@
   --sy: 54%;
   --sw: 47%;
   --sh: 46%;
+  --deal-r: -2.5deg;
+  transform-origin: 75% 75%;
 }
 
 .kp-panels__panel {
@@ -306,6 +348,7 @@
     height: 22rem;
     margin: 0;
     filter: none;
+    transform-origin: 50% 50%;
     --clip: inset(0);
     --bx: 0%;
     --by: 0%;
@@ -353,6 +396,7 @@
     position: relative;
     inset: auto;
     height: var(--stack-h);
+    transform-origin: 50% 50%;
     --bx: 0%;
     --by: 0%;
     --bw: 100%;
@@ -424,7 +468,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .kp-panels__narration,
   .kp-panels__cell,
+  .kp-panels__caption {
+    animation: none;
+  }
+
   .kp-panels__panel,
   .kp-panels__media img,
   .kp-panels__explore {
