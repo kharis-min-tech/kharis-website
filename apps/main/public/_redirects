@@ -1,0 +1,3 @@
+# Serve the legacy hero video URLs from the versioned media CDN.
+/videos/hero-a.mp4 https://images.kharis.org/site-videos/main/b10286f314728ee9/hero-a.mp4 302
+/videos/hero-b.mp4 https://images.kharis.org/site-videos/main/bf6397fee2d81863/hero-b.mp4 302

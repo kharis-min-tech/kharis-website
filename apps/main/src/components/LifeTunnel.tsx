@@ -16,6 +16,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { CHURCH_VALUES } from "@/lib/church-values";
 import { activeLifeActivities, type LifeActivity } from "@/lib/life-activities";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 import { useDialog } from "@/lib/use-dialog";
@@ -24,32 +25,47 @@ import "./life-tunnel.css";
 
 const programme = [
   {
-    title: "Grow in faith",
-    preview: "Small groups, baptism, fasting and Bible teaching",
-    activities: ["k-group", "baptism", "fasting", "let-the-bible-speak-conference"],
+    title: CHURCH_VALUES.christCentered,
+    preview: "Taking the next step in following Christ",
+    activities: ["baptism"],
   },
   {
-    title: "Find your people",
-    preview: "Relationships and time together",
-    activities: ["singles-seminar", "marriage", "cook-along", "christmas-jumper"],
+    title: CHURCH_VALUES.bibleBelieving,
+    preview: "Learning and sharing the Word",
+    activities: ["let-the-bible-speak-conference", "k-group"],
   },
   {
-    title: "Build for everyday life",
+    title: CHURCH_VALUES.revivalSeeking,
+    preview: "Seeking God together and sharing the gospel",
+    activities: ["fasting", "jesus-campaign"],
+  },
+  {
+    title: CHURCH_VALUES.purposeDriven,
+    preview: "Putting faith to work through service and innovation",
+    activities: ["departments", "innovation-project"],
+  },
+  {
+    title: CHURCH_VALUES.peopleDeveloping,
     preview: "Careers, money, technology and wellbeing",
+    activities: ["careers-fair", "finance-seminar", "ai-in-the-workplace", "health-seminar"],
+  },
+  {
+    title: CHURCH_VALUES.discipleMaking,
+    preview: "Growing together through relationships, fellowship and sport",
     activities: [
-      "careers-fair",
-      "finance-seminar",
-      "ai-in-the-workplace",
-      "health-seminar",
-      "innovation-project",
+      "singles-seminar",
+      "marriage",
+      "cook-along",
+      "christmas-jumper",
+      "sports-day",
+      "football-tournament",
     ],
   },
-  {
-    title: "Get involved",
-    preview: "Serving, outreach and sport",
-    activities: ["departments", "jesus-campaign", "sports-day", "football-tournament"],
-  },
-] satisfies { title: string; preview: string; activities: LifeActivity["slug"][] }[];
+] satisfies {
+  title: string;
+  preview: string;
+  activities: LifeActivity["slug"][];
+}[];
 
 const programmeSlugs = new Set<LifeActivity["slug"]>(
   programme.flatMap((chapter) => chapter.activities),

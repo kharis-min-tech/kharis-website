@@ -97,14 +97,6 @@ export function LifeDepartmentsPage() {
             <div className="life-dept-band__copy">
               <h2>{band.title}</h2>
               <p>{band.body}</p>
-              <Link
-                href={`/departments/${band.slug}`}
-                aria-label={`Join ${band.title}`}
-                className="life-dept-band__cta"
-              >
-                Join {band.title}
-                <Icon name="arrow" className="h-3.5 w-3.5" />
-              </Link>
             </div>
           </article>
         ))}
@@ -116,14 +108,19 @@ export function LifeDepartmentsPage() {
             <h3 id="life-dept-branch-cta-title">Still not sure where you fit?</h3>
             <p>Take the quiz and find the team that fits you at your local branch.</p>
           </div>
-          <Link
-            href={LIFE_DEPARTMENTS_URL}
-            data-no-smooth-nav
-            className="life-dept-branch-cta__link"
-          >
-            Take the quiz
-            <Icon name="arrow" className="h-3.5 w-3.5" />
-          </Link>
+          <div className="btn-pair">
+            <Link href="/locations" className="btn-secondary">
+              Find a branch
+            </Link>
+            <Link
+              href={LIFE_DEPARTMENTS_URL}
+              data-no-smooth-nav
+              className="life-dept-branch-cta__link"
+            >
+              Take the quiz
+              <Icon name="arrow" className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
       </section>
     </div>

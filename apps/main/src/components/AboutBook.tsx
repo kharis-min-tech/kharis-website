@@ -81,7 +81,7 @@ const PHOTO = {
   grace: "https://images.kharis.org/site-images/main/16b531253b8a325e/grace-filled-prayer.jpg",
   bible: "https://images.kharis.org/site-images/main/b65991e38ead9ab1/biblical-open-bible.jpg",
   mission: "https://images.kharis.org/site-images/main/11577f5e512c33cd/about-mission-outreach.jpg",
-  vision: "https://images.kharis.org/site-images/main/c7e0b460a01f93eb/about-vision-team-2048.jpg",
+  vision: siteImageUrls["/images/locations/london-sunday-laughter.jpg"],
   /* pastors-david-awo-3 was here and could not work. In that frame Pastor Awo
    * is against the left edge and Pastor David against the right, and a page
    * is a portrait crop of a landscape photograph: it keeps the middle half
@@ -306,8 +306,8 @@ const FACES: Face[] = [
           ))}
         </ol>
         <Inset
-          src={siteImageUrls["/images/vision-campaign.jpg"]}
-          alt="Kharis members taking part in the Jesus Campaign"
+          src={siteImageUrls["/images/contact/easter-door-greeter.jpg"]}
+          alt="A Kharis greeter welcoming people outside the Easter service"
         />
       </>
     ),
@@ -326,10 +326,7 @@ const FACES: Face[] = [
             </li>
           ))}
         </ol>
-        <Inset
-          src={PHOTO.vision}
-          alt="The Kharis church family gathered outside after a service, cheering"
-        />
+        <Inset src={PHOTO.vision} alt="Members of Kharis London smiling during a service" />
       </>
     ),
   },

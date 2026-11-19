@@ -14,22 +14,22 @@ const APP_STILLS = [
     alt: "Kharis Church app home screen with branch updates, the daily Bible reading and Moments",
   },
   {
-    label: "Messages",
+    label: "Media Player",
     screenBackground: "#f5f5f3",
-    src: siteImageUrls["/images/app-steps/kharis-app-current-messages.png"],
-    alt: "Kharis Church app Messages screen with a featured sermon, browsing tabs and saved collections",
+    src: siteImageUrls["/images/app-steps/kharis-app-current-player.png"],
+    alt: "Kharis Church app Media Player with audio and video tabs and playback controls",
   },
   {
     label: "Bible",
     screenBackground: "#f5f5f3",
-    src: siteImageUrls["/images/app-steps/kharis-app-current-bible.png"],
-    alt: "Kharis Church app Bible screen with Scripture search, highlights and notes",
+    src: siteImageUrls["/images/app-steps/kharis-app-current-chapter.png"],
+    alt: "John 3 open in the Kharis Church app Bible reader",
   },
 ] as const;
 
-export function VisionSection() {
+export function VisionSection({ id = "vision" }: { id?: string }) {
   return (
-    <section id="vision" className="listen-band section section--lg band band--1">
+    <section id={id} className="listen-band section section--lg band band--1">
       <div className="section__inner relative z-10">
         <Reveal variant="up" distance={28} className="mx-auto max-w-3xl text-center">
           <p className="eyebrow">Stay plugged in</p>
