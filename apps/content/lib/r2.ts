@@ -51,13 +51,43 @@ function cloudflarePublicUrl() {
   }
 }
 
-function nativeBucket(): R2BucketLike | null {
+async function nativeBucket(): Promise<R2BucketLike | null> {
   try {
-    const env = getCloudflareContext().env as unknown as { BUCKET?: R2BucketLike };
-    return env.BUCKET ?? null;
+    const { env } = await getCloudflareContext({ async: true });
+    return (env as unknown as { BUCKET?: R2BucketLike }).BUCKET ?? null;
   } catch {
     return null;
   }
+}
+
+type FixedLengthStreamLike = {
+  readable: ReadableStream;
+  writable: WritableStream;
+};
+
+/**
+ * R2 Workers `put()` rejects streams without a known length. OpenNext often
+ * hands us `request.body` as a plain ReadableStream even when Content-Length
+ * was sent, so wrap with FixedLengthStream (Workers) or buffer the bytes.
+ * @see https://developers.cloudflare.com/r2/api/workers/workers-api-reference/
+ */
+async function bodyForR2Put(body: ReadableStream | Uint8Array, contentLength?: number) {
+  if (body instanceof Uint8Array) return { value: body, done: Promise.resolve() };
+  if (typeof contentLength === "number" && contentLength > 0) {
+    const FixedLengthStreamCtor = (
+      globalThis as unknown as {
+        FixedLengthStream?: new (length: number) => FixedLengthStreamLike;
+      }
+    ).FixedLengthStream;
+    if (FixedLengthStreamCtor) {
+      const { readable, writable } = new FixedLengthStreamCtor(contentLength);
+      return { value: readable, done: body.pipeTo(writable) };
+    }
+  }
+  return {
+    value: new Uint8Array(await new Response(body).arrayBuffer()),
+    done: Promise.resolve(),
+  };
 }
 
 async function s3BucketFallback(): Promise<R2BucketLike | null> {
@@ -155,7 +185,7 @@ async function s3BucketFallback(): Promise<R2BucketLike | null> {
 
 /** The bound bucket, or S3 credentials fallback during local dev. */
 async function bucket(): Promise<R2BucketLike | null> {
-  return nativeBucket() ?? (await s3BucketFallback());
+  return (await nativeBucket()) ?? (await s3BucketFallback());
 }
 
 /** Writes a branch photo to R2. The upload route attaches the public address. */
@@ -169,15 +199,21 @@ export async function storeBranchImage(key: string, body: Uint8Array, contentTyp
   };
 }
 
-/** Writes a studio video or picture to R2 under site-media/. Streams, so large videos are not buffered. */
+/**
+ * Writes a studio video, picture or PDF to R2 under site-media/.
+ * Pass contentLength when known so Workers R2 can stream without buffering.
+ */
 export async function storeMediaObject(
   key: string,
   body: ReadableStream | Uint8Array,
   contentType: string,
+  contentLength?: number,
 ) {
   const store = await bucket();
   if (!store || !isMediaObjectKey(key)) return null;
-  await store.put(key, body, { httpMetadata: { contentType } });
+  const prepared = await bodyForR2Put(body, contentLength);
+  await store.put(key, prepared.value, { httpMetadata: { contentType } });
+  await prepared.done;
   return { key };
 }
 

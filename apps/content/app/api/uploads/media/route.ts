@@ -112,15 +112,27 @@ export async function POST(request: Request) {
 
   const key = mediaObjectKey(folder, fileName, branchId, subfolder);
   try {
-    const stored = await storeMediaObject(key, request.body, contentType);
+    const stored = await storeMediaObject(key, request.body, contentType, size);
     if (!stored) {
       return NextResponse.json({ error: "File storage is not configured." }, { status: 503 });
     }
     const publicUrl = branchImagePublicUrl(stored.key, new URL(request.url).origin);
     return NextResponse.json({ key: stored.key, publicUrl });
-  } catch {
+  } catch (caught) {
+    const detail = caught instanceof Error ? caught.message : String(caught);
+    const certificate =
+      /unable to verify the first certificate|UNABLE_TO_VERIFY_LEAF_SIGNATURE|self[- ]signed certificate/i.test(
+        detail,
+      );
+    const knownLength = /known length|FixedLengthStream/i.test(detail);
     return NextResponse.json(
-      { error: "File storage could not be reached. Try again." },
+      {
+        error: certificate
+          ? "File storage TLS check failed on this machine. Local uploads need a trusted CA (or NODE_TLS_REJECT_UNAUTHORIZED=0 for local only)."
+          : knownLength
+            ? "File storage rejected the upload stream. Redeploy Content Studio with the R2 length fix."
+            : "File storage could not be reached. Try again.",
+      },
       { status: 502 },
     );
   }
