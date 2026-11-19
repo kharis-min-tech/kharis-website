@@ -1,0 +1,380 @@
+/* —— Petitpoint Interactive Dot-Matrix Map ——————————————————— */
+.pp-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.pp-root:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--pp-accent, #ffde59);
+}
+
+.pp-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pp-probe {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* —— Coordinate Readout HUD ——————————————————————————————————— */
+.pp-readout {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: pre;
+  font-family: var(--font-space), "Space Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.pp-readout__dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+}
+
+/* —— Bottom-Left Legend / Filter Controls ————————————————————— */
+.pp-hud-bottom {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 2;
+  max-width: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 9px 11px;
+  border-radius: 4px;
+  font-family: var(--font-space), "Space Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.pp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pp-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.pp-chip__swatch {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+}
+
+.pp-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.pp-legend__bar {
+  width: 140px;
+  height: 6px;
+  border-radius: 1px;
+}
+
+.pp-legend__labels {
+  display: flex;
+  justify-content: space-between;
+  width: 140px;
+}
+
+/* —— Pin-Following Location Detail Card ——————————————————————— */
+.pp-card-anchor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  will-change: transform;
+}
+
+.pp-card {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  border-radius: 4px;
+  box-shadow: 0 24px 56px -18px rgba(0, 0, 0, 0.52);
+  animation: pp-card-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.pp-card--kp2 {
+  border-width: 3px !important;
+  border-style: solid !important;
+  border-color: #151218 !important;
+  box-shadow: 6px 6px 0 #f7be1d;
+}
+
+.dark .pp-card--kp2 {
+  border-color: #ffde59 !important;
+  box-shadow: 6px 6px 0 #630ed4;
+}
+
+@keyframes pp-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pp-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 11px;
+}
+
+.pp-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: pp-img-settle 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes pp-img-settle {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.pp-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-family: var(--font-space), "Space Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pp-card__cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.pp-card__cat-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+}
+
+.pp-card__coords {
+  white-space: nowrap;
+}
+
+.pp-card__title {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.pp-card__caption {
+  margin-top: 6px;
+  font-family: var(--font-hanken), "Hanken Grotesk", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.42;
+}
+
+.pp-card__meter {
+  margin-top: 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-space), "Space Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.pp-card__meter-track {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.pp-card__meter-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transform-origin: 0% 50%;
+  animation: pp-meter-grow 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.12s both;
+}
+
+@keyframes pp-meter-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.pp-card__link {
+  margin-top: 11px;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: gap 0.2s ease;
+}
+
+.pp-card__link:hover {
+  gap: 12px;
+}
+
+.pp-card__close {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.pp-card--kp2 .pp-card__close,
+.dark .pp-card--kp2 .pp-card__close {
+  background: #ffde59 !important;
+  color: #151218 !important;
+  border: 2px solid #151218 !important;
+}
+
+.pp-card--kp2 .pp-card__close svg,
+.dark .pp-card--kp2 .pp-card__close svg {
+  color: #151218 !important;
+}
+
+/* —— Zoom & Reset Controls ———————————————————————————————————— */
+.pp-controls {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pp-ctrl-btn {
+  width: 38px;
+  height: 38px;
+  border: 3px solid #151218;
+  background: #fffdf5;
+  color: #151218 !important;
+  box-shadow: 3px 3px 0 #151218;
+  font-family: var(--font-hanken), "Hanken Grotesk", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.dark .pp-ctrl-btn {
+  background: #1d162b;
+  color: #fffdf5 !important;
+  border-color: #000000;
+  box-shadow: 3px 3px 0 #f7be1d;
+}
+
+.pp-ctrl-btn:not(:disabled):hover,
+.dark .pp-ctrl-btn:not(:disabled):hover {
+  background: #f7be1d;
+  color: #151218 !important;
+}
+
+.pp-ctrl-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-card,
+  .pp-card__img,
+  .pp-card__meter-fill {
+    animation: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .pp-readout {
+    display: none;
+  }
+}
