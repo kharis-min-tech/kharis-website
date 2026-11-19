@@ -128,8 +128,8 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   format_quote
                 </span>
                 <p className="font-body-lg text-body-md leading-relaxed">
-                  “What sustains the move of God is text-driven, gospel-saturated,
-                  Christ-exalting teaching.”
+                  “What sustains the move of God is text-driven, gospel-saturated, Christ-exalting
+                  teaching.”
                 </p>
                 <cite className="mt-3 block font-label-sm not-italic uppercase tracking-wider text-on-surface">
                   — Pastor David Antwi

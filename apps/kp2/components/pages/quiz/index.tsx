@@ -174,7 +174,9 @@ export default function DepartmentQuizPage() {
     if (!hydrated || window.location.hash !== "#questions") return;
     const frame = window.requestAnimationFrame(() => {
       quizCardRef.current?.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
         block: "start",
       });
     });

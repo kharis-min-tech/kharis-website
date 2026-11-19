@@ -24,9 +24,7 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: "WATCH",
     to: "/messages",
-    children: [
-      { label: "MESSAGES", to: "/messages", blurb: "Recent sermons" },
-    ],
+    children: [{ label: "MESSAGES", to: "/messages", blurb: "Recent sermons" }],
   },
   { label: "GIVE", to: "/giving" },
   { label: "Kharis Church", to: KHARIS_CHURCH_URL, external: true },
