@@ -18,7 +18,7 @@ Scheduling a date that already has a message replaces it. To change a day, press
 
 ## Where the sermons come from
 
-The search looks in the app's sermon catalogue: the messages mirrored into Cloudflare from the church's sermon host, with audio, video, and transcripts.
+The search looks in the app's sermon catalogue: messages from the church's sermon library, with audio, video, and transcripts.
 
 ## Upcoming and Earlier
 

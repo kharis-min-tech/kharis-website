@@ -162,7 +162,7 @@ export function BranchList({
                 ? "Deactivated branches show here so you can reinstate them."
                 : "Nothing active here. Try the Inactive tab, or switch between Kharis Church and KP2."
             : isSuperAdmin
-              ? "Add the first campus with New branch."
+              ? "Add the first branch with New branch."
               : "No branches are assigned to you yet. Ask a super admin to add one."}
         </EmptyState>
       ) : (

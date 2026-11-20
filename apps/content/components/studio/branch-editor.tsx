@@ -416,7 +416,7 @@ export function BranchEditor() {
             ? draft.id
               ? `${FAMILY_LABEL[draft.family]} branch. Work through the steps, then save. Nothing changes on the websites until you save.`
               : "Work through the steps, then save. Nothing is public until you save."
-            : "Campuses, venues, service times, and gallery photos. Pick a branch to edit it step by step."
+            : "Branches, venues, service times, and gallery photos. Pick a branch to edit it step by step."
         }
         action={
           isSuperAdmin && !draft ? (
@@ -652,22 +652,24 @@ export function BranchEditor() {
                     onChange={(published) => patch({ published })}
                   />
                 ) : null}
-                <details className="rounded-lg border border-border px-4 py-3 text-sm">
-                  <summary className="cursor-pointer font-medium">Advanced</summary>
-                  <div className="mt-3 max-w-xs">
-                    <TextField
-                      label="List position"
-                      name="sortOrder"
-                      type="number"
-                      step={1}
-                      value={draft.sortOrder}
-                      onChange={(event) => patch({ sortOrder: event.target.value })}
-                    />
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Lower numbers appear first in branch lists.
-                    </p>
-                  </div>
-                </details>
+                {isSuperAdmin ? (
+                  <details className="rounded-lg border border-border px-4 py-3 text-sm">
+                    <summary className="cursor-pointer font-medium">Advanced</summary>
+                    <div className="mt-3 max-w-xs">
+                      <TextField
+                        label="List position"
+                        name="sortOrder"
+                        type="number"
+                        step={1}
+                        value={draft.sortOrder}
+                        onChange={(event) => patch({ sortOrder: event.target.value })}
+                      />
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Lower numbers appear first in branch lists.
+                      </p>
+                    </div>
+                  </details>
+                ) : null}
               </section>
 
               <section hidden={step !== "pastor"} className="space-y-4">

@@ -114,8 +114,10 @@ export default defineConfig({
     socialLinks: [],
     docFooter: { prev: "Previous", next: "Next" },
     footer: {
+      // target=_self bypasses the VitePress SPA router so / leaves /documentation/
+      // and opens the studio app root (same origin).
       message:
-        'Content Studio: Content Management by Kharis Church · <a href="/">Open the studio</a>',
+        'Content Studio: Content Management by Kharis Church · <a href="/" target="_self">Open the studio</a>',
     },
   },
 });

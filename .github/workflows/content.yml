@@ -33,6 +33,9 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: a94432b07dae8050b83efdec72a492a3
       # Public, baked into the client bundle at build time. Set as repo
       # Variables: Settings → Secrets and variables → Actions → Variables.
+      # SUPABASE_PUBLISHABLE_KEY must be sb_publishable_... (not legacy anon).
+      # Supabase secret / service_role keys are never set here — they live on
+      # the Kharis API backend as SUPABASE_SECRET_KEY=sb_secret_...
       NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       NEXT_PUBLIC_KHARIS_API_URL: ${{ vars.NEXT_PUBLIC_KHARIS_API_URL }}

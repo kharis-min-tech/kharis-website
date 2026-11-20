@@ -10,7 +10,7 @@ Each card shows:
 
 - A date tile and the title
 - The full date and time
-- The branch, or the location, or **All campuses**
+- The branch, or the location, or **All branches**
 - The **category** badge
 - **Weekly** for repeating events
 - **Hidden** for events that aren't shown on any site
@@ -31,7 +31,7 @@ Press **New event**. The panel opens on the right.
 | Start       | Yes           |                                                                                  |
 | End         | No            | Same day as the start                                                            |
 | Location    | No            | Free text, for events away from a branch venue                                   |
-| Branch      | Branch admins | Super admins can choose **No branch (all campuses)**                             |
+| Branch      | Branch admins | Super admins can choose **No branch (all branches)**                             |
 | Category    | Yes           | service, fellowship, conference, camp, or general                                |
 | Repeats     | Yes           | **Does not repeat** or **Weekly**                                                |
 | Show on     | No            | Kharis website, KP2 website, Mobile app. The current workspace is ticked for you |
