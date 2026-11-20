@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 0;
+  border-radius: 999px;
   background: var(--primary);
   color: var(--primary-foreground);
   padding: 0;
@@ -47,7 +47,7 @@
   width: 2rem;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
+  border-radius: 999px;
   background: var(--primary);
   color: var(--primary-foreground);
   font-weight: 800;

@@ -3,7 +3,12 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 const PLACEHOLDER_URL = "https://placeholder.supabase.co";
 const PLACEHOLDER_KEY = "placeholder-key";
 
+/** Project URL from Supabase Settings → API Keys. */
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || PLACEHOLDER_URL;
+/**
+ * Browser client key: `sb_publishable_...` (replaces legacy `anon`).
+ * Never use `sb_secret_...` / `service_role` here — those belong on the Kharis API.
+ */
 export const SUPABASE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || PLACEHOLDER_KEY;
 export const MEDIA_BUCKET = "content";

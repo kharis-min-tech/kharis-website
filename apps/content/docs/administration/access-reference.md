@@ -54,6 +54,4 @@ Every section of the studio, by workspace, and who can open it. Accounts with **
 
 ## How it's enforced
 
-The sidebar, the workspace list, and the overview only show what your role can use. If a branch admin opens the address of a section they can't use, the studio sends them back to the overview.
-
-Underneath that, every request goes through the Kharis API as the signed-in person, and the database's row level security decides what they can read and save. See [Roles & Permissions](/getting-started/roles-permissions).
+The sidebar, the workspace list, and the overview only show what your role can use. If a branch admin opens the address of a section they can't use, the studio sends them back to the overview. The same limits apply when saving. See [Roles & Permissions](/getting-started/roles-permissions).

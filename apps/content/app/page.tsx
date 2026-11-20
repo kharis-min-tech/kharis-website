@@ -127,7 +127,7 @@ export default function OverviewPage() {
         <StatCard
           label={access.isSuperAdmin ? "Total branches" : "Your branches"}
           value={pulse?.branches}
-          hint={access.isSuperAdmin ? "Campuses on the websites" : "Branches you can edit"}
+          hint={access.isSuperAdmin ? "Branches on the websites" : "Branches you can edit"}
           icon={Church}
           tone="brand"
           href={hrefWithWorkspace("/branches", "general")}
@@ -179,7 +179,7 @@ export default function OverviewPage() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold">{row.title}</p>
                       <p className="truncate text-xs text-muted-foreground">
-                        {[whenLabel(when), row.branch_name || row.location || "All campuses"]
+                        {[whenLabel(when), row.branch_name || row.location || "All branches"]
                           .filter(Boolean)
                           .join(" · ")}
                       </p>
@@ -326,7 +326,7 @@ function QuickActions({
     },
     {
       href: hrefWithWorkspace("/users", "general"),
-      label: "Invite a user",
+      label: "Invite a user with a role",
       icon: sectionIcon("/users"),
     },
   ].filter((action) => isSuperAdmin || allowed.has(action.href.split("?")[0]!));

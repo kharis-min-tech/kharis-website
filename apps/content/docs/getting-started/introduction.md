@@ -18,14 +18,14 @@ What you see in Content Studio follows from the role on your account. There are 
 - If you've just been invited, go to [Signing In](/getting-started/signing-in).
 - If you need to understand who can do what, see [Roles & Permissions](/getting-started/roles-permissions) and the [Access Reference](/administration/access-reference).
 - For a specific screen, use the **Studio** and **Mobile App** sections in the sidebar.
-- For a task from start to finish, such as opening a new campus, use the **Guides**.
+- For a task from start to finish, such as opening a new branch, use the **Guides**.
 
 ## What Content Studio covers
 
 | Area              | What it does                                                                  |
 | ----------------- | ----------------------------------------------------------------------------- |
 | Overview          | Your day at a glance: counts, upcoming events, recent messages, quick actions |
-| Branches          | Campuses, pastors, venues, service times, photos, gallery, and branch video   |
+| Branches          | Pastors, venues, service times, photos, gallery, and branch video             |
 | Events            | Services and gatherings, which sites show them, and weekly repeats            |
 | Announcements     | News and notices for each website and the app                                 |
 | Testimonies       | Stories for the websites, including the home and giving slots                 |

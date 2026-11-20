@@ -7,7 +7,7 @@ The messages you're most likely to see, what they mean, and what to do.
 | You see                        | What it means                                     | What to do                                                             |
 | ------------------------------ | ------------------------------------------------- | ---------------------------------------------------------------------- |
 | Waiting for access             | Your account has no role yet                      | Ask a super admin for a role, then press **Check again**               |
-| We couldn't check your access  | The studio couldn't reach the Kharis API          | Press **Try again**. If it keeps happening, tell a super admin         |
+| We couldn't check your access  | The studio couldn't confirm your role just then   | Press **Try again**. If it keeps happening, tell a super admin         |
 | This link doesn't work         | The invite or reset link has expired or been used | Ask a super admin to **Send password reset**, and use the newest email |
 | Sign in again to upload files. | Your session ended while you were working         | Sign out, sign back in, and upload again                               |
 

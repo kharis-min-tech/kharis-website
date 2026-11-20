@@ -1,6 +1,6 @@
 const TARGETS = ".VPNavBarMenuLink, .VPNavBarMenu .VPFlyout > .button";
 
-/** A soft highlight that glides between top-nav items, as on the Kairos docs. */
+/** A soft highlight that glides between top-nav items. */
 export function navHoverPill() {
   if (document.getElementById("nav-hover-pill")) return;
   const pill = document.createElement("div");

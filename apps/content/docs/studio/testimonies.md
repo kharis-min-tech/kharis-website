@@ -16,7 +16,7 @@ Press **New**.
 | ----------------- | --------------------------------------------------- |
 | Name              | Required. Shown unless the testimony is anonymous   |
 | Site              | On General only: which website or app it belongs to |
-| Branch            | The campus the person attends                       |
+| Branch            | The branch the person attends                       |
 | Category          | For example Healing, Provision, Salvation           |
 | Short description | The one or two lines shown on cards                 |
 | Full description  | The whole story                                     |

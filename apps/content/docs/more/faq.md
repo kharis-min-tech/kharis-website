@@ -34,7 +34,7 @@ No. Open the event and tick **KP2 website** under **Show on**. One event can app
 
 ### Where do app sermons live?
 
-Schedule a day under [Daily Message](/mobile-app/daily-message). Search picks from the catalogue mirrored into Cloudflare from the church's sermon host.
+Schedule a day under [Daily Message](/mobile-app/daily-message). Search picks from the church's sermon catalogue.
 
 ### Where does the Bible text in the app come from?
 
@@ -58,7 +58,7 @@ Images up to 8 MB; videos up to 95 MB. See [Images & Video](/guides/images-and-v
 
 ### Where are uploads stored?
 
-On Cloudflare, in the church's own storage. The websites and app load them from there.
+In the church's online media library. The websites and app load them from there.
 
 ## Safety
 
@@ -68,4 +68,4 @@ Deleting is permanent, which is why the studio asks first. Where you can, turn *
 
 ### Can a branch admin see another branch's messages?
 
-No. The database only returns messages, visitors, and events for the branches on their account, even if they type another page's address.
+No. They only see messages, visitors, and events for the branches on their account, even if they type another page's address.

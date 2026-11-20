@@ -17,7 +17,13 @@ npm install
 npm run dev:content
 ```
 
-Opens at http://localhost:3002. Copy `.env.example` to `.env.local` and fill in the Supabase publishable key (same project as the other apps) and, for venue search, `GOOGLE_MAPS_API_KEY`.
+Opens at http://localhost:3002. Copy `.env.example` to `.env.local` and fill in:
+
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — `sb_publishable_...` from Supabase **Settings → API Keys** (not the legacy `anon` JWT)
+- `NEXT_PUBLIC_KHARIS_API_URL` — studio accounts, invites and password resets
+- `GOOGLE_MAPS_API_KEY` — venue search (optional)
+
+The Supabase **secret** key (`sb_secret_...`, replaces `service_role`) belongs on the Kharis API server only. Never put it in Content Studio or any `NEXT_PUBLIC_*` variable.
 
 Sign-in is email and password against Supabase Auth. Unsigned visitors only see the sign-in card.
 

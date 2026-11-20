@@ -23,7 +23,7 @@ features:
   - icon:
       src: /icons/branches.svg
     title: Branches & Venues
-    details: Every campus with its pastor, venues, service times, photos, gallery, and video, exactly as the websites show it.
+    details: Every branch with its pastor, venues, service times, photos, gallery, and video, exactly as the websites show it.
     link: /studio/branches
     linkText: View Branches
   - icon:

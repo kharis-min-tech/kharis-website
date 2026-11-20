@@ -1,10 +1,10 @@
 # Roles & Permissions
 
-What you can see and do in Content Studio is decided by the **role** on your account. There are three. There is no role switcher, and nothing to choose after signing in. A super admin sets your role, and it takes effect the next time the studio checks your access.
+What you can see and do in Content Studio is decided by the **role** on your account. There are three. There is no role switcher, and nothing to choose after signing in. A super admin sets your role when they invite you (and, for branch admins, which branches you look after). The role takes effect the next time the studio checks your access.
 
 ## The one thing to understand first
 
-The studio hides what your role cannot use, but hiding is not the protection. Every read and every save goes through the Kharis API as **you**, and the database's row level security decides whether it is allowed. A branch admin who typed the address of another branch's page would get nothing back, because the database would refuse.
+The studio hides what your role cannot use, and it also refuses access behind the scenes. A branch admin who typed the address of another branch's page would still see nothing.
 
 That is also why a failed access check never falls back to full access. If the studio can't confirm your role, it shows you nothing.
 
@@ -24,7 +24,7 @@ That is also why a failed access check never falls back to full access. If the s
 
 - Open every workspace and every section
 - Create, edit, deactivate, and reinstate any branch
-- Add events with no branch, for all campuses
+- Add events with no branch, for all branches
 - Read and manage every message and visitor
 - Edit testimonies, announcements, department videos, documents, and all app content
 - Invite users, change roles and branches, send password resets, and delete accounts

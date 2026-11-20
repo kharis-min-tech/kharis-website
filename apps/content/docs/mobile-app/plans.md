@@ -32,7 +32,7 @@ Quiz, info, and video blocks stay available in every mode.
 | --------- | --------------------------------------------------------------------------- |
 | Scripture | Passage (same picker as Daily Reading), optional note and reflection prompt |
 | Message   | Sermon from the app catalogue (same search as Daily Message), optional note |
-| Video     | Title, Cloudflare upload (or URL), optional poster and caption              |
+| Video     | Title, uploaded file (or URL), optional poster and caption                  |
 | Quiz      | Title and multiple-choice questions with a marked correct answer            |
 | Info      | Header, body text, optional image                                           |
 
@@ -51,10 +51,6 @@ Quiz, info, and video blocks stay available in every mode.
 | Delete    | Removes the plan after confirmation |
 
 Filter by status and search by title, summary, audience, or mode.
-
-## Storage
-
-Studio stores plans in `app_config` under the key `content_plans`. Cover images and plan videos go to the Cloudflare `plans` media folder. When the mobile app ships, progress will use the `content_plans` / `content_plan_progress` tables (see the repo migration `005_content_plans.sql`).
 
 ::: tip Not in the live app yet
 Publishing a plan marks it ready for a future release. It does not appear in the current Kharis app until that feature ships.

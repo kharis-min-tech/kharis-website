@@ -24,7 +24,7 @@ What's changed in Content Studio, newest first.
 
 ### Uploads
 
-- Photos and videos now upload to Cloudflare, with a progress bar.
+- Photos and videos now upload in the studio, with a progress bar.
 - Branch videos and the 24 Department Discovery Quiz videos can be uploaded from the studio.
 
 ### Ask Grace

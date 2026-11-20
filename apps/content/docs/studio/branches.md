@@ -1,8 +1,8 @@
 # Branches
 
-The Branches page holds every Kharis campus. It is the source for the branch pages on kharis.org, the KP2 locations, and the campus list in the app. Super admins see every branch. Branch admins see the branches they've been given.
+The Branches page holds every Kharis branch. It is the source for the branch pages on kharis.org, the KP2 locations, and the branch list in the app. Super admins see every branch. Branch admins see the branches they've been given.
 
-<Screenshot name="branches" alt="Branches page showing a card for each campus with its hero photo and an Active badge" />
+<Screenshot name="branches" alt="Branches page showing a card for each branch with its hero photo and an Active badge" />
 
 ## Branch cards
 
@@ -67,10 +67,10 @@ Drop several photos at once into the gallery. They appear on the branch page in 
 
 ## Adding a branch
 
-Super admins see **New branch** at the top of the list. On a new branch, **Branch template** fills in a starting set of venues, service times, and the usual parking and transport wording, which you then edit to match the campus. For the full walk-through, see [Adding a Branch](/guides/adding-a-branch).
+Super admins see **New branch** at the top of the list. On a new branch, **Branch template** fills in a starting set of venues, service times, and the usual parking and transport wording, which you then edit to match the branch. For the full walk-through, see [Adding a Branch](/guides/adding-a-branch).
 
 ::: tip Photos before the first save
-You can choose photos for a branch that hasn't been saved yet. They're held in the browser and upload when you press **Save branch**, at the same moment the branch's Cloudflare folder is created.
+You can choose photos for a branch that hasn't been saved yet. They're held until you press **Save branch**, then they upload with the rest of the details.
 :::
 
 ## Deactivating a branch
@@ -81,4 +81,4 @@ Branch admins can't deactivate or reinstate a branch, or create a new one. They 
 
 ## If part of a save fails
 
-Saving a branch does several things in order: the details, the Cloudflare folder, each new photo, the gallery, the venue photos, the video, and finally tidying up images that are no longer used. If one of the later steps fails, the branch itself is still saved and the message says which part didn't go through, for example **Branch saved, but the gallery was not**. Open the branch and save again.
+Saving a branch does several things in order: the details, each new photo, the gallery, the venue photos, the video, and finally tidying up images that are no longer used. If one of the later steps fails, the branch itself is still saved and the message says which part didn't go through, for example **Branch saved, but the gallery was not**. Open the branch and save again.
