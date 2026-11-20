@@ -20,6 +20,7 @@ const PUBLIC_PATHS = ["/cookies", "/set-password"];
 /** Top-level app routes that exist under app/. Unknown paths render the 404 screen. */
 const APP_TOP_LEVEL = new Set([
   "announcements",
+  "blogs",
   "branches",
   "cookies",
   "daily",

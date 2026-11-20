@@ -16,35 +16,37 @@ Every section of the studio, by workspace, and who can open it.
 
 ## Mobile App
 
-| Section       | Super admin | Branch admin              |
-| ------------- | ----------- | ------------------------- |
-| Events        | ✓           | Events for their branches |
-| Announcements | ✓           |                           |
-| Daily Reading | ✓           |                           |
-| Daily Message | ✓           |                           |
-| Daily Prayers | ✓           |                           |
-| Plans         | ✓           |                           |
-| Live          | ✓           |                           |
+| Section              | Super admin | Branch admin              |
+| -------------------- | ----------- | ------------------------- |
+| Events               | ✓           | Events for their branches |
+| Announcements        | ✓           |                           |
+| Daily Reading        | ✓           |                           |
+| Daily Message        | ✓           |                           |
+| Daily Prayers        | ✓           |                           |
+| Plans (experimental) | ✓           |                           |
+| Live                 | ✓           |                           |
 
 ## Kharis Website
 
-| Section       | Super admin | Branch admin               |
-| ------------- | ----------- | -------------------------- |
-| Branches      | ✓           | Their branches             |
-| Events        | ✓           | Events for their branches  |
-| Testimonies   | ✓           |                            |
-| Announcements | ✓           |                            |
-| Messages      | ✓           | Messages to their branches |
+| Section              | Super admin | Branch admin               |
+| -------------------- | ----------- | -------------------------- |
+| Branches             | ✓           | Their branches             |
+| Events               | ✓           | Events for their branches  |
+| Testimonies          | ✓           |                            |
+| Announcements        | ✓           |                            |
+| Blogs (experimental) | ✓           |                            |
+| Messages             | ✓           | Messages to their branches |
 
 ## KP2 Website
 
-| Section       | Super admin | Branch admin               |
-| ------------- | ----------- | -------------------------- |
-| Branches      | ✓           | Their branches             |
-| Events        | ✓           | Events for their branches  |
-| Testimonies   | ✓           |                            |
-| Announcements | ✓           |                            |
-| Messages      | ✓           | Messages to their branches |
+| Section              | Super admin | Branch admin               |
+| -------------------- | ----------- | -------------------------- |
+| Branches             | ✓           | Their branches             |
+| Events               | ✓           | Events for their branches  |
+| Testimonies          | ✓           |                            |
+| Announcements        | ✓           |                            |
+| Blogs (experimental) | ✓           |                            |
+| Messages             | ✓           | Messages to their branches |
 
 ## Actions only super admins can take
 

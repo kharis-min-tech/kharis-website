@@ -263,7 +263,8 @@ export function PlansEditor() {
     <div>
       <PageHeader
         title="Plans"
-        description="Multi-day programmes for the future app: scriptures, messages, videos, quizzes and info blocks. Author them here; the app UI comes later."
+        badge="experimental"
+        description="Author multi-day programmes here. Experimental: nothing is live in the Kharis app yet."
         icon={<IconTile icon={Route} className="h-12 w-12 rounded-2xl" />}
         action={
           <Button onClick={openNew}>

@@ -4,9 +4,13 @@ What's changed in Content Studio, newest first.
 
 ## November 2026
 
+### Blogs
+
+- New **Kharis Website / KP2 Website → Blogs** screen (experimental): title, date, body, featured image, gallery, and show-on for one or both sites. Authoring only; not live on the websites yet. See [Blogs](/studio/blogs).
+
 ### Plans
 
-- New **Mobile App → Plans** screen for multi-day programmes: scriptures only, messages only, or a mix, plus videos, quizzes and info blocks. Author them now for a future app release. See [Plans](/mobile-app/plans).
+- New **Mobile App → Plans** screen for multi-day programmes: scriptures only, messages only, or a mix, plus videos, quizzes and info blocks. Experimental; author them now for a future app release. See [Plans](/mobile-app/plans).
 
 ### Roles
 

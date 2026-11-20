@@ -9,6 +9,7 @@ import { Mark } from "@/components/studio/mark";
 import { WORKSPACE_ICONS, sectionIcon } from "@/components/studio/nav-meta";
 import { StudioAtmosphere } from "@/components/studio/studio-atmosphere";
 import { ThemeToggle } from "@/components/studio/theme-toggle";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { countNewMessages } from "@/lib/content-repo";
 import { studioRoleLabel } from "@/lib/studio-api";
@@ -153,6 +154,11 @@ export function AdminShell({ email, children }: { email: string; children: React
                                   )}
                                 />
                                 <span className="flex-1 truncate">{section.label}</span>
+                                {section.badge === "experimental" ? (
+                                  <Badge tone="gold" className="px-1.5 py-px text-[9px]">
+                                    Experimental
+                                  </Badge>
+                                ) : null}
                                 {section.href === "/messages" && unread ? (
                                   <span className="rounded-full bg-primary px-1.5 py-px text-[10px] font-bold text-primary-foreground">
                                     {unread}

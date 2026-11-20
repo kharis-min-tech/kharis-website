@@ -11,6 +11,8 @@ export function isWorkspaceId(value: string | null | undefined): value is Worksp
 export type StudioNavItem = {
   href: string;
   label: string;
+  /** Shown in the sidebar and workspace cards for features not live on the site or app yet. */
+  badge?: "experimental";
 };
 
 export type StudioWorkspace = {
@@ -36,7 +38,7 @@ const appNav: StudioNavItem[] = [
   { href: "/daily", label: "Daily Reading" },
   { href: "/daily-message", label: "Daily Message" },
   { href: "/daily-prayers", label: "Daily Prayers" },
-  { href: "/plans", label: "Plans" },
+  { href: "/plans", label: "Plans", badge: "experimental" },
   { href: "/live", label: "Live" },
 ];
 
@@ -45,6 +47,7 @@ const kharisNav: StudioNavItem[] = [
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/announcements", label: "Announcements" },
+  { href: "/blogs", label: "Blogs", badge: "experimental" },
   { href: "/messages", label: "Messages" },
 ];
 
@@ -53,6 +56,7 @@ const kp2Nav: StudioNavItem[] = [
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
   { href: "/announcements", label: "Announcements" },
+  { href: "/blogs", label: "Blogs", badge: "experimental" },
   { href: "/messages", label: "Messages" },
 ];
 
@@ -74,13 +78,15 @@ export const WORKSPACES: StudioWorkspace[] = [
   {
     id: "kharis",
     name: "Kharis Website",
-    description: "Website events, testimonies, announcements, and contact messages for kharis.org.",
+    description:
+      "Website events, testimonies, announcements, blogs, and contact messages for kharis.org.",
     nav: kharisNav,
   },
   {
     id: "kp2",
     name: "KP2 Website",
-    description: "KP2 events, testimonies, announcements, and contact messages for kharis.org/kp2.",
+    description:
+      "KP2 events, testimonies, announcements, blogs, and contact messages for kharis.org/kp2.",
     nav: kp2Nav,
   },
 ];

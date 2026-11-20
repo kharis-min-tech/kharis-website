@@ -1,5 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 export function PageHeader({
   title,
@@ -7,12 +8,14 @@ export function PageHeader({
   action,
   back,
   icon,
+  badge,
 }: {
   title: string;
   description?: string;
   action?: React.ReactNode;
   back?: { href: string; label: string };
   icon?: React.ReactNode;
+  badge?: "experimental";
 }) {
   return (
     <div className="mb-7">
@@ -29,9 +32,12 @@ export function PageHeader({
         <div className="flex min-w-0 items-center gap-4">
           {icon}
           <div className="min-w-0">
-            <h1 className="font-heading text-2xl font-bold tracking-tight md:text-[1.75rem]">
-              {title}
-            </h1>
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="font-heading text-2xl font-bold tracking-tight md:text-[1.75rem]">
+                {title}
+              </h1>
+              {badge === "experimental" ? <Badge tone="gold">Experimental</Badge> : null}
+            </div>
             {description ? (
               <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{description}</p>
             ) : null}

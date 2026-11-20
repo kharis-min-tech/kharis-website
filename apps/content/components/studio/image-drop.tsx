@@ -182,18 +182,21 @@ export function MultiImageDrop({
   items,
   onChange,
   branchId,
+  folder,
   onQueueFiles,
 }: {
   items: { key: string; id?: string; url: string; path?: string }[];
   onChange: (items: { key: string; id?: string; url: string; path?: string }[]) => void;
   branchId?: string | null;
+  /** When set, uploads to site-media/{folder} instead of a branch gallery. */
+  folder?: string;
   onQueueFiles?: (files: File[]) => void;
 }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
   const [queued, setQueued] = useState<{ key: string; url: string }[]>([]);
-  const usesR2 = branchId !== undefined;
-  const waitingForSave = usesR2 && !branchId;
+  const usesR2 = Boolean(folder) || branchId !== undefined;
+  const waitingForSave = !folder && branchId !== undefined && !branchId;
   const needsSave = waitingForSave && !onQueueFiles;
 
   async function takeFiles(files: FileList | File[]) {
@@ -221,7 +224,12 @@ export function MultiImageDrop({
     try {
       const uploaded = [];
       for (const [index, file] of list.entries()) {
-        if (branchId) {
+        if (folder) {
+          const image = await uploadImage(file, folder, (percent) =>
+            setProgress(Math.round(((index + percent / 100) / list.length) * 100)),
+          );
+          uploaded.push({ key: crypto.randomUUID(), url: image.url, path: image.path });
+        } else if (branchId) {
           const image = await uploadBranchImage({
             branchId,
             category: "gallery",

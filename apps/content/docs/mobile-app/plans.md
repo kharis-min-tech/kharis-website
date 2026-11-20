@@ -1,6 +1,6 @@
 # Plans
 
-Plans are multi-day programmes for the Kharis app: scriptures, pastor messages, videos, quizzes, and info blocks, in the order you choose. Author them in Content Studio now; the app UI that opens them comes later.
+Plans are multi-day programmes for the Kharis app: scriptures, pastor messages, videos, quizzes, and info blocks, in the order you choose. They are **Experimental**: author them in Content Studio now; the app UI that opens them comes later.
 
 ## Opening Plans
 
@@ -52,6 +52,6 @@ Quiz, info, and video blocks stay available in every mode.
 
 Filter by status and search by title, summary, audience, or mode.
 
-::: tip Not in the live app yet
-Publishing a plan marks it ready for a future release. It does not appear in the current Kharis app until that feature ships.
+::: tip Experimental
+Plans are experimental. Publishing a plan marks it ready for a future release. It does not appear in the current Kharis app until that feature ships.
 :::

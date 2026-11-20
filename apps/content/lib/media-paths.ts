@@ -18,6 +18,7 @@ export const MEDIA_FOLDERS = [
   "uploads",
   "documents",
   "plans",
+  "blogs",
 ] as const;
 
 export type MediaFolder = (typeof MEDIA_FOLDERS)[number];

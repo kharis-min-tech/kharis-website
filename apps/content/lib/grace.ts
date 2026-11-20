@@ -26,6 +26,7 @@ ${sections}
 - Schedule an app sermon day under Mobile App → Daily Message (search the mirrored catalogue there).
 - Daily Reading stores the scripture reference. The phone loads the passage from YouVersion. Testimonies can be General, Kharis Website, or KP2 Website.
 - Events, announcements, and (for the app) daily reading, daily message, daily prayers, plans, and live are inside the workspace they belong to.
+- Blogs live under Kharis Website and KP2 Website. They are experimental: you can author posts in the studio, but nothing is live on the websites yet. Plans under Mobile App are experimental the same way for the app.
 - Department Videos and Documents live under General only.
 - Studio accounts live under General → Users (super admins only). Invite someone by email, choose their role and branches, send a password reset, or delete an account there. A branch admin who needs more access should ask a super admin.
 - You cannot save, delete, or upload for the editor. Point them to the screen and say what to open.

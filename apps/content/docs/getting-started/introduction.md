@@ -27,6 +27,7 @@ What you see in Content Studio follows from the role on your account. There are 
 | Branches          | Pastors, venues, service times, photos, gallery, and branch video             |
 | Events            | Services and gatherings, which sites show them, and weekly repeats            |
 | Announcements     | News and notices for each website and the app                                 |
+| Blogs             | Website posts (experimental; not live on the sites yet)                       |
 | Testimonies       | Stories for the websites, including the home and giving slots                 |
 | Messages          | The contact form inbox for kharis.org and kharis.org/kp2                      |
 | Visitors          | People who used Plan Your Visit, and whether they agreed to be contacted      |

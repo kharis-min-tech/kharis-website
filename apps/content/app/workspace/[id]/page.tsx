@@ -7,8 +7,10 @@ import { useEffect, useMemo, useState } from "react";
 import { EmptyState, IconTile } from "@/components/studio/blocks";
 import { SECTION_HINTS, WORKSPACE_ICONS, sectionIcon } from "@/components/studio/nav-meta";
 import { PageHeader } from "@/components/studio/page-header";
+import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { listContentBlogs } from "@/lib/content-blogs-repo";
 import { listContentPlans } from "@/lib/content-plans-repo";
 import { countRows } from "@/lib/content-repo";
 import { useStudioRole, type StudioAccess } from "@/lib/studio-role";
@@ -34,6 +36,15 @@ const COUNTS: Record<
   "/plans": async () => {
     try {
       return (await listContentPlans()).length;
+    } catch {
+      return null;
+    }
+  },
+  "/blogs": async (workspace) => {
+    try {
+      const blogs = await listContentBlogs();
+      if (workspace !== "kharis" && workspace !== "kp2") return blogs.length;
+      return blogs.filter((blog) => blog.sites.includes(workspace)).length;
     } catch {
       return null;
     }
@@ -113,7 +124,10 @@ export default function WorkspacePage() {
                   </span>
                 )}
               </div>
-              <p className="mt-4 font-heading text-[15px] font-semibold">{item.label}</p>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <p className="font-heading text-[15px] font-semibold">{item.label}</p>
+                {item.badge === "experimental" ? <Badge tone="gold">Experimental</Badge> : null}
+              </div>
               <p className="mt-1 flex-1 text-sm text-muted-foreground">
                 {SECTION_HINTS[item.href]}
               </p>
