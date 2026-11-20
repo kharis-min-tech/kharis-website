@@ -4,7 +4,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { GOVERNANCE } from "@/lib/about-content";
 import { fetchSiteDocuments } from "@/lib/site-documents";
-import "./policy-pdf-dialog.css";
 
 export const metadata: Metadata = {
   title: "Governance | Kharis Church",
