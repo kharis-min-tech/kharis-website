@@ -9,18 +9,55 @@ import { MessageBrowser } from "@/components/MessageBrowser";
 import "@/components/listen-row.css";
 import { MutedHeroVideo } from "@/components/MutedHeroVideo";
 import { youtubeWatchUrl, type MessageVideo } from "@/lib/youtube";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-function MessagesPage({ messages }: { messages: MessageVideo[] }) {
-  const featured = messages[0];
+function MessagesPage({ latest, messages }: { latest: MessageVideo[]; messages: MessageVideo[] }) {
+  const featured = latest[0] ?? messages[0];
+  const heroRef = useRef<HTMLElement>(null);
+  const [heroActive, setHeroActive] = useState(true);
   const [fullPlayback, setFullPlayback] = useState(false);
   const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const active = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+        setHeroActive(active);
+        if (!active) {
+          setFullPlayback(false);
+          setPaused(false);
+        }
+      },
+      { threshold: [0, 0.2] },
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
+  const togglePlayback = () => {
+    if (!fullPlayback) {
+      setFullPlayback(true);
+      setPaused(false);
+      return;
+    }
+    setPaused((value) => !value);
+  };
 
   return (
     <div className="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
       <SiteHeader />
       <main>
-        <section className="kp-messages-hero relative box-border mt-[74px] flex w-full flex-col overflow-hidden border-b-4 border-black bg-on-background xl:mt-0 xl:block xl:h-svh xl:max-h-svh">
+        <section
+          ref={heroRef}
+          onClick={(event) => {
+            if (event.target instanceof Element && event.target.closest("a")) return;
+            togglePlayback();
+          }}
+          className="kp-messages-hero relative box-border mt-[74px] flex w-full cursor-pointer flex-col overflow-hidden border-b-4 border-black bg-on-background xl:mt-0 xl:block xl:h-svh xl:max-h-svh"
+        >
           {featured ? (
             <MutedHeroVideo
               id={featured.id}
@@ -28,6 +65,8 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
               title={featured.title}
               fullPlayback={fullPlayback}
               paused={paused}
+              active={heroActive}
+              onTogglePlayback={togglePlayback}
             />
           ) : (
             <div
@@ -54,41 +93,6 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
             ) : null}
             {featured ? (
               <div className="flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!fullPlayback) {
-                      setFullPlayback(true);
-                      setPaused(false);
-                    } else {
-                      setFullPlayback(false);
-                      setPaused(false);
-                    }
-                  }}
-                  className="kp-depth-button kp-button-purple group flex w-full items-center justify-center gap-3 border-2 border-black bg-primary px-8 py-4 font-headline-md text-white hard-shadow btn-press sm:w-auto"
-                >
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                    aria-hidden="true"
-                  >
-                    {fullPlayback ? "arrow_back" : "play_arrow"}
-                  </span>
-                  {!fullPlayback ? "PLAY MESSAGE" : "STOP MESSAGE"}
-                </button>
-                {fullPlayback ? (
-                  <button
-                    type="button"
-                    onClick={() => setPaused((value) => !value)}
-                    aria-label={paused ? "Resume message" : "Pause message"}
-                    title={paused ? "Resume message" : "Pause message"}
-                    className="kp-depth-button kp-button-light keep-light inline-flex h-12 w-12 shrink-0 items-center justify-center border-2 border-black bg-white text-primary hard-shadow btn-press"
-                  >
-                    <span className="material-symbols-outlined" aria-hidden="true">
-                      {paused ? "play_arrow" : "pause"}
-                    </span>
-                  </button>
-                ) : null}
                 <a
                   href={youtubeWatchUrl(featured.id)}
                   target="_blank"
@@ -103,7 +107,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
           </div>
         </section>
 
-        <MessageBrowser messages={messages} />
+        <MessageBrowser latest={latest} messages={messages} />
         <MessagesAppStrip />
 
         <section
@@ -120,7 +124,7 @@ function MessagesPage({ messages }: { messages: MessageVideo[] }) {
                   Other Ways To Listen
                 </h2>
               </div>
-              <blockquote className="relative max-w-md border-l-4 border-primary bg-surface-container-low px-6 py-5 text-on-surface-variant shadow-[4px_4px_0_#151218]">
+              <blockquote className="relative max-w-md border-2 border-black bg-surface-container-low px-6 py-5 text-on-surface-variant shadow-[4px_4px_0_#151218] dark:border-white/50">
                 <span
                   className="material-symbols-outlined mb-2 block text-4xl leading-none text-primary"
                   aria-hidden="true"

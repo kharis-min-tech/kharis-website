@@ -32,7 +32,7 @@ function GivingPage({ branches }: { branches: GivingLocation[] }) {
                 Give to your branch
               </a>
               <a href="#building" className="kp-giving-button kp-giving-button--light">
-                Spurgeon&apos;s Centre
+                Building Fund
               </a>
             </div>
           </div>

@@ -21,8 +21,8 @@ const COLUMNS: FooterColumn[] = [
     titleColor: "text-primary",
     links: [
       { label: "Mission", to: "/mission" },
-      { label: "Governance", to: "/governance" },
       { label: "Kharis Church", to: KHARIS_MAIN_URL, external: true },
+      { label: "Governance", to: "/governance" },
     ],
   },
   {

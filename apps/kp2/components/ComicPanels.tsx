@@ -20,7 +20,7 @@ const IMG = "https://images.kharis.org/site-images/main";
 const PANELS: Panel[] = [
   {
     id: "events",
-    caption: "Gatherings & fellowships",
+    caption: "Life together",
     headline: "Events",
     subtext: "Praise Night, Family Fun Day, Bring A Soul Sunday and many more moments together.",
     poster: {
@@ -37,7 +37,7 @@ const PANELS: Panel[] = [
         src: `${IMG}/3423ef762f6c2481/events/family-fun-day-race.jpg`,
         alt: "Members racing across the court on Family Fun Day",
       },
-      KP2_PHOTOS.midweekHall,
+      { ...KP2_PHOTOS.midweekHall, alt: "The KP2 congregation in the service hall" },
       KP2_PHOTOS.midweekWorship,
       KP2_PHOTOS.midweekPrayer,
       KP2_PHOTOS.midweekJoy,
@@ -48,7 +48,8 @@ const PANELS: Panel[] = [
     id: "departments",
     caption: "Serve the Lord",
     headline: "Departments",
-    subtext: "Serving is part of our worship — music, drama, spoken word, media, welcome and more.",
+    subtext:
+      "Serving is part of our worship. We serve through music, drama, spoken word, media, welcome and more.",
     poster: KP2_PHOTOS.serviceSaxophone,
     gallery: [
       KP2_PHOTOS.serviceSaxophone,
@@ -65,14 +66,14 @@ const PANELS: Panel[] = [
     caption: "New life in Christ",
     headline: "Baptism",
     subtext:
-      "A public declaration of faith in Jesus — celebrating new life in Christ with the KP2 family.",
+      "A public declaration of faith in Jesus, celebrating new life in Christ with the KP2 family.",
     poster: KP2_PHOTOS.baptismJoy,
     gallery: [
       KP2_PHOTOS.baptismJoy,
       KP2_PHOTOS.baptismCelebration,
       KP2_PHOTOS.baptismCeremony,
       KP2_PHOTOS.baptismTeam,
-      KP2_PHOTOS.baptismFamily,
+      { ...KP2_PHOTOS.baptismFamily, alt: "The KP2 family together outside after baptism" },
     ],
   },
   {
