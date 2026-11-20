@@ -339,17 +339,6 @@ export function LocationsClient({ items, full }: Props) {
                   : "Near me"}
             </button>
           </form>
-          {query.trim() ? (
-            <p className="locations-hero__note" role="status">
-              {searchingAddress
-                ? "Finding nearest branches…"
-                : activeSearchOrigin
-                  ? `Showing nearest branches to ${activeSearchOrigin.label}`
-                  : shown.length === 1
-                    ? "1 branch found"
-                    : `${shown.length} branches found`}
-            </p>
-          ) : null}
           {geoNote ? (
             <p className="locations-hero__note" role="status">
               {geoNote}
@@ -365,6 +354,7 @@ export function LocationsClient({ items, full }: Props) {
           <AtomicGlobeBranches
             branches={full}
             country={filter === "all" ? "world" : filter}
+            focus={activeOrigin}
             hrefFor={(branch) =>
               items.find((item) => item.id === branch.slug)?.family === KP2
                 ? kp2BranchUrl(branch.slug)

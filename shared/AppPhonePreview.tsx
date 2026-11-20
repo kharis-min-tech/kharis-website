@@ -33,6 +33,11 @@ const CAPTURES = {
     alt: "Kharis Church app Bible screen with Scripture search, highlights and notes",
     current: true,
   },
+  "current-player": {
+    src: "https://images.kharis.org/site-images/main/f7dfca4f99bbe8a3/app-steps/kharis-app-current-player.png",
+    alt: "Kharis Church app audio player screen for a sermon",
+    current: true,
+  },
 } as const;
 
 type Props = {

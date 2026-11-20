@@ -10,6 +10,16 @@ const loadChat = () => import("@/components/LifeChatbot");
 
 const LifeChatbot = lazy(() => loadChat().then((m) => ({ default: m.LifeChatbot })));
 
+// What Grace's attention bubble says, by page, so the nudge reads as a
+// relevant offer rather than the same generic "Need help?" everywhere.
+const CONTEXT_BUBBLES: Record<string, string> = {
+  "/": "Need help?",
+  "/about": "Want to know more about us?",
+  "/messages": "Want help finding a message?",
+  "/locations": "Let me help you find a branch",
+};
+const DEFAULT_BUBBLE = "Need help?";
+
 function Launcher({
   busy = false,
   pop = false,
@@ -40,12 +50,20 @@ function Launcher({
   );
 }
 
-function AttentionCue({ bouncing, bubble }: { bouncing: boolean; bubble: boolean }) {
+function AttentionCue({
+  bouncing,
+  bubble,
+  text,
+}: {
+  bouncing: boolean;
+  bubble: boolean;
+  text: string;
+}) {
   return (
     <>
       <span className={`chat-attn__shadow${bouncing ? " is-on" : ""}`} aria-hidden />
       <span className={`chat-attn__bubble${bubble ? " is-on" : ""}`} aria-hidden>
-        Need help?
+        {text}
       </span>
     </>
   );
@@ -75,7 +93,8 @@ export function SiteChat() {
     setOpened(true);
   };
 
-  const cue = cueOn ? <AttentionCue bouncing={bouncing} bubble={bubble} /> : null;
+  const bubbleText = CONTEXT_BUBBLES[pathname ?? ""] ?? DEFAULT_BUBBLE;
+  const cue = cueOn ? <AttentionCue bouncing={bouncing} bubble={bubble} text={bubbleText} /> : null;
 
   if (!loaded && !requested) {
     return (

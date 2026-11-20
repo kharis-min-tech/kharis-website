@@ -53,6 +53,37 @@ export function MessageHoverTile({
   const [hovering, setHovering] = useState(false);
   const [ready, setReady] = useState(false);
   const timer = useRef<number | null>(null);
+  const tileRef = useRef<HTMLAnchorElement>(null);
+  /**
+   * With dozens of messages on the page, mounting every thumbnail's <Image>
+   * at once makes a fast scroll trigger a burst of simultaneous fetches —
+   * that's the lag before posters pop in. Gating the mount behind a generous
+   * IntersectionObserver margin spreads those fetches out instead, without
+   * shifting layout: the tile's box is already sized by CSS (`fill` needs
+   * that anyway), so swapping the placeholder for the image changes nothing
+   * about where the row sits. Once true it stays true — scrolling back up
+   * shouldn't re-hide a poster that already loaded.
+   */
+  const [nearViewport, setNearViewport] = useState(false);
+
+  useEffect(() => {
+    const el = tileRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setNearViewport(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "600px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const src = useMemo(() => (ready ? cleanEmbedSrc(message.id) : ""), [ready, message.id]);
 
@@ -78,6 +109,7 @@ export function MessageHoverTile({
 
   return (
     <a
+      ref={tileRef}
       href={`https://www.youtube.com/watch?v=${message.id}`}
       target="_blank"
       rel="noreferrer"
@@ -93,13 +125,15 @@ export function MessageHoverTile({
             {String(rank).padStart(2, "0")}
           </span>
         )}
-        <Image
-          src={message.thumbnail}
-          alt=""
-          fill
-          className={`msg-tile__poster ${hovering && ready ? "is-dim" : ""}`}
-          sizes="(max-width: 899px) 48vw, 24vw"
-        />
+        {nearViewport && (
+          <Image
+            src={message.thumbnail}
+            alt=""
+            fill
+            className={`msg-tile__poster ${hovering && ready ? "is-dim" : ""}`}
+            sizes="(max-width: 899px) 48vw, 24vw"
+          />
+        )}
         {ready && playOnHover && (
           <iframe
             src={src}

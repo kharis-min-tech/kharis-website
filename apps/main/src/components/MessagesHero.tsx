@@ -1,13 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, Square } from "lucide-react";
+import { MousePointer2, Pause, Play } from "lucide-react";
 import Image from "@/components/SiteImage";
+import { ABOUT } from "@/lib/about-content";
 import { youtubeWatchUrl } from "@/lib/life-videos";
 import type { MessageVideo } from "@/lib/youtube";
 
 const PREVIEW_MEDIA = "(min-width: 1280px) and (prefers-reduced-motion: no-preference)";
 const PREVIEW_START = 10 * 60;
+
+const HEADLINE_FIRST = "Teachings that";
+const HEADLINE_SECOND_PREFIX = "feed your ";
+const HEADLINE_LAST_WORD = "spirit.";
+const HEADLINE_HOLD_AT = HEADLINE_FIRST.length + HEADLINE_SECOND_PREFIX.length;
+const HEADLINE_LENGTH = HEADLINE_HOLD_AT + HEADLINE_LAST_WORD.length;
+const HEADLINE_TYPE_MS = 45;
 
 type Player = {
   destroy: () => void;
@@ -62,6 +70,21 @@ function loadPlayerApi() {
   return playerApi;
 }
 
+/**
+ * Who preached it, from the "Title | Speaker | Scripture" convention the
+ * channel titles follow. Null when the second segment is plainly not a
+ * person, so the cue never reads out a chapter of the Bible.
+ */
+function speakerFrom(title: string): string | null {
+  const raw = title.split("|")[1]?.trim();
+  if (!raw || /[0-9:]/.test(raw) || raw.split(/\s+/).length > 4) return null;
+  const pastor = ABOUT.leadership.pastors.find(
+    (p) => p.name.replace(/^pastor\s+/i, "").toLowerCase() === raw.toLowerCase(),
+  );
+  if (!pastor) return raw;
+  return `Pastor ${pastor.name.replace(/^pastor\s+/i, "").split(/\s+/)[0]}`;
+}
+
 type Mode = "idle" | "preview" | "playing" | "paused";
 
 export function MessagesHero({ message }: { message: MessageVideo }) {
@@ -76,10 +99,53 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
   const [player, setPlayer] = useState<Player | null>(null);
   const [hasOpenedPlayer, setHasOpenedPlayer] = useState(false);
   const [sharpPoster, setSharpPoster] = useState(true);
+  const [typed, setTyped] = useState(0);
+  const [typingStarted, setTypingStarted] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  /** Nobody taps a mouse and nobody clicks a phone, so the cue says which. */
+  const [coarsePointer, setCoarsePointer] = useState(false);
   const currentMode = useRef<Mode | null>(null);
   const title = message.title.split("|")[0]?.trim() || message.title;
+  const speaker = speakerFrom(message.title);
+  const cue = `${coarsePointer ? "Tap" : "Click"} to ${speaker ? `listen to ${speaker}` : "dive in"}`;
   const load = allowPreview || hasOpenedPlayer;
   const mode: Mode = watching ? (paused ? "paused" : "playing") : allowPreview ? "preview" : "idle";
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncMotion = () => setReducedMotion(motionQuery.matches);
+    syncMotion();
+    motionQuery.addEventListener("change", syncMotion);
+    const pointerQuery = window.matchMedia("(pointer: coarse)");
+    const syncPointer = () => setCoarsePointer(pointerQuery.matches);
+    syncPointer();
+    pointerQuery.addEventListener("change", syncPointer);
+    const startTimer = window.setTimeout(() => setTypingStarted(true), 100);
+    return () => {
+      motionQuery.removeEventListener("change", syncMotion);
+      pointerQuery.removeEventListener("change", syncPointer);
+      window.clearTimeout(startTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setTyped(HEADLINE_LENGTH);
+      return;
+    }
+    if (!typingStarted || typed >= HEADLINE_LENGTH) return;
+    const timer = window.setTimeout(
+      () => setTyped((current) => Math.min(HEADLINE_LENGTH, current + 1)),
+      HEADLINE_TYPE_MS,
+    );
+    return () => window.clearTimeout(timer);
+  }, [reducedMotion, typed, typingStarted]);
+
+  const firstLine = HEADLINE_FIRST.slice(0, Math.min(typed, HEADLINE_FIRST.length));
+  const secondTyped = Math.max(0, typed - HEADLINE_FIRST.length);
+  const secondLine = `${HEADLINE_SECOND_PREFIX}${HEADLINE_LAST_WORD}`.slice(0, secondTyped);
+  const typingFirstLine = !reducedMotion && typed < HEADLINE_FIRST.length;
+  const typingSecondLine = !reducedMotion && typed >= HEADLINE_FIRST.length && typed < HEADLINE_LENGTH;
 
   useEffect(() => {
     const element = hero.current;
@@ -184,7 +250,7 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
       className="msg-hub__hero msg-hub__hero--featured"
       data-preview={visible && mode !== "idle" && !failed ? true : undefined}
       data-playing={watching || undefined}
-      aria-label={title}
+      aria-label={`Watch the latest Kharis message: ${title}`}
       onKeyDown={(event) => {
         if (watching && event.key === "Escape") {
           togglePlayback();
@@ -213,32 +279,66 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
       </div>
 
       <div className="msg-featured-content">
-        <h1 className={watching ? "sr-only" : "msg-hub__title"}>{title}</h1>
-        {!watching && (
-          <p className="msg-featured-description">Watch the latest teaching here or on YouTube.</p>
+        {watching ? (
+          <h1 className="sr-only">{title}</h1>
+        ) : (
+          <h1 className="msg-hub__title" aria-label="Teachings that feed your spirit.">
+            <span className="msg-hub__title-line" aria-hidden="true">
+              {firstLine}
+              {typingFirstLine && <span className="msg-hub__typing-caret" />}
+            </span>
+            <span className="msg-hub__title-line" aria-hidden="true">
+              {secondLine}
+              {typingSecondLine && <span className="msg-hub__typing-caret" />}
+            </span>
+          </h1>
         )}
+
         {failed && (
           <p className="msg-featured-description" role="status">
             The video player is unavailable. You can still watch on YouTube.
           </p>
         )}
+
         <div className="msg-featured-actions">
-          <button ref={action} type="button" className="msg-hero-action" onClick={togglePlayback}>
-            {watching ? (
-              <Square size={16} aria-hidden />
-            ) : (
-              <Play size={16} fill="currentColor" aria-hidden />
-            )}
-            {watching ? "Stop message" : "Play message"}
-          </button>
-          {watching && !failed && (
+          {watching ? (
+            <>
+              <button
+                ref={action}
+                type="button"
+                className="msg-hero-action"
+                onClick={togglePlayback}
+              >
+                {paused ? (
+                  <Play size={16} fill="currentColor" aria-hidden />
+                ) : (
+                  <Pause size={16} aria-hidden />
+                )}
+                {paused ? "Resume message" : "Stop message"}
+              </button>
+              {!failed && (
+                <button
+                  type="button"
+                  className="msg-hero-action msg-hero-action--secondary"
+                  onClick={() => setPaused(!paused)}
+                >
+                  {paused ? <Play size={16} aria-hidden /> : <Pause size={16} aria-hidden />}
+                  {paused ? "Resume message" : "Pause message"}
+                </button>
+              )}
+            </>
+          ) : (
             <button
+              ref={action}
               type="button"
-              className="msg-hero-action msg-hero-action--secondary"
-              onClick={() => setPaused(!paused)}
+              className="msg-hero-cue"
+              onClick={togglePlayback}
+              aria-label={`Watch message: ${title}`}
             >
-              {paused ? <Play size={16} aria-hidden /> : <Pause size={16} aria-hidden />}
-              {paused ? "Resume message" : "Pause message"}
+              <span className="msg-hero-cue__pointer" aria-hidden="true">
+                <MousePointer2 className="msg-hero-cue__arrow" strokeWidth={1.75} />
+              </span>
+              <span className="msg-hero-cue__text">{cue}</span>
             </button>
           )}
           <a

@@ -642,25 +642,35 @@ html[data-theme="light"] .msg-app-strip__sub {
 }
 
 .msg-hub__hero--featured {
+  position: relative;
   display: block;
-  min-height: auto;
+  overflow: hidden;
+  min-height: min(100svh, 46rem);
   padding: 0;
-  margin-top: 4.5rem;
+  margin-top: 0;
   cursor: auto;
 }
 
 .msg-hero-media {
-  position: relative;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
 }
 
-.msg-hero-media .msg-hero-poster {
-  filter: none;
+/* Black & white until the message is actually playing — matches the rest of
+   the site's "teaser" hero treatment. The preview (muted autoplay) and the
+   poster both stay desaturated; only full playback goes to colour. */
+.msg-hero-media .msg-hero-poster,
+.msg-hero-media .msg-hero-preview__frame {
+  filter: grayscale(1) brightness(0.6);
+  transition: filter 420ms var(--ease-out);
 }
 
 .msg-hero-media .msg-hero-preview__frame {
   transform: translate(-50%, -50%);
+}
+
+.msg-hub__hero--featured[data-playing] .msg-hero-media .msg-hero-preview__frame {
   filter: none;
 }
 
@@ -672,15 +682,28 @@ html[data-theme="light"] .msg-app-strip__sub {
 }
 
 .msg-hero-media .msg-hub__veil {
-  display: none;
+  display: block;
+  opacity: 0.75;
+  transition: opacity 500ms var(--ease-out);
+}
+
+.msg-hub__hero--featured[data-playing] .msg-hub__veil {
+  opacity: 0;
 }
 
 .msg-featured-content {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
   width: min(100%, var(--page-max));
   margin-inline: auto;
   padding: 1.5rem var(--gutter) 2rem;
+  text-align: center;
 }
 
 .msg-featured-content .msg-hub__title {
@@ -695,6 +718,7 @@ html[data-theme="light"] .msg-app-strip__sub {
 .msg-featured-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.75rem;
 }
 
@@ -724,26 +748,3 @@ html[data-theme="light"] .msg-app-strip__sub {
   outline-offset: 3px;
 }
 
-@media (min-width: 1280px) {
-  .msg-hub__hero--featured {
-    display: flex;
-    min-height: 100svh;
-    justify-content: flex-end;
-    margin-top: 0;
-  }
-
-  .msg-hero-media {
-    position: absolute;
-    inset: 0;
-    aspect-ratio: auto;
-  }
-
-  .msg-hero-media .msg-hub__veil {
-    display: block;
-    opacity: 0.85;
-  }
-
-  .msg-hub__hero--featured[data-playing] .msg-hub__veil {
-    opacity: 0;
-  }
-}

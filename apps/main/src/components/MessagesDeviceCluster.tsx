@@ -140,7 +140,7 @@ export function MessagesDeviceCluster({ messages }: Props) {
       </div>
 
       <div className="msg-devices__phone">
-        <AppPhonePreview screen="messages" alt="" sizes="(max-width: 760px) 22vw, 152px" />
+        <AppPhonePreview screen="current-player" alt="" sizes="(max-width: 760px) 22vw, 152px" />
       </div>
     </div>
   );
