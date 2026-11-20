@@ -39,7 +39,7 @@ export const SECTION_ICONS: Record<string, LucideIcon> = {
 };
 
 export const SECTION_HINTS: Record<string, string> = {
-  "/branches": "Campuses, venues, service times and photos.",
+  "/branches": "Branches, venues, service times and photos.",
   "/department-videos": "Ministry and department videos.",
   "/documents": "Governance and fasting PDF uploads.",
   "/testimonies": "Stories of what God has done. General lists every site.",
@@ -52,7 +52,7 @@ export const SECTION_HINTS: Record<string, string> = {
   "/daily-prayers": "Prayer points for each day.",
   "/plans": "Multi-day programmes for the future app.",
   "/live": "Live stream link and status.",
-  "/users": "Studio accounts, roles and branches.",
+  "/users": "Invite people with a role and assigned branches.",
 };
 
 export const WORKSPACE_ICONS: Record<WorkspaceId, LucideIcon> = {

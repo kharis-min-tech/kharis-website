@@ -12,7 +12,7 @@ Open the workspace you're working in, for example **Kharis Website**, and choose
 
 - **Title**, for example **Night of Worship**
 - **Date** and **Start**, and an **End** if you know it
-- **Branch**: the campus hosting it. Super admins can choose **No branch (all campuses)** for church-wide events
+- **Branch**: the branch hosting it. Super admins can choose **No branch (all branches)** for church-wide events
 - **Category**: service, fellowship, conference, camp, or general
 
 ## 3. Choose where it shows

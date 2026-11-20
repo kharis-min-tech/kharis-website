@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { ArrowLeft, ArrowRight, CalendarDays, Check, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -257,7 +257,7 @@ export function EventManager() {
 
   const branchName =
     branches.find((branch) => branch.id === draft?.branchId)?.name ??
-    (draft?.branchId ? "" : "All campuses");
+    (draft?.branchId ? "" : "All branches");
 
   return (
     <div>
@@ -338,7 +338,7 @@ export function EventManager() {
                         {formatWhen(row.start_time)}
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
-                        {row.branch_name || row.location || "All campuses"}
+                        {row.branch_name || row.location || "All branches"}
                       </span>
                     </span>
                   </span>
@@ -489,7 +489,7 @@ export function EventManager() {
                     onChange={(event) => patch({ branchId: event.target.value })}
                   >
                     {isSuperAdmin ? (
-                      <option value="">No branch (all campuses)</option>
+                      <option value="">No branch (all branches)</option>
                     ) : (
                       <option value="" disabled>
                         Choose a branch

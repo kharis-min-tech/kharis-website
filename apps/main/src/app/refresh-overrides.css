@@ -428,11 +428,16 @@
 
 .life-page--depts .life-dept-why__card h3 {
   margin: 0;
+  color: var(--fg);
   font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
   font-size: clamp(1.6rem, 2.5vw, 2.3rem);
   font-weight: 850;
   letter-spacing: -0.055em;
   line-height: 1.05;
+}
+
+.life-page--depts .life-dept-why__card--purple h3 {
+  color: #fff;
 }
 
 .life-page--depts .life-dept-why__card > p {
@@ -464,8 +469,9 @@
   width: min(82rem, calc(100% - 3rem));
   margin: clamp(2rem, 5vw, 3rem) auto;
   padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--line);
   background: var(--surface-1);
-  color: #1c1c1f;
+  color: var(--fg);
   box-shadow: 0.4rem 0.45rem 0 rgba(0, 0, 0, 0.36);
 }
 
@@ -484,12 +490,13 @@
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  color: #1c1c1f !important;
+  color: var(--fg) !important;
+  -webkit-text-fill-color: var(--fg);
 }
 
 .life-page--depts .life-dept-branch-cta p {
   margin: 0.55rem 0 0;
-  color: #34313a;
+  color: var(--fg-soft);
   font-size: 1.08rem;
   font-weight: 600;
   line-height: 1.6;
@@ -517,7 +524,7 @@
 }
 
 .life-page--depts .life-dept-branch-cta__link:focus-visible {
-  outline: 3px solid #211a27;
+  outline: 3px solid var(--yellow);
   outline-offset: 3px;
 }
 
@@ -564,8 +571,31 @@
   }
 }
 
+html[data-theme="dark"] .life-page--depts .life-dept-branch-cta {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .life-page--depts .life-dept-branch-cta h3 {
+  color: #f3f0f7 !important;
+  -webkit-text-fill-color: #f3f0f7 !important;
+}
+
+html[data-theme="dark"] .life-page--depts .life-dept-branch-cta p {
+  color: #dbd5e2 !important;
+}
+
 html[data-theme="dark"] .life-page--depts .life-dept-band__copy {
   background: transparent;
+}
+
+html[data-theme="dark"] .life-page--depts .life-dept-why__header > p,
+html[data-theme="dark"] .life-page--depts .life-dept-why__number,
+html[data-theme="dark"] .life-page--depts .life-dept-directory__intro > p {
+  color: var(--label-accent, #b79ae8);
+}
+
+html[data-theme="dark"] .life-page--depts .life-dept-why__card--purple .life-dept-why__number {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 @supports (animation-timeline: view()) {

@@ -35,7 +35,7 @@ Branches, venues, and service times are never deleted from the studio. They are 
 
 ## Roles
 
-Every account has one role: **Super admin**, **Branch admin**, or **No access**. The role decides which workspaces and sections you see, and the database applies the same rule to every save. There is no way to switch role from inside the studio. See [Roles & Permissions](/getting-started/roles-permissions).
+Every account has one role: **Super admin** or **Branch admin**. The role decides which workspaces and sections you see, and the same rule applies to every save. There is no way to switch role from inside the studio. See [Roles & Permissions](/getting-started/roles-permissions).
 
 ::: tip Saving is always explicit
 Nothing in the studio saves as you type. Forms have a **Save** button, and you'll see a short confirmation in the corner when the change has gone through. If you close a panel without saving, the change is dropped.

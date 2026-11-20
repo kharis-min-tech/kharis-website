@@ -136,7 +136,7 @@ export async function GET(request: Request) {
       const postcode = postcodeFrom(formatted);
       return [
         {
-          label: item.name ? `${item.name} — ${formatted}` : formatted,
+          label: item.name ? `${item.name}, ${formatted}` : formatted,
           address: formatted,
           postcode,
           city: cityFrom(formatted, postcode),

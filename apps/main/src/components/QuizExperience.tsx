@@ -409,13 +409,6 @@ export function QuizExperience() {
                     <span className="inline-flex items-center gap-1.5 bg-[#630ed4] px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white mb-3">
                       {t.stepBadge}
                     </span>
-                    <h2
-                      className={`text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight ${
-                        isDark ? "!text-white" : "!text-[#1c1c1f]"
-                      }`}
-                    >
-                      {t.startHeading}
-                    </h2>
                     <p
                       className={`mt-2 text-sm sm:text-base leading-relaxed ${
                         isDark ? "text-white/70" : "text-[#4a4a52]"
@@ -982,13 +975,6 @@ export function QuizExperience() {
                     >
                       {t.nextStepTitle}
                     </h3>
-                    <p
-                      className={`mt-1 text-sm max-w-md ${
-                        isDark ? "text-white/70" : "text-[#4a4a52]"
-                      }`}
-                    >
-                      {t.nextStepSubtitle}
-                    </p>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">

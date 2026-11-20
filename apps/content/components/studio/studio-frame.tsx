@@ -17,6 +17,33 @@ import { getSupabase } from "@/lib/supabase";
 
 const PUBLIC_PATHS = ["/cookies", "/set-password"];
 
+/** Top-level app routes that exist under app/. Unknown paths render the 404 screen. */
+const APP_TOP_LEVEL = new Set([
+  "announcements",
+  "branches",
+  "cookies",
+  "daily",
+  "daily-message",
+  "daily-prayers",
+  "department-videos",
+  "documents",
+  "events",
+  "live",
+  "messages",
+  "plans",
+  "set-password",
+  "testimonies",
+  "users",
+  "visitors",
+  "workspace",
+]);
+
+function isAppPath(pathname: string) {
+  if (pathname === "/") return true;
+  const top = pathname.split("/").filter(Boolean)[0];
+  return Boolean(top && APP_TOP_LEVEL.has(top));
+}
+
 function BootScreen() {
   return (
     <div className="flex min-h-screen items-center justify-center">
@@ -122,6 +149,8 @@ export function StudioFrame({ children }: { children: React.ReactNode }) {
   );
 
   if (PUBLIC_PATHS.includes(pathname)) return children;
+  // Unmatched URLs use app/not-found.tsx; show it without sign-in or the admin shell.
+  if (!isAppPath(pathname)) return children;
   if (status === "loading") return <BootScreen />;
   if (status === "anon" || !user) return <SignIn />;
 
@@ -150,8 +179,8 @@ export function StudioFrame({ children }: { children: React.ReactNode }) {
   if (me.role === "none") {
     return (
       <AccountScreen
-        title="Waiting for access"
-        message="Your account is waiting for access. Ask a super admin to give you a role."
+        title="No access"
+        message="This account does not have access to Content Studio. Ask a super admin if you need a role."
         email={user.email ?? undefined}
       >
         <Button onClick={reload}>Check again</Button>

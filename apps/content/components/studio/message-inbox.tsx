@@ -229,7 +229,7 @@ export function MessageInbox() {
                     </span>
                     <span className="block truncate text-sm text-muted-foreground">
                       {row.topic}
-                      {row.message ? ` — ${row.message}` : ""}
+                      {row.message ? `: ${row.message}` : ""}
                     </span>
                   </span>
                   <span className="hidden shrink-0 flex-wrap justify-end gap-1.5 sm:flex">

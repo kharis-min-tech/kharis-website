@@ -14,7 +14,7 @@ Four cards across the top. Each one is a link to the page where you would act on
 
 | Card            | Super admin sees                  | Branch admin sees                        |
 | --------------- | --------------------------------- | ---------------------------------------- |
-| Total branches  | Every campus on the websites      | **Your branches**: the ones you can edit |
+| Total branches  | Every branch on the websites      | **Your branches**: the ones you can edit |
 | Upcoming events | Events in the next 30 days        | The same, for your branches only         |
 | Visitors        | Everyone who planned a visit      | Visitors to your branches                |
 | New messages    | Unread messages across every site | Unread messages to your branches         |

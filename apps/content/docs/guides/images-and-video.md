@@ -1,6 +1,6 @@
 # Images & Video
 
-Every picture and video you upload in the studio is stored on Cloudflare and served from there to the websites and the app. This page covers the limits and how to get files under them.
+Every picture and video you upload in the studio is stored in the church's media library and shown on the websites and the app. This page covers the limits and how to get files under them.
 
 ## Limits
 
@@ -22,7 +22,7 @@ Wherever you see **Drop an image, or click to browse**:
 You can also paste a link into **Or paste an image URL** and press **Use URL**. Use this for images that already live online. To take an image off, press the **×** beside the URL box.
 
 ::: tip New branches
-On a branch that hasn't been saved yet, the studio holds images until you save. You'll see **Save the branch to create its Cloudflare folder and upload this image.** Press **Save branch** and they upload.
+On a branch that hasn't been saved yet, the studio holds images until you save. You'll see a note to save the branch first. Press **Save branch** and they upload.
 :::
 
 ## Uploading a video
