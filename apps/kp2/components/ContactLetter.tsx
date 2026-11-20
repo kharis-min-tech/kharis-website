@@ -293,12 +293,12 @@ export function ContactLetter({
             </li>
             <li>
               <span className="kp-steps__num" aria-hidden="true">
-                02
+                03
               </span>
               <div>
                 <h3>Look out for a reply</h3>
                 <p>
-                  We&apos;ll reply by email. Visiting? We&apos;ll help you find your way on Sunday.
+                  We&apos;ll reply by email. Visiting? We&apos;ll help you find a nearby branch.
                 </p>
               </div>
             </li>

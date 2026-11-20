@@ -67,7 +67,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
           id: branch.slug,
           title: branch.name,
           category: establishedFor(branch),
-          caption: address ? `${serviceText} — ${address}` : serviceText,
+          caption: address ? `${serviceText} · ${address}` : serviceText,
           latitude: branch.lat,
           longitude: branch.lng,
           imageURL: branch.image || undefined,

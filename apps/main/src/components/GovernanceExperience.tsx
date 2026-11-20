@@ -2,14 +2,14 @@
 
 import "./governance.css";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { ContentIcon } from "@/components/ContentIcon";
 import { GOVERNANCE } from "@/lib/about-content";
 import {
-  PolicyDocumentReader,
-  type PolicyDocumentReaderProps,
-} from "../../../../shared/PolicyDocumentReader";
+  PolicyPdfDialog,
+  type PolicyPdfDocument,
+} from "../../../../shared/PolicyPdfDialog";
 
 export type GovernancePolicyCard = {
   id: string;
@@ -17,7 +17,7 @@ export type GovernancePolicyCard = {
   blurb: string;
   icon: string;
   href?: string;
-  document?: Omit<PolicyDocumentReaderProps, "theme">;
+  document?: PolicyPdfDocument;
 };
 
 export function GovernanceExperience({
@@ -26,13 +26,7 @@ export function GovernanceExperience({
   policies?: GovernancePolicyCard[];
 }) {
   const [openPolicyId, setOpenPolicyId] = useState<string | null>(null);
-  const readerRef = useRef<HTMLElement>(null);
   const openPolicy = policies.find((policy) => policy.id === openPolicyId && policy.document);
-
-  useEffect(() => {
-    if (!openPolicy) return;
-    readerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [openPolicy]);
 
   return (
     <div className="gov-page">
@@ -52,11 +46,8 @@ export function GovernanceExperience({
                 <button
                   type="button"
                   className="gov-policy__link gov-policy__button"
-                  aria-expanded={openPolicyId === policy.id}
-                  aria-controls="governance-policy-reader"
-                  onClick={() =>
-                    setOpenPolicyId((current) => (current === policy.id ? null : policy.id))
-                  }
+                  aria-haspopup="dialog"
+                  onClick={() => setOpenPolicyId(policy.id)}
                 >
                   <span className="gov-policy__icon">
                     <ContentIcon name={policy.icon} className="h-10 w-10" />
@@ -64,8 +55,7 @@ export function GovernanceExperience({
                   <h2>{policy.title}</h2>
                   <p>{policy.blurb}</p>
                   <span className="gov-policy__action">
-                    {openPolicyId === policy.id ? "Close document" : "Read full document"}
-                    <span aria-hidden="true">{openPolicyId === policy.id ? "↑" : "↓"}</span>
+                    Read full PDF <span aria-hidden="true">↗</span>
                   </span>
                 </button>
               ) : policy.href ? (
@@ -96,21 +86,11 @@ export function GovernanceExperience({
         </RevealStagger>
       </section>
 
-      {openPolicy?.document ? (
-        <section
-          id="governance-policy-reader"
-          ref={readerRef}
-          className="gov-policy-reader"
-          aria-label={`${openPolicy.title} full text`}
-        >
-          <div className="gov-policy-reader__toolbar">
-            <button type="button" onClick={() => setOpenPolicyId(null)}>
-              Close document <span aria-hidden="true">↑</span>
-            </button>
-          </div>
-          <PolicyDocumentReader key={openPolicy.id} {...openPolicy.document} theme="main" />
-        </section>
-      ) : null}
+      <PolicyPdfDialog
+        document={openPolicy?.document ?? null}
+        onClose={() => setOpenPolicyId(null)}
+        theme="main"
+      />
 
       <section className="gov-incident" aria-label="Report an incident">
         <Reveal className="gov-incident__panel">

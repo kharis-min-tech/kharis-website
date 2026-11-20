@@ -43,12 +43,12 @@ export default function NotFound() {
           className="mt-2 -rotate-2 border-4 border-[var(--on-surface)] bg-[var(--secondary-container)] px-5 py-2 font-[var(--font-body-md)] text-sm font-black uppercase tracking-widest text-[#17131f] shadow-[4px_4px_0_0_var(--on-surface)]"
           style={{ color: "#17131f" }}
         >
-          Faith looks different here — but this page is lost
+          Faith looks different here, but this page is lost
         </div>
 
         <p className="mt-8 max-w-xl font-[var(--font-body-md)] text-lg leading-relaxed text-[var(--on-surface-variant)]">
           Looks like the link broke, the page moved, or God is telling you to head back to the
-          altar. No worries — we&apos;ll get you right.
+          altar. No worries, we&apos;ll get you right.
         </p>
 
         <p className="mt-6 max-w-xl border-l-4 border-[var(--primary)] bg-[var(--surface-container)] px-5 py-4 text-left font-[var(--font-body-md)] text-base leading-relaxed text-[var(--on-surface)]">

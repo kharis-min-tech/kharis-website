@@ -216,7 +216,7 @@ function toChurchEvent(event: DisplayEvent): ChurchEvent {
     dayLabel: weekly ? `Every ${weekday}` : londonDate(event.occurrence_date),
     timeLabel: londonTime(event.occurrence_date),
     location: event.location || event.branch_name || "Kharis Phase 2",
-    blurb: event.description || "Join us — all welcome.",
+    blurb: event.description || "Join us. All welcome.",
     cta: "Plan Your Visit",
     featured: Boolean(event.is_featured),
     image: event.image_url ? publicAsset(event.image_url) : undefined,

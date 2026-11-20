@@ -4,21 +4,15 @@ import { useEffect, useState, type CSSProperties } from "react";
 import "./hero-title.css";
 
 const LINE = "A GENERATION";
-const PHRASES = ["ON FIRE FOR JESUS."] as const;
+const PHRASE = "ON FIRE FOR JESUS.";
 
 const START_DELAY_MS = 500;
 const TYPE_MS = 70;
 const PHRASE_DELAY_MS = 420;
-const PHRASE_HOLD_MS = 2400;
-const OUT_MS = 550;
-
-type Phase = "in" | "hold" | "out";
 
 export function HeroTitle() {
   const [typed, setTyped] = useState(0);
   const [ready, setReady] = useState(false);
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [phase, setPhase] = useState<Phase>("in");
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
@@ -33,7 +27,6 @@ export function HeroTitle() {
     if (reduced) {
       setTyped(LINE.length);
       setReady(true);
-      setPhase("hold");
       return;
     }
 
@@ -46,28 +39,12 @@ export function HeroTitle() {
     return () => timers.forEach((timer) => window.clearTimeout(timer));
   }, [reduced]);
 
-  useEffect(() => {
-    if (reduced || !ready) return;
-    const timers: number[] = [];
-    const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
-    setPhase("in");
-    at(PHRASE_DELAY_MS, () => setPhase("hold"));
-    at(PHRASE_DELAY_MS + PHRASE_HOLD_MS, () => setPhase("out"));
-    at(PHRASE_DELAY_MS + PHRASE_HOLD_MS + OUT_MS, () => {
-      setPhase("in");
-      setPhraseIndex((current) => (current + 1) % PHRASES.length);
-    });
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [ready, phraseIndex, reduced]);
-
-  const phrase = PHRASES[phraseIndex]!;
-  const out = phase === "out" ? " is-out" : "";
   const delay = { animationDelay: `${PHRASE_DELAY_MS}ms` } as CSSProperties;
 
   return (
     <h1 className="kp-hero-title font-display-xl text-[44px] sm:text-[60px] md:text-display-xl uppercase leading-none z-30">
       <span className="sr-only">
-        {LINE} {PHRASES[0]}
+        {LINE} {PHRASE}
       </span>
       <span className="kp-hero-title__line" aria-hidden="true">
         <span className="kp-hero-type">
@@ -84,14 +61,13 @@ export function HeroTitle() {
       <span className="kp-hero-title__phrase" aria-hidden="true">
         {ready ? (
           <span
-            key={phraseIndex}
-            className={`kp-hero-phrase kp-hero-phrase--fade-up${out}`}
+            className="kp-hero-phrase kp-hero-phrase--fade-up"
             style={delay}
           >
-            {phrase}
+            {PHRASE}
           </span>
         ) : (
-          <span className="kp-hero-phrase kp-hero-phrase--reserve">{PHRASES[0]}</span>
+          <span className="kp-hero-phrase kp-hero-phrase--reserve">{PHRASE}</span>
         )}
       </span>
     </h1>

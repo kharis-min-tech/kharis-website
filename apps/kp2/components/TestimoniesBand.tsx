@@ -118,41 +118,68 @@ export function TestimoniesBand({
     rail.addEventListener("touchstart", pauseAfterInteraction, { passive: true });
 
     let visible = false;
+    let frame = 0;
+    let previous = 0;
+    let position = rail.scrollLeft;
     const visibilityObserver = new IntersectionObserver(
       ([entry]) => {
         visible = Boolean(entry?.isIntersecting);
+        if (visible && !document.hidden) {
+          previous = 0;
+          cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(animate);
+        } else {
+          cancelAnimationFrame(frame);
+        }
       },
       { threshold: 0.35 },
     );
     visibilityObserver.observe(rail);
 
-    const timer = window.setInterval(() => {
+    const animate = (time: number) => {
+      const elapsed = previous ? Math.min(time - previous, 64) : 0;
+      previous = time;
       if (
-        !visible ||
-        selected ||
-        interactionState.current.hovered ||
-        interactionState.current.focused ||
-        Date.now() < pauseAutoplayUntil.current
-      )
-        return;
-      const firstCard = rail.querySelector<HTMLElement>(".kp-tst__card");
-      if (!firstCard) return;
-      const styles = window.getComputedStyle(rail);
-      const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
-      const step = firstCard.getBoundingClientRect().width + gap;
-      const maxScroll = rail.scrollWidth - rail.clientWidth;
-      if (maxScroll <= 0) return;
-
-      if (rail.scrollLeft >= maxScroll - step / 2) {
-        rail.scrollTo({ left: 0, behavior: "smooth" });
+        visible &&
+        !document.hidden &&
+        !reducedMotion.matches &&
+        !selected &&
+        !interactionState.current.hovered &&
+        !interactionState.current.focused &&
+        !dragRef.current.active &&
+        Date.now() >= pauseAutoplayUntil.current
+      ) {
+        const first = rail.querySelector<HTMLElement>(".kp-tst__card");
+        const copy = rail.querySelector<HTMLElement>('[data-loop-copy="true"]');
+        const cycle = first && copy ? copy.offsetLeft - first.offsetLeft : 0;
+        if (Math.abs(rail.scrollLeft - position) > 2) position = rail.scrollLeft;
+        if (cycle > 0) {
+          position = (position + elapsed * 0.008) % cycle;
+          rail.scrollTo({ left: position, behavior: "instant" });
+        }
       } else {
-        rail.scrollBy({ left: step, behavior: "smooth" });
+        position = rail.scrollLeft;
       }
-    }, 12_000);
+      if (visible && !document.hidden && !reducedMotion.matches) {
+        frame = requestAnimationFrame(animate);
+      }
+    };
+    const resume = () => {
+      cancelAnimationFrame(frame);
+      previous = 0;
+      if (visible && !document.hidden && !reducedMotion.matches) {
+        frame = requestAnimationFrame(animate);
+      }
+    };
+    document.addEventListener("visibilitychange", resume);
+    reducedMotion.addEventListener("change", resume);
+    if (visible && !document.hidden) frame = requestAnimationFrame(animate);
 
     return () => {
-      window.clearInterval(timer);
+      cancelAnimationFrame(frame);
       visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", resume);
+      reducedMotion.removeEventListener("change", resume);
       rail.removeEventListener("pointerenter", onPointerEnter);
       rail.removeEventListener("pointerleave", onPointerLeave);
       rail.removeEventListener("focusin", onFocusIn);
@@ -246,7 +273,7 @@ export function TestimoniesBand({
           <>
             <div className="kp-tst__family">
               <p className="kp-tst__family-kicker">From the family</p>
-              <p className="kp-tst__family-sub">Real stories of what Jesus is doing.</p>
+              <p className="kp-tst__family-sub">Where the grace makes a difference</p>
             </div>
 
             <div className="kp-tst__viewport">
@@ -258,15 +285,22 @@ export function TestimoniesBand({
                 onPointerUp={endPointerDrag}
                 onPointerCancel={endPointerDrag}
               >
-                {items.map((item, i) => {
-                  const accentIndex = (i % 5) + 1;
+                {Array.from({ length: items.length < 4 ? 4 : 2 }, () => items)
+                  .flat()
+                  .map((item, i) => {
+                  const accentIndex = ((i % items.length) % 5) + 1;
+                  const copy = i >= items.length;
                   return (
                     <article
                       key={`${item.name}-${i}`}
                       role="button"
-                      tabIndex={0}
+                      tabIndex={copy ? undefined : 0}
+                      aria-hidden={copy || undefined}
+                      data-loop-copy={copy || undefined}
                       aria-label={`Read full testimony from ${item.name}`}
-                      onClick={() => openCard(item, accentIndex)}
+                      onClick={() => {
+                        if (!copy) openCard(item, accentIndex);
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
                           e.preventDefault();

@@ -6,7 +6,7 @@ function photo(file: string, alt: string, position = "center") {
 }
 
 export const KP2_PHOTOS = {
-  serviceHall: photo("service-hall", "The KP2 congregation gathered in the service hall", "center"),
+  serviceHall: photo("service-hall", "The KP2 congregation during a service in the hall", "center"),
   serviceCongregation: photo(
     "service-congregation",
     "KP2 members listening together during a service",
@@ -61,7 +61,7 @@ export const KP2_PHOTOS = {
     "center",
   ),
   welcomeSmile: photo("welcome-smile", "KP2 members smiling together at church", "center"),
-  midweekHall: photo("midweek-hall", "The KP2 congregation gathered for midweek service", "center"),
+  midweekHall: photo("midweek-hall", "The KP2 congregation at a midweek service", "center"),
   midweekPrayer: photo("midweek-prayer", "KP2 members praying during midweek service", "center"),
   midweekWorship: photo(
     "midweek-worship",
@@ -135,7 +135,7 @@ export const KP2_PHOTOS = {
   ),
   baptismFamily: photo(
     "baptism-family",
-    "The KP2 family gathered together outside after baptism",
+    "The KP2 family together outside after baptism",
     "center",
   ),
   bassDance: photo(

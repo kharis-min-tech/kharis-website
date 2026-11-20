@@ -802,7 +802,7 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
   align-items: center;
   min-width: 0;
   overflow: hidden;
-  padding: 1.5rem 1rem 0;
+  padding: 1rem 1rem 1.25rem;
   background: var(--kp-app-card);
   border: 2px solid #221039;
   box-shadow: 5px 5px 0 #221039;
@@ -839,8 +839,11 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
 .kp-app-step-copy {
   width: 100%;
   min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-top: 0.9rem;
 }
 .kp-app-step .kp-app-step-number {
   margin: 0 0 0.6rem;
@@ -875,20 +878,13 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
 }
 .kp-app-phone {
   position: relative;
-  width: min(100%, 235px);
-  margin-top: auto;
+  width: min(100%, 16rem);
+  margin-inline: auto;
   pointer-events: none;
 }
 #app .kp-app-phone img {
   transform: none;
   filter: none;
-}
-.kp-app-phone-fade {
-  position: absolute;
-  inset: auto 0 0;
-  height: 14%;
-  background: linear-gradient(to bottom, transparent, var(--kp-app-card));
-  pointer-events: none;
 }
 /* These store labels retain readable ink in either theme. */
 .kp-app-stores a {
@@ -918,7 +914,7 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
     min-height: 0;
   }
   .kp-app-phone {
-    width: min(100%, 220px);
+    width: min(76vw, 16rem);
   }
   .kp-app-step h3 {
     font-size: 1.65rem;

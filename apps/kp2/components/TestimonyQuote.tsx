@@ -85,7 +85,7 @@ export function TestimonyQuote({
           {quote.replace(/^["“]|["”]$/g, "")}
         </p>
         <h3 id={titleId} className="font-headline-md text-2xl uppercase mt-6">
-          — {name}
+          By {name}
         </h3>
         {meta ? <p className="font-label-sm text-primary uppercase mt-1">{meta}</p> : null}
       </div>

@@ -176,13 +176,12 @@
   display: flex;
   gap: 1.25rem;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
   touch-action: pan-x pan-y;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   cursor: grab;
-  scroll-padding-inline: min(4vw, 2.5rem);
   padding: 0.35rem min(4vw, 2.5rem) 0.9rem;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -204,7 +203,6 @@
   flex-direction: column;
   min-height: 15rem;
   padding: 1.5rem 1.4rem 1.35rem;
-  scroll-snap-align: start;
   border: 3px solid #151218;
   background: #fff;
   box-shadow: 6px 6px 0 #151218;
@@ -220,15 +218,6 @@
   height: 6px;
   background: var(--accent);
   border-bottom: 3px solid #151218;
-}
-
-/* Auto margins centre a short rail but collapse to 0 once it overflows. */
-.kp-tst__card:first-child {
-  margin-left: auto;
-}
-
-.kp-tst__card:last-child {
-  margin-right: auto;
 }
 
 .kp-tst__card:hover {

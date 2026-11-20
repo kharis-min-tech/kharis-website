@@ -259,7 +259,7 @@ export function PlanVisitButton({
                     )
                   ) : (
                     <p className="font-body-md text-on-surface-variant">
-                      Add this gathering to your phone or laptop so you get a reminder when
+                      Add this service to your phone or laptop so you get a reminder when
                       it&apos;s time to go.
                     </p>
                   )}

@@ -44,7 +44,7 @@ export function BaptismGallery() {
           </h2>
           <p className="max-w-xl font-body-lg text-body-lg text-on-surface">
             Celebrating new life in Christ with the KP2 family. See moments from our baptism
-            gathering, or get in touch to ask about baptism.
+            service, or get in touch to ask about baptism.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
             <button

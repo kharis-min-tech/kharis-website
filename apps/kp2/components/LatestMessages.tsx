@@ -18,7 +18,10 @@ export function MessageCard({ message }: { message: MessageVideo }) {
         <span className="kp-msg__title">{displayMessageTitle(message.title)}</span>
         {year ? <span className="kp-msg__year">{year}</span> : null}
         <span className="kp-msg__watch">
-          Watch <span aria-hidden="true">→</span>
+          <span className="material-symbols-outlined" aria-hidden="true">
+            play_arrow
+          </span>
+          Play message <span aria-hidden="true">→</span>
         </span>
       </span>
     </a>

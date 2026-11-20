@@ -16,7 +16,7 @@ export const DEPARTMENTS: Department[] = [
   {
     name: "K-MUSIC",
     tagline: "SOUND OF A NEW BREED",
-    description: "Rappers who proclaim Christ through rhythm and verse. Get busy serving.",
+    description: "Rappers who proclaim Christ through rhythm and verse, serving God through their gifts.",
     image: "https://images.kharis.org/site-images/kp2/0a07dd570dc2424c/praise-singer-on-stage.jpg",
     imageAlt: "A KP2 K-Music performer rapping on stage",
     accent: "bg-primary text-on-primary",
@@ -61,7 +61,7 @@ export const DEPARTMENTS: Department[] = [
   {
     name: "CHOIR",
     tagline: "LIFT YOUR VOICE",
-    description: "Voices that lead the room in worship. Get busy serving in song.",
+    description: "Voices that lead the room in worship and help people encounter God.",
     image: KP2_PHOTOS.serviceChoir.src,
     imageAlt: KP2_PHOTOS.serviceChoir.alt,
     accent: "bg-primary text-on-primary",
@@ -81,7 +81,7 @@ export const DEPARTMENTS: Department[] = [
   {
     name: "INSTRUMENTALISTS",
     tagline: "PLAY FOR HIS GLORY",
-    description: "Guitars, drums, piano and more. Serve on the band. Get busy serving.",
+    description: "Guitars, drums, piano and more, all used to serve God through worship.",
     image: KP2_PHOTOS.serviceSaxophone.src,
     imageAlt: KP2_PHOTOS.serviceSaxophone.alt,
     accent: "bg-secondary-container text-[#151218]",
@@ -123,7 +123,7 @@ export const DEPARTMENTS: Department[] = [
   {
     name: "LIVE VISUALS",
     tagline: "SCRIPTURE ON THE SCREENS",
-    description: "Scriptures and lights for every gathering. Keep the Word in front of the room.",
+    description: "Scriptures and lights for every service. Keep the Word in front of the room.",
     image: KP2_PHOTOS.serviceScreen.src,
     imageAlt: KP2_PHOTOS.serviceScreen.alt,
     imagePosition: KP2_PHOTOS.serviceScreen.position,
