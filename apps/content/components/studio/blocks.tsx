@@ -85,7 +85,7 @@ export function StatCard({
         <p
           className={cn("mt-2 font-heading text-[2.15rem] font-bold leading-none", TONE_TEXT[tone])}
         >
-          {value ?? "—"}
+          {value ?? "-"}
         </p>
       )}
       {hint ? <p className="mt-2 text-xs text-muted-foreground">{hint}</p> : null}

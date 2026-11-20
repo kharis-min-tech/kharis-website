@@ -1,14 +1,15 @@
 "use client";
 
+import { ArrowRight, KeyRound, Link2Off, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AuthLayout } from "@/components/studio/auth-layout";
 import { PasswordField } from "@/components/studio/password-input";
-import { Button } from "@/components/ui/button";
+import { Button, buttonClasses } from "@/components/ui/button";
 import { getSupabase } from "@/lib/supabase";
-import { friendlyAuthError } from "@/lib/utils";
+import { cn, friendlyAuthError } from "@/lib/utils";
 
 const MIN_PASSWORD = 8;
 
@@ -83,62 +84,98 @@ export function SetPasswordForm() {
     router.replace("/");
   }
 
-  return (
-    <AuthLayout
-      title={status === "invalid" ? "This link doesn't work" : "Choose a password"}
-      description={
-        status === "checking"
-          ? "Checking your link…"
-          : status === "invalid"
-            ? invalidReason ||
-              "The link is invalid or has expired. Ask a super admin to send a new one."
-            : "Set the password you'll use to sign in to Content Studio."
-      }
-      footer={
-        status === "invalid" ? (
+  if (status === "checking") {
+    return (
+      <AuthLayout title="Checking your link" description="One moment…" center>
+        <div className="flex flex-col items-center gap-4 py-4">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-soft text-brand">
+            <LoaderCircle className="h-7 w-7 animate-spin" aria-hidden />
+          </span>
+          <p className="text-sm text-muted-foreground">Confirming your invite or reset link.</p>
+        </div>
+      </AuthLayout>
+    );
+  }
+
+  if (status === "invalid") {
+    return (
+      <AuthLayout
+        title="This link doesn't work"
+        description="Invite and password-reset links expire, and each one can only be used once."
+        center
+        footer={
           <Link href="/" className="font-semibold text-brand hover:underline">
             Back to sign in
           </Link>
-        ) : null
-      }
-    >
-      {status === "ready" ? (
-        <form className="space-y-4" onSubmit={onSubmit}>
-          {email ? (
-            <div className="rounded-lg border border-border bg-muted px-3 py-2 text-sm">
-              <span className="text-muted-foreground">Account </span>
-              <span className="font-semibold">{email}</span>
-            </div>
-          ) : null}
-          <PasswordField
-            label="New password"
-            name="password"
-            autoComplete="new-password"
-            required
-            minLength={MIN_PASSWORD}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          <PasswordField
-            label="Confirm password"
-            name="confirm"
-            autoComplete="new-password"
-            required
-            minLength={MIN_PASSWORD}
-            value={confirm}
-            onChange={(event) => setConfirm(event.target.value)}
-          />
-          <p className="text-xs text-muted-foreground">At least {MIN_PASSWORD} characters.</p>
-          {error ? (
-            <p className="rounded-lg border border-danger-line bg-danger-soft px-3 py-2 text-sm text-danger">
-              {error}
+        }
+      >
+        <div className="flex flex-col items-center gap-5 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-danger-soft text-danger">
+            <Link2Off className="h-8 w-8" aria-hidden />
+          </span>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              {invalidReason || "The link is invalid or has expired."}
             </p>
-          ) : null}
-          <Button type="submit" className="h-10 w-full" disabled={pending}>
-            {pending ? "Saving…" : "Save password"}
-          </Button>
-        </form>
-      ) : null}
+            <p className="text-sm text-muted-foreground">
+              Ask a super admin to press{" "}
+              <span className="font-semibold text-foreground">Send password reset</span> for your
+              account, then use the newest email.
+            </p>
+          </div>
+          <Link href="/" className={cn(buttonClasses("default", "default"), "h-10 w-full")}>
+            Back to sign in
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </AuthLayout>
+    );
+  }
+
+  return (
+    <AuthLayout
+      title="Choose a password"
+      description="Set the password you'll use to sign in to Content Studio."
+    >
+      <form className="space-y-4" onSubmit={onSubmit}>
+        <div className="mb-1 flex items-center gap-3 rounded-lg border border-border bg-muted px-3 py-2.5">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand">
+            <KeyRound className="h-4 w-4" aria-hidden />
+          </span>
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-muted-foreground">Account</p>
+            <p className="truncate text-sm font-semibold">{email || "Your studio account"}</p>
+          </div>
+        </div>
+        <PasswordField
+          label="New password"
+          name="password"
+          autoComplete="new-password"
+          required
+          minLength={MIN_PASSWORD}
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+        <PasswordField
+          label="Confirm password"
+          name="confirm"
+          autoComplete="new-password"
+          required
+          minLength={MIN_PASSWORD}
+          value={confirm}
+          onChange={(event) => setConfirm(event.target.value)}
+        />
+        <p className="text-xs text-muted-foreground">At least {MIN_PASSWORD} characters.</p>
+        {error ? (
+          <p className="rounded-lg border border-danger-line bg-danger-soft px-3 py-2 text-sm text-danger">
+            {error}
+          </p>
+        ) : null}
+        <Button type="submit" className="h-10 w-full" disabled={pending}>
+          {pending ? "Saving…" : "Save password"}
+          {pending ? null : <ArrowRight className="h-4 w-4" />}
+        </Button>
+      </form>
     </AuthLayout>
   );
 }

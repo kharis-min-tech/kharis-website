@@ -11,7 +11,7 @@ Enter the email address you were invited with and your password, then press **Si
 Use the **Dark mode** or **Light mode** button in the top corner to switch themes. The studio remembers your choice on that device.
 
 ::: tip Need an account?
-Ask a super admin to invite you. They choose your role and, for branch admins, which branches you can edit. See [Users](/administration/users).
+Ask a super admin to invite you. When they send the invite they also set your role, and if you are a branch admin they pick which branches you can edit. See [Users](/administration/users).
 :::
 
 ## Accepting an invitation
@@ -29,19 +29,19 @@ Press **Save password** and you are taken straight into the studio. Password res
 
 ## If the link doesn't work
 
-Links expire, and each one can only be used once. An old or already-used link shows **This link doesn't work**, with the reason Supabase gave. Ask a super admin to press **Send password reset** for your account, and use the newest email.
+Links expire, and each one can only be used once. An old or already-used link shows **This link doesn't work**. Ask a super admin to press **Send password reset** for your account, and use the newest email.
 
-## Waiting for access
+## No access
 
-If your account exists but has no role yet, you'll see **Waiting for access** after signing in. Nothing is broken: a super admin needs to give you a role.
+If your account exists but has no role yet, you'll see **No access** after signing in. Ask a super admin to give you a role.
 
-<Screenshot name="waiting-for-access" alt="The Waiting for access screen with Check again and Sign out buttons" />
+<Screenshot name="waiting-for-access" alt="The No access screen with Check again and Sign out buttons" />
 
 Once they have, press **Check again**. There's no need to sign out and back in.
 
 ## We couldn't check your access
 
-The studio asks the Kharis API who you are each time it opens. If that check fails, for example because the API is unreachable, you'll see **We couldn't check your access** with the reason. Press **Try again**. The studio never falls back to showing more than your role allows.
+Each time the studio opens, it checks who you are and what you can do. If that check fails, you'll see **We couldn't check your access**. Press **Try again**. The studio never falls back to showing more than your role allows.
 
 ## Signing out
 

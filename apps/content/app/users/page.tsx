@@ -51,9 +51,10 @@ type Draft = { email: string; role: StudioRole; branchIds: string[] };
 const ROLE_TONES = { super_admin: "default", branch_admin: "success", none: "gold" } as const;
 
 const ROLE_HINTS: Record<StudioRole, string> = {
-  super_admin: "Can edit everything in the studio and manage users.",
-  branch_admin: "Can edit the chosen branches, plus their events, messages and visitors.",
-  none: "Can sign in but can't see or edit anything yet.",
+  super_admin: "Can edit everything in the studio and manage users. Covers every branch.",
+  branch_admin:
+    "Can edit only the branches you assign below, plus those branches' events, messages and visitors.",
+  none: "Cannot use Content Studio until a super admin gives them a role.",
 };
 
 function message(caught: unknown, fallback: string) {
@@ -110,7 +111,7 @@ export default function UsersPage() {
   const branchesOf = useCallback(
     (user: StudioUser) => {
       if (user.role === "super_admin") return "All branches";
-      if (user.role === "none" || !user.branchIds.length) return "—";
+      if (user.role === "none" || !user.branchIds.length) return "-";
       return user.branchIds.map((id) => branchNames.get(id) ?? "Removed branch").join(", ");
     },
     [branchNames],
@@ -218,7 +219,7 @@ export default function UsersPage() {
       <PageHeader
         icon={<IconTile icon={UserCog} className="h-12 w-12 rounded-2xl" />}
         title="Users"
-        description="Who can sign in to the studio and what they can edit. Invites and password resets are sent by email."
+        description="Invite people with their role in one step. For branch admins, choose which branches they can edit. Password resets are sent by email."
         action={
           <Button onClick={openInvite}>
             <UserPlus className="h-4 w-4" />
@@ -241,7 +242,7 @@ export default function UsersPage() {
             tone="success"
           />
           <StatCard
-            label="Waiting for access"
+            label="No access"
             value={users.filter((user) => user.role === "none").length}
             icon={Hourglass}
             tone="gold"
@@ -261,7 +262,9 @@ export default function UsersPage() {
         <ErrorNotice message={error} onRetry={refresh} />
       ) : visible.length === 0 ? (
         <EmptyState icon={UserCog} title={users.length ? "No matches" : "No studio users yet"}>
-          {users.length ? "No users match that search." : "Invite someone to get started."}
+          {users.length
+            ? "No users match that search."
+            : "Invite someone and set their role, and branches if they look after a branch."}
         </EmptyState>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-card">
@@ -334,6 +337,17 @@ export default function UsersPage() {
           onClose={() => setEditing(null)}
         >
           <form className="space-y-4" onSubmit={onSave}>
+            {editing.user ? (
+              <p className="text-sm text-muted-foreground">
+                Change their role, or the branches a branch admin can edit. They pick this up the
+                next time they open the studio.
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Set their email, role, and (if they are a branch admin) which branches they look
+                after. Access is assigned with the invite; you do not need a second step.
+              </p>
+            )}
             {editing.user ? null : (
               <div>
                 <Label htmlFor="user-email">Email</Label>
@@ -355,7 +369,12 @@ export default function UsersPage() {
               <Select
                 id="user-role"
                 value={editing.draft.role}
-                onChange={(event) => patch({ role: event.target.value as StudioRole })}
+                onChange={(event) =>
+                  patch({
+                    role: event.target.value as StudioRole,
+                    branchIds: event.target.value === "branch_admin" ? editing.draft.branchIds : [],
+                  })
+                }
               >
                 {[...STUDIO_ROLES].reverse().map((role) => (
                   <option key={role} value={role}>
@@ -376,7 +395,7 @@ export default function UsersPage() {
               <Button type="submit" disabled={saving}>
                 {saving ? "Saving…" : editing.user ? "Save" : "Send invite"}
               </Button>
-              <Button variant="outline" onClick={() => setEditing(null)}>
+              <Button type="button" variant="outline" onClick={() => setEditing(null)}>
                 Cancel
               </Button>
             </div>
@@ -402,7 +421,9 @@ function BranchPicker({
 
   return (
     <fieldset>
-      <legend className="mb-1.5 block text-[13px] font-medium text-foreground/85">Branches</legend>
+      <legend className="mb-1.5 block text-[13px] font-medium text-foreground/85">
+        Assigned branches
+      </legend>
       {branches.length ? (
         <div className="max-h-64 space-y-1 overflow-y-auto rounded-lg border border-border p-2">
           {branches.map((branch) => (
@@ -421,12 +442,14 @@ function BranchPicker({
           ))}
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground">Add a branch before inviting branch admins.</p>
+        <p className="text-sm text-muted-foreground">
+          Add a branch under Branches before you can assign one here.
+        </p>
       )}
       <p className="mt-1 text-xs text-muted-foreground">
         {value.length
-          ? `${value.length} selected.`
-          : "Choose at least one branch this person can edit."}
+          ? `${value.length} branch${value.length === 1 ? "" : "es"} assigned.`
+          : "Tick at least one branch this branch admin can edit."}
       </p>
     </fieldset>
   );

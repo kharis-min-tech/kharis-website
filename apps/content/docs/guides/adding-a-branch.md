@@ -1,6 +1,6 @@
 # Adding a Branch
 
-This walks through setting up a new campus from start to finish. You need to be a super admin. Branch admins can follow steps 3 to 7 to update a branch they look after.
+This walks through setting up a new branch from start to finish. You need to be a super admin. Branch admins can follow steps 3 to 7 to update a branch they look after.
 
 ## 1. Open Branches
 
@@ -35,11 +35,11 @@ Add the **Hero image**, the **Pastor photo**, venue photos, and gallery images. 
 
 ## 7. Save
 
-Press **Save branch**. Saving creates the branch's Cloudflare folder and uploads any photos you chose.
+Press **Save branch**. Saving keeps the branch details and uploads any photos you chose.
 
 ## 8. Give someone access
 
-If the campus has its own admin, open [Users](/administration/users), invite them as a **Branch admin**, and tick the new branch.
+If the branch has its own admin, open [Users](/administration/users), invite them as a **Branch admin**, and tick the new branch.
 
 ::: tip Check it on the site
 Open the branch's page on kharis.org and read it as a visitor would: service times, address, and the map pin. It's the page most newcomers see before their first Sunday.

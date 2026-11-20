@@ -15,7 +15,7 @@ The sidebar count shows how many new messages are left.
 
 | Message is about        | Who should reply                                      |
 | ----------------------- | ----------------------------------------------------- |
-| A particular campus     | That branch's admin                                   |
+| A particular branch     | That branch's admin                                   |
 | KP2                     | The KP2 team                                          |
 | Prayer or pastoral care | Pass it to a pastor; don't reply with advice yourself |
 | Giving or finance       | The finance team                                      |
@@ -32,4 +32,4 @@ Messages can contain private things: health, family, money. Don't forward them m
 
 ## Branch admins
 
-You only see messages sent to your branches. If one arrives for another campus by mistake, tell a super admin rather than deleting it.
+You only see messages sent to your branches. If one arrives for another branch by mistake, tell a super admin rather than deleting it.

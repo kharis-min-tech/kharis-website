@@ -33,7 +33,7 @@ function service(partial: Pick<ServiceDraft, "day" | "time" | "label">): Service
   };
 }
 
-/** Sensible defaults for a new branch. Not named after a real campus. */
+/** Sensible defaults for a new branch. Not named after a real branch. */
 export function branchTemplate(current: BranchDraft): BranchDraft {
   return {
     ...current,

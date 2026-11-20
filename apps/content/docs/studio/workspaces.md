@@ -23,7 +23,7 @@ Some sections show the same list in every workspace. Others show each workspace 
 
 | Section           | Behaviour                                                    |
 | ----------------- | ------------------------------------------------------------ |
-| Branches          | One list of campuses, wherever you open it                   |
+| Branches          | One list of branches, wherever you open it                   |
 | Department Videos | One set of 24 videos, under General only                     |
 | Documents         | Governance and fasting PDFs, under General only              |
 | Visitors          | One list, under General                                      |
