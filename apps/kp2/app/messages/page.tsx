@@ -1,5 +1,5 @@
 import Page from "@/components/pages/messages";
-import { fetchPastorMessages } from "@/lib/youtube";
+import { fetchLatestMessages, fetchPastorMessages } from "@/lib/youtube";
 import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
@@ -12,6 +12,6 @@ export const metadata = pageMeta({
 });
 
 export default async function Messages() {
-  const messages = await fetchPastorMessages(120);
-  return <Page messages={messages} />;
+  const [latest, messages] = await Promise.all([fetchLatestMessages(4), fetchPastorMessages(120)]);
+  return <Page latest={latest} messages={messages} />;
 }

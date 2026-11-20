@@ -31,6 +31,7 @@ type YTNamespace = {
 
 const YT_ENDED = 0;
 const YT_PLAYING = 1;
+const YT_PAUSED = 2;
 
 function youtubeApi(): Promise<YTNamespace> {
   const w = window as Window & {
@@ -74,23 +75,30 @@ export function MutedHeroVideo({
   title,
   fullPlayback,
   paused,
+  active,
+  onTogglePlayback,
 }: {
   id: string;
   thumbnail: string;
   title: string;
   fullPlayback: boolean;
   paused: boolean;
+  active: boolean;
+  onTogglePlayback: () => void;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
+  const playerReadyRef = useRef(false);
   const [live, setLive] = useState(false);
   // Phones stay on the still. The iframe is wide, heavy, and what knocks the copy out of line.
   const [posterOnly, setPosterOnly] = useState(true);
   const fullPlaybackRef = useRef(fullPlayback);
   const pausedRef = useRef(paused);
+  const activeRef = useRef(active);
   const fullPlaybackStartedRef = useRef(false);
   fullPlaybackRef.current = fullPlayback;
   pausedRef.current = paused;
+  activeRef.current = active;
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 1279px), (prefers-reduced-motion: reduce)");
@@ -133,10 +141,14 @@ export function MutedHeroVideo({
         events: {
           onReady: async (event) => {
             if (cancelled) return;
+            playerReadyRef.current = true;
             if (fullPlaybackRef.current) {
               fullPlaybackStartedRef.current = true;
               event.target.unMute();
-              event.target.seekTo(0, true);
+              const duration = await waitForDuration(event.target);
+              if (cancelled || !activeRef.current || !fullPlaybackRef.current) return;
+              const start = ambientStartSeconds(duration);
+              if (start > 0) event.target.seekTo(start, true);
               if (pausedRef.current) event.target.pauseVideo();
               else event.target.playVideo();
               return;
@@ -144,7 +156,7 @@ export function MutedHeroVideo({
             if (!posterOnly) {
               event.target.mute();
               const duration = await waitForDuration(event.target);
-              if (cancelled || fullPlaybackRef.current) return;
+              if (cancelled || !activeRef.current || fullPlaybackRef.current) return;
               const start = ambientStartSeconds(duration);
               if (start > 0) event.target.seekTo(start, true);
               event.target.playVideo();
@@ -153,7 +165,12 @@ export function MutedHeroVideo({
           onStateChange: (event) => {
             if (cancelled) return;
             if (event.data === YT_PLAYING) setLive(true);
+            if (event.data === YT_PAUSED && !fullPlaybackRef.current) setLive(false);
             if (event.data === YT_ENDED) {
+              if (!activeRef.current) {
+                setLive(false);
+                return;
+              }
               if (fullPlaybackRef.current) {
                 setLive(false);
                 return;
@@ -171,6 +188,7 @@ export function MutedHeroVideo({
     return () => {
       cancelled = true;
       setLive(false);
+      playerReadyRef.current = false;
       try {
         playerRef.current?.destroy();
       } catch {
@@ -183,7 +201,12 @@ export function MutedHeroVideo({
 
   useEffect(() => {
     const player = playerRef.current;
-    if (!player) return;
+    if (!player || !playerReadyRef.current) return;
+    if (!active) {
+      player.pauseVideo();
+      setLive(false);
+      return;
+    }
     if (!fullPlayback) {
       fullPlaybackStartedRef.current = false;
       player.pauseVideo();
@@ -191,8 +214,15 @@ export function MutedHeroVideo({
     } else {
       if (!fullPlaybackStartedRef.current) {
         fullPlaybackStartedRef.current = true;
-        player.seekTo(0, true);
-        setLive(false);
+        void waitForDuration(player).then((duration) => {
+          if (!activeRef.current || !fullPlaybackRef.current) return;
+          const start = ambientStartSeconds(duration);
+          if (start > 0) player.seekTo(start, true);
+          if (pausedRef.current) player.pauseVideo();
+          else player.playVideo();
+        });
+        player.unMute();
+        return;
       }
       player.unMute();
       if (paused) {
@@ -201,10 +231,33 @@ export function MutedHeroVideo({
         player.playVideo();
       }
     }
-  }, [fullPlayback, paused, posterOnly]);
+  }, [active, fullPlayback, paused, posterOnly]);
 
   return (
-    <div className="kp-msg-hero__media relative aspect-video w-full shrink-0 overflow-hidden bg-on-background xl:absolute xl:inset-0 xl:aspect-auto">
+    <div
+      className="kp-msg-hero__media relative aspect-video w-full shrink-0 cursor-pointer overflow-hidden bg-on-background focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-[-8px] focus-visible:outline-secondary-container xl:absolute xl:inset-0 xl:aspect-auto"
+      role="button"
+      tabIndex={0}
+      aria-label={
+        fullPlayback
+          ? paused
+            ? "Resume featured message"
+            : "Pause featured message"
+          : "Play featured message"
+      }
+      aria-pressed={fullPlayback && !paused}
+      onClick={(event) => {
+        event.stopPropagation();
+        onTogglePlayback();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          event.stopPropagation();
+          onTogglePlayback();
+        }
+      }}
+    >
       <img
         src={thumbnail}
         alt=""
