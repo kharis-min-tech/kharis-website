@@ -4,11 +4,10 @@ Welcome to the Content Studio documentation. This guide covers everything you ne
 
 ## Who is this for?
 
-What you see in Content Studio follows from the role on your account. There are only three, and every page in this documentation is written with them in mind:
+What you see in Content Studio follows from the role on your account. There are only two, and every page in this documentation is written with them in mind:
 
 - **Super admins**: Edit everything in every workspace, and invite or remove studio users.
 - **Branch admins**: Edit the branches they have been given, plus those branches' events, messages, and visitors.
-- **No access**: Can sign in, but see nothing until a super admin gives them a role.
 
 [Roles & Permissions](/getting-started/roles-permissions) explains exactly where each role's edges are.
 

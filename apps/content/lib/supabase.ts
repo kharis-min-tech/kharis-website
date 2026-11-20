@@ -7,7 +7,7 @@ const PLACEHOLDER_KEY = "placeholder-key";
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || PLACEHOLDER_URL;
 /**
  * Browser client key: `sb_publishable_...` (replaces legacy `anon`).
- * Never use `sb_secret_...` / `service_role` here — those belong on the Kharis API.
+ * Never use `sb_secret_...` / `service_role` here; those belong on the Kharis API.
  */
 export const SUPABASE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || PLACEHOLDER_KEY;

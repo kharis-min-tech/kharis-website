@@ -111,7 +111,7 @@ export default function UsersPage() {
   const branchesOf = useCallback(
     (user: StudioUser) => {
       if (user.role === "super_admin") return "All branches";
-      if (user.role === "none" || !user.branchIds.length) return "—";
+      if (user.role === "none" || !user.branchIds.length) return "-";
       return user.branchIds.map((id) => branchNames.get(id) ?? "Removed branch").join(", ");
     },
     [branchNames],
@@ -264,7 +264,7 @@ export default function UsersPage() {
         <EmptyState icon={UserCog} title={users.length ? "No matches" : "No studio users yet"}>
           {users.length
             ? "No users match that search."
-            : "Invite someone and set their role — and branches, if they look after a branch."}
+            : "Invite someone and set their role, and branches if they look after a branch."}
         </EmptyState>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-card">
@@ -344,7 +344,7 @@ export default function UsersPage() {
               </p>
             ) : (
               <p className="text-sm text-muted-foreground">
-                Set their email, role, and — if they are a branch admin — which branches they look
+                Set their email, role, and (if they are a branch admin) which branches they look
                 after. Access is assigned with the invite; you do not need a second step.
               </p>
             )}

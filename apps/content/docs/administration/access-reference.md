@@ -1,6 +1,6 @@
 # Access Reference
 
-Every section of the studio, by workspace, and who can open it. Accounts with **No access** can't open any of them.
+Every section of the studio, by workspace, and who can open it.
 
 ## General
 

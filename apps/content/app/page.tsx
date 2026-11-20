@@ -246,7 +246,7 @@ export default function OverviewPage() {
               &ldquo;{verse.text}&rdquo;
             </blockquote>
             <figcaption className="mt-3 text-xs font-semibold text-gold">
-              — {verse.reference}
+              {verse.reference}
             </figcaption>
           </figure>
         </div>

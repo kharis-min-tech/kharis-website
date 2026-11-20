@@ -1,6 +1,6 @@
 # Roles & Permissions
 
-What you can see and do in Content Studio is decided by the **role** on your account. There are three. There is no role switcher, and nothing to choose after signing in. A super admin sets your role when they invite you (and, for branch admins, which branches you look after). The role takes effect the next time the studio checks your access.
+What you can see and do in Content Studio is decided by the **role** on your account. There are two. There is no role switcher, and nothing to choose after signing in. A super admin sets your role when they invite you (and, for branch admins, which branches you look after). The role takes effect the next time the studio checks your access.
 
 ## The one thing to understand first
 
@@ -8,13 +8,12 @@ The studio hides what your role cannot use, and it also refuses access behind th
 
 That is also why a failed access check never falls back to full access. If the studio can't confirm your role, it shows you nothing.
 
-## The three roles
+## The two roles
 
 | Role         | What it means                          | Reach                                                |
 | ------------ | -------------------------------------- | ---------------------------------------------------- |
 | Super admin  | Runs the studio                        | Every workspace, every branch, and studio users      |
 | Branch admin | Looks after one or more named branches | Those branches, and their events, messages, visitors |
-| No access    | Has an account but no role yet         | Nothing                                              |
 
 ---
 
@@ -58,12 +57,6 @@ A branch admin is given a list of branches when they are invited. Everything the
 ::: tip Each workspace shrinks to fit
 For a branch admin, every workspace shows only Branches, Events, Messages, and Visitors, whichever of those that workspace has. A workspace with none of them left is hidden.
 :::
-
----
-
-## No access
-
-An account with no role can sign in and see the **Waiting for access** screen. That's all. This is the state for someone who has been invited but not yet given a role, or whose role has been taken away without deleting the account.
 
 ## Changing a role
 

@@ -6,7 +6,7 @@ Password-protected admin for the shared Supabase project. It is its own workspac
 | -------------- | -------------------- | -------------------------------------------------------- |
 | `apps/main`    | `kharis.org`         | Apex domain, no `basePath`                               |
 | `apps/kp2`     | `kharis.org/kp2`     | Path prefix via `basePath: "/kp2"`                       |
-| `apps/content` | `content.kharis.org` | Subdomain. No `basePath` — the hostname is the whole app |
+| `apps/content` | `content.kharis.org` | Subdomain. No `basePath`; the hostname is the whole app |
 
 ## Run
 
@@ -19,9 +19,9 @@ npm run dev:content
 
 Opens at http://localhost:3002. Copy `.env.example` to `.env.local` and fill in:
 
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — `sb_publishable_...` from Supabase **Settings → API Keys** (not the legacy `anon` JWT)
-- `NEXT_PUBLIC_KHARIS_API_URL` — studio accounts, invites and password resets
-- `GOOGLE_MAPS_API_KEY` — venue search (optional)
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: `sb_publishable_...` from Supabase **Settings → API Keys** (not the legacy `anon` JWT)
+- `NEXT_PUBLIC_KHARIS_API_URL`: studio accounts, invites and password resets
+- `GOOGLE_MAPS_API_KEY`: venue search (optional)
 
 The Supabase **secret** key (`sb_secret_...`, replaces `service_role`) belongs on the Kharis API server only. Never put it in Content Studio or any `NEXT_PUBLIC_*` variable.
 

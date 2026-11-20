@@ -24,7 +24,7 @@ That's the design principle behind Content Studio, and the verse on its sign-in 
 
 ## What you use it for
 
-Content Studio is for what the public reads and watches — not for membership registers, attendance, or pastoral follow-up.
+Content Studio is for what the public reads and watches, not for membership registers, attendance, or pastoral follow-up.
 
 | Question                                          | Content Studio |
 | ------------------------------------------------- | -------------- |

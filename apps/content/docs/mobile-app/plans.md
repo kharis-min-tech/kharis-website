@@ -9,10 +9,10 @@ Plans are multi-day programmes for the Kharis app: scriptures, pastor messages, 
 ## Creating a plan
 
 1. Press **New plan**.
-2. **Basics** — title, summary, mode, pace, optional audience tags, cover image, and estimated minutes per day.
-3. **Days** — add and reorder days (Day 1, Day 2, …).
-4. **Day content** — for each day, add ordered items: scripture, message, video, quiz, or info (depending on mode).
-5. **Publish** — set status to Draft, Published, or Archived, then **Save plan**.
+2. **Basics:** title, summary, mode, pace, optional audience tags, cover image, and estimated minutes per day.
+3. **Days:** add and reorder days (Day 1, Day 2, …).
+4. **Day content:** for each day, add ordered items: scripture, message, video, quiz, or info (depending on mode).
+5. **Publish:** set status to Draft, Published, or Archived, then **Save plan**.
 
 The phone-style preview on the right shows how the plan roughly stacks for the future app.
 
@@ -38,9 +38,9 @@ Quiz, info, and video blocks stay available in every mode.
 
 ## Pace and unlock
 
-- **Self-paced** — people start when they like.
-- **Calendar start** — set a start date for a shared schedule.
-- **Sequential unlock** — flag for the future app so day N+1 waits until day N is finished.
+- **Self-paced:** people start when they like.
+- **Calendar start:** set a start date for a shared schedule.
+- **Sequential unlock:** flag for the future app so day N+1 waits until day N is finished.
 
 ## List actions
 

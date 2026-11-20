@@ -149,7 +149,7 @@ export function StudioFrame({ children }: { children: React.ReactNode }) {
   );
 
   if (PUBLIC_PATHS.includes(pathname)) return children;
-  // Unmatched URLs use app/not-found.tsx — show it without sign-in or the admin shell.
+  // Unmatched URLs use app/not-found.tsx; show it without sign-in or the admin shell.
   if (!isAppPath(pathname)) return children;
   if (status === "loading") return <BootScreen />;
   if (status === "anon" || !user) return <SignIn />;

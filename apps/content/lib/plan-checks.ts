@@ -40,7 +40,7 @@ function daysConfigured(plan: ContentPlan) {
   return plan.days.length > 1 || plan.days.some((day) => day.items.length > 0);
 }
 
-/** Full wizard path — always Basics → Days → Day content → Publish. */
+/** Full wizard path: always Basics → Days → Day content → Publish. */
 export function visiblePlanSteps(): PlanStep[] {
   return PLAN_STEPS.map((item) => item.id);
 }

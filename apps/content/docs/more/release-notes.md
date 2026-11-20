@@ -10,10 +10,9 @@ What's changed in Content Studio, newest first.
 
 ### Roles
 
-- Every account now has a role: **Super admin**, **Branch admin**, or **No access**. See [Roles & Permissions](/getting-started/roles-permissions).
+- Every account now has a role: **Super admin** or **Branch admin**. See [Roles & Permissions](/getting-started/roles-permissions).
 - Branch admins see only their branches, and the events, messages, and visitors that belong to them.
 - New [Users](/administration/users) screen for super admins: invite people, set roles and branches, send password resets, and delete accounts.
-- New **Waiting for access** screen for accounts without a role.
 
 ### A new look
 
