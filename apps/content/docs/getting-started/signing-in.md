@@ -31,11 +31,11 @@ Press **Save password** and you are taken straight into the studio. Password res
 
 Links expire, and each one can only be used once. An old or already-used link shows **This link doesn't work**. Ask a super admin to press **Send password reset** for your account, and use the newest email.
 
-## Waiting for access
+## No access
 
-If your account exists but has no role yet, you'll see **Waiting for access** after signing in. Nothing is broken: a super admin needs to give you a role.
+If your account exists but has no role yet, you'll see **No access** after signing in. Ask a super admin to give you a role.
 
-<Screenshot name="waiting-for-access" alt="The Waiting for access screen with Check again and Sign out buttons" />
+<Screenshot name="waiting-for-access" alt="The No access screen with Check again and Sign out buttons" />
 
 Once they have, press **Check again**. There's no need to sign out and back in.
 

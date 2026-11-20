@@ -10,9 +10,9 @@ Ask a super admin. They'll invite you from [Users](/administration/users), and y
 
 Ask a super admin to press **Send password reset** for your account. Use the link in the newest email.
 
-### I signed in and see "Waiting for access".
+### I signed in and see "No access".
 
-Your account exists but doesn't have a role yet. Once a super admin has given you one, press **Check again**.
+This account does not have access to Content Studio yet. Once a super admin has given you a role, press **Check again**.
 
 ### Can I have more than one role?
 

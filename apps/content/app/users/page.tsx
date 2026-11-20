@@ -54,7 +54,7 @@ const ROLE_HINTS: Record<StudioRole, string> = {
   super_admin: "Can edit everything in the studio and manage users. Covers every branch.",
   branch_admin:
     "Can edit only the branches you assign below, plus those branches' events, messages and visitors.",
-  none: "Can sign in but can't see or edit anything yet. Use this before you decide their access.",
+  none: "Cannot use Content Studio until a super admin gives them a role.",
 };
 
 function message(caught: unknown, fallback: string) {
@@ -242,7 +242,7 @@ export default function UsersPage() {
             tone="success"
           />
           <StatCard
-            label="Waiting for access"
+            label="No access"
             value={users.filter((user) => user.role === "none").length}
             icon={Hourglass}
             tone="gold"

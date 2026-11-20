@@ -179,8 +179,8 @@ export function StudioFrame({ children }: { children: React.ReactNode }) {
   if (me.role === "none") {
     return (
       <AccountScreen
-        title="Waiting for access"
-        message="Your account is waiting for access. Ask a super admin to give you a role."
+        title="No access"
+        message="This account does not have access to Content Studio. Ask a super admin if you need a role."
         email={user.email ?? undefined}
       >
         <Button onClick={reload}>Check again</Button>
