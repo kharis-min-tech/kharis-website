@@ -2,9 +2,8 @@
 
 import { KP2_PHOTOS } from "@/lib/photography";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { ComicGallery, type GalleryPhoto } from "@/components/ComicGallery";
-import { useRevealOnView } from "@/components/EventsTop";
 import "./comic-panels.css";
 
 type Panel = {
@@ -93,23 +92,78 @@ const PANELS: Panel[] = [
   },
 ];
 
+/**
+ * Deals the narration and panels onto the comic page as they scroll in; each caption sticker
+ * lands just after its panel. The wide page arrives in one go, so its panels stagger, while
+ * stacked panels on phones deal one by one. Panels already in view (a restored scroll or a
+ * link to the section) are left alone; ones just peeking in at the bottom still deal.
+ */
+function useDealIn(pageRef: RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const page = pageRef.current;
+    const section = page?.closest("section");
+    if (!page || !section || !("IntersectionObserver" in window)) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const notYetInView = (el: Element) => el.getBoundingClientRect().top > window.innerHeight * 0.8;
+    const pieces = [
+      ...section.querySelectorAll<HTMLElement>(".kp-panels__narration"),
+      ...page.querySelectorAll<HTMLElement>(".kp-panels__cell"),
+    ].filter(notYetInView);
+    if (!pieces.length) return;
+
+    const deal = (batch: HTMLElement[]) => {
+      batch.forEach((el, order) => {
+        observer.unobserve(el);
+        el.style.setProperty("--deal-order", String(order));
+        el.dataset.deal = "in";
+      });
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const arrived = entries
+          .filter((entry) => entry.isIntersecting)
+          .map((entry) => entry.target as HTMLElement)
+          .sort((a, b) => pieces.indexOf(a) - pieces.indexOf(b));
+        if (arrived.length) deal(arrived);
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.2 },
+    );
+    pieces.forEach((el) => {
+      el.dataset.deal = "armed";
+      observer.observe(el);
+    });
+
+    // Keyboard users tabbing ahead get every panel at once.
+    const onFocus = () => deal(pieces.filter((el) => el.dataset.deal === "armed"));
+    section.addEventListener("focusin", onFocus);
+
+    return () => {
+      observer.disconnect();
+      section.removeEventListener("focusin", onFocus);
+      pieces.forEach((el) => {
+        delete el.dataset.deal;
+        el.style.removeProperty("--deal-order");
+      });
+    };
+  }, [pageRef]);
+}
+
 export function ComicPanels({ midweekWhen: _midweekWhen }: { midweekWhen?: string }) {
-  const [ref, phase] = useRevealOnView<HTMLDivElement>(0.2);
+  const pageRef = useRef<HTMLDivElement>(null);
+  useDealIn(pageRef);
   const [openId, setOpenId] = useState<string | null>(null);
   const close = useCallback(() => setOpenId(null), []);
   const open = PANELS.find((p) => p.id === openId);
 
   return (
-    <section className="kp-panels" aria-label="Life at Kharis Phase 2">
+    // Deals its own panels in, so the generic section reveal would only blur the pop.
+    <section className="kp-panels" aria-label="Life at Kharis Phase 2" data-reveal="self">
       <p className="kp-panels__narration">Meanwhile, through the week &amp; the year…</p>
-      <div ref={ref} className={`kp-panels__page is-${phase}`}>
+      <div ref={pageRef} className="kp-panels__page">
         <ul className="kp-panels__grid">
           {PANELS.map((panel, i) => (
-            <li
-              key={panel.id}
-              className={`kp-panels__cell kp-panels__cell--${"abcd"[i]}`}
-              style={{ ["--i" as string]: i }}
-            >
+            <li key={panel.id} className={`kp-panels__cell kp-panels__cell--${"abcd"[i]}`}>
               <article className="kp-panels__panel" aria-labelledby={`kp-panel-${panel.id}`}>
                 <div className="kp-panels__media">
                   <img

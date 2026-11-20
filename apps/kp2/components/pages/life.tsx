@@ -1,11 +1,10 @@
 "use client";
 
-import { KP2_PHOTOS } from "@/lib/photography";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ComicPanels } from "@/components/ComicPanels";
-import "@/components/events-top.css";
+import { LifeHero } from "@/components/LifeHero";
 
 function LifePage() {
   return (
@@ -13,27 +12,7 @@ function LifePage() {
       <SiteHeader />
 
       <main className="pt-[74px]">
-        <header className="kp-ev-hero">
-          <img
-            src={KP2_PHOTOS.serviceChoir.src}
-            alt={KP2_PHOTOS.serviceChoir.alt}
-            className="kp-ev-hero__img"
-            loading="eager"
-            decoding="async"
-          />
-          <div className="kp-ev-hero__veil" aria-hidden="true" />
-          <div className="kp-ev-hero__dots" aria-hidden="true" />
-          <div className="kp-ev-hero__copy">
-            <p className="kp-ev-hero__eyebrow">Grow · Serve · Belong</p>
-            <h1 className="kp-ev-hero__heading">
-              Life at <span>Kharis Phase 2</span>
-            </h1>
-            <p className="kp-ev-hero__tag" style={{ maxWidth: "42rem" }}>
-              Beyond Sundays, we grow, serve, and build relationships in Christ together as a
-              family.
-            </p>
-          </div>
-        </header>
+        <LifeHero />
 
         <ComicPanels />
       </main>

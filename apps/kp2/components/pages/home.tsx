@@ -160,7 +160,7 @@ function Index({
                   fontSize: "clamp(0.7rem, 1.1vw, 1rem)",
                 }}
               >
-                Everything starts here.
+                Passionate for God and His Word.
               </div>
             </div>
             <div
@@ -223,10 +223,10 @@ function Index({
                   sword...&rdquo; Hebrews 4:12
                 </p>
                 <Link
-                  href="/mission"
+                  href="/mission#leadership"
                   className="kp-depth-button kp-button-gold inline-flex items-center gap-2 bg-[#f7be1d] text-gray-900 px-10 py-4 font-label-comic text-lg border-4 border-gray-900 brutalist-shadow uppercase hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
                 >
-                  HEAR ABOUT US
+                  MEET OUR LEADERS
                 </Link>
               </div>
               <div className="order-1 md:order-2 relative">
@@ -248,7 +248,7 @@ function Index({
           className="border-b-4 border-gray-900"
           eyebrow="Transformed lives"
           title="Testimonies"
-          intro="God is faithful! See what He is doing in this house."
+          intro="Where grace makes a difference."
           items={testimonials.map((t) => ({
             quote: t.quote,
             title: t.title,

@@ -4,19 +4,19 @@ const LISTEN_STEPS = [
   {
     step: "Step 1",
     title: "Open the app",
-    screen: "home",
+    screen: "current-home",
     alt: "Kharis app home with latest audio, video and playlists",
   },
   {
     step: "Step 2",
     title: "Search for a message",
-    screen: "messages",
+    screen: "current-messages",
     alt: "Kharis app messages list with search",
   },
   {
     step: "Step 3",
     title: "Press play and go",
-    screen: "player",
+    screen: "current-bible",
     alt: "Kharis app audio player",
   },
 ] as const;

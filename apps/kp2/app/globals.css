@@ -1225,6 +1225,36 @@ html.dark .site-logo {
     opacity: 1;
   }
 }
+/* A sticker slapped onto the page: it drops in big and tilted, squashes flat on impact with its
+   hard shadow pressed thin, then settles. Set --slap-r (resting angle) and --slap-shadow (resting
+   shadow offset) on the sticker; its base styles should match the 100% frame. */
+@keyframes kp-sticker-slap {
+  0% {
+    opacity: 0;
+    scale: 1.6;
+    rotate: calc(var(--slap-r, 0deg) - 8deg);
+    box-shadow: calc(var(--slap-shadow, 4px) * 3) calc(var(--slap-shadow, 4px) * 3) 0
+      rgb(21 18 24 / 0%);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.45);
+  }
+  48% {
+    opacity: 1;
+    scale: 0.95;
+    rotate: calc(var(--slap-r, 0deg) + 1deg);
+    box-shadow: 1px 1px 0 #151218;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  74% {
+    scale: 1.02;
+    rotate: calc(var(--slap-r, 0deg) - 0.6deg);
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+    rotate: var(--slap-r, 0deg);
+    box-shadow: var(--slap-shadow, 4px) var(--slap-shadow, 4px) 0 #151218;
+  }
+}
 @keyframes kp-marquee {
   from {
     transform: translateX(0);

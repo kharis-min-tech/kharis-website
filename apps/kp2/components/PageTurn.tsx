@@ -12,14 +12,14 @@ const LABELS: Record<string, string> = {
   "/": "Home",
   "/mission": "Mission",
   "/governance": "Governance",
-  "/departments": "Departments",
+  "/departments": "Department Discovery Quiz",
   "/life": "Life",
   "/events": "Events",
   "/messages": "Messages",
   "/media": "Media",
   "/giving": "Giving",
   "/contact": "Contact",
-  "/quiz": "Quiz",
+  "/quiz": "Department Discovery Quiz",
   "/branches": "Branches",
 };
 

@@ -51,7 +51,7 @@ function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; bran
         <section className="relative z-10 bg-secondary-container border-y-4 border-on-background py-16 px-margin-mobile md:px-margin-desktop">
           <div className="flex flex-col md:flex-row items-center justify-between gap-gutter">
             <h2 className="font-display-lg text-headline-lg-mobile md:text-headline-lg uppercase text-on-secondary-container">
-              Follow the Movement
+              See what&apos;s going on
             </h2>
             <div className="flex flex-wrap justify-center gap-4">
               <Link

@@ -19,7 +19,6 @@ export const STATIC_PATHS = [
   "/mission",
   "/governance",
   "/life",
-  "/departments",
   "/quiz",
   "/messages",
   "/media",
