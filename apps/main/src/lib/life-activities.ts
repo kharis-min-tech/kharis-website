@@ -119,7 +119,7 @@ const STANDIN = {
 export const LIFE_ACTIVITIES: LifeActivity[] = [
   {
     slug: "singles-seminar",
-    title: "Singles' Seminar",
+    title: "Singles' Ball",
     blurb: "Honest conversation about singleness, dating and waiting well.",
     body: "A room where the questions people usually only ask their closest friends get asked out loud. Teaching, a panel, and time to talk - about identity, relationships, loneliness and what it means to live whole while you wait.",
     cadence: "A few times a year",
