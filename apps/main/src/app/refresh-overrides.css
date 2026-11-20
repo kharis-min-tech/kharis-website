@@ -571,6 +571,19 @@
   }
 }
 
+html[data-theme="dark"] .life-page--depts .life-dept-branch-cta {
+  color: var(--fg);
+}
+
+html[data-theme="dark"] .life-page--depts .life-dept-branch-cta h3 {
+  color: #f3f0f7 !important;
+  -webkit-text-fill-color: #f3f0f7 !important;
+}
+
+html[data-theme="dark"] .life-page--depts .life-dept-branch-cta p {
+  color: #dbd5e2 !important;
+}
+
 html[data-theme="dark"] .life-page--depts .life-dept-band__copy {
   background: transparent;
 }

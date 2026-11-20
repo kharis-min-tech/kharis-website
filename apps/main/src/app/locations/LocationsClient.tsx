@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { BranchItem } from "@/lib/branches";
 import { AtomicGlobeBranches } from "@/components/branches/AtomicGlobeBranches";
 import type { GlobeBranch } from "@/lib/globe-branches";
@@ -16,6 +16,34 @@ interface Props {
 }
 
 type Origin = { lat: number; lng: number };
+type SearchOrigin = Origin & { label: string; query: string };
+
+const normalizeText = (value: string) => value.trim().toLowerCase().replace(/\s+/g, " ");
+
+function matchesBranchText(branch: BranchItem, normalizedQuery: string): boolean {
+  if (!normalizedQuery) return true;
+  const compactQuery = normalizedQuery.replace(/\s+/g, "");
+  const fields = [
+    branch.name,
+    branch.place,
+    branch.city,
+    branch.region,
+    branch.country,
+    branch.address,
+    branch.postcode,
+  ]
+    .filter(Boolean)
+    .map((v) => normalizeText(v!));
+
+  if (fields.some((value) => value.includes(normalizedQuery))) return true;
+  if (branch.postcode && branch.postcode.toLowerCase().replace(/\s+/g, "").includes(compactQuery)) {
+    return true;
+  }
+
+  const combined = fields.join(" ");
+  const tokens = normalizedQuery.split(" ").filter(Boolean);
+  return tokens.length > 1 && tokens.every((token) => combined.includes(token));
+}
 
 const KP2 = "KP2";
 
@@ -55,8 +83,16 @@ export function LocationsClient({ items, full }: Props) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [origin, setOrigin] = useState<Origin | null>(null);
+  const [searchOrigin, setSearchOrigin] = useState<SearchOrigin | null>(null);
+  const [searchingAddress, setSearchingAddress] = useState(false);
   const [locating, setLocating] = useState(false);
   const [geoNote, setGeoNote] = useState("");
+  const geocodeAbortRef = useRef<AbortController | null>(null);
+
+  const normalizedQuery = normalizeText(query);
+  const activeSearchOrigin =
+    searchOrigin && searchOrigin.query === normalizedQuery ? searchOrigin : null;
+  const activeOrigin: Origin | null = activeSearchOrigin ?? origin;
 
   /* Every country we meet in, including one that so far has only a KP2
    * branch: a country is a country whoever is gathering there. */
@@ -88,27 +124,74 @@ export function LocationsClient({ items, full }: Props) {
     [items, countries],
   );
 
+  const directMatches = useMemo(() => {
+    if (!normalizedQuery) return items;
+    return items.filter((b) => matchesBranchText(b, normalizedQuery));
+  }, [items, normalizedQuery]);
+
+  const geocodeAddress = useCallback(async (rawQuery: string): Promise<SearchOrigin | null> => {
+    const trimmed = rawQuery.trim();
+    const norm = normalizeText(trimmed);
+    if (norm.length < 2) return null;
+
+    geocodeAbortRef.current?.abort();
+    const controller = new AbortController();
+    geocodeAbortRef.current = controller;
+    setSearchingAddress(true);
+
+    try {
+      const res = await fetch(`/api/geocode?q=${encodeURIComponent(trimmed)}`, {
+        signal: controller.signal,
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as {
+        result?: { lat: number; lng: number; label: string } | null;
+      };
+      if (!data.result) return null;
+      const found: SearchOrigin = {
+        lat: data.result.lat,
+        lng: data.result.lng,
+        label: data.result.label,
+        query: norm,
+      };
+      setSearchOrigin(found);
+      setFilter("all");
+      return found;
+    } catch {
+      return null;
+    } finally {
+      if (geocodeAbortRef.current === controller) {
+        setSearchingAddress(false);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!normalizedQuery || normalizedQuery.length < 2 || directMatches.length > 0) {
+      geocodeAbortRef.current?.abort();
+      setSearchingAddress(false);
+      return;
+    }
+    if (activeSearchOrigin) return;
+
+    const timer = window.setTimeout(() => {
+      void geocodeAddress(query);
+    }, 450);
+    return () => window.clearTimeout(timer);
+  }, [normalizedQuery, query, directMatches.length, activeSearchOrigin, geocodeAddress]);
+
   const shown = useMemo(() => {
-    const q = query.trim().toLowerCase().replace(/\s+/g, " ");
-    const postcode = q.replace(/\s/g, "");
-    return items
+    const base = activeSearchOrigin ? items : directMatches;
+    return base
       .filter((b) => filter === "all" || b.country === filter)
-      .filter(
-        (b) =>
-          !q ||
-          [b.name, b.place, b.city, b.address].some((value) =>
-            value?.toLowerCase().replace(/\s+/g, " ").includes(q),
-          ) ||
-          b.postcode?.toLowerCase().replace(/\s/g, "").includes(postcode),
-      )
       .map((b) => ({
         branch: b,
         miles:
-          origin && b.latitude != null && b.longitude != null
-            ? milesBetween(origin, { lat: b.latitude, lng: b.longitude })
+          activeOrigin && b.latitude != null && b.longitude != null
+            ? milesBetween(activeOrigin, { lat: b.latitude, lng: b.longitude })
             : null,
       }));
-  }, [items, filter, query, origin]);
+  }, [items, directMatches, filter, activeSearchOrigin, activeOrigin]);
 
   /*
    * Nearest first once we know where the visitor is; otherwise by country,
@@ -117,12 +200,14 @@ export function LocationsClient({ items, full }: Props) {
    * a labelled section for every other kind.
    */
   const groups = useMemo(() => {
-    if (origin) {
+    if (activeOrigin) {
       const sorted = [...shown].sort((a, b) => (a.miles ?? Infinity) - (b.miles ?? Infinity));
       return sorted.length
         ? [
             {
-              title: "Nearest to you",
+              title: activeSearchOrigin
+                ? `Nearest to ${activeSearchOrigin.label}`
+                : "Nearest to you",
               sections: [{ key: "near", label: null, rows: sorted }],
             },
           ]
@@ -142,7 +227,7 @@ export function LocationsClient({ items, full }: Props) {
           .filter((section) => section.rows.length),
       }))
       .filter((group) => group.sections.length);
-  }, [shown, origin, countries, families]);
+  }, [shown, activeOrigin, activeSearchOrigin, countries, families]);
 
   /*
    * The globe's country cards link to "#branches:<country>", and this is the
@@ -174,7 +259,7 @@ export function LocationsClient({ items, full }: Props) {
 
   const locate = () => {
     if (!navigator.geolocation) {
-      setGeoNote("Your browser can't share your location. Search by town or postcode instead.");
+      setGeoNote("Your browser can't share your location. Search by address or postcode instead.");
       return;
     }
     setLocating(true);
@@ -182,16 +267,25 @@ export function LocationsClient({ items, full }: Props) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setSearchOrigin(null);
+        setQuery("");
         setFilter("all");
         setLocating(false);
         document.getElementById("branches")?.scrollIntoView({ behavior: "smooth" });
       },
       () => {
-        setGeoNote("We couldn't get your location. Search by town or postcode instead.");
+        setGeoNote("We couldn't get your location. Search by address or postcode instead.");
         setLocating(false);
       },
       { timeout: 10000 },
     );
+  };
+
+  const scrollToBranches = () => {
+    document.getElementById("branches-title")?.focus({ preventScroll: true });
+    document.getElementById("branches")?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
   };
 
   return (
@@ -211,38 +305,49 @@ export function LocationsClient({ items, full }: Props) {
           <form
             role="search"
             className="locations-search"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              document.getElementById("branches-title")?.focus({ preventScroll: true });
-              document.getElementById("branches")?.scrollIntoView({
-                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                  ? "auto"
-                  : "smooth",
-              });
+              if (normalizedQuery && directMatches.length === 0 && !activeSearchOrigin) {
+                await geocodeAddress(query);
+              }
+              scrollToBranches();
             }}
           >
             <label htmlFor="branch-search" className="sr-only">
-              Search branches by town, postcode or name
+              Search branches by address, town, postcode or name
             </label>
             <input
               id="branch-search"
               type="search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Town, postcode or branch name"
+              onChange={(e) => {
+                setQuery(e.target.value);
+                if (!e.target.value.trim()) setSearchOrigin(null);
+              }}
+              placeholder="Address, town, postcode or branch name"
               autoComplete="postal-code"
               className="locations-search__input"
             />
-            <button type="submit" className="btn-give">
-              Search
+            <button type="submit" className="btn-give" disabled={searchingAddress}>
+              {searchingAddress ? "Searching…" : "Search"}
             </button>
             <button type="button" className="btn-secondary" onClick={locate} disabled={locating}>
-              {locating ? "Finding you…" : origin ? "Nearest first" : "Near me"}
+              {locating
+                ? "Finding you…"
+                : origin && !activeSearchOrigin
+                  ? "Nearest first"
+                  : "Near me"}
             </button>
           </form>
           {query.trim() ? (
             <p className="locations-hero__note" role="status">
-              {shown.length === 1 ? "1 branch found" : `${shown.length} branches found`}
+              {searchingAddress
+                ? "Finding nearest branches…"
+                : activeSearchOrigin
+                  ? `Showing nearest branches to ${activeSearchOrigin.label}`
+                  : shown.length === 1
+                    ? "1 branch found"
+                    : `${shown.length} branches found`}
             </p>
           ) : null}
           {geoNote ? (
@@ -320,7 +425,7 @@ export function LocationsClient({ items, full }: Props) {
                         key={branch.id}
                         branch={branch}
                         miles={miles}
-                        showCountry={Boolean(origin)}
+                        showCountry={Boolean(activeOrigin)}
                       />
                     ))}
                   </ul>

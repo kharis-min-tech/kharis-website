@@ -106,21 +106,16 @@ export function LifeDepartmentsPage() {
         <div className="life-dept-branch-cta__intro">
           <div>
             <h3 id="life-dept-branch-cta-title">Still not sure where you fit?</h3>
-            <p>Take the quiz and find the team that fits you at your local branch.</p>
+            <p>Take the quiz and find the team that fits you.</p>
           </div>
-          <div className="btn-pair">
-            <Link href="/locations" className="btn-secondary">
-              Find a branch
-            </Link>
-            <Link
-              href={LIFE_DEPARTMENTS_URL}
-              data-no-smooth-nav
-              className="life-dept-branch-cta__link"
-            >
-              Take the quiz
-              <Icon name="arrow" className="h-3.5 w-3.5" />
-            </Link>
-          </div>
+          <Link
+            href={LIFE_DEPARTMENTS_URL}
+            data-no-smooth-nav
+            className="life-dept-branch-cta__link"
+          >
+            Take the quiz
+            <Icon name="arrow" className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </section>
     </div>

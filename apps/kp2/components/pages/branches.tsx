@@ -5,8 +5,9 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Petitpoint, type PetitpointLocation } from "@/components/Petitpoint";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { withBasePath } from "@/lib/base-path";
 import { hasCoords, mapsQuery, splitServices, type Branch } from "@/lib/branches";
 import { mapsDirectionsUrl } from "@/lib/calendar";
 import "@/components/comic-map.css";
@@ -14,10 +15,30 @@ import "@/components/branch-cards.css";
 
 const BRANCH_MARK = "https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png";
 
-function searchText(branch: Branch) {
-  return [branch.name, branch.city, branch.region, branch.address, branch.postcode, ...branch.tags]
-    .join(" ")
-    .toLowerCase();
+const normalizeText = (value: string) => value.trim().toLowerCase().replace(/\s+/g, " ");
+
+function matchesBranchText(branch: Branch, normalizedQuery: string) {
+  if (!normalizedQuery) return true;
+  const compactQuery = normalizedQuery.replace(/\s+/g, "");
+  const fields = [
+    branch.name,
+    branch.city,
+    branch.region,
+    branch.address,
+    branch.postcode,
+    ...branch.tags,
+  ]
+    .filter(Boolean)
+    .map((value) => normalizeText(value));
+
+  if (fields.some((value) => value.includes(normalizedQuery))) return true;
+  if (branch.postcode && branch.postcode.toLowerCase().replace(/\s+/g, "").includes(compactQuery)) {
+    return true;
+  }
+
+  const combined = fields.join(" ");
+  const tokens = normalizedQuery.split(" ").filter(Boolean);
+  return tokens.length > 1 && tokens.every((token) => combined.includes(token));
 }
 
 function establishedFor(branch: Branch) {
@@ -38,23 +59,91 @@ function milesBetween(aLat: number, aLng: number, bLat: number, bLng: number) {
   return 2 * earth * Math.asin(Math.sqrt(h));
 }
 
+type SearchOrigin = { lat: number; lng: number; label: string; query: string };
+
 function BranchesPage({ branches }: { branches: Branch[] }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [origin, setOrigin] = useState<{ lat: number; lng: number } | null>(null);
+  const [searchOrigin, setSearchOrigin] = useState<SearchOrigin | null>(null);
+  const [searchingAddress, setSearchingAddress] = useState(false);
   const [locating, setLocating] = useState(false);
   const [error, setError] = useState("");
+  const geocodeAbortRef = useRef<AbortController | null>(null);
+
+  const normalizedQuery = normalizeText(query);
+  const activeSearchOrigin =
+    searchOrigin && searchOrigin.query === normalizedQuery ? searchOrigin : null;
+  const activeOrigin = activeSearchOrigin ?? origin;
+
+  const directMatches = useMemo(() => {
+    if (!normalizedQuery) return branches;
+    return branches.filter((branch) => matchesBranchText(branch, normalizedQuery));
+  }, [branches, normalizedQuery]);
+
+  const geocodeAddress = useCallback(async (rawQuery: string): Promise<SearchOrigin | null> => {
+    const trimmed = rawQuery.trim();
+    const norm = normalizeText(trimmed);
+    if (norm.length < 2) return null;
+
+    geocodeAbortRef.current?.abort();
+    const controller = new AbortController();
+    geocodeAbortRef.current = controller;
+    setSearchingAddress(true);
+
+    try {
+      const res = await fetch(withBasePath(`/api/geocode?q=${encodeURIComponent(trimmed)}`), {
+        signal: controller.signal,
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as {
+        result?: { lat: number; lng: number; label: string } | null;
+      };
+      if (!data.result) return null;
+      const found: SearchOrigin = {
+        lat: data.result.lat,
+        lng: data.result.lng,
+        label: data.result.label,
+        query: norm,
+      };
+      setSearchOrigin(found);
+      return found;
+    } catch {
+      return null;
+    } finally {
+      if (geocodeAbortRef.current === controller) {
+        setSearchingAddress(false);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!normalizedQuery || normalizedQuery.length < 2 || directMatches.length > 0) {
+      geocodeAbortRef.current?.abort();
+      setSearchingAddress(false);
+      return;
+    }
+    if (activeSearchOrigin) return;
+
+    const timer = window.setTimeout(() => {
+      void geocodeAddress(query);
+    }, 450);
+    return () => window.clearTimeout(timer);
+  }, [normalizedQuery, query, directMatches.length, activeSearchOrigin, geocodeAddress]);
 
   const visible = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const rows = branches.filter((branch) => !q || searchText(branch).includes(q));
-    if (!origin) return rows;
+    const rows = activeSearchOrigin ? branches : directMatches;
+    if (!activeOrigin) return rows;
     return [...rows].sort((a, b) => {
-      const aMiles = hasCoords(a) ? milesBetween(origin.lat, origin.lng, a.lat, a.lng) : Infinity;
-      const bMiles = hasCoords(b) ? milesBetween(origin.lat, origin.lng, b.lat, b.lng) : Infinity;
+      const aMiles = hasCoords(a)
+        ? milesBetween(activeOrigin.lat, activeOrigin.lng, a.lat, a.lng)
+        : Infinity;
+      const bMiles = hasCoords(b)
+        ? milesBetween(activeOrigin.lat, activeOrigin.lng, b.lat, b.lng)
+        : Infinity;
       return aMiles - bMiles;
     });
-  }, [branches, origin, query]);
+  }, [branches, directMatches, activeOrigin, activeSearchOrigin]);
 
   const mapLocations = useMemo<PetitpointLocation[]>(
     () =>
@@ -77,27 +166,29 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
     [visible],
   );
 
-  const nearest = origin ? visible.find((branch) => hasCoords(branch)) : null;
+  const nearest = activeOrigin ? visible.find((branch) => hasCoords(branch)) : null;
   const nearestMiles =
-    origin && nearest && hasCoords(nearest)
-      ? milesBetween(origin.lat, origin.lng, nearest.lat, nearest.lng)
+    activeOrigin && nearest && hasCoords(nearest)
+      ? milesBetween(activeOrigin.lat, activeOrigin.lng, nearest.lat, nearest.lng)
       : null;
 
   const locate = () => {
     setError("");
     if (!window.isSecureContext || !navigator.geolocation) {
-      setError("Location isn't available here. Search by city or postcode instead.");
+      setError("Location isn't available here. Search by address, city or postcode instead.");
       return;
     }
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setSearchOrigin(null);
+        setQuery("");
         setLocating(false);
       },
       () => {
         setLocating(false);
-        setError("We couldn't get your location. Search by city or postcode instead.");
+        setError("We couldn't get your location. Search by address, city or postcode instead.");
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
     );
@@ -116,8 +207,11 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
               <form
                 className="kp-find__bar"
                 role="search"
-                onSubmit={(event) => {
+                onSubmit={async (event) => {
                   event.preventDefault();
+                  if (normalizedQuery && directMatches.length === 0 && !activeSearchOrigin) {
+                    await geocodeAddress(query);
+                  }
                   document.getElementById("kp-branch-list")?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
@@ -128,33 +222,47 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                   <input
                     type="search"
                     value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Search..."
-                    aria-label="Search KP2 branches"
-                    autoComplete="off"
+                    onChange={(event) => {
+                      setQuery(event.target.value);
+                      if (!event.target.value.trim()) setSearchOrigin(null);
+                    }}
+                    placeholder="Address, postcode or city..."
+                    aria-label="Search KP2 branches by address, postcode or city"
+                    autoComplete="postal-code"
                   />
                   {query ? (
                     <button
                       type="button"
                       className="kp-find__clear"
                       aria-label="Clear search"
-                      onClick={() => setQuery("")}
+                      onClick={() => {
+                        setQuery("");
+                        setSearchOrigin(null);
+                      }}
                     >
                       <span className="material-symbols-outlined">close</span>
                     </button>
                   ) : null}
-                  <span className="kp-find__badge">{mapLocations.length} Hubs</span>
+                  <span className="kp-find__badge">
+                    {searchingAddress ? "Searching…" : `${mapLocations.length} Hubs`}
+                  </span>
                 </div>
                 <button
                   type="button"
-                  className={`kp-find__near${origin ? " is-active" : ""}`}
+                  className={`kp-find__near${origin && !activeSearchOrigin ? " is-active" : ""}`}
                   onClick={locate}
                   disabled={locating}
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>
                     near_me
                   </span>
-                  <span>{locating ? "Finding you…" : origin ? "Nearest first" : "Near me"}</span>
+                  <span>
+                    {locating
+                      ? "Finding you…"
+                      : origin && !activeSearchOrigin
+                        ? "Nearest first"
+                        : "Near me"}
+                  </span>
                 </button>
               </form>
             </div>
@@ -204,11 +312,11 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
               theme={{ preset: "kp2" }}
               controls
               userLocation={
-                origin
+                activeOrigin
                   ? {
-                      latitude: origin.lat,
-                      longitude: origin.lng,
-                      label: "You are here",
+                      latitude: activeOrigin.lat,
+                      longitude: activeOrigin.lng,
+                      label: activeSearchOrigin ? activeSearchOrigin.label : "You are here",
                     }
                   : null
               }
@@ -229,10 +337,23 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
             <p className="kp-find__note" role="status">
               {error}
             </p>
+          ) : searchingAddress ? (
+            <p className="kp-find__note" role="status">
+              Finding nearest branches…
+            </p>
           ) : nearest && nearestMiles != null ? (
             <p className="kp-find__note" role="status">
-              Closest: {nearest.name} ({nearestMiles < 1 ? "<1" : Math.round(nearestMiles)} mi).{" "}
-              <button type="button" className="underline" onClick={() => setOrigin(null)}>
+              Closest{activeSearchOrigin ? ` to ${activeSearchOrigin.label}` : ""}: {nearest.name} (
+              {nearestMiles < 1 ? "<1" : Math.round(nearestMiles)} mi).{" "}
+              <button
+                type="button"
+                className="underline"
+                onClick={() => {
+                  setOrigin(null);
+                  setSearchOrigin(null);
+                  if (activeSearchOrigin) setQuery("");
+                }}
+              >
                 Reset
               </button>
             </p>
@@ -267,8 +388,8 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
               const sun = sunday[0] ?? branch.serviceTimes[0];
               const mid = midweek[0];
               const miles =
-                origin && hasCoords(branch)
-                  ? milesBetween(origin.lat, origin.lng, branch.lat, branch.lng)
+                activeOrigin && hasCoords(branch)
+                  ? milesBetween(activeOrigin.lat, activeOrigin.lng, branch.lat, branch.lng)
                   : null;
               const address = [branch.address, branch.postcode].filter(Boolean).join(", ");
               return (
