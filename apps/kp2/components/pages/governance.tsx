@@ -4,6 +4,11 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import {
+  PolicyDocumentReader,
+  type PolicyDocumentReaderProps,
+} from "../../../../shared/PolicyDocumentReader";
+import { useEffect, useRef, useState } from "react";
 
 export type GovernancePolicy = {
   id: string;
@@ -11,6 +16,7 @@ export type GovernancePolicy = {
   title: string;
   description: string;
   href?: string;
+  document?: Omit<PolicyDocumentReaderProps, "theme">;
 };
 
 const DEFAULT_POLICIES: GovernancePolicy[] = [
@@ -46,6 +52,15 @@ const DEFAULT_POLICIES: GovernancePolicy[] = [
 ];
 
 function GovernancePage({ policies = DEFAULT_POLICIES }: { policies?: GovernancePolicy[] }) {
+  const [openPolicyId, setOpenPolicyId] = useState<string | null>(null);
+  const readerRef = useRef<HTMLElement>(null);
+  const openPolicy = policies.find((policy) => policy.id === openPolicyId && policy.document);
+
+  useEffect(() => {
+    if (!openPolicy) return;
+    readerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [openPolicy]);
+
   return (
     <div className="bg-background text-on-surface font-body-md overflow-x-hidden">
       <SiteHeader />
@@ -88,6 +103,28 @@ function GovernancePage({ policies = DEFAULT_POLICIES }: { policies?: Governance
             );
             const className =
               "no-accent-fill scroll-mt-28 block text-inherit bg-surface-container-lowest rounded-none border-2 border-black brutalist-shadow p-8 transition-all group hover:-translate-y-1";
+            if (policy.document) {
+              const isOpen = openPolicyId === policy.id;
+              return (
+                <button
+                  key={policy.id}
+                  id={policy.id}
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls="governance-policy-reader"
+                  onClick={() => setOpenPolicyId(isOpen ? null : policy.id)}
+                  className={`${className} w-full text-left`}
+                >
+                  {card}
+                  <span className="mt-6 flex items-center gap-2 font-label-md font-bold uppercase text-primary">
+                    {isOpen ? "Close document" : "Read full document"}
+                    <span className="material-symbols-outlined" aria-hidden="true">
+                      {isOpen ? "expand_less" : "expand_more"}
+                    </span>
+                  </span>
+                </button>
+              );
+            }
             if (policy.href) {
               const external = policy.href.startsWith("http");
               if (external) {
@@ -118,6 +155,26 @@ function GovernancePage({ policies = DEFAULT_POLICIES }: { policies?: Governance
           })}
         </div>
       </section>
+
+      {openPolicy?.document ? (
+        <section
+          id="governance-policy-reader"
+          ref={readerRef}
+          aria-label={`${openPolicy.title} full text`}
+          className="mx-auto max-w-7xl scroll-mt-28 px-margin-mobile pb-20 md:px-margin-desktop"
+        >
+          <div className="mx-auto mb-4 flex w-full max-w-[68rem] justify-end">
+            <button
+              type="button"
+              onClick={() => setOpenPolicyId(null)}
+              className="font-label-md font-bold uppercase text-primary underline underline-offset-4"
+            >
+              Close document
+            </button>
+          </div>
+          <PolicyDocumentReader key={openPolicy.id} {...openPolicy.document} theme="kp2" />
+        </section>
+      ) : null}
 
       <section className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto pb-24">
         <div className="kp-brand-panel relative overflow-hidden rounded-none p-8 md:p-12 lg:p-16">

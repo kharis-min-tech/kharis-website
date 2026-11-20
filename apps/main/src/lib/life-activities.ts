@@ -91,7 +91,7 @@ export type LifeActivity = {
 
 /**
  * Stand-in photography, so the experience can be judged with real pictures
- * of real Kharis people while the activity shoots are gathered. Every entry
+ * of real Kharis people while the activity shoots are in progress. Every entry
  * using one of these is flagged `placeholder: true`; search that flag to
  * find everything still waiting on its own photograph.
  */
@@ -125,7 +125,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "A few times a year",
     audience: "Anyone single, at any age",
     image: STANDIN.congregation,
-    alt: "The congregation gathered at a Kharis seminar",
+    alt: "Members at a Kharis seminar",
     placeholder: true,
   },
   {
@@ -147,7 +147,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "Through the year",
     audience: "Families, flatmates, anyone with a hob",
     image: STANDIN.outreachCommunity,
-    alt: "The Kharis community gathered together",
+    alt: "The Kharis community together",
     placeholder: true,
   },
   {
@@ -158,7 +158,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "Yearly",
     audience: "Students, career changers, anyone stuck",
     image: STANDIN.celebration,
-    alt: "Kharis members gathered and celebrating together",
+    alt: "Kharis members celebrating together",
     placeholder: true,
   },
   {
@@ -169,7 +169,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "As the ground shifts",
     audience: "Anyone whose work is changing",
     image: STANDIN.bibles,
-    alt: "A full Kharis gathering",
+    alt: "Kharis members worshipping together",
     placeholder: true,
   },
   {
@@ -180,7 +180,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "Yearly",
     audience: "Everyone, especially the ones avoiding it",
     image: STANDIN.worship,
-    alt: "The congregation gathered at Kharis",
+    alt: "Members worshipping at Kharis",
     placeholder: true,
   },
   {
@@ -246,7 +246,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "Every December",
     audience: "Everyone, jumper mandatory",
     image: STANDIN.serve,
-    alt: "The Kharis congregation together",
+    alt: "Kharis members together",
     season: "christmas",
     placeholder: true,
   },
@@ -258,7 +258,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "Weekly",
     audience: "Everyone, wherever you live",
     image: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
-    alt: "A full Kharis hall gathered for the Word",
+    alt: "A full Kharis hall listening to the Word",
   },
   {
     slug: "baptism",

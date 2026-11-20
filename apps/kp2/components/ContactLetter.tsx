@@ -106,8 +106,7 @@ export function ContactLetter({
               Start with a <em>few lines.</em>
             </h2>
             <p className="kp-write__sub">
-              Tell us what&apos;s on your heart. Your message goes to the Kharis Phase 2 team,
-              marked for the branch you choose.
+              Tell us what&apos;s on your heart. Your message goes to the Kharis Phase 2 team.
             </p>
           </header>
 
@@ -295,15 +294,6 @@ export function ContactLetter({
             <li>
               <span className="kp-steps__num" aria-hidden="true">
                 02
-              </span>
-              <div>
-                <h3>It reaches the team</h3>
-                <p>Your message arrives with the KP2 team, marked for the branch you picked.</p>
-              </div>
-            </li>
-            <li>
-              <span className="kp-steps__num" aria-hidden="true">
-                03
               </span>
               <div>
                 <h3>Look out for a reply</h3>

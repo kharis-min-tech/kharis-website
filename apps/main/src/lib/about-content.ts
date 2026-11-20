@@ -183,6 +183,7 @@ export const GOVERNANCE = {
       blurb:
         "How we protect children, young people and adults at risk across every Kharis gathering and activity.",
       icon: "shield-check",
+      href: "/governance/safeguarding",
     },
     {
       id: "privacy",
@@ -190,6 +191,7 @@ export const GOVERNANCE = {
       blurb:
         "How we collect, use and look after personal information when you engage with Kharis Ministries.",
       icon: "lock-keyhole",
+      href: "/governance/privacy",
     },
     {
       id: "cookies",
@@ -204,6 +206,7 @@ export const GOVERNANCE = {
       title: "Website Disclaimer",
       blurb: "Important notes about information on this website and your use of our online spaces.",
       icon: "scroll-text",
+      href: "/governance/disclaimer",
     },
   ],
   incident: {

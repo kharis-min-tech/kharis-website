@@ -4,12 +4,11 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { PlanVisitButton } from "@/components/PlanVisitButton";
-import { YoutubeEmbed } from "@/components/YoutubeEmbed";
 import { VisitInstead } from "@/components/VisitInstead";
 import { withBasePath } from "@/lib/base-path";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   hasCoords,
   mapsEmbedUrl,
@@ -23,157 +22,11 @@ import {
   weeklyServiceToCalendarItem,
 } from "@/lib/calendar";
 import type { ChurchEvent } from "@/lib/events";
-import { youtubeThumbnail, youtubeVideoId } from "@/lib/youtube";
 import "@/components/branch-cards.css";
 import { HONEYPOT_FIELD, TURNSTILE_FIELD } from "../../../../shared/form-fields";
 import { HoneypotField, useTurnstile } from "../../../../shared/form-widgets";
 
 const BRANCH_MARK = "https://images.kharis.org/site-images/main/113a6a24b1d3741b/kharis-logo.png";
-
-const GALLERY_FALLBACKS = [
-  "https://images.kharis.org/site-images/kp2/9b547f88f3b4d297/worship.jpg",
-  "https://images.kharis.org/site-images/kp2/234c625e119f9e2a/young-adults.jpg",
-  "https://images.kharis.org/site-images/kp2/ca1bcf57dbf80629/community.jpg",
-  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/events-hero-worship.jpg",
-  "https://images.kharis.org/site-images/kp2/2bf8a23f06e5bb67/praise-night.jpg",
-  "https://images.kharis.org/site-images/kp2/d6b67a1d5d3003b0/events-sunday-service.jpg",
-];
-
-function galleryFor(branch: Branch) {
-  return branch.gallery;
-}
-
-function GalleryCarousel({
-  images,
-  city,
-  onOpen,
-}: {
-  images: string[];
-  city: string;
-  onOpen: (index: number) => void;
-}) {
-  const scroller = useRef<HTMLDivElement>(null);
-  const [canScroll, setCanScroll] = useState(images.length > 1);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  const updateEdges = useCallback(() => {
-    const el = scroller.current;
-    if (!el) return;
-    setCanScroll(el.scrollWidth > el.clientWidth + 4);
-    setAtStart(el.scrollLeft <= 4);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
-  }, []);
-
-  useEffect(() => {
-    updateEdges();
-    window.addEventListener("resize", updateEdges);
-    return () => window.removeEventListener("resize", updateEdges);
-  }, [images.length, updateEdges]);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  useEffect(() => {
-    if (paused || reducedMotion || images.length < 2) return;
-    const advance = () => {
-      const el = scroller.current;
-      const card = el?.querySelector("button");
-      if (!el || !card) return;
-      const styles = window.getComputedStyle(el);
-      const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
-      const step = card.getBoundingClientRect().width + gap;
-      const reachedEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
-      el.scrollTo({ left: reachedEnd ? 0 : el.scrollLeft + step, behavior: "smooth" });
-    };
-    const timer = window.setInterval(advance, 11_000);
-    return () => window.clearInterval(timer);
-  }, [images.length, paused, reducedMotion]);
-
-  function scrollByCard(direction: 1 | -1) {
-    const el = scroller.current;
-    const card = el?.querySelector("button");
-    if (!el || !card) return;
-    el.scrollBy({ left: direction * (card.clientWidth + 16), behavior: "smooth" });
-  }
-
-  return (
-    <div
-      className="relative"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(true);
-      }}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false);
-      }}
-      onTouchStart={() => setPaused(true)}
-      onTouchEnd={() => setPaused(false)}
-    >
-      <div
-        ref={scroller}
-        onScroll={updateEdges}
-        className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label={`Photos from ${city}`}
-      >
-        {images.map((src, index) => (
-          <button
-            key={`${src}-${index}`}
-            type="button"
-            onClick={() => onOpen(index)}
-            className="group relative aspect-[4/5] w-[78%] shrink-0 snap-start overflow-hidden brutalist-border text-left sm:w-[calc(50%-8px)] md:w-[calc(25%-12px)]"
-          >
-            <img
-              src={src}
-              alt={`Gathering at ${city}`}
-              loading={index < 4 ? "eager" : "lazy"}
-              decoding="async"
-              className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-              <span className="flex h-12 w-12 items-center justify-center border-2 border-white/30 bg-black/50 text-white">
-                <span className="material-symbols-outlined">zoom_in</span>
-              </span>
-            </span>
-          </button>
-        ))}
-      </div>
-      {canScroll ? (
-        <>
-          <button
-            type="button"
-            aria-label="Previous photos"
-            disabled={atStart}
-            onClick={() => scrollByCard(-1)}
-            className="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center border-2 border-on-background bg-background text-on-background disabled:opacity-40"
-          >
-            <span className="material-symbols-outlined">chevron_left</span>
-          </button>
-          <button
-            type="button"
-            aria-label="Next photos"
-            disabled={atEnd}
-            onClick={() => scrollByCard(1)}
-            className="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center border-2 border-on-background bg-background text-on-background disabled:opacity-40"
-          >
-            <span className="material-symbols-outlined">chevron_right</span>
-          </button>
-        </>
-      ) : null}
-    </div>
-  );
-}
 
 function usablePhone(phone: string) {
   const national = phone.replace(/\D/g, "").replace(/^44/, "");
@@ -256,7 +109,6 @@ function BranchPage({
   const router = useRouter();
   const nextVisit = visitItem(branch);
   const directions = visitDirections(branch);
-  const branchVideoId = youtubeVideoId(branch.videoUrl);
   const { sunday, midweek } = splitServices(branch.services);
   const sundayList = (sunday.length ? sunday : branch.serviceTimes) as Array<{
     day: string;
@@ -264,7 +116,6 @@ function BranchPage({
     label: string;
     description?: string;
   }>;
-  const gallery = galleryFor(branch);
   const campusEvents = eventsForBranch(events, branch);
   const others = branches.filter((item) => item.slug !== branch.slug);
   const giveHref = branch.givingLink || "/giving";
@@ -272,7 +123,6 @@ function BranchPage({
 
   const [zoomLevel, setZoomLevel] = useState(15);
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
-  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactMessage, setContactMessage] = useState("");
@@ -292,23 +142,6 @@ function BranchPage({
     document.addEventListener("mousedown", onPointer);
     return () => document.removeEventListener("mousedown", onPointer);
   }, []);
-
-  useEffect(() => {
-    if (galleryIndex === null) return;
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") setGalleryIndex(null);
-      if (event.key === "ArrowRight") {
-        setGalleryIndex((current) => (current === null ? 0 : (current + 1) % gallery.length));
-      }
-      if (event.key === "ArrowLeft") {
-        setGalleryIndex((current) =>
-          current === null ? 0 : (current - 1 + gallery.length) % gallery.length,
-        );
-      }
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [galleryIndex, gallery.length]);
 
   const mapSrc = useMemo(
     () => (hasCoords(branch) ? osmEmbedUrlAtZoom(branch, zoomLevel) : mapsEmbedUrl(branch)),
@@ -750,87 +583,6 @@ function BranchPage({
           </div>
         </section>
 
-        {/* Watch */}
-        <section
-          id="watch"
-          className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto"
-        >
-          <div className="mb-10 text-center">
-            <div className="inline-flex items-center gap-1.5 border-2 border-on-background/20 bg-secondary-container text-on-secondary-container px-3.5 py-1 font-body-md text-[12px] font-bold uppercase mb-3">
-              Watch
-            </div>
-            <h2 className="font-display-lg text-headline-lg uppercase leading-none">
-              A look at {branch.city}
-            </h2>
-          </div>
-
-          <div className="relative overflow-hidden brutalist-border brutalist-shadow bg-on-background aspect-video">
-            {branchVideoId ? (
-              <YoutubeEmbed
-                id={branchVideoId}
-                title={`A look at ${branch.city}`}
-                thumbnail={branch.image || youtubeThumbnail(branchVideoId)}
-              />
-            ) : branch.videoUrl ? (
-              <video
-                className="block h-full w-full bg-black object-contain"
-                src={branch.videoUrl}
-                poster={branch.image || undefined}
-                controls
-                playsInline
-                preload="metadata"
-                aria-label={`A look at ${branch.city}`}
-              />
-            ) : branch.image ? (
-              <Link href="/messages" className="group relative block h-full w-full">
-                <img
-                  src={branch.image}
-                  alt={`Worship at ${branch.city}`}
-                  className="h-full w-full object-cover opacity-70 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
-                  <span className="flex h-20 w-20 items-center justify-center bg-primary text-on-primary brutalist-border">
-                    <span className="material-symbols-outlined text-[40px]">play_arrow</span>
-                  </span>
-                  <span className="font-body-md text-[13px] font-bold uppercase tracking-wider text-white">
-                    Watch on YouTube
-                  </span>
-                </div>
-              </Link>
-            ) : (
-              <Link
-                href="/messages"
-                className="flex h-full w-full items-center justify-center font-body-md text-[13px] font-bold uppercase tracking-wider text-white"
-              >
-                Watch on YouTube
-              </Link>
-            )}
-          </div>
-        </section>
-
-        {/* Gallery */}
-        <section className="py-16 px-margin-mobile md:px-margin-desktop max-w-[1536px] mx-auto">
-          <div className="mb-10 text-center">
-            <div className="inline-flex items-center gap-1.5 border-2 border-on-background/20 bg-secondary-container text-on-secondary-container px-3.5 py-1 font-body-md text-[12px] font-bold uppercase mb-3">
-              Life at KP2 {branch.city}
-            </div>
-            <h2 className="font-display-lg text-headline-lg uppercase leading-none">
-              Moments from our family
-            </h2>
-          </div>
-          {gallery.length ? (
-            <GalleryCarousel images={gallery} city={branch.city} onOpen={setGalleryIndex} />
-          ) : (
-            <div className="kp-branch-empty">
-              <span className="kp-branch-card__fallback">
-                <img src={BRANCH_MARK} alt="" />
-                <span>{branch.name}</span>
-              </span>
-            </div>
-          )}
-        </section>
-
         {/* Calendar */}
         <section
           id="events"
@@ -1149,50 +901,6 @@ function BranchPage({
 
       <SiteFooter />
       <ThemeToggle />
-
-      {galleryIndex !== null && gallery[galleryIndex] ? (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-          <button
-            type="button"
-            className="absolute inset-0 bg-on-background/80"
-            aria-label="Close gallery"
-            onClick={() => setGalleryIndex(null)}
-          />
-          {gallery.length > 1 ? (
-            <button
-              type="button"
-              aria-label="Previous photo"
-              onClick={() =>
-                setGalleryIndex((current) =>
-                  current === null ? 0 : (current - 1 + gallery.length) % gallery.length,
-                )
-              }
-              className="absolute left-4 z-20 flex h-12 w-12 items-center justify-center border-2 border-background bg-background text-on-background"
-            >
-              <span className="material-symbols-outlined">chevron_left</span>
-            </button>
-          ) : null}
-          <img
-            src={gallery[galleryIndex]}
-            alt={`Gathering at ${branch.city}`}
-            className="relative z-10 max-h-[85vh] max-w-[90vw] object-contain brutalist-border"
-          />
-          {gallery.length > 1 ? (
-            <button
-              type="button"
-              aria-label="Next photo"
-              onClick={() =>
-                setGalleryIndex((current) =>
-                  current === null ? 0 : (current + 1) % gallery.length,
-                )
-              }
-              className="absolute right-4 z-20 flex h-12 w-12 items-center justify-center border-2 border-background bg-background text-on-background"
-            >
-              <span className="material-symbols-outlined">chevron_right</span>
-            </button>
-          ) : null}
-        </div>
-      ) : null}
     </div>
   );
 }
