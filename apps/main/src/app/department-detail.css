@@ -52,6 +52,7 @@
 .department-detail__copy h1 {
   margin: 0;
   color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
   font-size: clamp(3rem, 8vw, 7rem);
   letter-spacing: -0.07em;
   line-height: 0.98;
@@ -76,6 +77,8 @@
 
 .department-detail__next h2 {
   margin: 0 0 1.5rem;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
   font-size: clamp(2rem, 5vw, 4rem);
   letter-spacing: -0.06em;
 }
