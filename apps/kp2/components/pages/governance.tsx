@@ -4,10 +4,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import {
-  PolicyPdfDialog,
-  type PolicyPdfDocument,
-} from "../../../../shared/PolicyPdfDialog";
+import { PolicyPdfDialog, type PolicyPdfDocument } from "../../../../shared/PolicyPdfDialog";
 import { useState } from "react";
 
 export type GovernancePolicy = {

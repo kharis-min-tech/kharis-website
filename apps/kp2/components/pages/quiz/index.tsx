@@ -542,7 +542,9 @@ export default function DepartmentQuizPage() {
                           {t.resultsTitle}
                         </h2>
                         {t.resultsSubtitle ? (
-                          <p className="mt-1 text-sm text-on-surface-variant">{t.resultsSubtitle}</p>
+                          <p className="mt-1 text-sm text-on-surface-variant">
+                            {t.resultsSubtitle}
+                          </p>
                         ) : null}
                       </div>
 
@@ -575,14 +577,9 @@ export default function DepartmentQuizPage() {
                         {t.departments[topThree[0]].desc}
                       </p>
 
-                      <div className="mb-6 flex items-start gap-2.5 border-l-4 border-primary bg-surface-container-low p-3.5">
-                        <span className="material-symbols-outlined text-base text-primary shrink-0">
-                          format_quote
-                        </span>
-                        <p className="font-body-md text-xs sm:text-sm text-on-surface-variant">
-                          {t.departments[topThree[0]].scripture}
-                        </p>
-                      </div>
+                      <blockquote className="mb-6 border-l-4 border-primary bg-surface-container-low p-3.5 font-body-md text-xs text-on-surface-variant sm:text-sm">
+                        {t.departments[topThree[0]].scripture}
+                      </blockquote>
 
                       {/* Top Dept Video Facade / Player */}
                       {customVideos[topThree[0]] && (
@@ -806,7 +803,9 @@ export default function DepartmentQuizPage() {
                     <div className="kp-branch-dove" aria-hidden="true" />
                     <p className="kp-branch-eyebrow">{t.discoveryCompleted}</p>
                     <h3 className="kp-branch-title font-display-lg">{t.nextStepTitle}</h3>
-                    {t.nextStepSubtitle ? <p className="kp-branch-copy">{t.nextStepSubtitle}</p> : null}
+                    {t.nextStepSubtitle ? (
+                      <p className="kp-branch-copy">{t.nextStepSubtitle}</p>
+                    ) : null}
 
                     <div className="kp-branch-actions relative z-10 flex flex-wrap items-center justify-center gap-4">
                       <button

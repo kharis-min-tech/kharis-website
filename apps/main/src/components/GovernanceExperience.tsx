@@ -6,10 +6,7 @@ import { useState } from "react";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { ContentIcon } from "@/components/ContentIcon";
 import { GOVERNANCE } from "@/lib/about-content";
-import {
-  PolicyPdfDialog,
-  type PolicyPdfDocument,
-} from "../../../../shared/PolicyPdfDialog";
+import { PolicyPdfDialog, type PolicyPdfDocument } from "../../../../shared/PolicyPdfDialog";
 
 export type GovernancePolicyCard = {
   id: string;

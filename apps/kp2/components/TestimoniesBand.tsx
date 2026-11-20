@@ -288,50 +288,37 @@ export function TestimoniesBand({
                 {Array.from({ length: items.length < 4 ? 4 : 2 }, () => items)
                   .flat()
                   .map((item, i) => {
-                  const accentIndex = ((i % items.length) % 5) + 1;
-                  const copy = i >= items.length;
-                  return (
-                    <article
-                      key={`${item.name}-${i}`}
-                      role="button"
-                      tabIndex={copy ? undefined : 0}
-                      aria-hidden={copy || undefined}
-                      data-loop-copy={copy || undefined}
-                      aria-label={`Read full testimony from ${item.name}`}
-                      onClick={() => {
-                        if (!copy) openCard(item, accentIndex);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          openCard(item, accentIndex);
-                        }
-                      }}
-                      className={`kp-tst__card kp-tst__card--clickable kp-tst__card--${accentIndex}`}
-                    >
-                      <svg
-                        className="kp-tst__marks"
-                        viewBox="0 0 72 48"
-                        fill="none"
-                        aria-hidden="true"
+                    const accentIndex = ((i % items.length) % 5) + 1;
+                    const copy = i >= items.length;
+                    return (
+                      <article
+                        key={`${item.name}-${i}`}
+                        role="button"
+                        tabIndex={copy ? undefined : 0}
+                        aria-hidden={copy || undefined}
+                        data-loop-copy={copy || undefined}
+                        aria-label={`Read full testimony from ${item.name}`}
+                        onClick={() => openCard(item, accentIndex)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            openCard(item, accentIndex);
+                          }
+                        }}
+                        className={`kp-tst__card kp-tst__card--clickable kp-tst__card--${accentIndex}`}
                       >
-                        <path
-                          d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                      {item.title ? <h3 className="kp-tst__card-title">{item.title}</h3> : null}
-                      <p className="kp-tst__quote">{excerpt(item.quote)}</p>
-                      <div className="kp-tst__footer">
-                        <div className="kp-tst__meta">
-                          <strong>{item.name}</strong>
-                          <span>{item.meta}</span>
+                        {item.title ? <h3 className="kp-tst__card-title">{item.title}</h3> : null}
+                        <p className="kp-tst__quote">{excerpt(item.quote)}</p>
+                        <div className="kp-tst__footer">
+                          <div className="kp-tst__meta">
+                            <strong>{item.name}</strong>
+                            <span>{item.meta}</span>
+                          </div>
+                          <span className="kp-tst__read">Read full story →</span>
                         </div>
-                        <span className="kp-tst__read">Read full story →</span>
-                      </div>
-                    </article>
-                  );
-                })}
+                      </article>
+                    );
+                  })}
               </div>
             </div>
           </>
@@ -365,12 +352,6 @@ export function TestimoniesBand({
                     <path d="M5 5l14 14M19 5 5 19" />
                   </svg>
                 </button>
-                <svg className="kp-tst__marks" viewBox="0 0 72 48" fill="none" aria-hidden="true">
-                  <path
-                    d="M28.2 44.5C18.4 44.5 11 37.6 11 27.2 11 16.2 18.8 6.8 31.6 3.4c1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Zm32.6 0C51 44.5 43.6 37.6 43.6 27.2c0-11 7.8-20.4 20.6-23.8 1.2-.3 2.4.6 2.4 1.9v2.1c0 1.1-.8 2-1.9 2.3-7.2 1.9-12.2 7.1-12.6 13.6 1.6-1.2 3.6-1.9 5.9-1.9 6.4 0 11 4.5 11 11.1 0 6.9-5 12-8.2 12Z"
-                    fill="currentColor"
-                  />
-                </svg>
                 {selected.item.title ? (
                   <h3 id={`${id}-modal-title`} className="kp-tst__modal-title">
                     {selected.item.title}

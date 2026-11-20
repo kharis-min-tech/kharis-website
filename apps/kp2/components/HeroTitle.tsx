@@ -60,10 +60,7 @@ export function HeroTitle() {
       </span>
       <span className="kp-hero-title__phrase" aria-hidden="true">
         {ready ? (
-          <span
-            className="kp-hero-phrase kp-hero-phrase--fade-up"
-            style={delay}
-          >
+          <span className="kp-hero-phrase kp-hero-phrase--fade-up" style={delay}>
             {PHRASE}
           </span>
         ) : (

@@ -124,9 +124,7 @@ function BranchPage({
 
   const [zoomLevel, setZoomLevel] = useState(15);
   const [branchPhotoIndex, setBranchPhotoIndex] = useState(0);
-  const activeBranchPhoto = branchPhotos.length
-    ? branchPhotoIndex % branchPhotos.length
-    : 0;
+  const activeBranchPhoto = branchPhotos.length ? branchPhotoIndex % branchPhotos.length : 0;
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
@@ -149,10 +147,7 @@ function BranchPage({
   }, []);
 
   useEffect(() => {
-    if (
-      branchPhotos.length < 2 ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
+    if (branchPhotos.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
     const timer = window.setInterval(() => {

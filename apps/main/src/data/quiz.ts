@@ -181,7 +181,7 @@ export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
   en: {
     badge: "Department Discovery Quiz",
     title: "Find Your Kharis Department",
-    subtitle: "Answer a few short questions to see where your gifting fits best.",
+    subtitle: "Answer a few questions to discover where you can serve God best.",
     stepBadge: "Step 1 of 2",
     startHeading: "Find Your Fit in Kharis",
     startDescription: "Select your Kharis branch before we jump into the questions.",

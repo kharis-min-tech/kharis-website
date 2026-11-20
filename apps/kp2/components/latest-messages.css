@@ -23,7 +23,7 @@
 .kp-latest__row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
+  gap: 1.25rem 1rem;
 }
 
 .kp-msg {
@@ -49,7 +49,7 @@
 
 .kp-msg__poster {
   display: block;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-bottom: 4px solid #151218;
   background: #000;
@@ -96,14 +96,7 @@
 .kp-msg__watch {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  align-self: flex-start;
-  min-height: 2.5rem;
-  padding: 0.45rem 0.7rem;
-  border: 2px solid #151218;
-  background: #f7be1d;
-  color: #151218;
-  box-shadow: 3px 3px 0 #151218;
+  gap: 0.35rem;
   font-family: var(--font-space), "Space Mono", monospace;
   font-size: 0.72rem;
   font-weight: 700;
@@ -224,10 +217,6 @@
   gap: 1.25rem;
 }
 
-.kp-browse__rows {
-  gap: 0.45rem;
-}
-
 .kp-browse__results-head {
   display: flex;
   flex-wrap: wrap;
@@ -294,7 +283,7 @@
 .kp-browse__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
+  gap: 1.25rem 1rem;
 }
 
 .kp-browse__empty {
@@ -360,7 +349,7 @@
 
 .dark .kp-latest .kp-msg__watch,
 .dark .kp-latest .kp-msg__watch * {
-  color: #151218;
+  color: #f7be1d;
 }
 
 .dark .kp-latest :is(.kp-filters__chip, .kp-filters__search) {

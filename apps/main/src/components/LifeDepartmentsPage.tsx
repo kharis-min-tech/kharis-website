@@ -64,7 +64,9 @@ export function LifeDepartmentsPage() {
         <header className="life-dept-why__header">
           <p>THE HEART BEHIND IT</p>
           <h2 id="life-dept-why-title">Why we serve</h2>
-          <span>Serving is one of the ways we worship. Everything we do for others, we do for Him.</span>
+          <span>
+            Serving is one of the ways we worship. Everything we do for others, we do for Him.
+          </span>
         </header>
         <div className="life-dept-why__grid">
           {WHY_WE_SERVE.map((item, i) => (

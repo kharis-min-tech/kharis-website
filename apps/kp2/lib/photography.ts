@@ -133,11 +133,7 @@ export const KP2_PHOTOS = {
     "KP2 members together beside the pool after baptism",
     "center",
   ),
-  baptismFamily: photo(
-    "baptism-family",
-    "The KP2 family together outside after baptism",
-    "center",
-  ),
+  baptismFamily: photo("baptism-family", "The KP2 family together outside after baptism", "center"),
   bassDance: photo(
     "bass-dance",
     "KP2 members dancing and celebrating during BASS worship",
