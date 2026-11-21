@@ -20,6 +20,10 @@
  * touching the entry itself - a Christmas activity can sit here all year and
  * only surface when it is switched on.
  *
+ * An activity waiting on real content - not seasonal, just not ready - carries
+ * `hidden: true` instead. The copy stays here so it is one flag away from
+ * coming back, rather than being rewritten from scratch later.
+ *
  * MEDIA
  * -----
  * `image` is the photograph on the tunnel wall and at the top of the detail
@@ -38,11 +42,10 @@ import { LIFE_BAPTISM_IMAGE, LIFE_CHILDREN_IMAGE } from "@/lib/life-content";
 
 export type LifeActivitySlug =
   | "singles-seminar"
-  | "finance-seminar"
+  | "seminars"
   | "cook-along"
   | "careers-fair"
   | "ai-in-the-workplace"
-  | "health-seminar"
   | "innovation-project"
   | "sports-day"
   | "football-tournament"
@@ -53,7 +56,6 @@ export type LifeActivitySlug =
   | "k-group"
   | "baptism"
   | "fasting"
-  | "marriage"
   | "children"
   | "departments";
 
@@ -88,6 +90,8 @@ export type LifeActivity = {
   /** Present only while the entry is using a stand-in photograph. */
   placeholder?: true;
   season?: LifeSeason;
+  /** Kept in the list but left out of `activeLifeActivities()` - no real content yet. */
+  hidden?: true;
 };
 
 /**
@@ -196,12 +200,12 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     ],
   },
   {
-    slug: "finance-seminar",
-    title: "Finance Seminar",
-    blurb: "Practical money teaching, with no shame attached.",
-    body: "Budgeting, debt, saving, giving and the long game - taught plainly by people who do it for a living. We think a church should be a place you can admit you are struggling with money and leave with a plan.",
-    cadence: "Yearly",
-    audience: "Anyone, whatever your starting point",
+    slug: "seminars",
+    title: "Seminars",
+    blurb: "Practical teaching on the things we don't talk about enough.",
+    body: "Standalone sessions on the parts of life a sermon doesn't usually cover - budgeting, debt and saving one seminar, blood pressure, sleep and mental health the next, taught plainly by people in the congregation who do it, or deal with it, for a living. It ranges from finance to health and beyond, but the aim is always the same: leave with something you can actually use.",
+    cadence: "A few times a year",
+    audience: "Anyone, whatever you're putting off",
     image: STANDIN.preaching,
     alt: "Teaching from the stage at Kharis",
     placeholder: true,
@@ -216,6 +220,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     image: STANDIN.outreachCommunity,
     alt: "The Kharis community together",
     placeholder: true,
+    hidden: true,
   },
   {
     slug: "careers-fair",
@@ -227,6 +232,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     image: STANDIN.celebration,
     alt: "Kharis members celebrating together",
     placeholder: true,
+    hidden: true,
   },
   {
     slug: "ai-in-the-workplace",
@@ -238,17 +244,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     image: STANDIN.bibles,
     alt: "Kharis members worshipping together",
     placeholder: true,
-  },
-  {
-    slug: "health-seminar",
-    title: "Health Seminar",
-    blurb: "Bodies matter. We talk about them properly.",
-    body: "Doctors, nurses and physios from the congregation on the things people quietly put off - blood pressure, sleep, mental health, the checks that matter at your age. Direct, practical, and not a sales pitch.",
-    cadence: "Yearly",
-    audience: "Everyone, especially the ones avoiding it",
-    image: STANDIN.worship,
-    alt: "Members worshipping at Kharis",
-    placeholder: true,
+    hidden: true,
   },
   {
     slug: "innovation-project",
@@ -321,6 +317,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     image: STANDIN.outreachCommunity,
     alt: "The Kharis community outdoors together",
     placeholder: true,
+    hidden: true,
   },
   {
     slug: "football-tournament",
@@ -1002,23 +999,13 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     image: LIFE_CHILDREN_IMAGE,
     alt: "Illustration of a teacher sharing a Bible story with children",
   },
-  {
-    slug: "marriage",
-    title: "Marriage",
-    blurb: "We celebrate marriage because God created it.",
-    body: "Preparation, counselling and the building of a victorious Christian home. The Eden School of Marriage and pre-marital counselling sit behind this, for couples at either end of the journey.",
-    cadence: "Through the year",
-    audience: "Couples, and those preparing",
-    image: "https://images.kharis.org/site-images/main/15638c2668f428de/testimony-2.jpg",
-    alt: "Joy in the Kharis family",
-  },
 ];
 
 /** The activities currently in season, in the order they are listed above. */
 export function activeLifeActivities(
   seasons: Record<LifeSeason, boolean> = SEASONS,
 ): LifeActivity[] {
-  return LIFE_ACTIVITIES.filter((a) => !a.season || seasons[a.season]);
+  return LIFE_ACTIVITIES.filter((a) => !a.hidden && (!a.season || seasons[a.season]));
 }
 
 export function lifeActivityBySlug(slug: string): LifeActivity | undefined {

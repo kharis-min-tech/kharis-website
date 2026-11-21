@@ -42,12 +42,12 @@ const programme = [
   {
     title: CHURCH_VALUES.purposeDriven,
     preview: "Putting faith to work through service and innovation",
-    activities: ["marriage", "innovation-project"],
+    activities: ["innovation-project"],
   },
   {
     title: CHURCH_VALUES.peopleDeveloping,
     preview: "Careers, money, technology and wellbeing",
-    activities: ["careers-fair", "finance-seminar", "ai-in-the-workplace", "health-seminar"],
+    activities: ["careers-fair", "ai-in-the-workplace", "seminars"],
   },
   {
     title: CHURCH_VALUES.discipleMaking,

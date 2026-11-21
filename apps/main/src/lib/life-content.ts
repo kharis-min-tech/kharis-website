@@ -1,6 +1,6 @@
 export type LifeTone = "gold" | "dark" | "purple" | "cream";
 
-export type LifeSlug = "k-group" | "fasting" | "marriage" | "children" | "departments";
+export type LifeSlug = "k-group" | "fasting" | "children" | "departments";
 
 export type LifeSection = {
   title: string;
@@ -135,47 +135,8 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
         body: "To go deeper, listen to The Mystery of Fasting, Prayer and Obeying Divine Instructions During Fasting, and A Time for Fasting and Feasting, then join your local branch when we fast together.",
       },
     ],
-    next: "marriage",
-    cta: { label: "Join us in prayer", href: "/locations" },
-  },
-  {
-    slug: "marriage",
-    title: "Marriage",
-    shortTitle: "Marriage",
-    badge: "Family",
-    href: "/life/marriage",
-    card: "We celebrate marriage because God created it: preparation, counselling, and a victorious Christian home.",
-    image: "https://images.kharis.org/site-images/main/15638c2668f428de/testimony-2.jpg",
-    imageAlt: "Joy in the Kharis family",
-    tone: "cream",
-    layout: "text",
-    icon: "heart",
-    intro:
-      "We celebrate marriage at Kharis, because it’s created by God. We see marriage at the beginning of the Bible in Genesis 2:24, and the Bible will end with marriage. Before making a commitment it is sensible for couples to discover each other at a deeper level and learn how best to keep their relationship strong.",
-    quote: {
-      text: "Therefore shall a man leave his father and his mother, and shall cleave unto his wife: and they shall be one flesh.",
-      source: "Genesis 2:24",
-    },
-    sections: [
-      {
-        title: "Eden School of Marriage",
-        body: "The Eden School of Marriage focuses on the fundamental areas that help couples prepare for a successful and victorious Christian marriage, a mix of in-person and online sessions.",
-        items: [
-          "Foundations of Christian marriage",
-          "Love and communication",
-          "Money and marriage",
-          "Duties of a husband and wife",
-          "Fighting fair: resolving conflict",
-          "The origin of sex",
-        ],
-      },
-      {
-        title: "Pre-marital counselling",
-        body: "Pre-marital counselling helps couples align with God’s idea of marriage. Couples complete a form independently; a trained Kharis marriage counsellor is then allocated. Sessions typically range from 6–8 and cover the biblical purpose of marriage, roles, communication, finances, sexuality, and family history. Speak to your local branch to begin.",
-      },
-    ],
     next: "children",
-    cta: { label: "Talk to your branch", href: "/contact" },
+    cta: { label: "Join us in prayer", href: "/locations" },
   },
   {
     slug: "children",
@@ -246,7 +207,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
   },
 ] as const;
 
-/** Cards shown on the Life landing grid (K-Group / marriage hidden from UI). */
+/** Cards shown on the Life landing grid (K-Group hidden from UI). */
 export const LIFE_VISIBLE_SLUGS = new Set<LifeSlug>(["fasting", "children", "departments"]);
 
 export const LIFE_PHOTO_CARDS = LIFE_CATEGORIES.filter(

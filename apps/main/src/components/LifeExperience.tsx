@@ -16,7 +16,7 @@ export function LifeExperience({ fastingDownloads }: { fastingDownloads?: Fastin
       window.location.replace("/life/departments");
       return;
     }
-    if (slug === "fasting" || slug === "marriage" || slug === "k-group") {
+    if (slug === "fasting" || slug === "k-group") {
       setModalSlug(slug);
     }
   }, []);
