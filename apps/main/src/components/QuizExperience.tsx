@@ -409,13 +409,6 @@ export function QuizExperience() {
                     <span className="inline-flex items-center gap-1.5 bg-[#630ed4] px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white mb-3">
                       {t.stepBadge}
                     </span>
-                    <p
-                      className={`mt-2 text-sm sm:text-base leading-relaxed ${
-                        isDark ? "text-white/70" : "text-[#4a4a52]"
-                      }`}
-                    >
-                      {t.startDescription}
-                    </p>
                   </div>
 
                   <button
