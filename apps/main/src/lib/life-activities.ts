@@ -1026,17 +1026,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
         alt: "A member of the photography team capturing the choir on stage",
       },
     ],
-  },
-  {
-    slug: "children",
-    title: "Children’s Department",
-    blurb: "Fun, vibrant, and full of life.",
-    body: "We partner with parents to help children discover who God is through Bible teaching, worship and friendship, in groups from three years old up to sixteen.",
-    cadence: "Every Sunday",
-    audience: "Ages 3 to 16, and their parents",
-    image: LIFE_CHILDREN_IMAGE,
-    alt: "Illustration of a teacher sharing a Bible story with children",
-  },
+  }
 ];
 
 /** The activities currently in season, in the order they are listed above. */
