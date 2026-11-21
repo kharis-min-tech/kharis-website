@@ -4,6 +4,7 @@ import Image from "@/components/SiteImage";
 import { type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
+import siteImageUrls from "@/lib/site-image-urls.json";
 import type { Testimony } from "@/lib/testimonies";
 
 interface TestimoniesSectionProps {
@@ -12,8 +13,8 @@ interface TestimoniesSectionProps {
 
 const photos = [
   {
-    src: "https://images.kharis.org/site-images/main/79c0eac25d6bc370/testimony-sharing.jpg",
-    alt: "Sharing a testimony on stage",
+    src: siteImageUrls["/images/testimony-sharing.jpg"],
+    alt: "A brother sharing his testimony on stage",
     position: "object-center",
   },
   {
@@ -22,8 +23,8 @@ const photos = [
     position: "object-[12%_top]",
   },
   {
-    src: "https://images.kharis.org/site-images/main/bb1a12396469052d/testimony-stage-2.jpg",
-    alt: "Giving glory to God in testimony",
+    src: siteImageUrls["/images/testimony-stage-2.jpg"],
+    alt: "Celebrating together after a testimony is shared on stage",
     position: "object-[86%_top]",
   },
 ];

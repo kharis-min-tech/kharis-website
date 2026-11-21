@@ -34,7 +34,7 @@
  * waiting on the real one.
  */
 
-import { LIFE_BAPTISM_IMAGE, LIFE_CHILDREN_IMAGE, LIFE_SERVE_IMAGE } from "@/lib/life-content";
+import { LIFE_BAPTISM_IMAGE, LIFE_CHILDREN_IMAGE } from "@/lib/life-content";
 
 export type LifeActivitySlug =
   | "singles-seminar"
@@ -547,6 +547,76 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     image:
       "https://images.kharis.org/site-images/main/67a46f34494b763e/life-picks/let-the-bible-speak-conference/00-main-open-bible.jpg",
     alt: "An open Bible, turned to Genesis 4",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/48c13b558056fe3d/life-picks/let-the-bible-speak-conference/01-packed-hall.jpg",
+        alt: "The packed conference hall listening to the preacher on stage",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/2870d7031a515637/life-picks/let-the-bible-speak-conference/02-scripture-on-screen.jpg",
+        alt: "2 Timothy 3:15 displayed on the big screen above the seated delegates",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/013a7f8eb198cb46/life-picks/let-the-bible-speak-conference/03-preaching-open-bible.jpg",
+        alt: "A speaker preaching with an open Bible in hand",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/c3c8df9a42fb2711/life-picks/let-the-bible-speak-conference/04-street-banners.jpg",
+        alt: "Street banners for the conference's speakers outside the venue",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/0ba04c272f02e78b/life-picks/let-the-bible-speak-conference/05-raised-bibles-reaching.jpg",
+        alt: "Delegates reaching up with raised Bibles toward the stage",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/060809ad2cee71a2/life-picks/let-the-bible-speak-conference/06-crowd-cheering-bibles.jpg",
+        alt: "The crowd cheering with Bibles held high",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/6aa622f57e4aa378/life-picks/let-the-bible-speak-conference/07-young-man-raised-bible.jpg",
+        alt: "A young delegate holding his Bible high overhead",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/66b460fd7035683d/life-picks/let-the-bible-speak-conference/08-overwhelmed-in-worship.jpg",
+        alt: "A worshipper overwhelmed with emotion, hand raised",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/c093e5d8a6303f21/life-picks/let-the-bible-speak-conference/09-dancing-in-celebration.jpg",
+        alt: "Delegates dancing and celebrating together in the hall",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/53e10f89181cf0b4/life-picks/let-the-bible-speak-conference/10-worship-leader-singing.jpg",
+        alt: "A worship leader singing under blue stage light",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/0c8c7e0fc5cbd9ef/life-picks/let-the-bible-speak-conference/11-full-stage-worship.jpg",
+        alt: "The full worship team leading the hall from the stage",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/f107d3fecea565f3/life-picks/let-the-bible-speak-conference/12-preacher-gesturing.jpg",
+        alt: "A speaker preaching with an open Bible under dramatic stage light",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/8c981a0c49fdc966/life-picks/let-the-bible-speak-conference/13-sola-scriptura-bible.jpg",
+        alt: 'A leather Bible embossed "Sola Scriptura" held up on stage',
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/9f1ebbe3a52ac298/life-picks/let-the-bible-speak-conference/14-panel-discussion.jpg",
+        alt: "A panel discussion on stage in front of the conference backdrop",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/7389bd5bca97daea/life-picks/let-the-bible-speak-conference/15-kente-welcome-dancers.jpg",
+        alt: "Traditional dancers in kente cloth welcoming the team to Ghana",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/d208ce0d193056fe/life-picks/let-the-bible-speak-conference/16-street-skaters.jpg",
+        alt: "Skaters in conference T-shirts taking the message onto the street",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/07c358ba2796500c/life-picks/let-the-bible-speak-conference/17-speaker-on-stage.jpg",
+        alt: "A speaker addressing the conference in front of the event backdrop",
+      },
+    ],
   },
   {
     slug: "jesus-campaign",
@@ -555,9 +625,75 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "A concentrated push out into the community: teams on the streets, conversations with strangers, prayer with anyone who wants it. It is the part of our life that is least comfortable and most talked about afterwards.",
     cadence: "Every year",
     audience: "Anyone willing to come along",
-    image: STANDIN.outreachStreet,
-    alt: "The Kharis outreach team sharing the gospel on the street",
-    placeholder: true,
+    image:
+      "https://images.kharis.org/site-images/main/af6114c87c7ccc08/life-picks/jesus-campaign/00-main-passionate-outreach.jpg",
+    alt: "A Kharis member preaching passionately into a microphone, fist raised, wearing a 'My God Died For Me' campaign shirt",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/965dea58655780bd/life-picks/jesus-campaign/01-street-conversation.jpg",
+        alt: "A Kharis outreach team member in conversation with two people on the street",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/1a7b7f7826638cf9/life-picks/jesus-campaign/02-no-jesus-no-life-shirt.jpg",
+        alt: "A campaign volunteer wearing a 'No Jesus No Life' t-shirt outside a cafe",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/f42578a2ea27500b/life-picks/jesus-campaign/03-bus-stop-conversation.jpg",
+        alt: "Outreach team members talking with passers-by at a bus stop",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/1ecc159356293775/life-picks/jesus-campaign/04-bench-conversation.jpg",
+        alt: "Three men in conversation on a bench under a tree",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/fb859f79c3d4ce3b/life-picks/jesus-campaign/05-group-worship-gathering.jpg",
+        alt: "A large group of campaign volunteers gathered under a tree in matching John 3:16 jerseys, singing and praising",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/fa1ef5cdde467963/life-picks/jesus-campaign/06-prayer-with-strangers.jpg",
+        alt: "A volunteer praying with two women on the street, hands clasped together",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/7f916299b98c8dbe/life-picks/jesus-campaign/07-underpass-conversation.jpg",
+        alt: "A volunteer in a 'He Died I Lived' t-shirt sharing the gospel with a passer-by under a graffitied railway bridge",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/5cae8f55b7a1763c/life-picks/jesus-campaign/08-mother-daughter-hug.jpg",
+        alt: "A volunteer hugging a young girl, both wearing John 3:16 jerseys",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/8a3f7381fb7a5888/life-picks/jesus-campaign/09-group-photo.jpg",
+        alt: "The Jesus Campaign outreach team posing together in their campaign shirts",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/340aa5c29826c430/life-picks/jesus-campaign/10-wheelchair-conversation.jpg",
+        alt: "A volunteer crouching down to talk with a man in a wheelchair",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/913afa5a001db19d/life-picks/jesus-campaign/11-prayer-huddle.jpg",
+        alt: "A small group praying together in a huddle on the street",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/c714a9464b65279d/life-picks/jesus-campaign/12-bike-celebration.jpg",
+        alt: "A volunteer in a Kharis Phase 2 Peterborough hoodie cheering with a fist in the air while riding a hire bike",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/7860fe3947c5103e/life-picks/jesus-campaign/13-park-conversation.jpg",
+        alt: "Volunteers in conversation with a passer-by in a park, one wearing an 'I Speak Jesus' t-shirt",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/d4a43b2ea2bb86d7/life-picks/jesus-campaign/14-street-conversation-women.jpg",
+        alt: "Three women talking on the street, one wearing a 'Jesus Paid The Price' t-shirt",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/38698af4162d2e1e/life-picks/jesus-campaign/15-fist-bump.jpg",
+        alt: "Two volunteers sharing a fist bump and a laugh on the street",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/1d4e462b2030cccb/life-picks/jesus-campaign/16-preaching-mic.jpg",
+        alt: "A volunteer preaching into a microphone, wearing a 'Jesus Paid The Price' t-shirt",
+      },
+    ],
   },
   {
     slug: "christmas-jumper",
@@ -612,12 +748,69 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "We abstain from food to signal dependence on God, fasting joined with prayer, as a church family seeking His purpose. Done together rather than alone, which is most of what makes it possible.",
     cadence: "Several times a year",
     audience: "The whole church",
-    image: "https://images.kharis.org/site-images/main/ffbe5aca25d25b8c/pastor-stage.jpg",
-    alt: "Seeking God together in worship",
+    image:
+      "https://images.kharis.org/site-images/main/9f531452791f6c5c/life-picks/fasting/00-main-hands-raised-prayer.jpg",
+    alt: "A worshipper, hands clasped above her head, moved to tears in prayer",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/3ca65e0f86f1c2f8/life-picks/fasting/01-prayer.jpg",
         alt: "A worshipper in prayer during Prayer Fest",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/c6d26bd4db049e2b/life-picks/fasting/02-tearful-prayer.jpg",
+        alt: "A young woman in tears, hands clasped in prayer",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/147b57347de9dd9c/life-picks/fasting/03-prayer-fest-crowd.jpg",
+        alt: "A packed hall at Prayer Fest, hands raised and one man lying prostrate on the floor",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/3334e18f48ae3ff0/life-picks/fasting/04-fervent-praise.jpg",
+        alt: "Worshippers crying out with fists raised in fervent praise",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/bbe05e8d16aa55cc/life-picks/fasting/05-pastor-kneeling-passionate.jpg",
+        alt: "A pastor kneeling on stage, crying out into the microphone",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/414d2eed19e87141/life-picks/fasting/06-joyful-worship-raised-hands.jpg",
+        alt: "A worshipper smiling with hands raised",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/0807240ed3439675/life-picks/fasting/07-worship-eyes-closed.jpg",
+        alt: "A worshipper, eyes closed, lost in worship",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/f59d0f5d096cee15/life-picks/fasting/08-young-man-worship.jpg",
+        alt: "A young man worshipping with his hand raised",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/2d807bf18debdb14/life-picks/fasting/09-embraced-in-worship.jpg",
+        alt: "A worshipper embraced by a friend mid-worship",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/c5af83ad88c45f90/life-picks/fasting/10-prostrate-on-open-bible.jpg",
+        alt: "A young man face down in prayer over an open Bible",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/88839764cefe0599/life-picks/fasting/11-worship-with-bible.jpg",
+        alt: "A worshipper standing in prayer, Bible in hand",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/df130ac8376e877d/life-picks/fasting/12-three-women-worshipping-together.jpg",
+        alt: "Three women worshipping together, arm in arm",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/b46b0be0c64d817e/life-picks/fasting/13-private-prayer-by-chair.jpg",
+        alt: "A woman kneeling in quiet prayer beside her chair",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/423f80133efadcb6/life-picks/fasting/14-group-praying-together.jpg",
+        alt: "A group gathered in prayer over someone kneeling among them",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/b1c654a6c0319637/life-picks/fasting/15-worship-cross-necklace.jpg",
+        alt: "A worshipper, head back and eyes closed, a cross necklace at her neck",
       },
     ],
   },
@@ -628,8 +821,9 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "From ushers to music to hospitality, every believer has a role in God’s house. Most people find their closest friendships here rather than in a seat.",
     cadence: "Every week",
     audience: "Anyone willing to serve",
-    image: LIFE_SERVE_IMAGE,
-    alt: "Serving together at Kharis",
+    image:
+      "https://images.kharis.org/site-images/main/4a1bb718d732af9e/life-picks/departments/11-sound-engineer.jpg",
+    alt: "A sound engineer smiling while working the mixing desk during a service",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/7f57aa7edcc26557/life-picks/departments/01-led-wall.jpg",
@@ -650,6 +844,30 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
       {
         src: "https://images.kharis.org/site-images/main/cc3e21bab82fec4f/life-picks/departments/05-bassist.jpg",
         alt: "Members of the music team sharing a laugh on stage",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/27487d8a6247d0bb/life-picks/departments/06-saxophonist.jpg",
+        alt: "A saxophonist from the music department playing during a service",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/70fe31fd939c61a5/life-picks/departments/07-camera-operator.jpg",
+        alt: "A camera operator filming from behind a tripod-mounted camera",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/3b9f2b64898938a4/life-picks/departments/08-broadcast-desk.jpg",
+        alt: "The broadcast team watching Pastor David on the production monitors",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/7a02ae0347d707cc/life-picks/departments/09-led-wall-panels.jpg",
+        alt: "A member of the production team working behind the LED wall panels",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/38c3674a2fc929ea/life-picks/departments/10-foh-mixing.jpg",
+        alt: "A sound engineer adjusting the front-of-house mixing desk, viewed from above",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/fa92704371d5d511/life-picks/departments/12-photography-team.jpg",
+        alt: "A member of the photography team capturing the choir on stage",
       },
     ],
   },

@@ -82,6 +82,98 @@ const ImageTunnel = dynamic(() => import("@/vendor/image-tunnel/InfiniteImageTun
   loading: () => <div className="life-tunnel__placeholder" aria-hidden />,
 });
 
+/**
+ * The activity's pictures, as one carousel rather than a poster plus a
+ * separate static grid. Whatever is focused plays large up top; clicking any
+ * thumbnail below brings it to focus, and the focused picture itself can be
+ * swiped - or stepped with the arrow buttons or the keyboard - left and
+ * right. The main image is just slide zero, not a different kind of thing.
+ */
+function ActivityCarousel({ activity }: { activity: LifeActivity }) {
+  const slides = [{ src: activity.image, alt: activity.alt }, ...(activity.gallery ?? [])];
+  const [index, setIndex] = useState(0);
+  const dragStart = useRef<number | null>(null);
+
+  const go = useCallback(
+    (delta: number) => setIndex((i) => (i + delta + slides.length) % slides.length),
+    [slides.length],
+  );
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight") go(1);
+      else if (event.key === "ArrowLeft") go(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [go, slides.length]);
+
+  const current = slides[index];
+
+  return (
+    <div className="life-panel__visual">
+      <figure
+        className="life-panel__media"
+        onPointerDown={(event) => {
+          dragStart.current = event.clientX;
+        }}
+        onPointerUp={(event) => {
+          if (dragStart.current === null) return;
+          const dx = event.clientX - dragStart.current;
+          dragStart.current = null;
+          if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={current.src} alt={current.alt} draggable={false} />
+        {slides.length > 1 ? (
+          <>
+            <button
+              type="button"
+              className="life-panel__nav life-panel__nav--prev"
+              aria-label="Previous picture"
+              onClick={() => go(-1)}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="life-panel__nav life-panel__nav--next"
+              aria-label="Next picture"
+              onClick={() => go(1)}
+            >
+              ›
+            </button>
+            <span className="life-panel__count" aria-hidden>
+              {index + 1} / {slides.length}
+            </span>
+          </>
+        ) : null}
+      </figure>
+
+      {slides.length > 1 ? (
+        <div className="life-panel__gallery" role="list">
+          {slides.map((shot, i) => (
+            <button
+              key={shot.src}
+              type="button"
+              role="listitem"
+              className={`life-panel__thumb${i === index ? " is-active" : ""}`}
+              aria-current={i === index}
+              aria-label={`Show picture ${i + 1} of ${slides.length}: ${shot.alt}`}
+              onClick={() => setIndex(i)}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={shot.src} alt="" draggable={false} />
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function ActivityPanel({ activity, onClose }: { activity: LifeActivity; onClose: () => void }) {
   const panelRef = useDialog(true, onClose);
 
@@ -99,10 +191,7 @@ function ActivityPanel({ activity, onClose }: { activity: LifeActivity; onClose:
           Close
         </button>
 
-        <figure className="life-panel__media">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={activity.image} alt={activity.alt} />
-        </figure>
+        <ActivityCarousel activity={activity} />
 
         <div className="life-panel__body">
           <h3 id="life-panel-title" className="life-panel__title">
@@ -111,15 +200,6 @@ function ActivityPanel({ activity, onClose }: { activity: LifeActivity; onClose:
           <p className="life-panel__blurb">{activity.blurb}</p>
 
           <p className="life-panel__copy">{activity.body}</p>
-
-          {activity.gallery?.length ? (
-            <div className="life-panel__gallery">
-              {activity.gallery.map((shot) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={shot.src} src={shot.src} alt={shot.alt} />
-              ))}
-            </div>
-          ) : null}
         </div>
       </div>
     </div>
@@ -264,7 +344,7 @@ export function LifeTunnel() {
               Step inside
             </button>
             <button type="button" className="life-tunnel__browse" onClick={browseActivities}>
-              Browse activities
+              Scroll down for the full picture
             </button>
           </div>
 
@@ -283,15 +363,12 @@ export function LifeTunnel() {
             onClick={browseActivities}
             tabIndex={started ? undefined : -1}
           >
-            Browse activities
+            Scroll down for the full picture
           </button>
 
           <p className={`life-tunnel__hint${started ? " is-on" : ""}`} aria-hidden>
             {showing ? (
-              <>
-                <strong>{showing.title}</strong>
-                <span>{showing.blurb}</span>
-              </>
+              <strong>{showing.title}</strong>
             ) : (
               <span>Hold to speed up · Click any wall to stop on it</span>
             )}

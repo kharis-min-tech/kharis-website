@@ -117,29 +117,28 @@ html[data-theme="dark"] .life-tunnel__title span {
 /* The caption fades in as its tile approaches. --near is written by the
  * component each frame: 1 at the camera, 0 by the half way point.
  *
- * It is deliberately small and quiet. The readout at the foot of the tunnel
- * is what names things now, and at speed the walls are going past too fast
- * to read anyway: a large caption on every one of them was just noise
- * travelling across the screen. This is a quiet confirmation of what the
- * readout is saying, not the label doing the work. */
+ * This is the only word on an event's name you get while the tunnel is
+ * moving - there is no second line of description to lean on, so it has to
+ * read clearly, by itself, at a glance. Bold and reasonably large rather
+ * than a quiet footnote. */
 .life-tunnel .tunnel-tile__label {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0.35rem 0.45rem;
-  /* Quieter than the tile itself, so it never competes with the photograph. */
-  opacity: calc(var(--near, 1) * 0.8);
+  padding: 0.6rem 0.65rem;
+  opacity: calc(0.35 + var(--near, 1) * 0.65);
   font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-size: clamp(0.85rem, 2.1vw, 1.2rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
   line-height: 1.15;
   color: #fff;
   text-align: left;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   /* The caption sits on a photograph that could be anything, so it carries
    * its own ground rather than relying on the picture being dark. */
-  background: linear-gradient(0deg, rgba(10, 4, 24, 0.72) 0%, rgba(10, 4, 24, 0) 100%);
+  background: linear-gradient(0deg, rgba(10, 4, 24, 0.82) 0%, rgba(10, 4, 24, 0) 100%);
   pointer-events: none;
 }
 
@@ -356,9 +355,18 @@ html[data-theme="dark"] .life-tunnel__programme {
   cursor: pointer;
 }
 
+.life-panel__visual {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .life-panel__media {
+  position: relative;
   margin: 0;
   min-height: 14rem;
+  flex: 1;
+  touch-action: pan-y;
 }
 
 .life-panel__media img {
@@ -366,6 +374,73 @@ html[data-theme="dark"] .life-tunnel__programme {
   width: 100%;
   height: 100%;
   min-height: 14rem;
+  object-fit: cover;
+  user-select: none;
+}
+
+/* Click to step, or swipe the picture itself - the buttons are the
+   discoverable affordance, the drag is the one some people will just try. */
+.life-panel__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-top: -1.375rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(10, 4, 24, 0.55);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.life-panel__nav:is(:hover, :focus-visible) {
+  background: rgba(10, 4, 24, 0.78);
+}
+
+.life-panel__nav--prev {
+  left: 0.75rem;
+}
+
+.life-panel__nav--next {
+  right: 0.75rem;
+}
+
+.life-panel__count {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 1;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(10, 4, 24, 0.55);
+}
+
+.life-panel__thumb {
+  display: block;
+  padding: 0;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.life-panel__thumb.is-active {
+  border-color: var(--purple);
+}
+
+html[data-theme="dark"] .life-panel__thumb.is-active {
+  border-color: var(--yellow);
+}
+
+.life-panel__thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
 }
 
