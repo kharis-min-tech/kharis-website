@@ -13,21 +13,21 @@ const DEPT_BANDS = DEPARTMENT_PAGES;
 const WHY_WE_SERVE = [
   {
     number: "01",
-    title: "Get busy serving",
-    body: "Jesus came to serve. We serve because we have been served. Get busy serving.",
+    title: "Serve like Jesus",
+    body: "Jesus said He came not to be served but to serve, and to give His life for many. We serve because He served us first, and our love for others is our response to His love for us.",
     verse: "Matthew 20:28",
   },
   {
     number: "02",
-    title: "Find your place",
-    body: "Every gift belongs in the body. Take your place and become family.",
-    verse: "1 Corinthians 12:12–27",
+    title: "Every part matters",
+    body: "The church is one body with many parts, and no part can say it doesn’t need another. Whatever you’re gifted at, you’re needed here, and when one of us hurts or rejoices, we all do.",
+    verse: "1 Corinthians 12:12-27",
   },
   {
     number: "03",
-    title: "Work as unto the Lord",
-    body: "Work with all your heart, as working for the Lord. We are passionate about God and His word.",
-    verse: "Colossians 3:23–24",
+    title: "Serve as for the Lord",
+    body: "Whatever you do, do it wholeheartedly, as if working for the Lord and not for people. No act of service is small, because it is ultimately offered to Christ, who promises a reward that lasts.",
+    verse: "Colossians 3:23-24",
   },
 ] as const;
 
@@ -64,7 +64,9 @@ export function LifeDepartmentsPage() {
         <header className="life-dept-why__header">
           <p>THE HEART BEHIND IT</p>
           <h2 id="life-dept-why-title">Why we serve</h2>
-          <span>Serving is worship. Respond to grace. Take your place.</span>
+          <span>
+            Serving is one of the ways we worship. Everything we do for others, we do for Him.
+          </span>
         </header>
         <div className="life-dept-why__grid">
           {WHY_WE_SERVE.map((item, i) => (

@@ -6,7 +6,7 @@ import type { ChurchEvent } from "@/lib/events";
 export const SITE_NAME = "Kharis Phase 2";
 export const SITE_TAGLINE = "Church for this generation";
 export const SITE_DESCRIPTION =
-  "Kharis Phase 2 is a youth church community across the UK — worship, fellowships, events, messages from Pastor David Antwi, and giving. Faith looks different here.";
+  "Kharis Phase 2 is a youth church community across the UK. Worship, fellowships, events, messages from Pastor David Antwi, and giving. Faith looks different here.";
 
 export const SOCIAL_LINKS = [
   "https://www.instagram.com/kharisphasetwo/",

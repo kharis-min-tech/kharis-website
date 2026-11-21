@@ -1,0 +1,89 @@
+.policy-pdf-dialog:not([open]) {
+  display: none;
+}
+
+.policy-pdf-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  width: min(94vw, 72rem);
+  height: min(90dvh, 62rem);
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  color: var(--on-surface, #1a1b21);
+  background: var(--surface-container-lowest, #fff);
+  border: 2px solid var(--outline-variant, #ccc3d8);
+  box-shadow: 0 24px 80px rgb(0 0 0 / 40%);
+}
+
+.policy-pdf-dialog::backdrop {
+  background: rgb(12 8 20 / 76%);
+  backdrop-filter: blur(3px);
+}
+
+.policy-pdf-dialog__header {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 4rem;
+  padding: 0.65rem 0.8rem 0.65rem 1.25rem;
+  color: var(--on-surface, #1a1b21);
+  background: var(--surface-container-lowest, #fff);
+  border-bottom: 1px solid var(--outline-variant, #ccc3d8);
+}
+
+.policy-pdf-dialog__header h2 {
+  overflow: hidden;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.policy-pdf-dialog__header button {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--outline-variant, #ccc3d8);
+  cursor: pointer;
+}
+
+.policy-pdf-dialog__header button:hover,
+.policy-pdf-dialog__header button:focus-visible {
+  color: #fff;
+  background: var(--primary, #630ed4);
+  outline: 2px solid var(--primary, #630ed4);
+  outline-offset: 2px;
+}
+
+.policy-pdf-dialog__header button > span:first-child {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.policy-pdf-dialog__frame {
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  background: #fff;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .policy-pdf-dialog[open] {
+    width: calc(100vw - 1rem);
+    height: calc(100dvh - 1rem);
+    max-width: none;
+    max-height: none;
+  }
+}

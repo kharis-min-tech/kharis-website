@@ -125,18 +125,12 @@ function MessagesPage({ latest, messages }: { latest: MessageVideo[]; messages: 
                 </h2>
               </div>
               <blockquote className="relative max-w-md border-2 border-black bg-surface-container-low px-6 py-5 text-on-surface-variant shadow-[4px_4px_0_#151218] dark:border-white/50">
-                <span
-                  className="material-symbols-outlined mb-2 block text-4xl leading-none text-primary"
-                  aria-hidden="true"
-                >
-                  format_quote
-                </span>
                 <p className="font-body-lg text-body-md leading-relaxed">
                   “What sustains the move of God is text-driven, gospel-saturated, Christ-exalting
                   teaching.”
                 </p>
                 <cite className="mt-3 block font-label-sm not-italic uppercase tracking-wider text-on-surface">
-                  — Pastor David Antwi
+                  By Pastor David Antwi
                 </cite>
               </blockquote>
             </div>

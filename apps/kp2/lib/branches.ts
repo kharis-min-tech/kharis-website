@@ -300,7 +300,7 @@ function toBranch(row: BranchRow, gallery: string[], videoUrl = ""): Branch {
     id: s.id || `${row.slug}-service-${index}`,
     day: s.day || "Sunday",
     time: formatTime(s.start_time) || "TBC",
-    label: s.name || s.description || s.type || "Gathering",
+    label: s.name || s.description || s.type || "Service",
     description: s.description || "Details will be added soon.",
     type: s.type || "",
   }));

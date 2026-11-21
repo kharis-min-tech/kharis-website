@@ -243,7 +243,7 @@ export function MutedHeroVideo({
           ? paused
             ? "Resume featured message"
             : "Pause featured message"
-          : "Play featured message"
+          : `Click to listen to ${title}`
       }
       aria-pressed={fullPlayback && !paused}
       onClick={(event) => {
@@ -275,6 +275,15 @@ export function MutedHeroVideo({
           <div ref={wrapRef} className="h-full w-full [&>iframe]:h-full [&>iframe]:w-full" />
         </div>
       </div>
+      {!fullPlayback && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-0 bottom-0 z-10 inline-flex items-center gap-1 bg-linear-to-l from-black/85 via-black/75 to-transparent py-2 pr-4 pl-10 font-body-md text-sm font-bold text-white xl:bottom-10 xl:pr-24"
+        >
+          <span className="material-symbols-outlined text-lg">play_arrow</span>
+          Click to listen
+        </span>
+      )}
     </div>
   );
 }
