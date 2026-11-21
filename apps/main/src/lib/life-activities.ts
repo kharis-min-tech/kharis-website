@@ -124,9 +124,31 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "A room where the questions people usually only ask their closest friends get asked out loud. Teaching, a panel, and time to talk - about identity, relationships, loneliness and what it means to live whole while you wait.",
     cadence: "A few times a year",
     audience: "Anyone single, at any age",
-    image: STANDIN.congregation,
-    alt: "Members at a Kharis seminar",
-    placeholder: true,
+    image:
+      "https://images.kharis.org/site-images/main/319ef1993281960f/life-picks/singles-seminar/00-main-stepandrepeat.jpg",
+    alt: "A couple at the Singles' Ball step-and-repeat",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/d5de8e5ea8d6136d/life-picks/singles-seminar/01-friends.jpg",
+        alt: "Friends laughing together at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/2f8106a9bc9a96f1/life-picks/singles-seminar/02-dance.jpg",
+        alt: "Dancing on the floor at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/46081a409e0e1fd1/life-picks/singles-seminar/03-group-portrait.jpg",
+        alt: "A group portrait at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/6f0894034c89d135/life-picks/singles-seminar/04-dessert.jpg",
+        alt: "Dessert served at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/a006c8c2d13d3911/life-picks/singles-seminar/05-arrival.jpg",
+        alt: "A warm welcome on arrival at the Singles' Ball",
+      },
+    ],
   },
   {
     slug: "finance-seminar",
@@ -190,7 +212,8 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "Members of the church took an innovation project into Barclays for Transition - real brief, real stakes, real deadline. It is the sort of thing we want to keep making room for: faith that shows up in the work, not only on a Sunday.",
     cadence: "When the right brief comes",
     audience: "Builders, designers, analysts",
-    image: "https://images.kharis.org/site-images/main/368cc44369c33caa/life-picks/innovation-project/00-main-group.jpg",
+    image:
+      "https://images.kharis.org/site-images/main/368cc44369c33caa/life-picks/innovation-project/00-main-group.jpg",
     alt: "The Innovation Challenge cohort with their completion certificates at Barclays",
     gallery: [
       {
@@ -229,7 +252,8 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "A proper tournament - groups, knockouts, a trophy that gets talked about until the next one. It is the quickest way we know to turn people from different branches into people who know each other's names.",
     cadence: "Every summer",
     audience: "Players and the crowd on the touchline",
-    image: "https://images.kharis.org/site-images/main/1c6c077e5f63fe91/life-picks/football-tournament/00-main-duel.jpg",
+    image:
+      "https://images.kharis.org/site-images/main/1c6c077e5f63fe91/life-picks/football-tournament/00-main-duel.jpg",
     alt: "Two players challenging for the ball in front of a watching crowd",
     gallery: [
       {
@@ -257,7 +281,8 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "A conference built around the Word being allowed to say what it says. Sustained teaching rather than a single sermon, for anyone who wants to move past Sunday depth and learn to read Scripture for themselves.",
     cadence: "Yearly",
     audience: "Anyone ready to go deeper",
-    image: "https://images.kharis.org/site-images/main/67a46f34494b763e/life-picks/let-the-bible-speak-conference/00-main-open-bible.jpg",
+    image:
+      "https://images.kharis.org/site-images/main/67a46f34494b763e/life-picks/let-the-bible-speak-conference/00-main-open-bible.jpg",
     alt: "An open Bible, turned to Genesis 4",
   },
   {
