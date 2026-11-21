@@ -42,6 +42,24 @@ type PlayerApi = {
   ) => Player;
 };
 
+/**
+ * Fast scrolling can flip the hero in and out of view within the same React
+ * commit: the effect that destroys the old player instance and the effect
+ * that calls play/pause/seek on it both fire in that commit, and the second
+ * one can still be holding the pre-destroy `player` reference. YouTube's own
+ * widget code then throws reaching into the iframe that effect A just
+ * removed. The player is already gone either way, so there's nothing to
+ * recover — just stop that from reaching React as an uncaught exception.
+ */
+function safely<T>(fn: () => T): T | undefined {
+  try {
+    return fn();
+  } catch {
+    /* player instance was torn down mid-call; ignore */
+    return undefined;
+  }
+}
+
 let playerApi: Promise<PlayerApi> | undefined;
 
 function loadPlayerApi() {
@@ -85,7 +103,7 @@ function speakerFrom(title: string): string | null {
   return `Pastor ${pastor.name.replace(/^pastor\s+/i, "").split(/\s+/)[0]}`;
 }
 
-type Mode = "idle" | "preview" | "playing";
+type Mode = "idle" | "preview" | "playing" | "paused";
 
 export function MessagesHero({ message }: { message: MessageVideo }) {
   const hero = useRef<HTMLElement>(null);
@@ -93,6 +111,7 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
   const action = useRef<HTMLButtonElement>(null);
   const [allowPreview, setAllowPreview] = useState(false);
   const [watching, setWatching] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(false);
   const [failed, setFailed] = useState(false);
   const [player, setPlayer] = useState<Player | null>(null);
@@ -108,7 +127,7 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
   const speaker = speakerFrom(message.title);
   const cue = `${coarsePointer ? "Tap" : "Click"} to ${speaker ? `listen to ${speaker}` : "dive in"}`;
   const load = allowPreview || hasOpenedPlayer;
-  const mode: Mode = watching ? "playing" : allowPreview ? "preview" : "idle";
+  const mode: Mode = watching ? (paused ? "paused" : "playing") : allowPreview ? "preview" : "idle";
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -222,24 +241,34 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
     const previous = currentMode.current;
     currentMode.current = mode;
     if (mode === "playing") {
-      player.unMute();
-      player.seekTo(0, true);
-      player.playVideo();
-    } else if (mode === "idle") {
-      player.pauseVideo();
+      safely(() => player.unMute());
+      if (previous !== "paused") safely(() => player.seekTo(0, true));
+      safely(() => player.playVideo());
+    } else if (mode === "paused" || mode === "idle") {
+      safely(() => player.pauseVideo());
     } else {
-      player.mute();
+      safely(() => player.mute());
       if (previous !== "preview") {
-        const duration = player.getDuration();
-        player.seekTo(duration >= PREVIEW_START + 120 ? PREVIEW_START : 0, true);
+        const duration = safely(() => player.getDuration()) ?? 0;
+        safely(() => player.seekTo(duration >= PREVIEW_START + 120 ? PREVIEW_START : 0, true));
       }
-      player.playVideo();
+      safely(() => player.playVideo());
     }
   }, [failed, mode, player]);
 
-  function togglePlayback() {
-    if (!watching) setHasOpenedPlayer(true);
-    setWatching(!watching);
+  /** First click/tap starts the real video; every one after that just pauses/resumes it. */
+  function onHeroActivate() {
+    if (!watching) {
+      setHasOpenedPlayer(true);
+      setWatching(true);
+      return;
+    }
+    setPaused((current) => !current);
+  }
+
+  function stopWatching() {
+    setWatching(false);
+    setPaused(false);
   }
 
   return (
@@ -249,9 +278,14 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
       data-preview={visible && mode !== "idle" && !failed ? true : undefined}
       data-playing={watching || undefined}
       aria-label={`Watch the latest Kharis message: ${title}`}
+      onClick={(event) => {
+        if (failed) return;
+        if ((event.target as Element).closest?.("a")) return;
+        onHeroActivate();
+      }}
       onKeyDown={(event) => {
         if (watching && event.key === "Escape") {
-          togglePlayback();
+          stopWatching();
           action.current?.focus({ preventScroll: true });
         }
       }}
@@ -316,7 +350,6 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
               ref={action}
               type="button"
               className="msg-hero-cue"
-              onClick={togglePlayback}
               aria-label={`Watch message: ${title}`}
             >
               <span className="msg-hero-cue__pointer" aria-hidden="true">
