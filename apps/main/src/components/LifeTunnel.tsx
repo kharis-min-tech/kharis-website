@@ -26,40 +26,38 @@ import "./life-tunnel.css";
 const programme = [
   {
     title: CHURCH_VALUES.christCentered,
-    preview: "Taking the next step in following Christ",
-    activities: ["baptism"],
-  },
-  {
-    title: CHURCH_VALUES.bibleBelieving,
-    preview: "Learning and sharing the Word",
-    activities: ["let-the-bible-speak-conference", "k-group"],
+    preview:
+      "We follow Christ through the scriptures. We read it through, we live it out, and we pass it on",
+    activities: ["let-the-bible-speak-conference", "baptism", "k-group"],
   },
   {
     title: CHURCH_VALUES.revivalSeeking,
-    preview: "Seeking God together and sharing the gospel",
+    preview:
+      "Seeking the face of God and the power of the Holy Spirit to transform this generation",
     activities: ["fasting", "jesus-campaign"],
   },
   {
-    title: CHURCH_VALUES.purposeDriven,
-    preview: "Putting faith to work through service and innovation",
-    activities: ["innovation-project"],
-  },
-  {
     title: CHURCH_VALUES.peopleDeveloping,
-    preview: "Careers, money, technology and wellbeing",
-    activities: ["careers-fair", "ai-in-the-workplace", "seminars"],
+    preview: "Developing and equipping people to serve in the church and lead in the world",
+    activities: [
+      "careers-fair",
+      "ai-in-the-workplace",
+      "departments",
+      "seminars",
+      "innovation-project",
+    ],
   },
   {
-    title: CHURCH_VALUES.discipleMaking,
-    preview: "Growing together through relationships, fellowship and sport",
+    title: CHURCH_VALUES.purposeDriven,
+    preview:
+      "Enabling people to live holistically purposeful lives whilst having fun along the way",
     activities: [
-      "departments",
-      "singles-seminar",
       "cook-along",
       "christmas-jumper",
       "sports-day",
       "football-tournament",
       "family-fun-day",
+      "singles-seminar",
     ],
   },
 ] satisfies {

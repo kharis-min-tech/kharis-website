@@ -125,7 +125,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
   {
     slug: "singles-seminar",
     title: "Singles' Ball",
-    blurb: "Honest conversation about singleness, dating and waiting well.",
+    blurb: "Honest conversations about singleness, dating and waiting well.",
     body: "A room where the questions people usually only ask their closest friends get asked out loud. Teaching, a panel, and time to talk - about identity, relationships, loneliness and what it means to live whole while you wait.",
     cadence: "A few times a year",
     audience: "Anyone single, at any age",
@@ -249,7 +249,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
   {
     slug: "innovation-project",
     title: "Innovation Project",
-    blurb: "Our team at Barclays, building something real.",
+    blurb: "Empowering leaders of tomorrow to build the future through faith.",
     body: "Members of the church took an innovation project into Barclays for Transition - real brief, real stakes, real deadline. It is the sort of thing we want to keep making room for: faith that shows up in the work, not only on a Sunday.",
     cadence: "When the right brief comes",
     audience: "Builders, designers, analysts",
@@ -440,7 +440,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
   {
     slug: "family-fun-day",
     title: "Family Fun Day",
-    blurb: "Sack races, tug of war and a trophy on the line.",
+    blurb: "Fun for all, tug-of-war, sack races, musical chairs and more.",
     body: "One afternoon a year with no agenda beyond being glad to be in the same place - games, face painting, food and a trophy that gets taken far too seriously, for every age in one playground at once.",
     cadence: "Every summer",
     audience: "Every age, every family",
@@ -537,7 +537,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
   {
     slug: "let-the-bible-speak-conference",
     title: "Let the Bible Speak Conference",
-    blurb: "Days of teaching that put Scripture back at the centre.",
+    blurb: "Open the book. Hear His voice.",
     body: "A conference built around the Word being allowed to say what it says. Sustained teaching rather than a single sermon, for anyone who wants to move past Sunday depth and learn to read Scripture for themselves.",
     cadence: "Yearly",
     audience: "Anyone ready to go deeper",
@@ -742,7 +742,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
   {
     slug: "jesus-campaign",
     title: "Jesus Campaign",
-    blurb: "Taking it outside - streets, campuses, doorsteps.",
+    blurb: "The Great Commission in action: we preach Christ crucified.",
     body: "A concentrated push out into the community: teams on the streets, conversations with strangers, prayer with anyone who wants it. It is the part of our life that is least comfortable and most talked about afterwards.",
     cadence: "Every year",
     audience: "Anyone willing to come along",
@@ -858,11 +858,49 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     audience: "Anyone ready to take the step",
     image: LIFE_BAPTISM_IMAGE,
     alt: "A Kharis baptism candidate emerging from the water with hands raised",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/1bd318f907282361/life-picks/baptism/01-newness-of-life-tshirts.jpg",
+        alt: "Two baptism candidates holding up their 'Newness of Life in Christ' t-shirts",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/f8fd0dbfee7bffb1/life-picks/baptism/02-candidates-lined-up-poolside.jpg",
+        alt: "Baptism candidates lined up poolside in prayer before going into the water",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/e86b43f79e152614/life-picks/baptism/03-worship-before-the-water.jpg",
+        alt: "A candidate with eyes closed and hands raised in worship before baptism",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/349a9a7c729b5b5a/life-picks/baptism/04-raised-up-out-of-the-water.jpg",
+        alt: "A woman raised up out of the water by two helpers either side of her",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/9598bf69ee2e11c6/life-picks/baptism/05-men-celebrating-in-the-pool.jpg",
+        alt: "Three men celebrating and laughing together in the baptism pool",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/11b78c25fef288c7/life-picks/baptism/06-arms-raised-in-celebration.jpg",
+        alt: "A newly baptised man shouting with arms raised in the water",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/a58ea8bf731a6d7e/life-picks/baptism/07-three-men-hands-raised.jpg",
+        alt: "Three men with hands raised, cheering in the baptism pool",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/7ee08e2cf7b35e6a/life-picks/baptism/08-full-group-photo-outside.jpg",
+        alt: "The full group of baptism candidates and helpers posing together outside",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/0f3d5c57741744a1/life-picks/baptism/09-friends-celebrating-outside.jpg",
+        alt: "Four friends celebrating together outside after the baptism service",
+      },
+    ],
   },
   {
     slug: "fasting",
     title: "Fasting",
-    blurb: "Abstaining together, to say we depend on God.",
+    blurb: "Fasting together, seeking God’s agenda on earth.",
     body: "We abstain from food to signal dependence on God, fasting joined with prayer, as a church family seeking His purpose. Done together rather than alone, which is most of what makes it possible.",
     cadence: "Several times a year",
     audience: "The whole church",

@@ -25,7 +25,7 @@ const WHY_WE_SERVE = [
   },
   {
     number: "03",
-    title: "Serve as for the Lord",
+    title: "Serve as unto the Lord",
     body: "Whatever you do, do it wholeheartedly, as if working for the Lord and not for people. No act of service is small, because it is ultimately offered to Christ, who promises a reward that lasts.",
     verse: "Colossians 3:23-24",
   },

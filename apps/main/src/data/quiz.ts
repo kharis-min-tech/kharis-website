@@ -504,7 +504,7 @@ export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
       },
       "Tech Team": {
         desc: "Creative and detail-oriented individuals who use technology to create an atmosphere of excellence so people can encounter God freely.",
-        scripture: "Colossians 3:23, Whatever you do, work heartily, as for the Lord.",
+        scripture: "Colossians 3:23, Whatever you do, work heartily, as unto the Lord.",
         video: "https://drive.google.com/file/d/1l9I2AjAi1__YXZvMsgub_MQ7ggqkMwks/preview",
       },
       Uniform: {
