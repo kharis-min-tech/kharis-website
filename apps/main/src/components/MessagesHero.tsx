@@ -163,7 +163,8 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
   const secondTyped = Math.max(0, typed - HEADLINE_FIRST.length);
   const secondLine = `${HEADLINE_SECOND_PREFIX}${HEADLINE_LAST_WORD}`.slice(0, secondTyped);
   const typingFirstLine = !reducedMotion && typed < HEADLINE_FIRST.length;
-  const typingSecondLine = !reducedMotion && typed >= HEADLINE_FIRST.length && typed < HEADLINE_LENGTH;
+  const typingSecondLine =
+    !reducedMotion && typed >= HEADLINE_FIRST.length && typed < HEADLINE_LENGTH;
 
   useEffect(() => {
     const element = hero.current;

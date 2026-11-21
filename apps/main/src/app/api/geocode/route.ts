@@ -132,9 +132,17 @@ async function lookupGoogle(query: string): Promise<GeocodeResult | null> {
   const components = first?.address_components ?? [];
   const find = (type: string) => components.find((c) => c.types?.includes(type))?.long_name;
   const area =
-    find("postal_town") || find("locality") || find("administrative_area_level_2") || find("country");
+    find("postal_town") ||
+    find("locality") ||
+    find("administrative_area_level_2") ||
+    find("country");
   const fallbackLabel = first?.formatted_address
-    ? first.formatted_address.split(",").slice(0, 2).map((s) => s.trim()).filter(Boolean).join(", ")
+    ? first.formatted_address
+        .split(",")
+        .slice(0, 2)
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .join(", ")
     : query;
 
   return {

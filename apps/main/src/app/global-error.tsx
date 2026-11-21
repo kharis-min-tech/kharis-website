@@ -28,15 +28,16 @@ export default function GlobalError({
           placeItems: "center",
           minHeight: "100vh",
           padding: "2rem",
-          fontFamily:
-            "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           background: "#0d0a12",
           color: "#fff",
           textAlign: "center",
         }}
       >
         <div style={{ maxWidth: "28rem" }}>
-          <h1 style={{ fontSize: "1.4rem", marginBottom: "0.75rem" }}>This page couldn&apos;t load.</h1>
+          <h1 style={{ fontSize: "1.4rem", marginBottom: "0.75rem" }}>
+            This page couldn&apos;t load.
+          </h1>
           <p style={{ opacity: 0.8, marginBottom: "1.5rem", lineHeight: 1.6 }}>
             Something went wrong loading Kharis Church. Please try again.
           </p>
