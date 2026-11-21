@@ -148,6 +148,38 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
         src: "https://images.kharis.org/site-images/main/a006c8c2d13d3911/life-picks/singles-seminar/05-arrival.jpg",
         alt: "A warm welcome on arrival at the Singles' Ball",
       },
+      {
+        src: "https://images.kharis.org/site-images/main/649556a0ae38406f/life-picks/singles-seminar/06-group-women.jpg",
+        alt: "A group of singles together at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/4f93d727f341e3c8/life-picks/singles-seminar/07-interacting.jpg",
+        alt: "Singles chatting over drinks at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/7cd6b6b166e6be55/life-picks/singles-seminar/08-selfie-table.jpg",
+        alt: "A selfie around the table at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/e1d582f9728b24fc/life-picks/singles-seminar/09-singer.jpg",
+        alt: "A singer performing on stage at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/dc09cccccec8d86f/life-picks/singles-seminar/10-fashion-moment.jpg",
+        alt: "Singles taking part in an activity on the floor at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/35e5d4e9b12adf68/life-picks/singles-seminar/11-booth-women.jpg",
+        alt: "Friends in the photo booth at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/bb5ae635b74b233f/life-picks/singles-seminar/12-booth-men.jpg",
+        alt: "Friends in the photo booth at the Singles' Ball",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/b7336d41e2555528/life-picks/singles-seminar/13-crowd.jpg",
+        alt: "The room full of singles at the Singles' Ball",
+      },
     ],
   },
   {
