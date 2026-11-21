@@ -1026,7 +1026,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
         alt: "A member of the photography team capturing the choir on stage",
       },
     ],
-  }
+  },
 ];
 
 /** The activities currently in season, in the order they are listed above. */
