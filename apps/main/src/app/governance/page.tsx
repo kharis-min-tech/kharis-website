@@ -33,7 +33,7 @@ export default async function GovernancePage() {
         policy.id in DOCUMENTS
           ? {
               title: slot?.title?.trim() || policy.title,
-              pdfUrl: DOCUMENTS[policy.id as keyof typeof DOCUMENTS],
+              pdfUrl: pdfUrl || DOCUMENTS[policy.id as keyof typeof DOCUMENTS],
             }
           : undefined,
     };

@@ -1,6 +1,6 @@
 export type LifeTone = "gold" | "dark" | "purple" | "cream";
 
-export type LifeSlug = "k-group" | "fasting" | "marriage" | "children" | "departments";
+export type LifeSlug = "k-group" | "fasting" | "children" | "departments";
 
 export type LifeSection = {
   title: string;
@@ -135,78 +135,8 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
         body: "To go deeper, listen to The Mystery of Fasting, Prayer and Obeying Divine Instructions During Fasting, and A Time for Fasting and Feasting, then join your local branch when we fast together.",
       },
     ],
-    next: "marriage",
-    cta: { label: "Join us in prayer", href: "/locations" },
-  },
-  {
-    slug: "marriage",
-    title: "Marriage",
-    shortTitle: "Marriage",
-    badge: "Family",
-    href: "/life/marriage",
-    card: "We celebrate marriage because God created it: preparation, counselling, and a victorious Christian home.",
-    image: "https://images.kharis.org/site-images/main/15638c2668f428de/testimony-2.jpg",
-    imageAlt: "Joy in the Kharis family",
-    tone: "cream",
-    layout: "text",
-    icon: "heart",
-    intro:
-      "We celebrate marriage at Kharis, because it’s created by God. We see marriage at the beginning of the Bible in Genesis 2:24, and the Bible will end with marriage. Before making a commitment it is sensible for couples to discover each other at a deeper level and learn how best to keep their relationship strong.",
-    quote: {
-      text: "Therefore shall a man leave his father and his mother, and shall cleave unto his wife: and they shall be one flesh.",
-      source: "Genesis 2:24",
-    },
-    sections: [
-      {
-        title: "Eden School of Marriage",
-        body: "The Eden School of Marriage focuses on the fundamental areas that help couples prepare for a successful and victorious Christian marriage, a mix of in-person and online sessions.",
-        items: [
-          "Foundations of Christian marriage",
-          "Love and communication",
-          "Money and marriage",
-          "Duties of a husband and wife",
-          "Fighting fair: resolving conflict",
-          "The origin of sex",
-        ],
-      },
-      {
-        title: "Pre-marital counselling",
-        body: "Pre-marital counselling helps couples align with God’s idea of marriage. Couples complete a form independently; a trained Kharis marriage counsellor is then allocated. Sessions typically range from 6–8 and cover the biblical purpose of marriage, roles, communication, finances, sexuality, and family history. Speak to your local branch to begin.",
-      },
-    ],
     next: "children",
-    cta: { label: "Talk to your branch", href: "/contact" },
-  },
-  {
-    slug: "children",
-    title: "Children’s department",
-    shortTitle: "Children",
-    badge: "Kids",
-    href: "/life/children",
-    card: "Fun, vibrant, and full of life. We partner with parents to help children discover who God is through Bible teaching, worship, and friendship.",
-    image: LIFE_CHILDREN_IMAGE,
-    imageAlt: "Illustration of a teacher sharing a Bible story with children",
-    tone: "gold",
-    layout: "blend",
-    icon: "sparkles",
-    intro:
-      "We are dedicated to shaping the spiritual futures of children and teenagers by partnering with parents to raise up the next generation in the ways of the Lord. Through engaging activities, timely and meaningful biblical messages, and vibrant praise and worship, we provide a dynamic environment where young people can truly learn and grow. Our ultimate vision is to spark revival and equip our children and teens to boldly carry the torch of faith for years to come.",
-    sections: [
-      {
-        title: "Kinder (3–6 years)",
-        body: "Kinder is a vibrant, energetic group for young children aged 3–6. It is a nurturing space where little ones discover the foundational principles of building a personal relationship with God through age-appropriate Bible stories, engaging activities, worship, prayer, and wholesome friendships. Our ultimate aim is to cultivate a deep love and boldness for Jesus in their hearts, so that when they reach the age of understanding, they will eagerly choose Him for themselves.",
-      },
-      {
-        title: "Super (7–11 years)",
-        body: "Super is a lively community for children. We focus on laying a solid biblical foundation for their Christian walk through core topics like salvation, faith, and the Holy Spirit. Our aim is to guide them into a deeply personal, fruitful journey of truly knowing and following Christ.",
-      },
-      {
-        title: "Transition (12–16 years)",
-        body: "Transition is an exciting and engaging class designed to support spiritual growth and a smooth, confident assimilation into the wider church. Through fun, interactive lessons grounded in the teachings of Pastor David Antwi, we equip teenagers to navigate everyday life—empowering them to be bold for Jesus among their peers, stand firm in their faith, and live as true examples. Our goal is to anchor them deeply in Christ as they step into their next season.",
-      },
-    ],
-    next: "departments",
-    cta: { label: "Bring the family", href: "/locations" },
+    cta: { label: "Join us in prayer", href: "/locations" },
   },
   {
     slug: "departments",
@@ -246,7 +176,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
   },
 ] as const;
 
-/** Cards shown on the Life landing grid (K-Group / marriage hidden from UI). */
+/** Cards shown on the Life landing grid (K-Group hidden from UI). */
 export const LIFE_VISIBLE_SLUGS = new Set<LifeSlug>(["fasting", "children", "departments"]);
 
 export const LIFE_PHOTO_CARDS = LIFE_CATEGORIES.filter(

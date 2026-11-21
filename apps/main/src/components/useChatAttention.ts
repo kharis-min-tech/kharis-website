@@ -11,6 +11,8 @@ const BROWSE_MS = 25_000;
 const BROWSE_MIN_SCREENS = 0.75;
 const BOUNCE_MS = 1500;
 const BUBBLE_MS = 4500;
+/** Grace should offer herself, not just wait to be noticed while scrolling. */
+const GREETING_MS = 3000;
 
 function readCount(): number {
   try {
@@ -100,6 +102,8 @@ export function useChatAttention(enabled: boolean) {
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    // The proactive greeting: offered on arrival, not just earned by scrolling away.
+    timers.push(window.setTimeout(fire, GREETING_MS));
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (frame) window.cancelAnimationFrame(frame);

@@ -7,7 +7,7 @@ import { DEPARTMENTS } from "@/data/departments";
 
 // Add a department video by adding one line here.
 const DEPARTMENT_VIDEOS: Record<string, string> = {
-  CHOIR: "/kp2/assets/Choir-video.mp4",
+  CHOIR: "https://images.kharis.org/site-images/kp2/d7e2929cd285968f/Choir-video.mp4",
 };
 
 export function DepartmentVideoHero() {

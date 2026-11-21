@@ -26,47 +26,47 @@ export type QuizSlide = {
 /** Hero slideshow behind the quiz heading. Add more slides here and they crossfade automatically. */
 export const QUIZ_SLIDESHOW_IMAGES: readonly QuizSlide[] = [
   {
-    src: "/images/quiz/choir-vocalists-worship.jpg",
+    src: "https://images.kharis.org/site-images/main/8ba0f1a441d665f4/quiz/choir-vocalists-worship.jpg",
     alt: "Kharis choir vocalists worshipping on stage with hands raised",
     position: "50% 60%",
   },
   {
-    src: "/images/quiz/outreach-we-preach-christ.jpg",
+    src: "https://images.kharis.org/site-images/main/f00cff6ad823a37b/quiz/outreach-we-preach-christ.jpg",
     alt: "Kharis members smiling in yellow We Preach Christ shirts during street outreach",
     position: "50% 35%",
   },
   {
-    src: "/images/quiz/sound-mixing-desk.jpg",
+    src: "https://images.kharis.org/site-images/main/5a71e7a0ea6516d4/quiz/sound-mixing-desk.jpg",
     alt: "Digital sound mixing console glowing in blue during a Kharis service",
     position: "50% 50%",
   },
   {
-    src: "/images/quiz/jesus-campaign-praise.jpg",
+    src: "https://images.kharis.org/site-images/main/345cd8d96886f095/quiz/jesus-campaign-praise.jpg",
     alt: "Kharis members praising joyfully outdoors during the Jesus Campaign",
     position: "50% 30%",
   },
   {
-    src: "/images/quiz/bible-study-tablet.jpg",
+    src: "https://images.kharis.org/site-images/main/0def4ca1161934cd/quiz/bible-study-tablet.jpg",
     alt: "Member taking Bible study notes on a tablet alongside an open Bible",
     position: "50% 50%",
   },
   {
-    src: "/images/quiz/jesus-campaign-outreach.jpg",
+    src: "https://images.kharis.org/site-images/main/c67b1dd6174ff4e0/quiz/jesus-campaign-outreach.jpg",
     alt: "Kharis members in yellow Jesus Campaign shirts talking with a man on the street",
     position: "50% 32%",
   },
   {
-    src: "/images/quiz/worship-guitarist.jpg",
+    src: "https://images.kharis.org/site-images/main/dad1464b6865bcc0/quiz/worship-guitarist.jpg",
     alt: "Musician playing electric guitar with headphones during worship",
     position: "50% 20%",
   },
   {
-    src: "/images/quiz/outreach-crowd-celebration.jpg",
+    src: "https://images.kharis.org/site-images/main/e35a1ea3937c6bee/quiz/outreach-crowd-celebration.jpg",
     alt: "Outreach team celebrating together in yellow Jesus Campaign shirts",
     position: "50% 30%",
   },
   {
-    src: "/images/quiz/media-camera-rig.jpg",
+    src: "https://images.kharis.org/site-images/main/6bbc3f0d433879f8/quiz/media-camera-rig.jpg",
     alt: "Cinema camera rig capturing the congregation during worship",
     position: "50% 48%",
   },
@@ -504,7 +504,7 @@ export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
       },
       "Tech Team": {
         desc: "Creative and detail-oriented individuals who use technology to create an atmosphere of excellence so people can encounter God freely.",
-        scripture: "Colossians 3:23, Whatever you do, work heartily, as for the Lord.",
+        scripture: "Colossians 3:23, Whatever you do, work heartily, as unto the Lord.",
         video: "https://drive.google.com/file/d/1l9I2AjAi1__YXZvMsgub_MQ7ggqkMwks/preview",
       },
       Uniform: {

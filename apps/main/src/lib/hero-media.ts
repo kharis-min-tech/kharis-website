@@ -41,6 +41,12 @@ export const HERO_SLIDES: HeroSlide[] = [
     alt: "The congregation raising their Bibles at the Easter service",
   },
   {
+    type: "video",
+    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim.mp4",
+    poster: "https://images.kharis.org/site-images/main/1cd1968f552f6970/hero/worship-altar.jpg",
+    alt: "Worship to Glory to the Lamb at a Kharis service",
+  },
+  {
     type: "image",
     src: "https://images.kharis.org/site-images/main/b8180db67daeb332/hero/preaching-open-bible.jpg",
     alt: "Preaching with arms outstretched and an open Bible in hand",
@@ -61,6 +67,12 @@ export const HERO_SLIDES: HeroSlide[] = [
     alt: "Kharis outreach team sharing the gospel on the street",
   },
   {
+    type: "video",
+    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim%202.mp4",
+    poster: "https://images.kharis.org/site-images/main/850b7f32a7f6712c/joyful-worship.jpg",
+    alt: "Worship to Glory to the Lamb at a Kharis service",
+  },
+  {
     type: "image",
     src: "https://images.kharis.org/site-images/main/aee6ab0aae266c72/hero/easter-pastor-david.jpg",
     alt: "Pastor David preaching at the Easter Saturday service",
@@ -75,13 +87,20 @@ export const HERO_SLIDES: HeroSlide[] = [
     src: "https://images.kharis.org/site-images/main/ca959585decb8ff4/hero/outreach-community.jpg",
     alt: "Kharis community outreach day in a local playground",
   },
-  /* The five photographs that used to carry the "This is Kharis" character
-     section. That section has gone; the pictures were too good to lose, so
-     they ride the hero band instead. */
   {
     type: "image",
     src: "https://images.kharis.org/site-images/main/850b7f32a7f6712c/joyful-worship.jpg",
     alt: "Joyful worship at a Kharis service",
+  },
+  /* The five photographs that used to carry the "This is Kharis" character
+     section. That section has gone; the pictures were too good to lose, so
+     they ride the hero band instead. */
+  {
+    type: "video",
+    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim%203.mp4",
+    poster:
+      "https://images.kharis.org/site-images/main/4ac6c245a7e4d9c2/hero/impartation-celebration.jpg",
+    alt: "Worship to Glory to the Lamb at a Kharis service",
   },
   {
     type: "image",

@@ -1,6 +1,6 @@
 import type { LifeSlug } from "@/lib/life-content";
 
-export type LifeModalSlug = Extract<LifeSlug, "fasting" | "departments" | "k-group" | "marriage">;
+export type LifeModalSlug = Extract<LifeSlug, "fasting" | "departments" | "k-group">;
 
 export type LifeModalVideo = {
   /** YouTube video ID, or local file path when kind is "file" */
@@ -24,12 +24,6 @@ export const LIFE_MODAL_VIDEOS: Record<LifeModalSlug, LifeModalVideo> = {
     videoId: "AE2AXoQetmc",
     title: "The Mystery of Fasting | David Antwi",
     blurb: "We abstain from food to signal dependence on God, fasting joined with prayer.",
-  },
-  marriage: {
-    videoId: "XdCNUHBdzh4",
-    title: "Marriage at Kharis | David Antwi",
-    blurb:
-      "We celebrate marriage because God created it: preparation, counselling, and a victorious Christian home.",
   },
   departments: {
     videoId: "jFjHOlV9uq0",

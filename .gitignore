@@ -48,3 +48,10 @@ yarn-error.log*
 
 # Supabase CLI scratch
 supabase/.temp/
+
+# Raw /life photo and video drops awaiting curation, and the resized copies
+# staged for migrate-site-images.mjs. Too much to commit; the curated picks
+# that make it into life-activities.ts are already safe on R2.
+apps/main/public/images/life/
+apps/main/public/images/life-picks/
+apps/main/public/videos/football-tournament/
