@@ -190,9 +190,26 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "Members of the church took an innovation project into Barclays for Transition - real brief, real stakes, real deadline. It is the sort of thing we want to keep making room for: faith that shows up in the work, not only on a Sunday.",
     cadence: "When the right brief comes",
     audience: "Builders, designers, analysts",
-    image: STANDIN.pastor,
-    alt: "Kharis members at a church event",
-    placeholder: true,
+    image: "https://images.kharis.org/site-images/main/368cc44369c33caa/life-picks/innovation-project/00-main-group.jpg",
+    alt: "The Innovation Challenge cohort with their completion certificates at Barclays",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/9c7619a414a8876e/life-picks/innovation-project/01-gift.jpg",
+        alt: "The Kharis Careers Innovation Challenge notebook and pen",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/618d492c54b5ca18/life-picks/innovation-project/02-pitch.jpg",
+        alt: "Young people presenting their pitch, HomeLink, on stage at Barclays",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/946933920317a665/life-picks/innovation-project/03-mentoring.jpg",
+        alt: "A mentor working through ideas with a team around the table",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/c338955bba0dc3de/life-picks/innovation-project/04-group.jpg",
+        alt: "A team of young people smiling together after their presentation",
+      },
+    ],
   },
   {
     slug: "sports-day",
@@ -212,9 +229,26 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "A proper tournament - groups, knockouts, a trophy that gets talked about until the next one. It is the quickest way we know to turn people from different branches into people who know each other's names.",
     cadence: "Every summer",
     audience: "Players and the crowd on the touchline",
-    image: STANDIN.outreachStreet,
-    alt: "Kharis members out together in the community",
-    placeholder: true,
+    image: "https://images.kharis.org/site-images/main/1c6c077e5f63fe91/life-picks/football-tournament/00-main-duel.jpg",
+    alt: "Two players challenging for the ball in front of a watching crowd",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/c4bfde850407b1e3/life-picks/football-tournament/01-lifted-up.jpg",
+        alt: "A player lifted up by teammates in celebration",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/60799effb81d1ef6/life-picks/football-tournament/02-medal.jpg",
+        alt: "A medal being placed around a player's neck",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/f722bab5cf0a3e47/life-picks/football-tournament/03-huddle.jpg",
+        alt: "Players from every branch gathered together before the final",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/293a1f84c30f748a/life-picks/football-tournament/04-arrival.jpg",
+        alt: "Two players arriving at the tournament, ball in hand",
+      },
+    ],
   },
   {
     slug: "let-the-bible-speak-conference",
@@ -223,9 +257,8 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "A conference built around the Word being allowed to say what it says. Sustained teaching rather than a single sermon, for anyone who wants to move past Sunday depth and learn to read Scripture for themselves.",
     cadence: "Yearly",
     audience: "Anyone ready to go deeper",
-    image: STANDIN.bibleRaised,
-    alt: "A worshipper raising her Bible at a Kharis service",
-    placeholder: true,
+    image: "https://images.kharis.org/site-images/main/67a46f34494b763e/life-picks/let-the-bible-speak-conference/00-main-open-bible.jpg",
+    alt: "An open Bible, turned to Genesis 4",
   },
   {
     slug: "jesus-campaign",
@@ -259,6 +292,20 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     audience: "Everyone, wherever you live",
     image: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
     alt: "A full Kharis hall listening to the Word",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/e3d93dee21bbad78/life-picks/k-group/01-conversation.jpg",
+        alt: "Two K-Group members deep in conversation at a home fellowship",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/67587be47ceeb3bd/life-picks/k-group/02-living-room.jpg",
+        alt: "A K-Group gathered around a living room, Bibles open",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/ef81b7e09ac9af7d/life-picks/k-group/03-family-table.jpg",
+        alt: "A family K-Group with children around the table, Bibles open",
+      },
+    ],
   },
   {
     slug: "baptism",
@@ -279,6 +326,12 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     audience: "The whole church",
     image: "https://images.kharis.org/site-images/main/ffbe5aca25d25b8c/pastor-stage.jpg",
     alt: "Seeking God together in worship",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/3ca65e0f86f1c2f8/life-picks/fasting/01-prayer.jpg",
+        alt: "A worshipper in prayer during Prayer Fest",
+      },
+    ],
   },
   {
     slug: "departments",
@@ -289,6 +342,28 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     audience: "Anyone willing to serve",
     image: LIFE_SERVE_IMAGE,
     alt: "Serving together at Kharis",
+    gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/7f57aa7edcc26557/life-picks/departments/01-led-wall.jpg",
+        alt: "A member of the production team wiring up the stage LED wall",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/ce4506c5208a3d77/life-picks/departments/02-drum-tech.jpg",
+        alt: "A member of the music team setting up a microphone over the drum kit",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/bce4860eb375858e/life-picks/departments/03-rigging.jpg",
+        alt: "A member of the production team up a ladder rigging the stage",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/463852ab7fec4d1c/life-picks/departments/04-sound-desk.jpg",
+        alt: "A member of the sound team at the mixing desk",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/cc3e21bab82fec4f/life-picks/departments/05-bassist.jpg",
+        alt: "Members of the music team sharing a laugh on stage",
+      },
+    ],
   },
   {
     slug: "children",

@@ -89,7 +89,7 @@ const TUNNEL_CARDS: TunnelCardData[] = KHARIS_ITEMS.map((item, i) => {
 });
 
 /** Worship crowd clip (from the KP2 assets), played muted behind the tunnel. */
-const BACKGROUND_VIDEO = "/videos/life-crowd.mp4";
+const BACKGROUND_VIDEO = "https://images.kharis.org/site-images/main/06c4e252e26bc25f/life-crowd.mp4";
 const BACKGROUND_POSTER =
   "https://images.kharis.org/site-images/main/202d5d8fcf42bef6/life-crowd-poster.jpg";
 

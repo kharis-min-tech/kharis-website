@@ -16,7 +16,7 @@ export type LotClip = {
 export const LOT_CLIPS: LotClip[] = [
   {
     kind: "video",
-    src: "/kp2/assets/dancing.mp4",
+    src: "https://images.kharis.org/site-images/kp2/785c2b4d533ea835/dancing.mp4",
     alt: "KP2 dancing in worship",
     label: "The floor is shaking",
     span: "tall",
@@ -34,7 +34,7 @@ export const LOT_CLIPS: LotClip[] = [
     label: "Praise & worship",
     span: "wide",
   },
-  { kind: "video", src: "/kp2/assets/crowd.mp4", alt: "The room in full voice", label: "The room" },
+  { kind: "video", src: "https://images.kharis.org/site-images/kp2/06c4e252e26bc25f/crowd.mp4", alt: "The room in full voice", label: "The room" },
   {
     kind: "image",
     src: KP2_PHOTOS.serviceTogether.src,
@@ -47,7 +47,7 @@ export const LOT_CLIPS: LotClip[] = [
     alt: KP2_PHOTOS.welcomeGroup.alt,
     label: "Together at church",
   },
-  { kind: "video", src: "/kp2/assets/choir2.mp4", alt: "Choir in worship", label: "Choir" },
+  { kind: "video", src: "https://images.kharis.org/site-images/kp2/ba4f09f054519d29/choir2.mp4", alt: "Choir in worship", label: "Choir" },
   {
     kind: "image",
     src: KP2_PHOTOS.outreachConversation.src,
@@ -68,7 +68,7 @@ export const LOT_CLIPS: LotClip[] = [
   },
   {
     kind: "video",
-    src: "/kp2/assets/Choir-video.mp4",
+    src: "https://images.kharis.org/site-images/kp2/d7e2929cd285968f/Choir-video.mp4",
     alt: "Worship set",
     label: "Worship",
     span: "wide",

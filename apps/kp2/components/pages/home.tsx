@@ -80,7 +80,7 @@ function Index({
           <div className="relative col-span-2 lg:flex-1 group overflow-hidden border-b-2 lg:border-b-0 lg:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
-              src="/kp2/assets/Choir-video.mp4"
+              src="https://images.kharis.org/site-images/kp2/d7e2929cd285968f/Choir-video.mp4"
               poster="https://images.kharis.org/site-images/kp2/88a52cf2f36e4dba/choir-video-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
@@ -89,7 +89,7 @@ function Index({
           <div className="relative lg:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#deb7ff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
-              src="/kp2/assets/crowd.mp4"
+              src="https://images.kharis.org/site-images/kp2/06c4e252e26bc25f/crowd.mp4"
               poster="https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
@@ -98,7 +98,7 @@ function Index({
           <div className="relative lg:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#f7be1d]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
-              src="/kp2/assets/choir2.mp4"
+              src="https://images.kharis.org/site-images/kp2/ba4f09f054519d29/choir2.mp4"
               poster="https://images.kharis.org/site-images/kp2/a20adefe3b0f9d7a/choir2-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
@@ -107,7 +107,7 @@ function Index({
           <div className="relative hidden lg:block lg:flex-1 group overflow-hidden halftone-bg text-[#eaddff]/10">
             <AmbientVideo
               className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
-              src="/kp2/assets/dancing.mp4"
+              src="https://images.kharis.org/site-images/kp2/785c2b4d533ea835/dancing.mp4"
               poster="https://images.kharis.org/site-images/kp2/2777b7351167f611/dancing-poster.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>

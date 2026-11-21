@@ -36,6 +36,31 @@ test("retries a timed-out public image request and still checks its checksum", a
     request.mock.restore();
   }
 });
+test("retries a connection failure but not a real content mismatch", async () => {
+  const bytes = Buffer.from("verified image fixture");
+  const image = {
+    key: "site-images/test/fixture.webp",
+    url: "https://images.kharis.org/site-images/test/fixture.webp",
+    contentType: "image/webp",
+    hash: createHash("sha256").update(bytes).digest("hex"),
+  };
+  let requests = 0;
+  const request = mock.method(globalThis, "fetch", async () => {
+    if (requests++ === 0) throw new TypeError("fetch failed");
+    return new Response(bytes, { headers: { "Content-Type": "image/webp" } });
+  });
+  try {
+    await verifyPublic(image);
+    assert.equal(request.mock.callCount(), 2);
+    await assert.rejects(
+      verifyPublic({ ...image, contentType: "image/png" }),
+      /Incorrect Content-Type/,
+    );
+    assert.equal(request.mock.callCount(), 3);
+  } finally {
+    request.mock.restore();
+  }
+});
 test("keeps selected replacement aliases when rebuilding the Cloudflare mapping", () => {
   const previous = {
     "/assets/old-photo.jpg": "/kp2/assets/photo.jpg",
@@ -65,6 +90,12 @@ test("updates JSX and CSS while leaving external URLs and similar filenames inta
   assert.ok(actual.includes("https://example.com/images/photo.jpg"));
   assert.ok(actual.includes("/images/photo.jpg.backup"));
   assert.ok(actual.includes(`url('${images[0].url}')`));
+});
+test("leaves a siteImageUrls lookup key alone while still updating a plain src on the same line", () => {
+  const source = `src: siteImageUrls["/images/photo.jpg"], other: "/images/photo.jpg"`;
+  const actual = replaceImageUrls(source, "main", images);
+  assert.ok(actual.includes(`siteImageUrls["/images/photo.jpg"]`));
+  assert.ok(actual.includes(`other: "${images[0].url}"`));
 });
 test("handles both KP2 base-path forms and is idempotent", () => {
   const source = `"/assets/photo.jpg" url(/kp2/assets/photo.jpg)`;
