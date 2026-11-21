@@ -258,9 +258,13 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "When the right brief comes",
     audience: "Builders, designers, analysts",
     image:
-      "https://images.kharis.org/site-images/main/618d492c54b5ca18/life-picks/innovation-project/00-main-pitch.jpg",
-    alt: "Young people presenting their pitch, HomeLink, on stage at Barclays",
+      "https://images.kharis.org/site-images/main/15b6069f2c123a2d/life-picks/innovation-project/04-card-tower.jpg",
+    alt: "Students building a card tower together during a team exercise",
     gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/618d492c54b5ca18/life-picks/innovation-project/00-main-pitch.jpg",
+        alt: "Young people presenting their pitch, HomeLink, on stage at Barclays",
+      },
       {
         src: "https://images.kharis.org/site-images/main/12674f47125bccf9/life-picks/innovation-project/01-group.jpg",
         alt: "The Innovation Challenge cohort with their completion certificates at Barclays",
@@ -272,10 +276,6 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
       {
         src: "https://images.kharis.org/site-images/main/1593e1c926aecea3/life-picks/innovation-project/03-mentor-hug.jpg",
         alt: "A mentor and student embracing during the Innovation Challenge",
-      },
-      {
-        src: "https://images.kharis.org/site-images/main/15b6069f2c123a2d/life-picks/innovation-project/04-card-tower.jpg",
-        alt: "Students building a card tower together during a team exercise",
       },
       {
         src: "https://images.kharis.org/site-images/main/24373420e731c103/life-picks/innovation-project/05-speaking.jpg",
@@ -545,9 +545,13 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "Yearly",
     audience: "Anyone ready to go deeper",
     image:
-      "https://images.kharis.org/site-images/main/67a46f34494b763e/life-picks/let-the-bible-speak-conference/00-main-open-bible.jpg",
-    alt: "An open Bible, turned to Genesis 4",
+      "https://images.kharis.org/site-images/main/8c981a0c49fdc966/life-picks/let-the-bible-speak-conference/13-sola-scriptura-bible.jpg",
+    alt: 'A leather Bible embossed "Sola Scriptura" held up on stage',
     gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/67a46f34494b763e/life-picks/let-the-bible-speak-conference/00-main-open-bible.jpg",
+        alt: "An open Bible, turned to Genesis 4",
+      },
       {
         src: "https://images.kharis.org/site-images/main/48c13b558056fe3d/life-picks/let-the-bible-speak-conference/01-packed-hall.jpg",
         alt: "The packed conference hall listening to the preacher on stage",
@@ -597,10 +601,6 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
         alt: "A speaker preaching with an open Bible under dramatic stage light",
       },
       {
-        src: "https://images.kharis.org/site-images/main/8c981a0c49fdc966/life-picks/let-the-bible-speak-conference/13-sola-scriptura-bible.jpg",
-        alt: 'A leather Bible embossed "Sola Scriptura" held up on stage',
-      },
-      {
         src: "https://images.kharis.org/site-images/main/9f1ebbe3a52ac298/life-picks/let-the-bible-speak-conference/14-panel-discussion.jpg",
         alt: "A panel discussion on stage in front of the conference backdrop",
       },
@@ -616,6 +616,130 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
         src: "https://images.kharis.org/site-images/main/07c358ba2796500c/life-picks/let-the-bible-speak-conference/17-speaker-on-stage.jpg",
         alt: "A speaker addressing the conference in front of the event backdrop",
       },
+      {
+        src: "https://images.kharis.org/site-images/main/dc4477e8fb14e998/life-picks/let-the-bible-speak-conference/18-departure-group-photo.jpg",
+        alt: "The Let the Bible Speak Conference team posing together before departure, pointing to the sky",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/d63192390ffa531f/life-picks/let-the-bible-speak-conference/19-sunglasses-trio.jpg",
+        alt: "A team member wearing sunglasses with 'LTBS 2026' written on the lenses, flanked by two smiling colleagues",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/13ca8a9d622ce4e4/life-picks/let-the-bible-speak-conference/20-departure-lounge-portrait.jpg",
+        alt: "A team member smiling in the airport departure lounge, wearing a conference polo shirt",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/5338f1e9431e6916/life-picks/let-the-bible-speak-conference/21-preaching-jesus-screen.jpg",
+        alt: "A speaker preaching on stage in front of a large 'JESUS' graphic on the screen",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/107ea3ed28032ab3/life-picks/let-the-bible-speak-conference/22-arrivals-corridor-ghana.jpg",
+        alt: "The conference team walking through the arrivals corridor after landing in Ghana",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/6b76bb51da6bfb00/life-picks/let-the-bible-speak-conference/23-reception-desk-banner.jpg",
+        alt: "Two staff waving behind a reception desk next to the Let the Bible Speak Conference banner listing all four speakers",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/4a7d66c80c32a8a0/life-picks/let-the-bible-speak-conference/24-welcome-to-ghana-banner.jpg",
+        alt: "Supporters holding up a 'Welcome to Ghana' banner for Rev. Dr. David Antwi on his arrival",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/744f414453d90375/life-picks/let-the-bible-speak-conference/25-crowd-cheering-flyers.jpg",
+        alt: "A cheering crowd holding up conference flyers and wearing branded sunglasses",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/b3cad6b76b796fe2/life-picks/let-the-bible-speak-conference/26-street-arrival-interview.jpg",
+        alt: "A speaker giving an interview to reporters amid a crowd outside a shopping mall at night",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/b4b0eb01f0f14b48/life-picks/let-the-bible-speak-conference/27-sunglasses-profile.jpg",
+        alt: "A young delegate in branded sunglasses among the crowd, conference flyers visible nearby",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/1fb46b12c76c6668/life-picks/let-the-bible-speak-conference/28-night-street-march.jpg",
+        alt: "Delegates holding conference signs aloft as they walk together at night, under a highway flyover",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/5c03011050e00ab9/life-picks/let-the-bible-speak-conference/29-worship-leader-hand-raised.jpg",
+        alt: "A worship leader singing with one hand raised under blue stage light",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/ae3c2a5ef8788c60/life-picks/let-the-bible-speak-conference/30-truck-skaters.jpg",
+        alt: "Rollerblading promo team sitting atop the conference's branded street truck",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/0fa58f4791c726f1/life-picks/let-the-bible-speak-conference/31-promo-truck-crowd.jpg",
+        alt: "A crowd gathered on the conference's promotional truck, waving booklets and cheering",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/48c13b558056fe3d/life-picks/let-the-bible-speak-conference/32-auditorium-wide-dignitaries.jpg",
+        alt: "A wide view of the conference hall with dignitaries seated in front and a speaker addressing the crowd from the stage",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/6aa622f57e4aa378/life-picks/let-the-bible-speak-conference/33-auditorium-scripture-screen.jpg",
+        alt: "The conference hall viewed from the back, with 2 Timothy 3:15 displayed on the stage screen",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/228d8ea9cc84dad0/life-picks/let-the-bible-speak-conference/34-orange-bible-raised.jpg",
+        alt: "A delegate holding an orange Bible high overhead",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/7f9a525d3a8c06f2/life-picks/let-the-bible-speak-conference/35-laughing-at-phone.jpg",
+        alt: "Delegates laughing together while looking at a phone at the airport",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/64fc5f1cb48a82da/life-picks/let-the-bible-speak-conference/36-airport-selfie.jpg",
+        alt: "Three delegates taking a selfie together at the airport, pointing and smiling",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/e7a222e9fd46a420/life-picks/let-the-bible-speak-conference/37-promo-truck-street.jpg",
+        alt: "The conference's branded promotional truck parked on the street, with the team loading sound equipment",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/9b466d1d4cd617d8/life-picks/let-the-bible-speak-conference/38-flyers-fanned-out.jpg",
+        alt: "A hand fanning out a stack of Let the Bible Speak Conference flyers featuring all four speakers",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/15f3e7048967e330/life-picks/let-the-bible-speak-conference/39-tshirt-logo-closeup.jpg",
+        alt: "Close-up of the 'Let the Bible Speak' conference t-shirt logo on a volunteer's back",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/0a030c67eec931e7/life-picks/let-the-bible-speak-conference/40-speakers-panel-laughing.jpg",
+        alt: "Speakers sharing a laugh together during a panel discussion on stage",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/d1892d630e0469cc/life-picks/let-the-bible-speak-conference/41-worship-leader-passionate.jpg",
+        alt: "A worship leader singing passionately with his hand raised, lit in blue stage light",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/96113ece96a38858/life-picks/let-the-bible-speak-conference/42-backdrop-interview.jpg",
+        alt: "Two attendees being interviewed in front of the conference's step-and-repeat backdrop",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/dccd2e5ba96e0a80/life-picks/let-the-bible-speak-conference/43-worship-duet-passionate.jpg",
+        alt: "Two worship leaders singing together, one with hand raised, under smoky blue stage light",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/6a621d320400d364/life-picks/let-the-bible-speak-conference/44-bibles-raised-cheering-aisle.jpg",
+        alt: "Delegates cheering with raised Bibles as a speaker walks down the aisle holding a red Bible",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/5bffb2329f4fdd2c/life-picks/let-the-bible-speak-conference/45-street-banners-security.jpg",
+        alt: "Street banner flags of the conference speakers lining the road outside the venue, with security on duty",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/4ed95c000f332b18/life-picks/let-the-bible-speak-conference/46-outdoor-screen-mentorship-poster.jpg",
+        alt: "An outdoor LED screen broadcasting the stage feed live next to a poster for the Special Mentorship Sessions",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/587f1cfe228eab50/life-picks/let-the-bible-speak-conference/47-stage-backdrop-setup.jpg",
+        alt: "The conference's main stage backdrop featuring Rev. Dr. David Antwi, being set up ahead of the event",
+      },
+      {
+        src: "https://images.kharis.org/site-images/main/6b02e22bddccf7c0/life-picks/let-the-bible-speak-conference/48-full-stage-performance.jpg",
+        alt: "The full worship team performing on stage in front of the crowd, with the conference logo on the screen behind them",
+      },
     ],
   },
   {
@@ -626,16 +750,16 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "Every year",
     audience: "Anyone willing to come along",
     image:
-      "https://images.kharis.org/site-images/main/af6114c87c7ccc08/life-picks/jesus-campaign/00-main-passionate-outreach.jpg",
-    alt: "A Kharis member preaching passionately into a microphone, fist raised, wearing a 'My God Died For Me' campaign shirt",
+      "https://images.kharis.org/site-images/main/1a7b7f7826638cf9/life-picks/jesus-campaign/02-no-jesus-no-life-shirt.jpg",
+    alt: "A woman wearing a 'No Jesus No Life' t-shirt outside a cafe",
     gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/af6114c87c7ccc08/life-picks/jesus-campaign/00-main-passionate-outreach.jpg",
+        alt: "A Kharis member preaching passionately into a microphone, fist raised, wearing a 'My God Died For Me' campaign shirt",
+      },
       {
         src: "https://images.kharis.org/site-images/main/965dea58655780bd/life-picks/jesus-campaign/01-street-conversation.jpg",
         alt: "A Kharis outreach team member in conversation with two people on the street",
-      },
-      {
-        src: "https://images.kharis.org/site-images/main/1a7b7f7826638cf9/life-picks/jesus-campaign/02-no-jesus-no-life-shirt.jpg",
-        alt: "A campaign volunteer wearing a 'No Jesus No Life' t-shirt outside a cafe",
       },
       {
         src: "https://images.kharis.org/site-images/main/f42578a2ea27500b/life-picks/jesus-campaign/03-bus-stop-conversation.jpg",
@@ -714,16 +838,13 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     body: "Small home fellowships where we discuss the Word, pray, and care for one another. It is where a big church becomes a room of people who know your name.",
     cadence: "Weekly",
     audience: "Everyone, wherever you live",
-    image: "https://images.kharis.org/site-images/main/571e499ea60fdffc/branch-slide-1.jpg",
-    alt: "A full Kharis hall listening to the Word",
+    image:
+      "https://images.kharis.org/site-images/main/67587be47ceeb3bd/life-picks/k-group/02-living-room.jpg",
+    alt: "A K-Group gathered around a living room, Bibles open",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/e3d93dee21bbad78/life-picks/k-group/01-conversation.jpg",
         alt: "Two K-Group members deep in conversation at a home fellowship",
-      },
-      {
-        src: "https://images.kharis.org/site-images/main/67587be47ceeb3bd/life-picks/k-group/02-living-room.jpg",
-        alt: "A K-Group gathered around a living room, Bibles open",
       },
       {
         src: "https://images.kharis.org/site-images/main/ef81b7e09ac9af7d/life-picks/k-group/03-family-table.jpg",
@@ -749,9 +870,13 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     cadence: "Several times a year",
     audience: "The whole church",
     image:
-      "https://images.kharis.org/site-images/main/9f531452791f6c5c/life-picks/fasting/00-main-hands-raised-prayer.jpg",
-    alt: "A worshipper, hands clasped above her head, moved to tears in prayer",
+      "https://images.kharis.org/site-images/main/bbe05e8d16aa55cc/life-picks/fasting/05-pastor-kneeling-passionate.jpg",
+    alt: "A pastor kneeling on stage, crying out into the microphone",
     gallery: [
+      {
+        src: "https://images.kharis.org/site-images/main/9f531452791f6c5c/life-picks/fasting/00-main-hands-raised-prayer.jpg",
+        alt: "A worshipper, hands clasped above her head, moved to tears in prayer",
+      },
       {
         src: "https://images.kharis.org/site-images/main/3ca65e0f86f1c2f8/life-picks/fasting/01-prayer.jpg",
         alt: "A worshipper in prayer during Prayer Fest",
@@ -767,10 +892,6 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
       {
         src: "https://images.kharis.org/site-images/main/3334e18f48ae3ff0/life-picks/fasting/04-fervent-praise.jpg",
         alt: "Worshippers crying out with fists raised in fervent praise",
-      },
-      {
-        src: "https://images.kharis.org/site-images/main/bbe05e8d16aa55cc/life-picks/fasting/05-pastor-kneeling-passionate.jpg",
-        alt: "A pastor kneeling on stage, crying out into the microphone",
       },
       {
         src: "https://images.kharis.org/site-images/main/414d2eed19e87141/life-picks/fasting/06-joyful-worship-raised-hands.jpg",

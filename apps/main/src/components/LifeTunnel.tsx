@@ -93,6 +93,7 @@ function ActivityCarousel({ activity }: { activity: LifeActivity }) {
   const slides = [{ src: activity.image, alt: activity.alt }, ...(activity.gallery ?? [])];
   const [index, setIndex] = useState(0);
   const dragStart = useRef<number | null>(null);
+  const railRef = useRef<HTMLDivElement>(null);
 
   const go = useCallback(
     (delta: number) => setIndex((i) => (i + delta + slides.length) % slides.length),
@@ -108,6 +109,14 @@ function ActivityCarousel({ activity }: { activity: LifeActivity }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [go, slides.length]);
+
+  /* The rail scrolls one card at a time regardless of gallery size, so
+     whichever thumbnail is now focused has to bring itself into view - it
+     will usually be off to the side, not visible by default. */
+  useEffect(() => {
+    const thumb = railRef.current?.children[index];
+    thumb?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [index]);
 
   const current = slides[index];
 
@@ -153,21 +162,23 @@ function ActivityCarousel({ activity }: { activity: LifeActivity }) {
       </figure>
 
       {slides.length > 1 ? (
-        <div className="life-panel__gallery" role="list">
-          {slides.map((shot, i) => (
-            <button
-              key={shot.src}
-              type="button"
-              role="listitem"
-              className={`life-panel__thumb${i === index ? " is-active" : ""}`}
-              aria-current={i === index}
-              aria-label={`Show picture ${i + 1} of ${slides.length}: ${shot.alt}`}
-              onClick={() => setIndex(i)}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={shot.src} alt="" draggable={false} />
-            </button>
-          ))}
+        <div className="life-panel__gallery-viewport">
+          <div className="life-panel__gallery" role="list" ref={railRef}>
+            {slides.map((shot, i) => (
+              <button
+                key={shot.src}
+                type="button"
+                role="listitem"
+                className={`life-panel__thumb${i === index ? " is-active" : ""}`}
+                aria-current={i === index}
+                aria-label={`Show picture ${i + 1} of ${slides.length}: ${shot.alt}`}
+                onClick={() => setIndex(i)}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={shot.src} alt="" draggable={false} />
+              </button>
+            ))}
+          </div>
         </div>
       ) : null}
     </div>
@@ -216,8 +227,6 @@ export function LifeTunnel() {
   const [backdrop, setBackdrop] = useState<string | undefined>();
   const [open, setOpen] = useState<LifeActivity | null>(null);
   const [started, setStarted] = useState(false);
-  const [hovered, setHovered] = useState<LifeActivity | null>(null);
-  const [nearest, setNearest] = useState<LifeActivity | null>(null);
   /** Once someone has actually pointed at or opened a wall, the centre cue has done its job. */
   const [engaged, setEngaged] = useState(false);
   /* The pointer is very often already resting over a wall the instant "Step
@@ -261,24 +270,12 @@ export function LifeTunnel() {
     }
   }, []);
 
-  /* Names whatever the pointer is over, in one fixed legible place. The
-   * captions on the walls tell you what is coming; this tells you exactly
-   * what you are about to open. */
+  /* A hover is what retires the centre cue once someone has actually pointed
+   * at a wall, rather than just arrived. */
   const onHoverItem = useCallback((item: { activity?: LifeActivity } | null) => {
-    setHovered(item?.activity ?? null);
     if (item?.activity && Date.now() - startedAt.current > 500) setEngaged(true);
   }, []);
 
-  /* Whatever is closest to the camera right now. The tunnel narrates itself
-   * as you travel, which is what makes it a guided journey rather than a
-   * browse, and it is the only part of this that works on touch. */
-  const onNearestItem = useCallback((item: { activity?: LifeActivity } | null) => {
-    setNearest(item?.activity ?? null);
-  }, []);
-
-  /* Hovering is a deliberate question about one wall, so it wins. With no
-   * pointer on anything, the tunnel names whatever it is carrying you past. */
-  const showing = hovered ?? nearest;
   const programmeActivities = activities.filter((activity) => activity.slug !== "children");
   const activitiesBySlug = new Map(
     programmeActivities.map((activity) => [activity.slug, activity]),
@@ -309,7 +306,6 @@ export function LifeTunnel() {
             items={items}
             onSelectItem={onSelectItem}
             onHoverItem={onHoverItem}
-            onNearestItem={onNearestItem}
             /* Nothing should be moving behind an open activity. */
             frozen={Boolean(open)}
             /* The start control is ours, in the middle of the tunnel with the
@@ -353,7 +349,7 @@ export function LifeTunnel() {
               out the moment you actually point at or open a wall, handing
               off to the readout below. */}
           <p className={`life-tunnel__cue${started && !engaged ? " is-on" : ""}`} aria-hidden>
-            <span>Click a picture to find out more</span>
+            <span>Click anywhere to pause · Click a picture to find out more</span>
           </p>
 
           <button
@@ -365,14 +361,6 @@ export function LifeTunnel() {
           >
             Scroll down for the full picture
           </button>
-
-          <p className={`life-tunnel__hint${started ? " is-on" : ""}`} aria-hidden>
-            {showing ? (
-              <strong>{showing.title}</strong>
-            ) : (
-              <span>Hold to speed up · Click any wall to stop on it</span>
-            )}
-          </p>
         </div>
       ) : null}
 
