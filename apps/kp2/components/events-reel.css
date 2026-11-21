@@ -1,0 +1,2653 @@
+/* KP2 Events: the opening reel, one chapter per signature event, the Camp teaser and the closing
+   band. House style: Anton headlines, ink borders, hard offset shadows, halftone dots and slapped
+   stickers. Motion is deliberately slow: long eases and drifting stills. */
+
+.kp-events .kp-reel,
+.kp-events .kp-chap,
+.kp-events .kp-next {
+  --ink: #151218;
+  --sun: #f7be1d;
+  --paper: #fdf8ec;
+  --slow: cubic-bezier(0.65, 0, 0.35, 1);
+  --settle: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* The site's dark theme recolours every descendant of the page wrapper
+   (`.dark .bg-background *`). Inside this page, text inherits its section's colour instead;
+   every rule here is scoped under `.kp-events` (on <main>) so it outranks that reset too. */
+.dark .kp-events * {
+  color: inherit;
+}
+
+/* ─── Opening reel ─────────────────────────────────────────────────────────────────────────── */
+
+.kp-events .kp-reel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  min-height: clamp(40rem, calc(100svh - 74px), 58rem);
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(1.25rem, 5vw, 4.5rem);
+  overflow: hidden;
+  background: var(--ink);
+  color: #fff;
+  border-bottom: 4px solid var(--ink);
+}
+
+.kp-events .kp-reel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(21 18 24 / 0.94) 0%,
+      rgb(21 18 24 / 0.7) 38%,
+      rgb(21 18 24 / 0.25) 100%
+    ),
+    linear-gradient(0deg, rgb(21 18 24 / 0.8) 0%, transparent 40%);
+}
+
+.kp-events .kp-reel__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.kp-events .kp-reel__ambient-layer {
+  position: absolute;
+  inset: -12%;
+  background-position: center;
+  background-size: cover;
+  filter: blur(42px) saturate(1.35) brightness(0.6);
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+
+.kp-events .kp-reel__ambient-layer.is-on {
+  opacity: 1;
+}
+
+.kp-events .kp-reel__dots {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(rgb(255 255 255 / 0.12) 1.4px, transparent 1.5px);
+  background-size: 12px 12px;
+  mask-image: linear-gradient(90deg, #000 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.kp-events .kp-reel__intro {
+  position: relative;
+  z-index: 2;
+  max-width: 34rem;
+}
+
+.kp-events .kp-reel__eyebrow {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: 0.3rem 0.75rem;
+  background: var(--sun);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 #000;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  rotate: -2deg;
+}
+
+.kp-events .kp-reel__title {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(4.5rem, 11vw, 9.5rem);
+  font-weight: 400;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 6px 6px 0 var(--accent);
+  transition: text-shadow 1.2s var(--slow);
+}
+
+.kp-events .kp-reel__lede {
+  margin: 1.1rem 0 0;
+  max-width: 26rem;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  font-weight: 600;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 0.86);
+}
+
+.kp-events .kp-reel__index {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kp-events .kp-reel__index-item {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  width: 100%;
+  max-width: 20rem;
+  padding: 0.5rem 0.9rem 0.6rem;
+  overflow: hidden;
+  background: transparent;
+  color: rgb(255 255 255 / 0.7);
+  border: 3px solid transparent;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.9s var(--slow),
+    color 0.9s var(--slow),
+    border-color 0.9s var(--slow),
+    box-shadow 0.9s var(--slow),
+    transform 0.9s var(--slow);
+}
+
+.kp-events .kp-reel__index-item:hover,
+.kp-events .kp-reel__index-item:focus-visible {
+  color: #fff;
+  border-color: rgb(255 255 255 / 0.5);
+}
+
+.kp-events .kp-reel__index-item:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.kp-events .kp-reel__index-item.is-active {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--ink);
+  box-shadow: 5px 5px 0 #000;
+  transform: translateX(0.6rem);
+}
+
+.kp-events .kp-reel__index-num {
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.kp-events .kp-reel__index-name {
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* Time left on the current card. */
+.kp-events .kp-reel__index-timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 100%;
+  background: var(--on-accent);
+  opacity: 0.55;
+  transform-origin: left;
+  animation: kp-reel-timer 6.5s linear both;
+}
+
+@keyframes kp-reel-timer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.kp-events .kp-reel__stage {
+  position: relative;
+  z-index: 1;
+  height: clamp(30rem, 72svh, 42rem);
+  perspective: 1600px;
+  touch-action: pan-y;
+}
+
+.kp-events .kp-reel__card {
+  --w: clamp(15rem, 23vw, 20.5rem);
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: var(--w);
+  aspect-ratio: 9 / 14;
+  overflow: hidden;
+  background: var(--ink);
+  border: 4px solid var(--ink);
+  box-shadow: 8px 8px 0 #000;
+  cursor: pointer;
+  z-index: calc(10 - var(--abs));
+  opacity: calc(1 - max(0, var(--abs) - 1));
+  filter: brightness(calc(1 - var(--abs) * 0.38)) saturate(calc(1 - var(--abs) * 0.3));
+  transform: translate(-50%, -50%) translateX(calc(var(--o) * 64%)) rotateY(calc(var(--o) * -24deg))
+    rotate(calc(var(--o) * 3deg)) scale(calc(1 - var(--abs) * 0.16));
+  transition:
+    transform 1.25s var(--slow),
+    opacity 1.25s var(--slow),
+    filter 1.25s var(--slow),
+    box-shadow 1.25s var(--slow);
+}
+
+.kp-events .kp-reel__card.is-active {
+  cursor: default;
+  box-shadow: 12px 12px 0 var(--card-accent);
+}
+
+.kp-events .kp-reel__media {
+  position: absolute;
+  inset: 0;
+}
+
+.kp-events .kp-reel__video,
+.kp-events .kp-reel__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kp-events .kp-reel__card.is-active .kp-reel__img {
+  animation: kp-slow-drift 16s ease-in-out infinite alternate;
+}
+
+.kp-events .kp-reel__card-copy {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 3.5rem 1.1rem 1.1rem;
+  background: linear-gradient(
+    0deg,
+    rgb(21 10 38 / 0.95) 0%,
+    rgb(21 10 38 / 0.6) 55%,
+    transparent 100%
+  );
+}
+
+.kp-events .kp-reel__card-num {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgb(255 255 255 / 0.8);
+}
+
+.kp-events .kp-reel__card-title {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2.2rem, 3.6vw, 3.1rem);
+  font-weight: 400;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 4px 4px 0 var(--ink);
+}
+
+.kp-events .kp-reel__card-full {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.85);
+}
+
+.kp-events .kp-reel__card-tag {
+  display: inline-block;
+  margin: 0.6rem 0 0;
+  padding: 0.25rem 0.55rem;
+  background: var(--card-accent);
+  color: var(--card-on-accent);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  rotate: -1.5deg;
+}
+
+.kp-events .kp-reel__card-go {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+  padding: 0.55rem 0.9rem;
+  background: var(--ink);
+  color: #fff;
+  border: 3px solid #fff;
+  box-shadow: 4px 4px 0 var(--card-accent);
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  translate: 0 0.6rem;
+  transition:
+    opacity 0.8s var(--settle) 0.5s,
+    translate 0.8s var(--settle) 0.5s,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.kp-events .kp-reel__card.is-active .kp-reel__card-go {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.kp-events .kp-reel__card:not(.is-active) .kp-reel__card-go {
+  transition-delay: 0s;
+}
+
+.kp-events .kp-reel__card-go:hover,
+.kp-events .kp-reel__card-go:focus-visible {
+  background: var(--card-accent);
+  color: var(--card-on-accent);
+}
+
+.kp-events .kp-reel__card-go:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.kp-events .kp-reel__card-go .material-symbols-outlined {
+  font-size: 1.05rem;
+}
+
+.kp-events .kp-reel__controls {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  translate: -50% 0;
+}
+
+.kp-events .kp-reel__arrow {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  background: var(--ink);
+  color: #fff;
+  border: 3px solid #fff;
+  box-shadow: 4px 4px 0 var(--accent);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 1.2s var(--slow);
+}
+
+.kp-events .kp-reel__arrow:hover,
+.kp-events .kp-reel__arrow:focus-visible {
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: translate(-2px, -2px);
+}
+
+.kp-events .kp-reel__arrow:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.kp-events .kp-reel__count {
+  min-width: 4.5rem;
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.95rem;
+  text-align: center;
+  color: rgb(255 255 255 / 0.75);
+}
+
+.kp-events .kp-reel__count b {
+  color: #fff;
+  font-size: 1.15rem;
+}
+
+/* ─── Chapters ─────────────────────────────────────────────────────────────────────────────── */
+
+.kp-events .kp-chap {
+  --pad-x: clamp(1.1rem, 5vw, 4.5rem);
+  position: relative;
+  isolation: isolate;
+  padding: clamp(4rem, 8vw, 7rem) var(--pad-x) clamp(3.5rem, 6vw, 5.5rem);
+  overflow: hidden;
+  /* The site's dotted page texture (the homepage's .halftone-bg layer: 1px dots on an 8px grid,
+     gray-200 at half strength over white; faint white dots on the dark surface in dark mode). */
+  --dots: rgb(229 231 235 / 0.5);
+  --dot-r: 1px;
+  background-color: #fff;
+  background-image: radial-gradient(circle, var(--dots) var(--dot-r), transparent var(--dot-r));
+  background-size: 8px 8px;
+  color: var(--ink);
+  border-bottom: 4px solid var(--ink);
+  scroll-margin-top: 74px;
+}
+
+/* Halftone in the chapter's colour, bleeding in from the top right. */
+.kp-events .kp-chap::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto auto;
+  z-index: -1;
+  width: min(70%, 54rem);
+  height: 36rem;
+  background-image: radial-gradient(var(--accent) 1.7px, transparent 1.8px);
+  background-size: 13px 13px;
+  mask-image: radial-gradient(70% 70% at 100% 0%, #000 0%, transparent 70%);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.kp-events .kp-chap--praise-night,
+.kp-events .kp-chap--camp {
+  --dots: rgb(255 255 255 / 0.03);
+  --dot-r: 1.5px;
+  background-color: var(--ink);
+  color: #fff;
+}
+
+.kp-events .kp-chap--praise-night::before,
+.kp-events .kp-chap--camp::before {
+  background-image: radial-gradient(rgb(157 78 255 / 0.9) 1.7px, transparent 1.8px);
+  opacity: 0.4;
+}
+
+.kp-events .kp-chap__head {
+  max-width: 72rem;
+  margin: 0 auto clamp(2.2rem, 4vw, 3.5rem);
+}
+
+.kp-events .kp-chap__label {
+  display: inline-block;
+  margin: 0 0 0.9rem;
+  padding: 0.3rem 0.7rem;
+  background: var(--ink);
+  color: #fff;
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--accent);
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  rotate: -1.5deg;
+}
+
+.kp-events .kp-chap__label b {
+  color: var(--accent);
+}
+
+.kp-events .kp-chap--praise-night .kp-chap__label,
+.kp-events .kp-chap--camp .kp-chap__label {
+  background: #fff;
+  color: var(--ink);
+}
+
+.kp-events .kp-chap--praise-night .kp-chap__label b,
+.kp-events .kp-chap--camp .kp-chap__label b {
+  color: var(--accent);
+}
+
+.kp-events .kp-chap__title {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(4.2rem, 13vw, 11rem);
+  font-weight: 400;
+  line-height: 0.86;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow: 7px 7px 0 var(--accent);
+}
+
+.kp-events .kp-chap--praise-night .kp-chap__title,
+.kp-events .kp-chap--camp .kp-chap__title {
+  color: #fff;
+  text-shadow:
+    7px 7px 0 var(--accent),
+    0 0 40px rgb(157 78 255 / 0.55);
+}
+
+.kp-events .kp-chap__title-letters > span {
+  display: inline-block;
+  transition:
+    transform 1.1s var(--settle),
+    opacity 1.1s var(--settle);
+  transition-delay: calc(var(--i) * 70ms);
+}
+
+/* Slow entrances, armed only when JS and motion are available (useArrive sets data-arrive). */
+.kp-events [data-arrive]:not([data-in]) .kp-chap__title-letters > span {
+  opacity: 0;
+  transform: translateY(0.55em) rotate(8deg);
+}
+
+.kp-events .kp-chap__full {
+  margin: 0.9rem 0 0;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-chap__feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.kp-events .kp-chap__feature--tall {
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1fr);
+}
+
+.kp-events .kp-chap__frame {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--ink);
+  border: 4px solid var(--ink);
+  box-shadow: 12px 12px 0 var(--accent);
+  rotate: -1deg;
+  transition:
+    translate 1.3s var(--settle),
+    opacity 1.3s var(--settle);
+}
+
+.kp-events .kp-chap__feature--tall .kp-chap__frame {
+  justify-self: center;
+  width: min(100%, 23rem);
+  aspect-ratio: 9 / 16;
+}
+
+.kp-events [data-arrive]:not([data-in]) .kp-chap__frame {
+  opacity: 0;
+  translate: -5% 2rem;
+}
+
+.kp-events .kp-chap__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kp-events .kp-chap__media--drift {
+  animation: kp-slow-drift 18s ease-in-out infinite alternate;
+}
+
+/* A soft band of light sweeping slowly across the frame. */
+.kp-events .kp-chap__sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgb(255 255 255 / 0.16) 50%,
+    transparent 62%
+  );
+  mix-blend-mode: screen;
+  transform: translateX(-100%);
+  animation: kp-sweep 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.kp-events .kp-chap__story {
+  transition:
+    translate 1.3s var(--settle) 0.2s,
+    opacity 1.3s var(--settle) 0.2s;
+}
+
+.kp-events [data-arrive]:not([data-in]) .kp-chap__story {
+  opacity: 0;
+  translate: 0 2.5rem;
+}
+
+.kp-events .kp-chap__tagline {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-chap__intro {
+  margin: 1rem 0 0;
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  font-weight: 500;
+  line-height: 1.65;
+  opacity: 0.9;
+}
+
+.kp-events .kp-chap__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kp-events .kp-chap__facts li {
+  padding: 0.4rem 0.75rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  rotate: calc(-1.5deg + var(--i) * 1.4deg);
+}
+
+.kp-events .kp-chap__facts li:nth-child(2) {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.kp-events [data-in] .kp-chap__facts li {
+  --slap-r: calc(-1.5deg + var(--i) * 1.4deg);
+  --slap-shadow: 3px;
+  animation: kp-sticker-slap 560ms calc(0.7s + var(--i) * 160ms) backwards;
+}
+
+.kp-events .kp-chap__quote {
+  position: relative;
+  margin: 1.8rem 0 0;
+  padding: 1rem 1.2rem;
+  max-width: 24rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  rotate: 1deg;
+}
+
+.kp-events .kp-chap__quote::after {
+  content: "";
+  position: absolute;
+  left: 2rem;
+  bottom: -18px;
+  width: 26px;
+  height: 18px;
+  background: #fffdf5;
+  border-left: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  transform: skewX(-12deg);
+}
+
+.kp-events .kp-chap__quote p {
+  margin: 0;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+/* ─── Moments carousel ─────────────────────────────────────────────────────────────────────── */
+
+.kp-events .kp-moments {
+  max-width: 80rem;
+  margin: clamp(3.5rem, 7vw, 5.5rem) auto 0;
+}
+
+.kp-events .kp-moments__bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.8rem, 2vw, 1.4rem);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.kp-events .kp-moments__label {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  text-transform: uppercase;
+}
+
+.kp-events .kp-moments__progress {
+  flex: 1;
+  height: 8px;
+  background: transparent;
+  border: 3px solid currentColor;
+}
+
+.kp-events .kp-moments__progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.9s var(--slow);
+}
+
+.kp-events .kp-moments__count {
+  margin: 0;
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.kp-events .kp-moments__count b {
+  font-size: 1.1rem;
+}
+
+.kp-events .kp-moments__arrows {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.kp-events .kp-moments__arrow {
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.3s ease;
+}
+
+.kp-events .kp-moments__arrow:hover:not(:disabled),
+.kp-events .kp-moments__arrow:focus-visible {
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.kp-events .kp-moments__arrow:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.kp-events .kp-moments__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.kp-events .kp-moments__track {
+  --mh: clamp(19rem, 40vw, 27rem);
+  display: flex;
+  align-items: center;
+  gap: clamp(1.1rem, 2.2vw, 2rem);
+  margin: 0 calc(-1 * var(--pad-x));
+  padding: 2.2rem calc(50% - 8rem) 2.8rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  list-style: none;
+  cursor: grab;
+  outline: none;
+}
+
+.kp-events .kp-moments__track::-webkit-scrollbar {
+  display: none;
+}
+
+.kp-events .kp-moments__track:focus-visible {
+  box-shadow: inset 0 0 0 3px var(--accent);
+}
+
+.kp-events .kp-moments__track[data-dragging] {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.kp-events .kp-moment {
+  flex: none;
+  height: var(--mh);
+  aspect-ratio: 4 / 3;
+  scroll-snap-align: center;
+}
+
+.kp-events .kp-moment--tall {
+  aspect-ratio: 5 / 8;
+}
+
+.kp-events .kp-moment:not(.is-active) {
+  cursor: pointer;
+}
+
+.kp-events .kp-moment__frame {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--ink);
+  border: 4px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  transform: rotate(var(--tilt)) scale(0.9);
+  filter: saturate(0.5) brightness(0.82);
+  transition:
+    transform 0.95s var(--slow),
+    filter 0.95s var(--slow),
+    box-shadow 0.95s var(--slow);
+}
+
+.kp-events .kp-moment.is-active .kp-moment__frame {
+  transform: none;
+  filter: none;
+  box-shadow: 11px 11px 0 var(--accent);
+}
+
+.kp-events .kp-moment__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.kp-events .kp-moment.is-active img.kp-moment__media {
+  animation: kp-moment-zoom 9s ease-out both;
+}
+
+.kp-events .kp-moment__caption {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  rotate: -1.5deg;
+  transition: background-color 0.9s var(--slow);
+}
+
+.kp-events .kp-moment.is-active .kp-moment__caption {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ─── Closing band ─────────────────────────────────────────────────────────────────────────── */
+
+.kp-events .kp-next {
+  position: relative;
+  padding-bottom: clamp(3.5rem, 7vw, 6rem);
+  overflow: hidden;
+  background: var(--sun);
+  color: var(--ink);
+  border-bottom: 4px solid var(--ink);
+}
+
+.kp-events .kp-next__marquee {
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--sun);
+  border-bottom: 4px solid var(--ink);
+}
+
+.kp-events .kp-next__track {
+  display: flex;
+  width: max-content;
+  animation: kp-marquee 48s linear infinite;
+}
+
+.kp-events .kp-next__run {
+  display: flex;
+  flex: none;
+}
+
+.kp-events .kp-next__run > span {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.kp-events .kp-next__star {
+  margin: 0 1.4rem;
+  font-size: 0.6em;
+  color: #fff;
+}
+
+.kp-events .kp-next__copy {
+  max-width: 52rem;
+  margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
+  padding: 0 1.25rem;
+  text-align: center;
+}
+
+.kp-events .kp-next__title {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
+  font-weight: 400;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow: 5px 5px 0 #fff;
+}
+
+.kp-events .kp-next__lede {
+  margin: 1.1rem auto 0;
+  max-width: 34rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.kp-events .kp-next__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+.kp-events .kp-next__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 1.3rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.kp-events .kp-next__btn--solid {
+  background: var(--ink);
+  color: #fff;
+}
+
+.kp-events .kp-next__btn:hover,
+.kp-events .kp-next__btn:focus-visible {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--ink);
+}
+
+.kp-events .kp-next__btn:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ─── Keyframes ────────────────────────────────────────────────────────────────────────────── */
+
+@keyframes kp-slow-drift {
+  from {
+    transform: scale(1.03) translate(0, 0);
+  }
+  to {
+    transform: scale(1.14) translate(-2%, -1.5%);
+  }
+}
+
+@keyframes kp-moment-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.07);
+  }
+}
+
+@keyframes kp-sweep {
+  0%,
+  35% {
+    transform: translateX(-100%);
+  }
+  75%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes kp-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ─── Responsive ───────────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 899px) {
+  .kp-events .kp-reel {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .kp-events .kp-reel::before {
+    background: linear-gradient(0deg, rgb(21 18 24 / 0.75) 0%, rgb(21 18 24 / 0.55) 100%);
+  }
+
+  .kp-events .kp-reel__index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.3rem;
+  }
+
+  .kp-events .kp-reel__index-item {
+    width: auto;
+    padding: 0.35rem 0.65rem 0.45rem;
+    border-color: rgb(255 255 255 / 0.25);
+  }
+
+  .kp-events .kp-reel__index-item.is-active {
+    transform: none;
+  }
+
+  .kp-events .kp-reel__index-name {
+    font-size: 1.05rem;
+  }
+
+  .kp-events .kp-reel__stage {
+    height: clamp(29rem, 62svh, 36rem);
+  }
+
+  .kp-events .kp-reel__card {
+    --w: clamp(13.5rem, 56vw, 18rem);
+    transform: translate(-50%, -50%) translateX(calc(var(--o) * 78%))
+      rotateY(calc(var(--o) * -22deg)) rotate(calc(var(--o) * 3deg))
+      scale(calc(1 - var(--abs) * 0.18));
+  }
+
+  .kp-events .kp-chap__feature,
+  .kp-events .kp-chap__feature--tall {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kp-events .kp-chap__feature--tall .kp-chap__frame {
+    width: min(100%, 19rem);
+  }
+
+  .kp-events .kp-moments__bar {
+    flex-wrap: wrap;
+  }
+
+  .kp-events .kp-moments__progress {
+    order: 5;
+    flex-basis: 100%;
+  }
+
+  .kp-events .kp-moments__count {
+    margin-left: auto;
+  }
+
+  .kp-events .kp-moments__track {
+    --mh: clamp(14rem, 60vw, 21rem);
+    padding-inline: calc(50% - 6rem);
+  }
+}
+
+/* Phones: the reel comes first. The index chips duplicate the arrows and swipes, so they go,
+   and the card rises into the first screen. */
+@media (max-width: 599px) {
+  .kp-events .kp-reel {
+    gap: 0.25rem;
+    padding-top: 1.75rem;
+  }
+
+  .kp-events .kp-reel__eyebrow {
+    margin-bottom: 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .kp-events .kp-reel__title {
+    font-size: clamp(3.6rem, 18vw, 5rem);
+  }
+
+  .kp-events .kp-reel__lede {
+    margin-top: 0.7rem;
+    font-size: 0.98rem;
+  }
+
+  .kp-events .kp-reel__index {
+    display: none;
+  }
+
+  .kp-events .kp-reel__stage {
+    height: clamp(27rem, 64svh, 32rem);
+  }
+
+  .kp-events .kp-reel__card {
+    --w: clamp(12.5rem, 54vw, 15.5rem);
+  }
+}
+
+/* ─── Dark theme ───────────────────────────────────────────────────────────────────────────── */
+
+.dark .kp-events .kp-chap {
+  --dots: rgb(255 255 255 / 0.03);
+  --dot-r: 1.5px;
+  background-color: var(--surface-container-low);
+  color: #ece6f0;
+  border-color: #000;
+}
+
+.dark .kp-events .kp-chap--praise-night,
+.dark .kp-events .kp-chap--camp {
+  background-color: #0f0d12;
+}
+
+.dark .kp-events .kp-chap .kp-chap__title {
+  color: #fff;
+}
+
+.dark .kp-events .kp-chap .kp-chap__label {
+  background: #fff;
+  color: var(--ink);
+}
+
+.dark .kp-events .kp-chap__frame,
+.dark .kp-events .kp-moment__frame {
+  border-color: #000;
+}
+
+.dark .kp-events .kp-moments__arrow {
+  background: #1f1a26;
+  color: #fff;
+  border-color: #000;
+  box-shadow: 4px 4px 0 #000;
+}
+
+.dark .kp-events .kp-chap .kp-chap__facts li,
+.dark .kp-events .kp-chap .kp-chap__quote,
+.dark .kp-events .kp-chap .kp-moment__caption {
+  color: var(--ink);
+}
+
+.dark .kp-events .kp-chap .kp-chap__facts li:nth-child(2),
+.dark .kp-events .kp-chap .kp-moment.is-active .kp-moment__caption {
+  color: var(--on-accent);
+}
+
+.dark .kp-events .kp-reel,
+.dark .kp-events .kp-next {
+  border-color: #000;
+}
+
+/* ─── Reduced motion: everything arrives in place and holds still. ─────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-events .kp-reel__card,
+  .kp-events .kp-reel__ambient-layer,
+  .kp-events .kp-reel__index-item,
+  .kp-events .kp-reel__card-go,
+  .kp-events .kp-moment__frame,
+  .kp-events .kp-moments__progress span,
+  .kp-events .kp-chap__frame,
+  .kp-events .kp-chap__story,
+  .kp-events .kp-chap__title-letters > span {
+    transition: none;
+  }
+
+  .kp-events .kp-reel__img,
+  .kp-events .kp-reel__card.is-active .kp-reel__img,
+  .kp-events .kp-chap__media--drift,
+  .kp-events .kp-chap__sweep,
+  .kp-events .kp-chap__facts li,
+  .kp-events .kp-moment.is-active img.kp-moment__media,
+  .kp-events .kp-next__track,
+  .kp-events .kp-reel__index-timer {
+    animation: none !important;
+  }
+
+  .kp-events .kp-chap__sweep {
+    display: none;
+  }
+}
+
+/* ─── Shared kicker sticker (line-up, cinema) ──────────────────────────────────────────────── */
+
+.kp-events .kp-kicker {
+  display: inline-block;
+  margin: 0;
+  padding: 0.3rem 0.7rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  rotate: -1.5deg;
+}
+
+.kp-events .kp-lineup__title,
+.kp-events .kp-cinema__title {
+  margin: 0.9rem 0 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2.4rem, 5.2vw, 4.2rem);
+  font-weight: 400;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-lineup__intro,
+.kp-events .kp-cinema__intro {
+  margin: 0.8rem 0 0;
+  max-width: 36rem;
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  font-weight: 500;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* Shared by both players: the portrait clip sits centred over a blurred copy of its poster. */
+.kp-events .kp-lineup__blur,
+.kp-events .kp-cinema__blur {
+  position: absolute;
+  inset: -8%;
+  background-position: center;
+  background-size: cover;
+  filter: blur(26px) brightness(0.5) saturate(1.2);
+  animation: kp-evx-fade 0.25s ease both;
+}
+
+.kp-events .kp-lineup__video,
+.kp-events .kp-cinema__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: kp-evx-fade 0.25s ease both;
+}
+
+/* ─── Line-up: "now showing" screen + picker ───────────────────────────────────────────────── */
+
+.kp-events .kp-lineup {
+  max-width: 72rem;
+  margin: clamp(4rem, 8vw, 6.5rem) auto 0;
+}
+
+.kp-events .kp-lineup__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-top: 2.2rem;
+}
+
+.kp-events .kp-lineup__screen {
+  position: relative;
+  min-height: clamp(26rem, 40vw, 34rem);
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  border: 4px solid var(--ink);
+  box-shadow: 12px 12px 0 var(--accent);
+}
+
+.kp-events .kp-lineup__now {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.3rem 0.65rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-lineup__now b {
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0;
+}
+
+.kp-events .kp-lineup__screen-copy {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 1.5rem;
+  z-index: 2;
+  display: grid;
+  justify-items: start;
+  gap: 0.4rem;
+  max-width: calc(100% - 5rem);
+  animation: kp-evx-rise 0.35s var(--settle) both;
+}
+
+.kp-events .kp-lineup__screen-label {
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 4px 4px 0 var(--ink);
+}
+
+.kp-events .kp-lineup__screen-caption {
+  padding: 0.25rem 0.55rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.kp-events .kp-lineup__toggle,
+.kp-events .kp-cinema__toggle {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  background: var(--ink);
+  color: #fff;
+  border: 3px solid #fff;
+  box-shadow: 3px 3px 0 var(--accent);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.kp-events .kp-lineup__toggle {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 1.5rem;
+  z-index: 2;
+}
+
+.kp-events .kp-lineup__toggle:hover,
+.kp-events .kp-lineup__toggle:focus-visible,
+.kp-events .kp-cinema__toggle:hover,
+.kp-events .kp-cinema__toggle:focus-visible {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.kp-events .kp-lineup__toggle:focus-visible,
+.kp-events .kp-cinema__toggle:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.kp-events .kp-lineup__progress {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  height: 6px;
+  background: rgb(255 255 255 / 0.25);
+}
+
+.kp-events .kp-lineup__progress > span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+}
+
+.kp-events .kp-lineup__picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: clamp(0.75rem, 1.5vw, 1.1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kp-events .kp-lineup__thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 12rem;
+  padding: 0;
+  overflow: hidden;
+  background: var(--ink);
+  border: 4px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  cursor: pointer;
+  animation: kp-evx-fade 0.25s ease both;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.kp-events .kp-lineup__thumb:hover,
+.kp-events .kp-lineup__thumb:focus-visible {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--accent);
+}
+
+.kp-events .kp-lineup__thumb:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.kp-events .kp-lineup__thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  filter: saturate(0.85) brightness(0.8);
+  transition: filter 0.18s ease;
+}
+
+.kp-events .kp-lineup__thumb:hover img,
+.kp-events .kp-lineup__thumb:focus-visible img {
+  filter: none;
+}
+
+.kp-events .kp-lineup__thumb-label {
+  position: absolute;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  padding: 0.25rem 0.5rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-lineup__thumb-play {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 2px solid var(--ink);
+  font-size: 1.25rem;
+}
+
+/* ─── Cinema: the pastor's moments as chapters ─────────────────────────────────────────────── */
+
+.kp-events .kp-cinema {
+  max-width: 72rem;
+  margin: clamp(4.5rem, 9vw, 7rem) auto 0;
+}
+
+.kp-events .kp-cinema__screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 78svh;
+  margin: 2.2rem 0 0;
+  overflow: hidden;
+  background: #000;
+  border: 4px solid var(--ink);
+  box-shadow: 12px 12px 0 var(--ink);
+}
+
+.kp-events .kp-cinema__card {
+  position: absolute;
+  left: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 2;
+  display: grid;
+  gap: 0.35rem;
+  max-width: 45%;
+  animation: kp-evx-rise 0.4s var(--settle) both;
+}
+
+.kp-events .kp-cinema__card-num {
+  width: fit-content;
+  padding: 0.2rem 0.5rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 3px solid var(--ink);
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-cinema__card-label {
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 5px 5px 0 var(--ink);
+}
+
+.kp-events .kp-cinema__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  translate: 0 -50%;
+  background: var(--ink);
+  color: #fff;
+  border: 3px solid #fff;
+  box-shadow: 3px 3px 0 var(--accent);
+  cursor: pointer;
+  opacity: 0.85;
+  transition:
+    opacity 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.kp-events .kp-cinema__nav--prev {
+  left: 1rem;
+}
+
+.kp-events .kp-cinema__nav--next {
+  right: 1rem;
+}
+
+.kp-events .kp-cinema__nav:hover,
+.kp-events .kp-cinema__nav:focus-visible {
+  opacity: 1;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.kp-events .kp-cinema__nav:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.kp-events .kp-cinema__timeline {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+.kp-events .kp-cinema__toggle {
+  flex: none;
+  border-color: var(--ink);
+}
+
+.kp-events .kp-cinema__chapters {
+  display: flex;
+  flex: 1;
+  gap: 0.5rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kp-events .kp-cinema__chapters > li {
+  flex-basis: 0;
+  min-width: 0;
+}
+
+.kp-events .kp-cinema__chapter {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.kp-events .kp-cinema__chapter:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.kp-events .kp-cinema__track {
+  grid-column: 1 / -1;
+  display: block;
+  height: 14px;
+  overflow: hidden;
+  border: 3px solid currentColor;
+}
+
+.kp-events .kp-cinema__track > span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+}
+
+.kp-events .kp-cinema__chapter.is-done .kp-cinema__track > span {
+  width: 100%;
+}
+
+.kp-events .kp-cinema__chapter-num {
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  opacity: 0.55;
+}
+
+.kp-events .kp-cinema__chapter-label {
+  overflow: hidden;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+
+.kp-events .kp-cinema__chapter:hover .kp-cinema__chapter-label,
+.kp-events .kp-cinema__chapter:hover .kp-cinema__chapter-num {
+  opacity: 0.85;
+}
+
+.kp-events .kp-cinema__chapter.is-active .kp-cinema__chapter-label,
+.kp-events .kp-cinema__chapter.is-active .kp-cinema__chapter-num {
+  opacity: 1;
+}
+
+.kp-events .kp-cinema__desc {
+  max-width: 40rem;
+  margin: 1.6rem 0 0;
+  padding: 1rem 1.2rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--accent);
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.45;
+  rotate: -0.6deg;
+  animation: kp-evx-rise 0.35s var(--settle) both;
+}
+
+.kp-events .kp-cinema__desc b {
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@keyframes kp-evx-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes kp-evx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 899px) {
+  .kp-events .kp-lineup__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kp-events .kp-lineup__screen {
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    box-shadow: 8px 8px 0 var(--accent);
+  }
+
+  .kp-events .kp-lineup__picker {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: auto;
+    gap: 0.6rem;
+  }
+
+  .kp-events .kp-lineup__thumb {
+    min-height: 0;
+    aspect-ratio: 3 / 4;
+    border-width: 3px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .kp-events .kp-lineup__thumb-label {
+    left: 0.3rem;
+    right: 0.3rem;
+    bottom: 0.3rem;
+    padding: 0.15rem 0.3rem;
+    border-width: 2px;
+    box-shadow: none;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
+  .kp-events .kp-lineup__thumb-play {
+    display: none;
+  }
+
+  .kp-events .kp-cinema__screen {
+    aspect-ratio: 4 / 5;
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+
+  .kp-events .kp-cinema__card {
+    max-width: calc(100% - 2rem);
+  }
+
+  .kp-events .kp-cinema__nav {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .kp-events .kp-cinema__nav--prev {
+    left: 0.6rem;
+  }
+
+  .kp-events .kp-cinema__nav--next {
+    right: 0.6rem;
+  }
+}
+
+@media (max-width: 599px) {
+  .kp-events .kp-cinema__chapter-label {
+    display: none;
+  }
+
+  .kp-events .kp-cinema__chapters {
+    gap: 0.35rem;
+  }
+}
+
+.dark .kp-events .kp-lineup__screen,
+.dark .kp-events .kp-lineup__thumb,
+.dark .kp-events .kp-cinema__screen {
+  border-color: #000;
+}
+
+.dark .kp-events .kp-cinema__screen {
+  box-shadow: 12px 12px 0 #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-events .kp-lineup__blur,
+  .kp-events .kp-cinema__blur,
+  .kp-events .kp-lineup__video,
+  .kp-events .kp-cinema__video,
+  .kp-events .kp-lineup__screen-copy,
+  .kp-events .kp-lineup__thumb,
+  .kp-events .kp-cinema__card,
+  .kp-events .kp-cinema__desc {
+    animation: none;
+  }
+
+  .kp-events .kp-lineup__thumb,
+  .kp-events .kp-lineup__thumb img {
+    transition: none;
+  }
+}
+
+/* Phones: the clips carry a BASS watermark low in the frame. The cinema's caption card already
+   names the chapter, so its on-screen title goes; the line-up's title shrinks. */
+@media (max-width: 599px) {
+  .kp-events .kp-cinema__card {
+    display: none;
+  }
+
+  .kp-events .kp-lineup__screen-label {
+    font-size: 1.6rem;
+  }
+
+  .kp-events .kp-lineup__screen-caption {
+    font-size: 0.78rem;
+  }
+}
+
+/* ─── Teams: entrances side by side, like a line of jerseys ────────────────────────────────── */
+
+.kp-events .kp-teams,
+.kp-events .kp-bouts {
+  max-width: 72rem;
+  margin: clamp(4rem, 8vw, 6.5rem) auto 0;
+}
+
+.kp-events .kp-teams__title,
+.kp-events .kp-bouts__title {
+  margin: 0.9rem 0 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2.4rem, 5.2vw, 4.2rem);
+  font-weight: 400;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-teams__intro,
+.kp-events .kp-bouts__intro {
+  margin: 0.8rem 0 0;
+  max-width: 36rem;
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  font-weight: 500;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.kp-events .kp-teams__row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.9rem, 1.8vw, 1.4rem);
+  margin: 2.6rem 0 0;
+  padding: 1.4rem 0 2rem;
+  list-style: none;
+}
+
+.kp-events .kp-team {
+  position: relative;
+  rotate: var(--tilt);
+  transition:
+    translate 0.25s ease,
+    rotate 0.25s ease,
+    opacity 0.25s ease,
+    filter 0.25s ease;
+}
+
+/* A staggered line: every other team stands a little lower. */
+.kp-events .kp-team:nth-child(even) {
+  margin-top: 1.6rem;
+}
+
+/* Point at a card: it lifts and straightens, the others step back. */
+.kp-events .kp-team:hover,
+.kp-events .kp-team:focus-within {
+  z-index: 2;
+  translate: 0 -0.5rem;
+  rotate: 0deg;
+}
+
+@media (hover: hover) {
+  .kp-events .kp-teams__row:hover .kp-team:not(:hover) {
+    opacity: 0.6;
+    filter: saturate(0.55);
+  }
+}
+
+/* One trading card: the team colour frames the clip, with the header and the team's line inside. */
+.kp-events .kp-team__card {
+  display: flex;
+  flex-direction: column;
+  padding: 0 7px 7px;
+  background: var(--team);
+  color: var(--on-team);
+  border: 4px solid var(--ink);
+  box-shadow: 7px 7px 0 var(--ink);
+  transition: box-shadow 0.25s ease;
+}
+
+.kp-events .kp-team:hover .kp-team__card {
+  box-shadow: 11px 11px 0 var(--ink);
+}
+
+.kp-events .kp-team__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 0.55rem 0.2rem 0.5rem;
+}
+
+.kp-events .kp-team__name {
+  display: grid;
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.35rem, 2.1vw, 1.85rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-team__word {
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* Jersey number: outlined in the text colour, like a printed kit number. */
+.kp-events .kp-team__num {
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--on-team);
+}
+
+.kp-events .kp-team__frame {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: var(--ink);
+  border: 3px solid var(--ink);
+}
+
+/* Fade the foot of the clip into the card (it also softens the burned-in Sports Day badge). */
+.kp-events .kp-team__frame::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 38%;
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--team) 92%, transparent) 0%,
+    color-mix(in srgb, var(--team) 45%, transparent) 45%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.kp-events .kp-team__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kp-events .kp-team__line {
+  display: flex;
+  gap: 0.3rem;
+  min-height: 3.1em;
+  margin: 0;
+  padding: 0.6rem 0.2rem 0.15rem;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.kp-events .kp-team__quote {
+  flex: none;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 1.6rem;
+  line-height: 0.8;
+}
+
+/* Champions: a gold outline round the card and a ribbon above it. */
+.kp-events .kp-team.is-champion .kp-team__card {
+  box-shadow:
+    0 0 0 4px var(--sun),
+    9px 9px 0 4px var(--ink);
+}
+
+.kp-events .kp-team.is-champion:hover .kp-team__card {
+  box-shadow:
+    0 0 0 4px var(--sun),
+    13px 13px 0 4px var(--ink);
+}
+
+.kp-events .kp-team__ribbon {
+  position: absolute;
+  top: -1.35rem;
+  left: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  translate: -50% 0;
+  background: var(--sun);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  rotate: -3deg;
+}
+
+.kp-events .kp-team__ribbon .material-symbols-outlined {
+  font-size: 1.05rem;
+}
+
+/* ─── Bouts: tug-of-war fight cards on one rope ────────────────────────────────────────────── */
+
+.kp-events .kp-bouts__arena {
+  position: relative;
+  margin-top: 2.4rem;
+}
+
+.kp-events .kp-bouts__rope {
+  position: absolute;
+  top: 60%;
+  left: calc(-1 * var(--pad-x));
+  right: calc(-1 * var(--pad-x));
+  height: 18px;
+  background: repeating-linear-gradient(115deg, #d2a464 0 7px, #9c6b2f 7px 14px);
+  border-block: 3px solid var(--ink);
+  box-shadow: 0 4px 0 rgb(21 18 24 / 0.25);
+}
+
+.kp-events .kp-bouts__list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.8rem, 4.5vw, 4rem);
+  margin: 0;
+  padding: 0 0 1rem;
+  list-style: none;
+}
+
+.kp-events .kp-bout {
+  rotate: var(--tilt);
+}
+
+.kp-events .kp-bout__label {
+  display: inline-block;
+  margin: 0 0 0.6rem;
+  padding: 0.15rem 0.5rem;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-bout__title {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  border: 4px solid var(--ink);
+  border-bottom: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-bout__side {
+  padding: 0.6rem 1.6rem 0.65rem 0.7rem;
+}
+
+.kp-events .kp-bout__side--home {
+  background: var(--home);
+  color: var(--on-home);
+}
+
+.kp-events .kp-bout__side--away {
+  padding: 0.6rem 0.7rem 0.65rem 1.6rem;
+  background: var(--away);
+  color: var(--on-away);
+  text-align: right;
+}
+
+.kp-events .kp-bout__vs {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  translate: -50% -50%;
+  rotate: 45deg;
+  background: var(--ink);
+  border: 3px solid #fff;
+}
+
+.kp-events .kp-bout__vs > span {
+  rotate: -45deg;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.kp-events .kp-bout__frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--ink);
+  border: 4px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.kp-events .kp-bout__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%;
+}
+
+@media (max-width: 899px) {
+  .kp-events .kp-teams__row,
+  .kp-events .kp-bouts__list {
+    display: flex;
+    gap: 1rem;
+    margin-inline: calc(-1 * var(--pad-x));
+    padding: 0.5rem var(--pad-x) 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad-x);
+    scrollbar-width: none;
+  }
+
+  .kp-events .kp-teams__row::-webkit-scrollbar,
+  .kp-events .kp-bouts__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kp-events .kp-team {
+    flex: 0 0 min(56vw, 14rem);
+    scroll-snap-align: start;
+  }
+
+  .kp-events .kp-team:nth-child(even) {
+    margin-top: 1rem;
+  }
+
+  .kp-events .kp-bout {
+    flex: 0 0 min(74vw, 20rem);
+    scroll-snap-align: start;
+  }
+
+  .kp-events .kp-bouts__list {
+    margin-top: 0;
+  }
+}
+
+.dark .kp-events .kp-team__card,
+.dark .kp-events .kp-team__frame,
+.dark .kp-events .kp-bout__title,
+.dark .kp-events .kp-bout__frame {
+  border-color: #000;
+}
+
+.dark .kp-events .kp-bout__frame {
+  box-shadow: 8px 8px 0 #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-events .kp-team,
+  .kp-events .kp-team__card {
+    transition: none;
+  }
+}
+
+/* Phones: the sideways-scrolling row clips overflow, so leave room for the Champions ribbon. */
+@media (max-width: 899px) {
+  .kp-events .kp-teams__row {
+    padding-top: 1.9rem;
+  }
+}
+
+/* ─── Camp: a whole day in the Word ────────────────────────────────────────────────────────── */
+
+/* Dark like Praise Night, with a glow in the selected camp's colour (orange or purple). */
+.kp-events .kp-chap--camp::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 42rem;
+  background: radial-gradient(
+    60% 55% at 72% 0%,
+    color-mix(in srgb, var(--accent) 38%, transparent),
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+.kp-events .kp-chap--camp .kp-chap__title {
+  text-shadow:
+    7px 7px 0 var(--accent),
+    0 0 40px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.kp-events .kp-camp__intro {
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.kp-events .kp-camp__intro .kp-chap__intro {
+  max-width: 46rem;
+}
+
+.kp-events .kp-camp__switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 1.4rem);
+  max-width: 72rem;
+  margin: clamp(2.8rem, 5vw, 4rem) auto 0;
+}
+
+.kp-events .kp-camp__tab {
+  display: grid;
+  justify-items: start;
+  gap: 0.3rem;
+  padding: 0.9rem 1.1rem 1rem;
+  background: transparent;
+  color: #fff;
+  border: 3px solid rgb(255 255 255 / 0.28);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.kp-events .kp-camp__tab:hover {
+  border-color: var(--tab);
+}
+
+.kp-events .kp-camp__tab:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.kp-events .kp-camp__tab.is-active {
+  background: var(--tab);
+  color: var(--on-tab);
+  border-color: var(--ink);
+  box-shadow: 6px 6px 0 #000;
+  transform: translate(-2px, -2px);
+}
+
+.kp-events .kp-camp__tab-name {
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-camp__tab-ref {
+  padding: 0.1rem 0.45rem;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-space), "Space Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.kp-events .kp-camp__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: 72rem;
+  margin: clamp(2.2rem, 4vw, 3rem) auto 0;
+  animation: kp-evx-rise 0.4s var(--settle) both;
+}
+
+/* Scripture cards: paper slips with the reference on a tab in the chapter colour. */
+.kp-events .kp-camp__verses {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.9rem, 2vw, 1.4rem);
+  max-width: 56rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kp-events .kp-camp__verse {
+  position: relative;
+  margin: 0;
+  padding: 1rem 1.1rem 0.9rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-left: 8px solid var(--accent);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.kp-events .kp-camp__verses li:nth-child(odd) .kp-camp__verse {
+  rotate: -0.6deg;
+}
+
+.kp-events .kp-camp__verses li:nth-child(even) .kp-camp__verse {
+  rotate: 0.6deg;
+}
+
+.kp-events .kp-camp__verse p {
+  margin: 0;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.kp-events .kp-camp__verse-ref {
+  display: block;
+  margin-top: 0.55rem;
+  font-style: normal;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* The camp's key scripture, under the pastor's quote. */
+.kp-events .kp-camp__verse--key {
+  margin-top: 1.4rem;
+}
+
+/* One large photo (its camp logo kept in view, bottom left) with two smaller ones beside it. */
+.kp-events .kp-camp__mosaic {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.7rem, 1.4vw, 1rem);
+}
+
+.kp-events .kp-camp__photo {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: var(--ink);
+  border: 4px solid var(--ink);
+  box-shadow: 6px 6px 0 #000;
+}
+
+.kp-events .kp-camp__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kp-events .kp-camp__photo--0 {
+  grid-row: 1 / -1;
+  aspect-ratio: 4 / 5;
+  box-shadow: 11px 11px 0 var(--accent);
+  rotate: -1deg;
+}
+
+.kp-events .kp-camp__photo--1 {
+  rotate: 1.5deg;
+}
+
+.kp-events .kp-camp__photo--2 {
+  rotate: -1.2deg;
+}
+
+.kp-events .kp-camp__quote {
+  position: relative;
+  margin: 0;
+  padding-top: 2.4rem;
+}
+
+/* A big opening quote mark in the camp's colour. */
+.kp-events .kp-camp__quote::before {
+  content: "“";
+  position: absolute;
+  top: -1.2rem;
+  left: -0.3rem;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 7rem;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.kp-events .kp-camp__quote p {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2rem, 3.8vw, 3.3rem);
+  line-height: 1.02;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 4px 4px 0 #000;
+}
+
+.kp-events .kp-camp__quote footer {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.3rem 0.65rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 #000;
+  font-family: var(--font-label-comic), "Bricolage Grotesque", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  rotate: -1.5deg;
+}
+
+.kp-events .kp-camp__quote footer::before {
+  content: "— ";
+}
+
+.kp-events .kp-camp__summary {
+  margin: 1.6rem 0 0;
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  font-weight: 500;
+  line-height: 1.65;
+  opacity: 0.9;
+}
+
+.kp-events .kp-camp__themes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 1.6rem 0 0;
+}
+
+.kp-events .kp-camp__theme {
+  padding: 0.75rem 0.85rem 0.85rem;
+  background: #fffdf5;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-top: 7px solid var(--accent);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.kp-events .kp-camp__theme dt {
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kp-events .kp-camp__theme dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Three themes: the last one spans the row so the grid stays even. */
+.kp-events .kp-camp__theme:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 899px) {
+  .kp-events .kp-camp__panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 599px) {
+  .kp-events .kp-camp__switch,
+  .kp-events .kp-camp__verses,
+  .kp-events .kp-camp__themes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kp-events .kp-camp__quote::before {
+    font-size: 5.5rem;
+  }
+}
+
+.dark .kp-events .kp-camp__photo {
+  border-color: #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-events .kp-camp__panel {
+    animation: none;
+  }
+
+  .kp-events .kp-camp__tab {
+    transition: none;
+  }
+}
+
+/* ─── Light mode: Praise Night and Camp ────────────────────────────────────────────────────────
+   In dark mode these two chapters are near-black. In light mode they take a soft tint of their own
+   colour instead (lilac for Praise Night; warm orange or lilac for whichever camp is picked), with
+   dots and the corner halftone in that colour, so they sit with the white chapters around them
+   while still standing apart. */
+
+html:not(.dark) .kp-events :is(.kp-chap--praise-night, .kp-chap--camp) {
+  --dots: color-mix(in srgb, var(--accent) 24%, transparent);
+  --dot-r: 1.2px;
+  background-color: color-mix(in srgb, var(--accent) 9%, #fffdf8);
+  color: var(--ink);
+  transition: background-color 0.4s ease;
+}
+
+html:not(.dark) .kp-events :is(.kp-chap--praise-night, .kp-chap--camp)::before {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--accent) 75%, transparent) 1.7px,
+    transparent 1.8px
+  );
+  opacity: 0.35;
+}
+
+html:not(.dark) .kp-events :is(.kp-chap--praise-night, .kp-chap--camp) .kp-chap__label {
+  background: var(--ink);
+  color: #fff;
+}
+
+html:not(.dark) .kp-events :is(.kp-chap--praise-night, .kp-chap--camp) .kp-chap__title {
+  color: var(--ink);
+  text-shadow: 7px 7px 0 var(--accent);
+}
+
+html:not(.dark) .kp-events .kp-chap--camp::after {
+  background: radial-gradient(
+    60% 55% at 72% 0%,
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    transparent 72%
+  );
+}
+
+html:not(.dark) .kp-events .kp-camp__quote p {
+  color: var(--ink);
+  text-shadow: 4px 4px 0 color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+html:not(.dark) .kp-events .kp-camp__tab:not(.is-active) {
+  background: #fffdf5;
+  color: var(--ink);
+  border-color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+html:not(.dark) .kp-events .kp-camp__tab:not(.is-active):hover {
+  border-color: var(--ink);
+  box-shadow: 4px 4px 0 var(--tab);
+}
+
+html:not(.dark) .kp-events .kp-camp__tab.is-active {
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+html:not(.dark) .kp-events .kp-camp__photo,
+html:not(.dark) .kp-events .kp-camp__verse,
+html:not(.dark) .kp-events .kp-camp__theme {
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+html:not(.dark) .kp-events .kp-camp__photo--0 {
+  box-shadow: 11px 11px 0 var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.dark) .kp-events :is(.kp-chap--praise-night, .kp-chap--camp) {
+    transition: none;
+  }
+}
+
+/* Dark mode: the Camp theme cards and scripture cards take the camp's light-mode tint (warm
+   orange for Agents of Revival, lilac for Not One City) instead of plain paper, with dark text. */
+.dark .kp-events .kp-camp__theme,
+.dark .kp-events .kp-camp__verse {
+  background: color-mix(in srgb, var(--accent) 9%, #fffdf8);
+  color: var(--ink);
+  transition: background-color 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dark .kp-events .kp-camp__theme,
+  .dark .kp-events .kp-camp__verse {
+    transition: none;
+  }
+}

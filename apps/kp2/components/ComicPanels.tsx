@@ -2,6 +2,7 @@
 
 import { KP2_PHOTOS } from "@/lib/photography";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { ComicGallery, type GalleryPhoto } from "@/components/ComicGallery";
 import "./comic-panels.css";
@@ -13,6 +14,8 @@ type Panel = {
   subtext: string;
   poster: GalleryPhoto;
   gallery: GalleryPhoto[];
+  /** A panel with its own page opens it instead of the photo gallery. */
+  href?: string;
 };
 
 const IMG = "https://images.kharis.org/site-images/main";
@@ -23,6 +26,7 @@ const PANELS: Panel[] = [
     caption: "Life together",
     headline: "Events",
     subtext: "Praise Night, Family Fun Day, Bring A Soul Sunday and many more moments together.",
+    href: "/events",
     poster: {
       src: `${IMG}/c92b67201f985207/events/praise-night-stage.jpg`,
       alt: "Singers leading praise on stage beside a large screen, with a packed hall of worshippers in front of them",
@@ -184,17 +188,27 @@ export function ComicPanels({ midweekWhen: _midweekWhen }: { midweekWhen?: strin
                       {panel.headline}
                     </h3>
                     <p className="kp-panels__sub">{panel.subtext}</p>
-                    <button
-                      type="button"
-                      className="kp-panels__explore"
-                      onClick={() => setOpenId(panel.id)}
-                    >
-                      Explore
-                      <span className="sr-only"> photos from {panel.headline}</span>
-                      <span className="material-symbols-outlined" aria-hidden="true">
-                        north_east
-                      </span>
-                    </button>
+                    {panel.href ? (
+                      <Link href={panel.href} className="kp-panels__explore">
+                        Explore
+                        <span className="sr-only"> {panel.headline}</span>
+                        <span className="material-symbols-outlined" aria-hidden="true">
+                          north_east
+                        </span>
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        className="kp-panels__explore"
+                        onClick={() => setOpenId(panel.id)}
+                      >
+                        Explore
+                        <span className="sr-only"> photos from {panel.headline}</span>
+                        <span className="material-symbols-outlined" aria-hidden="true">
+                          north_east
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </div>
               </article>

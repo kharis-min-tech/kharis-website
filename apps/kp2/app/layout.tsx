@@ -133,6 +133,11 @@ const MATERIAL_ICONS = [
   "volunteer_activism",
   "waving_hand",
   "zoom_in",
+  // Events page: reel arrows and the Camp packing list.
+  "check_box",
+  "east",
+  "south",
+  "west",
 ];
 const MATERIAL_ICON_NAMES = [...new Set(MATERIAL_ICONS)].sort().join(",");
 import { PageTurn } from "@/components/PageTurn";
