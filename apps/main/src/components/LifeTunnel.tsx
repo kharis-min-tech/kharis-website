@@ -59,6 +59,7 @@ const programme = [
       "christmas-jumper",
       "sports-day",
       "football-tournament",
+      "family-fun-day",
     ],
   },
 ] satisfies {

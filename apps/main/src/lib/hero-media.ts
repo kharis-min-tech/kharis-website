@@ -21,9 +21,21 @@ export type HeroSlide = {
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
+    type: "video",
+    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim.mp4",
+    poster: "https://images.kharis.org/site-images/main/1cd1968f552f6970/hero/worship-altar.jpg",
+    alt: "Worship to Glory to the Lamb at a Kharis service",
+  },
+  {
     type: "image",
     src: siteImageUrls["/images/locations/london-sunday-smiles.jpg"],
     alt: "Members of Kharis London smiling during a service",
+  },
+  {
+    type: "video",
+    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim%202.mp4",
+    poster: "https://images.kharis.org/site-images/main/850b7f32a7f6712c/joyful-worship.jpg",
+    alt: "Worship to Glory to the Lamb at a Kharis service",
   },
   {
     type: "image",
@@ -102,5 +114,12 @@ export const HERO_SLIDES: HeroSlide[] = [
     type: "image",
     src: "https://images.kharis.org/site-images/main/16b531253b8a325e/grace-filled-prayer.jpg",
     alt: "Praying together at a Kharis service",
+  },
+  {
+    type: "video",
+    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim%203.mp4",
+    poster:
+      "https://images.kharis.org/site-images/main/4ac6c245a7e4d9c2/hero/impartation-celebration.jpg",
+    alt: "Worship to Glory to the Lamb at a Kharis service",
   },
 ];
