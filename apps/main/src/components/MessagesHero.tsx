@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MousePointer2, Pause, Play } from "lucide-react";
+import { MousePointer2 } from "lucide-react";
 import Image from "@/components/SiteImage";
 import { ABOUT } from "@/lib/about-content";
 import { youtubeWatchUrl } from "@/lib/life-videos";
@@ -85,7 +85,7 @@ function speakerFrom(title: string): string | null {
   return `Pastor ${pastor.name.replace(/^pastor\s+/i, "").split(/\s+/)[0]}`;
 }
 
-type Mode = "idle" | "preview" | "playing" | "paused";
+type Mode = "idle" | "preview" | "playing";
 
 export function MessagesHero({ message }: { message: MessageVideo }) {
   const hero = useRef<HTMLElement>(null);
@@ -93,7 +93,6 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
   const action = useRef<HTMLButtonElement>(null);
   const [allowPreview, setAllowPreview] = useState(false);
   const [watching, setWatching] = useState(false);
-  const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(false);
   const [failed, setFailed] = useState(false);
   const [player, setPlayer] = useState<Player | null>(null);
@@ -109,7 +108,7 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
   const speaker = speakerFrom(message.title);
   const cue = `${coarsePointer ? "Tap" : "Click"} to ${speaker ? `listen to ${speaker}` : "dive in"}`;
   const load = allowPreview || hasOpenedPlayer;
-  const mode: Mode = watching ? (paused ? "paused" : "playing") : allowPreview ? "preview" : "idle";
+  const mode: Mode = watching ? "playing" : allowPreview ? "preview" : "idle";
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -224,9 +223,9 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
     currentMode.current = mode;
     if (mode === "playing") {
       player.unMute();
-      if (previous !== "paused") player.seekTo(0, true);
+      player.seekTo(0, true);
       player.playVideo();
-    } else if (mode === "paused" || mode === "idle") {
+    } else if (mode === "idle") {
       player.pauseVideo();
     } else {
       player.mute();
@@ -240,7 +239,6 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
 
   function togglePlayback() {
     if (!watching) setHasOpenedPlayer(true);
-    setPaused(false);
     setWatching(!watching);
   }
 
@@ -295,39 +293,25 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
         )}
 
         {failed && (
-          <p className="msg-featured-description" role="status">
-            The video player is unavailable. You can still watch on YouTube.
-          </p>
+          <>
+            <p className="msg-featured-description" role="status">
+              The video player is unavailable. You can still watch on YouTube.
+            </p>
+            <div className="msg-featured-actions">
+              <a
+                className="msg-hero-action msg-hero-action--secondary"
+                href={youtubeWatchUrl(message.id)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                YouTube
+              </a>
+            </div>
+          </>
         )}
 
-        <div className="msg-featured-actions">
-          {watching ? (
-            <>
-              <button
-                ref={action}
-                type="button"
-                className="msg-hero-action"
-                onClick={togglePlayback}
-              >
-                {paused ? (
-                  <Play size={16} fill="currentColor" aria-hidden />
-                ) : (
-                  <Pause size={16} aria-hidden />
-                )}
-                {paused ? "Resume message" : "Stop message"}
-              </button>
-              {!failed && (
-                <button
-                  type="button"
-                  className="msg-hero-action msg-hero-action--secondary"
-                  onClick={() => setPaused(!paused)}
-                >
-                  {paused ? <Play size={16} aria-hidden /> : <Pause size={16} aria-hidden />}
-                  {paused ? "Resume message" : "Pause message"}
-                </button>
-              )}
-            </>
-          ) : (
+        {!watching && !failed && (
+          <div className="msg-featured-actions">
             <button
               ref={action}
               type="button"
@@ -340,16 +324,8 @@ export function MessagesHero({ message }: { message: MessageVideo }) {
               </span>
               <span className="msg-hero-cue__text">{cue}</span>
             </button>
-          )}
-          <a
-            className="msg-hero-action msg-hero-action--secondary"
-            href={youtubeWatchUrl(message.id)}
-            target="_blank"
-            rel="noreferrer"
-          >
-            YouTube
-          </a>
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
