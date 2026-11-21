@@ -139,13 +139,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                   style={{ backgroundColor: t.color }}
                 />
                 <div className="relative z-10 flex flex-col flex-1 pt-4">
-                  <span
-                    className="font-display-xl leading-none testimonial-accent"
-                    style={{ color: t.color, fontSize: "clamp(2.75rem, 8vw, 4.5rem)" }}
-                  >
-                    &ldquo;
-                  </span>
-                  <div className="flex-1 -mt-2" style={{ fontSize: "clamp(1rem, 3.4vw, 1.25rem)" }}>
+                  <div className="flex-1" style={{ fontSize: "clamp(1rem, 3.4vw, 1.25rem)" }}>
                     <TestimonyQuote
                       quote={t.quote}
                       name={t.name}

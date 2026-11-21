@@ -23,7 +23,7 @@
 .kp-latest__row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.25rem 1rem;
 }
 
 .kp-msg {
@@ -217,10 +217,6 @@
   gap: 1.25rem;
 }
 
-.kp-browse__rows {
-  gap: 0.45rem;
-}
-
 .kp-browse__results-head {
   display: flex;
   flex-wrap: wrap;
@@ -287,7 +283,7 @@
 .kp-browse__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.25rem 1rem;
 }
 
 .kp-browse__empty {

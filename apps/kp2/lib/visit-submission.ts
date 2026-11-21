@@ -51,7 +51,7 @@ export function visitorInsert(
     "May contact: yes",
     `Site: ${fields.site}`,
     `Plan your visit for ${place}.`,
-    `Gathering: ${gathering}.`,
+    `Service: ${gathering}.`,
     fields.children ? "Bringing children (ages 0-12)." : "No children noted.",
   ].join("\n");
 

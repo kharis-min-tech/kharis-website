@@ -28,6 +28,11 @@ const CAPTURES = {
     alt: "Kharis Church app Messages screen with a featured sermon, browsing tabs and saved collections",
     current: true,
   },
+  "current-player": {
+    src: "https://images.kharis.org/site-images/main/f7dfca4f99bbe8a3/app-steps/kharis-app-current-player.png",
+    alt: "Kharis Church app Media Player with audio and video playback controls",
+    current: true,
+  },
   "current-bible": {
     src: "https://images.kharis.org/site-images/main/60f1b5d6513363dd/app-steps/kharis-app-current-bible.png",
     alt: "Kharis Church app Bible screen with Scripture search, highlights and notes",

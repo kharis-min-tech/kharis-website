@@ -25,7 +25,7 @@ function branchLine(branch: Branch) {
     services.length ? `Services: ${services.join("; ")}` : "",
     `Page: /kp2/branches/${branch.slug}`,
   ].filter(Boolean);
-  return `- ${bits.join(" — ")}`;
+  return `- ${bits.join(", ")}`;
 }
 
 export async function kp2Knowledge(): Promise<string> {

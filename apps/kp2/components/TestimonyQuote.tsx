@@ -80,12 +80,11 @@ export function TestimonyQuote({
         >
           <span className="material-symbols-outlined">close</span>
         </button>
-        <span className="material-symbols-outlined text-primary text-4xl">format_quote</span>
         <p className="font-body-lg text-on-surface leading-relaxed mt-2 whitespace-pre-wrap pr-10">
           {quote.replace(/^["“]|["”]$/g, "")}
         </p>
         <h3 id={titleId} className="font-headline-md text-2xl uppercase mt-6">
-          — {name}
+          By {name}
         </h3>
         {meta ? <p className="font-label-sm text-primary uppercase mt-1">{meta}</p> : null}
       </div>
