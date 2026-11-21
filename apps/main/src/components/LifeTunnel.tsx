@@ -139,9 +139,19 @@ export function LifeTunnel() {
   const [nearest, setNearest] = useState<LifeActivity | null>(null);
   /** Once someone has actually pointed at or opened a wall, the centre cue has done its job. */
   const [engaged, setEngaged] = useState(false);
+  /* The pointer is very often already resting over a wall the instant "Step
+     inside" is clicked (the button sits where the tunnel is about to be), so
+     the tunnel's own hover callback can fire immediately and dismiss the cue
+     before it has even faded in. A genuine click still counts straight away;
+     a bare hover only counts once it has had a moment to be a real, moved-to
+     hover rather than a leftover one from the click itself. */
+  const startedAt = useRef(0);
 
   useEffect(() => {
-    if (started) runningBrowse.current?.focus({ preventScroll: true });
+    if (started) {
+      startedAt.current = Date.now();
+      runningBrowse.current?.focus({ preventScroll: true });
+    }
   }, [started]);
 
   /* The tunnel needs a real colour, not a custom property, so the page's own
@@ -175,7 +185,7 @@ export function LifeTunnel() {
    * what you are about to open. */
   const onHoverItem = useCallback((item: { activity?: LifeActivity } | null) => {
     setHovered(item?.activity ?? null);
-    if (item?.activity) setEngaged(true);
+    if (item?.activity && Date.now() - startedAt.current > 500) setEngaged(true);
   }, []);
 
   /* Whatever is closest to the camera right now. The tunnel narrates itself
