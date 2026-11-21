@@ -13,12 +13,9 @@ export function IncidentFormExperience() {
           <h1>Report an incident</h1>
           <p>
             If something needs attention, tell us. Your report helps us keep our church family safe.
-            Use the form below, or open it in a new tab if the embed does not load on your device.
+            Fill in the form below.
           </p>
           <div className="incident-actions">
-            <a href={INCIDENT_FORM_URL} target="_blank" rel="noreferrer" className="btn-primary">
-              Open Microsoft Form
-            </a>
             <Link href="/governance" className="btn-ghost">
               Back to governance
             </Link>

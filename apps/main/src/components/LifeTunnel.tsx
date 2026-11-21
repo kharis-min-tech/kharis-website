@@ -137,6 +137,8 @@ export function LifeTunnel() {
   const [started, setStarted] = useState(false);
   const [hovered, setHovered] = useState<LifeActivity | null>(null);
   const [nearest, setNearest] = useState<LifeActivity | null>(null);
+  /** Once someone has actually pointed at or opened a wall, the centre cue has done its job. */
+  const [engaged, setEngaged] = useState(false);
 
   useEffect(() => {
     if (started) runningBrowse.current?.focus({ preventScroll: true });
@@ -162,7 +164,10 @@ export function LifeTunnel() {
   }));
 
   const onSelectItem = useCallback((item: { activity?: LifeActivity }) => {
-    if (item?.activity) setOpen(item.activity);
+    if (item?.activity) {
+      setOpen(item.activity);
+      setEngaged(true);
+    }
   }, []);
 
   /* Names whatever the pointer is over, in one fixed legible place. The
@@ -170,6 +175,7 @@ export function LifeTunnel() {
    * what you are about to open. */
   const onHoverItem = useCallback((item: { activity?: LifeActivity } | null) => {
     setHovered(item?.activity ?? null);
+    if (item?.activity) setEngaged(true);
   }, []);
 
   /* Whatever is closest to the camera right now. The tunnel narrates itself
@@ -250,6 +256,14 @@ export function LifeTunnel() {
               Browse activities
             </button>
           </div>
+
+          {/* The first thing you'd otherwise have to guess: once you're
+              moving, dead centre, exactly where the title just was. Clears
+              out the moment you actually point at or open a wall, handing
+              off to the readout below. */}
+          <p className={`life-tunnel__cue${started && !engaged ? " is-on" : ""}`} aria-hidden>
+            <span>Click a picture to find out more</span>
+          </p>
 
           <button
             type="button"

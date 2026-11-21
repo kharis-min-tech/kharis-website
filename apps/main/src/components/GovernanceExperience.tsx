@@ -6,7 +6,8 @@ import { useState } from "react";
 import { Reveal, RevealItem, RevealStagger } from "@/components/Reveal";
 import { ContentIcon } from "@/components/ContentIcon";
 import { GOVERNANCE } from "@/lib/about-content";
-import { PolicyPdfDialog, type PolicyPdfDocument } from "../../../../shared/PolicyPdfDialog";
+import { PolicyPdfModal } from "../../../../shared/PolicyPdfModal";
+import type { PolicyPdfDocument } from "../../../../shared/PolicyPdfDialog";
 
 export type GovernancePolicyCard = {
   id: string;
@@ -52,7 +53,8 @@ export function GovernanceExperience({
                   <h2>{policy.title}</h2>
                   <p>{policy.blurb}</p>
                   <span className="gov-policy__action">
-                    Read full PDF <span aria-hidden="true">↗</span>
+                    Read document
+                    <span aria-hidden="true">↗</span>
                   </span>
                 </button>
               ) : policy.href ? (
@@ -83,11 +85,13 @@ export function GovernanceExperience({
         </RevealStagger>
       </section>
 
-      <PolicyPdfDialog
-        document={openPolicy?.document ?? null}
-        onClose={() => setOpenPolicyId(null)}
-        theme="main"
-      />
+      {openPolicy?.document ? (
+        <PolicyPdfModal
+          title={openPolicy.document.title}
+          pdfUrl={openPolicy.document.pdfUrl}
+          onClose={() => setOpenPolicyId(null)}
+        />
+      ) : null}
 
       <section className="gov-incident" aria-label="Report an incident">
         <Reveal className="gov-incident__panel">

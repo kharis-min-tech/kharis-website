@@ -10951,10 +10951,40 @@ html[data-theme="dark"] .floating-theme-toggle:hover {
 }
 
 /* —— 404 page (parallax scene, GitHub-style depth) —— */
-.not-found-page {
+.not-found-page,
+.route-error {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
+}
+
+.route-error__panel {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  gap: 1rem;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: clamp(6.5rem, 14vw, 8rem) 1.25rem clamp(3.5rem, 8vw, 5rem);
+}
+
+.route-error__panel h1 {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 800;
+}
+
+.route-error__panel p {
+  color: var(--fg-muted, currentColor);
+  line-height: 1.6;
+}
+
+.route-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .not-found {

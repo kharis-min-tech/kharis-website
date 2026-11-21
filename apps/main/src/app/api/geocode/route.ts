@@ -93,6 +93,65 @@ async function lookupUkPostcode(query: string): Promise<GeocodeResult | null> {
   return null;
 }
 
+/**
+ * Google's Geocoding API: used when a key is configured, since it covers
+ * addresses worldwide far more reliably than Nominatim. `GOOGLE_GEOCODING_API_KEY`
+ * is server-only; `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` is accepted as a fallback
+ * for projects that only set up the one key, but a key restricted to browser
+ * referrers won't work here since this call is server-side — use an
+ * IP-restricted or unrestricted key (or a separate server key) for this route.
+ */
+async function lookupGoogle(query: string): Promise<GeocodeResult | null> {
+  const key = process.env.GOOGLE_GEOCODING_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  if (!key) return null;
+
+  const url = new URL("https://maps.googleapis.com/maps/api/geocode/json");
+  url.searchParams.set("address", query);
+  url.searchParams.set("key", key);
+
+  const res = await fetch(url.toString(), {
+    signal: AbortSignal.timeout(6000),
+    next: { revalidate: 86400 },
+  });
+  if (!res.ok) return null;
+
+  const data = (await res.json()) as {
+    status?: string;
+    results?: Array<{
+      formatted_address?: string;
+      geometry?: { location?: { lat?: number; lng?: number } };
+      address_components?: Array<{ long_name?: string; types?: string[] }>;
+    }>;
+  };
+  if (data.status !== "OK") return null;
+
+  const first = data.results?.[0];
+  const loc = first?.geometry?.location;
+  if (loc?.lat == null || loc?.lng == null) return null;
+
+  const components = first?.address_components ?? [];
+  const find = (type: string) => components.find((c) => c.types?.includes(type))?.long_name;
+  const area =
+    find("postal_town") ||
+    find("locality") ||
+    find("administrative_area_level_2") ||
+    find("country");
+  const fallbackLabel = first?.formatted_address
+    ? first.formatted_address
+        .split(",")
+        .slice(0, 2)
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .join(", ")
+    : query;
+
+  return {
+    lat: loc.lat,
+    lng: loc.lng,
+    label: area ? area : fallbackLabel,
+  };
+}
+
 async function lookupNominatim(query: string): Promise<GeocodeResult | null> {
   const url = new URL("https://nominatim.openstreetmap.org/search");
   url.searchParams.set("format", "jsonv2");
@@ -170,7 +229,8 @@ export async function GET(request: Request) {
   }
 
   try {
-    const result = (await lookupUkPostcode(raw)) ?? (await lookupNominatim(raw));
+    const result =
+      (await lookupUkPostcode(raw)) ?? (await lookupGoogle(raw)) ?? (await lookupNominatim(raw));
     writeCache(cacheKey, result);
     return NextResponse.json({ result }, { status: 200 });
   } catch {

@@ -36,6 +36,13 @@ type Props = {
    * "country" gives it.
    */
   group?: "country" | "branch";
+  /**
+   * Where a search or "Near me" placed the visitor. When set, the camera
+   * aims and zooms there instead of the `country` overview, without changing
+   * which markers are shown — so a search still reads as "here's everywhere
+   * we are, and here's where you are" rather than hiding other countries.
+   */
+  focus?: { lat: number; lng: number } | null;
 };
 
 export function AtomicGlobeBranches({
@@ -43,6 +50,7 @@ export function AtomicGlobeBranches({
   hrefFor,
   country = "world",
   group = "country",
+  focus = null,
 }: Props) {
   /* The same theme-aware palette the footer globe uses, so the two globes on
    * the site are one object seen twice. Its backdrop is transparent, which
@@ -96,14 +104,18 @@ export function AtomicGlobeBranches({
    * marker labels sit outside the sphere and need the margin.
    */
   const motion = useMemo(() => {
-    const centroid = places.length
-      ? {
-          lat: places.reduce((sum, p) => sum + p.lat, 0) / places.length,
-          lng: places.reduce((sum, p) => sum + p.lng, 0) / places.length,
-        }
-      : { lat: 20, lng: -21 };
+    const centroid = focus
+      ? focus
+      : places.length
+        ? {
+            lat: places.reduce((sum, p) => sum + p.lat, 0) / places.length,
+            lng: places.reduce((sum, p) => sum + p.lng, 0) / places.length,
+          }
+        : { lat: 20, lng: -21 };
+    const overview = country === "world" && !focus;
     return {
-      // Turns on the overview, holds still once a country is chosen.
+      // Turns on the overview, holds still once a country (or a search) is
+      // chosen.
       //
       // This was 0 everywhere, on the reasoning that every branch sits in
       // the Europe/West-Africa hemisphere so half a rotation shows an empty
@@ -111,12 +123,12 @@ export function AtomicGlobeBranches({
       // It stays still while filtered because `startLng` below aims the
       // camera at the chosen country, and a spin would immediately carry it
       // back out of view — and because a drifting marker is hard to click.
-      spin: country === "world" ? 0.03 : 0,
+      spin: overview ? 0.03 : 0,
       // `tilt` is the camera latitude. Leaning the full way to the centroid
       // puts the camera over the pole for anywhere as far north as the UK, so
       // lean most of the way and cap it: the country still reads as the
       // subject without the view becoming an Arctic plan view.
-      tilt: Math.max(-45, Math.min(45, country === "world" ? 16 : centroid.lat * 0.62)),
+      tilt: Math.max(-45, Math.min(45, overview ? 16 : centroid.lat * 0.62)),
       startLng: -centroid.lng,
       // Both values keep the whole sphere inside the band. Above roughly 1.2
       // the poles start being sliced off by the viewport, which is the same
@@ -125,13 +137,13 @@ export function AtomicGlobeBranches({
       // The overview was 0.95, left over from a shorter band. With the band
       // taller it was leaving a wide margin of empty surface; 1.05 fills more
       // of it and is still well under what the filtered view already uses.
-      zoom: country === "world" ? 1.05 : 1.15,
+      zoom: overview ? 1.05 : 1.15,
       offsetX: 0,
       offsetY: 0,
       allowTiltDrag: true,
       tiltRange: 70,
     };
-  }, [country, places]);
+  }, [country, places, focus]);
 
   return (
     <div className="atomic-globe">

@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { Icon } from "@/components/Icon";
 import { MessageHoverTile } from "@/components/MessageHoverTile";
-import { VisionSection } from "@/components/VisionSection";
+import { MessagesDeviceCluster } from "@/components/MessagesDeviceCluster";
 import { MessagesHero } from "@/components/MessagesHero";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { KHARIS_APP } from "@/lib/kharis-app";
@@ -42,6 +42,86 @@ const TOPIC_ICONS: Record<string, LucideIcon> = {
   "just-men": Users,
   fragrance: Flower,
 };
+
+/** Curated Pastor David posters for Listen Anywhere (maxres quality, no “God” titles). */
+const LISTEN_DEVICE_POSTERS: MessageVideo[] = [
+  {
+    id: "KBFfpU0mX2U",
+    title: "A Living Witness For Jesus | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/KBFfpU0mX2U/mqdefault.jpg",
+  },
+  {
+    id: "9uYPZYrTHIA",
+    title: "Mercy, Repentance and Baptism | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/9uYPZYrTHIA/maxresdefault.jpg",
+    publishedAt: "2020-06-14T00:00:00Z",
+  },
+  {
+    id: "NOiT8EPTMrg",
+    title: "The Saving Power Of Baptism | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/NOiT8EPTMrg/maxresdefault.jpg",
+    publishedAt: "2021-04-27T00:00:00Z",
+  },
+  {
+    id: "ys4CMmykRh8",
+    title: "End Of Fast Impartation Service | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/ys4CMmykRh8/maxresdefault.jpg",
+  },
+  {
+    id: "CkFM6auEc_g",
+    title: "The Glorious Cross - Good Friday | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/CkFM6auEc_g/maxresdefault.jpg",
+    publishedAt: "2026-04-18T00:00:00Z",
+  },
+  {
+    id: "71yzF9EfC3g",
+    title: "The Implication Of The Virgin Birth | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/71yzF9EfC3g/maxresdefault.jpg",
+    publishedAt: "2025-12-21T00:00:00Z",
+  },
+  {
+    id: "JFRZoVbHaMg",
+    title: "THE LOGOS | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/JFRZoVbHaMg/maxresdefault.jpg",
+    publishedAt: "2026-06-01T00:00:00Z",
+  },
+  {
+    id: "8mANIl_heyI",
+    title: "Should We Continue In Sin? | David Antwi",
+    thumbnail: "https://i.ytimg.com/vi/8mANIl_heyI/maxresdefault.jpg",
+    publishedAt: "2026-05-25T00:00:00Z",
+  },
+];
+
+function pickListenDevicePosters(archive: MessageVideo[]): MessageVideo[] {
+  const skip = (t: string) =>
+    t.includes("just men") || t.includes("fragrance") || /\bgod\b/.test(t);
+
+  const fromArchive = [...archive]
+    .filter((m) => {
+      const t = m.title.toLowerCase();
+      return t.includes("david antwi") && !skip(t);
+    })
+    .sort((a, b) => {
+      const da = a.publishedAt ? Date.parse(a.publishedAt) : Number.POSITIVE_INFINITY;
+      const db = b.publishedAt ? Date.parse(b.publishedAt) : Number.POSITIVE_INFINITY;
+      return da - db;
+    });
+
+  const picked: MessageVideo[] = [];
+  const seen = new Set<string>();
+  for (const m of [...LISTEN_DEVICE_POSTERS, ...fromArchive]) {
+    if (seen.has(m.id)) continue;
+    if (skip(m.title.toLowerCase())) continue;
+    seen.add(m.id);
+    picked.push({
+      ...m,
+      thumbnail: `https://i.ytimg.com/vi/${m.id}/maxresdefault.jpg`,
+    });
+    if (picked.length >= 8) break;
+  }
+  return picked.length ? picked : LISTEN_DEVICE_POSTERS;
+}
 
 function AppStoreButtons() {
   return (
@@ -83,6 +163,8 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
   const heroMessage = useMemo(() => newestMessage([...latest, ...messages]), [latest, messages]);
 
   const topRow = useMemo(() => latest.slice(0, 4), [latest]);
+
+  const listenMessages = useMemo(() => pickListenDevicePosters(messages), [messages]);
 
   const shelves = useMemo(() => {
     const taken = new Set(topRow.map((m) => m.id));
@@ -344,10 +426,14 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
         </aside>
       )}
 
-      <VisionSection id="listen" />
+      <section id="listen" className="msg-listen" aria-label="Listen platforms">
+        <h2 className="msg-listen__title">
+          Listen <span>anywhere.</span>
+        </h2>
+        <p className="msg-listen__lede">Available on all platforms on all devices.</p>
 
-      <section className="msg-listen" aria-label="More ways to listen">
-        <h2 className="msg-listen__title">More ways to listen</h2>
+        <MessagesDeviceCluster messages={listenMessages} />
+
         <div className="msg-listen__steps">
           {LISTEN_PLATFORMS.slice(0, 5).map((p) => (
             <a

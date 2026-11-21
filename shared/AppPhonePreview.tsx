@@ -40,7 +40,7 @@ const CAPTURES = {
   },
   "current-chapter": {
     src: "https://images.kharis.org/site-images/main/0706ed3bc435673c/app-steps/kharis-app-current-chapter.png",
-    alt: "John 3 open in the Kharis Church app Bible reader",
+    alt: "Kharis Church app Bible reader open on a chapter",
     current: true,
   },
 } as const;

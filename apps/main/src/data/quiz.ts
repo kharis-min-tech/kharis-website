@@ -81,7 +81,6 @@ export type QuizTranslation = {
   // Start Screen
   stepBadge: string;
   startHeading: string;
-  startDescription: string;
   nameLabel: string;
   namePlaceholder: string;
   nameError: string;
@@ -184,7 +183,6 @@ export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
     subtitle: "Answer a few questions to discover where you can serve God best.",
     stepBadge: "Step 1 of 2",
     startHeading: "Find Your Fit in Kharis",
-    startDescription: "Select your Kharis branch before we jump into the questions.",
     nameLabel: "Full Name",
     namePlaceholder: "Enter your full name",
     nameError: "Please enter your full name to begin.",
@@ -534,7 +532,6 @@ export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
     subtitle: "Répondez à quelques questions pour voir où vos dons s'intègrent le mieux.",
     stepBadge: "Étape 1 sur 2",
     startHeading: "Trouvez votre place à Kharis",
-    startDescription: "Sélectionnez votre branche Kharis avant de commencer les questions.",
     nameLabel: "Nom complet",
     namePlaceholder: "Entrez votre nom complet",
     nameError: "Veuillez entrer votre nom complet pour commencer.",
@@ -893,7 +890,6 @@ export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
     subtitle: "Responde algunas preguntas para ver dónde encajan mejor tus dones.",
     stepBadge: "Paso 1 de 2",
     startHeading: "Encuentra tu lugar en Kharis",
-    startDescription: "Selecciona tu sucursal de Kharis antes de comenzar con las preguntas.",
     nameLabel: "Nombre completo",
     namePlaceholder: "Ingresa tu nombre completo",
     nameError: "Por favor, ingresa tu nombre completo para comenzar.",
@@ -1251,7 +1247,6 @@ export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
     subtitle: "Ansa som kɔt kweshɔn fɔ si wɛ yu gif fit.",
     stepBadge: "Stɛp 1 pan 2",
     startHeading: "Fɛn yu ples na Kharis",
-    startDescription: "Shus yu Kharis branch bifo wi stat di kweshɔn dem.",
     nameLabel: "Ful Nem",
     namePlaceholder: "Put yu ful nem",
     nameError: "Plis put yu ful nem bifo yu stat.",
@@ -1606,7 +1601,6 @@ export const QUIZ_TRANSLATIONS: Record<SupportedLanguage, QuizTranslation> = {
     subtitle: "Beantworte einige kurze Fragen, um zu sehen, wo deine Gaben am besten passen.",
     stepBadge: "Schritt 1 von 2",
     startHeading: "Finde deinen Platz bei Kharis",
-    startDescription: "Wähle deinen Kharis Standort aus, bevor wir mit den Fragen beginnen.",
     nameLabel: "Vollständiger Name",
     namePlaceholder: "Gib deinen vollständigen Namen ein",
     nameError: "Bitte gib deinen vollständigen Namen ein, um zu beginnen.",
