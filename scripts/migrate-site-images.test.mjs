@@ -78,21 +78,20 @@ test("keeps URL query strings and fragments", () => {
     `"${images[0].url}?v=2#crop"`,
   );
 });
-test("uses distinct content-addressed keys without uploading backup originals or video", async () => {
+test("uses distinct content-addressed keys, uploads video, and skips backup originals", async () => {
   const files = await inventory();
   assert.ok(files.length > 0);
   assert.ok(files.some((file) => file.source.startsWith("/videos/")));
+  const videos = files.filter((file) => file.file.endsWith(".mp4"));
+  assert.ok(videos.length > 0);
+  assert.ok(videos.every((file) => file.contentType === "video/mp4"));
   assert.equal(new Set(files.map((file) => file.key)).size, files.length);
   assert.ok(
     files.every((file) =>
       file.key.startsWith(`site-images/${file.app}/${file.hash.slice(0, 16)}/`),
     ),
   );
-  assert.ok(
-    files.every(
-      (file) => !file.file.includes("_original-black-canvas") && !file.file.endsWith(".mp4"),
-    ),
-  );
+  assert.ok(files.every((file) => !file.file.includes("_original-black-canvas")));
 });
 
 test("matches whitespace-delimited paths and escapes image filename dots", () => {

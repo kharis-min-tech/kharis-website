@@ -19,6 +19,13 @@ const imageTypes = {
   ".gif": "image/gif",
   ".svg": "image/svg+xml",
 };
+// The `videos` app entry has always scanned for these; nothing uploaded them
+// until there were real R2 credentials to upload with.
+const videoTypes = {
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
+};
+const mediaTypes = { ...imageTypes, ...videoTypes };
 const sha = (data) => createHash("sha256").update(data).digest("hex");
 const apps = [
   {
@@ -62,7 +69,7 @@ export async function inventory() {
   const result = [];
   for (const app of apps) {
     const directory = resolve(root, app.publicDir);
-    const files = (await walk(directory)).filter((file) => imageTypes[extname(file).toLowerCase()]);
+    const files = (await walk(directory)).filter((file) => mediaTypes[extname(file).toLowerCase()]);
     for (const file of files) {
       const data = await readFile(file);
       const hash = sha(data);
@@ -75,7 +82,7 @@ export async function inventory() {
         key,
         hash,
         bytes: data.length,
-        contentType: imageTypes[extname(file).toLowerCase()],
+        contentType: mediaTypes[extname(file).toLowerCase()],
         url: `https://images.kharis.org/${key.split("/").map(encodeURIComponent).join("/")}`,
       });
     }
