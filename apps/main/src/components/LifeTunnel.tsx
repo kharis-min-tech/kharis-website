@@ -262,7 +262,7 @@ export function LifeTunnel() {
               out the moment you actually point at or open a wall, handing
               off to the readout below. */}
           <p className={`life-tunnel__cue${started && !engaged ? " is-on" : ""}`} aria-hidden>
-            Click a picture to find out more
+            <span>Click a picture to find out more</span>
           </p>
 
           <button
