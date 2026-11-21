@@ -101,6 +101,17 @@ html[data-theme="dark"] .life-tunnel__title span {
  * .tunnel-tile--selectable when it can be opened. */
 .life-tunnel .tunnel-tile {
   position: absolute;
+  /* A gallery mat around every wall: border-box keeps the frame inside the
+   * component's own computed width/height, so it never throws off the
+   * tunnel's 3D placement math. It's declared in the tile's own local
+   * pixels, so the perspective transform the component applies scales the
+   * frame along with the photo - thick up close, thin in the distance,
+   * exactly like a real frame receding down a gallery hall. */
+  box-sizing: border-box;
+  border: 9px solid #f4efe4;
+  box-shadow:
+    0 20px 44px -16px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(20, 14, 8, 0.2);
 }
 
 /* The caption fades in as its tile approaches. --near is written by the
@@ -133,13 +144,16 @@ html[data-theme="dark"] .life-tunnel__title span {
 }
 
 .life-tunnel .tunnel-tile--selectable {
-  transition: outline-color 0.18s ease;
+  transition:
+    outline-color 0.18s ease,
+    border-color 0.18s ease;
   outline: 2px solid transparent;
   outline-offset: -2px;
 }
 
 .life-tunnel .tunnel-tile--selectable:is(:hover, :focus-visible) {
   outline-color: var(--yellow);
+  border-color: #fff;
 }
 
 /* The list. Real content, not a fallback. */
@@ -462,6 +476,34 @@ html[data-theme="dark"] .life-tunnel__start {
 
 .life-tunnel__start:is(:hover, :focus-visible) {
   transform: translateY(-2px);
+}
+
+/* The onboarding cue. Sits dead centre, where the title just was, so the
+ * invitation ("Step inside") hands off to an instruction ("click a wall")
+ * without the eye having to travel. Clears the moment you engage with a
+ * wall - after that the readout at the foot of the tunnel is doing the
+ * talking. */
+.life-tunnel__cue {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease 0.5s;
+}
+
+.life-tunnel__cue.is-on {
+  opacity: 1;
 }
 
 /* The running hint. Appears only once you are moving, and stays out of the
