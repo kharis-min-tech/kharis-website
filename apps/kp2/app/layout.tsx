@@ -71,7 +71,6 @@ const MATERIAL_ICONS = [
   "explore",
   "favorite",
   "flight",
-  "format_quote",
   "graphic_eq",
   "grid_view",
   "group",

@@ -139,7 +139,7 @@ function EventsPage({ events, branchPins }: { events: ChurchEvent[]; branchPins:
                   The <span className="text-primary underline decoration-4">Calendar</span>
                 </h3>
                 <p className="font-label-md text-outline uppercase tracking-widest">
-                  {filtered.length} gathering{filtered.length === 1 ? "" : "s"} in the diary
+                  {filtered.length} service{filtered.length === 1 ? "" : "s"} in the diary
                 </p>
               </div>
 
@@ -227,7 +227,7 @@ function EventsPage({ events, branchPins }: { events: ChurchEvent[]; branchPins:
               {
                 icon: "groups",
                 title: "Bring a friend",
-                copy: "Every gathering is easier with a friend. Invite someone and we'll save you both a seat.",
+                copy: "Every service is better with a friend. Invite someone and we'll save you both a seat.",
                 cta: "See Life",
                 to: "/life" as const,
               },

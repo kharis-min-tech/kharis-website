@@ -7,7 +7,7 @@ import { TIKTOK_URL } from "@/lib/social";
 const eaLogoLight = "https://images.kharis.org/site-images/kp2/7034e8bd749d082a/ea-logo-light.png";
 const eaLogoDark = "https://images.kharis.org/site-images/kp2/8d53006577293048/ea-logo-dark.png";
 
-const KHARIS_MAIN_URL = "https://kharis.org/";
+const KHARIS_MAIN_URL = "https://kharis-main.itadmin-a94.workers.dev/";
 
 type FooterColumn = {
   title: string;
@@ -59,7 +59,7 @@ export function SiteFooter() {
         <div className="col-span-2 md:col-span-3 lg:col-span-2 space-y-4">
           <div className="font-display-xl text-4xl md:text-5xl text-primary tracking-tighter leading-none">
             KHARIS
-            <span className="text-on-background"> PHASE 2.</span>
+            <span className="text-on-background"> PHASE 2</span>
           </div>
           <div className="flex gap-3 pt-2">
             <a
@@ -102,7 +102,12 @@ export function SiteFooter() {
               {col.links.map((link) => (
                 <li key={link.label}>
                   {link.external ? (
-                    <a className={footerLinkClass} href={link.to}>
+                    <a
+                      className={footerLinkClass}
+                      href={link.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {link.label}
                     </a>
                   ) : (
@@ -154,7 +159,7 @@ export function SiteFooter() {
           </div>
           <img
             src={eaLogoLight}
-            alt="Evangelical Alliance — together making Jesus known"
+            alt="Evangelical Alliance, together making Jesus known"
             className="block h-auto w-[min(78vw,300px)] dark:hidden xl:justify-self-end"
             loading="lazy"
             decoding="async"

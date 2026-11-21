@@ -157,13 +157,15 @@ export function MessageBrowser({
                   <h3 className="mb-5 border-b-2 border-on-background pb-3 font-display-lg text-2xl uppercase tracking-tight text-on-background sm:text-3xl">
                     {shelf.title}
                   </h3>
-                  {shelf.rows.map((row, rowIndex) => (
-                    <div key={`${shelf.id}-${rowIndex}`} className="kp-browse__grid">
-                      {row.map((message) => (
-                        <MessageCard key={message.id} message={message} />
-                      ))}
-                    </div>
-                  ))}
+                  <div className="kp-browse__rows">
+                    {shelf.rows.map((row, rowIndex) => (
+                      <div key={`${shelf.id}-${rowIndex}`} className="kp-browse__grid">
+                        {row.map((message) => (
+                          <MessageCard key={message.id} message={message} />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </section>
               ))}
             </div>

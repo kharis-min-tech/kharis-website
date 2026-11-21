@@ -51,7 +51,7 @@ export function EventsHero({ image }: { image: string }) {
       <div className="kp-ev-hero__copy">
         <p className="kp-ev-hero__eyebrow">KP2 Events</p>
         <h1 className="kp-ev-hero__heading">
-          Gather with <span>KP2</span>
+          Services at <span>KP2</span>
         </h1>
         <p className="kp-ev-hero__tag">Come encounter God with us.</p>
         <div className="kp-ev-hero__actions">

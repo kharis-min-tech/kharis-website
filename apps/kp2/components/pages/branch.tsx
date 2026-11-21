@@ -118,10 +118,13 @@ function BranchPage({
   }>;
   const campusEvents = eventsForBranch(events, branch);
   const others = branches.filter((item) => item.slug !== branch.slug);
+  const branchPhotos = [...new Set([branch.image, ...branch.gallery].filter(Boolean))];
   const giveHref = branch.givingLink || "/giving";
   const externalGive = giveHref.startsWith("http");
 
   const [zoomLevel, setZoomLevel] = useState(15);
+  const [branchPhotoIndex, setBranchPhotoIndex] = useState(0);
+  const activeBranchPhoto = branchPhotos.length ? branchPhotoIndex % branchPhotos.length : 0;
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
@@ -142,6 +145,16 @@ function BranchPage({
     document.addEventListener("mousedown", onPointer);
     return () => document.removeEventListener("mousedown", onPointer);
   }, []);
+
+  useEffect(() => {
+    if (branchPhotos.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setBranchPhotoIndex((current) => (current + 1) % branchPhotos.length);
+    }, 9000);
+    return () => window.clearInterval(timer);
+  }, [branch.slug, branchPhotos.length]);
 
   const mapSrc = useMemo(
     () => (hasCoords(branch) ? osmEmbedUrlAtZoom(branch, zoomLevel) : mapsEmbedUrl(branch)),
@@ -201,17 +214,20 @@ function BranchPage({
         {/* Hero */}
         <section className="kp-branch-hero relative flex w-full min-h-0 items-center justify-center px-4 pt-6 pb-8 sm:px-5 sm:pt-8 sm:pb-10 md:min-h-[32rem] md:px-8 lg:min-h-[65vh] max-w-[1536px] mx-auto">
           <div className="kp-branch-hero-fallback absolute inset-x-4 top-6 bottom-4 z-0 overflow-hidden brutalist-border sm:inset-x-5 sm:top-10 sm:bottom-8 md:inset-x-8">
-            {branch.image ? (
+            {branchPhotos.map((photo, index) => (
               <img
-                src={branch.image}
+                key={photo}
+                src={photo}
                 alt=""
-                fetchPriority="high"
+                aria-hidden="true"
+                loading={index === activeBranchPhoto ? "eager" : "lazy"}
+                fetchPriority={index === activeBranchPhoto ? "high" : "auto"}
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 motion-reduce:transition-none ${index === activeBranchPhoto ? "opacity-100" : "opacity-0"}`}
               />
-            ) : null}
+            ))}
             <div
-              className={`absolute inset-0 ${branch.image ? "bg-gradient-to-t from-black/80 via-black/35 to-black/25" : "bg-gradient-to-t from-[#12041f]/45 via-transparent to-transparent"}`}
+              className={`absolute inset-0 ${branchPhotos.length ? "bg-gradient-to-t from-black/80 via-black/35 to-black/25" : "bg-gradient-to-t from-[#12041f]/45 via-transparent to-transparent"}`}
             />
           </div>
 
@@ -373,7 +389,7 @@ function BranchPage({
               <span className="kp-pastor__rule" aria-hidden="true" />
               <p className="kp-pastor__bio">
                 {branch.pastor === "Coming soon"
-                  ? `You are welcome at ${branch.name}. Come and gather with us in ${branch.city}.`
+                  ? `You are welcome at ${branch.name}. Join us for services in ${branch.city}.`
                   : branch.pastorBio}
               </p>
             </div>
@@ -390,7 +406,7 @@ function BranchPage({
               Join us this Sunday
             </h2>
             <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
-              We can&apos;t wait to host you. Choose a service time that works best for you and your
+              We can&apos;t wait to have you. Choose a service time that works best for you and your
               family.
             </p>
           </div>
@@ -406,7 +422,7 @@ function BranchPage({
                     <div>
                       <h3 className="font-display-lg text-[24px] uppercase">Service times</h3>
                       <p className="font-body-md text-[12px] text-on-surface-variant">
-                        Sunday & midweek gathering
+                        Sunday & midweek services
                       </p>
                     </div>
                   </div>
@@ -594,7 +610,7 @@ function BranchPage({
                 This month at {branch.city}
               </h2>
               <p className="font-body-md text-body-md text-on-surface-variant">
-                Services, gatherings and what&apos;s coming up across Phase 2.
+                Services and what&apos;s coming up across Phase 2.
               </p>
             </div>
             <Link

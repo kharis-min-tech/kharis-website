@@ -15,7 +15,7 @@ export type GovernancePolicyCard = {
   blurb: string;
   icon: string;
   href?: string;
-  document?: Omit<PolicyDocumentReaderProps, "theme">;
+  document?: PolicyPdfDocument;
 };
 
 export function GovernanceExperience({

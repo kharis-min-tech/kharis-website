@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Kharis Phase 2 — Church for this generation";
+export const alt = "Kharis Phase 2, Church for this generation";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -68,7 +68,7 @@ export default function OpenGraphImage() {
             marginTop: 20,
           }}
         >
-          Youth church. Worship, fellowships, events and the Word — across the UK.
+          Youth church. Worship, fellowships, events and the Word across the UK.
         </div>
       </div>
       <div

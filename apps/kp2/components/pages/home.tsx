@@ -248,7 +248,6 @@ function Index({
           className="border-b-4 border-gray-900"
           eyebrow="Transformed lives"
           title="Testimonies"
-          intro="Where grace makes a difference."
           items={testimonials.map((t) => ({
             quote: t.quote,
             title: t.title,

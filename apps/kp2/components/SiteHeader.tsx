@@ -8,7 +8,7 @@ import { pageReloadStorageKey } from "@/lib/page-reload";
 
 type NavItem = MobileNavItem;
 
-const KHARIS_CHURCH_URL = "https://kharis.org/";
+const KHARIS_CHURCH_URL = "https://kharis-main.itadmin-a94.workers.dev/";
 
 const NAV_ITEMS: NavItem[] = [
   { label: "HOME", to: "/" },
@@ -21,11 +21,7 @@ const NAV_ITEMS: NavItem[] = [
       { label: "LIFE", to: "/life", blurb: "Groups & branch life" },
     ],
   },
-  {
-    label: "WATCH",
-    to: "/messages",
-    children: [{ label: "MESSAGES", to: "/messages", blurb: "Recent sermons" }],
-  },
+  { label: "MESSAGES", to: "/messages" },
   { label: "GIVE", to: "/giving" },
   { label: "Kharis Church", to: KHARIS_CHURCH_URL, external: true },
   {
@@ -188,7 +184,13 @@ export function SiteHeader() {
                   </div>
                 </div>
               ) : item.external ? (
-                <a key={item.to} href={item.to} className={linkBase}>
+                <a
+                  key={item.to}
+                  href={item.to}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkBase}
+                >
                   <span className="kp-nav-label">{item.label}</span>
                 </a>
               ) : (

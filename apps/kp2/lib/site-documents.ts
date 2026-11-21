@@ -17,7 +17,7 @@ const POLICY_DEFAULTS: Record<PolicyId, Pick<DocumentSlot, "title" | "blurb">> =
   safeguarding: {
     title: "Safeguarding Policy",
     blurb:
-      "How we protect children, young people and adults at risk across every Kharis gathering and activity.",
+      "How we protect children, young people and adults at risk across Kharis Church activities and services.",
   },
   privacy: {
     title: "Privacy Policy",
