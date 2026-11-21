@@ -58,6 +58,7 @@ export function AppPhonePreview({ screen, alt, sizes = "235px" }: Props) {
     return (
       <div className={styles.currentFrame} data-app-phone={screen}>
         <div className={styles.currentScreen}>
+          <span className={styles.currentNotch} aria-hidden />
           <Image
             src={capture.src}
             alt={alt ?? capture.alt}

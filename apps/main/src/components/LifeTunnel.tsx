@@ -26,39 +26,38 @@ import "./life-tunnel.css";
 const programme = [
   {
     title: CHURCH_VALUES.christCentered,
-    preview: "Taking the next step in following Christ",
-    activities: ["baptism"],
-  },
-  {
-    title: CHURCH_VALUES.bibleBelieving,
-    preview: "Learning and sharing the Word",
-    activities: ["let-the-bible-speak-conference", "k-group"],
+    preview:
+      "We follow Christ through the scriptures. We read it through, we live it out, and we pass it on",
+    activities: ["let-the-bible-speak-conference", "baptism", "k-group"],
   },
   {
     title: CHURCH_VALUES.revivalSeeking,
-    preview: "Seeking God together and sharing the gospel",
+    preview:
+      "Seeking the face of God and the power of the Holy Spirit to transform this generation",
     activities: ["fasting", "jesus-campaign"],
   },
   {
-    title: CHURCH_VALUES.purposeDriven,
-    preview: "Putting faith to work through service and innovation",
-    activities: ["marriage", "innovation-project"],
-  },
-  {
     title: CHURCH_VALUES.peopleDeveloping,
-    preview: "Careers, money, technology and wellbeing",
-    activities: ["careers-fair", "finance-seminar", "ai-in-the-workplace", "health-seminar"],
+    preview: "Developing and equipping people to serve in the church and lead in the world",
+    activities: [
+      "careers-fair",
+      "ai-in-the-workplace",
+      "departments",
+      "seminars",
+      "innovation-project",
+    ],
   },
   {
-    title: CHURCH_VALUES.discipleMaking,
-    preview: "Growing together through relationships, fellowship and sport",
+    title: CHURCH_VALUES.purposeDriven,
+    preview:
+      "Enabling people to live holistically purposeful lives whilst having fun along the way",
     activities: [
-      "departments",
-      "singles-seminar",
       "cook-along",
       "christmas-jumper",
       "sports-day",
       "football-tournament",
+      "family-fun-day",
+      "singles-seminar",
     ],
   },
 ] satisfies {
@@ -81,6 +80,109 @@ const ImageTunnel = dynamic(() => import("@/vendor/image-tunnel/InfiniteImageTun
   loading: () => <div className="life-tunnel__placeholder" aria-hidden />,
 });
 
+/**
+ * The activity's pictures, as one carousel rather than a poster plus a
+ * separate static grid. Whatever is focused plays large up top; clicking any
+ * thumbnail below brings it to focus, and the focused picture itself can be
+ * swiped - or stepped with the arrow buttons or the keyboard - left and
+ * right. The main image is just slide zero, not a different kind of thing.
+ */
+function ActivityCarousel({ activity }: { activity: LifeActivity }) {
+  const slides = [{ src: activity.image, alt: activity.alt }, ...(activity.gallery ?? [])];
+  const [index, setIndex] = useState(0);
+  const dragStart = useRef<number | null>(null);
+  const railRef = useRef<HTMLDivElement>(null);
+
+  const go = useCallback(
+    (delta: number) => setIndex((i) => (i + delta + slides.length) % slides.length),
+    [slides.length],
+  );
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight") go(1);
+      else if (event.key === "ArrowLeft") go(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [go, slides.length]);
+
+  /* The rail scrolls one card at a time regardless of gallery size, so
+     whichever thumbnail is now focused has to bring itself into view - it
+     will usually be off to the side, not visible by default. */
+  useEffect(() => {
+    const thumb = railRef.current?.children[index];
+    thumb?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [index]);
+
+  const current = slides[index];
+
+  return (
+    <div className="life-panel__visual">
+      <figure
+        className="life-panel__media"
+        onPointerDown={(event) => {
+          dragStart.current = event.clientX;
+        }}
+        onPointerUp={(event) => {
+          if (dragStart.current === null) return;
+          const dx = event.clientX - dragStart.current;
+          dragStart.current = null;
+          if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={current.src} alt={current.alt} draggable={false} />
+        {slides.length > 1 ? (
+          <>
+            <button
+              type="button"
+              className="life-panel__nav life-panel__nav--prev"
+              aria-label="Previous picture"
+              onClick={() => go(-1)}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="life-panel__nav life-panel__nav--next"
+              aria-label="Next picture"
+              onClick={() => go(1)}
+            >
+              ›
+            </button>
+            <span className="life-panel__count" aria-hidden>
+              {index + 1} / {slides.length}
+            </span>
+          </>
+        ) : null}
+      </figure>
+
+      {slides.length > 1 ? (
+        <div className="life-panel__gallery-viewport">
+          <div className="life-panel__gallery" role="list" ref={railRef}>
+            {slides.map((shot, i) => (
+              <button
+                key={shot.src}
+                type="button"
+                role="listitem"
+                className={`life-panel__thumb${i === index ? " is-active" : ""}`}
+                aria-current={i === index}
+                aria-label={`Show picture ${i + 1} of ${slides.length}: ${shot.alt}`}
+                onClick={() => setIndex(i)}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={shot.src} alt="" draggable={false} />
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function ActivityPanel({ activity, onClose }: { activity: LifeActivity; onClose: () => void }) {
   const panelRef = useDialog(true, onClose);
 
@@ -98,10 +200,7 @@ function ActivityPanel({ activity, onClose }: { activity: LifeActivity; onClose:
           Close
         </button>
 
-        <figure className="life-panel__media">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={activity.image} alt={activity.alt} />
-        </figure>
+        <ActivityCarousel activity={activity} />
 
         <div className="life-panel__body">
           <h3 id="life-panel-title" className="life-panel__title">
@@ -110,15 +209,6 @@ function ActivityPanel({ activity, onClose }: { activity: LifeActivity; onClose:
           <p className="life-panel__blurb">{activity.blurb}</p>
 
           <p className="life-panel__copy">{activity.body}</p>
-
-          {activity.gallery?.length ? (
-            <div className="life-panel__gallery">
-              {activity.gallery.map((shot) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={shot.src} src={shot.src} alt={shot.alt} />
-              ))}
-            </div>
-          ) : null}
         </div>
       </div>
     </div>
@@ -135,13 +225,21 @@ export function LifeTunnel() {
   const [backdrop, setBackdrop] = useState<string | undefined>();
   const [open, setOpen] = useState<LifeActivity | null>(null);
   const [started, setStarted] = useState(false);
-  const [hovered, setHovered] = useState<LifeActivity | null>(null);
-  const [nearest, setNearest] = useState<LifeActivity | null>(null);
   /** Once someone has actually pointed at or opened a wall, the centre cue has done its job. */
   const [engaged, setEngaged] = useState(false);
+  /* The pointer is very often already resting over a wall the instant "Step
+     inside" is clicked (the button sits where the tunnel is about to be), so
+     the tunnel's own hover callback can fire immediately and dismiss the cue
+     before it has even faded in. A genuine click still counts straight away;
+     a bare hover only counts once it has had a moment to be a real, moved-to
+     hover rather than a leftover one from the click itself. */
+  const startedAt = useRef(0);
 
   useEffect(() => {
-    if (started) runningBrowse.current?.focus({ preventScroll: true });
+    if (started) {
+      startedAt.current = Date.now();
+      runningBrowse.current?.focus({ preventScroll: true });
+    }
   }, [started]);
 
   /* The tunnel needs a real colour, not a custom property, so the page's own
@@ -170,24 +268,12 @@ export function LifeTunnel() {
     }
   }, []);
 
-  /* Names whatever the pointer is over, in one fixed legible place. The
-   * captions on the walls tell you what is coming; this tells you exactly
-   * what you are about to open. */
+  /* A hover is what retires the centre cue once someone has actually pointed
+   * at a wall, rather than just arrived. */
   const onHoverItem = useCallback((item: { activity?: LifeActivity } | null) => {
-    setHovered(item?.activity ?? null);
-    if (item?.activity) setEngaged(true);
+    if (item?.activity && Date.now() - startedAt.current > 500) setEngaged(true);
   }, []);
 
-  /* Whatever is closest to the camera right now. The tunnel narrates itself
-   * as you travel, which is what makes it a guided journey rather than a
-   * browse, and it is the only part of this that works on touch. */
-  const onNearestItem = useCallback((item: { activity?: LifeActivity } | null) => {
-    setNearest(item?.activity ?? null);
-  }, []);
-
-  /* Hovering is a deliberate question about one wall, so it wins. With no
-   * pointer on anything, the tunnel names whatever it is carrying you past. */
-  const showing = hovered ?? nearest;
   const programmeActivities = activities.filter((activity) => activity.slug !== "children");
   const activitiesBySlug = new Map(
     programmeActivities.map((activity) => [activity.slug, activity]),
@@ -218,7 +304,6 @@ export function LifeTunnel() {
             items={items}
             onSelectItem={onSelectItem}
             onHoverItem={onHoverItem}
-            onNearestItem={onNearestItem}
             /* Nothing should be moving behind an open activity. */
             frozen={Boolean(open)}
             /* The start control is ours, in the middle of the tunnel with the
@@ -253,7 +338,7 @@ export function LifeTunnel() {
               Step inside
             </button>
             <button type="button" className="life-tunnel__browse" onClick={browseActivities}>
-              Browse activities
+              Scroll down for the full picture
             </button>
           </div>
 
@@ -262,7 +347,7 @@ export function LifeTunnel() {
               out the moment you actually point at or open a wall, handing
               off to the readout below. */}
           <p className={`life-tunnel__cue${started && !engaged ? " is-on" : ""}`} aria-hidden>
-            <span>Click a picture to find out more</span>
+            <span>Click anywhere to pause · Click a picture to find out more</span>
           </p>
 
           <button
@@ -272,19 +357,8 @@ export function LifeTunnel() {
             onClick={browseActivities}
             tabIndex={started ? undefined : -1}
           >
-            Browse activities
+            Scroll down for the full picture
           </button>
-
-          <p className={`life-tunnel__hint${started ? " is-on" : ""}`} aria-hidden>
-            {showing ? (
-              <>
-                <strong>{showing.title}</strong>
-                <span>{showing.blurb}</span>
-              </>
-            ) : (
-              <span>Hold to speed up · Click any wall to stop on it</span>
-            )}
-          </p>
         </div>
       ) : null}
 

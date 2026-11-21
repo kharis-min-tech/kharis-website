@@ -19,6 +19,13 @@ const imageTypes = {
   ".gif": "image/gif",
   ".svg": "image/svg+xml",
 };
+// The `videos` app entry has always scanned for these; nothing uploaded them
+// until there were real R2 credentials to upload with.
+const videoTypes = {
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
+};
+const mediaTypes = { ...imageTypes, ...videoTypes };
 const sha = (data) => createHash("sha256").update(data).digest("hex");
 const apps = [
   {
@@ -62,7 +69,7 @@ export async function inventory() {
   const result = [];
   for (const app of apps) {
     const directory = resolve(root, app.publicDir);
-    const files = (await walk(directory)).filter((file) => imageTypes[extname(file).toLowerCase()]);
+    const files = (await walk(directory)).filter((file) => mediaTypes[extname(file).toLowerCase()]);
     for (const file of files) {
       const data = await readFile(file);
       const hash = sha(data);
@@ -75,7 +82,7 @@ export async function inventory() {
         key,
         hash,
         bytes: data.length,
-        contentType: imageTypes[extname(file).toLowerCase()],
+        contentType: mediaTypes[extname(file).toLowerCase()],
         url: `https://images.kharis.org/${key.split("/").map(encodeURIComponent).join("/")}`,
       });
     }
@@ -94,16 +101,27 @@ async function verifyPublicOnce(image) {
   if (sha(Buffer.from(await response.arrayBuffer())) !== image.hash)
     throw new Error(`Public checksum mismatch: ${image.key}`);
 }
-export async function verifyPublic(image) {
+// A plain Error here (from verifyPublicOnce, or the S3 SDK's own
+// NotFound/404) is always a real, non-transient outcome - never worth
+// retrying. Anything else - the request's own AbortSignal timeout, a
+// TypeError from the network layer failing to even connect, or the AWS SDK's
+// own AggregateError after exhausting its internal retries - is transient
+// and gets retried the same way, here and against the R2 API itself.
+function isTransientNetworkError(error) {
+  return error.name === "TimeoutError" || error.code === "ETIMEDOUT" || error instanceof TypeError;
+}
+async function withNetworkRetry(key, fn) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      await verifyPublicOnce(image);
-      return;
+      return await fn();
     } catch (error) {
-      if (attempt === 2 || error.name !== "TimeoutError") throw error;
-      console.log(`Retrying public verification (${attempt + 2}/3): ${image.key}`);
+      if (attempt === 2 || !isTransientNetworkError(error)) throw error;
+      console.log(`Retrying after a network error (${attempt + 2}/3): ${key}`);
     }
   }
+}
+export async function verifyPublic(image) {
+  return withNetworkRetry(image.key, () => verifyPublicOnce(image));
 }
 export async function uploadImages(images) {
   const endpoint = new URL(process.env.R2_ENDPOINT ?? "https://missing.invalid");
@@ -142,8 +160,8 @@ export async function uploadImages(images) {
   for (const image of images) {
     let exists = false;
     try {
-      const existing = await client.send(
-        new HeadObjectCommand({ Bucket: "kharis-images", Key: image.key }),
+      const existing = await withNetworkRetry(image.key, () =>
+        client.send(new HeadObjectCommand({ Bucket: "kharis-images", Key: image.key })),
       );
       if (existing.ContentLength !== image.bytes || existing.Metadata?.sha256 !== image.hash)
         throw new Error(`Existing object differs: ${image.key}`);
@@ -152,16 +170,19 @@ export async function uploadImages(images) {
       if (error.$metadata?.httpStatusCode !== 404 && error.name !== "NotFound") throw error;
     }
     if (!exists) {
-      await client.send(
-        new PutObjectCommand({
-          Bucket: "kharis-images",
-          Key: image.key,
-          Body: await readFile(image.file),
-          ContentType: image.contentType,
-          CacheControl: "public, max-age=31536000, immutable",
-          Metadata: { sha256: image.hash },
-          IfNoneMatch: "*",
-        }),
+      const body = await readFile(image.file);
+      await withNetworkRetry(image.key, () =>
+        client.send(
+          new PutObjectCommand({
+            Bucket: "kharis-images",
+            Key: image.key,
+            Body: body,
+            ContentType: image.contentType,
+            CacheControl: "public, max-age=31536000, immutable",
+            Metadata: { sha256: image.hash },
+            IfNoneMatch: "*",
+          }),
+        ),
       );
     }
     await verifyPublic(image);
@@ -179,8 +200,14 @@ export function replaceImageUrls(text, app, images) {
   for (const image of replacements) {
     const escaped = image.source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const path = app === "kp2" ? `(?:/kp2)?${escaped}` : escaped;
-    // Match root-relative references, preserving existing external URLs and longer filenames.
-    const pattern = new RegExp(`(^|[\\s\x22\x27\x60(=])${path}(?=$|[\\s\x22\x27\x60)?#])`, "gm");
+    // Match root-relative references, preserving existing external URLs and
+    // longer filenames, but never a `siteImageUrls["/local/path"]` lookup key
+    // - that bracket access is meant to keep resolving the local path, not be
+    // rewritten into the very URL it looks up.
+    const pattern = new RegExp(
+      `(?<!siteImageUrls\\[)(^|[\\s\x22\x27\x60(=])${path}(?=$|[\\s\x22\x27\x60)?#])`,
+      "gm",
+    );
     updated = updated.replace(pattern, (_, prefix) => prefix + image.url);
   }
   return updated;
