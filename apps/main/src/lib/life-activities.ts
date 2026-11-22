@@ -250,7 +250,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     slug: "innovation-project",
     title: "Innovation Project",
     blurb: "Empowering leaders of tomorrow to build the future through faith.",
-    body: "Our next generation tackling real-world challenges with a real brief, real stakes, and real deadline. A first chance to experience the impact of faith in everyday life - the kind of faith that shows up in the work, not only on a Sunday. \"... so faith without works is dead.\" James 2:26",
+    body: 'Our next generation tackling real-world challenges with a real brief, real stakes, and real deadline. A first chance to experience the impact of faith in everyday life - the kind of faith that shows up in the work, not only on a Sunday. "... so faith without works is dead." James 2:26',
     cadence: "Annually",
     audience: "Ages 11 - 17",
     image:
@@ -323,7 +323,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     slug: "football-tournament",
     title: "Football Tournament",
     blurb: "Branch against branch. Bragging rights for a year.",
-    body: "A proper tournament with groups, knockouts, a trophy that gets talked about until the next one. A prime example of the \"one another\" life where relationships move beyond just Sundays and lifelong friendships are made on the pitch.",
+    body: 'A proper tournament with groups, knockouts, a trophy that gets talked about until the next one. A prime example of the "one another" life where relationships move beyond just Sundays and lifelong friendships are made on the pitch.',
     cadence: "Every summer",
     audience: "Anyone who can kick a ball, whatever your ability",
     image:
@@ -538,7 +538,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     slug: "let-the-bible-speak-conference",
     title: "Let the Bible Speak Conference",
     blurb: "Open the book. Hear His voice.",
-    body: "A conference built around the Bible taking center stage in the Church and in our lives. Multiple days of worship, teaching, and panels with each session leaving attendees with a deeper understanding of Scripture. \"All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness, that the man of God may be complete, thoroughly equipped for every good work.\" 2 Timothy 3:16-17",
+    body: 'A conference built around the Bible taking center stage in the Church and in our lives. Multiple days of worship, teaching, and panels with each session leaving attendees with a deeper understanding of Scripture. "All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness, that the man of God may be complete, thoroughly equipped for every good work." 2 Timothy 3:16-17',
     cadence: "Yearly",
     audience: "Anyone, pastors, leaders, and believers across the world",
     image:
@@ -743,7 +743,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     slug: "jesus-campaign",
     title: "Jesus Campaign",
     blurb: "The Great Commission in action: we preach Christ crucified.",
-    body: "Our annual outreach campaign, we take Christ to people on the streets, in the parks, at bus stops. It's not just an activity but an integral part of our way of life. \"Go into all the world and preach the gospel to every creature\" Mark 16:15",
+    body: 'Our annual outreach campaign, we take Christ to people on the streets, in the parks, at bus stops. It\'s not just an activity but an integral part of our way of life. "Go into all the world and preach the gospel to every creature" Mark 16:15',
     cadence: "Every year",
     audience: "Anyone willing to come along",
     image:
@@ -832,7 +832,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     slug: "k-group",
     title: "K-Group",
     blurb: "Home cell fellowships, growing larger and smaller at once.",
-    body: "Home cell fellowships where we discuss the Word, pray, and catch up over small bites and drinks. \"And they continued steadfastly in the apostles' doctrine and fellowship, in the breaking of bread, and in prayers.\" Acts 2:42",
+    body: 'Home cell fellowships where we discuss the Word, pray, and catch up over small bites and drinks. "And they continued steadfastly in the apostles\' doctrine and fellowship, in the breaking of bread, and in prayers." Acts 2:42',
     cadence: "Weekly",
     audience: "Everyone, wherever you live",
     image:
@@ -901,7 +901,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     slug: "fasting",
     title: "Fasting",
     blurb: "Fasting together, seeking God’s agenda on earth.",
-    body: "We abstain from food to signal dependence on God. Done together rather than alone. \"If My people who are called by My name will humble themselves, and pray and seek My face, and turn from their wicked ways, then I will hear from heaven, and will forgive their sin and heal their land.\" 2 Chronicles 7:14",
+    body: 'We abstain from food to signal dependence on God. Done together rather than alone. "If My people who are called by My name will humble themselves, and pray and seek My face, and turn from their wicked ways, then I will hear from heaven, and will forgive their sin and heal their land." 2 Chronicles 7:14',
     cadence: "Twice a year. January and June",
     audience: "The whole church",
     image:
@@ -974,7 +974,7 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     slug: "departments",
     title: "Departments",
     blurb: "Serving is part of our worship.",
-    body: "From ushers to music to hospitality, discover your talents and gifts to build God’s house. \"just as the Son of Man did not come to be served, but to serve, and to give His life a ransom for many.\" Matthew 20:28",
+    body: 'From ushers to music to hospitality, discover your talents and gifts to build God’s house. "just as the Son of Man did not come to be served, but to serve, and to give His life a ransom for many." Matthew 20:28',
     cadence: "Every week",
     audience: "Anyone willing to serve",
     image:
