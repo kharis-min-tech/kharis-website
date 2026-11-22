@@ -306,8 +306,8 @@ const FACES: Face[] = [
           ))}
         </ol>
         <Inset
-          src={siteImageUrls["/images/contact/easter-door-greeter.jpg"]}
-          alt="A Kharis greeter welcoming people outside the Easter service"
+          src={siteImageUrls["/images/vision-church-family.jpg"]}
+          alt="The Kharis church family gathered outside after a Sunday service"
         />
       </>
     ),

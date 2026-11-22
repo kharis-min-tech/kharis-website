@@ -49,14 +49,23 @@ type Props = {
   screen: keyof typeof CAPTURES;
   alt?: string;
   sizes?: string;
+  /**
+   * "hardware" squares the shell off and darkens the screen surround, for
+   * places that stand this next to other devices drawn the same way. The
+   * default rounded, pale shell is for showing the phone on its own.
+   */
+  variant?: "default" | "hardware";
 };
 
 /** Fits the app capture below the camera, excluding the old image's bezel and notch. */
-export function AppPhonePreview({ screen, alt, sizes = "235px" }: Props) {
+export function AppPhonePreview({ screen, alt, sizes = "235px", variant = "default" }: Props) {
   const capture = CAPTURES[screen];
   if ("current" in capture) {
     return (
-      <div className={styles.currentFrame} data-app-phone={screen}>
+      <div
+        className={`${styles.currentFrame}${variant === "hardware" ? ` ${styles.currentFrameHardware}` : ""}`}
+        data-app-phone={screen}
+      >
         <div className={styles.currentScreen}>
           <span className={styles.currentNotch} aria-hidden />
           <Image

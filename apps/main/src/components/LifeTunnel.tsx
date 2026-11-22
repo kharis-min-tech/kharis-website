@@ -132,8 +132,15 @@ function ActivityCarousel({ activity }: { activity: LifeActivity }) {
           if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
         }}
       >
+        {/* These galleries mix portrait and landscape in one rail, so filling
+            a fixed landscape frame meant cropping - and on a portrait shot
+            what a centred crop takes is the heads. The picture is shown
+            whole instead, over a blurred copy of itself that fills whatever
+            the picture leaves, so the frame stays the same size either way. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={current.src} alt={current.alt} draggable={false} />
+        <img className="life-panel__wash" src={current.src} alt="" aria-hidden draggable={false} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="life-panel__shot" src={current.src} alt={current.alt} draggable={false} />
         {slides.length > 1 ? (
           <>
             <button

@@ -3791,14 +3791,18 @@ html[data-theme="dark"] .testimony-card__read {
   color: #630ed4;
 }
 
+/* Overlapping the tablet rather than hanging off the right edge. Every other
+   device in here leans on the one behind it; the phone was the only thing
+   standing clear of the pile, which is most of why it read as stuck on
+   afterwards rather than as part of the group. */
 .msg-devices__phone {
   position: absolute;
-  right: -0.5%;
-  bottom: -2%;
-  width: min(19%, 9.5rem);
+  right: 3%;
+  bottom: 0;
+  width: min(22%, 11rem);
   z-index: 5;
   transform: rotate(3deg);
-  filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 22px 44px rgba(0, 0, 0, 0.55));
 }
 
 @media (max-width: 760px) {
@@ -3821,8 +3825,8 @@ html[data-theme="dark"] .testimony-card__read {
   }
 
   .msg-devices__phone {
-    width: 22%;
-    right: -2%;
+    width: 24%;
+    right: 1%;
   }
 
   .msg-devices__lap-nav span:nth-child(n + 3) {

@@ -100,3 +100,33 @@
   width: 100%;
   height: auto;
 }
+
+/* Standing in a cluster of other devices, the default shell is the odd one
+   out: its corners are round where theirs are square, its surround is a hair
+   of grey where theirs is a milled bezel, and the pale strip the notch sits
+   in reads as a margin around a screenshot rather than as the top of a
+   phone. This variant borrows the bezel those devices are drawn with — the
+   same gradient, the same weight of edge — so the phone is one of them.
+   The depth is left to whatever places it, which already casts the shadow. */
+.currentFrameHardware {
+  padding: 0.42rem;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(165deg, #3f3f46 0%, #151518 100%);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 10%) inset,
+    0 0 0 1px rgb(0 0 0 / 55%);
+}
+
+/* The other devices fill their bezels with screen, edge to edge, so this one
+   drops the reserved strip and the notch drawn into it — the capture carries
+   the app's own grab handle at that spot anyway. */
+.currentFrameHardware .currentScreen {
+  padding-top: 0;
+  border-radius: 0;
+  background: #0c0812;
+}
+
+.currentFrameHardware .currentNotch {
+  display: none;
+}
