@@ -311,7 +311,7 @@ html[data-theme="dark"] .life-tunnel__programme {
   z-index: 120;
   display: grid;
   place-items: center;
-  padding: 1.25rem;
+  padding: clamp(1rem, 3vw, 2.5rem);
 }
 
 .life-panel__scrim {
@@ -324,24 +324,33 @@ html[data-theme="dark"] .life-tunnel__programme {
   cursor: pointer;
 }
 
-/* A fixed form factor: the same box whether an activity has four pictures
-   or forty. The picture rail below scrolls sideways for the overflow
-   instead of the box growing taller, which is also what keeps this
-   consistent with the testimony cards' rail. */
+/* One form factor whatever the activity: the same box whether it has four
+   pictures or forty, with the rail below scrolling sideways for the
+   overflow rather than the box growing taller, which is also what keeps
+   this consistent with the testimony cards' rail.
+
+   The size tracks the viewport rather than sitting at a figure in rem. A
+   fixed cap is the same number of pixels on a laptop and on a 2200px
+   desktop, where it stops being a sheet you've opened and becomes a card
+   adrift in the middle of the screen. The floor keeps it from shrinking
+   below a readable two columns on the way down. */
 .life-panel__sheet {
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
-  width: min(50rem, 100%);
-  max-height: min(78vh, 42rem);
+  width: min(100%, max(64rem, 62vw));
+  max-height: min(88vh, 60rem);
   overflow: auto;
   border: 1px solid var(--line-strong);
   background: var(--surface-0);
 }
 
+/* Weighted towards the pictures, which are what someone opened this for.
+   An even split also stretched the write-up - a paragraph - across half a
+   wide sheet, which is a worse line length than the narrower column gives. */
 @media (min-width: 860px) {
   .life-panel__sheet {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   }
 }
 
@@ -366,12 +375,17 @@ html[data-theme="dark"] .life-tunnel__programme {
   min-height: 0;
 }
 
-/* A fixed height rather than flex: 1, so the focused picture is always the
-   same size and it's only the rail below that scrolls for more pictures. */
+/* A set height rather than flex: 1, so the focused picture is always the
+   same size and it's only the rail below that scrolls for more pictures.
+   It tracks the viewport between its bounds because the sheet does too —
+   pinning it at one figure left the picture small on a large screen, which
+   is the whole reason to open the thing. */
 .life-panel__media {
   position: relative;
   margin: 0;
-  height: 18rem;
+  height: clamp(19rem, 44vh, 34rem);
+  overflow: hidden;
+  background: #0b0418;
   touch-action: pan-y;
 }
 
@@ -379,8 +393,24 @@ html[data-theme="dark"] .life-tunnel__programme {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
   user-select: none;
+}
+
+/* Fills whatever the picture itself does not, so a portrait shot sits in a
+   landscape frame without either bars down the sides or a crop through
+   someone's head. Scaled past the edges because blurring samples beyond
+   them and would otherwise fade the frame's border. */
+.life-panel__wash {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  transform: scale(1.2);
+  filter: blur(1.75rem) saturate(1.25) brightness(0.52);
+}
+
+.life-panel__shot {
+  position: relative;
+  object-fit: contain;
 }
 
 /* Click to step, or swipe the picture itself - the buttons are the
@@ -459,7 +489,7 @@ html[data-theme="dark"] .life-tunnel__programme {
 
 .life-panel__thumb {
   display: block;
-  flex: 0 0 3.75rem;
+  flex: 0 0 4.75rem;
   padding: 0;
   border: 2px solid transparent;
   cursor: pointer;
@@ -474,26 +504,36 @@ html[data-theme="dark"] .life-panel__thumb.is-active {
   border-color: var(--yellow);
 }
 
+/* A square thumbnail has to crop. Biased above centre because on a standing
+   shot that is where the faces are, and a thumbnail of someone's waist is
+   no use for picking the picture you want. */
 .life-panel__thumb img {
   display: block;
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
+  object-position: center 32%;
 }
 
+/* Centred down the column: the picture beside it sets the height, and most
+   of these write-ups are a paragraph, so top-aligning them left the bottom
+   half of the sheet empty. */
 .life-panel__body {
-  padding: 1.75rem 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1.75rem, 2.6vw, 2.5rem) clamp(1.5rem, 2.4vw, 2.25rem) clamp(2rem, 2.8vw, 2.75rem);
 }
 
 .life-panel__title {
   margin: 0;
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-size: clamp(1.75rem, 2.6vw, 2.5rem);
   color: var(--fg);
 }
 
 .life-panel__blurb {
   margin: 0.5rem 0 0;
-  font-size: 1rem;
+  font-size: 1.08rem;
   font-weight: 700;
   color: var(--purple);
 }
@@ -528,8 +568,8 @@ html[data-theme="dark"] .life-panel__blurb {
 
 .life-panel__copy {
   margin: 1.25rem 0 0;
-  font-size: 0.98rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.68;
   color: var(--fg);
 }
 

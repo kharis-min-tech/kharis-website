@@ -139,8 +139,15 @@ export function MessagesDeviceCluster({ messages }: Props) {
         </div>
       </div>
 
+      {/* The TV, laptop and tablet above are drawn as square-edged hardware,
+          so the phone asks for the same shell rather than its standalone one. */}
       <div className="msg-devices__phone">
-        <AppPhonePreview screen="current-player" alt="" sizes="(max-width: 760px) 22vw, 152px" />
+        <AppPhonePreview
+          screen="current-player"
+          alt=""
+          variant="hardware"
+          sizes="(max-width: 760px) 26vw, 184px"
+        />
       </div>
     </div>
   );
