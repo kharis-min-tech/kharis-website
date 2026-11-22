@@ -34,7 +34,7 @@ export function BranchNextGathering({ services }: { services: Service[] }) {
 
   return (
     <div className={`branch-next${next.live ? " branch-next--live" : ""}`}>
-      <p className="branch-next__label">{next.live ? "Happening now" : "Next gathering"}</p>
+      <p className="branch-next__label">{next.live ? "Happening now" : "Next service"}</p>
       <p className="branch-next__when">
         <span className="branch-next__day">{next.when}</span>
         {next.time ? <span className="branch-next__time">{next.time}</span> : null}

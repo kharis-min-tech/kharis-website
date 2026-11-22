@@ -1,9 +1,10 @@
 "use client";
-/* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
+/* eslint-disable @next/next/no-img-element -- the source is swapped per opening, so this draws it itself */
 import React from "react";
 import { X, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { cdnImage, cdnSrcSet } from "@/lib/image-cdn";
 import { useDialog } from "@/lib/use-dialog";
 
 interface BranchMediaModalProps {
@@ -66,8 +67,13 @@ export function BranchMediaModal({
 
             {type === "image" && imageSrc && (
               <div className="flex h-full max-h-[80vh] items-center justify-center p-2">
+                {/* A lightbox, so this one does want the big version - the
+                    cap is only there to rule out the occasional oversized
+                    upload, and `format=auto` is most of the saving anyway. */}
                 <img
-                  src={imageSrc}
+                  src={cdnImage(imageSrc, { width: 2000, quality: 90 })}
+                  srcSet={cdnSrcSet(imageSrc, [1200, 1600, 2000], { quality: 90 })}
+                  sizes="90vw"
                   alt={`Kharis ${city} gathering`}
                   className="max-h-[78vh] w-full object-contain"
                 />

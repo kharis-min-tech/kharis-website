@@ -7,7 +7,8 @@
  *         Praise Night | Jesus Campaign). Keep halves in pairs.
  *  split  Two photos joined edge to edge to look like one wide image (Singles Ball).
  *
- * Photos live in /public/images, videos in /public/videos. `media.video` is optional;
+ * Photos and videos are served from Cloudflare; originals live in
+ * apps/main/media-originals. `media.video` is optional;
  * `media.poster` is the photo (and the still shown while a video loads).
  * `gallery` takes any number of photos (6 to 12 works well).
  *

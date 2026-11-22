@@ -26,6 +26,7 @@ import {
   youtubePosterSrc,
   youtubeWatchUrl,
 } from "@/lib/life-videos";
+import "./life-detail-modal.css";
 
 export type FastingDownloads = {
   booklet?: { title: string; url: string };

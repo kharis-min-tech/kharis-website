@@ -56,7 +56,6 @@ export type LifeActivitySlug =
   | "k-group"
   | "baptism"
   | "fasting"
-  | "children"
   | "departments";
 
 /** Seasons an activity can belong to. Flip one off and it leaves the tunnel. */

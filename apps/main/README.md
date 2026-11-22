@@ -15,5 +15,5 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Notes
 
 - YouTube hero video is selected via the Data API (key in `.env.local`, not committed).
-- Photos live in `public/images/`.
+- Photos are served from Cloudflare (`https://images.kharis.org/`). Originals live in `media-originals/`, not `public/`, so they are not deployed as static assets. See the repo root `AGENTS.md`.
 - Branch links currently point at existing `kharis.org` location pages.

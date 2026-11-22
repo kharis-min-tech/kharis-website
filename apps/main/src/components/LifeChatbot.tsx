@@ -8,6 +8,7 @@ import { Icon } from "@/components/Icon";
 import { contactHandoffUrl, replyOffersContact, saveGraceHandoff } from "@/lib/grace-handoff";
 import { hasAppMarker, hasContactMarker, stripGraceMarkers } from "@/lib/grace-markers";
 import { KHARIS_APP } from "@/lib/kharis-app";
+import "./life-chat.css";
 
 type Role = "user" | "assistant";
 

@@ -238,6 +238,16 @@ function measure(width, height, tile, aspect, gap, bend) {
   const [layout, setLayout] = useState(null); // How many times each tile has wrapped round the loop. Picks the image it shows.
   const [laps, setLaps] = useState([]);
   const [inView, setInView] = useState(true);
+  /* KHARIS PATCH: video tiles do not mount with the rest of the row.
+   *
+   * The hero's clips are 7-9MB each and three of them sit in this row, so
+   * autoplaying them on mount put 25MB on the wire in competition with the
+   * photograph the page is judged on. Until this flips, a video item renders
+   * through the ordinary image path below, which draws its poster with the
+   * same curve as every other tile - so the row looks finished either way and
+   * the clips start once the page has gone quiet. A row that is never scrolled
+   * to never loads them at all. */
+  const [videosReady, setVideosReady] = useState(false);
   const tileEls = useRef([]);
   /* KHARIS PATCH: identifies this row's video tiles to the strip painter. */ const vseq =
     useRef(0);
@@ -457,6 +467,21 @@ function measure(width, height, tile, aspect, gap, bend) {
         } else v.pause();
       }
   }, [inView]);
+  /* KHARIS PATCH: hand the clips over once the row is on screen AND the main
+   * thread has a spare moment. requestIdleCallback is what keeps this behind
+   * the first paint rather than merely a fixed delay after it; the timeout is
+   * the backstop for a busy page, and the setTimeout is for Safari, which has
+   * only recently grown rIC. */
+  useEffect(() => {
+    if (!inView || videosReady) return;
+    const start = () => setVideosReady(true);
+    if (typeof requestIdleCallback === "function") {
+      const id = requestIdleCallback(start, { timeout: 2500 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(start, 1200);
+    return () => clearTimeout(id);
+  }, [inView, videosReady]);
   useEffect(() => {
     flags.current.autoplay = autoplay;
     syncPlay();
@@ -640,7 +665,7 @@ function measure(width, height, tile, aspect, gap, bend) {
            * it just does not bend within its own width, which at these tile sizes is
            * not something you can see. `poster` is what shows until the first frame
            * decodes, so a video item still wants its image. */
-          if (img?.video) {
+          if (img?.video && videosReady) {
             const vid = `${vseq.current}:${t}`;
             const out = Array.from({ length: SLICES }, (_, k) => {
               const isFirst = k === 0;

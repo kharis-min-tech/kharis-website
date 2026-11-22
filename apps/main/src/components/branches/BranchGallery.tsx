@@ -1,7 +1,8 @@
 "use client";
-/* eslint-disable @next/next/no-img-element -- branch photos are shown as uploaded; the image optimizer softened them */
+/* eslint-disable @next/next/no-img-element -- the rail swaps and duplicates its own sources, so it draws them itself */
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from "react";
 import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { cdnImage, cdnSrcSet } from "@/lib/image-cdn";
 
 interface BranchGalleryProps {
   images: string[];
@@ -225,9 +226,18 @@ export function BranchGallery({ images, city, onImageClick, hasFilm }: BranchGal
                   onClick={() => open(src)}
                   className="branch-gallery__tile group relative aspect-[4/5] shrink-0 overflow-hidden border border-[var(--branch-line)] bg-black text-left"
                 >
-                  {/* Original file, same as KP2. The image optimizer was softening these photos. */}
+                  {/* These were served as uploaded, because the optimizer was
+                      softening them. The soft look came from quality, not
+                      from resizing: asking Cloudflare for the size the tile
+                      actually draws at, at 90, is if anything sharper than
+                      handing the browser a 2000px photograph to shrink
+                      itself - and the rail holds every image twice over to
+                      carry its loop, so the full-resolution version of that
+                      was a lot of memory for a 4:5 thumbnail. */}
                   <img
-                    src={src}
+                    src={cdnImage(src, { width: 800, quality: 90 })}
+                    srcSet={cdnSrcSet(src, [400, 800, 1200], { quality: 90 })}
+                    sizes="(max-width: 640px) 60vw, 320px"
                     alt={copy ? "" : `Kharis ${city} gathering`}
                     loading={index < 4 ? "eager" : "lazy"}
                     decoding="async"

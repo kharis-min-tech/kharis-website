@@ -17,11 +17,27 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { CHURCH_VALUES } from "@/lib/church-values";
+import { cdnImage, cdnSrcSet } from "@/lib/image-cdn";
 import { activeLifeActivities, type LifeActivity } from "@/lib/life-activities";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 import { useDialog } from "@/lib/use-dialog";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import "./life-tunnel.css";
+
+/**
+ * Widths offered for the focused picture in an activity sheet. It occupies
+ * roughly 45vw of the sheet beside the write-up, full width once the sheet
+ * stacks, so these cover a phone through to a large desktop at 2x.
+ */
+const SHOT_WIDTHS = [640, 960, 1400, 1920] as const;
+
+/**
+ * The widest a tunnel wall is ever drawn. Tiles sit a long way down a
+ * perspective tunnel and are a few hundred pixels at most, so this is
+ * generous; the point is only that eighteen of them stop being
+ * full-resolution decodes. At 2000x1333 each one was 10.2MB of bitmap.
+ */
+const WALL_WIDTH = 900;
 
 const programme = [
   {
@@ -137,10 +153,26 @@ function ActivityCarousel({ activity }: { activity: LifeActivity }) {
             what a centred crop takes is the heads. The picture is shown
             whole instead, over a blurred copy of itself that fills whatever
             the picture leaves, so the frame stays the same size either way. */}
+        {/* The wash is blurred past recognition and scaled up, so it has no use
+            for detail: 48px of picture is indistinguishable from 2000px once
+            `filter: blur(1.75rem)` has had it, and costs about 1KB. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="life-panel__wash" src={current.src} alt="" aria-hidden draggable={false} />
+        <img
+          className="life-panel__wash"
+          src={cdnImage(current.src, { width: 48, quality: 60 })}
+          alt=""
+          aria-hidden
+          draggable={false}
+        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="life-panel__shot" src={current.src} alt={current.alt} draggable={false} />
+        <img
+          className="life-panel__shot"
+          src={cdnImage(current.src, { width: 1400 })}
+          srcSet={cdnSrcSet(current.src, SHOT_WIDTHS)}
+          sizes="(max-width: 860px) 100vw, 45vw"
+          alt={current.alt}
+          draggable={false}
+        />
         {slides.length > 1 ? (
           <>
             <button
@@ -179,8 +211,21 @@ function ActivityCarousel({ activity }: { activity: LifeActivity }) {
                 aria-label={`Show picture ${i + 1} of ${slides.length}: ${shot.alt}`}
                 onClick={() => setIndex(i)}
               >
+                {/* A 76px square, so 160px covers a 2x screen. This was the
+                    single worst thing on the page: seventeen full-resolution
+                    uploads, decoded in full, to fill seventeen thumbnails.
+                    `lazy` keeps the ones off the end of the rail from being
+                    fetched until the rail is scrolled to them. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={shot.src} alt="" draggable={false} />
+                <img
+                  src={cdnImage(shot.src, { width: 160, height: 160, fit: "cover" })}
+                  alt=""
+                  width={76}
+                  height={76}
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                />
               </button>
             ))}
           </div>
@@ -259,10 +304,16 @@ export function LifeTunnel() {
     setBackdrop(value || undefined);
   }, [theme]);
 
+  /* `src` is capped rather than passed straight through. The tunnel holds
+     every wall in the DOM at once, and the uploads behind them run to
+     2000x1333 - around 10MB of decoded bitmap each, which on a phone added up
+     to more memory than the tab was allowed. `activity` still carries the
+     untouched URLs, so the sheet that opens from a wall asks for its own
+     sizes rather than inheriting this one. */
   const items = activities.map((a) => ({
     id: a.slug,
     title: a.title,
-    src: a.image,
+    src: cdnImage(a.image, { width: WALL_WIDTH }),
     alt: a.alt,
     video: a.video,
     activity: a,
@@ -281,7 +332,7 @@ export function LifeTunnel() {
     if (item?.activity && Date.now() - startedAt.current > 500) setEngaged(true);
   }, []);
 
-  const programmeActivities = activities.filter((activity) => activity.slug !== "children");
+  const programmeActivities = activities;
   const activitiesBySlug = new Map(
     programmeActivities.map((activity) => [activity.slug, activity]),
   );

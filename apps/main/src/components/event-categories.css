@@ -541,9 +541,11 @@ div.events-page {
   z-index: 200;
   overflow: hidden;
   overscroll-behavior: contain;
-  background: rgba(10, 6, 18, 0.96);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  /* Opaque rather than 96% + a 12px blur. This is `fixed; inset: 0`, so the
+     blur covered the whole viewport - the most expensive shape a
+     backdrop-filter can take - and it was re-run while photographs slide
+     underneath it, to show 4% of a page nobody can see anyway. */
+  background: rgb(10, 6, 18);
   color: #fff;
   outline: none;
 }

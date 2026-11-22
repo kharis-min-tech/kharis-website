@@ -1,6 +1,6 @@
 export type LifeTone = "gold" | "dark" | "purple" | "cream";
 
-export type LifeSlug = "k-group" | "fasting" | "children" | "departments";
+export type LifeSlug = "k-group" | "fasting" | "departments";
 
 export type LifeSection = {
   title: string;
@@ -135,7 +135,6 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
         body: "To go deeper, listen to The Mystery of Fasting, Prayer and Obeying Divine Instructions During Fasting, and A Time for Fasting and Feasting, then join your local branch when we fast together.",
       },
     ],
-    next: "children",
     cta: { label: "Join us in prayer", href: "/locations" },
   },
   {
@@ -177,7 +176,7 @@ export const LIFE_CATEGORIES: readonly LifeCategory[] = [
 ] as const;
 
 /** Cards shown on the Life landing grid (K-Group hidden from UI). */
-export const LIFE_VISIBLE_SLUGS = new Set<LifeSlug>(["fasting", "children", "departments"]);
+export const LIFE_VISIBLE_SLUGS = new Set<LifeSlug>(["fasting", "departments"]);
 
 export const LIFE_PHOTO_CARDS = LIFE_CATEGORIES.filter(
   (c) => c.layout === "photo" && LIFE_VISIBLE_SLUGS.has(c.slug),

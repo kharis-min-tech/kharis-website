@@ -27,16 +27,24 @@ const videoTypes = {
 };
 const mediaTypes = { ...imageTypes, ...videoTypes };
 const sha = (data) => createHash("sha256").update(data).digest("hex");
+/* The main app's originals live in apps/main/media-originals, not in
+ * apps/main/public. Anything under public/ is uploaded to Cloudflare as a
+ * static asset on every deploy, and these files are migration and rollback
+ * inputs whose published references are already images.kharis.org URLs - so
+ * 160MB of them was being deployed to serve nothing. `localPrefix` is
+ * unchanged: it is the /images/ and /videos/ path a source file would have
+ * used before migration, which is what this script rewrites, and has nothing
+ * to do with where the original now sits on disk. */
 const apps = [
   {
     id: "main",
-    publicDir: "apps/main/public/images",
+    publicDir: "apps/main/media-originals/images",
     sourceDirs: ["apps/main/src"],
     localPrefix: "/images/",
   },
   {
     id: "main",
-    publicDir: "apps/main/public/videos",
+    publicDir: "apps/main/media-originals/videos",
     sourceDirs: [],
     localPrefix: "/videos/",
   },
