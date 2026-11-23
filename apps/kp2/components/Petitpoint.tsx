@@ -1218,6 +1218,8 @@ export function Petitpoint(props: PetitpointProps) {
 
   const palette: PetitpointPalette = hm?.palette || (isKp2Theme ? "kp2" : "thermal");
   const inks = useMemo(() => buildInks(solid, palette), [solid, palette]);
+  // Yellow marks both branches and hot spots on the dark map.
+  const darkRouteColor = isKp2Theme && dark ? "#67e8f9" : null;
   const gradient = useMemo(() => rampCss(inks.stops, inks.landRGBA), [inks]);
   const colorBy = mk?.colorBy || "theme";
   const pinInks = useMemo(
@@ -1262,6 +1264,7 @@ export function Petitpoint(props: PetitpointProps) {
     props,
     sheet,
     inks,
+    darkRouteColor,
     solid,
     spots,
     pinInks,
@@ -1276,6 +1279,7 @@ export function Petitpoint(props: PetitpointProps) {
     props,
     sheet,
     inks,
+    darkRouteColor,
     solid,
     spots,
     pinInks,
@@ -1541,7 +1545,8 @@ export function Petitpoint(props: PetitpointProps) {
     if (ly.routes && RT.length) {
       const fade = still ? 1 : clamp((intro - 1) / 0.6, 0, 1);
       if (fade > 0) {
-        ctx.fillStyle = K.accent;
+        const routeColor = L.darkRouteColor ?? K.accent;
+        ctx.fillStyle = routeColor;
         const dot = Math.max(1.4, s * 0.22);
         const speed = ly.routeSpeed ?? 14;
         for (let ri = 0; ri < RT.length; ri++) {
@@ -1559,7 +1564,7 @@ export function Petitpoint(props: PetitpointProps) {
           const head = still ? -1 : (secs * speed + ri * 9.7) % (n + 14);
           for (let kk = kFrom; kk <= kTo; kk++) {
             const shift = kk * cols;
-            ctx.globalAlpha = 0.4 * fade;
+            ctx.globalAlpha = (L.darkRouteColor ? 0.65 : 0.4) * fade;
             for (let q = 0; q < cells.length; q += 2) {
               const x = ox + (cells[q] + shift) * s + s / 2;
               if (x < -s || x > W + s) continue;
@@ -1575,7 +1580,15 @@ export function Petitpoint(props: PetitpointProps) {
                 const y = oy + cells[idx * 2 + 1] * s + s / 2;
                 ctx.globalAlpha = (1 - tail / 9) * fade;
                 const z = Math.max(2.2, s * (tail === 0 ? 0.64 : 0.44 - tail * 0.025));
-                ctx.fillRect(x - z / 2, y - z / 2, z, z);
+                if (tail === 0 && L.darkRouteColor) {
+                  const tip = Math.max(4, z);
+                  ctx.fillStyle = T.background;
+                  ctx.fillRect(x - tip / 2 - 1, y - tip / 2 - 1, tip + 2, tip + 2);
+                  ctx.fillStyle = routeColor;
+                  ctx.fillRect(x - tip / 2, y - tip / 2, tip, tip);
+                } else {
+                  ctx.fillRect(x - z / 2, y - z / 2, z, z);
+                }
               }
             }
           }
