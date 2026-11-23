@@ -4,11 +4,19 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.*.*", "*.local"],
 
   images: {
-    // AVIF encoding of large photos at quality 95 can take over a minute, so the
-    // browser gives up and the tile stays empty. WebP is near-instant.
-    formats: ["image/webp"],
+    // AVIF was off because encoding a large photo at quality 95 was said to
+    // take over a minute, leaving the tile empty. Re-measured on 2026-11-22
+    // against hero/impartation-celebration.jpg at w=1920: 2.0s at q80, 1.8s at
+    // q90, 1.6s at q95 - so whatever caused that is not present on this
+    // version. The saving is large enough to be worth having: that photograph
+    // is 52KB as AVIF q80 against 220KB as WebP q95, which is what the site
+    // served before. If a tile ever does render empty, this is the first
+    // setting to suspect.
+    formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 7,
-    qualities: [75, 90, 95],
+    // Every quality any call site asks for has to be listed here or the request
+    // is rejected. 80 is SiteImage's default; the rest are explicit overrides.
+    qualities: [75, 80, 90, 95],
     remotePatterns: [
       { protocol: "https", hostname: "i.ytimg.com" },
       { protocol: "https", hostname: "img.youtube.com" },

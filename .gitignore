@@ -55,3 +55,6 @@ supabase/.temp/
 apps/main/public/images/life/
 apps/main/public/images/life-picks/
 apps/main/public/videos/football-tournament/
+
+# Working directory for scripts/transcode-hero-videos.mjs (downloads + encodes).
+.transcode/

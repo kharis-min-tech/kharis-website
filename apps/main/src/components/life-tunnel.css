@@ -642,8 +642,8 @@ html[data-theme="dark"] .life-tunnel__start {
 /* The onboarding cue. Sits dead centre, where the title just was, so the
  * invitation ("Step inside") hands off to an instruction ("click a wall")
  * without the eye having to travel. Clears the moment you engage with a
- * wall - after that the readout at the foot of the tunnel is doing the
- * talking. */
+ * wall - after that the outline under the pointer says what is clickable,
+ * or, on a touch screen, the readout at the foot of the tunnel does. */
 .life-tunnel__cue {
   position: absolute;
   inset: 0;
@@ -671,61 +671,14 @@ html[data-theme="dark"] .life-tunnel__start {
   opacity: 1;
 }
 
-/* The running hint. Appears only once you are moving, and stays out of the
- * way at the foot of the tunnel. */
-.life-tunnel__hint {
-  position: absolute;
-  left: 50%;
-  bottom: 1.75rem;
-  z-index: 3;
-  margin: 0;
-  padding: 0.5rem 1rem;
-  transform: translateX(-50%);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  background: color-mix(in srgb, var(--surface-0) 70%, transparent);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.7s ease 0.4s;
-}
-
-.life-tunnel__hint.is-on {
-  opacity: 1;
-}
-
 /* The list is below the fold now, so it gets its own breathing room. */
 .life-tunnel__list {
   padding-inline: var(--gutter, 1.25rem);
 }
 
-/* The readout. Names whatever is under the pointer, in one place that is
- * always legible, so choosing a wall is a decision rather than a gamble. */
-.life-tunnel__hint strong {
-  display: block;
-  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: var(--fg);
-}
-
-.life-tunnel__hint span {
-  display: block;
-}
-
-.life-tunnel__hint {
-  min-width: 18rem;
-  text-align: center;
-  transition:
-    opacity 0.7s ease 0.4s,
-    background 0.2s ease;
-}
-
 /* Scroll prompt. The tunnel fills the screen, so without this a visitor can
- * reasonably believe it is the whole page. Appears with the running hint,
- * not over the invitation, where it would compete with Step inside. */
+ * reasonably believe it is the whole page. Appears once you are moving, not
+ * over the invitation, where it would compete with Step inside. */
 .life-tunnel__scroll {
   position: absolute;
   left: 50%;
@@ -760,6 +713,117 @@ html[data-theme="dark"] .life-tunnel__start {
 
 html[data-theme="dark"] .life-tunnel__scroll:is(:hover, :focus-visible) {
   border-color: var(--yellow);
+}
+
+/* The readout, for fingers.
+ *
+ * A wall is a flat panel standing side-on in a tunnel, so the box the browser
+ * hit-tests for it is the sliver its own projection leaves: on a 430px phone
+ * several of them measured 2-20px across. TOUCH_SLOP in the tunnel component
+ * gives every one of those a 48px target by resolving a touch to the nearest
+ * wall rather than only to a direct hit; this names the wall you are actually
+ * passing and makes it a full-width one, so there is always something
+ * unmissable to press, and you know what you are pressing before you do.
+ *
+ * Rendered only where there is no pointer that can hover, so a mouse keeps
+ * the outline-under-the-cursor it has always had and nothing else.
+ */
+.life-tunnel__passing {
+  position: absolute;
+  left: var(--gutter, 1.25rem);
+  right: var(--gutter, 1.25rem);
+  /* Above the scroll prompt, which the touch block below drops to the foot
+   * of the stage: the readout is the thing you act on, so it gets the room,
+   * and this also keeps it clear of the floating theme toggle parked in the
+   * bottom-left corner of every page. env() is for the home indicator on a
+   * phone with no hardware button, where the foot of the stage is not the
+   * foot of the usable screen. */
+  bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+  z-index: 4;
+  /* A tablet is touch too, and a 900px-wide bar would be absurd. */
+  max-width: 30rem;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0.75rem;
+  /* Fixed rather than fitted: the name inside changes every second or so as
+   * you travel, and a bar that grew and shrank with it would be the most
+   * distracting thing on the screen. Two lines' worth, because the longest
+   * of these is "Let the Bible Speak Conference". */
+  min-height: 4rem;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface-0) 88%, transparent);
+  cursor: pointer;
+  animation: life-tunnel-passing-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+
+.life-tunnel__passing-text {
+  min-width: 0;
+}
+
+.life-tunnel__passing-label {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.life-tunnel__passing strong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-top: 0.1rem;
+  font-family: var(--font-display), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--fg);
+}
+
+.life-tunnel__passing-arrow {
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--purple);
+}
+
+html[data-theme="dark"] .life-tunnel__passing-arrow {
+  color: var(--yellow);
+}
+
+@keyframes life-tunnel-passing-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .life-tunnel__passing {
+    animation-duration: 1ms;
+  }
+}
+
+/* The scroll prompt sits where the readout now is, so on a touch screen -
+ * the only place the readout exists - it moves down to the foot of the
+ * stage. Centred, so it clears the theme toggle in the bottom-left corner
+ * the way a full-width bar could not. Nothing about a mouse changes. */
+@media (hover: none) {
+  .life-tunnel__scroll {
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 .life-tunnel__list-title {

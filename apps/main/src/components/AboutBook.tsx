@@ -61,7 +61,7 @@
  */
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Image from "@/components/SiteImage";
 import { ContentIcon } from "@/components/ContentIcon";
 import { ABOUT, LEADERSHIP_BEATS } from "@/lib/about-content";
@@ -391,25 +391,54 @@ const LEAVES = Array.from({ length: Math.ceil(FACES.length / 2) }, (_, i) => ({
 }));
 
 /**
- * The last turn that still shows two facing pages. Turning every leaf would
- * land on the endpaper, which is a blank nobody needs to visit.
+ * One page per leaf, for a screen too narrow to carry a spread.
+ *
+ * A spread leaf is a sheet with a page on each side: turning it moves two
+ * pages at once and lands the verso on the left. With one page showing there
+ * is no left, so a leaf is a single page and a turn advances by one. The
+ * faces are the same objects in the same order either way - only the dealing
+ * changes - so everything downstream, the contents included, still works off
+ * `turned`.
  */
-const MAX_TURN = LEAVES.length - 1;
+const SINGLE_LEAVES = FACES.map((face) => ({ front: face, back: undefined }));
 
-/** What the contents jumps to. Each entry is a number of leaves turned. */
+/** What the contents jumps to, as a number of leaves turned in each mode. */
+/**
+ * Where each section starts, as an index into FACES.
+ *
+ * Stored as a face rather than as a number of turns because the two modes
+ * count turns differently, and the conversion between them is not a formula:
+ * some faces are full-bleed plates, so sections do not fall on a regular
+ * stride. A spread showing face f is `ceil(f / 2)` turns in; one page showing
+ * face f is f turns in. Both fall out of the face, so neither can drift.
+ */
 const CONTENTS = [
-  { turn: 0, label: "Cover" },
-  { turn: 1, label: "What Kharis means" },
-  { turn: 2, label: "What we believe" },
-  { turn: 3, label: "Our mission" },
-  { turn: 4, label: "Our vision" },
-  { turn: 5, label: "Our leadership" },
-  { turn: 6, label: "Their story" },
+  { face: 0, label: "Cover" },
+  { face: 2, label: "What Kharis means" },
+  { face: 3, label: "What we believe" },
+  { face: 5, label: "Our mission" },
+  { face: 7, label: "Our vision" },
+  { face: 9, label: "Our leadership" },
+  { face: 12, label: "Their story" },
 ];
 
 const PAGE_TURN_MS = 950;
 
-export function AboutBook() {
+/** How far a drag has to travel before it counts as a page turn. */
+const SWIPE_PX = 45;
+
+export function AboutBook({ single = false }: { single?: boolean }) {
+  /* Everything below works off these three, so the two modes differ in one
+     place rather than in every branch that touches a page. */
+  const leaves = single ? SINGLE_LEAVES : LEAVES;
+  /* Both stop one short of the endpaper, which is a blank nobody needs. */
+  const maxTurn = leaves.length - (single ? 2 : 1);
+  const contents = useMemo(
+    () =>
+      CONTENTS.map((item) => ({ ...item, turn: single ? item.face : Math.ceil(item.face / 2) })),
+    [single],
+  );
+
   const [turned, setTurned] = useState(0);
   /** The leaf in flight, lifted above the stack so it does not clip through. */
   const [flipping, setFlipping] = useState<number | null>(null);
@@ -419,7 +448,7 @@ export function AboutBook() {
 
   const go = useCallback(
     (to: number) => {
-      const next = Math.max(0, Math.min(MAX_TURN, to));
+      const next = Math.max(0, Math.min(maxTurn, to));
       if (next === turned) return;
       /* The leaf that moves is the lowest one changing state: going forward
        * that is the one being turned, going back the one being turned back.
@@ -431,7 +460,7 @@ export function AboutBook() {
       window.clearTimeout(settle.current);
       settle.current = window.setTimeout(() => setFlipping(null), PAGE_TURN_MS);
     },
-    [turned],
+    [turned, maxTurn],
   );
 
   useEffect(() => () => window.clearTimeout(settle.current), []);
@@ -446,13 +475,53 @@ export function AboutBook() {
       if (event.key === "ArrowRight") go(turned + 1);
       else if (event.key === "ArrowLeft") go(turned - 1);
       else if (event.key === "Home") go(0);
-      else if (event.key === "End") go(MAX_TURN);
+      else if (event.key === "End") go(maxTurn);
       else return;
       event.preventDefault();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [go, turned]);
+  }, [go, turned, maxTurn]);
+
+  /* Swipe to turn.
+   *
+   * The arrows and the contents are the discoverable way through; on a phone
+   * a drag across the page is the one people will simply try, and a book that
+   * does not answer it feels broken. Only in single-page mode: the spread has
+   * the room for its buttons and is driven by a mouse.
+   *
+   * Horizontal intent is checked against the vertical travel so that a thumb
+   * scrolling the page past the book never turns a page by accident. */
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene || !single) return;
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+
+    const onStart = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") return;
+      tracking = true;
+      startX = event.clientX;
+      startY = event.clientY;
+    };
+    const onEnd = (event: PointerEvent) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
+      if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) <= Math.abs(dy)) return;
+      go(dx < 0 ? turned + 1 : turned - 1);
+    };
+
+    scene.addEventListener("pointerdown", onStart, { passive: true });
+    scene.addEventListener("pointerup", onEnd, { passive: true });
+    scene.addEventListener("pointercancel", () => (tracking = false), { passive: true });
+    return () => {
+      scene.removeEventListener("pointerdown", onStart);
+      scene.removeEventListener("pointerup", onEnd);
+    };
+  }, [go, turned, single]);
 
   /* The parallax tilt, which is the part of the Framer component that makes
    * it feel like an object rather than a picture. Written straight to CSS
@@ -496,12 +565,12 @@ export function AboutBook() {
     };
   }, []);
 
-  const spread = CONTENTS[turned];
+  const place = [...contents].reverse().find((c) => c.turn <= turned) ?? contents[0];
   const nextButton = useRef<HTMLButtonElement>(null);
 
   return (
     <section
-      className="about-book"
+      className={`about-book${single ? " about-book--single" : ""}`}
       aria-label="Kharis: who we are"
       ref={bookRef}
       style={{ "--normal-page-turn-duration": `${PAGE_TURN_MS}ms` } as CSSProperties}
@@ -512,7 +581,9 @@ export function AboutBook() {
           role="group"
           aria-roledescription="book"
           aria-label={
-            turned === 0 ? "Front cover" : `${spread.label}, spread ${turned} of ${MAX_TURN}`
+            turned === 0
+              ? "Front cover"
+              : `${place.label}, ${single ? "page" : "spread"} ${turned} of ${maxTurn}`
           }
         >
           {/* The spine. Only on the shut book, where it is the edge you see;
@@ -523,12 +594,12 @@ export function AboutBook() {
           <div className="about-book__base about-book__base--left" aria-hidden="true" />
           <div className="about-book__base about-book__base--right" aria-hidden="true" />
 
-          {LEAVES.map((leaf, i) => {
+          {leaves.map((leaf, i) => {
             const isTurned = i < turned;
             /* Unturned leaves stack with the cover on top; turned ones stack
                the other way, so the most recently turned is uppermost. The
                leaf in flight goes above both piles. */
-            const z = flipping === i ? 60 : isTurned ? 10 + i : 10 + (LEAVES.length - i);
+            const z = flipping === i ? 60 : isTurned ? 10 + i : 10 + (leaves.length - i);
             return (
               <div
                 key={i}
@@ -589,7 +660,7 @@ export function AboutBook() {
           ref={nextButton}
           className="about-book__turn about-book__turn--next"
           onClick={() => go(turned + 1)}
-          disabled={turned === MAX_TURN}
+          disabled={turned === maxTurn}
           aria-label="Next pages"
         >
           &rarr;
@@ -600,7 +671,7 @@ export function AboutBook() {
           with no end in sight, and it doubles as the way to reach a spread
           directly by keyboard. */}
       <div className="about-book__contents" role="group" aria-label="Book contents">
-        {CONTENTS.map((item) => (
+        {contents.map((item) => (
           <button
             key={item.turn}
             type="button"

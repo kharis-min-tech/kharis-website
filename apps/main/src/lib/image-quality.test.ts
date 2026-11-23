@@ -32,6 +32,22 @@ it("delivers full-width high-resolution candidates at the site's default photo q
     defaultLoader,
     imgConf,
   });
-  expect(props.src).toContain("q=95");
+  /* 80, down from 95. Roughly half the bytes for a difference that needs a
+     magnified crop to see, on a site that is almost entirely photographs -
+     and low enough that AVIF encodes quickly, which is why it is back on in
+     next.config.ts. See docs/performance/media-quality.md. */
+  expect(props.src).toContain("q=80");
   expect(props.srcSet).toContain("3840w");
+});
+
+it("offers AVIF ahead of WebP", () => {
+  expect(nextConfig.images?.formats).toEqual(["image/avif", "image/webp"]);
+});
+
+/* Next rejects any quality not listed in `images.qualities`, so a call site
+   asking for one that was never declared silently fails to render. */
+it("declares every quality the site asks for", () => {
+  for (const quality of [75, 80, 90, 95]) {
+    expect(nextConfig.images?.qualities).toContain(quality);
+  }
 });

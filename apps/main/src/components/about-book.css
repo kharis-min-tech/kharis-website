@@ -162,6 +162,162 @@ html[data-theme="dark"] .about-book {
   transform: rotateY(-180deg);
 }
 
+/* ONE PAGE AT A TIME
+ *
+ * A spread needs width for two pages; below 1024px there is only room for
+ * one, and the page used to give up and hand over to the scrolling version.
+ * Instead the book keeps its mechanism and shows a single page: the book box
+ * is one leaf wide, each leaf carries one page rather than a sheet with two
+ * sides, and a turn advances by one.
+ *
+ * The leaf still pivots on its left edge, so a turning page sweeps out into
+ * the space beside the book. The scene clips it, which is why the turn reads
+ * as a page lifting away rather than as a rectangle flying off the screen.
+ *
+ * The page gets the width here, which is the whole point: the spread's cap
+ * of `56vw` exists so two pages fit side by side, and one page does not need
+ * it. That is what takes a phone page from 241px tall to something readable.
+ */
+.about-book--single {
+  --leaf-h: min(clamp(26rem, 70svh, 40rem), 128vw);
+}
+
+.about-book--single .about-book__scene {
+  overflow: hidden;
+}
+
+.about-book--single .about-book__book {
+  width: var(--leaf-w);
+}
+
+.about-book--single .about-book__book.is-shut {
+  /* Nothing to slide: the shut cover already fills the box. The slight turn
+     stays, so the book still reads as an object with a spine. */
+  --shut-shift: 0px;
+}
+
+/* The spine stands at the gutter, which in a spread is the middle of the box.
+ * One page wide, the middle of the box is the middle of the cover, so without
+ * this it draws a purple stripe down the artwork. */
+.about-book--single .about-book__spine {
+  left: 0;
+}
+
+.about-book--single .about-book__leaf {
+  left: 0;
+  width: 100%;
+}
+
+/* With one page there is no left half to rest on. */
+.about-book--single .about-book__base--left {
+  display: none;
+}
+
+.about-book--single .about-book__base--right {
+  left: 0;
+  width: 100%;
+}
+
+/* Both edges are outside edges now, so neither takes the gutter shading. */
+.about-book--single .about-book__face--front {
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+/* A single page is about two thirds the width of a spread page, so the
+ * densest pages reflowed past the bottom of the paper. `.about-book__face`
+ * clips, so that is not type running tight - it is the end of the statement
+ * of faith and the last marks of the vision being cut off the page.
+ *
+ * Measured at 430px before this block: the faith pages overflowed by 67px
+ * and 123px, the mission pages by 37px and 99px, and the vision by 78px.
+ * Everything below is trimmed to close those, and nothing else is touched -
+ * the spread keeps the scale it was designed with. */
+.about-book--single .about-book__face {
+  padding: clamp(1.4rem, 5vw, 1.9rem) clamp(1.3rem, 4.5vw, 1.8rem) 2.4rem;
+}
+
+.about-book--single .about-book__title {
+  margin-bottom: 0.7rem;
+  font-size: clamp(1.15rem, 5.2vw, 1.45rem);
+}
+
+.about-book--single .about-book__lead {
+  margin-bottom: 0.65rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.about-book--single .about-book__intro {
+  margin-bottom: 0.65rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.about-book--single .about-book__faith > div {
+  margin-bottom: 0.65rem;
+}
+
+.about-book--single .about-book__faith dt {
+  margin-bottom: 0.1rem;
+  font-size: 0.88rem;
+}
+
+.about-book--single .about-book__faith dd {
+  margin-left: 1.6rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.about-book--single .about-book__points {
+  gap: 0.6rem;
+}
+
+.about-book--single .about-book__points li {
+  grid-template-columns: 1.6rem 1fr;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.about-book--single .about-book__body {
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+/* The inset is the first thing worth losing height on: it is there to stop a
+ * page being a wall of type, and it still does that smaller. */
+.about-book--single .about-book__inset {
+  min-height: 4.5rem;
+  margin-top: 0.5rem;
+}
+
+/* The four pillars of the mission, each an icon beside a heading, a line of
+ * body and a verse. Four of those at spread spacing ran 45px off the bottom
+ * of a single page; most of it was the 1.5rem between them and a 2.4rem
+ * icon that does not need to be that size next to 0.88rem type. */
+.about-book--single .about-book__pillars {
+  gap: 0.85rem;
+}
+
+.about-book--single .about-book__pillars li {
+  gap: 0.65rem;
+}
+
+.about-book--single .about-book__pillar-icon {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+
+.about-book--single .about-book__pillars h4 {
+  margin: 0 0 0.15rem;
+  font-size: 0.88rem;
+}
+
+.about-book--single .about-book__pillars p {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
 /* A face. Hidden from behind, which is what lets one sheet carry two pages.
  * The wash is very slight, but paper is never one flat value, and a page of
  * type on a dead flat ground is most of what makes a screen look like a
@@ -678,7 +834,7 @@ html[data-theme="dark"] .about-book {
   left: calc(50% + var(--leaf-w) + 1.25rem);
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 767px) {
   .about-book__scene {
     padding-bottom: 3.5rem;
   }

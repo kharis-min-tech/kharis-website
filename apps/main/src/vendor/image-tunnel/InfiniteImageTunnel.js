@@ -105,6 +105,21 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
  */ const DEPTH_SPAN_SCALE = 2.2;
 /** How much faster the tunnel travels while the scene is long-pressed. */ const BOOST_MAX = 2.6;
 /** Ramp rate for the boost multiplier - lower is a slower, smoother build. */ const BOOST_EASE = 1.4;
+/**
+ * KHARIS PATCH: how far from a tile a touch can land and still count as
+ * touching it.
+ *
+ * A tile is a flat panel standing on a tunnel wall, so the box the browser
+ * hit-tests is the quad the perspective projection leaves - and side-on, a
+ * long way down a narrow tunnel, that quad is a sliver. Measured on a 430px
+ * phone, several walls were 2-20px across. A finger cannot hit those, which
+ * makes the picture you are plainly looking at the one you cannot open.
+ *
+ * So a touch resolves to the nearest tile within this many pixels of its
+ * edge, which gives even a zero-width sliver a 48px target. A mouse is left
+ * hit-testing exactly as before: it is precise, it has the hover outline to
+ * aim with, and widening it would mean clicking beside a picture opened it.
+ */ const TOUCH_SLOP = 24;
 /* =========================== UTILITIES =========================== */ function clamp(
   v,
   min,
@@ -643,6 +658,12 @@ function StartButton({ label, visible, onStart, compact, invert }) {
   const startedRef = useRef(started);
   const pausedRef = useRef(paused);
   const hoverRef = useRef(false);
+  /* KHARIS PATCH: the kind of pointer that opened the current gesture, so a
+   * click can tell a finger from a mouse. Read from the event rather than a
+   * media query: a phone with a stylus, or a laptop with both a trackpad and
+   * a touchscreen, then gets the right treatment per gesture instead of per
+   * device. */
+  const pointerTypeRef = useRef("mouse");
   const visibleRef = useRef(true); // Set by the animation effect; lets observers restart a torn-down loop.
   const wakeRef = useRef(() => {});
   startedRef.current = started;
@@ -717,8 +738,9 @@ function StartButton({ label, visible, onStart, compact, invert }) {
     const release = () => {
       holdRef.current = false;
     };
-    const onDown = () => {
+    const onDown = (e) => {
       holdRef.current = true;
+      pointerTypeRef.current = (e && e.pointerType) || "mouse";
     };
     const opts = { passive: true };
     el.addEventListener("pointerdown", onDown, opts);
@@ -956,11 +978,73 @@ function StartButton({ label, visible, onStart, compact, invert }) {
   useEffect(() => {
     if (startSignal) setStarted(true);
   }, [startSignal]);
-  const handleSceneClick = useCallback(() => {
-    if (!clickToToggle || !startedRef.current) return;
-    setPaused((p) => !p);
-    wakeRef.current();
-  }, [clickToToggle]);
+  /* KHARIS PATCH: which tile a touch was aiming at.
+   *
+   * Measured off the live DOM rects rather than recomputed from the
+   * projection, so it agrees with a direct hit by construction - the rect is
+   * the very thing the browser hit-tests. It reads layout, so it runs once
+   * per tap and never per frame.
+   *
+   * Only tiles someone can actually see are candidates: ones still in front
+   * of the camera, not yet faded into the distance, and inside the stage.
+   * Nearest edge wins. A tie - normally two overlapping tiles that both
+   * contain the point - goes to whichever is nearer the camera, which is the
+   * one drawn on top and the one the finger was on. */
+  const resolveTouchTile = useCallback((x, y) => {
+    const nr = nearestRef.current;
+    const container = containerRef.current;
+    if (!container || !nr.layout || !nr.list || !nr.list.length) return null;
+    const bounds = container.getBoundingClientRect();
+    const z = tileZ.current;
+    const cache = lastTileStyle.current;
+    let found = null;
+    let bestDist = Infinity;
+    let bestZ = Infinity;
+    for (let i = 0; i < nr.layout.length; i++) {
+      const el = tileRefs.current[i];
+      if (!el) continue;
+      const zi = z[i];
+      if (!(zi > 0)) continue; // Already gone past.
+      const cached = cache[i];
+      if (cached && Number(cached.o) < 0.3) continue; // Lost in the haze.
+      const spec = nr.layout[i];
+      const entry = spec ? nr.list[spec.index % nr.list.length] : null;
+      if (!entry || !entry.item) continue;
+      const r = el.getBoundingClientRect();
+      if (r.right < bounds.left || r.left > bounds.right) continue;
+      if (r.bottom < bounds.top || r.top > bounds.bottom) continue;
+      const dx = x < r.left ? r.left - x : x > r.right ? x - r.right : 0;
+      const dy = y < r.top ? r.top - y : y > r.bottom ? y - r.bottom : 0;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > TOUCH_SLOP) continue;
+      if (dist < bestDist - 0.5 || (dist <= bestDist + 0.5 && zi < bestZ)) {
+        bestDist = dist;
+        bestZ = zi;
+        found = entry.item;
+      }
+    }
+    return found;
+  }, []);
+  const handleSceneClick = useCallback(
+    (event) => {
+      /* KHARIS PATCH: a near miss by a finger is treated as a hit. A tap that
+       * lands on a tile never arrives here at all - the tile stops it - so
+       * this only ever rescues the misses, and a tap with no tile anywhere
+       * near it still falls through to the pause toggle below, which is what
+       * keeps "tap anywhere to pause" working. */
+      if (onSelectItem && startedRef.current && pointerTypeRef.current === "touch") {
+        const item = resolveTouchTile(event.clientX, event.clientY);
+        if (item) {
+          onSelectItem(item);
+          return;
+        }
+      }
+      if (!clickToToggle || !startedRef.current) return;
+      setPaused((p) => !p);
+      wakeRef.current();
+    },
+    [clickToToggle, onSelectItem, resolveTouchTile],
+  );
   /* ------------------------- styling ------------------------ */ const lineColor = withAlpha(
     gridColor,
     gridOpacity,

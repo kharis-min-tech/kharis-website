@@ -181,8 +181,8 @@ const DEFAULT_IMAGES = [
 function arc(bend) {
   return (CAMERA - 1 + Math.cos(bend)) / (2 * CAMERA * Math.sin(bend));
 }
-function measure(width, height, tile, aspect, gap, bend) {
-  const h = Math.min((tile / 100) * height, ((MAX_WIDTH / 100) * width) / aspect);
+function measure(width, height, tile, aspect, gap, bend, maxWidth = MAX_WIDTH) {
+  const h = Math.min((tile / 100) * height, ((maxWidth / 100) * width) / aspect);
   const radius = width * arc(bend);
   if (!(h > 0) || !(radius > 0)) return { columns: 2, sweep: 0, unit: 0, limit: 0 };
   const deg = (rad) => (rad * 180) / Math.PI;
@@ -219,6 +219,12 @@ function measure(width, height, tile, aspect, gap, bend) {
     axis = 50,
     curve = 80,
     fade = 12,
+    /* KHARIS PATCH: the widest a tile may be, as a share of the row's width.
+     * It was the fixed MAX_WIDTH constant, which is a sensible desktop
+     * number and a bad phone one: at 430px it caps a 16:9 tile at 133px
+     * tall however much height the row is given, so the band ends up a
+     * sliver floating in a screen of empty surface. Exposed so a narrow
+     * layout can let its tiles take more of the width. */ maxWidth = MAX_WIDTH,
     placeholder = "rgba(128, 128, 128, 0.15)",
     /* KHARIS PATCH: how many tiles keep their colour at the centre (0 = original),
      * and what the tiles outside that window fade to. The defaults desaturate
@@ -238,6 +244,16 @@ function measure(width, height, tile, aspect, gap, bend) {
   const [layout, setLayout] = useState(null); // How many times each tile has wrapped round the loop. Picks the image it shows.
   const [laps, setLaps] = useState([]);
   const [inView, setInView] = useState(true);
+  /* KHARIS PATCH: video tiles do not mount with the rest of the row.
+   *
+   * The hero's clips are 7-9MB each and three of them sit in this row, so
+   * autoplaying them on mount put 25MB on the wire in competition with the
+   * photograph the page is judged on. Until this flips, a video item renders
+   * through the ordinary image path below, which draws its poster with the
+   * same curve as every other tile - so the row looks finished either way and
+   * the clips start once the page has gone quiet. A row that is never scrolled
+   * to never loads them at all. */
+  const [videosReady, setVideosReady] = useState(false);
   const tileEls = useRef([]);
   /* KHARIS PATCH: identifies this row's video tiles to the strip painter. */ const vseq =
     useRef(0);
@@ -261,9 +277,9 @@ function measure(width, height, tile, aspect, gap, bend) {
       const { width, height } = entry.contentRect;
       tilePx.current = Math.min(
         (tileHeight / 100) * height,
-        ((MAX_WIDTH / 100) * width) / aspectRatio,
+        ((maxWidth / 100) * width) / aspectRatio,
       );
-      const next = measure(width, height, tileHeight, aspectRatio, gap, bend);
+      const next = measure(width, height, tileHeight, aspectRatio, gap, bend, maxWidth);
       startTransition(() =>
         setLayout((prev) =>
           prev?.columns === next.columns && prev.sweep === next.sweep && prev.unit === next.unit
@@ -274,7 +290,7 @@ function measure(width, height, tile, aspect, gap, bend) {
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, [tileHeight, aspectRatio, gap, bend]);
+  }, [tileHeight, aspectRatio, gap, bend, maxWidth]);
   useEffect(() => {
     if (isStatic) return;
     const el = ref.current;
@@ -291,9 +307,9 @@ function measure(width, height, tile, aspect, gap, bend) {
     for (const img of images) if (img.src) new window.Image().src = img.src;
   }, [srcKey, isStatic]);
   const { columns, sweep, unit, limit } =
-    layout ?? measure(1200, 560, tileHeight, aspectRatio, gap, bend); // Every length is a multiple of the tile's height.
+    layout ?? measure(1200, 560, tileHeight, aspectRatio, gap, bend, maxWidth); // Every length is a multiple of the tile's height.
   const u = (n) =>
-    `calc(${+n.toFixed(4)} * min(${tileHeight}cqh, ${+(MAX_WIDTH / aspectRatio).toFixed(4)}cqw))`;
+    `calc(${+n.toFixed(4)} * min(${tileHeight}cqh, ${+(maxWidth / aspectRatio).toFixed(4)}cqw))`;
   const r = 100 * arc(bend);
   const radiusCq = `${+r.toFixed(3)}cqw`;
   const turn = (deg) =>
@@ -457,6 +473,21 @@ function measure(width, height, tile, aspect, gap, bend) {
         } else v.pause();
       }
   }, [inView]);
+  /* KHARIS PATCH: hand the clips over once the row is on screen AND the main
+   * thread has a spare moment. requestIdleCallback is what keeps this behind
+   * the first paint rather than merely a fixed delay after it; the timeout is
+   * the backstop for a busy page, and the setTimeout is for Safari, which has
+   * only recently grown rIC. */
+  useEffect(() => {
+    if (!inView || videosReady) return;
+    const start = () => setVideosReady(true);
+    if (typeof requestIdleCallback === "function") {
+      const id = requestIdleCallback(start, { timeout: 2500 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(start, 1200);
+    return () => clearTimeout(id);
+  }, [inView, videosReady]);
   useEffect(() => {
     flags.current.autoplay = autoplay;
     syncPlay();
@@ -640,7 +671,7 @@ function measure(width, height, tile, aspect, gap, bend) {
            * it just does not bend within its own width, which at these tile sizes is
            * not something you can see. `poster` is what shows until the first frame
            * decodes, so a video item still wants its image. */
-          if (img?.video) {
+          if (img?.video && videosReady) {
             const vid = `${vseq.current}:${t}`;
             const out = Array.from({ length: SLICES }, (_, k) => {
               const isFirst = k === 0;

@@ -195,7 +195,7 @@
   text-underline-offset: 0.18em;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 759px) {
   .life-alone {
     margin-bottom: -3.25rem;
   }

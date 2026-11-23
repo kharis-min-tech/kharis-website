@@ -472,7 +472,7 @@
   margin-left: 0;
   margin-right: -2rem;
 }
-@media (max-width: 860px) {
+@media (max-width: 859px) {
   .about-page .about-lead__profile-copy,
   .about-page .about-lead__profile:nth-child(2) .about-lead__profile-copy {
     margin: -1rem 0.5rem 0;
@@ -608,7 +608,7 @@
 .about-page .about-vision-theme > p {
   margin: 1rem 0 0;
 }
-@media (max-width: 1000px) {
+@media (max-width: 999px) {
   .about-page .about-vision-themes__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -777,7 +777,7 @@ html[data-theme="dark"] .about-page .about-vision-theme .about-vision-theme__act
 .about-page .about-lead__story-cta {
   border-radius: 0;
 }
-@media (max-width: 800px) {
+@media (max-width: 799px) {
   .about-page .about-lead__story {
     grid-template-columns: 1fr;
   }

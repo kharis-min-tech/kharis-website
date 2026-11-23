@@ -107,7 +107,9 @@ export function LifeDepartmentsPage() {
       <section className="life-dept-branch-cta" aria-labelledby="life-dept-branch-cta-title">
         <div className="life-dept-branch-cta__intro">
           <div>
-            <h3 id="life-dept-branch-cta-title">Still not sure where you fit?</h3>
+            <h3 id="life-dept-branch-cta-title">
+              Still exploring your talents? It takes a minute to find your fit.
+            </h3>
             <p>Take the quiz and find the team that fits you.</p>
           </div>
           <Link

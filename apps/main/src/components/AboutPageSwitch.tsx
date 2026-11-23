@@ -36,29 +36,45 @@ const AboutBook = dynamic(
 );
 
 /**
- * Below this the book is too cramped. It opens into a spread now, so the
- * width has to carry two pages side by side, not one.
+ * Where the book stops being a spread and becomes one page at a time.
+ *
+ * The spread needs width for two pages side by side. Below this there is only
+ * room for one, so the book turns single page instead of giving up and
+ * handing over to the scrolling page - which is what it used to do, and which
+ * meant a phone never saw the book at all.
  */
-const MIN_WIDTH = 1024;
+const SPREAD_WIDTH = 1024;
 
 export function AboutPageSwitch() {
-  const [fits, setFits] = useState(false);
+  /* `motion` is the only thing that can now rule the book out. Width decides
+   * which book you get, not whether you get one. */
+  const [reduced, setReduced] = useState(false);
+  const [single, setSingle] = useState(false);
   const pinned = useSearchParams().get("view");
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const wide = window.matchMedia(`(min-width: ${MIN_WIDTH}px)`);
-    const sync = () => setFits(wide.matches && !motion.matches);
+    const spread = window.matchMedia(`(min-width: ${SPREAD_WIDTH}px)`);
+    const sync = () => {
+      setReduced(motion.matches);
+      setSingle(!spread.matches);
+    };
     sync();
     motion.addEventListener("change", sync);
-    wide.addEventListener("change", sync);
+    spread.addEventListener("change", sync);
     return () => {
       motion.removeEventListener("change", sync);
-      wide.removeEventListener("change", sync);
+      spread.removeEventListener("change", sync);
     };
   }, []);
 
-  const useBook = pinned === "book" ? true : pinned === "scroll" ? false : fits;
+  /* False on the server and on the first client render, so the scrolling page
+   * is what gets rendered and indexed, and the book replaces it once the
+   * media queries have been read. */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const useBook = pinned === "book" ? true : pinned === "scroll" ? false : mounted && !reduced;
 
   /* The header is rendered here rather than by the route because only this
    * component knows which view won. The scrolling page opens on a dark
@@ -69,7 +85,7 @@ export function AboutPageSwitch() {
   return (
     <>
       <SiteHeader tone={useBook ? "light" : "auto"} />
-      {useBook ? <AboutBook /> : <AboutExperience />}
+      {useBook ? <AboutBook single={single} /> : <AboutExperience />}
     </>
   );
 }

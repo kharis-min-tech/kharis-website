@@ -38,7 +38,7 @@
  * waiting on the real one.
  */
 
-import { LIFE_BAPTISM_IMAGE, LIFE_CHILDREN_IMAGE } from "@/lib/life-content";
+import { LIFE_BAPTISM_IMAGE } from "@/lib/life-content";
 
 export type LifeActivitySlug =
   | "singles-seminar"
@@ -56,7 +56,6 @@ export type LifeActivitySlug =
   | "k-group"
   | "baptism"
   | "fasting"
-  | "children"
   | "departments";
 
 /** Seasons an activity can belong to. Flip one off and it leaves the tunnel. */
@@ -329,7 +328,8 @@ export const LIFE_ACTIVITIES: LifeActivity[] = [
     image:
       "https://images.kharis.org/site-images/main/4bee94a5aa2e8d42/life-picks/football-tournament/00-main-trophy.jpg",
     alt: "The winning team lifting the Kharis Cup",
-    video: "https://images.kharis.org/site-videos/main/FOOTBALL%202%20-%20Trim.mp4",
+    video:
+      "https://images.kharis.org/site-images/main/b32d4e26393125e1/FOOTBALL%202%20-%20Trim-960w.mp4",
     gallery: [
       {
         src: "https://images.kharis.org/site-images/main/1c6c077e5f63fe91/life-picks/football-tournament/01-duel.jpg",

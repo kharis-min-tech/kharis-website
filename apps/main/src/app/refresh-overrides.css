@@ -60,7 +60,10 @@
 
   .site-footer__legal {
     max-width: 22rem;
-    font-size: 0.7rem;
+    /* 0.7rem rendered at 11.2px, which is below what is comfortable to read on
+       a phone - and this is the copyright and policy line, so it is small
+       print that someone may actually need. */
+    font-size: 0.8125rem;
   }
 }
 
@@ -528,7 +531,7 @@
   outline-offset: 3px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 899px) {
   .life-page--depts .life-dept-why__grid {
     grid-template-columns: 1fr;
     max-width: 38rem;
@@ -539,7 +542,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .life-page--depts .life-dept-directory {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -620,7 +623,7 @@ html[data-theme="dark"] .life-page--depts .life-dept-why__card--purple .life-dep
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 759px) {
   .life-page--depts .life-dept-band {
     min-height: 100svh;
     padding: 1.25rem;

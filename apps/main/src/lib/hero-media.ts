@@ -42,7 +42,7 @@ export const HERO_SLIDES: HeroSlide[] = [
   },
   {
     type: "video",
-    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim.mp4",
+    src: "https://images.kharis.org/site-images/main/bccc7c3a84bff0b1/Glory%20to%20the%20lamb%20-%20Trim-960w.mp4",
     poster: "https://images.kharis.org/site-images/main/1cd1968f552f6970/hero/worship-altar.jpg",
     alt: "Worship to Glory to the Lamb at a Kharis service",
   },
@@ -68,7 +68,7 @@ export const HERO_SLIDES: HeroSlide[] = [
   },
   {
     type: "video",
-    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim%202.mp4",
+    src: "https://images.kharis.org/site-images/main/ca64a6f0dd627bfe/Glory%20to%20the%20lamb%20-%20Trim%202-960w.mp4",
     poster: "https://images.kharis.org/site-images/main/850b7f32a7f6712c/joyful-worship.jpg",
     alt: "Worship to Glory to the Lamb at a Kharis service",
   },
@@ -97,7 +97,7 @@ export const HERO_SLIDES: HeroSlide[] = [
      they ride the hero band instead. */
   {
     type: "video",
-    src: "https://images.kharis.org/site-videos/main/Glory%20to%20the%20lamb%20-%20Trim%203.mp4",
+    src: "https://images.kharis.org/site-images/main/909c123ea907fe99/Glory%20to%20the%20lamb%20-%20Trim%203-960w.mp4",
     poster:
       "https://images.kharis.org/site-images/main/4ac6c245a7e4d9c2/hero/impartation-celebration.jpg",
     alt: "Worship to Glory to the Lamb at a Kharis service",

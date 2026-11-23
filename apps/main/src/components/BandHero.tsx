@@ -24,6 +24,7 @@ import { useEffect, useMemo, type CSSProperties } from "react";
 import { HeroHeadline } from "./HeroHeadline";
 import { PanoramaRow, type PanoramaImage } from "./PanoramaRow";
 import { HERO_SLIDES, type HeroSlide } from "@/lib/hero-media";
+import { useMediaQuery } from "@/lib/use-media-query";
 import "./hero-band.css";
 
 /**
@@ -41,6 +42,19 @@ import "./hero-band.css";
  * Corners are square. The carousel's reference look rounds them; the sample
  * this layout comes from does not, and nor does anything else on the site.
  */
+/**
+ * The widest a tile may be, as a share of the panel's width.
+ *
+ * The carousel's own default is 55, which is a desktop number: there the
+ * panel is wide enough that 55% of it still makes a tall tile, and five or so
+ * photographs read as a band. On a phone it caps a 16:9 tile at about 133px
+ * however much height the panel has, so the band became a sliver floating in
+ * a screen of empty surface. A phone shows one picture at a time whatever we
+ * do, so letting a tile take almost the full width costs nothing and buys
+ * back the height.
+ */
+const BAND_MAX_WIDTH = { wide: 55, phone: 92 } as const;
+
 const BAND = {
   tileHeight: 38,
   aspectRatio: 1.77,
@@ -106,9 +120,16 @@ export function BandHero() {
    * `min(tileHeight in container height, 55% of container width over the
    * aspect ratio)` — from the same constants it is given, so the two cannot
    * drift apart. */
+  /* The carousel is client-only, so this resolving after hydration costs
+     nothing it was going to render before then anyway. The copy's own
+     measurements read --band-max-w, which hero-band.css sets at the same
+     breakpoint, so the two cannot disagree about where the band is. */
+  const phone = useMediaQuery("(max-width: 767px)");
+  const maxWidth = phone ? BAND_MAX_WIDTH.phone : BAND_MAX_WIDTH.wide;
+
   const bandVars = {
     "--band-tile-h": `${BAND.tileHeight}cqh`,
-    "--band-tile-w": `calc(55cqw / ${BAND.aspectRatio})`,
+    "--band-tile-w": `calc(var(--band-max-w) * 1cqw / ${BAND.aspectRatio})`,
     "--band-axis-top": `${AXES[0]}%`,
     "--band-axis-bottom": `${AXES[AXES.length - 1]}%`,
   } as CSSProperties;
@@ -132,6 +153,7 @@ export function BandHero() {
               axis={AXES[b] ?? 50}
               fade={BAND.fade}
               radius={BAND.radius}
+              maxWidth={maxWidth}
               /* Every tile in full colour. The wall had to grey out
                  everything off-centre so white copy survived on top of it;
                  nothing sits on these photographs, so nothing is dimmed. */
