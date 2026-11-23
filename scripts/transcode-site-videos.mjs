@@ -1,31 +1,42 @@
 /**
- * Re-encode the home hero's clips to the size they are actually drawn at.
+ * Re-encode the site's background clips to the size they are actually drawn at.
  *
- * Dry run: node scripts/transcode-hero-videos.mjs
- * Upload:  node --env-file=.env.r2.local scripts/transcode-hero-videos.mjs --upload
- * Switch:  node --env-file=.env.r2.local scripts/transcode-hero-videos.mjs --apply
+ * Dry run: node scripts/transcode-site-videos.mjs
+ * Upload:  node --env-file=.env.r2.local scripts/transcode-site-videos.mjs --upload
+ * Switch:  node --env-file=.env.r2.local scripts/transcode-site-videos.mjs --apply
  *
  * WHY
  * ---
- * The clips are 7-9MB each, 720p H.264 at roughly 2 Mbps. They are painted
- * into tiles on a curved band that are a few hundred pixels wide, and they are
- * rendered muted, so most of each file is resolution and an audio track that
- * nothing can use. PanoramaCarousel already defers loading them until the row
- * is on screen and the main thread is idle; this is the other half, which is
- * making the bytes themselves smaller.
+ * These are decoration, not cinema. Every one of them is muted, looped, and
+ * painted into a tile a few hundred pixels wide - the hero's curved band, or a
+ * wall of the Life tunnel. They were shipped at their edit resolution: the
+ * three hero clips were 1920x1080 at 18-20 Mbps for three second loops, and
+ * the football clip was 47.5MB. So most of each file is resolution nothing
+ * displays and an audio track nothing can play.
+ *
+ * PanoramaCarousel defers the hero's clips until the row is on screen and the
+ * main thread is idle. This is the other half: making the bytes smaller.
  *
  * WHAT IT DOES NOT DO
  * -------------------
  * It never overwrites a published object. Output goes to a new content-hashed
- * key, exactly like scripts/migrate-site-images.mjs, so the URLs currently in
- * hero-media.ts keep working until --apply switches them and you have seen the
- * new ones load. --apply refuses to run until every new object verifies
- * public, which is the same rule the picture migration follows.
+ * key, exactly like scripts/migrate-site-images.mjs, so the URLs in the source
+ * files keep working until --apply switches them and you have seen the new
+ * ones load. --apply refuses to run until every new object verifies public,
+ * which is the same rule the picture migration follows.
+ *
+ * ADDING A SOURCE
+ * ---------------
+ * Put the file in SOURCE_FILES. Anything matching an images.kharis.org mp4 is
+ * picked up wherever it appears, so a `src:` in hero-media.ts and a `video:`
+ * in life-activities.ts both work without the script knowing the difference.
  *
  * FINDING FFMPEG
  * --------------
  * Checked in order: $FFMPEG_PATH, the ffmpeg-static package if it happens to
  * be installed, then PATH. ffprobe likewise. Any one of those is enough.
+ * ffmpeg-static is a devDependency, so it is normally the one that answers -
+ * note that resolving it only works from inside this repo.
  */
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile, stat, readdir } from "node:fs/promises";
@@ -38,7 +49,11 @@ import { uploadImages } from "./migrate-site-images.mjs";
 
 const run = promisify(execFile);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const HERO_MEDIA = resolve(root, "apps/main/src/lib/hero-media.ts");
+/** Every file that names a background clip by URL. */
+const SOURCE_FILES = [
+  "apps/main/src/lib/hero-media.ts",
+  "apps/main/src/lib/life-activities.ts",
+].map((p) => resolve(root, p));
 const WORK = resolve(root, ".transcode");
 
 /**
@@ -70,12 +85,21 @@ async function which(name, pkg) {
   }
 }
 
-/** The video entries in hero-media.ts, in file order. */
-async function heroVideos() {
-  const text = await readFile(HERO_MEDIA, "utf8");
-  const urls = [...text.matchAll(/type:\s*"video",\s*\n\s*src:\s*"([^"]+)"/g)].map((m) => m[1]);
-  if (!urls.length) throw new Error("No video entries found in hero-media.ts");
-  return [...new Set(urls)];
+/**
+ * Every distinct images.kharis.org mp4 named in SOURCE_FILES, with the files
+ * that name it, so --apply knows where to rewrite each one.
+ */
+async function siteVideos() {
+  const found = new Map();
+  for (const file of SOURCE_FILES) {
+    const text = await readFile(file, "utf8");
+    for (const [url] of text.matchAll(/https:\/\/images\.kharis\.org\/[^"'\s]+\.mp4/g)) {
+      if (!found.has(url)) found.set(url, []);
+      if (!found.get(url).includes(file)) found.get(url).push(file);
+    }
+  }
+  if (!found.size) throw new Error("No clips found in " + SOURCE_FILES.join(", "));
+  return [...found.entries()].map(([url, files]) => ({ url, files }));
 }
 
 const nameOf = (url) => decodeURIComponent(url.split("/").pop());
@@ -164,10 +188,10 @@ async function main() {
   }
 
   await mkdir(WORK, { recursive: true });
-  const urls = await heroVideos();
+  const clips = await siteVideos();
   const results = [];
 
-  for (const url of urls) {
+  for (const { url, files } of clips) {
     const name = nameOf(url);
     const source = resolve(WORK, name);
     const outName = name.replace(/\.[^.]+$/, "") + `-${TARGET_WIDTH}w.mp4`;
@@ -196,6 +220,7 @@ async function main() {
       contentType: "video/mp4",
       url: `https://images.kharis.org/${key.split("/").map(encodeURIComponent).join("/")}`,
       originalUrl: url,
+      files,
       before,
       after,
     });
@@ -217,18 +242,33 @@ async function main() {
 
   if (upload) {
     await uploadImages(results);
-    console.log("Uploaded and verified. Re-run with --apply to switch hero-media.ts.");
+    console.log("Uploaded and verified. Re-run with --apply to switch the source files.");
     return;
   }
   if (apply) {
     await uploadImages(results); // no-ops for objects already present, and verifies each
-    let text = await readFile(HERO_MEDIA, "utf8");
+    /* Rewrite per file rather than globally: a clip can be named in more than
+       one place, and each file is read and written once however many of them
+       it carries. */
+    const byFile = new Map();
     for (const r of results) {
-      if (!text.includes(r.originalUrl)) throw new Error(`Not in hero-media.ts: ${r.originalUrl}`);
-      text = text.split(r.originalUrl).join(r.url);
+      for (const f of r.files) {
+        if (!byFile.has(f)) byFile.set(f, []);
+        byFile.get(f).push(r);
+      }
     }
-    await writeFile(HERO_MEDIA, text);
-    console.log(`Switched ${results.length} hero video URLs in hero-media.ts.`);
+    let switched = 0;
+    for (const [file, items] of byFile) {
+      let text = await readFile(file, "utf8");
+      for (const r of items) {
+        if (!text.includes(r.originalUrl)) throw new Error(`Not in ${file}: ${r.originalUrl}`);
+        text = text.split(r.originalUrl).join(r.url);
+        switched++;
+      }
+      await writeFile(file, text);
+      console.log(`  ${items.length} switched in ${file.slice(root.length + 1)}`);
+    }
+    console.log(`Switched ${switched} clip reference(s).`);
     return;
   }
   console.log("Dry run only. Use --upload to upload, then --apply to switch the URLs.");

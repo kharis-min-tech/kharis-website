@@ -1,5 +1,40 @@
 /* Phone controls keep comfortable hit areas without changing desktop layouts. */
 @media (max-width: 767px) {
+  /* The testimony rail bleeds outward to cancel the section gutter, so its
+     fade edges can sit over the page margin. It cancels `min(5.5vw, 3.25rem)`,
+     which is not the gutter: at 430px that is 23.65px against a 20px gutter,
+     so the rail hangs 3.65px past each edge and the whole document scrolls
+     sideways. Above 768px the section's max-width leaves slack to absorb the
+     difference; on a phone the section fills the screen and there is none.
+     `--gutter` is exactly the thing being cancelled, so use it. */
+  .testimony-viewport {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .testimony-rail {
+    padding-inline: var(--gutter);
+  }
+
+  .testimony-viewport::before,
+  .testimony-viewport::after {
+    width: var(--gutter);
+  }
+
+  /* The policy links were 11.2px. The legal line is set with the rest of the
+     narrow-screen footer in refresh-overrides.css, which loads after this. */
+  .site-footer__policy {
+    font-size: 0.8125rem;
+  }
+
+  /* mobile.css already gives buttons and summaries a 44px target, but a plain
+     anchor was left out, and the branch list on /locations is a column of
+     them at 33px. Scoped to the lists that are genuinely tap targets rather
+     than every link, so links inside running text keep their line height. */
+  .branch-card__name a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
   :where(button, summary, [role="tab"], [role="menuitemradio"]) {
     min-height: 44px;
     min-width: 44px;

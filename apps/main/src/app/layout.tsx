@@ -34,6 +34,11 @@ export const metadata: Metadata = {
 
 export const viewport = {
   colorScheme: "light" as const,
+  /* Lets the page use the whole screen on a notched or rounded phone, which is
+   * what the `env(safe-area-inset-*)` rules in globals.css are written
+   * against - without this the browser letterboxes the page and every one of
+   * them resolves to 0. Width and initial-scale keep Next's defaults. */
+  viewportFit: "cover" as const,
 };
 
 /** Public pages can be a minute old. Repeat visits skip a fresh database round trip. */

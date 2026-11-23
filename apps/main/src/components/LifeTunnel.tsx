@@ -21,6 +21,7 @@ import { cdnImage, cdnSrcSet } from "@/lib/image-cdn";
 import { activeLifeActivities, type LifeActivity } from "@/lib/life-activities";
 import { getSiteTheme, subscribeSiteTheme } from "@/lib/theme";
 import { useDialog } from "@/lib/use-dialog";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import "./life-tunnel.css";
 
@@ -271,6 +272,12 @@ export function LifeTunnel() {
   const activities = activeLifeActivities();
   const theme = useSyncExternalStore(subscribeSiteTheme, getSiteTheme, () => "light" as const);
   const reduced = usePrefersReducedMotion();
+  /* Not a width: the question is whether there is a pointer that can hover,
+   * because that is what aiming at a wall depends on. A mouse gets the
+   * outline under it and the precision to use it; a finger gets neither, and
+   * is what the readout is for. Every desktop therefore behaves exactly as it
+   * did before this existed. */
+  const touch = useMediaQuery("(hover: none)");
   const shellRef = useRef<HTMLElement>(null);
   const listTitle = useRef<HTMLHeadingElement>(null);
   const runningBrowse = useRef<HTMLButtonElement>(null);
@@ -279,6 +286,8 @@ export function LifeTunnel() {
   const [started, setStarted] = useState(false);
   /** Once someone has actually pointed at or opened a wall, the centre cue has done its job. */
   const [engaged, setEngaged] = useState(false);
+  /** The wall the camera is about to pass, named for the touch readout. */
+  const [passing, setPassing] = useState<LifeActivity | null>(null);
   /* The pointer is very often already resting over a wall the instant "Step
      inside" is clicked (the button sits where the tunnel is about to be), so
      the tunnel's own hover callback can fire immediately and dismiss the cue
@@ -332,6 +341,14 @@ export function LifeTunnel() {
     if (item?.activity && Date.now() - startedAt.current > 500) setEngaged(true);
   }, []);
 
+  /* The tunnel names the wall nearest the camera whenever it changes - about
+     once a second at cruising speed, so this is a render per wall rather than
+     a render per frame. Wired up for touch only: on a mouse it would be state
+     nobody reads. */
+  const onNearestItem = useCallback((item: { activity?: LifeActivity } | null) => {
+    setPassing(item?.activity ?? null);
+  }, []);
+
   const programmeActivities = activities;
   const activitiesBySlug = new Map(
     programmeActivities.map((activity) => [activity.slug, activity]),
@@ -362,6 +379,7 @@ export function LifeTunnel() {
             items={items}
             onSelectItem={onSelectItem}
             onHoverItem={onHoverItem}
+            onNearestItem={touch ? onNearestItem : undefined}
             /* Nothing should be moving behind an open activity. */
             frozen={Boolean(open)}
             /* The start control is ours, in the middle of the tunnel with the
@@ -402,10 +420,15 @@ export function LifeTunnel() {
 
           {/* The first thing you'd otherwise have to guess: once you're
               moving, dead centre, exactly where the title just was. Clears
-              out the moment you actually point at or open a wall, handing
-              off to the readout below. */}
+              out the moment you actually point at or open a wall - handing
+              off to the outline under the pointer, or, on a touch screen, to
+              the readout below. */}
           <p className={`life-tunnel__cue${started && !engaged ? " is-on" : ""}`} aria-hidden>
-            <span>Click anywhere to pause · Click a picture to find out more</span>
+            <span>
+              {touch
+                ? "Tap to pause · Tap a picture, or the bar below"
+                : "Click anywhere to pause · Click a picture to find out more"}
+            </span>
           </p>
 
           <button
@@ -417,6 +440,32 @@ export function LifeTunnel() {
           >
             Scroll down for the full picture
           </button>
+
+          {/* The readout, for fingers.
+              A wall's hit box is the sliver its own projection leaves, so on a
+              phone the thing you are looking straight at can be a few pixels
+              wide. The tunnel's touch slop gives each of those a 48px target;
+              this gives the one you are passing a named, full-width one, so
+              there is always something unmissable to press. */}
+          {touch && started && passing ? (
+            <button
+              type="button"
+              className="life-tunnel__passing"
+              aria-haspopup="dialog"
+              onClick={() => {
+                setOpen(passing);
+                setEngaged(true);
+              }}
+            >
+              <span className="life-tunnel__passing-text">
+                <span className="life-tunnel__passing-label">Now passing</span>
+                <strong>{passing.title}</strong>
+              </span>
+              <span className="life-tunnel__passing-arrow" aria-hidden>
+                ↗
+              </span>
+            </button>
+          ) : null}
         </div>
       ) : null}
 

@@ -60,7 +60,10 @@
 
   .site-footer__legal {
     max-width: 22rem;
-    font-size: 0.7rem;
+    /* 0.7rem rendered at 11.2px, which is below what is comfortable to read on
+       a phone - and this is the copyright and policy line, so it is small
+       print that someone may actually need. */
+    font-size: 0.8125rem;
   }
 }
 

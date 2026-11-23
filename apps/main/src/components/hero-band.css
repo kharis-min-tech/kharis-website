@@ -32,6 +32,39 @@ html[data-theme="dark"] .band-hero {
   }
 }
 
+/* A phone does not get a whole screen for this.
+ *
+ * At 430x932 the panel was 844px tall and the band inside it about 133px, so
+ * five sixths of the first screen was empty surface and everything else on
+ * the page started below the fold. The band is taller now (see --band-max-w),
+ * and the hero asks for a share of the screen rather than all of it, so the
+ * section under it is visible without scrolling and the composition reads as
+ * a headline sitting on a band rather than adrift in a dark field. */
+@media (max-width: 767px) {
+  .band-hero {
+    min-height: 0;
+    padding: 4.25rem 0 1.25rem;
+  }
+
+  .band-hero__panel {
+    min-height: 0;
+    height: min(62svh, 30rem);
+  }
+}
+
+/* Must match BAND_MAX_WIDTH in BandHero.tsx, at the same breakpoint: the
+ * carousel sizes the band from the prop, and the copy positions itself from
+ * this, so if they disagree the headline stops sitting on the band. */
+.band-hero__panel {
+  --band-max-w: 55;
+}
+
+@media (max-width: 767px) {
+  .band-hero__panel {
+    --band-max-w: 92;
+  }
+}
+
 .band-hero__panel {
   position: relative;
   flex: 1;

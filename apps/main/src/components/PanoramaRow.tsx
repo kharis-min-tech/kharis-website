@@ -46,6 +46,8 @@ type Props = {
   axis?: number;
   /** Masks the outer N% at each end to transparent. */
   fade?: number;
+  /** Widest a tile may be, as a share of the row width. Defaults to 55. */
+  maxWidth?: number;
   /** Tile corner radius, as a CSS length. "0" squares them off. */
   radius?: string;
   className?: string;
@@ -74,6 +76,7 @@ export function PanoramaRow({
   gap = -7,
   axis = 50,
   fade = 0,
+  maxWidth,
   /* Rounded, as the carousel's reference look has them, and the one place on
      the site that is not square-cornered. Pass "0" to square them off. */
   radius = "12px",
@@ -117,6 +120,7 @@ export function PanoramaRow({
         gap={gap}
         radius={radius}
         axis={axis}
+        {...(maxWidth === undefined ? {} : { maxWidth })}
         /* The fade masks the row to transparent over the outer N% at each
            end. It defaults to 0 because the full-bleed wall had nothing
            behind it but the shell's own background, so fading the ends drew
