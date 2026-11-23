@@ -1,5 +1,33 @@
 @import "tailwindcss";
 
+/* —— Breakpoints ——————————————————————————————————————————————
+ * A media query cannot read a custom property, so every one of these numbers
+ * is written out by hand in every file. This is the list they are written
+ * from. Reach for the nearest rung rather than a new number: the reason the
+ * footer legal line broke on a phone was two files naming the same intent at
+ * two different widths, and the wrong one winning.
+ *
+ * Each rung is a pair. A min-width owns the rung; the matching max-width is
+ * one pixel below it, so the two never both apply:
+ *
+ *   phone       (max-width:  479px) | (min-width:  480px)
+ *   phone wide  (max-width:  559px) | (min-width:  560px)
+ *   tablet      (max-width:  639px) | (min-width:  640px)
+ *   tablet wide (max-width:  767px) | (min-width:  768px)
+ *   laptop      (max-width:  899px) | (min-width:  900px)
+ *   desktop     (max-width: 1023px) | (min-width: 1024px)
+ *
+ * Older one-off widths (519/520, 539/540, 719/720, 759/760, 799/800, 819/820,
+ * 859/860, 959/960, 999/1000, and 359, 420, 700, 850, 1100, 1200, 1280) are
+ * still in use where a particular component genuinely breaks there. They are
+ * paired the same way, and are not a licence to add more.
+ *
+ * Always px, never rem: a rem in a media query is measured against the
+ * visitor's default font size, not the root font-size, so (max-width: 48rem)
+ * fires at 960px for someone running 20px text and silently overlaps the
+ * 768px rung it was meant to match.
+ */
+
 :root {
   /* —— Surfaces ————————————————————————————————————————————————
    * One purple-tinted ramp with even perceptual steps (~1.1 contrast each).
@@ -2074,9 +2102,6 @@ html[data-theme="dark"] .testimony-card__read {
   background: #0a0614;
 }
 
-/*
- * Full-bleed cover: Tailwind preflight sets `video { max-width:100%; height:auto }
-
 /* Hero slideshow picks — larger thumbs, no weak glass bar */
 .hero-slides {
   margin-top: 1.65rem;
@@ -2677,7 +2702,7 @@ html[data-theme="dark"] .testimony-card__read {
   width: 22px;
   background: #1c1c1f;
 }
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .apple-carousel {
     --slide-w: 86vw;
     --slide-gap: 8px;
@@ -3817,7 +3842,7 @@ html[data-theme="dark"] .testimony-card__read {
   filter: drop-shadow(0 22px 44px rgba(0, 0, 0, 0.55));
 }
 
-@media (max-width: 760px) {
+@media (max-width: 759px) {
   .msg-devices {
     height: 17.5rem;
   }
@@ -4268,7 +4293,7 @@ html[data-theme="dark"] .testimony-card__read {
   white-space: nowrap;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 719px) {
   .about-stage__title {
     white-space: normal;
   }
@@ -4781,7 +4806,7 @@ html[data-theme="dark"] .testimony-card__read {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .about-panel__vision-stage {
     padding: 1.2rem 4.6rem;
     min-height: 11.5rem;
@@ -5033,7 +5058,7 @@ html[data-theme="dark"] .about-panel__vision-side:hover {
   display: inline-flex;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .about-stage__pickers {
     grid-template-columns: 1fr;
   }
@@ -9726,18 +9751,10 @@ html[data-theme="dark"] .life-modal__followup-form input {
   color: #fff;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 899px) {
   html[data-theme="dark"] .life-hero__sticky {
     color: rgba(243, 240, 248, 0.9);
   }
-} /* Children page editorial flow: image-led welcome,
-a clear values interlude {
-  display: grid;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 0;
-  background: var(--card-bg, #fff);
-  box-shadow: var(--shadow-lift);
 }
 
 /* :: Contrast fixes (WCAG AA, light + dark) :: */
@@ -10657,7 +10674,7 @@ html[data-theme="dark"] .locations-empty a {
 }
 
 /* The map is short on a phone; a row of buttons covers less of it than a column. */
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .branch-map__zoom {
     top: 0.5rem;
     left: 0.75rem;
@@ -10976,7 +10993,7 @@ html[data-theme="dark"] .locations-empty a {
   text-align: right;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 519px) {
   .not-found__game-footer {
     align-items: flex-start;
     flex-direction: column;

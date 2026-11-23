@@ -455,7 +455,7 @@ html[data-theme="dark"] .branch-page {
     animation-delay: 260ms;
   }
 }
-@media (max-width: 800px) {
+@media (max-width: 799px) {
   .branch-intro {
     padding-top: 6rem;
   }

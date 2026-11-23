@@ -127,7 +127,7 @@
   text-transform: uppercase;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .events-next__empty {
     align-items: flex-start;
     flex-wrap: wrap;

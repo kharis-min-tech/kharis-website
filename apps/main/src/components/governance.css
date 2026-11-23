@@ -211,7 +211,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-@media (max-width: 800px) {
+@media (max-width: 799px) {
   .gov-page .gov-policy__link {
     grid-template-columns: 1fr;
     gap: 0.6rem;
@@ -293,7 +293,7 @@
   background: #fff;
   border: 0;
 }
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .policy-pdf-dialog[open] {
     width: calc(100vw - 1rem);
     height: calc(100dvh - 1rem);
@@ -322,7 +322,7 @@
   outline: 3px solid #ffde59;
   outline-offset: 4px;
 }
-@media (max-width: 800px) {
+@media (max-width: 799px) {
   .gov-page .gov-hero > div {
     display: block;
   }
@@ -384,7 +384,7 @@
 .gov-page .gov-incident {
   max-width: calc(var(--page-max) + 2 * var(--gutter));
 }
-@media (max-width: 800px) {
+@media (max-width: 799px) {
   .gov-page .gov-policy {
     grid-template-columns: 1fr;
     gap: 0.6rem;

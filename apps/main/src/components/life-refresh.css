@@ -581,7 +581,7 @@ html[data-theme="dark"] .life-refresh {
   font-weight: 650;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 959px) {
   .life-belong__desktop {
     grid-template-columns: minmax(15rem, 0.78fr) minmax(0, 1.22fr);
     gap: 2rem;
@@ -600,7 +600,7 @@ html[data-theme="dark"] .life-refresh {
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 759px) {
   .life-refresh {
     padding: 5.75rem 1rem 3.25rem;
   }

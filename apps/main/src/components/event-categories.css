@@ -826,7 +826,7 @@ div.events-page {
   outline-offset: -2px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) {
   .events-gallery {
     --gallery-top: 4rem;
   }

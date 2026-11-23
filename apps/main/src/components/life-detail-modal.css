@@ -272,7 +272,7 @@ html[data-theme="dark"] .life-modal__dots button.is-on {
   padding: 0.75rem 1.25rem 1.25rem;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 559px) {
   .life-modal__stage {
     gap: 0;
     padding-inline: 0.15rem;
@@ -1136,7 +1136,7 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
   text-underline-offset: 0.25em;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 759px) {
   .life-reader__toolbar {
     min-height: 4rem;
     padding-inline: 1rem;
@@ -1263,7 +1263,7 @@ html:not([data-theme="dark"]) .life-reader__journey-heading-stage > p {
   }
 }
 
-@media (min-width: 761px) and (max-width: 1000px) {
+@media (min-width: 760px) and (max-width: 999px) {
   .life-reader__journey-heading h3 {
     font-size: clamp(2.5rem, 5vw, 3.5rem);
   }

@@ -834,7 +834,7 @@ html[data-theme="dark"] .about-book {
   left: calc(50% + var(--leaf-w) + 1.25rem);
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 767px) {
   .about-book__scene {
     padding-bottom: 3.5rem;
   }
