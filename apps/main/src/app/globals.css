@@ -3342,73 +3342,6 @@ html[data-theme="dark"] .testimony-card__read {
   }
 }
 
-/* Netflix-style FAQ at bottom of Messages page */
-/* Reading column, deliberately narrower than the page, but on the shared
- * vertical scale and gutter rather than three more clamps. */
-.msg-faq {
-  padding: var(--pad-lg) var(--gutter);
-  max-width: calc(56rem + 2 * var(--gutter));
-  margin-inline: auto;
-}
-
-.msg-faq__title {
-  margin: 0 0 1.35rem;
-  font-size: clamp(1.65rem, 4vw, 2.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #fff !important;
-}
-
-.msg-faq__list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.msg-faq__item {
-  background: #2d2d2d;
-  border-radius: 0;
-}
-
-.msg-faq__q {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.25rem;
-  padding: 1.15rem 1.35rem;
-  border: 0;
-  background: transparent;
-  color: #fff;
-  font: inherit;
-  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
-}
-
-.msg-faq__q:hover {
-  background: #3a3a3a;
-}
-
-.msg-faq__icon {
-  flex-shrink: 0;
-  font-size: 2.25rem;
-  font-weight: 300;
-  line-height: 1;
-  color: #fff;
-}
-
-.msg-faq__a {
-  padding: 0 1.35rem 1.35rem;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.88);
-  border-top: 1px solid #07040c;
-  padding-top: 1.1rem;
-}
-
 /* Was a 90rem container with its own 44px gutter — the one section on the
  * page whose content edge did not line up with the rest. */
 .msg-listen {
@@ -8193,15 +8126,13 @@ html[data-theme="dark"] .msg-page {
 }
 
 html[data-theme="light"] .msg-page .msg-row-band h2,
-html[data-theme="light"] .msg-page .msg-shelf h2,
-html[data-theme="light"] .msg-page .msg-faq__title {
+html[data-theme="light"] .msg-page .msg-shelf h2 {
   color: var(--fg) !important;
   -webkit-text-fill-color: var(--fg) !important;
 }
 
 html[data-theme="dark"] .msg-page .msg-row-band h2,
-html[data-theme="dark"] .msg-page .msg-shelf h2,
-html[data-theme="dark"] .msg-page .msg-faq__title {
+html[data-theme="dark"] .msg-page .msg-shelf h2 {
   color: var(--fg) !important;
   -webkit-text-fill-color: var(--fg) !important;
 }
@@ -8309,31 +8240,6 @@ html[data-theme="light"] .msg-tile--series .msg-tile__cta {
 html[data-theme="light"] .msg-tile--series:hover .msg-tile__cta,
 html[data-theme="light"] .msg-tile--series:focus-visible .msg-tile__cta {
   color: var(--yellow);
-}
-
-html[data-theme="light"] .msg-faq__item {
-  background: var(--bg-soft);
-}
-
-html[data-theme="light"] .msg-faq__q {
-  color: var(--fg);
-}
-
-html[data-theme="light"] .msg-faq__q:hover {
-  background: var(--bg-purple);
-}
-
-html[data-theme="light"] .msg-faq__icon {
-  color: var(--purple);
-}
-
-html[data-theme="light"] .msg-faq__a {
-  color: var(--fg-soft);
-  border-top-color: var(--line);
-}
-
-html[data-theme="light"] .msg-faq__title {
-  color: var(--fg) !important;
 }
 
 /* Floating theme toggle — bottom-left so it never fights the chat launcher */
@@ -9469,23 +9375,10 @@ html[data-theme="dark"] .events-happen__card {
   color: #f1eef5;
 }
 
-html[data-theme="dark"] .msg-faq,
-html[data-theme="dark"] .msg-faq__item,
 html[data-theme="dark"] .msg-row-band,
 html[data-theme="dark"] .msg-shelf {
   background-color: var(--surface-0);
   color: #f1eef5;
-}
-
-html[data-theme="dark"] .msg-faq__item {
-  background-color: var(--surface-raised);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-html[data-theme="dark"] .msg-faq__item p,
-html[data-theme="dark"] .msg-faq__item summary,
-html[data-theme="dark"] .msg-faq__a {
-  color: #d0cad8;
 }
 
 /* Prefer explicit light surfaces when OS forces dark without our theme */
