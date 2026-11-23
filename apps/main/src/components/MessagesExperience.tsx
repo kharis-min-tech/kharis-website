@@ -221,19 +221,6 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
     if (!root) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".msg-hub__hero-copy > *",
-        { y: 28, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          stagger: 0.08,
-          ease: "power3.out",
-          clearProps: "transform",
-        },
-      );
-
       gsap.utils.toArray<HTMLElement>(".msg-row").forEach((row) => {
         const gridRow =
           row.classList.contains("msg-row--series") || row.classList.contains("msg-row--wide");
@@ -256,24 +243,6 @@ export function MessagesExperience({ messages, latest = [] }: Props) {
           },
         );
       });
-
-      gsap.fromTo(
-        ".msg-faq__item",
-        { y: 24, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: ".msg-faq",
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-          y: 0,
-          opacity: 1,
-          duration: 0.55,
-          stagger: 0.06,
-          ease: "power3.out",
-          clearProps: "transform",
-        },
-      );
 
       gsap.fromTo(
         ".msg-listen__step",
