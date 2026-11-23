@@ -20,6 +20,9 @@ type MessageCard = {
 };
 
 type Msg = {
+  replyId?: number;
+  pending?: boolean;
+  error?: string;
   role: Role;
   content: string;
   cards?: MessageCard[];
@@ -229,10 +232,7 @@ export function LifeChatbot({
   const [nudgeOpen, setNudgeOpen] = useState(false);
   const [nudgeDismissed, setNudgeDismissed] = useState(!nudge || startOpen);
   const [input, setInput] = useState("");
-  const [busy, setBusy] = useState(false);
-  /** True once the first streamed token has been appended (hides typing dots). */
-  const [streaming, setStreaming] = useState(false);
-  const [error, setError] = useState("");
+  const [choosingTopic, setChoosingTopic] = useState(true);
   const [unread, setUnread] = useState(false);
   const [picked, setPicked] = useState<string | null>(null);
   const [composerOpen, setComposerOpen] = useState(false);
@@ -249,7 +249,13 @@ export function LifeChatbot({
   const openRef = useRef(open);
   const messagesRef = useRef(messages);
   openRef.current = open;
-  messagesRef.current = messages;
+  const nextReplyId = useRef(0);
+  const busy = messages.some((message) => message.pending);
+
+  function replaceMessages(next: Msg[]) {
+    messagesRef.current = next;
+    setMessages(next);
+  }
 
   useEffect(() => {
     if (!nudge) {
@@ -323,7 +329,7 @@ export function LifeChatbot({
     setUnread(false);
     setNudgeOpen(false);
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, open, busy, streaming, composerOpen]);
+  }, [messages, open, composerOpen]);
 
   useEffect(() => {
     if (open && composerOpen) {
@@ -351,28 +357,41 @@ export function LifeChatbot({
 
   const goToContact = () => {
     const payload = saveGraceHandoff(
-      messagesRef.current.map((m) => ({
-        role: m.role,
-        content:
-          m.role === "assistant"
-            ? tidyAssistantText(m.content, Boolean(m.cards?.length))
-            : m.content,
-      })),
+      messagesRef.current
+        .filter((m) => m.content && !m.pending && !m.error)
+        .map((m) => ({
+          role: m.role,
+          content:
+            m.role === "assistant"
+              ? tidyAssistantText(m.content, Boolean(m.cards?.length))
+              : m.content,
+        })),
     );
     window.location.href = contactHandoffUrl(payload.ticketId);
   };
 
   const send = async (text: string) => {
     const content = text.trim();
-    if (!content || busy) return;
-    setError("");
+    if (!content) return;
     setComposerOpen(true);
-    const next: Msg[] = [...messages, { role: "user", content }];
-    setMessages(next);
+    setChoosingTopic(false);
+    const replyId = ++nextReplyId.current;
+    const userMessage: Msg = { role: "user", content };
+    const previous = messagesRef.current;
+    const history = [...previous.filter((m) => !m.pending && !m.error), userMessage];
+    replaceMessages([
+      ...previous,
+      userMessage,
+      { replyId, role: "assistant", content: "", pending: true },
+    ]);
     setInput("");
-    setBusy(true);
-    // Typing dots until the first streamed token arrives.
-    setStreaming(false);
+
+    function updateReply(update: Partial<Msg>) {
+      replaceMessages(
+        messagesRef.current.map((m) => (m.replyId === replyId ? { ...m, ...update } : m)),
+      );
+    }
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -381,7 +400,7 @@ export function LifeChatbot({
           Accept: "text/event-stream",
         },
         body: JSON.stringify({
-          messages: next.map((m) => ({ role: m.role, content: m.content })),
+          messages: history.slice(-16).map((m) => ({ role: m.role, content: m.content })),
         }),
       });
 
@@ -396,66 +415,23 @@ export function LifeChatbot({
           cards?: MessageCard[];
         };
         if (!res.ok || !data.ok || !data.reply) {
-          setError(data.error || "I'm a bit busy right now, please try again in a moment.");
-          return;
+          throw new Error(data.error || "I'm a bit busy right now, please try again in a moment.");
         }
         const cards = normalizeCards(data.cards);
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: data.reply!,
-            ...(cards?.length ? { cards } : {}),
-          },
-        ]);
+        updateReply({ content: data.reply, cards });
         if (!openRef.current) setUnread(true);
         return;
       }
 
       if (!res.ok || !res.body) {
-        setError("I'm a bit busy right now, please try again in a moment.");
-        return;
+        throw new Error("I'm a bit busy right now, please try again in a moment.");
       }
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
       let assistant = "";
-      let started = false;
-      let sawDone = false;
       let streamError = "";
-
-      const appendChunk = (piece: string) => {
-        if (!piece) return;
-        assistant += piece;
-        if (!started) {
-          started = true;
-          setStreaming(true);
-          setMessages((prev) => [...prev, { role: "assistant", content: assistant }]);
-        } else {
-          const snapshot = assistant;
-          setMessages((prev) => {
-            const copy = [...prev];
-            const last = copy[copy.length - 1];
-            if (last?.role === "assistant") {
-              copy[copy.length - 1] = { ...last, content: snapshot };
-            }
-            return copy;
-          });
-        }
-      };
-
-      const applyCards = (cards: MessageCard[] | undefined) => {
-        if (!cards?.length) return;
-        setMessages((prev) => {
-          const copy = [...prev];
-          const last = copy[copy.length - 1];
-          if (last?.role === "assistant") {
-            copy[copy.length - 1] = { ...last, cards };
-          }
-          return copy;
-        });
-      };
 
       while (true) {
         const { done, value } = await reader.read();
@@ -484,49 +460,29 @@ export function LifeChatbot({
           }
 
           if (evt.type === "chunk" && typeof evt.text === "string") {
-            appendChunk(evt.text);
+            assistant += evt.text;
+            updateReply({ content: assistant });
           } else if (evt.type === "done") {
-            sawDone = true;
-            if (typeof evt.reply === "string" && evt.reply && !assistant) {
-              appendChunk(evt.reply);
-            } else if (typeof evt.reply === "string" && evt.reply && evt.reply !== assistant) {
-              // Prefer server-assembled final text (trimmed) if it differs.
-              assistant = evt.reply;
-              setMessages((prev) => {
-                const copy = [...prev];
-                const last = copy[copy.length - 1];
-                if (last?.role === "assistant") {
-                  copy[copy.length - 1] = {
-                    ...last,
-                    content: evt.reply!,
-                  };
-                } else {
-                  copy.push({ role: "assistant", content: evt.reply! });
-                }
-                return copy;
-              });
-            }
-            applyCards(normalizeCards(evt.cards));
+            assistant = evt.reply || assistant;
+            updateReply({ content: assistant, cards: normalizeCards(evt.cards) });
           } else if (evt.type === "error") {
             streamError = evt.error || "I'm a bit busy right now, please try again in a moment.";
           }
         }
       }
 
-      if (streamError && !assistant) {
-        setError(streamError);
-        return;
-      }
-      if (!sawDone && !assistant) {
-        setError("I'm a bit busy right now, please try again in a moment.");
-        return;
-      }
+      if (!assistant)
+        throw new Error(streamError || "Grace couldn't finish this reply. Please try again.");
       if (!openRef.current) setUnread(true);
-    } catch {
-      setError("Could not reach the chat just now. Please try again.");
+    } catch (err) {
+      updateReply({
+        error:
+          err instanceof TypeError || !(err instanceof Error)
+            ? "Could not reach the chat just now. Please try again."
+            : err.message,
+      });
     } finally {
-      setBusy(false);
-      setStreaming(false);
+      updateReply({ pending: false });
     }
   };
 
@@ -535,8 +491,9 @@ export function LifeChatbot({
     setPicked(id);
     if (id === "other") {
       setComposerOpen(true);
-      setMessages((prev) => [
-        ...prev,
+      setChoosingTopic(false);
+      replaceMessages([
+        ...messagesRef.current,
         {
           role: "assistant",
           content: "Sure, type your question below and I'll help.",
@@ -559,7 +516,7 @@ export function LifeChatbot({
     }
   };
 
-  const showTopics = !busy && messages.filter((m) => m.role === "user").length === 0;
+  const showTopics = choosingTopic && !busy;
   const showFab = launcherReady && (nudgeDismissed || open);
   const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
   const showContactCta =
@@ -750,13 +707,24 @@ export function LifeChatbot({
                   <GraceAvatar className="is-mini" />
                   <div className="life-chat__stack">
                     <span className="life-chat__who">Grace</span>
-                    <div className="life-chat__bubble life-chat__bubble--assistant">
-                      <ChatMarkdown
-                        text={tidyAssistantText(m.content, Boolean(m.cards?.length))}
-                        onContactClick={goToContact}
-                        onNavigate={() => setOpen(false)}
-                      />
-                    </div>
+                    {m.pending && !m.content ? (
+                      <div className="life-chat__bubble life-chat__bubble--assistant life-chat__typing">
+                        <TypingDots />
+                      </div>
+                    ) : m.content ? (
+                      <div className="life-chat__bubble life-chat__bubble--assistant">
+                        <ChatMarkdown
+                          text={tidyAssistantText(m.content, Boolean(m.cards?.length))}
+                          onContactClick={goToContact}
+                          onNavigate={() => setOpen(false)}
+                        />
+                      </div>
+                    ) : null}
+                    {m.error ? (
+                      <p className="life-chat__err" role="status">
+                        {m.error}
+                      </p>
+                    ) : null}
                     {m.cards?.length ? <MessageCards cards={m.cards} /> : null}
                     {hasAppMarker(m.content) ? <AppDownloadButtons /> : null}
                   </div>
@@ -785,20 +753,6 @@ export function LifeChatbot({
             </div>
           ) : null}
 
-          {busy && !streaming ? (
-            <div className="life-chat__row life-chat__row--assistant">
-              <div className="life-chat__meta">
-                <GraceAvatar className="is-mini" />
-                <div className="life-chat__stack">
-                  <span className="life-chat__who">Grace</span>
-                  <div className="life-chat__bubble life-chat__bubble--assistant life-chat__typing">
-                    <TypingDots />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : null}
-
           {showContactCta ? (
             <button type="button" className="life-chat__handoff" onClick={goToContact}>
               Open contact form with chat ticket
@@ -812,13 +766,7 @@ export function LifeChatbot({
               onClick={() => {
                 setPicked(null);
                 setComposerOpen(false);
-                setMessages([
-                  {
-                    role: "assistant",
-                    content:
-                      "Sure, what would you like next? Pick an option, or choose Other to type.",
-                  },
-                ]);
+                setChoosingTopic(true);
               }}
             >
               Ask something else
@@ -827,8 +775,6 @@ export function LifeChatbot({
 
           <div ref={bottomRef} />
         </div>
-
-        {error ? <p className="life-chat__err">{error}</p> : null}
 
         {(composerOpen || !showTopics) && (
           <form className="life-chat__form" onSubmit={onSubmit}>
@@ -843,12 +789,12 @@ export function LifeChatbot({
               onKeyDown={onKeyDown}
               placeholder="Search your message and ask anything…"
               autoComplete="off"
-              disabled={busy}
+              maxLength={2000}
             />
             <button
               type="submit"
               className="life-chat__send"
-              disabled={busy || !input.trim()}
+              disabled={!input.trim()}
               aria-label="Send message"
             >
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden>

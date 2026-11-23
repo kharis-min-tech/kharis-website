@@ -1,3 +1,4 @@
+import { recentGraceTurns, graceModelContents } from "../../../../../../shared/grace-history";
 import {
   buildGraceSystemPrompt,
   buildKharisChatContext,
@@ -7,11 +8,6 @@ import { extractMessageMarkerIds } from "@/lib/grace-markers";
 import { fetchPastorMessages, type MessageVideo } from "@/lib/youtube";
 
 export const runtime = "nodejs";
-
-type ChatMessage = {
-  role: "user" | "assistant" | "system";
-  content: string;
-};
 
 export type ChatMessageCard = {
   id: string;
@@ -34,33 +30,6 @@ const GENERATION_CONFIG = {
   // Keep replies snappy; thinking models can burn the output budget.
   thinkingConfig: { thinkingBudget: 0 },
 };
-
-function sanitizeMessages(input: unknown): ChatMessage[] {
-  if (!Array.isArray(input)) return [];
-  const out: ChatMessage[] = [];
-  for (const raw of input) {
-    if (!raw || typeof raw !== "object") continue;
-    const role = (raw as { role?: string }).role;
-    const content = String((raw as { content?: unknown }).content ?? "").trim();
-    if ((role === "user" || role === "assistant") && content && content.length <= MAX_CONTENT) {
-      out.push({ role, content });
-    }
-    if (out.length >= MAX_MESSAGES) break;
-  }
-  return out;
-}
-
-function toGeminiContents(messages: ChatMessage[]) {
-  const contents = messages.map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.content }],
-  }));
-  // Gemini requires the first turn to be "user" — drop the UI welcome bubble.
-  while (contents.length && contents[0].role === "model") {
-    contents.shift();
-  }
-  return contents;
-}
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -117,7 +86,7 @@ function cardsFromReply(reply: string, catalog: MessageVideo[]): ChatMessageCard
 type GeminiResult =
   { ok: true; reply: string } | { ok: false; status: number; error: string; retryable: boolean };
 
-function geminiBody(systemText: string, contents: ReturnType<typeof toGeminiContents>) {
+function geminiBody(systemText: string, contents: ReturnType<typeof graceModelContents>) {
   return JSON.stringify({
     systemInstruction: {
       parts: [{ text: systemText }],
@@ -164,7 +133,7 @@ async function callGemini(opts: {
   apiKey: string;
   model: string;
   systemText: string;
-  contents: ReturnType<typeof toGeminiContents>;
+  contents: ReturnType<typeof graceModelContents>;
 }): Promise<GeminiResult> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${opts.model}:generateContent?key=${encodeURIComponent(opts.apiKey)}`;
   const res = await fetch(url, {
@@ -197,7 +166,7 @@ async function callGemini(opts: {
 async function generateWithFallback(opts: {
   apiKey: string;
   systemText: string;
-  contents: ReturnType<typeof toGeminiContents>;
+  contents: ReturnType<typeof graceModelContents>;
   /** Skip models already tried via streaming. */
   skipModels?: ReadonlySet<string>;
 }): Promise<GeminiResult> {
@@ -247,7 +216,7 @@ async function streamGemini(opts: {
   apiKey: string;
   model: string;
   systemText: string;
-  contents: ReturnType<typeof toGeminiContents>;
+  contents: ReturnType<typeof graceModelContents>;
   onChunk: (text: string) => void;
 }): Promise<StreamChunkResult> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${opts.model}:streamGenerateContent?alt=sse&key=${encodeURIComponent(opts.apiKey)}`;
@@ -453,12 +422,16 @@ export async function POST(request: Request) {
     return jsonError("Invalid request.", 400);
   }
 
-  const messages = sanitizeMessages((body as { messages?: unknown })?.messages);
+  const messages = recentGraceTurns(
+    (body as { messages?: unknown })?.messages,
+    MAX_MESSAGES,
+    MAX_CONTENT,
+  );
   if (!messages.length || messages[messages.length - 1]?.role !== "user") {
     return jsonError("Please send a message.", 400);
   }
 
-  const contents = toGeminiContents(messages);
+  const contents = graceModelContents(messages);
   if (!contents.length) {
     return jsonError("Please send a message.", 400);
   }
