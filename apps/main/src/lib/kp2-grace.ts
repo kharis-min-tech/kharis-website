@@ -1,4 +1,4 @@
-import { listBranches, type Branch } from "@/lib/branches";
+import { listBranches, type BranchItem } from "@/lib/branches";
 
 const PAGES = [
   ["Home", "/kp2"],
@@ -13,25 +13,22 @@ const PAGES = [
   ["Contact", "/kp2/contact"],
 ] as const;
 
-function branchLine(branch: Branch) {
-  const services = branch.serviceTimes
-    .slice(0, 4)
-    .map((service) => [service.day, service.time, service.label].filter(Boolean).join(" "))
-    .filter(Boolean);
+function branchLine(branch: BranchItem) {
   const bits = [
     branch.name,
     branch.city && `(${branch.city})`,
     branch.address,
-    services.length ? `Services: ${services.join("; ")}` : "",
-    `Page: /kp2/branches/${branch.slug}`,
+    branch.serviceSummary,
+    branch.midweekSummary,
+    `Page: /kp2/branches/${encodeURIComponent(branch.id)}`,
   ].filter(Boolean);
   return `- ${bits.join(", ")}`;
 }
 
-export async function kp2Knowledge(): Promise<string> {
+async function kp2Knowledge(): Promise<string> {
   let branches = "Live branch list unavailable. Send people to /kp2/branches.";
   try {
-    const rows = await listBranches();
+    const rows = (await listBranches()).filter((branch) => branch.family === "KP2");
     if (rows.length) branches = rows.map(branchLine).join("\n");
   } catch {
     /* keep the fallback line */
@@ -50,7 +47,7 @@ ${branches}
 `;
 }
 
-export function kp2SystemPrompt(knowledge: string, page: string) {
+export async function kp2SystemPrompt(page: unknown) {
   return `You are Grace, the AI assistant on the Kharis Phase 2 website. You are an AI, not a pastor or staff member. If asked, say so simply. Introduce yourself as "your assistant".
 
 Answer the latest user message, including each request in it. Use earlier messages for context. If several user messages arrived before a reply, focus on the last one.
@@ -59,12 +56,12 @@ Use only the knowledge below for facts about KP2: branches, times, addresses, an
 When you point to a page, include one markdown link whose address starts with /kp2, for example [Find a branch](/kp2/branches).
 For someone in immediate danger, tell them to contact local emergency services now, then offer [contact](/kp2/contact).
 Stay on Kharis Phase 2, faith, and finding a place in the church. Politely redirect anything else in one sentence.
-The person is currently on ${page}.
+The person is currently on ${cleanPage(page)}.
 
-${knowledge}`;
+${await kp2Knowledge()}`;
 }
 
-export function cleanPage(value: unknown) {
+function cleanPage(value: unknown) {
   const page = String(value ?? "").trim();
   if (!page.startsWith("/") || page.startsWith("//") || page.includes("\n")) return "/kp2";
   const path = page.slice(0, 120);

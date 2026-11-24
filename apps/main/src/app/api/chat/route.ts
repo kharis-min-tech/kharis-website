@@ -4,6 +4,7 @@ import {
   buildKharisChatContext,
   GRACE_MESSAGE_LIMIT,
 } from "@/lib/chat-context";
+import { kp2SystemPrompt } from "@/lib/kp2-grace";
 import { extractMessageMarkerIds } from "@/lib/grace-markers";
 import { fetchPastorMessages, type MessageVideo } from "@/lib/youtube";
 
@@ -422,10 +423,12 @@ export async function POST(request: Request) {
     return jsonError("Invalid request.", 400);
   }
 
+  const payload = body as { site?: unknown; page?: unknown; messages?: unknown } | null;
+  const kp2 = payload?.site === "kp2";
   const messages = recentGraceTurns(
-    (body as { messages?: unknown })?.messages,
-    MAX_MESSAGES,
-    MAX_CONTENT,
+    payload?.messages,
+    kp2 ? 12 : MAX_MESSAGES,
+    kp2 ? 1500 : MAX_CONTENT,
   );
   if (!messages.length || messages[messages.length - 1]?.role !== "user") {
     return jsonError("Please send a message.", 400);
@@ -434,6 +437,21 @@ export async function POST(request: Request) {
   const contents = graceModelContents(messages);
   if (!contents.length) {
     return jsonError("Please send a message.", 400);
+  }
+
+  if (kp2) {
+    if (!apiKey) {
+      return Response.json({
+        ok: true,
+        reply:
+          "Full AI replies are unavailable right now. You can [find a KP2 branch](/kp2/branches), [browse messages](/kp2/messages), or [contact the team](/kp2/contact).",
+      });
+    }
+    const systemText = await kp2SystemPrompt(payload?.page);
+    const result = await generateWithFallback({ apiKey, systemText, contents });
+    return result.ok
+      ? Response.json({ ok: true, reply: result.reply })
+      : jsonError(result.error, result.status);
   }
 
   if (!apiKey) {
