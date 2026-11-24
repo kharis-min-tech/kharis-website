@@ -17,7 +17,8 @@ const ICONS: Record<string, string> = {
   disclaimer: "info",
 };
 
-const DOCUMENTS: Record<"safeguarding" | "privacy" | "disclaimer", string> = {
+/** Local PDFs only if Content Studio has not uploaded a live file yet. */
+const FALLBACK_PDFS: Record<"safeguarding" | "privacy" | "disclaimer", string> = {
   safeguarding: "/kp2/documents/safeguarding-policy.pdf",
   privacy: "/kp2/documents/privacy-policy.pdf",
   disclaimer: "/kp2/documents/website-disclaimer.pdf",
@@ -29,18 +30,20 @@ export default async function GovernanceRoute() {
     ["safeguarding", "privacy", "cookies", "disclaimer"] as const
   ).map((id) => {
     const slot = documents.policies[id];
-    const pdfUrl = slot.url.trim();
+    const studioUrl = slot.url.trim();
+    const fallbackPdf = id in FALLBACK_PDFS ? FALLBACK_PDFS[id as keyof typeof FALLBACK_PDFS] : "";
+    const pdfUrl = studioUrl || fallbackPdf;
     return {
       id,
       icon: ICONS[id] ?? "info",
       title: slot.title,
       description: slot.blurb,
-      href: id === "cookies" ? pdfUrl || "/cookies" : undefined,
+      href: id === "cookies" ? studioUrl || "/cookies" : undefined,
       document:
-        id in DOCUMENTS
+        id !== "cookies" && pdfUrl
           ? {
               title: slot.title,
-              pdfUrl: DOCUMENTS[id as keyof typeof DOCUMENTS],
+              pdfUrl,
             }
           : undefined,
     };
