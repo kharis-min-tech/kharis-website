@@ -57,11 +57,13 @@ function PanelHero({
   title,
   reduce,
   tone,
+  imageUrl,
 }: {
   eyebrow: string;
   title: string;
   reduce: boolean;
   tone: "mission" | "vision" | "leadership";
+  imageUrl?: string;
 }) {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start end", "end start"] });
@@ -71,6 +73,8 @@ function PanelHero({
   const phrases = Array.from({ length: Math.ceil(words.length / 3) }, (_, i) =>
     words.slice(i * 3, i * 3 + 3).join(" "),
   );
+  const mediaMotion =
+    reduce || tone === "leadership" ? undefined : ({ y: photoY } as { y: typeof photoY });
   return (
     <div
       ref={heroRef}
@@ -78,7 +82,10 @@ function PanelHero({
     >
       <motion.div
         className="about-panel__hero-media"
-        style={reduce || tone === "leadership" ? undefined : { y: photoY }}
+        style={{
+          ...(mediaMotion ?? {}),
+          ...(imageUrl ? { backgroundImage: `url(${imageUrl})` } : {}),
+        }}
         aria-hidden
         initial={reduce ? false : { opacity: 0.7 }}
         animate={{ opacity: 1 }}
@@ -117,7 +124,17 @@ function PanelHero({
 /**
  * Interactive About stage: one chapter in focus, full content via progressive UI.
  */
-export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null }) {
+export function AboutChapters({
+  initialId,
+  chapterHeroes,
+}: {
+  initialId?: AboutChapterId | null;
+  chapterHeroes?: {
+    mission?: string;
+    vision?: string;
+    leadership?: string;
+  };
+}) {
   const reduce = useReducedMotion();
   const [active, setActive] = useState<AboutChapterId>(initialId ?? "mission");
 
@@ -209,9 +226,15 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
             exit={reduce ? undefined : { opacity: 0, y: -18, filter: "blur(0px)" }}
             transition={{ duration: 0.45, ease }}
           >
-            {active === "mission" ? <MissionPanel reduce={!!reduce} /> : null}
-            {active === "vision" ? <VisionPanel reduce={!!reduce} /> : null}
-            {active === "leadership" ? <LeadershipPanel reduce={!!reduce} /> : null}
+            {active === "mission" ? (
+              <MissionPanel reduce={!!reduce} imageUrl={chapterHeroes?.mission} />
+            ) : null}
+            {active === "vision" ? (
+              <VisionPanel reduce={!!reduce} imageUrl={chapterHeroes?.vision} />
+            ) : null}
+            {active === "leadership" ? (
+              <LeadershipPanel reduce={!!reduce} imageUrl={chapterHeroes?.leadership} />
+            ) : null}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -219,7 +242,7 @@ export function AboutChapters({ initialId }: { initialId?: AboutChapterId | null
   );
 }
 
-function MissionPanel({ reduce }: { reduce: boolean }) {
+function MissionPanel({ reduce, imageUrl }: { reduce: boolean; imageUrl?: string }) {
   const { mission } = ABOUT;
   const [pillar, setPillar] = useState(0);
   const active = mission.how[pillar]!;
@@ -231,6 +254,7 @@ function MissionPanel({ reduce }: { reduce: boolean }) {
         tone="mission"
         eyebrow="Our Mission"
         title="Influence society with the reality of God’s love"
+        imageUrl={imageUrl}
       />
 
       <div className="about-panel__body">
@@ -276,7 +300,7 @@ function MissionPanel({ reduce }: { reduce: boolean }) {
   );
 }
 
-function VisionPanel({ reduce }: { reduce: boolean }) {
+function VisionPanel({ reduce, imageUrl }: { reduce: boolean; imageUrl?: string }) {
   const { vision } = ABOUT;
   const themes = [
     { icon: Cross, text: "Christ-centred, purpose-driven and disciple-making" },
@@ -290,7 +314,13 @@ function VisionPanel({ reduce }: { reduce: boolean }) {
   ];
   return (
     <div className="about-panel about-panel--vision about-vision-themes">
-      <PanelHero reduce={reduce} tone="vision" eyebrow="Our Vision" title={vision.lead} />
+      <PanelHero
+        reduce={!!reduce}
+        tone="vision"
+        eyebrow="Our Vision"
+        title={vision.lead}
+        imageUrl={imageUrl}
+      />
       <div className="about-panel__body about-vision-themes__content">
         <p className="about-vision-themes__intro">{vision.intro}</p>
         <p className="about-vision-themes__hint">
@@ -325,7 +355,7 @@ function VisionPanel({ reduce }: { reduce: boolean }) {
   );
 }
 
-function LeadershipPanel({ reduce }: { reduce: boolean }) {
+function LeadershipPanel({ reduce, imageUrl }: { reduce: boolean; imageUrl?: string }) {
   const { leadership } = ABOUT;
 
   return (
@@ -335,6 +365,7 @@ function LeadershipPanel({ reduce }: { reduce: boolean }) {
         tone="leadership"
         eyebrow="Our Leadership"
         title={leadership.title}
+        imageUrl={imageUrl}
       />
 
       <div className="about-panel__body about-lead__body">

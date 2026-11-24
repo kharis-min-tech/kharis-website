@@ -8,9 +8,12 @@ import "./contact/contact-page.css";
 
 type Props = {
   locations: ContactLocation[];
+  heroPhotos?: Array<{ src: string; alt: string; caption: string; spot: string }>;
+  letterPhoto?: string;
+  letterPhotoAlt?: string;
 };
 
-export function ContactExperience({ locations }: Props) {
+export function ContactExperience({ locations, heroPhotos, letterPhoto, letterPhotoAlt }: Props) {
   const branches = useMemo(
     () =>
       [...locations].sort((a, b) =>
@@ -23,12 +26,14 @@ export function ContactExperience({ locations }: Props) {
 
   return (
     <div className="hello-page">
-      <ContactHero />
+      <ContactHero photos={heroPhotos} />
       <ContactLetter
         branches={branches}
         branch={letterBranch}
         onBranchChange={setLetterBranch}
         focusSignal={focusSignal}
+        letterPhoto={letterPhoto}
+        letterPhotoAlt={letterPhotoAlt}
       />
     </div>
   );

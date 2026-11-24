@@ -133,7 +133,8 @@ export function AdminShell({ email, children }: { email: string; children: React
                       <ul className="relative mb-2 ml-[1.15rem] mt-0.5 space-y-0.5 border-l border-border pl-2.5">
                         {item.nav.map((section) => {
                           const SectionIcon = sectionIcon(section.href);
-                          const active = pathname === section.href;
+                          const active =
+                            pathname === section.href || pathname.startsWith(`${section.href}/`);
                           return (
                             <li key={section.href}>
                               <Link

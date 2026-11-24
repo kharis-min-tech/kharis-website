@@ -11,7 +11,15 @@ import { MutedHeroVideo } from "@/components/MutedHeroVideo";
 import { youtubeWatchUrl, type MessageVideo } from "@/lib/youtube";
 import { useEffect, useRef, useState } from "react";
 
-function MessagesPage({ latest, messages }: { latest: MessageVideo[]; messages: MessageVideo[] }) {
+function MessagesPage({
+  latest,
+  messages,
+  heroBackground,
+}: {
+  latest: MessageVideo[];
+  messages: MessageVideo[];
+  heroBackground: string;
+}) {
   const featured = latest[0] ?? messages[0];
   const heroRef = useRef<HTMLElement>(null);
   const [heroActive, setHeroActive] = useState(true);
@@ -71,10 +79,7 @@ function MessagesPage({ latest, messages }: { latest: MessageVideo[]; messages: 
           ) : (
             <div
               className="absolute inset-0 bg-cover bg-center opacity-60"
-              style={{
-                backgroundImage:
-                  "url('https://images.kharis.org/site-images/kp2/a991d1457f200aa6/pastor-david-at-pulpit.jpg')",
-              }}
+              style={{ backgroundImage: `url('${heroBackground}')` }}
             />
           )}
           {!fullPlayback ? (

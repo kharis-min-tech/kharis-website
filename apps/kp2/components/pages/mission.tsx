@@ -1,7 +1,5 @@
 "use client";
 
-import { KP2_PHOTOS } from "@/lib/photography";
-
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -14,7 +12,12 @@ import { ParallaxHeroImage } from "@/components/ParallaxHeroImage";
 import { TypedText } from "@/components/TypedText";
 import "@/components/mission-pillars.css";
 
-const ABOUT_HERO = KP2_PHOTOS.serviceCongregation.src;
+export type MissionMedia = {
+  aboutHero: string;
+  visionHero: string;
+  /** Studio portrait per pastor, by index. An empty string keeps the built-in photo. */
+  leadershipPortraits: string[];
+};
 
 const CHAPTERS = ["mission", "vision", "leadership"] as const;
 
@@ -88,13 +91,13 @@ const MAIN_TABS = [
   },
 ];
 
-function WhoWeAreBecoming() {
+function WhoWeAreBecoming({ media }: { media: MissionMedia }) {
   const [mainTab, setMainTab] = useState(0);
   const [subTab, setSubTab] = useState(0);
   const tab = MAIN_TABS[mainTab]!;
   const item = tab.items[subTab];
   const bannerPhoto =
-    tab.id === "leadership" ? PASTORS_PORTRAIT : tab.id === "vision" ? VISION_HERO : null;
+    tab.id === "leadership" ? PASTORS_PORTRAIT : tab.id === "vision" ? media.visionHero : null;
 
   useEffect(() => {
     const sync = () => {
@@ -242,7 +245,7 @@ function WhoWeAreBecoming() {
             {tab.id === "vision" ? (
               <VisionContent />
             ) : tab.id === "leadership" ? (
-              <LeadershipContent />
+              <LeadershipContent portraits={media.leadershipPortraits} />
             ) : item ? (
               <div className="kp-content-enter kp-pillars">
                 <p className="kp-pillars__lead">{tab.body}</p>
@@ -295,8 +298,6 @@ function WhoWeAreBecoming() {
     </section>
   );
 }
-
-const VISION_HERO = KP2_PHOTOS.serviceHall.src;
 
 const VISION_THEMES = [
   {
@@ -455,14 +456,19 @@ const PASTORS_STORY = [
   },
 ];
 
-function LeadershipContent() {
+function LeadershipContent({ portraits }: { portraits: string[] }) {
   return (
     <div className="kp-content-enter kp-lead">
       <div className="kp-lead__profiles">
-        {PASTORS.map((pastor) => (
+        {PASTORS.map((pastor, index) => (
           <article key={pastor.id} className="kp-lead__profile">
             <div className="kp-lead__photo">
-              <img src={pastor.image} alt={pastor.name} loading="lazy" decoding="async" />
+              <img
+                src={portraits[index] || pastor.image}
+                alt={pastor.name}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
             <div className="kp-lead__card">
               <p className="kp-lead__role">{pastor.role}</p>
@@ -498,13 +504,13 @@ function LeadershipContent() {
   );
 }
 
-function AboutPage() {
+function AboutPage({ media }: { media: MissionMedia }) {
   return (
     <div className="kp-mission-page bg-background text-on-surface font-body-md overflow-x-clip">
       <SiteHeader />
 
       <section className="kp-mission-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
-        <ParallaxHeroImage src={ABOUT_HERO} alt="" className="object-[center_40%]" />
+        <ParallaxHeroImage src={media.aboutHero} alt="" className="object-[center_40%]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25"></div>
         <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
           <p className="font-label-md uppercase tracking-[0.28em] text-[#f7be1d] mb-4">We are...</p>
@@ -547,7 +553,7 @@ function AboutPage() {
           </div>
         </section>
 
-        <WhoWeAreBecoming />
+        <WhoWeAreBecoming media={media} />
 
         <StatementOfFaith />
       </main>

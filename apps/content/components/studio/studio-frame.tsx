@@ -32,6 +32,7 @@ const APP_TOP_LEVEL = new Set([
   "messages",
   "plans",
   "set-password",
+  "site-contents",
   "testimonies",
   "users",
   "visitors",

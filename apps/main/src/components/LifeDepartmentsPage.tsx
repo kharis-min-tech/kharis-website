@@ -31,7 +31,14 @@ const WHY_WE_SERVE = [
   },
 ] as const;
 
-export function LifeDepartmentsPage() {
+const DEPTS_BAND_FALLBACK =
+  "https://images.kharis.org/site-images/main/c7e0b460a01f93eb/about-vision-team-2048.jpg";
+
+export function LifeDepartmentsPage({
+  departmentsBandUrl = DEPTS_BAND_FALLBACK,
+}: {
+  departmentsBandUrl?: string;
+}) {
   const page = lifeBySlug("departments");
   if (!page) return null;
 
@@ -41,8 +48,7 @@ export function LifeDepartmentsPage() {
         <div
           className="life-dept-hero__media"
           style={{
-            backgroundImage:
-              "url(https://images.kharis.org/site-images/main/c7e0b460a01f93eb/about-vision-team-2048.jpg)",
+            backgroundImage: `url(${departmentsBandUrl})`,
           }}
           aria-hidden
         />

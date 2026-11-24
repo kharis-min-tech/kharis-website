@@ -50,6 +50,7 @@ export function TestimoniesBand({
   intro,
   items,
   className,
+  photos = PHOTOS,
 }: {
   id: string;
   eyebrow: string;
@@ -57,6 +58,7 @@ export function TestimoniesBand({
   intro?: string;
   items: TestimonyItem[];
   className?: string;
+  photos?: Array<{ src: string; alt: string; position?: string }>;
 }) {
   const railRef = useRef<HTMLDivElement>(null);
   const [revealRef, phase] = useRevealOnView<HTMLDivElement>(0.12);
@@ -256,7 +258,7 @@ export function TestimoniesBand({
         </header>
 
         <div className="kp-tst__photos">
-          {PHOTOS.map((photo, i) => (
+          {photos.map((photo, i) => (
             <figure key={photo.src} className="kp-tst__photo" style={{ "--i": i } as CSSProperties}>
               <img
                 src={photo.src}

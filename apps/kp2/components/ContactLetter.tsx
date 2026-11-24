@@ -1,7 +1,5 @@
 "use client";
 
-import { KP2_PHOTOS } from "@/lib/photography";
-
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { withBasePath } from "@/lib/base-path";
 import { CONTACT_TOPICS } from "@/lib/contact";
@@ -27,9 +25,11 @@ function check(form: typeof EMPTY): Errors {
 export function ContactLetter({
   branches,
   fallbackEmail,
+  letterPhoto,
 }: {
   branches: { slug: string; name: string }[];
   fallbackEmail?: string;
+  letterPhoto: { src: string; alt: string };
 }) {
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
@@ -270,12 +270,7 @@ export function ContactLetter({
 
         <aside className="kp-write__aside" aria-label="What happens next">
           <figure className="kp-write__photo">
-            <img
-              src={KP2_PHOTOS.serviceTogether.src}
-              alt={KP2_PHOTOS.serviceTogether.alt}
-              loading="lazy"
-              decoding="async"
-            />
+            <img src={letterPhoto.src} alt={letterPhoto.alt} loading="lazy" decoding="async" />
             <figcaption>Together at KP2</figcaption>
           </figure>
 

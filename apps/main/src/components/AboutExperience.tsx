@@ -10,7 +10,17 @@ import { ABOUT } from "@/lib/about-content";
 import "./about.css";
 
 /** About hub: Mission, Vision, and Leadership on one page. */
-export function AboutExperience() {
+export function AboutExperience({
+  scrollHeroUrl,
+  chapterHeroes,
+}: {
+  scrollHeroUrl?: string;
+  chapterHeroes?: {
+    mission?: string;
+    vision?: string;
+    leadership?: string;
+  };
+}) {
   const search = useSearchParams();
   const [chapterId, setChapterId] = useState<AboutChapterId | null>(null);
 
@@ -26,7 +36,10 @@ export function AboutExperience() {
       <header className="about-hero">
         <div className="about-hero__media" aria-hidden>
           <Image
-            src="https://images.kharis.org/site-images/main/e01fad6602636193/about-outreach-hero.jpg"
+            src={
+              scrollHeroUrl ??
+              "https://images.kharis.org/site-images/main/e01fad6602636193/about-outreach-hero.jpg"
+            }
             alt=""
             fill
             priority
@@ -55,7 +68,7 @@ export function AboutExperience() {
         </RevealStagger>
       </section>
 
-      <AboutChapters initialId={chapterId} />
+      <AboutChapters initialId={chapterId} chapterHeroes={chapterHeroes} />
 
       <FaithStack statements={ABOUT.faith} />
     </div>

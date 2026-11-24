@@ -45,7 +45,17 @@ const AboutBook = dynamic(
  */
 const SPREAD_WIDTH = 1024;
 
-export function AboutPageSwitch() {
+export function AboutPageSwitch({
+  scrollHeroUrl,
+  chapterHeroes,
+}: {
+  scrollHeroUrl?: string;
+  chapterHeroes?: {
+    mission?: string;
+    vision?: string;
+    leadership?: string;
+  };
+}) {
   /* `motion` is the only thing that can now rule the book out. Width decides
    * which book you get, not whether you get one. */
   const [reduced, setReduced] = useState(false);
@@ -85,7 +95,11 @@ export function AboutPageSwitch() {
   return (
     <>
       <SiteHeader tone={useBook ? "light" : "auto"} />
-      {useBook ? <AboutBook single={single} /> : <AboutExperience />}
+      {useBook ? (
+        <AboutBook single={single} />
+      ) : (
+        <AboutExperience scrollHeroUrl={scrollHeroUrl} chapterHeroes={chapterHeroes} />
+      )}
     </>
   );
 }

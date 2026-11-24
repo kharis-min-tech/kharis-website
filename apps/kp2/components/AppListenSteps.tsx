@@ -21,15 +21,16 @@ const LISTEN_STEPS = [
   },
 ] as const;
 
-export function AppListenSteps() {
+export function AppListenSteps({ images }: { images?: string[] }) {
   return (
     <div className="kp-app-steps">
-      {LISTEN_STEPS.map((step) => (
+      {LISTEN_STEPS.map((step, index) => (
         <article key={step.title} className="kp-app-step">
           <div className="kp-app-phone">
             <AppPhonePreview
               screen={step.screen}
               alt={step.alt}
+              src={images?.[index]}
               sizes="(max-width: 767px) 76vw, 256px"
             />
           </div>

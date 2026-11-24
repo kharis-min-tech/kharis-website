@@ -60,9 +60,21 @@ type Props = {
   onBranchChange: (name: string) => void;
   /** Increments when "Write to this branch" is pressed, to move focus into the letter. */
   focusSignal: number;
+  letterPhoto?: string;
+  letterPhotoAlt?: string;
 };
 
-export function ContactLetter({ branches, branch, onBranchChange, focusSignal }: Props) {
+const LETTER_PHOTO_FALLBACK =
+  "https://images.kharis.org/site-images/main/67210f0fba54b6a1/contact/after-service-conversation.jpg";
+
+export function ContactLetter({
+  branches,
+  branch,
+  onBranchChange,
+  focusSignal,
+  letterPhoto = LETTER_PHOTO_FALLBACK,
+  letterPhotoAlt = "Two women talking after a Sunday service",
+}: Props) {
   const searchParams = useSearchParams();
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
@@ -384,8 +396,8 @@ export function ContactLetter({ branches, branch, onBranchChange, focusSignal }:
 
           <figure className="hello-write__photo">
             <Image
-              src="https://images.kharis.org/site-images/main/67210f0fba54b6a1/contact/after-service-conversation.jpg"
-              alt="Two women talking after a Sunday service"
+              src={letterPhoto}
+              alt={letterPhotoAlt}
               fill
               sizes="(max-width: 1023px) 92vw, 34vw"
             />

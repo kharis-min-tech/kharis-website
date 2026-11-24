@@ -156,15 +156,24 @@ type Props = {
   messages: MessageVideo[];
   /** Same 5 as homepage Latest Messages */
   latest?: MessageVideo[];
+  /** Studio listen-poster image URLs, overlaid onto device posters by index. */
+  listenPosterUrls?: string[];
 };
 
-export function MessagesExperience({ messages, latest = [] }: Props) {
+export function MessagesExperience({ messages, latest = [], listenPosterUrls }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const heroMessage = useMemo(() => newestMessage([...latest, ...messages]), [latest, messages]);
 
   const topRow = useMemo(() => latest.slice(0, 4), [latest]);
 
-  const listenMessages = useMemo(() => pickListenDevicePosters(messages), [messages]);
+  const listenMessages = useMemo(() => {
+    const posters = pickListenDevicePosters(messages);
+    if (!listenPosterUrls?.length) return posters;
+    return posters.map((poster, index) => {
+      const url = listenPosterUrls[index]?.trim();
+      return url ? { ...poster, thumbnail: url } : poster;
+    });
+  }, [messages, listenPosterUrls]);
 
   const shelves = useMemo(() => {
     const taken = new Set(topRow.map((m) => m.id));

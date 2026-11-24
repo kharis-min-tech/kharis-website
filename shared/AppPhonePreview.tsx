@@ -48,6 +48,8 @@ const CAPTURES = {
 type Props = {
   screen: keyof typeof CAPTURES;
   alt?: string;
+  /** Optional studio override for the capture image. */
+  src?: string;
   sizes?: string;
   /**
    * "hardware" squares the shell off and darkens the screen surround, for
@@ -58,8 +60,9 @@ type Props = {
 };
 
 /** Fits the app capture below the camera, excluding the old image's bezel and notch. */
-export function AppPhonePreview({ screen, alt, sizes = "235px", variant = "default" }: Props) {
+export function AppPhonePreview({ screen, alt, src, sizes = "235px", variant = "default" }: Props) {
   const capture = CAPTURES[screen];
+  const imageSrc = src ?? capture.src;
   if ("current" in capture) {
     return (
       <div
@@ -69,7 +72,7 @@ export function AppPhonePreview({ screen, alt, sizes = "235px", variant = "defau
         <div className={styles.currentScreen}>
           <span className={styles.currentNotch} aria-hidden />
           <Image
-            src={capture.src}
+            src={imageSrc}
             alt={alt ?? capture.alt}
             width={780}
             height={1688}
@@ -95,7 +98,7 @@ export function AppPhonePreview({ screen, alt, sizes = "235px", variant = "defau
           }
         >
           <Image
-            src={capture.src}
+            src={imageSrc}
             alt={alt ?? capture.alt}
             width={486}
             height={986}
