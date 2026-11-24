@@ -33,7 +33,11 @@ const PHOTOS = [
 
 const SPOT_MS = 3400;
 
-export function ContactHero() {
+export function ContactHero({
+  photos = PHOTOS,
+}: {
+  photos?: ReadonlyArray<{ src: string; alt: string; caption: string; spot: string }>;
+}) {
   const ref = useRef<HTMLElement>(null);
   const [spot, setSpot] = useState(0);
 
@@ -48,7 +52,7 @@ export function ContactHero() {
     const start = () => {
       stop();
       if (reduced.matches || !inView || document.hidden) return;
-      timer = window.setInterval(() => setSpot((s) => (s + 1) % PHOTOS.length), SPOT_MS);
+      timer = window.setInterval(() => setSpot((s) => (s + 1) % photos.length), SPOT_MS);
     };
 
     const io = new IntersectionObserver(([entry]) => {
@@ -66,12 +70,12 @@ export function ContactHero() {
       reduced.removeEventListener("change", start);
       document.removeEventListener("visibilitychange", start);
     };
-  }, []);
+  }, [photos.length]);
 
   return (
     <section ref={ref} className="hello-hero" aria-labelledby="hello-title">
       <div className="hello-hero__photos">
-        {PHOTOS.map((photo, i) => (
+        {photos.map((photo, i) => (
           <figure
             key={photo.src}
             className={`hello-hero__photo ${photo.spot}${i === spot ? " is-spot" : ""}`}

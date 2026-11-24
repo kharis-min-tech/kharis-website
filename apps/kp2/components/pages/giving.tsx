@@ -5,10 +5,17 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { GivingMethods, type GivingLocation } from "@/components/GivingMethods";
 import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
-import { KP2_PHOTOS } from "@/lib/photography";
 import "@/components/giving-experience.css";
 
-function GivingPage({ branches }: { branches: GivingLocation[] }) {
+type HeroPhoto = { src: string; alt: string; position: string };
+
+function GivingPage({
+  branches,
+  heroStack,
+}: {
+  branches: GivingLocation[];
+  heroStack: HeroPhoto[];
+}) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
       <SiteHeader />
@@ -37,16 +44,14 @@ function GivingPage({ branches }: { branches: GivingLocation[] }) {
             </div>
           </div>
           <div className="kp-giving-photos" aria-label="Worship at KP2">
-            {[KP2_PHOTOS.serviceWorship, KP2_PHOTOS.servicePrayer, KP2_PHOTOS.midweekWorship].map(
-              (photo, index) => (
-                <figure
-                  key={photo.src}
-                  className={`kp-giving-photos__item kp-giving-photos__item--${index}`}
-                >
-                  <img src={photo.src} alt={photo.alt} style={{ objectPosition: photo.position }} />
-                </figure>
-              ),
-            )}
+            {heroStack.map((photo, index) => (
+              <figure
+                key={index}
+                className={`kp-giving-photos__item kp-giving-photos__item--${index}`}
+              >
+                <img src={photo.src} alt={photo.alt} style={{ objectPosition: photo.position }} />
+              </figure>
+            ))}
           </div>
         </section>
         <GivingMethods branches={branches} />

@@ -20,9 +20,13 @@ const orderedEventCategories = [...EVENT_CATEGORIES].sort((a, b) => {
 
 type Props = {
   branches: ServiceBranch[];
+  heroImage?: string;
 };
 
-export function EventsExperience({ branches }: Props) {
+const EVENTS_HERO_FALLBACK =
+  "https://images.kharis.org/site-images/main/4ad6b94f8e2d8cf0/events-hero-banquet.jpg";
+
+export function EventsExperience({ branches, heroImage = EVENTS_HERO_FALLBACK }: Props) {
   const [filter, setFilter] = useState<EventFilter>("all");
   const [query, setQuery] = useState("");
   const visibleIds = useMemo(
@@ -39,7 +43,7 @@ export function EventsExperience({ branches }: Props) {
       <header className="events-top">
         <div className="events-top__media">
           <Image
-            src="https://images.kharis.org/site-images/main/4ad6b94f8e2d8cf0/events-hero-banquet.jpg"
+            src={heroImage}
             alt="Banquet table set with red roses and candles beneath chandeliers"
             fill
             priority

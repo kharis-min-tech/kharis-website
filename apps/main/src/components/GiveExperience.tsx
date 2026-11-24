@@ -225,7 +225,24 @@ function TextPanel() {
   );
 }
 
-export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
+const HERO_STACK_FALLBACK = [
+  "https://images.kharis.org/site-images/main/8527db06a4968c60/give/thanksgiving-hands-raised.jpg",
+  "https://images.kharis.org/site-images/main/e686a4818115ee4e/give/thanksgiving-hall.jpg",
+  "https://images.kharis.org/site-images/main/72e8b112e585bed6/give/thanksgiving-heart-hands.jpg",
+] as const;
+
+const BUILDING_FALLBACK =
+  "https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg";
+
+export function GiveExperience({
+  branches,
+  heroStack = [...HERO_STACK_FALLBACK],
+  buildingPhoto = BUILDING_FALLBACK,
+}: {
+  branches: GivingBranch[];
+  heroStack?: string[];
+  buildingPhoto?: string;
+}) {
   const [way, setWay] = useState<Way>("online");
   const [hasSwitched, setHasSwitched] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -299,24 +316,14 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
 
         <div className="gv-hero__stack" aria-hidden>
           <figure className="gv-hero__photo gv-hero__photo--left">
-            <Image
-              src="https://images.kharis.org/site-images/main/8527db06a4968c60/give/thanksgiving-hands-raised.jpg"
-              alt=""
-              fill
-              sizes="34vw"
-            />
+            <Image src={heroStack[0] ?? HERO_STACK_FALLBACK[0]} alt="" fill sizes="34vw" />
           </figure>
           <figure className="gv-hero__photo gv-hero__photo--right">
-            <Image
-              src="https://images.kharis.org/site-images/main/e686a4818115ee4e/give/thanksgiving-hall.jpg"
-              alt=""
-              fill
-              sizes="34vw"
-            />
+            <Image src={heroStack[1] ?? HERO_STACK_FALLBACK[1]} alt="" fill sizes="34vw" />
           </figure>
           <figure className="gv-hero__photo gv-hero__photo--centre">
             <Image
-              src="https://images.kharis.org/site-images/main/72e8b112e585bed6/give/thanksgiving-heart-hands.jpg"
+              src={heroStack[2] ?? HERO_STACK_FALLBACK[2]}
               alt=""
               fill
               priority
@@ -393,7 +400,7 @@ export function GiveExperience({ branches }: { branches: GivingBranch[] }) {
         <div className="gv-build__inner">
           <div className="gv-build__art">
             <Image
-              src="https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg"
+              src={buildingPhoto}
               alt="An artist's impression of the proposed renovations in South London"
               fill
               sizes="(max-width: 899px) 92vw, 44vw"

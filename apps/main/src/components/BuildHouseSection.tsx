@@ -4,15 +4,17 @@ import { Reveal } from "@/components/Reveal";
 import { Parallax } from "@/components/Parallax";
 import { SPURGEONS_CENTRE } from "@/lib/spurgeons";
 
-export function BuildHouseSection() {
+const BUILD_HOUSE_FALLBACK =
+  "https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg";
+
+export function BuildHouseSection({ imageUrl = BUILD_HOUSE_FALLBACK }: { imageUrl?: string }) {
   return (
     <section id="give" className="give-shell relative min-h-[58vh] overflow-hidden">
       <Parallax className="absolute inset-0" speed={60} scaleFrom={1.18} scaleTo={1.02}>
         <div
           className="absolute inset-0 h-[120%] w-full -translate-y-[8%] bg-cover bg-center"
           style={{
-            backgroundImage:
-              "url(https://images.kharis.org/site-images/main/8f521cd8c5d3a713/spurgeons-impression.jpg)",
+            backgroundImage: `url(${imageUrl})`,
           }}
         />
       </Parallax>

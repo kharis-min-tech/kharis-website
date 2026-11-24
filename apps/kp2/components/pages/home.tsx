@@ -17,13 +17,59 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { type Testimonial } from "@/components/TestimonialCarousel";
 import { TestimoniesBand } from "@/components/TestimoniesBand";
 
+export type HomeMedia = {
+  mosaic: Array<{ src: string; poster: string; kind: "image" | "video" }>;
+  stillPoster: string;
+  introPhoto: string;
+  introAlt: string;
+  pastorPhoto: string;
+  testimonyPhotos: Array<{ src: string; alt: string; position?: string }>;
+  appScreens: string[];
+};
+
+const DEFAULT_MOSAIC: HomeMedia["mosaic"] = [
+  {
+    kind: "video",
+    src: "https://images.kharis.org/site-images/kp2/d7e2929cd285968f/Choir-video.mp4",
+    poster: "https://images.kharis.org/site-images/kp2/88a52cf2f36e4dba/choir-video-poster.jpg",
+  },
+  {
+    kind: "video",
+    src: "https://images.kharis.org/site-images/kp2/06c4e252e26bc25f/crowd.mp4",
+    poster: "https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg",
+  },
+  {
+    kind: "video",
+    src: "https://images.kharis.org/site-images/kp2/ba4f09f054519d29/choir2.mp4",
+    poster: "https://images.kharis.org/site-images/kp2/a20adefe3b0f9d7a/choir2-poster.jpg",
+  },
+  {
+    kind: "video",
+    src: "https://images.kharis.org/site-images/kp2/785c2b4d533ea835/dancing.mp4",
+    poster: "https://images.kharis.org/site-images/kp2/2777b7351167f611/dancing-poster.jpg",
+  },
+];
+
 function Index({
   testimonials,
   branchPins,
+  media,
 }: {
   testimonials: Testimonial[];
   branchPins: LocationPin[];
+  media?: HomeMedia;
 }) {
+  const mosaic = media?.mosaic ?? DEFAULT_MOSAIC;
+  const stillPoster =
+    media?.stillPoster ??
+    "https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg";
+  const introPhoto = media?.introPhoto ?? KP2_PHOTOS.midweekJoy.src;
+  const introAlt = media?.introAlt || KP2_PHOTOS.midweekJoy.alt;
+  const pastorPhoto =
+    media?.pastorPhoto ??
+    "https://images.kharis.org/site-images/kp2/51390c9807aba7b8/pastor-david-smiling.jpg";
+  const testimonyPhotos = media?.testimonyPhotos;
+  const appScreens = media?.appScreens;
   const introRef = useRef<HTMLElement>(null);
   const [introMotion, setIntroMotion] = useState<"rest" | "ready" | "in">("rest");
 
@@ -71,47 +117,43 @@ function Index({
       <SiteHeader />
 
       <header className="kp-home-hero kp-on-dark relative h-[calc(100svh-74px)] min-h-[540px] w-full flex flex-col overflow-hidden bg-[#151218]">
-        <img
-          className="kp-home-hero__still"
-          src="https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg"
-          alt=""
-        />
+        <img className="kp-home-hero__still" src={stillPoster} alt="" />
         <div className="kp-home-hero__mosaic absolute inset-0 grid grid-cols-2 lg:flex lg:flex-row w-full h-full z-0">
-          <div className="relative col-span-2 lg:flex-1 group overflow-hidden border-b-2 lg:border-b-0 lg:border-r-2 border-[#151218] halftone-bg text-[#d2bbff]/10">
-            <AmbientVideo
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
-              src="https://images.kharis.org/site-images/kp2/d7e2929cd285968f/Choir-video.mp4"
-              poster="https://images.kharis.org/site-images/kp2/88a52cf2f36e4dba/choir-video-poster.jpg"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
-          </div>
-
-          <div className="relative lg:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#deb7ff]/10">
-            <AmbientVideo
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
-              src="https://images.kharis.org/site-images/kp2/06c4e252e26bc25f/crowd.mp4"
-              poster="https://images.kharis.org/site-images/kp2/6a42a25165e3e08a/crowd-poster.jpg"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
-          </div>
-
-          <div className="relative lg:flex-1 group overflow-hidden border-r-2 border-[#151218] halftone-bg text-[#f7be1d]/10">
-            <AmbientVideo
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
-              src="https://images.kharis.org/site-images/kp2/ba4f09f054519d29/choir2.mp4"
-              poster="https://images.kharis.org/site-images/kp2/a20adefe3b0f9d7a/choir2-poster.jpg"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
-          </div>
-
-          <div className="relative hidden lg:block lg:flex-1 group overflow-hidden halftone-bg text-[#eaddff]/10">
-            <AmbientVideo
-              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
-              src="https://images.kharis.org/site-images/kp2/785c2b4d533ea835/dancing.mp4"
-              poster="https://images.kharis.org/site-images/kp2/2777b7351167f611/dancing-poster.jpg"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
-          </div>
+          {mosaic.map((panel, index) => {
+            const tone = [
+              "text-[#d2bbff]/10",
+              "text-[#deb7ff]/10",
+              "text-[#f7be1d]/10",
+              "text-[#eaddff]/10",
+            ][index]!;
+            const border =
+              index === 0
+                ? "col-span-2 lg:flex-1 border-b-2 lg:border-b-0 lg:border-r-2"
+                : index === mosaic.length - 1
+                  ? "hidden lg:block lg:flex-1"
+                  : "lg:flex-1 border-r-2";
+            return (
+              <div
+                key={`${panel.src}-${index}`}
+                className={`relative group overflow-hidden border-[#151218] halftone-bg ${border} ${tone}`}
+              >
+                {panel.kind === "video" ? (
+                  <AmbientVideo
+                    className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
+                    src={panel.src}
+                    poster={panel.poster}
+                  />
+                ) : (
+                  <img
+                    src={panel.src}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 motion-safe:group-hover:scale-[1.03] transition-transform duration-700"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#151218] to-transparent opacity-80"></div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="kp-home-hero__veil absolute inset-0 z-20 bg-[#151218]/55 md:bg-transparent"></div>
@@ -145,10 +187,10 @@ function Index({
             <div className="kp-intro-visual relative order-2 md:order-1">
               <div className="border-4 border-gray-900 brutalist-shadow overflow-hidden rotate-[-2deg] bg-gray-100">
                 <img
-                  alt={KP2_PHOTOS.midweekJoy.alt}
+                  alt={introAlt}
                   className="kp-intro-photo w-full object-cover"
                   style={{ height: "clamp(240px, 28vw, 420px)" }}
-                  src={KP2_PHOTOS.midweekJoy.src}
+                  src={introPhoto}
                   loading="lazy"
                   decoding="async"
                 />
@@ -234,7 +276,7 @@ function Index({
                 <img
                   alt="Pastor David Antwi, Head Pastor of Kharis Phase 2"
                   className="relative w-full aspect-[4/5] object-cover rounded-[2rem] shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500"
-                  src="https://images.kharis.org/site-images/kp2/51390c9807aba7b8/pastor-david-smiling.jpg"
+                  src={pastorPhoto}
                   loading="lazy"
                   decoding="async"
                 />
@@ -248,6 +290,7 @@ function Index({
           className="border-b-4 border-gray-900"
           eyebrow="Transformed lives"
           title="Testimonies"
+          photos={testimonyPhotos}
           items={testimonials.map((t) => ({
             quote: t.quote,
             title: t.title,
@@ -277,7 +320,7 @@ function Index({
               </p>
             </div>
 
-            <AppListenSteps />
+            <AppListenSteps images={appScreens} />
 
             <div
               id="app-stores"

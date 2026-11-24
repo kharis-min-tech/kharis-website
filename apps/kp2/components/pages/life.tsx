@@ -6,13 +6,13 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { ComicPanels } from "@/components/ComicPanels";
 import { LifeHero } from "@/components/LifeHero";
 
-function LifePage() {
+function LifePage({ printPhotos }: { printPhotos: string[] }) {
   return (
     <div className="bg-background text-on-background font-body-md overflow-x-hidden">
       <SiteHeader />
 
       <main className="pt-[74px]">
-        <LifeHero />
+        <LifeHero printPhotos={printPhotos} />
 
         <ComicPanels />
       </main>

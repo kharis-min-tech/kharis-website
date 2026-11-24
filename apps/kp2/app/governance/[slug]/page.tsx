@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { fetchSiteDocuments } from "@/lib/site-documents";
 import { PolicyDocumentReader } from "../../../../../shared/PolicyDocumentReader";
 import type { PolicyTextPage, PolicyQuickLink } from "../../../../../shared/PolicyDocumentReader";
 import privacy from "@/data/policy-documents/privacy.json";
@@ -21,13 +22,19 @@ type PolicyEntry = {
   quickLinks?: PolicyQuickLink[];
 };
 
+const FALLBACK_PDFS: Record<PolicySlug, string> = {
+  privacy: "/kp2/documents/privacy-policy.pdf",
+  safeguarding: "/kp2/documents/safeguarding-policy.pdf",
+  disclaimer: "/kp2/documents/website-disclaimer.pdf",
+};
+
 const POLICIES: Record<PolicySlug, PolicyEntry> = {
   privacy: {
     title: "Privacy Policy",
     description: "The complete text of the privacy policy supplied by Kharis Ministries.",
     updatedAt: "September 2022",
     pages: privacy.pages,
-    pdfUrl: "/kp2/documents/privacy-policy.pdf",
+    pdfUrl: FALLBACK_PDFS.privacy,
     quickLinks: [{ label: "Data protection contact", page: 5 }],
   },
   safeguarding: {
@@ -35,7 +42,7 @@ const POLICIES: Record<PolicySlug, PolicyEntry> = {
     description: "The complete safeguarding policy, organized by its original PDF pages.",
     updatedAt: "16 February 2019",
     pages: safeguarding.pages,
-    pdfUrl: "/kp2/documents/safeguarding-policy.pdf",
+    pdfUrl: FALLBACK_PDFS.safeguarding,
     quickLinks: [
       { label: "Reporting concerns and urgent danger", page: 55 },
       { label: "Useful support contacts", page: 61 },
@@ -45,7 +52,7 @@ const POLICIES: Record<PolicySlug, PolicyEntry> = {
     title: "Website Disclaimer",
     description: "The complete website disclaimer supplied by Kharis Ministries.",
     pages: disclaimer.pages,
-    pdfUrl: "/kp2/documents/website-disclaimer.pdf",
+    pdfUrl: FALLBACK_PDFS.disclaimer,
     quickLinks: [
       { label: "Limitations and exceptions", page: 1 },
       { label: "Other parties and unenforceable provisions", page: 2 },
@@ -61,16 +68,29 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const policy = POLICIES[slug as PolicySlug];
-  return policy
-    ? { title: `${policy.title} | Kharis Phase 2`, description: policy.description }
-    : { title: "Policy | Kharis Phase 2" };
+  const base = POLICIES[slug as PolicySlug];
+  if (!base) return { title: "Policy | Kharis Phase 2" };
+  const documents = await fetchSiteDocuments();
+  const slot = documents.policies[slug as PolicySlug];
+  const title = slot.title.trim() || base.title;
+  const description = slot.blurb.trim() || base.description;
+  return { title: `${title} | Kharis Phase 2`, description };
 }
 
 export default async function GovernancePolicyPage({ params }: PageProps) {
   const { slug } = await params;
-  const policy = POLICIES[slug as PolicySlug];
-  if (!policy) notFound();
+  const base = POLICIES[slug as PolicySlug];
+  if (!base) notFound();
+
+  const documents = await fetchSiteDocuments();
+  const slot = documents.policies[slug as PolicySlug];
+  const policy: PolicyEntry = {
+    ...base,
+    title: slot.title.trim() || base.title,
+    description: slot.blurb.trim() || base.description,
+    updatedAt: slot.updatedAt.trim() || base.updatedAt,
+    pdfUrl: slot.url.trim() || base.pdfUrl,
+  };
 
   return (
     <div className="bg-background text-on-surface font-body-md min-h-screen">

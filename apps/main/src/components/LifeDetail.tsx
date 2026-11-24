@@ -36,7 +36,7 @@ const DEPT_BANDS = [
   },
 ] as const;
 
-export function LifeDetail({ slug }: { slug: LifeSlug }) {
+export function LifeDetail({ slug, imageUrl }: { slug: LifeSlug; imageUrl?: string }) {
   const [activeDeptSlide, setActiveDeptSlide] = useState(0);
   const depts = slug === "departments";
 
@@ -51,6 +51,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
 
   const page = lifeBySlug(slug);
   if (!page) return null;
+  const heroImage = imageUrl ?? page.image;
 
   const next = page.next ? lifeBySlug(page.next) : undefined;
   const navCats = LIFE_CATEGORIES.filter((c) => LIFE_VISIBLE_SLUGS.has(c.slug));
@@ -61,7 +62,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
         <header className="life-dept-hero">
           <div
             className="life-dept-hero__media"
-            style={{ backgroundImage: `url(${page.image})` }}
+            style={{ backgroundImage: `url(${heroImage})` }}
             aria-hidden
           />
           <div className="life-dept-hero__veil" aria-hidden />
@@ -178,7 +179,7 @@ export function LifeDetail({ slug }: { slug: LifeSlug }) {
         <header className="life-detail-hero">
           <div
             className="life-detail-hero__media"
-            style={{ backgroundImage: `url(${page.image})` }}
+            style={{ backgroundImage: `url(${heroImage})` }}
           />
           <div className="life-detail-hero__veil" />
           <Reveal variant="blur" className="life-detail-hero__copy">

@@ -27,7 +27,14 @@ const APP_STILLS = [
   },
 ] as const;
 
-export function VisionSection({ id = "vision" }: { id?: string }) {
+export function VisionSection({
+  id = "vision",
+  stills,
+}: {
+  id?: string;
+  stills?: Array<{ label: string; screenBackground: string; src: string; alt: string }>;
+}) {
+  const screens = stills ?? APP_STILLS;
   return (
     <section id={id} className="listen-band section section--lg band band--1">
       <div className="section__inner relative z-10">
@@ -45,7 +52,7 @@ export function VisionSection({ id = "vision" }: { id?: string }) {
             tabIndex={0}
             className="grid snap-x snap-mandatory auto-cols-[min(76%,16rem)] grid-flow-col items-start gap-6 overflow-x-auto px-2 pb-4 focus-visible:outline-2 focus-visible:outline-offset-2 md:snap-none md:auto-cols-auto md:grid-flow-row md:grid-cols-3 md:gap-12 md:overflow-visible md:px-0 md:pb-0 lg:gap-20"
           >
-            {APP_STILLS.map((still) => (
+            {screens.map((still) => (
               <li key={still.label} className="min-w-0 snap-center">
                 <figure className="mx-auto max-w-[16rem]">
                   <div className="rounded-[2.25rem] border border-[#46414d] bg-[#141218] p-[clamp(0.65rem,1.35vw,0.95rem)] shadow-md">

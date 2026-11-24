@@ -1,7 +1,5 @@
 "use client";
 
-import { KP2_PHOTOS } from "@/lib/photography";
-
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -118,13 +116,13 @@ const SOCIALS: SocialPlatform[] = [
 
 /* ---------------- page ---------------- */
 
-function MediaPage() {
+function MediaPage({ hero }: { hero: string }) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container overflow-x-clip">
       <SiteHeader />
 
       <header className="kp-media-hero relative box-border flex w-full items-end overflow-hidden border-b-4 border-primary bg-on-background text-background">
-        <ParallaxHeroImage src={KP2_PHOTOS.serviceCamera.src} alt="" className="object-center" />
+        <ParallaxHeroImage src={hero} alt="" className="object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25 pointer-events-none"></div>
         <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
           <p className="font-label-md uppercase tracking-[0.28em] text-white/80 mb-4">

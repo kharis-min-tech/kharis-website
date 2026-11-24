@@ -18,6 +18,7 @@ export const MEDIA_FOLDERS = [
   "uploads",
   "documents",
   "plans",
+  "site-contents",
 ] as const;
 
 export type MediaFolder = (typeof MEDIA_FOLDERS)[number];
@@ -98,8 +99,12 @@ export function mediaObjectKey(
 ) {
   const branchScope =
     branchId && isBranchMediaFolder(folder) && isBranchId(branchId) ? `${branchId}/` : "";
-  const nest = safeMediaName(subfolder ?? "");
-  const nestedScope = nest && nest !== "file" ? `${nest}/` : `${mediaMonthScope()}/`;
+  const nest = (subfolder ?? "")
+    .split("/")
+    .map((segment) => safeMediaName(segment))
+    .filter((segment) => segment && segment !== "file")
+    .join("/");
+  const nestedScope = nest ? `${nest}/` : `${mediaMonthScope()}/`;
   return `${MEDIA_PREFIX}${folder}/${branchScope}${nestedScope}${crypto.randomUUID()}-${safeMediaName(fileName)}`;
 }
 

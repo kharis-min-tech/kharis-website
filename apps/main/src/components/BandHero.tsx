@@ -92,21 +92,21 @@ function toImage(slide: HeroSlide): PanoramaImage | null {
   return slide.src ? { src: slide.src, alt: slide.alt ?? "" } : null;
 }
 
-export function BandHero() {
+export function BandHero({ slides = HERO_SLIDES }: { slides?: HeroSlide[] }) {
   /* One band takes everything. With more than one, the photographs are dealt
    * round the bands so none is on two at once, and the clips all stay on the
    * first — the same split the photo wall uses. */
   const bands = useMemo(() => {
     const buckets: PanoramaImage[][] = AXES.map(() => []);
     let photoCount = 0;
-    for (const slide of HERO_SLIDES) {
+    for (const slide of slides) {
       const image = toImage(slide);
       if (!image) continue;
       const bucket = slide.type === "video" ? 0 : photoCount++ % buckets.length;
       buckets[bucket].push(image);
     }
     return buckets;
-  }, []);
+  }, [slides]);
 
   useEffect(() => {
     document.documentElement.classList.add("hero-ready");

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MessagesExperience } from "@/components/MessagesExperience";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { fetchSiteContents, listSlot } from "@/lib/site-contents";
 import { fetchLatestMessages, fetchPastorMessages } from "@/lib/youtube";
 
 // Serve a pre-rendered Messages hub and refresh it in the background so visitors
@@ -16,7 +17,14 @@ export const metadata: Metadata = {
 };
 
 export default async function MessagesPage() {
-  const [latest, messages] = await Promise.all([fetchLatestMessages(4), fetchPastorMessages(120)]);
+  const [latest, messages, contents] = await Promise.all([
+    fetchLatestMessages(4),
+    fetchPastorMessages(120),
+    fetchSiteContents("kharis"),
+  ]);
+  const listenPosterUrls = listSlot(contents, "messages", "listenPosters")
+    .map((item) => item.url.trim())
+    .filter(Boolean);
 
   if (!messages.length && !latest.length) {
     return (
@@ -44,7 +52,7 @@ export default async function MessagesPage() {
   return (
     <main>
       <SiteHeader />
-      <MessagesExperience messages={messages} latest={latest} />
+      <MessagesExperience messages={messages} latest={latest} listenPosterUrls={listenPosterUrls} />
       <div className="msg-footer-wrap">
         <SiteFooter />
       </div>

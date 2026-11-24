@@ -41,6 +41,7 @@ const appNav: StudioNavItem[] = [
 ];
 
 const kharisNav: StudioNavItem[] = [
+  { href: "/site-contents", label: "Site contents" },
   { href: "/branches", label: "Branches" },
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
@@ -49,6 +50,7 @@ const kharisNav: StudioNavItem[] = [
 ];
 
 const kp2Nav: StudioNavItem[] = [
+  { href: "/site-contents", label: "Site contents" },
   { href: "/branches", label: "Branches" },
   { href: "/events", label: "Events" },
   { href: "/testimonies", label: "Testimonies" },
@@ -74,13 +76,15 @@ export const WORKSPACES: StudioWorkspace[] = [
   {
     id: "kharis",
     name: "Kharis Website",
-    description: "Website events, testimonies, announcements, and contact messages for kharis.org.",
+    description:
+      "Site contents, events, testimonies, announcements, and contact messages for kharis.org.",
     nav: kharisNav,
   },
   {
     id: "kp2",
     name: "KP2 Website",
-    description: "KP2 events, testimonies, announcements, and contact messages for kharis.org/kp2.",
+    description:
+      "Site contents, events, testimonies, announcements, and contact messages for kharis.org/kp2.",
     nav: kp2Nav,
   },
 ];

@@ -12,7 +12,15 @@ import { TypedText } from "@/components/TypedText";
 import { TIKTOK_URL } from "@/lib/social";
 import { type Branch } from "@/lib/branches";
 
-function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; branches: Branch[] }) {
+function ContactPage({
+  mainCampus,
+  branches,
+  letterPhoto,
+}: {
+  mainCampus: Branch | null;
+  branches: Branch[];
+  letterPhoto: { src: string; alt: string };
+}) {
   return (
     <div className="bg-background text-on-background font-body-md selection:bg-secondary-container">
       <SiteHeader />
@@ -46,6 +54,7 @@ function ContactPage({ mainCampus, branches }: { mainCampus: Branch | null; bran
         <ContactLetter
           branches={branches.map(({ slug, name }) => ({ slug, name }))}
           fallbackEmail={mainCampus?.email || undefined}
+          letterPhoto={letterPhoto}
         />
 
         <section className="relative z-10 bg-secondary-container border-y-4 border-on-background py-16 px-margin-mobile md:px-margin-desktop">

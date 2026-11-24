@@ -9,9 +9,10 @@ import type { Testimony } from "@/lib/testimonies";
 
 interface TestimoniesSectionProps {
   testimonies: Testimony[];
+  photos?: Array<{ src: string; alt: string; position?: string }>;
 }
 
-const photos = [
+const DEFAULT_PHOTOS = [
   {
     src: siteImageUrls["/images/testimony-sharing.jpg"],
     alt: "A brother sharing his testimony on stage",
@@ -37,7 +38,10 @@ function excerpt(text: string, limit = 240) {
   return clean.length > limit ? `${clean.slice(0, limit - 3).trimEnd()}…` : clean;
 }
 
-export function TestimoniesSection({ testimonies }: TestimoniesSectionProps) {
+export function TestimoniesSection({
+  testimonies,
+  photos = DEFAULT_PHOTOS,
+}: TestimoniesSectionProps) {
   const railRef = useRef<HTMLDivElement>(null);
   const interacting = useRef(false);
   const manualUntil = useRef(0);

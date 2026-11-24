@@ -257,7 +257,7 @@ function DriftingPrint({
  * Life at KP2 hero. Once the intro or page turn clears, the headline rises line by line, the
  * sticker slaps on and photo prints pop out around the copy. Scrolling drifts the prints away.
  */
-export function LifeHero() {
+export function LifeHero({ printPhotos = [] }: { printPhotos?: string[] }) {
   const heroRef = useRef<HTMLElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
   const printsRef = useRef<HTMLDivElement>(null);
@@ -286,7 +286,11 @@ export function LifeHero() {
         {PRINTS.map((print, order) => (
           <DriftingPrint
             key={print.id}
-            print={print}
+            print={
+              printPhotos[order]
+                ? { ...print, photo: { ...print.photo, src: printPhotos[order] } }
+                : print
+            }
             order={order}
             progress={progress}
             still={still}

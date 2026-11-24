@@ -11,7 +11,8 @@ export const metadata: Metadata = {
     "Safeguarding, privacy and website policies for Kharis Ministries. Report an incident securely.",
 };
 
-const DOCUMENTS: Record<"safeguarding" | "privacy" | "disclaimer", string> = {
+/** Local PDFs only if Content Studio has not uploaded a live file yet. */
+const FALLBACK_PDFS: Record<"safeguarding" | "privacy" | "disclaimer", string> = {
   safeguarding: "/documents/safeguarding-policy.pdf",
   privacy: "/documents/privacy-policy.pdf",
   disclaimer: "/documents/website-disclaimer.pdf",
@@ -21,19 +22,22 @@ export default async function GovernancePage() {
   const documents = await fetchSiteDocuments();
   const policies: GovernancePolicyCard[] = GOVERNANCE.policies.map((policy) => {
     const slot = documents.policies[policy.id as keyof typeof documents.policies];
-    const pdfUrl = slot?.url?.trim() || "";
+    const studioUrl = slot?.url?.trim() || "";
     const fallbackHref = "href" in policy ? policy.href : undefined;
+    const fallbackPdf =
+      policy.id in FALLBACK_PDFS ? FALLBACK_PDFS[policy.id as keyof typeof FALLBACK_PDFS] : "";
+    const pdfUrl = studioUrl || fallbackPdf;
     return {
       id: policy.id,
       title: slot?.title?.trim() || policy.title,
       blurb: slot?.blurb?.trim() || policy.blurb,
       icon: policy.icon,
-      href: policy.id === "cookies" ? pdfUrl || fallbackHref : undefined,
+      href: policy.id === "cookies" ? studioUrl || fallbackHref : undefined,
       document:
-        policy.id in DOCUMENTS
+        policy.id !== "cookies" && pdfUrl
           ? {
               title: slot?.title?.trim() || policy.title,
-              pdfUrl: pdfUrl || DOCUMENTS[policy.id as keyof typeof DOCUMENTS],
+              pdfUrl,
             }
           : undefined,
     };

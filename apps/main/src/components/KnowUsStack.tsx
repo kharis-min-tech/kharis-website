@@ -56,7 +56,12 @@ const cards: Card[] = [
 
 const IMAGE_SIZES = "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw";
 
-export function KnowUsStack() {
+export function KnowUsStack({ images }: { images?: string[] }) {
+  const resolved = cards.map((card, index) => ({
+    ...card,
+    image: images?.[index] ?? card.image,
+  }));
+
   return (
     <section id="know" className="section band band--1 overflow-x-clip">
       <div className="section__inner">
@@ -70,7 +75,7 @@ export function KnowUsStack() {
           className="know-grid grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-6 lg:gap-7"
           stagger={0.14}
         >
-          {cards.map((card) => (
+          {resolved.map((card) => (
             <RevealItem key={card.title} variant={card.reveal} distance={64} className="h-full">
               <motion.a
                 href={card.href}
