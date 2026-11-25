@@ -16,7 +16,7 @@ export const SOCIAL_LINKS = [
 
 export const STATIC_PATHS = [
   "/",
-  "/mission",
+  "/about",
   "/governance",
   "/life",
   "/quiz",

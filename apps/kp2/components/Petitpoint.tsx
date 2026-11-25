@@ -150,7 +150,7 @@ export type PetitpointProps = {
   ui?: {
     intro?: "sweep" | "bloom" | "rain" | "none";
     readout?: boolean;
-    countLabel?: string;
+    overviewLabel?: string;
     filters?: boolean;
     allLabel?: string;
     radius?: number;
@@ -1937,7 +1937,8 @@ export function Petitpoint(props: PetitpointProps) {
       } else if (sel >= 0 && SP[sel]) {
         text = `${coordLabel(SP[sel].lat, SP[sel].lon)}  ·  ${pad2(sel + 1)}`;
       } else {
-        text = `${coordLabel(latC, wrapDeg(lonC))}  ·  ${pad2(SP.length)} ${UI.countLabel || "POINTS"}`;
+        const label = UI.overviewLabel ?? `${pad2(SP.length)} POINTS`;
+        text = `${coordLabel(latC, wrapDeg(lonC))}  ·  ${label}`;
       }
       if (text !== S.readText) {
         rd.textContent = text;

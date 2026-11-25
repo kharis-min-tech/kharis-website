@@ -10,7 +10,7 @@ const SAFETY_MS = 8000;
 
 const LABELS: Record<string, string> = {
   "/": "Home",
-  "/mission": "Mission",
+  "/about": "About Us",
   "/governance": "Governance",
   "/departments": "Department Discovery Quiz",
   "/life": "Life",

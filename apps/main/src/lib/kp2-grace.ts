@@ -3,7 +3,7 @@ import { listBranches, type BranchItem } from "@/lib/branches";
 const PAGES = [
   ["Home", "/kp2"],
   ["Find a branch", "/kp2/branches"],
-  ["Mission", "/kp2/mission"],
+  ["About Us", "/kp2/about"],
   ["Governance", "/kp2/governance"],
   ["Department Discovery Quiz", "/kp2/quiz"],
   ["Life", "/kp2/life"],

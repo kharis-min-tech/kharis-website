@@ -223,7 +223,7 @@ function Index({
                   sword...&rdquo; Hebrews 4:12
                 </p>
                 <Link
-                  href="/mission#leadership"
+                  href="/about#leadership"
                   className="kp-depth-button kp-button-gold inline-flex items-center gap-2 bg-[#f7be1d] text-gray-900 px-10 py-4 font-label-comic text-lg border-4 border-gray-900 brutalist-shadow uppercase hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
                 >
                   MEET OUR LEADERS
@@ -262,7 +262,7 @@ function Index({
         >
           <div className="halftone-bg text-[#630ed4]/10 opacity-30 absolute inset-0 z-0"></div>
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-            <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+            <div className="text-center max-w-3xl mx-auto mb-6">
               <span className="font-label-comic text-xs tracking-[0.2em] text-[#630ed4] dark:text-[#d2bbff] uppercase mb-3 block">
                 Get The App
               </span>
@@ -270,18 +270,17 @@ function Index({
                 Messages On The Go
               </h2>
               <p className="font-body-lg text-body-lg text-gray-600 dark:text-[#ccc3d8] transition-colors duration-300">
-                Romans 10:17. Faith comes by hearing, and hearing by the word of God.
+                “Faith comes by hearing, and hearing by the word of God.”{" "}
+                <cite className="whitespace-nowrap not-italic">Romans 10:17</cite>
               </p>
               <p className="font-body-md text-sm text-gray-500 dark:text-[#958da1] mt-4 transition-colors duration-300">
                 Available on iPhone &amp; Android
               </p>
             </div>
 
-            <AppListenSteps />
-
             <div
               id="app-stores"
-              className="kp-app-stores scroll-mt-28 flex flex-wrap items-center justify-center gap-4 mt-8 md:mt-10"
+              className="kp-app-stores scroll-mt-28 flex flex-wrap items-center justify-center gap-4 mb-8 md:mb-10"
             >
               <a
                 href={KHARIS_APP.iosUrl}
@@ -327,6 +326,8 @@ function Index({
                 </div>
               </a>
             </div>
+
+            <AppListenSteps />
           </div>
         </section>
       </main>

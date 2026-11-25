@@ -536,6 +536,11 @@
   color: #e8e0e9;
 }
 
+.dark .kp-tst .kp-tst__eyebrow {
+  background-color: #ffde59;
+  color: #151218;
+}
+
 .dark .kp-tst .kp-tst__title {
   color: #fffdf5;
   text-shadow: 4px 4px 0 #7c3aed;

@@ -1,12 +1,13 @@
 "use client";
 
 import { KP2_PHOTOS } from "@/lib/photography";
+import { publicAsset } from "@/lib/public-asset";
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useLayoutEffect, useState, type CSSProperties } from "react";
 import { AnimatedHeight } from "@/components/AnimatedHeight";
 import { FaithAccordion } from "@/components/FaithAccordion";
 import "@/components/leadership.css";
@@ -93,10 +94,9 @@ function WhoWeAreBecoming() {
   const [subTab, setSubTab] = useState(0);
   const tab = MAIN_TABS[mainTab]!;
   const item = tab.items[subTab];
-  const bannerPhoto =
-    tab.id === "leadership" ? PASTORS_PORTRAIT : tab.id === "vision" ? VISION_HERO : null;
+  const isLeadership = tab.id === "leadership";
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const sync = () => {
       const hash = window.location.hash.replace("#", "");
       const index = CHAPTERS.indexOf(hash as (typeof CHAPTERS)[number]);
@@ -209,34 +209,36 @@ function WhoWeAreBecoming() {
           className="bg-surface rounded-none border-2 border-black brutalist-shadow-lg overflow-hidden"
         >
           <AnimatedHeight>
-            {/* Content header */}
             <div
               key={tab.id}
-              className={`kp-content-enter kp-mission-banner bg-primary px-6 md:px-10 py-8 md:py-10 relative overflow-hidden${
-                bannerPhoto ? " kp-lead-hero" : ""
-              }${tab.id === "vision" ? " kp-vision-hero" : ""}`}
+              className={`kp-content-enter relative overflow-hidden bg-primary ${isLeadership ? "kp-founders-banner" : tab.id === "vision" ? "kp-lead-hero kp-vision-hero" : ""}`}
             >
-              {bannerPhoto ? (
+              {tab.id === "vision" && (
+                <img src={VISION_HERO} alt="" decoding="async" className="kp-lead-hero__photo" />
+              )}
+              <div className="relative z-10 px-6 py-8 md:px-10 md:py-10">
+                <span className="font-label-md text-white/80 uppercase tracking-[0.2em] block mb-3">
+                  {tab.eyebrow || "How we fulfil it"}
+                </span>
+                <h3 className="font-display-xl text-3xl md:text-5xl text-white uppercase leading-tight max-w-3xl">
+                  {tab.headline}
+                </h3>
+                {isLeadership && (
+                  <p className="font-body-lg text-body-lg text-white/90 mt-4 max-w-3xl">
+                    {tab.body}
+                  </p>
+                )}
+              </div>
+              {isLeadership && (
                 <img
-                  src={bannerPhoto}
-                  alt=""
-                  aria-hidden="true"
+                  src={PASTORS_PORTRAIT}
+                  alt="Pastors David and Awo Antwi seated with the congregation during worship"
+                  width={2048}
+                  height={1365}
                   decoding="async"
-                  className="kp-lead-hero__photo"
+                  className="kp-founders-banner__photo"
                 />
-              ) : null}
-              <div className="absolute top-0 right-0 w-40 h-40  bg-white/10 -mr-10 -mt-10"></div>
-              <span className="relative z-10 font-label-md text-white/80 uppercase tracking-[0.2em] block mb-3">
-                {tab.eyebrow || "How we fulfil it"}
-              </span>
-              <h3 className="relative z-10 font-display-xl text-3xl md:text-5xl text-white uppercase leading-tight max-w-3xl">
-                {tab.headline}
-              </h3>
-              {tab.id === "leadership" ? (
-                <p className="relative z-10 font-body-lg text-body-lg text-white/90 mt-4 max-w-3xl">
-                  {tab.body}
-                </p>
-              ) : null}
+              )}
             </div>
 
             {tab.id === "vision" ? (
@@ -414,8 +416,7 @@ function StatementOfFaith() {
   return <FaithAccordion statements={FAITH_STATEMENTS} />;
 }
 
-const PASTORS_PORTRAIT =
-  "https://images.kharis.org/site-images/main/61b5f617ef58872c/about-pastors-portrait.jpg";
+const PASTORS_PORTRAIT = publicAsset("/assets/leadership/pastors-david-and-awo-at-church.jpg");
 
 const PASTORS = [
   {
@@ -507,7 +508,7 @@ function AboutPage() {
         <ParallaxHeroImage src={ABOUT_HERO} alt="" className="object-[center_40%]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#151218]/80 via-[#151218]/45 to-[#151218]/25"></div>
         <div className="relative z-20 w-full px-margin-mobile md:px-margin-desktop text-left">
-          <p className="font-label-md uppercase tracking-[0.28em] text-[#f7be1d] mb-4">We are...</p>
+          <p className="kp-about-intro font-label-md uppercase mb-4">We are...</p>
           <h1 className="font-display-lg uppercase leading-none text-white mb-4">
             <TypedText text="Kharis Phase 2" />
           </h1>

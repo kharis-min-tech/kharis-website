@@ -243,9 +243,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
                       <span className="material-symbols-outlined">close</span>
                     </button>
                   ) : null}
-                  <span className="kp-find__badge">
-                    {searchingAddress ? "Searching…" : `${mapLocations.length} Hubs`}
-                  </span>
+                  <span className="kp-find__badge">{searchingAddress ? "Searching…" : "Hubs"}</span>
                 </div>
                 <button
                   type="button"
@@ -323,7 +321,7 @@ function BranchesPage({ branches }: { branches: Branch[] }) {
               ui={{
                 intro: "sweep",
                 readout: true,
-                countLabel: "HUBS",
+                overviewLabel: "HUBS",
                 filters: false,
                 ariaLabel: "Interactive England map of Kharis Phase 2 branches",
               }}
