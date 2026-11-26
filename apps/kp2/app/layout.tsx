@@ -133,6 +133,11 @@ const MATERIAL_ICONS = [
   "volunteer_activism",
   "waving_hand",
   "zoom_in",
+  // Life comic book
+  "person_add",
+  "photo_library",
+  "south",
+  "swipe_left",
 ];
 const MATERIAL_ICON_NAMES = [...new Set(MATERIAL_ICONS)].sort().join(",");
 import { PageTurn } from "@/components/PageTurn";
