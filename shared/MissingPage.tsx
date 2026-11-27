@@ -2,8 +2,6 @@ import Link from "next/link";
 import { DoveFlight } from "./DoveFlight";
 import styles from "./MissingPage.module.css";
 
-const VERSE = "the crooked shall be made straight, and the rough places plain";
-
 export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
   const primary = phaseTwo
     ? `kp-depth-button kp-button-purple ${styles.comicAction}`
@@ -56,7 +54,10 @@ export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
         </div>
         <DoveFlight buttonClassName={primary} phaseTwo={phaseTwo} />
         <figure className={styles.verse} id="isaiah-40-4" tabIndex={-1}>
-          <blockquote>{VERSE}</blockquote>
+          <blockquote>
+            Every valley shall be exalted, and every mountain and hill shall be made low: and{" "}
+            <mark>the crooked shall be made straight, and the rough places plain</mark>:
+          </blockquote>
           <figcaption>
             <strong>Isaiah 40:4 · KJV</strong>
             <p>

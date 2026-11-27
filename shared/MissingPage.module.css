@@ -342,6 +342,12 @@
   background: var(--card);
 }
 
+.verse mark {
+  background: var(--yellow, var(--secondary-container));
+  color: var(--art-outline);
+  font-weight: 700;
+}
+
 .verse figcaption {
   margin-top: 0.45rem;
   font-size: 0.875rem;
