@@ -57,7 +57,13 @@ export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
         <DoveFlight buttonClassName={primary} phaseTwo={phaseTwo} />
         <figure className={styles.verse} id="isaiah-40-4" tabIndex={-1}>
           <blockquote>{VERSE}</blockquote>
-          <figcaption>Isaiah 40:4 · KJV</figcaption>
+          <figcaption>
+            <strong>Isaiah 40:4 · KJV</strong>
+            <p>
+              This link took a crooked turn. “Head straight home” is our nod to Isaiah’s straight
+              path.
+            </p>
+          </figcaption>
         </figure>
       </div>
     </section>

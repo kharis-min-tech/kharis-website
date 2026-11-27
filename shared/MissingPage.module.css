@@ -344,9 +344,17 @@
 
 .verse figcaption {
   margin-top: 0.45rem;
-  color: var(--accent);
   font-size: 0.875rem;
+}
+
+.verse figcaption strong {
+  color: var(--accent);
   font-weight: 800;
+}
+
+.verse figcaption p {
+  margin: 0.6rem 0 0;
+  line-height: 1.5;
 }
 
 @media (min-width: 900px) {
@@ -360,6 +368,16 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  :global(html):has(.page) {
+    scroll-behavior: smooth;
+  }
+
+  .verse {
+    transition:
+      background-color 320ms ease-out,
+      border-color 320ms ease-out;
+  }
+
   .doveIdle {
     animation: doveIdle 1.5s ease-in-out infinite alternate;
   }
