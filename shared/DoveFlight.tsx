@@ -5,10 +5,17 @@ import { advanceDoveGame, createDoveGame, DOVE_GAME } from "./dove-game";
 import styles from "./MissingPage.module.css";
 
 const SHEEP_TOWER_ID = 2;
-const SHEEP_SIGHTING_SCORE = SHEEP_TOWER_ID + 1;
+const SHEEP_REACH = 27;
 const initialFlight = createDoveGame();
 
 type Phase = "ready" | "playing" | "over";
+
+function sheepPosition(frame: ReturnType<typeof createDoveGame>) {
+  const tower = frame.towers.find(({ id }) => id === SHEEP_TOWER_ID);
+  return (
+    tower && { x: tower.x + DOVE_GAME.towerWidth / 2, y: tower.gapTop + DOVE_GAME.gapSize / 2 }
+  );
+}
 
 function Sheep({ x, y }: { x: number; y: number }) {
   return (
@@ -21,11 +28,19 @@ function Sheep({ x, y }: { x: number; y: number }) {
   );
 }
 
-export function DoveFlight() {
+export function DoveFlight({
+  buttonClassName,
+  phaseTwo,
+}: {
+  buttonClassName: string;
+  phaseTwo: boolean;
+}) {
   const [phase, setPhase] = useState<Phase>("ready");
   const [frame, setFrame] = useState(initialFlight);
   const flight = useRef(initialFlight);
   const phaseRef = useRef<Phase>("ready");
+  const [sheepFound, setSheepFound] = useState(false);
+  const sheepCaught = useRef(false);
 
   useEffect(() => {
     if (phase !== "playing") return;
@@ -38,6 +53,13 @@ export function DoveFlight() {
       const next = advanceDoveGame(flight.current, seconds);
       flight.current = next;
       setFrame(next);
+      if (!next.over && !sheepCaught.current) {
+        const sheep = sheepPosition(next);
+        if (sheep && Math.hypot(sheep.x - DOVE_GAME.doveX, sheep.y - next.y) <= SHEEP_REACH) {
+          sheepCaught.current = true;
+          setSheepFound(true);
+        }
+      }
       if (next.over) {
         phaseRef.current = "over";
         setPhase("over");
@@ -56,6 +78,8 @@ export function DoveFlight() {
       return;
     }
     flight.current = createDoveGame();
+    sheepCaught.current = false;
+    setSheepFound(false);
     setFrame(flight.current);
     phaseRef.current = "playing";
     setPhase("playing");
@@ -83,10 +107,8 @@ export function DoveFlight() {
       ? "Guide the dove through the towers."
       : phase === "over"
         ? `You scored ${points}.`
-        : frame.score === SHEEP_SIGHTING_SCORE
-          ? "You found the one! Keep flying."
-          : `${points} collected. Keep flying!`;
-  const sheepTower = frame.towers.find((tower) => tower.id === SHEEP_TOWER_ID);
+        : `${points} collected. Keep flying!`;
+  const sheep = sheepFound ? undefined : sheepPosition(frame);
   const tilt = Math.max(
     DOVE_GAME.minTilt,
     Math.min(DOVE_GAME.maxTilt, frame.velocity / DOVE_GAME.tiltVelocityDivisor),
@@ -101,58 +123,58 @@ export function DoveFlight() {
         </span>
       </div>
       <div>
-        <svg
-          className={styles.scene}
-          viewBox={`0 0 ${DOVE_GAME.width} ${DOVE_GAME.ground}`}
-          aria-hidden="true"
-          onClick={activate}
-        >
-          <rect className={styles.sky} width={DOVE_GAME.width} height={DOVE_GAME.ground} />
-          <circle className={styles.sun} cx="504" cy="75" r="43" />
-          <path
-            className={styles.cloud}
-            d="M27 81h118c0-13-16-21-29-17-4-16-36-17-44 0-19-8-38 2-45 17Zm247-35h100c-3-14-16-20-31-16-5-15-31-16-39 1-11-3-23 5-30 15Z"
-          />
-          <path className={styles.hill} d="M0 206Q89 144 194 197T391 181T640 183V272H0Z" />
-          <path className={styles.field} d="M0 239Q95 213 178 234T367 226T640 222V272H0Z" />
-          <path className={styles.trail} d="M0 251Q108 227 184 249T385 239T640 236" />
-          {frame.towers.map((tower) => {
-            const gapTop = tower.gapTop;
-            const gapBottom = gapTop + DOVE_GAME.gapSize;
-            const middle = DOVE_GAME.towerWidth / 2;
-            return (
-              <g key={tower.id} className={styles.gate} transform={`translate(${tower.x} 0)`}>
-                <path
-                  d={`M0 0H${DOVE_GAME.towerWidth}V${gapTop - 15}L${middle} ${gapTop}L0 ${gapTop - 15}Z`}
-                />
-                <path
-                  d={`M0 ${DOVE_GAME.ground}H${DOVE_GAME.towerWidth}V${gapBottom + 15}L${middle} ${gapBottom}L0 ${gapBottom + 15}Z`}
-                />
-                <path
-                  className={styles.windows}
-                  d={`M12 ${gapTop - 38}h7v12h-7zm17 0h7v12h-7zM12 ${gapBottom + 23}h7v12h-7zm17 0h7v12h-7z`}
-                />
-              </g>
-            );
-          })}
-          {sheepTower && (
-            <Sheep
-              x={sheepTower.x + DOVE_GAME.towerWidth / 2}
-              y={sheepTower.gapTop + DOVE_GAME.gapSize / 2}
-            />
-          )}
-          <g
-            transform={`translate(${DOVE_GAME.doveX} ${frame.y}) rotate(${phase === "ready" ? 0 : tilt}) scale(${DOVE_GAME.spriteScale})`}
+        <div className={styles.playArea}>
+          <svg
+            className={styles.scene}
+            viewBox={`0 0 ${DOVE_GAME.width} ${DOVE_GAME.ground}`}
+            aria-hidden="true"
+            onClick={activate}
           >
-            <g className={phase === "ready" ? `${styles.dove} ${styles.doveIdle}` : styles.dove}>
-              <path d="M-15 2-38-13l8 15-9 10 28-3C4 20 29 10 27-4l11-1-11-6C18-23 4-13-2-9-14-26-27-21-20-10Z" />
-              <path className={styles.wing} d="M12 2C3 9-9 5-16-3" />
-              <circle cx="21" cy="-8" r="1.6" fill="currentColor" />
+            <rect className={styles.sky} width={DOVE_GAME.width} height={DOVE_GAME.ground} />
+            <circle className={styles.sun} cx="504" cy="75" r="43" />
+            <path
+              className={styles.cloud}
+              d="M27 81h118c0-13-16-21-29-17-4-16-36-17-44 0-19-8-38 2-45 17Zm247-35h100c-3-14-16-20-31-16-5-15-31-16-39 1-11-3-23 5-30 15Z"
+            />
+            <path className={styles.hill} d="M0 206Q89 144 194 197T391 181T640 183V272H0Z" />
+            <path className={styles.field} d="M0 239Q95 213 178 234T367 226T640 222V272H0Z" />
+            <path className={styles.trail} d="M0 251Q108 227 184 249T385 239T640 236" />
+            {frame.towers.map((tower) => {
+              const gapTop = tower.gapTop;
+              const gapBottom = gapTop + DOVE_GAME.gapSize;
+              const middle = DOVE_GAME.towerWidth / 2;
+              return (
+                <g key={tower.id} className={styles.gate} transform={`translate(${tower.x} 0)`}>
+                  <path
+                    d={`M0 0H${DOVE_GAME.towerWidth}V${gapTop - 15}L${middle} ${gapTop}L0 ${gapTop - 15}Z`}
+                  />
+                  <path
+                    d={`M0 ${DOVE_GAME.ground}H${DOVE_GAME.towerWidth}V${gapBottom + 15}L${middle} ${gapBottom}L0 ${gapBottom + 15}Z`}
+                  />
+                  <path
+                    className={styles.windows}
+                    d={`M12 ${gapTop - 38}h7v12h-7zm17 0h7v12h-7zM12 ${gapBottom + 23}h7v12h-7zm17 0h7v12h-7z`}
+                  />
+                </g>
+              );
+            })}
+            {sheep && <Sheep {...sheep} />}
+            <g
+              transform={`translate(${DOVE_GAME.doveX} ${frame.y}) rotate(${phase === "ready" ? 0 : tilt}) scale(${DOVE_GAME.spriteScale})`}
+            >
+              <g className={phase === "ready" ? `${styles.dove} ${styles.doveIdle}` : styles.dove}>
+                <path d="M-15 2-38-13l8 15-9 10 28-3C4 20 29 10 27-4l11-1-11-6C18-23 4-13-2-9-14-26-27-21-20-10Z" />
+                <path className={styles.wing} d="M12 2C3 9-9 5-16-3" />
+                <circle cx="21" cy="-8" r="1.6" fill="currentColor" />
+              </g>
             </g>
-          </g>
-        </svg>
+          </svg>
+          <div className={styles.sighting} role="status">
+            {sheepFound ? (phaseTwo ? "Baa! You found the one." : "You found the one!") : ""}
+          </div>
+        </div>
         <div className={styles.gameFooter}>
-          <button type="button" className={styles.primary} onClick={activate}>
+          <button type="button" className={buttonClassName} onClick={activate}>
             {label}
           </button>
           <p className={styles.status} role="status">

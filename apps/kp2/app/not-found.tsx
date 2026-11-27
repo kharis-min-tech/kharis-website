@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { MissingPage } from "../../../shared/MissingPage";
 
 export const metadata: Metadata = {
@@ -7,5 +10,14 @@ export const metadata: Metadata = {
 };
 
 export default function NotFound() {
-  return <MissingPage phaseTwo />;
+  return (
+    <>
+      <SiteHeader />
+      <main>
+        <MissingPage phaseTwo />
+      </main>
+      <SiteFooter />
+      <ThemeToggle />
+    </>
+  );
 }
