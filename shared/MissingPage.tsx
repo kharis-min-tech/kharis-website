@@ -15,8 +15,10 @@ export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
           <p className={styles.code}>404 · Page not found</p>
           <h1 id="missing-title">Have you seen our page?</h1>
           <p className={styles.lede}>
-            {phaseTwo ? "It slipped off-panel." : "It wandered off."} Jesus told of a shepherd who
-            left the ninety-nine to find the one. We’re following his lead.
+            The shepherd left the ninety-nine to find the one (Luke 15:4–7).{" "}
+            {phaseTwo
+              ? "We’d go off-panel to find this page."
+              : "We’d leave ninety-nine tabs open to find this page."}
           </p>
           <nav className={styles.links} aria-label="Find your way">
             <Link href="/" className={styles.primary}>
