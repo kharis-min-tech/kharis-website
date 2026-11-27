@@ -58,13 +58,7 @@ export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
             Every valley shall be exalted, and every mountain and hill shall be made low: and{" "}
             <mark>the crooked shall be made straight, and the rough places plain</mark>:
           </blockquote>
-          <figcaption>
-            <strong>Isaiah 40:4 · KJV</strong>
-            <p>
-              This link took a crooked turn. “Head straight home” is our nod to Isaiah’s straight
-              path.
-            </p>
-          </figcaption>
+          <figcaption>Isaiah 40:4 · KJV</figcaption>
         </figure>
       </div>
     </section>
