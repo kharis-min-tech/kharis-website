@@ -2,8 +2,7 @@ import Link from "next/link";
 import { DoveFlight } from "./DoveFlight";
 import styles from "./MissingPage.module.css";
 
-const VERSE =
-  "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.";
+const VERSE = "I will go before thee, and make the crooked places straight";
 
 export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
   return (
@@ -14,16 +13,14 @@ export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
       <div className={styles.spread}>
         <div className={styles.copy}>
           <p className={styles.code}>404 · Page not found</p>
-          <h1 id="missing-title">
-            {phaseTwo ? "One sheep went off-panel." : "This page wandered off."}
-          </h1>
+          <h1 id="missing-title">Have you seen our page?</h1>
           <p className={styles.lede}>
-            Jesus told of a shepherd who left the ninety-nine to find the one. This link might be
-            lost, but there’s a way home.
+            {phaseTwo ? "It slipped off-panel." : "It wandered off."} Jesus told of a shepherd who
+            left the ninety-nine to find the one. We’re following his lead.
           </p>
           <nav className={styles.links} aria-label="Find your way">
             <Link href="/" className={styles.primary}>
-              Back home
+              Head straight home
             </Link>
             {phaseTwo && (
               <Link href="/life" className={styles.secondary}>
@@ -38,7 +35,7 @@ export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
         <DoveFlight />
         <figure className={styles.verse}>
           <blockquote>{VERSE}</blockquote>
-          <figcaption>Isaiah 40:31 · KJV</figcaption>
+          <figcaption>Isaiah 45:2 · KJV</figcaption>
         </figure>
       </div>
     </section>
