@@ -19,7 +19,20 @@ export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
     >
       <div className={styles.spread}>
         <div className={styles.copy}>
-          <p className={styles.code}>404 · Page not found</p>
+          <p className={styles.code}>
+            <span className={styles.errorNumber}>
+              <span aria-hidden="true">40</span>
+              <a
+                href="#isaiah-40-4"
+                className={styles.scriptureColon}
+                aria-label="Jump to Isaiah 40:4"
+              >
+                :
+              </a>
+              <span aria-hidden="true">4</span>
+            </span>
+            <span>Page not found</span>
+          </p>
           <h1 id="missing-title">
             {phaseTwo ? "Plot twist. Wrong page." : "Wrong turn? Let’s straighten that out."}
           </h1>
@@ -42,22 +55,9 @@ export function MissingPage({ phaseTwo = false }: { phaseTwo?: boolean }) {
           </nav>
         </div>
         <DoveFlight buttonClassName={primary} phaseTwo={phaseTwo} />
-        <figure className={styles.verse}>
+        <figure className={styles.verse} id="isaiah-40-4" tabIndex={-1}>
           <blockquote>{VERSE}</blockquote>
-          <figcaption>
-            <a
-              className={styles.scriptureLink}
-              href="https://www.biblegateway.com/passage/?search=Isaiah%2040%3A4&version=KJV"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Read Isaiah 40:4 in the King James Version (opens in a new tab)"
-            >
-              <span>
-                Isaiah 40<span className={styles.scriptureColon}>:</span>4 · KJV
-              </span>
-              <span aria-hidden="true">↗</span>
-            </a>
-          </figcaption>
+          <figcaption>Isaiah 40:4 · KJV</figcaption>
         </figure>
       </div>
     </section>

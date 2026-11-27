@@ -69,6 +69,10 @@
 }
 
 .code {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.8rem;
   width: fit-content;
   margin: 0 0 0.85rem;
   color: var(--accent);
@@ -304,35 +308,45 @@
   line-height: 1.55;
 }
 
-.scriptureLink {
+.errorNumber {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  min-height: 44px;
-  color: var(--accent);
-  font-size: 0.875rem;
-  font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 0.22em;
-}
-
-.scriptureLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 .scriptureColon {
-  display: inline-block;
-  min-width: 0.55em;
-  margin-inline: 0.08em;
-  background: var(--yellow, var(--secondary-container));
-  color: var(--art-outline);
-  text-align: center;
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
-.scriptureLink:is(:hover, :focus-visible) .scriptureColon {
-  background: var(--accent);
-  color: var(--card);
+.scriptureColon:is(:hover, :focus-visible) {
+  background: var(--yellow, var(--secondary-container));
+  color: var(--art-outline);
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+
+.verse {
+  scroll-margin-top: 6rem;
+}
+
+.verse:target {
+  border-color: var(--accent);
+  background: var(--card);
+}
+
+.verse figcaption {
+  margin-top: 0.45rem;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 800;
 }
 
 @media (min-width: 900px) {
