@@ -1,32 +1,58 @@
-import { askGemini, chatTurns } from "@/lib/gemini";
-import { cleanPage, kp2Knowledge, kp2SystemPrompt } from "@/lib/grace";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { recentGraceTurns } from "../../../../../shared/grace-history";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return Response.json({ ok: false, error: "Chat is not configured yet." }, { status: 503 });
-  }
+interface MainChatWorker {
+  fetch(request: Request): Promise<Response>;
+}
 
-  let body: unknown;
+export async function POST(request: Request) {
+  let body: { messages?: unknown; page?: unknown } | null;
   try {
     body = await request.json();
   } catch {
     return Response.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
-  const turns = chatTurns((body as { messages?: unknown })?.messages);
-  if (!turns.length || turns[turns.length - 1]?.role !== "user") {
+  const messages = recentGraceTurns(body?.messages, 12, 1500);
+  if (!messages.length) {
     return Response.json({ ok: false, error: "Please send a message." }, { status: 400 });
   }
 
-  const page = cleanPage((body as { page?: unknown })?.page);
-  const system = kp2SystemPrompt(await kp2Knowledge(), page);
-  const result = await askGemini(apiKey, system, turns);
-  if (!result.ok) {
-    return Response.json({ ok: false, error: result.error }, { status: 502 });
+  try {
+    const origin =
+      process.env.KHARIS_MAIN_CHAT_ORIGIN ||
+      (process.env.NODE_ENV === "development" ? "http://127.0.0.1:3000" : undefined);
+    const upstream = new Request(new URL("/api/chat", origin || "https://kharis-main.internal"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ site: "kp2", page: body?.page, messages }),
+      redirect: "error",
+      signal: request.signal,
+    });
+    let response: Response;
+    if (origin) {
+      response = await fetch(upstream);
+    } else {
+      const { env } = getCloudflareContext();
+      const main = (env as unknown as { KHARIS_MAIN: MainChatWorker }).KHARIS_MAIN;
+      response = await main.fetch(upstream);
+    }
+
+    if (!response.headers.get("content-type")?.includes("application/json")) {
+      await response.body?.cancel();
+      throw new Error("Unexpected Grace response format");
+    }
+    return new Response(response.body, {
+      status: response.status,
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+    });
+  } catch {
+    return Response.json(
+      { ok: false, error: "Grace couldn't connect just now. Please try again." },
+      { status: 502 },
+    );
   }
-  return Response.json({ ok: true, reply: result.reply });
 }

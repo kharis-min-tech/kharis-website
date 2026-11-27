@@ -38,6 +38,25 @@
   filter: grayscale(0);
 }
 
+.kp-founders-banner {
+  display: grid;
+  align-items: center;
+  background: #2a104b;
+}
+
+.kp-founders-banner__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .kp-founders-banner {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+}
+
 .kp-lead {
   container-type: inline-size;
   display: flex;

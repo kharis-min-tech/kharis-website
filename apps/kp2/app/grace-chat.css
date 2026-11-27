@@ -130,11 +130,15 @@
   color: #ffffff;
 }
 
+.kp-grace__status,
 .kp-grace__error {
   margin: 0 0.85rem 0.4rem;
-  color: #9f1239;
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.kp-grace__error {
+  color: #9f1239;
 }
 
 .kp-grace__form {

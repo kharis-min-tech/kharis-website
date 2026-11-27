@@ -12,6 +12,7 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS",
   },
+  "services": [{ "binding": "KHARIS_MAIN", "service": "kharis-main" }],
   "observability": {
     "enabled": true,
   },
