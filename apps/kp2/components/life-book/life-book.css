@@ -464,6 +464,19 @@
   background: #2a1250;
   box-shadow: 14px 16px 0 rgba(0, 0, 0, 0.45);
 }
+.lb-cover__open {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.lb-cover__open:focus-visible {
+  outline: 4px solid var(--lb-gold);
+  outline-offset: -8px;
+}
 /* The spine: a darker strip with a crease. */
 .lb-cover__front::before {
   content: "";
@@ -537,6 +550,24 @@
   top: 13%;
   left: 10%;
   width: 82% !important;
+}
+.lb-unified-cover .lb-cover__cloth {
+  top: 7%;
+  left: 51%;
+  width: 42% !important;
+}
+.lb-cover__title {
+  aspect-ratio: 1.9;
+}
+.lb-cover__title .lb-cloth__flat {
+  background: #fffdf5;
+  color: #151218;
+  font-size: clamp(1rem, 7cqw, 2.2rem);
+}
+.lb-cover__title .lb-cloth__flat span:last-child {
+  color: #f7be1d;
+  -webkit-text-stroke: 0.04em #151218;
+  paint-order: stroke fill;
 }
 .lb-cover__burst {
   z-index: 3;
@@ -846,8 +877,7 @@
   pointer-events: none;
 }
 .lb-events__pin {
-  position: sticky;
-  top: 74px;
+  position: relative;
   height: var(--lb-pin-h);
   min-height: 34rem;
   display: flex;
@@ -899,9 +929,21 @@
 .lb-tabs__tab:hover {
   transform: translateY(-2px);
 }
+.lb-tabs__skip {
+  position: sticky;
+  left: -1rem;
+  z-index: 3;
+  background: var(--lb-gold);
+  color: var(--lb-ink);
+}
+.lb-events__skip {
+  display: flex;
+  width: fit-content;
+  margin: 0 auto 1rem;
+}
 .lb-tabs__tab[aria-current] {
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: var(--lb-gold);
+  color: var(--lb-ink);
   transform: translateY(-3px);
 }
 
@@ -916,7 +958,7 @@
 }
 .lb-events[data-mode="swipe"] .lb-book {
   --pw: min(88vw, calc((var(--lb-pin-h) - 8rem) * 0.64), 440px);
-  --ph: calc(var(--pw) / 0.64);
+  --ph: calc(var(--pw) / 0.56);
   width: var(--pw);
   touch-action: pan-y;
 }
@@ -937,6 +979,18 @@
   background:
     radial-gradient(rgba(247, 190, 29, 0.22) 1.5px, transparent 1.7px) 0 0 / 12px 12px,
     #2a1250;
+}
+.lb-book[data-at-start] .lb-book__board--left {
+  visibility: hidden;
+}
+@media (min-width: 900px) {
+  .lb-book[data-at-start] {
+    transform: translateX(-25%);
+  }
+}
+.lb-unified-cover {
+  position: absolute;
+  inset: 0;
 }
 /* An ex-libris bookplate on the inside front cover. */
 .lb-book__plate {
@@ -1201,7 +1255,7 @@
 .lb-titlepage {
   display: flex;
   flex-direction: column;
-  gap: 3cqh;
+  gap: 1.5cqh;
   height: 100%;
   padding: 9cqw 8cqw;
 }
@@ -1211,7 +1265,7 @@
 .lb-titlepage__title {
   margin: 0;
   font-family: var(--font-anton), "Anton", sans-serif;
-  font-size: 17cqw;
+  font-size: clamp(2rem, 14cqw, 3.9rem);
   line-height: 0.9;
   text-transform: uppercase;
   color: var(--lb-ink) !important;
@@ -1232,7 +1286,9 @@
 }
 .lb-titlepage__list {
   display: grid;
-  gap: 1.4cqh;
+  gap: 0.6cqh;
+  min-height: 0;
+  overflow-y: auto;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1247,7 +1303,7 @@
   border: 0;
   color: var(--lb-ink);
   font-family: var(--font-anton), "Anton", sans-serif;
-  font-size: max(0.9rem, 5.4cqw);
+  font-size: clamp(0.85rem, 4.1cqw, 1.1rem);
   text-align: left;
   text-transform: uppercase !important;
   cursor: pointer;
@@ -1606,7 +1662,7 @@
 .lb-more__title {
   margin: 0;
   font-family: var(--font-anton), "Anton", sans-serif;
-  font-size: clamp(2.6rem, 7vw, 6rem);
+  font-size: clamp(2.1rem, 5vw, 3.9rem);
   line-height: 0.92;
   text-transform: uppercase;
   color: #fff !important;
@@ -1619,8 +1675,8 @@
 }
 .lb-more__lede {
   margin: 0;
-  font-family: var(--font-space), "Space Mono", monospace;
-  font-size: 0.85rem;
+  font-family: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
   color: rgba(255, 255, 255, 0.75);
 }
 .lb-more__stage {
@@ -1752,8 +1808,17 @@
   overflow: clip;
 }
 .lb-you__banner {
-  width: min(920px, 92%);
+  width: min(1200px, 100%);
   margin: 0 auto clamp(3rem, 6vw, 5rem);
+}
+.lb-you__title {
+  margin: 0;
+  font-family: var(--font-anton), "Anton", sans-serif;
+  font-size: clamp(2.1rem, 5vw, 3.9rem);
+  line-height: 1.05;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--lb-sheet-text);
 }
 .lb-you__grid {
   display: grid;
@@ -1793,7 +1858,7 @@
 .lb-you__lede {
   margin: 0 0 1.5rem;
   font-family: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
-  font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
   font-weight: 700;
   line-height: 1.3;
 }
@@ -2012,13 +2077,13 @@
     padding: 8cqw 7cqw;
   }
   .lb-titlepage__title {
-    font-size: 14cqw;
+    font-size: clamp(2rem, 14cqw, 3.9rem);
   }
   .lb-titlepage__list {
-    gap: 1cqh;
+    gap: 0.6cqh;
   }
   .lb-titlepage__list button {
-    font-size: max(0.85rem, 5cqw);
+    font-size: clamp(0.85rem, 4.1cqw, 1.1rem);
   }
 }
 

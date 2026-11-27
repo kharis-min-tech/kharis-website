@@ -1,21 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { advanceDoveGame, createDoveGame, DOVE_GAME } from "./dove-game";
 import styles from "./MissingPage.module.css";
 
-const HEIGHT = 270;
-const DOVE_X = 112;
-const DOVE_RADIUS = 12;
-const GATE_WIDTH = 48;
-const GAP = 124;
-const GATE_CENTERS = [135, 153, 117];
-const COURSE_LENGTH = GATE_CENTERS.length;
-const START_X = 600;
+const COURSE_LENGTH = 3;
+const initialFlight = createDoveGame();
 
 type Phase = "ready" | "playing" | "paused" | "over" | "found";
-type Flight = { y: number; velocity: number; gateX: number; cleared: number };
-
-const initialFlight: Flight = { y: HEIGHT / 2, velocity: 0, gateX: START_X, cleared: 0 };
 
 function Sheep({ x, y }: { x: number; y: number }) {
   return (
@@ -40,31 +32,13 @@ export function DoveFlight() {
     let last = 0;
 
     function tick(now: number) {
-      const dt = last ? Math.min((now - last) / 1000, 0.032) : 0;
+      const seconds = last ? (now - last) / 1000 : 0;
       last = now;
-      const previous = flight.current;
-      const velocity = Math.min(previous.velocity + 310 * dt, 235);
-      const y = previous.y + velocity * dt;
-      const gateX = previous.gateX - 185 * dt;
-      const gapY = GATE_CENTERS[previous.cleared];
-      const overlapsGate =
-        DOVE_X + DOVE_RADIUS > gateX && DOVE_X - DOVE_RADIUS < gateX + GATE_WIDTH;
-      if (
-        y < DOVE_RADIUS ||
-        y > HEIGHT - DOVE_RADIUS ||
-        (overlapsGate && Math.abs(y - gapY) > GAP / 2 - DOVE_RADIUS)
-      ) {
-        setPhase("over");
-        return;
-      }
-
-      const passed = gateX + GATE_WIDTH < DOVE_X - DOVE_RADIUS;
-      const cleared = previous.cleared + Number(passed);
-      const next = { y, velocity, gateX: passed ? START_X : gateX, cleared };
+      const next = advanceDoveGame(flight.current, seconds);
       flight.current = next;
       setFrame(next);
-      if (cleared === COURSE_LENGTH) {
-        setPhase("found");
+      if (next.over || next.score >= COURSE_LENGTH) {
+        setPhase(next.over ? "over" : "found");
         return;
       }
       request = requestAnimationFrame(tick);
@@ -83,11 +57,11 @@ export function DoveFlight() {
   }, [phase]);
 
   function activate() {
-    if (phase === "playing" || phase === "paused") {
-      flight.current = { ...flight.current, velocity: -125 };
-    } else {
-      flight.current = initialFlight;
-      setFrame(initialFlight);
+    if (phase === "playing") {
+      flight.current = { ...flight.current, velocity: DOVE_GAME.flapVelocity };
+    } else if (phase !== "paused") {
+      flight.current = createDoveGame();
+      setFrame(flight.current);
     }
     setPhase("playing");
   }
@@ -106,9 +80,11 @@ export function DoveFlight() {
     over: "The sheep is still out there. Try again?",
     found: "You found the one!",
   }[phase];
-  const gateCenter = GATE_CENTERS[Math.min(frame.cleared, COURSE_LENGTH - 1)];
-  const gapTop = gateCenter - GAP / 2;
-  const gapBottom = gateCenter + GAP / 2;
+  const goalTower = frame.towers.find((tower) => tower.id === COURSE_LENGTH - 1);
+  const tilt = Math.max(
+    DOVE_GAME.minTilt,
+    Math.min(DOVE_GAME.maxTilt, frame.velocity / DOVE_GAME.tiltVelocityDivisor),
+  );
 
   return (
     <section className={styles.game} aria-label="Dove Flight game">
@@ -117,7 +93,7 @@ export function DoveFlight() {
         <span className={styles.score}>
           Gates{" "}
           <strong>
-            {frame.cleared}/{COURSE_LENGTH}
+            {frame.score}/{COURSE_LENGTH}
           </strong>
         </span>
       </div>
@@ -130,32 +106,54 @@ export function DoveFlight() {
           }
         }}
       >
-        <svg className={styles.scene} viewBox="0 0 640 270" aria-hidden="true">
-          <rect className={styles.sky} width="640" height="270" />
+        <svg
+          className={styles.scene}
+          viewBox={`0 0 ${DOVE_GAME.width} ${DOVE_GAME.ground}`}
+          aria-hidden="true"
+          onClick={activate}
+        >
+          <rect className={styles.sky} width={DOVE_GAME.width} height={DOVE_GAME.ground} />
           <circle className={styles.sun} cx="504" cy="75" r="43" />
           <path
             className={styles.cloud}
             d="M27 81h118c0-13-16-21-29-17-4-16-36-17-44 0-19-8-38 2-45 17Zm247-35h100c-3-14-16-20-31-16-5-15-31-16-39 1-11-3-23 5-30 15Z"
           />
-          <path className={styles.hill} d="M0 206Q89 144 194 197T391 181T640 183V270H0Z" />
-          <path className={styles.field} d="M0 239Q95 213 178 234T367 226T640 222V270H0Z" />
+          <path className={styles.hill} d="M0 206Q89 144 194 197T391 181T640 183V272H0Z" />
+          <path className={styles.field} d="M0 239Q95 213 178 234T367 226T640 222V272H0Z" />
           <path className={styles.trail} d="M0 251Q108 227 184 249T385 239T640 236" />
-          <g className={styles.gate} transform={`translate(${frame.gateX} 0)`}>
-            <path d={`M0 0H${GATE_WIDTH}V${gapTop - 15}L24 ${gapTop}L0 ${gapTop - 15}Z`} />
-            <path
-              d={`M0 ${HEIGHT}H${GATE_WIDTH}V${gapBottom + 15}L24 ${gapBottom}L0 ${gapBottom + 15}Z`}
-            />
-            <path
-              className={styles.windows}
-              d={`M12 ${gapTop - 38}h7v12h-7zm17 0h7v12h-7zM12 ${gapBottom + 23}h7v12h-7zm17 0h7v12h-7z`}
-            />
-          </g>
-          {frame.cleared === COURSE_LENGTH - 1 && <Sheep x={frame.gateX + 88} y={gateCenter} />}
+          {frame.towers
+            .filter((tower) => tower.id < COURSE_LENGTH)
+            .map((tower) => {
+              const gapTop = tower.gapTop;
+              const gapBottom = gapTop + DOVE_GAME.gapSize;
+              const middle = DOVE_GAME.towerWidth / 2;
+              return (
+                <g key={tower.id} className={styles.gate} transform={`translate(${tower.x} 0)`}>
+                  <path
+                    d={`M0 0H${DOVE_GAME.towerWidth}V${gapTop - 15}L${middle} ${gapTop}L0 ${gapTop - 15}Z`}
+                  />
+                  <path
+                    d={`M0 ${DOVE_GAME.ground}H${DOVE_GAME.towerWidth}V${gapBottom + 15}L${middle} ${gapBottom}L0 ${gapBottom + 15}Z`}
+                  />
+                  <path
+                    className={styles.windows}
+                    d={`M12 ${gapTop - 38}h7v12h-7zm17 0h7v12h-7zM12 ${gapBottom + 23}h7v12h-7zm17 0h7v12h-7z`}
+                  />
+                </g>
+              );
+            })}
+          {goalTower && phase !== "found" && (
+            <Sheep x={goalTower.x + 88} y={goalTower.gapTop + DOVE_GAME.gapSize / 2} />
+          )}
           {phase === "found" && <Sheep x={282} y={210} />}
-          <g className={styles.dove} transform={`translate(${DOVE_X} ${frame.y})`}>
-            <path d="M-15 2-38-13l8 15-9 10 28-3C4 20 29 10 27-4l11-1-11-6C18-23 4-13-2-9-14-26-27-21-20-10Z" />
-            <path className={styles.wing} d="M12 2C3 9-9 5-16-3" />
-            <circle cx="21" cy="-8" r="1.6" fill="currentColor" />
+          <g
+            transform={`translate(${DOVE_GAME.doveX} ${frame.y}) rotate(${phase === "ready" ? 0 : tilt}) scale(${DOVE_GAME.spriteScale})`}
+          >
+            <g className={phase === "ready" ? `${styles.dove} ${styles.doveIdle}` : styles.dove}>
+              <path d="M-15 2-38-13l8 15-9 10 28-3C4 20 29 10 27-4l11-1-11-6C18-23 4-13-2-9-14-26-27-21-20-10Z" />
+              <path className={styles.wing} d="M12 2C3 9-9 5-16-3" />
+              <circle cx="21" cy="-8" r="1.6" fill="currentColor" />
+            </g>
           </g>
         </svg>
         <div className={styles.gameFooter}>
@@ -180,7 +178,7 @@ export function DoveFlight() {
         </div>
       </div>
       <p className={styles.instructions}>
-        Tap Flap or use Space or ↑ when the game button is focused.
+        Tap the scene or use Space or ↑ when the game button is focused.
       </p>
     </section>
   );

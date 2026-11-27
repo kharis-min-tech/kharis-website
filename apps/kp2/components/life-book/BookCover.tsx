@@ -76,6 +76,11 @@ export function BookCover() {
   }, [pageW, fillScale]);
 
   const coverTurn = useTransform(progress, OPEN, [0, -180], { ease: EASE });
+  const frontVisible = useTransform(
+    coverTurn,
+    [-180, -90, -89, 0],
+    ["hidden", "hidden", "visible", "visible"],
+  );
   const spreadShift = useTransform(progress, OPEN, [0, 1], { ease: EASE });
   const zoomT = useTransform(progress, ZOOM, [0, 1], { ease: EASE });
   const scale = useTransform(() => 1 + (fillScale.get() - 1) * zoomT.get());
@@ -110,6 +115,10 @@ export function BookCover() {
   };
 
   const openBook = () => {
+    if (reduce) {
+      resting.set(READ);
+      return;
+    }
     const section = sectionRef.current;
     if (section) glidePageTo(pinScrollY(section, READ), 1100);
   };
@@ -160,7 +169,7 @@ export function BookCover() {
 
               {/* The cover board: front outside, contents inside. */}
               <motion.div className="lb-cover__board" style={{ rotateY: coverTurn }}>
-                <div className="lb-cover__front">
+                <motion.div className="lb-cover__front" style={{ visibility: frontVisible }}>
                   <div className="lb-cover__art">
                     <img
                       src={cdn(COVER_ART.src, 900)}
@@ -171,13 +180,11 @@ export function BookCover() {
                     />
                   </div>
                   <div className="lb-cover__masthead">
-                    <span className="lb-cover__issue">KP2 Comics · Vol. 2</span>
-                    <span className="lb-cover__price">Free · every Sunday</span>
+                    <span className="lb-cover__issue">KP2 Comic</span>
                   </div>
                   <ClothBanner
                     className="lb-cover__cloth"
                     lines={["Kharis", "Life"]}
-                    sub="Phase 2 · Our story together"
                     label="Kharis Life"
                     aspect={1.9}
                     accent="#f7be1d"
@@ -192,7 +199,15 @@ export function BookCover() {
                     style={{ opacity: coverShade }}
                     aria-hidden="true"
                   />
-                </div>
+                  <button
+                    type="button"
+                    className="lb-cover__open"
+                    aria-label="Open Kharis Life comic"
+                    onClick={openBook}
+                    tabIndex={closed ? 0 : -1}
+                    disabled={!closed}
+                  />
+                </motion.div>
 
                 <nav className="lb-cover__inside lb-paper" aria-label="In this issue">
                   <p className="lb-kicker">In this issue</p>
@@ -209,8 +224,7 @@ export function BookCover() {
                     ))}
                   </ol>
                   <p className="lb-cover__note">
-                    Dear reader, Sundays are only the first page. Turn on and see what life at
-                    Kharis Phase 2 is really about.
+                    You&apos;re inside the book. Scroll on to explore life at Kharis Phase 2.
                   </p>
                   <motion.span
                     className="lb-cover__shade"

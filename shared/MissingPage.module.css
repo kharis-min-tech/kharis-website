@@ -219,6 +219,8 @@
   width: 100%;
   height: auto;
   border-block: var(--trim) solid var(--rule);
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .sky {
@@ -339,5 +341,17 @@
 
   .verse {
     grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .doveIdle {
+    animation: doveIdle 1.5s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes doveIdle {
+  to {
+    transform: translateY(-6px);
   }
 }
