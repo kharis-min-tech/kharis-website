@@ -6,23 +6,19 @@ import {
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
-  useScroll,
-  useSpring,
   useTransform,
   type MotionValue,
 } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ComicGallery } from "@/components/ComicGallery";
-import { EVENT_CHAPTERS, type EventChapter } from "./data";
+import { COVER_ART, EVENT_CHAPTERS, type EventChapter } from "./data";
 import {
-  SCRUB_SPRING,
   announceEventPage,
   cdn,
   cdnSet,
   glidePageTo,
-  pinScrollY,
   useCompact,
-  useSectionSnap,
+  useStageReady,
   type JourneyGoto,
 } from "./motion";
 
@@ -35,8 +31,46 @@ type PageCtx = {
   near: boolean;
   openGallery: (id: string) => void;
   goToEvent: (i: number) => void;
+  openBook: () => void;
+  ready: boolean;
 };
 type PageDef = { key: string; label: string | null; render: (ctx: PageCtx) => ReactNode };
+
+function goToSection(id: string) {
+  const section = document.getElementById(id);
+  if (section) glidePageTo(section.getBoundingClientRect().top + window.scrollY - 74, 650);
+}
+
+function CoverPage({ openBook, ready }: PageCtx) {
+  return (
+    <div className="lb-cover__front lb-unified-cover">
+      <div className="lb-cover__art">
+        <img src={cdn(COVER_ART.src, 900)} alt="" style={{ objectPosition: COVER_ART.position }} />
+      </div>
+      <div className="lb-cover__masthead">
+        <span className="lb-cover__issue">KP2 Comic</span>
+      </div>
+      <div className="lb-cloth lb-cover__cloth lb-cover__title" role="img" aria-label="Kharis Life">
+        <span className="lb-cloth__rod" aria-hidden="true" />
+        <div className="lb-cloth__flat" aria-hidden="true">
+          <span>Kharis</span>
+          <span>Life</span>
+        </div>
+      </div>
+      <span className="lb-burst lb-cover__burst" aria-hidden="true">
+        <span>Beyond Sundays!</span>
+      </span>
+      <p className="lb-cover__strap">Grow · Serve · Belong</p>
+      <button
+        type="button"
+        className="lb-cover__open"
+        onClick={openBook}
+        disabled={!ready}
+        aria-label="Open Kharis Life comic"
+      />
+    </div>
+  );
+}
 
 function Picture({
   photo,
@@ -91,19 +125,30 @@ function PageVideo({ event, live }: { event: EventChapter; live: boolean }) {
 function TitlePage({ goToEvent }: PageCtx) {
   return (
     <div className="lb-titlepage">
-      <p className="lb-kicker">Chapter 2</p>
-      <h2 className="lb-titlepage__title">
-        The <span>Events</span>
-      </h2>
+      <p className="lb-kicker">Inside the book</p>
+      <h2 className="lb-titlepage__title">Contents</h2>
       <p className="lb-titlepage__lede">
         Choose your adventure, or turn the page and read them all.
       </p>
       <ol className="lb-titlepage__list">
-        {EVENT_CHAPTERS.map((event, i) => (
-          <li key={event.id}>
-            <button type="button" onClick={() => goToEvent(i)} data-accent={event.accent}>
+        {EVENT_CHAPTERS.map((chapter, i) => (
+          <li key={chapter.id}>
+            <button type="button" onClick={() => goToEvent(i)}>
               <span className="lb-titlepage__num">{String(i + 1).padStart(2, "0")}</span>
-              <span>{event.title}</span>
+              <span>{chapter.title}</span>
+            </button>
+          </li>
+        ))}
+        {[
+          { id: "lb-more", title: "More adventures" },
+          { id: "lb-you", title: "Your chapter" },
+        ].map((chapter, i) => (
+          <li key={chapter.id}>
+            <button type="button" onClick={() => goToSection(chapter.id)}>
+              <span className="lb-titlepage__num">
+                {String(EVENT_CHAPTERS.length + i + 1).padStart(2, "0")}
+              </span>
+              <span>{chapter.title}</span>
             </button>
           </li>
         ))}
@@ -112,8 +157,8 @@ function TitlePage({ goToEvent }: PageCtx) {
         <span className="material-symbols-outlined" aria-hidden="true">
           swipe_left
         </span>
-        <span className="lb-only-compact">Swipe to turn the page</span>
-        <span className="lb-only-wide">Scroll, click the corner or use ← → to turn</span>
+        <span className="lb-only-compact">Tap a page or use the arrows to turn</span>
+        <span className="lb-only-wide">Click a page or use the arrows to turn</span>
       </p>
     </div>
   );
@@ -198,7 +243,8 @@ function EndPage() {
 
 function buildPages(): PageDef[] {
   const pages: PageDef[] = [
-    { key: "title", label: "The Events", render: (ctx) => <TitlePage {...ctx} /> },
+    { key: "cover", label: "Cover", render: (ctx) => <CoverPage {...ctx} /> },
+    { key: "title", label: "Contents", render: (ctx) => <TitlePage {...ctx} /> },
   ];
   EVENT_CHAPTERS.forEach((event, index) => {
     pages.push({
@@ -286,20 +332,16 @@ function Leaf({
 /* The book                                                                                    */
 /* ------------------------------------------------------------------------------------------ */
 
-/** Each page turn gets this much scroll on wide screens. */
-const TURN_SCREENS = 0.75;
-
 /**
- * The Events, as a book you read. Wide screens show a two-page spread pinned to the screen;
- * scrolling turns the pages (with a snap so a page never rests half turned), and the corners,
- * the chapter tabs and the arrow keys glide to a page. Phones read one portrait page at a time
- * and swipe to turn, like a lookbook. Reduced motion shows the same spreads without turning.
+ * The Events, as a book you read. Page clicks, buttons and arrow keys turn the pages.
+ * Reduced motion shows the same spreads without turning.
  */
 export function EventBook() {
   const sectionRef = useRef<HTMLElement>(null);
   const bookRef = useRef<HTMLDivElement>(null);
   const compact = useCompact();
   const reduce = useReducedMotion() ?? false;
+  const ready = useStageReady();
   const pages = useMemo(buildPages, []);
 
   // Wide: leaf j carries pages 2j (front, right-hand) and 2j+1 (back, left-hand).
@@ -307,28 +349,16 @@ export function EventBook() {
   const leaves = compact ? pages.length : Math.ceil(pages.length / 2);
   const states = compact ? pages.length - 1 : leaves; // number of turns available
 
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start 74px", "end end"] });
-  const smooth = useSpring(scrollYProgress, SCRUB_SPRING);
-  const scrollTurn = useTransform(reduce ? scrollYProgress : smooth, (v) => v * states);
-  const swipeTurn = useMotionValue(0);
-  const turn = compact ? swipeTurn : scrollTurn;
+  const turn = useMotionValue(0);
 
   const [current, setCurrent] = useState(0);
-  const [reach, setReach] = useState(2);
   useMotionValueEvent(turn, "change", (v) => {
     const s = Math.round(v);
     setCurrent(s);
-    setReach((r) => Math.max(r, s + 2));
   });
   useEffect(() => {
     setCurrent(Math.round(turn.get()));
   }, [turn]);
-
-  useSectionSnap(
-    sectionRef,
-    Array.from({ length: states + 1 }, (_, i) => i / states),
-    !compact && !reduce,
-  );
 
   // The pages visible at a resting state.
   const visible = (state: number) => (compact ? [state] : [state * 2 - 1, state * 2]);
@@ -358,30 +388,31 @@ export function EventBook() {
       const target = Math.max(0, Math.min(states, state));
       const section = sectionRef.current;
       if (!section) return;
-      if (compact) {
-        animate(swipeTurn, target, {
-          type: "spring",
-          stiffness: 70,
-          damping: 16,
-          restDelta: 0.001,
-        });
-        // Bring the book fully into view if it isn't.
-        const rect = section.getBoundingClientRect();
-        if (rect.top < 0 || rect.bottom > window.innerHeight)
-          glidePageTo(rect.top + window.scrollY - 74);
-      } else {
-        glidePageTo(
-          pinScrollY(section, target / states),
-          640 + 120 * Math.min(4, Math.abs(target - turn.get())),
+      if (reduce) {
+        const page = section.querySelector<HTMLElement>(
+          `[data-page-index="${compact ? target : target * 2 - 1}"]`,
         );
+        page?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
       }
+      animate(turn, target, { type: "spring", stiffness: 140, damping: 20, restDelta: 0.001 });
+      const rect = bookRef.current?.getBoundingClientRect();
+      if (rect && (rect.bottom < 74 || rect.top > window.innerHeight))
+        glidePageTo(rect.top + window.scrollY - 74);
     },
-    [compact, states, swipeTurn, turn],
+    [compact, reduce, states, turn],
   );
   const goToEvent = useCallback(
-    // Event i's splash is page 2i+1: spread i+1 on wide screens, page 2i+1 on phones.
-    (i: number) => goToState(compact ? 2 * i + 1 : i + 1),
-    [compact, goToState],
+    (i: number) => {
+      if (reduce) {
+        sectionRef.current
+          ?.querySelector<HTMLElement>(`[data-page-index="${2 * i + 2}"]`)
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      goToState(compact ? 2 * i + 2 : i + 1);
+    },
+    [compact, goToState, reduce],
   );
 
   // The contents and the page counter can send the reader straight to an event.
@@ -390,23 +421,12 @@ export function EventBook() {
       const detail = (event as CustomEvent<JourneyGoto>).detail;
       if (detail.chapter !== "lb-events") return;
       const index = EVENT_CHAPTERS.findIndex((e) => e.id === detail.event);
-      const section = sectionRef.current;
-      if (!section) return;
-      if (index < 0) {
-        if (compact) swipeTurn.set(0);
-        glidePageTo(pinScrollY(section, 0), 900);
-        return;
-      }
-      if (compact) {
-        glidePageTo(section.getBoundingClientRect().top + window.scrollY - 74, 900);
-        animate(swipeTurn, 2 * index + 1, { type: "spring", stiffness: 70, damping: 16 });
-      } else {
-        glidePageTo(pinScrollY(section, (index + 1) / states), 1000);
-      }
+      if (index < 0) goToState(1);
+      else goToEvent(index);
     };
     window.addEventListener("lifebook:goto", onGoto);
     return () => window.removeEventListener("lifebook:goto", onGoto);
-  }, [compact, states, swipeTurn]);
+  }, [goToEvent, goToState]);
 
   // Arrow keys turn the page while the book fills the screen.
   useEffect(() => {
@@ -424,92 +444,17 @@ export function EventBook() {
     return () => window.removeEventListener("keydown", onKey);
   }, [goToState, turn]);
 
-  // Phones: drag the page like paper. Horizontal drags turn; vertical ones scroll the page.
-  const drag = useRef<{
-    x: number;
-    y: number;
-    from: number;
-    t: number;
-    axis: "x" | "y" | null;
-    id: number;
-  } | null>(null);
-  const onPointerDown = (event: React.PointerEvent) => {
-    if (!compact || reduce) return;
-    if ((event.target as HTMLElement).closest("button, a, video")) return;
-    drag.current = {
-      x: event.clientX,
-      y: event.clientY,
-      from: swipeTurn.get(),
-      t: performance.now(),
-      axis: null,
-      id: event.pointerId,
-    };
-  };
-  const onPointerMove = (event: React.PointerEvent) => {
-    const d = drag.current;
-    const book = bookRef.current;
-    if (!d || !book || d.id !== event.pointerId) return;
-    const dx = event.clientX - d.x;
-    const dy = event.clientY - d.y;
-    if (!d.axis && Math.hypot(dx, dy) > 8) {
-      d.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
-      if (d.axis === "x") {
-        try {
-          (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
-        } catch {
-          /* the pointer is already gone; the drag still follows move events */
-        }
-      }
-    }
-    if (d.axis !== "x") return;
-    const w = book.offsetWidth;
-    const next = d.from - dx / (w * 0.9);
-    // A little resistance past the first and last page.
-    const max = states;
-    const soft = next < 0 ? next * 0.25 : next > max ? max + (next - max) * 0.25 : next;
-    swipeTurn.set(soft);
-  };
-  const onPointerUp = (event: React.PointerEvent) => {
-    const d = drag.current;
-    drag.current = null;
-    const book = bookRef.current;
-    if (!d || !book) return;
-    if (d.axis !== "x") {
-      // A tap: right side goes forward, left side goes back.
-      if (d.axis === null) {
-        const rect = book.getBoundingClientRect();
-        const at = (event.clientX - rect.left) / rect.width;
-        if (at > 0.72) goToState(Math.round(swipeTurn.get()) + 1);
-        else if (at < 0.28) goToState(Math.round(swipeTurn.get()) - 1);
-      }
-      return;
-    }
-    const dt = Math.max(16, performance.now() - d.t);
-    const velocity = -(event.clientX - d.x) / dt; // px per ms, positive = forward
-    const now = swipeTurn.get();
-    let target = Math.round(now);
-    if (Math.abs(velocity) > 0.35) target = velocity > 0 ? Math.floor(now) + 1 : Math.ceil(now) - 1;
-    else if (now - d.from > 0.2) target = Math.ceil(now);
-    else if (d.from - now > 0.2) target = Math.floor(now);
-    target = Math.max(0, Math.min(states, target));
-    animate(swipeTurn, target, {
-      type: "spring",
-      stiffness: 70,
-      damping: 16,
-      velocity: velocity * 2,
-      restDelta: 0.001,
-    });
-  };
-
   const [galleryId, setGalleryId] = useState<string | null>(null);
   const closeGallery = useCallback(() => setGalleryId(null), []);
   const galleryEvent = EVENT_CHAPTERS.find((e) => e.id === galleryId);
 
   const ctxFor = (pageIndex: number): PageCtx => ({
     live: liveSet.has(pageIndex),
-    near: pageIndex <= (compact ? reach + 1 : reach * 2 + 2),
+    near: Math.abs(pageIndex - (compact ? current : current * 2)) <= 3,
     openGallery: setGalleryId,
     goToEvent,
+    openBook: () => goToState(1),
+    ready,
   });
 
   const renderPage = (pageIndex: number) => {
@@ -535,8 +480,8 @@ export function EventBook() {
             <div className="lb-blank lb-blank--endpaper" />
           )
         }
-        frontNo={frontIndex + 4}
-        backNo={backIndex >= 0 && backIndex < pages.length ? backIndex + 4 : undefined}
+        frontNo={frontIndex > 0 ? frontIndex : undefined}
+        backNo={backIndex > 0 && backIndex < pages.length ? backIndex : undefined}
       />
     );
   });
@@ -553,11 +498,6 @@ export function EventBook() {
       className="lb-events"
       data-mode={reduce ? "still" : compact ? "swipe" : "scroll"}
       data-chapter="The Events"
-      style={
-        !compact && !reduce
-          ? { height: `calc((100svh - 74px) + ${states} * ${TURN_SCREENS * 100}svh)` }
-          : undefined
-      }
       aria-labelledby="lb-events-title"
       aria-roledescription="book"
     >
@@ -567,38 +507,53 @@ export function EventBook() {
 
       {reduce ? (
         <div className="lb-events__still">
-          {Array.from({ length: Math.ceil(pages.length / 2) + 1 }, (_, s) => {
-            const pair = compact ? [s] : [s * 2 - 1, s * 2];
-            return (
-              <div key={s} className="lb-events__spread">
-                {pair
-                  .filter((p) => p >= 0 && p < pages.length)
-                  .map((p) => (
-                    <div key={p} className="lb-events__page lb-paper">
-                      {pages[p]!.render({ ...ctxFor(p), near: true, live: false })}
-                    </div>
-                  ))}
-              </div>
-            );
-          })}
+          <button
+            type="button"
+            className="lb-button lb-events__skip"
+            onClick={() => goToSection("lb-more")}
+          >
+            Go to More Adventures ↓
+          </button>
+          {Array.from(
+            { length: compact ? pages.length : Math.ceil(pages.length / 2) + 1 },
+            (_, s) => {
+              const pair = compact ? [s] : [s * 2 - 1, s * 2];
+              return (
+                <div key={s} className="lb-events__spread">
+                  {pair
+                    .filter((p) => p >= 0 && p < pages.length)
+                    .map((p) => (
+                      <div key={p} className="lb-events__page lb-paper" data-page-index={p}>
+                        {pages[p]!.render({ ...ctxFor(p), near: true, live: false })}
+                      </div>
+                    ))}
+                </div>
+              );
+            },
+          )}
         </div>
       ) : (
         <div className="lb-events__pin">
           <nav className="lb-tabs" aria-label="Event chapters">
-            {EVENT_CHAPTERS.map((event, i) => {
-              const active = compact
-                ? current === 2 * i + 1 || current === 2 * i + 2
-                : current === i + 1;
+            <button
+              type="button"
+              className="lb-tabs__tab lb-tabs__skip"
+              onClick={() => goToSection("lb-more")}
+            >
+              More Adventures ↓
+            </button>
+            {EVENT_CHAPTERS.map((chapter, i) => {
+              const eventIndex = compact ? Math.floor((current - 2) / 2) : current - 1;
+              const active = eventIndex === i;
               return (
                 <button
-                  key={event.id}
+                  key={chapter.id}
                   type="button"
                   className="lb-tabs__tab"
-                  data-accent={event.accent}
                   aria-current={active || undefined}
                   onClick={() => goToEvent(i)}
                 >
-                  {event.short}
+                  {String(i + 1).padStart(2, "0")} · {chapter.title}
                 </button>
               );
             })}
@@ -609,16 +564,19 @@ export function EventBook() {
             className="lb-book"
             data-at-start={atStart || undefined}
             data-at-end={atEnd || undefined}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={() => (drag.current = null)}
+            onClick={(event) => {
+              if ((event.target as HTMLElement).closest("button, a, video")) return;
+              if (window.getSelection()?.toString()) return;
+              const rect = event.currentTarget.getBoundingClientRect();
+              const forward = event.clientX >= rect.left + rect.width * (compact ? 0.35 : 0.5);
+              goToState(current + (forward ? 1 : -1));
+            }}
           >
             <div className="lb-book__board lb-book__board--left" aria-hidden="true">
               <span className="lb-book__plate">
                 <small>This book belongs to</small>
                 <strong>You</strong>
-                <small>KP2 Comics · Vol. 2</small>
+                <small>KP2 Comic</small>
               </span>
             </div>
             <div className="lb-book__board lb-book__board--right" aria-hidden="true">
@@ -660,7 +618,7 @@ export function EventBook() {
             </button>
             <p className="lb-book__counter" aria-live="polite">
               <span className="sr-only">Showing </span>
-              {shownPages.length ? `Pg ${shownPages.map((p) => p + 4).join("–")}` : "Cover"}
+              {shownPages[0] === 0 ? "Cover" : `Pg ${shownPages.join("–")}`}
               <span className="lb-book__counter-label"> · {label ?? "The Events"}</span>
             </p>
             <button

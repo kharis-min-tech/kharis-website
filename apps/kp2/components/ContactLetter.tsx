@@ -285,10 +285,8 @@ export function ContactLetter({
                 01
               </span>
               <div>
-                <h3>You write</h3>
-                <p>
-                  A few lines is plenty. Visiting, praying, hurting or curious, it all belongs here.
-                </p>
+                <h3>Tell us how we can help</h3>
+                <p>We look forward to hearing from you.</p>
               </div>
             </li>
             <li>
@@ -305,8 +303,8 @@ export function ContactLetter({
                 03
               </span>
               <div>
-                <h3>You&apos;re welcome here</h3>
-                <p>Thinking of visiting? You&apos;re always welcome at a branch near you.</p>
+                <h3>Come and experience Kharis</h3>
+                <p>We&apos;d love to meet you.</p>
               </div>
             </li>
           </ol>
