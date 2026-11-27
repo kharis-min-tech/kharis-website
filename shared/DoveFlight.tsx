@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { advanceDoveGame, createDoveGame, DOVE_GAME } from "./dove-game";
 import styles from "./MissingPage.module.css";
 
-const COURSE_LENGTH = 3;
+const SHEEP_TOWER_ID = 2;
+const SHEEP_SIGHTING_SCORE = SHEEP_TOWER_ID + 1;
 const initialFlight = createDoveGame();
 
-type Phase = "ready" | "playing" | "paused" | "over" | "found";
+type Phase = "ready" | "playing" | "over";
 
 function Sheep({ x, y }: { x: number; y: number }) {
   return (
@@ -24,7 +25,7 @@ export function DoveFlight() {
   const [phase, setPhase] = useState<Phase>("ready");
   const [frame, setFrame] = useState(initialFlight);
   const flight = useRef(initialFlight);
-  const action = useRef<HTMLButtonElement>(null);
+  const phaseRef = useRef<Phase>("ready");
 
   useEffect(() => {
     if (phase !== "playing") return;
@@ -37,50 +38,55 @@ export function DoveFlight() {
       const next = advanceDoveGame(flight.current, seconds);
       flight.current = next;
       setFrame(next);
-      if (next.over || next.score >= COURSE_LENGTH) {
-        setPhase(next.over ? "over" : "found");
+      if (next.over) {
+        phaseRef.current = "over";
+        setPhase("over");
         return;
       }
       request = requestAnimationFrame(tick);
     }
 
-    function pauseWhenHidden() {
-      if (document.hidden) setPhase("paused");
-    }
-
     request = requestAnimationFrame(tick);
-    document.addEventListener("visibilitychange", pauseWhenHidden);
-    return () => {
-      cancelAnimationFrame(request);
-      document.removeEventListener("visibilitychange", pauseWhenHidden);
-    };
+    return () => cancelAnimationFrame(request);
   }, [phase]);
 
-  function activate() {
-    if (phase === "playing") {
+  const activate = useCallback(() => {
+    if (phaseRef.current === "playing") {
       flight.current = { ...flight.current, velocity: DOVE_GAME.flapVelocity };
-    } else if (phase !== "paused") {
-      flight.current = createDoveGame();
-      setFrame(flight.current);
+      return;
     }
+    flight.current = createDoveGame();
+    setFrame(flight.current);
+    phaseRef.current = "playing";
     setPhase("playing");
-  }
+  }, []);
 
-  const label = {
-    ready: "Play",
-    playing: "Flap",
-    paused: "Resume",
-    over: "Try again",
-    found: "Play again",
-  }[phase];
-  const status = {
-    ready: "Fly through the gates to find the missing sheep.",
-    playing: "",
-    paused: "Flight paused.",
-    over: "The sheep is still out there. Try again?",
-    found: "You found the one!",
-  }[phase];
-  const goalTower = frame.towers.find((tower) => tower.id === COURSE_LENGTH - 1);
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.code !== "Space" && event.code !== "ArrowUp") return;
+      if (
+        event.target instanceof HTMLElement &&
+        event.target.closest("input, textarea, select, button, a, [contenteditable]")
+      )
+        return;
+      event.preventDefault();
+      activate();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [activate]);
+
+  const label = phase === "ready" ? "Play" : phase === "over" ? "Play again" : "Flap";
+  const points = `${frame.score} ${frame.score === 1 ? "point" : "points"}`;
+  const status =
+    phase === "ready"
+      ? "Guide the dove through the towers."
+      : phase === "over"
+        ? `You scored ${points}.`
+        : frame.score === SHEEP_SIGHTING_SCORE
+          ? "You found the one! Keep flying."
+          : `${points} collected. Keep flying!`;
+  const sheepTower = frame.towers.find((tower) => tower.id === SHEEP_TOWER_ID);
   const tilt = Math.max(
     DOVE_GAME.minTilt,
     Math.min(DOVE_GAME.maxTilt, frame.velocity / DOVE_GAME.tiltVelocityDivisor),
@@ -91,21 +97,10 @@ export function DoveFlight() {
       <div className={styles.gameHeader}>
         <h2>Dove Flight</h2>
         <span className={styles.score}>
-          Gates{" "}
-          <strong>
-            {frame.score}/{COURSE_LENGTH}
-          </strong>
+          Points <strong>{String(frame.score).padStart(2, "0")}</strong>
         </span>
       </div>
-      <div
-        className={styles.playArea}
-        onKeyDown={(event) => {
-          if (event.key === "ArrowUp" && event.target === action.current) {
-            event.preventDefault();
-            if (!event.repeat) activate();
-          }
-        }}
-      >
+      <div>
         <svg
           className={styles.scene}
           viewBox={`0 0 ${DOVE_GAME.width} ${DOVE_GAME.ground}`}
@@ -121,31 +116,31 @@ export function DoveFlight() {
           <path className={styles.hill} d="M0 206Q89 144 194 197T391 181T640 183V272H0Z" />
           <path className={styles.field} d="M0 239Q95 213 178 234T367 226T640 222V272H0Z" />
           <path className={styles.trail} d="M0 251Q108 227 184 249T385 239T640 236" />
-          {frame.towers
-            .filter((tower) => tower.id < COURSE_LENGTH)
-            .map((tower) => {
-              const gapTop = tower.gapTop;
-              const gapBottom = gapTop + DOVE_GAME.gapSize;
-              const middle = DOVE_GAME.towerWidth / 2;
-              return (
-                <g key={tower.id} className={styles.gate} transform={`translate(${tower.x} 0)`}>
-                  <path
-                    d={`M0 0H${DOVE_GAME.towerWidth}V${gapTop - 15}L${middle} ${gapTop}L0 ${gapTop - 15}Z`}
-                  />
-                  <path
-                    d={`M0 ${DOVE_GAME.ground}H${DOVE_GAME.towerWidth}V${gapBottom + 15}L${middle} ${gapBottom}L0 ${gapBottom + 15}Z`}
-                  />
-                  <path
-                    className={styles.windows}
-                    d={`M12 ${gapTop - 38}h7v12h-7zm17 0h7v12h-7zM12 ${gapBottom + 23}h7v12h-7zm17 0h7v12h-7z`}
-                  />
-                </g>
-              );
-            })}
-          {goalTower && phase !== "found" && (
-            <Sheep x={goalTower.x + 88} y={goalTower.gapTop + DOVE_GAME.gapSize / 2} />
+          {frame.towers.map((tower) => {
+            const gapTop = tower.gapTop;
+            const gapBottom = gapTop + DOVE_GAME.gapSize;
+            const middle = DOVE_GAME.towerWidth / 2;
+            return (
+              <g key={tower.id} className={styles.gate} transform={`translate(${tower.x} 0)`}>
+                <path
+                  d={`M0 0H${DOVE_GAME.towerWidth}V${gapTop - 15}L${middle} ${gapTop}L0 ${gapTop - 15}Z`}
+                />
+                <path
+                  d={`M0 ${DOVE_GAME.ground}H${DOVE_GAME.towerWidth}V${gapBottom + 15}L${middle} ${gapBottom}L0 ${gapBottom + 15}Z`}
+                />
+                <path
+                  className={styles.windows}
+                  d={`M12 ${gapTop - 38}h7v12h-7zm17 0h7v12h-7zM12 ${gapBottom + 23}h7v12h-7zm17 0h7v12h-7z`}
+                />
+              </g>
+            );
+          })}
+          {sheepTower && (
+            <Sheep
+              x={sheepTower.x + DOVE_GAME.towerWidth / 2}
+              y={sheepTower.gapTop + DOVE_GAME.gapSize / 2}
+            />
           )}
-          {phase === "found" && <Sheep x={282} y={210} />}
           <g
             transform={`translate(${DOVE_GAME.doveX} ${frame.y}) rotate(${phase === "ready" ? 0 : tilt}) scale(${DOVE_GAME.spriteScale})`}
           >
@@ -157,29 +152,15 @@ export function DoveFlight() {
           </g>
         </svg>
         <div className={styles.gameFooter}>
-          <button type="button" className={styles.primary} ref={action} onClick={activate}>
+          <button type="button" className={styles.primary} onClick={activate}>
             {label}
           </button>
-          {phase === "playing" && (
-            <button
-              type="button"
-              className={styles.secondary}
-              onClick={() => {
-                setPhase("paused");
-                action.current?.focus();
-              }}
-            >
-              Pause
-            </button>
-          )}
           <p className={styles.status} role="status">
             {status}
           </p>
         </div>
       </div>
-      <p className={styles.instructions}>
-        Tap the scene or use Space or ↑ when the game button is focused.
-      </p>
+      <p className={styles.instructions}>Tap the scene or press Space or ↑ to flap.</p>
     </section>
   );
 }
