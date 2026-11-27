@@ -10791,6 +10791,18 @@ html[data-theme="dark"] .locations-empty a {
   height: auto;
   margin-top: 0.8rem;
   border: 1px solid var(--line);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.not-found__dove-bob {
+  animation: not-found-dove-bob 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes not-found-dove-bob {
+  to {
+    transform: translateY(-6px);
+  }
 }
 
 .not-found__dove-wing {
@@ -10903,6 +10915,7 @@ html[data-theme="dark"] .locations-empty a {
 
 @media (prefers-reduced-motion: reduce) {
   .not-found__dove-flutter,
+  .not-found__dove-bob,
   .not-found__dove-wing {
     animation: none;
   }

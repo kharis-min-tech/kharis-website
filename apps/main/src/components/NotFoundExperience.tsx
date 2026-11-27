@@ -2,45 +2,26 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { advanceDoveGame, createDoveGame, DOVE_GAME } from "@/lib/dove-game";
 
 type GamePhase = "ready" | "playing" | "over";
-type GameFrame = { doveY: number; obstacleX: number; gapOffset: number; points: number };
-
-const initialFrame: GameFrame = { doveY: 170, obstacleX: 660, gapOffset: 0, points: 0 };
-const gapOffsets = [-28, -14, 0, 14, 28];
 
 export function NotFoundExperience() {
   const [phase, setPhase] = useState<GamePhase>("ready");
-  const [frame, setFrame] = useState(initialFrame);
+  const [frame, setFrame] = useState(createDoveGame);
   const phaseRef = useRef<GamePhase>("ready");
-  const doveY = useRef(initialFrame.doveY);
-  const velocityY = useRef(0);
-  const obstacleX = useRef(initialFrame.obstacleX);
-  const gapOffset = useRef(initialFrame.gapOffset);
-  const points = useRef(0);
-
-  const startGame = useCallback(() => {
-    doveY.current = initialFrame.doveY;
-    velocityY.current = 0;
-    obstacleX.current = initialFrame.obstacleX;
-    gapOffset.current = initialFrame.gapOffset;
-    points.current = 0;
-    setFrame(initialFrame);
-    phaseRef.current = "playing";
-    setPhase("playing");
-  }, []);
-
-  const flap = useCallback(() => {
-    if (phaseRef.current === "playing") velocityY.current = -6.8;
-  }, []);
+  const game = useRef(frame);
 
   const handleGameAction = useCallback(() => {
     if (phaseRef.current !== "playing") {
-      startGame();
+      game.current = createDoveGame();
+      setFrame(game.current);
+      phaseRef.current = "playing";
+      setPhase("playing");
       return;
     }
-    flap();
-  }, [flap, startGame]);
+    game.current = { ...game.current, velocity: DOVE_GAME.flapVelocity };
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -48,7 +29,7 @@ export function NotFoundExperience() {
       const target = event.target;
       if (target instanceof HTMLElement && /INPUT|TEXTAREA|BUTTON|A/.test(target.tagName)) return;
       event.preventDefault();
-      handleGameAction();
+      if (!event.repeat) handleGameAction();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -58,45 +39,19 @@ export function NotFoundExperience() {
     if (phase !== "playing") return;
     let raf = 0;
     let previousTime = 0;
-
     const tick = (time: number) => {
       if (!previousTime) previousTime = time;
-      const step = Math.min((time - previousTime) / 16.67, 2);
+      const elapsed = (time - previousTime) / 1000;
       previousTime = time;
-
-      velocityY.current = Math.min(8, velocityY.current + 0.38 * step);
-      doveY.current = Math.max(20, Math.min(280, doveY.current + velocityY.current * step));
-      obstacleX.current -= Math.min(7.4, 5.1 + points.current * 0.18) * step;
-      if (obstacleX.current < -46) {
-        obstacleX.current = 660;
-        points.current += 1;
-        const choices = gapOffsets.filter((offset) => offset !== gapOffset.current);
-        gapOffset.current = choices[Math.floor(Math.random() * choices.length)]!;
-      }
-
-      const obstacleOverlapsDove = obstacleX.current < 141 && obstacleX.current + 46 > 82;
-      const hitTower =
-        obstacleOverlapsDove &&
-        (doveY.current - 54 < 89 + gapOffset.current ||
-          doveY.current - 16 > 207 + gapOffset.current);
-      const nextFrame = {
-        doveY: doveY.current,
-        obstacleX: obstacleX.current,
-        gapOffset: gapOffset.current,
-        points: points.current,
-      };
-
-      if (hitTower) {
+      game.current = advanceDoveGame(game.current, elapsed);
+      setFrame(game.current);
+      if (game.current.over) {
         phaseRef.current = "over";
         setPhase("over");
-        setFrame(nextFrame);
-        return;
+      } else {
+        raf = requestAnimationFrame(tick);
       }
-
-      setFrame(nextFrame);
-      raf = requestAnimationFrame(tick);
     };
-
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [phase]);
@@ -104,10 +59,10 @@ export function NotFoundExperience() {
   const actionLabel = phase === "ready" ? "Play" : phase === "over" ? "Play again" : "Flap";
   const statusText =
     phase === "ready"
-      ? "Tap Play or press Space to guide the dove."
+      ? "Tap the game or press Space to start."
       : phase === "over"
-        ? `You scored ${frame.points} ${frame.points === 1 ? "point" : "points"}. Give it another go!`
-        : `${frame.points} ${frame.points === 1 ? "point" : "points"} collected. Keep flying!`;
+        ? `You scored ${frame.score} ${frame.score === 1 ? "point" : "points"}. Give it another go!`
+        : `${frame.score} ${frame.score === 1 ? "point" : "points"} collected. Keep flying!`;
 
   return (
     <section className="not-found" aria-labelledby="not-found-title">
@@ -120,14 +75,15 @@ export function NotFoundExperience() {
           <p className="not-found__game-404" aria-label="Error 404">
             404
           </p>
-          <p className="not-found__score" aria-label={`Points ${frame.points}`}>
+          <p className="not-found__score" aria-label={`Points ${frame.score}`}>
             <span>POINTS</span>
-            <strong>{String(frame.points).padStart(2, "0")}</strong>
+            <strong>{String(frame.score).padStart(2, "0")}</strong>
           </p>
         </div>
 
         <svg
           className="not-found__game-art"
+          onClick={handleGameAction}
           viewBox="0 0 640 300"
           role="img"
           aria-label="A dove flies between church towers. In the background: But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles, they shall run, and not be weary; and they shall walk, and not faint. Isaiah 40:31, King James Version."
@@ -185,66 +141,78 @@ export function NotFoundExperience() {
             <path d="M355 209 V168 L374 148 L393 168 V209Z" />
           </g>
 
-          <g transform={`translate(0 ${frame.doveY - initialFrame.doveY})`}>
-            <ellipse cx="115" cy="155" rx="27" ry="6" fill="#27183c" opacity=".14" />
-            <g transform="translate(112 142) scale(.7) translate(-112 -142)">
-              <g className={phase === "playing" ? "not-found__dove-flutter" : ""}>
-                <path
-                  d="M95 145 L75 128 L80 148 L69 161 L99 159Z"
-                  fill="#fff"
-                  stroke="#6f2fd2"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                />
-                <ellipse
-                  cx="112"
-                  cy="142"
-                  rx="27"
-                  ry="16"
-                  fill="#fff"
-                  stroke="#6f2fd2"
-                  strokeWidth="2"
-                />
-                <path
-                  className="not-found__dove-wing"
-                  d="M99 140 Q83 115 99 105 Q122 102 132 130 Q119 127 106 141Z"
-                  fill="#f4effb"
-                  stroke="#6f2fd2"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M97 121 Q108 113 119 123 M94 129 Q106 121 122 131"
-                  fill="none"
-                  stroke="#c9b4e4"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <circle cx="133" cy="132" r="11" fill="#fff" stroke="#6f2fd2" strokeWidth="2" />
-                <path
-                  d="M142 132 L154 136 L142 140Z"
-                  fill="#fff"
-                  stroke="#6f2fd2"
-                  strokeWidth="1.5"
-                  strokeLinejoin="round"
-                />
-                <circle cx="136" cy="130" r="1.7" fill="#211a27" />
-              </g>
+          <g
+            className={phase === "ready" ? "not-found__dove-bob" : undefined}
+            data-dove-y={frame.y}
+            data-dove-velocity={frame.velocity}
+          >
+            <g
+              transform={`translate(${DOVE_GAME.doveX} ${frame.y}) rotate(${phase === "playing" ? Math.max(DOVE_GAME.minTilt, Math.min(DOVE_GAME.maxTilt, frame.velocity / DOVE_GAME.tiltVelocityDivisor)) : 0}) scale(${DOVE_GAME.spriteScale}) translate(-112 -133)`}
+            >
+              <path
+                d="M95 145 L75 128 L80 148 L69 161 L99 159Z"
+                fill="#fff"
+                stroke="#6f2fd2"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <ellipse
+                cx="112"
+                cy="142"
+                rx="27"
+                ry="16"
+                fill="#fff"
+                stroke="#6f2fd2"
+                strokeWidth="2"
+              />
+              <path
+                className="not-found__dove-wing"
+                d="M99 140 Q83 115 99 105 Q122 102 132 130 Q119 127 106 141Z"
+                fill="#f4effb"
+                stroke="#6f2fd2"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M97 121 Q108 113 119 123 M94 129 Q106 121 122 131"
+                fill="none"
+                stroke="#c9b4e4"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <circle cx="133" cy="132" r="11" fill="#fff" stroke="#6f2fd2" strokeWidth="2" />
+              <path
+                d="M142 132 L154 136 L142 140Z"
+                fill="#fff"
+                stroke="#6f2fd2"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
+              <circle cx="136" cy="130" r="1.7" fill="#211a27" />
             </g>
           </g>
 
-          <g transform={`translate(${frame.obstacleX} 0)`} fill="#6034a0">
-            <g transform={`translate(0 ${frame.gapOffset})`}>
-              <path d="M0 -40 H46 V67 L23 89 L0 67Z" />
-              <path d="M0 340 H46 V229 L23 207 L0 229Z" />
+          {frame.towers.map((tower) => (
+            <g
+              key={tower.id}
+              transform={`translate(${tower.x} 0)`}
+              fill="#6034a0"
+              data-tower-x={tower.x}
+              data-gap-top={tower.gapTop}
+            >
               <path
-                d="M12 45 h8 v16 h-8z M27 45 h8 v16 h-8z M12 239 h8 v16 h-8z M27 239 h8 v16 h-8z"
+                d={`M0 0 H${DOVE_GAME.towerWidth} V${tower.gapTop - 22} L${DOVE_GAME.towerWidth / 2} ${tower.gapTop} L0 ${tower.gapTop - 22}Z`}
+              />
+              <path
+                d={`M0 300 H${DOVE_GAME.towerWidth} V${tower.gapTop + DOVE_GAME.gapSize + 22} L${DOVE_GAME.towerWidth / 2} ${tower.gapTop + DOVE_GAME.gapSize} L0 ${tower.gapTop + DOVE_GAME.gapSize + 22}Z`}
+              />
+              <path
+                d={`M12 ${tower.gapTop - 44} h8 v16 h-8z M27 ${tower.gapTop - 44} h8 v16 h-8z M12 ${tower.gapTop + DOVE_GAME.gapSize + 32} h8 v16 h-8z M27 ${tower.gapTop + DOVE_GAME.gapSize + 32} h8 v16 h-8z`}
                 fill="#f6c94a"
                 opacity=".86"
               />
-              <path d="M23 0 V-17 M19 -12 h8 M23 283 V300" stroke="#d4920a" strokeWidth="4" />
             </g>
-          </g>
+          ))}
         </svg>
 
         <div className="not-found__game-footer">
@@ -257,7 +225,7 @@ export function NotFoundExperience() {
           </button>
         </div>
         <p className="not-found__controls">
-          Space or ↑ to flap · tap the button on mobile ·{" "}
+          Space, ↑ or tap the game to flap ·{" "}
           <a
             className="not-found__verse-link"
             href="https://www.biblegateway.com/passage/?search=Isaiah%2040%3A31&version=KJV"
