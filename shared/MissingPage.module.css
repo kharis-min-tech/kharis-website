@@ -1,0 +1,343 @@
+.page {
+  flex: 1;
+  --ink: #241637;
+  --muted-ink: #544667;
+  --paper: #fbf9ff;
+  --card: #fff;
+  --accent: #5e1cbb;
+  --action: #5916ad;
+  --action-ink: #fff;
+  --rule: #d8c9e7;
+  --land-sky: #e6daff;
+  --land-sun: #ffe0a0;
+  --land-cloud: #fff8ed;
+  --land-hill: #bba1e8;
+  --land-field: #9d7cca;
+  --land-trail: #f6d88a;
+  --tower: #412260;
+  --outline: #2c1746;
+  --trim: 1px;
+  --corner: 0.85rem;
+  --shadow: 0 15px 35px #2c174614;
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(7.5rem, 12vw, 10rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 7vw, 6rem);
+}
+
+:global(html[data-theme="dark"]) .page,
+:global(html.dark) .page {
+  --ink: #f8f0ff;
+  --muted-ink: #ddcdec;
+  --paper: #211732;
+  --card: #2e2143;
+  --accent: #e0c7ff;
+  --rule: #785e94;
+  --shadow: 0 15px 35px #130d20a0;
+}
+
+.comic {
+  --ink: #171024;
+  --muted-ink: #44334d;
+  --paper: #f8efff;
+  --card: #fffaf0;
+  --accent: #631ea3;
+  --action: #ffdd50;
+  --action-ink: #201329;
+  --rule: #241335;
+  --land-sky: #c8a0fa;
+  --land-sun: #ffdb43;
+  --land-cloud: #fff9df;
+  --land-hill: #9a69dc;
+  --land-field: #7243ad;
+  --land-trail: #ffe878;
+  --tower: #49217b;
+  --outline: #241335;
+  --trim: 3px;
+  --corner: 0;
+  --shadow: 6px 6px 0 var(--rule);
+  background-image: radial-gradient(#7745a129 1px, transparent 1px);
+  background-size: 14px 14px;
+  padding-top: clamp(4rem, 8vw, 8rem);
+  padding-right: max(clamp(1rem, 4vw, 3rem), 1.375rem);
+}
+
+:global(html[data-theme="dark"]) .comic,
+:global(html.dark) .comic {
+  --paper: #1b1229;
+  --card: #332148;
+  --rule: #caa9ef;
+  --shadow: 6px 6px 0 #a47cd1;
+}
+
+.spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  max-width: 76rem;
+  margin-inline: auto;
+}
+
+.copy {
+  min-width: 0;
+}
+
+.code {
+  width: fit-content;
+  margin: 0 0 0.85rem;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.comic .code {
+  padding: 0.4rem 0.65rem;
+  transform: rotate(-2deg);
+  border: var(--trim) solid var(--rule);
+  background: #ffdd50;
+  color: #241335;
+}
+
+.copy h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(2.65rem, 6vw, 5.45rem);
+  font-weight: 850;
+  line-height: 0.99;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+.comic .copy h1 {
+  font-family: var(--font-anton), Impact, sans-serif;
+  font-size: clamp(2.7rem, 6vw, 5.15rem);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+.lede {
+  max-width: 35ch;
+  margin: 1.2rem 0 1.5rem;
+  color: var(--muted-ink);
+  font-size: clamp(1rem, 2vw, 1.19rem);
+  line-height: 1.6;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
+  border: var(--trim) solid transparent;
+  border-radius: var(--corner);
+  background: var(--action);
+  color: var(--action-ink);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.secondary {
+  border-color: var(--rule);
+  background: var(--card);
+  color: var(--ink);
+}
+
+.comic :is(.primary, .secondary) {
+  border-color: var(--rule);
+}
+
+.primary:hover,
+.secondary:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.game {
+  min-width: 0;
+  border: var(--trim) solid var(--rule);
+  border-radius: var(--corner);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.gameHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.8rem;
+  padding: 0.9rem clamp(0.8rem, 3vw, 1.3rem);
+}
+
+.gameHeader h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  font-weight: 850;
+}
+
+.comic .gameHeader h2 {
+  font-family: var(--font-anton), Impact, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.score {
+  color: var(--muted-ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.score strong {
+  margin-inline-start: 0.4rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-block: var(--trim) solid var(--rule);
+}
+
+.sky {
+  fill: var(--land-sky);
+}
+.sun {
+  fill: var(--land-sun);
+}
+.cloud {
+  fill: var(--land-cloud);
+}
+.hill {
+  fill: var(--land-hill);
+}
+.field {
+  fill: var(--land-field);
+}
+.trail {
+  fill: none;
+  stroke: var(--land-trail);
+  stroke-width: 4;
+  stroke-dasharray: 8 10;
+}
+
+.gate {
+  fill: var(--tower);
+  stroke: var(--outline);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.windows {
+  fill: var(--land-sun);
+  stroke: none;
+}
+
+.dove,
+.sheep {
+  fill: #fffaf0;
+  stroke: var(--outline);
+  color: var(--outline);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.comic :is(.dove, .sheep, .gate, .sun) {
+  stroke: var(--outline);
+  stroke-width: 4;
+  paint-order: stroke fill;
+}
+
+.wing {
+  fill: none;
+  stroke: #8157ad;
+}
+
+.gameFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem clamp(0.8rem, 3vw, 1.3rem) 0;
+}
+
+.status {
+  flex: 1 1 12rem;
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.87rem;
+  line-height: 1.4;
+}
+
+.status:empty {
+  flex: 0 0 0;
+  height: 0;
+}
+
+.instructions {
+  margin: 0;
+  padding: 0.65rem clamp(0.8rem, 3vw, 1.3rem) 0.95rem;
+  color: var(--muted-ink);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.verse {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border-inline-start: 3px solid var(--accent);
+  color: var(--muted-ink);
+}
+
+.verse blockquote {
+  max-width: 70ch;
+  margin: 0;
+  color: inherit;
+  line-height: 1.55;
+}
+
+.verse figcaption {
+  margin-top: 0.5rem;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.comic .verse {
+  border: var(--trim) solid var(--rule);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+@media (min-width: 900px) {
+  .spread {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+
+  .verse {
+    grid-column: 1 / -1;
+  }
+}
