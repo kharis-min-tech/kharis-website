@@ -52,4 +52,19 @@ describe("404 dove game", () => {
     expect(slow.y).toBeCloseTo(fast.y, 6);
     expect(slow.towers[0]!.x).toBeCloseTo(fast.towers[0]!.x, 6);
   });
+
+  it("gives the dove time to descend and keeps tower pairs spaced apart", () => {
+    let game = { ...createDoveGame(), y: 110, velocity: 0 };
+    for (let i = 0; i < 18; i++) game = advanceDoveGame(game, 1 / 60);
+    expect(game.y - 110).toBeLessThan(35);
+
+    const beforeSpawn = {
+      ...createDoveGame(),
+      velocity: 0,
+      towers: [{ id: 0, x: DOVE_GAME.width - DOVE_GAME.towerSpacing, gapTop: 80, passed: false }],
+    };
+    const spawned = advanceDoveGame(beforeSpawn, 1 / 120);
+    expect(spawned.towers).toHaveLength(2);
+    expect(spawned.towers[1]!.x - spawned.towers[0]!.x).toBeCloseTo(DOVE_GAME.towerSpacing, 6);
+  });
 });
