@@ -58,6 +58,7 @@ export function MoreIssues() {
       <div className="lb-more__pin">
         <span className="lb-more__rays" aria-hidden="true" />
         <motion.div className="lb-more__head" style={reduce ? undefined : { scale: titleScale }}>
+          <p className="lb-caption">Chapter 3</p>
           <h2 id="lb-more-title" className="lb-more__title">
             More <span>adventures</span>
           </h2>

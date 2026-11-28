@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import type { ChurchEvent } from "@/lib/events";
+import { ClothBanner } from "./ClothBanner";
 import { SCRUB_SPRING } from "./motion";
 
 /**
@@ -29,10 +30,17 @@ export function YourChapter({ events }: { events: ChurchEvent[] }) {
       data-chapter="Your chapter"
       aria-labelledby="lb-you-title"
     >
+      <h2 id="lb-you-title" className="sr-only">
+        Your chapter starts here
+      </h2>
       <div className="lb-you__banner">
-        <h2 id="lb-you-title" className="lb-you__title">
-          Your chapter starts here
-        </h2>
+        <ClothBanner
+          lines={["Your chapter", "starts here"]}
+          label="Your chapter starts here"
+          aspect={2.8}
+          accent="#630ed4"
+          wind={1.2}
+        />
       </div>
 
       <div className="lb-you__grid">
