@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { LocationBranchView } from "./LocationBranchView";
 import { listBranchData, getBranchBySlug } from "@/lib/branches";
+import { isKp2Branch } from "@/lib/contact-branches";
 
 interface PageProps {
   params: Promise<{
@@ -17,9 +18,14 @@ interface PageProps {
 export async function generateStaticParams() {
   const branches = await listBranchData();
 
-  return branches.map((branch) => ({
-    branchId: branch.slug,
-  }));
+  /* KP2 congregations have their own site and are no longer listed in the
+   * directory, so main must not build pages for them either - otherwise they
+   * stay reachable by URL, and indexable, with nothing linking to them. */
+  return branches
+    .filter((branch) => !isKp2Branch(branch))
+    .map((branch) => ({
+      branchId: branch.slug,
+    }));
 }
 
 // ======================================================
@@ -31,7 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const branch = await getBranchBySlug(branchId);
 
-  if (!branch) {
+  /* Same test as the page itself, so a KP2 slug is never described as a real
+   * branch in the head of a document that is about to 404. */
+  if (!branch || isKp2Branch(branch)) {
     return {
       title: "Branch unavailable | Kharis Church",
       robots: {
@@ -88,7 +96,10 @@ export default async function BranchPage({ params }: PageProps) {
 
   const branch = await getBranchBySlug(branchId);
 
-  if (!branch) {
+  /* Leaving it out of generateStaticParams is not enough on its own:
+   * dynamicParams defaults to true, so an unlisted slug is still rendered on
+   * demand. A KP2 branch has to 404 here to actually be gone from main. */
+  if (!branch || isKp2Branch(branch)) {
     notFound();
   }
 

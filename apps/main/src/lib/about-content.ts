@@ -156,11 +156,10 @@ export const ABOUT = {
 /**
  * The founders' story, cut into the three beats it is told in.
  *
- * The cut lives here rather than in a component because both tellings use it:
- * the scrolling page's Leadership panel and the book's closing spread. It was
- * written inline in AboutChapters, which meant the book could not reach it
- * without copying a regex and three headings that would then have to be kept
- * in step by hand.
+ * The cut lives here rather than in the book because it was once written
+ * inline in a component, which meant anything else wanting the same three
+ * beats had to copy a regex and three headings and keep them in step by
+ * hand. Here it is read, not duplicated.
  *
  * The split is on sentence boundaries, so editing leadership.body reflows the
  * beats; only add or remove whole sentences and the headings keep their sense.

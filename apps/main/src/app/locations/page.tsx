@@ -22,7 +22,10 @@ export const metadata: Metadata = {
 };
 
 export default async function LocationsPage() {
-  const [items, full] = await Promise.all([listBranches(), listBranchData()]);
+  const [allItems, allPins] = await Promise.all([listBranches(), listBranchData()]);
+  const items = allItems.filter((b) => b.family !== "KP2");
+  const kp2 = new Set(allItems.filter((b) => b.family === "KP2").map((b) => b.id));
+  const full = allPins.filter((b) => !kp2.has(b.slug));
   // Send map coordinates and a photo, without duplicating full branch records.
   const pins = full.flatMap((branch) => {
     const venue = sundayVenue(branch);

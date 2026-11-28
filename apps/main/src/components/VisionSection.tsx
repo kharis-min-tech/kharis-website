@@ -35,7 +35,7 @@ export function VisionSection({ id = "vision" }: { id?: string }) {
           <p className="eyebrow">Stay plugged in</p>
           <h2 className="section-title mt-2">Messages on the go.</h2>
           <p className="mx-auto mt-4 max-w-xl text-[0.98rem] font-semibold leading-relaxed text-muted">
-            Romans 10:17. Faith comes by hearing, and hearing by the word of God.
+            Romans 10:17 &ldquo;Faith comes by hearing, and hearing by the word of God.&rdquo;
           </p>
         </Reveal>
 

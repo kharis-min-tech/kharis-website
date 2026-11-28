@@ -103,8 +103,8 @@ export function BranchTemplate({ branchData, extraSections }: BranchTemplateProp
    * anchored to it and sat permanently "finished": the arrival animations
    * were attached and never ran a frame. `clip` keeps the horizontal
    * overflow off, which the full-bleed band needs, without creating a scroll
-   * container. It is what about.css, contact-page.css and give.css already
-   * use on their own page wrappers.
+   * container. It is what contact-page.css and give.css already use on their
+   * own page wrappers.
    */
   return (
     <div className="branch-page min-h-screen font-sans overflow-x-clip flex flex-col text-[var(--branch-ink)]">
