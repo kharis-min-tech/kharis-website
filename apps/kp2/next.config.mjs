@@ -49,6 +49,9 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [{ source: "/mission", destination: "/about", permanent: true }];
+  },
   async headers() {
     return [
       {

@@ -16,15 +16,27 @@
     height: 100%;
   }
 }
-.kp-mission-hero h1,
+.kp-about-intro {
+  color: #ffda53;
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-shadow: 2px 2px 0 #25152e;
+}
+.kp-mission-hero h1 {
+  color: #fff;
+  font-size: clamp(2.75rem, 5.56vw, 5rem);
+  text-shadow: 4px 4px 0 #151218;
+}
+
 .kp-media-hero h1 {
   color: #fff;
-  font-size: clamp(4.5rem, 12vw, 8.5rem);
+  font-size: clamp(4rem, 9vw, 7.25rem);
   text-shadow: 4px 4px 0 #151218;
 }
 .kp-media-hero h1 {
   max-width: 7ch;
-  font-size: clamp(4rem, 9vw, 7.25rem);
   text-shadow: 0 2px 24px rgba(9, 10, 30, 0.35);
 }
 .kp-quiz-hero {
@@ -838,12 +850,8 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
 }
 .kp-app-step-copy {
   width: 100%;
-  min-height: 116px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   text-align: center;
-  margin-top: 0.9rem;
+  margin-top: 0.5rem;
 }
 .kp-app-step .kp-app-step-number {
   margin: 0 0 0.6rem;
@@ -909,9 +917,6 @@ html[data-kp-turn="leave"] .kp-turn__stamp {
   .kp-app-steps {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
-  }
-  .kp-app-step-copy {
-    min-height: 0;
   }
   .kp-app-phone {
     width: min(76vw, 16rem);

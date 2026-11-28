@@ -12,7 +12,7 @@ const KHARIS_CHURCH_URL = "https://kharis-main.itadmin-a94.workers.dev/";
 
 const NAV_ITEMS: NavItem[] = [
   { label: "HOME", to: "/" },
-  { label: "ABOUT", to: "/mission" },
+  { label: "ABOUT", to: "/about" },
   {
     label: "COMMUNITY",
     to: "/quiz",

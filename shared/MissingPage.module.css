@@ -1,0 +1,388 @@
+.page {
+  --ink: var(--fg);
+  --muted-ink: var(--muted);
+  --paper: var(--surface-1);
+  --card: var(--surface-0);
+  --accent: var(--purple-fill);
+  --rule: var(--line);
+  --land-sky: color-mix(in srgb, var(--purple-fill) 14%, var(--card));
+  --land-sun: var(--yellow);
+  --land-cloud: var(--card);
+  --land-hill: color-mix(in srgb, var(--purple-fill) 35%, var(--card));
+  --land-field: color-mix(in srgb, var(--purple-fill) 54%, var(--card));
+  --land-trail: var(--yellow);
+  --tower: var(--surface-brand);
+  --art-outline: var(--surface-brand);
+  --trim: 1px;
+  flex: 1;
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(7rem, 11vw, 9rem) var(--gutter) calc(var(--pad-lg) * 1.5);
+}
+
+:global(html[data-theme="dark"]) .page {
+  --accent: var(--yellow);
+}
+
+.comic {
+  --ink: var(--on-surface);
+  --muted-ink: var(--on-surface-variant);
+  --paper: var(--background);
+  --card: var(--surface-container-lowest);
+  --accent: var(--primary);
+  --rule: var(--on-surface);
+  --land-sky: var(--primary-fixed);
+  --land-sun: var(--secondary-container);
+  --land-cloud: var(--on-primary);
+  --land-hill: color-mix(in srgb, var(--primary) 39%, var(--primary-fixed));
+  --land-field: color-mix(in srgb, var(--primary) 66%, var(--primary-fixed));
+  --land-trail: var(--secondary-container);
+  --tower: var(--primary-container);
+  --art-outline: var(--on-primary-fixed);
+  --trim: 2px;
+  --gutter: var(--spacing-margin-mobile, 1rem);
+  --page-max: 80rem;
+  --pad-lg: 3rem;
+}
+
+:global(html.dark) .comic {
+  --accent: var(--secondary-container);
+}
+
+@media (min-width: 1024px) {
+  .comic {
+    --gutter: var(--spacing-margin-desktop, 4rem);
+  }
+}
+
+.spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  max-width: var(--page-max);
+  margin-inline: auto;
+}
+
+.copy {
+  min-width: 0;
+}
+
+.code {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.8rem;
+  width: fit-content;
+  margin: 0 0 0.85rem;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.comic .code {
+  padding: 0.4rem 0.65rem;
+  border: var(--trim) solid var(--rule);
+  background: var(--secondary-container);
+  color: var(--on-secondary-fixed);
+}
+
+.copy h1 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(2.35rem, 5vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.comic .copy h1 {
+  font-family: var(--font-display-lg, var(--font-anton)), Impact, sans-serif;
+  font-size: clamp(2.7rem, 6vw, 5.15rem);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+.lede {
+  max-width: 35ch;
+  margin: 1.2rem 0 1.5rem;
+  color: var(--muted-ink);
+  font-size: clamp(1rem, 2vw, 1.19rem);
+  line-height: 1.6;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.comicAction {
+  padding: 0.7rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.game {
+  min-width: 0;
+  border: var(--trim) solid var(--rule);
+  background: var(--card);
+}
+
+.comic .game {
+  box-shadow: 6px 6px 0 var(--rule);
+}
+
+.gameHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.8rem;
+  padding: 0.9rem clamp(0.8rem, 3vw, 1.3rem);
+}
+
+.gameHeader h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  font-weight: 800;
+}
+
+.comic .gameHeader h2 {
+  font-family: var(--font-display-lg, var(--font-anton)), Impact, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.score {
+  color: var(--muted-ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.score strong {
+  margin-inline-start: 0.4rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.playArea {
+  position: relative;
+}
+
+.sighting {
+  position: absolute;
+  inset-block-start: 0.65rem;
+  inset-inline-end: 0.65rem;
+  pointer-events: none;
+}
+
+.sighting:not(:empty) {
+  max-width: calc(100% - 1.3rem);
+  padding: 0.45rem 0.65rem;
+  border: var(--trim) solid var(--rule);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.comic .sighting:not(:empty) {
+  background: var(--secondary-container);
+  color: var(--on-secondary-fixed);
+  box-shadow: 3px 3px 0 var(--rule);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-block: var(--trim) solid var(--rule);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.sky {
+  fill: var(--land-sky);
+}
+.sun {
+  fill: var(--land-sun);
+}
+.cloud {
+  fill: var(--land-cloud);
+}
+.hill {
+  fill: var(--land-hill);
+}
+.field {
+  fill: var(--land-field);
+}
+.trail {
+  fill: none;
+  stroke: var(--land-trail);
+  stroke-width: 4;
+  stroke-dasharray: 8 10;
+}
+
+.gate {
+  fill: var(--tower);
+  stroke: var(--art-outline);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.windows {
+  fill: var(--land-sun);
+  stroke: none;
+}
+
+.dove,
+.sheep {
+  fill: #fffaf0;
+  stroke: var(--art-outline);
+  color: var(--art-outline);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.comic :is(.dove, .sheep, .gate, .sun) {
+  stroke: var(--art-outline);
+  stroke-width: 4;
+  paint-order: stroke fill;
+}
+
+.wing {
+  fill: none;
+  stroke: #8157ad;
+}
+
+.gameFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem clamp(0.8rem, 3vw, 1.3rem) 0;
+}
+
+.status {
+  flex: 1 1 12rem;
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.87rem;
+  line-height: 1.4;
+}
+
+.status:empty {
+  flex: 0 0 0;
+  height: 0;
+}
+
+.instructions {
+  margin: 0;
+  padding: 0.65rem clamp(0.8rem, 3vw, 1.3rem) 0.95rem;
+  color: var(--muted-ink);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.verse {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted-ink);
+}
+
+.verse blockquote {
+  max-width: 70ch;
+  margin: 0;
+  color: inherit;
+  line-height: 1.55;
+}
+
+.errorNumber {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.scriptureColon {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.scriptureColon:is(:hover, :focus-visible) {
+  background: var(--yellow, var(--secondary-container));
+  color: var(--art-outline);
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+
+.verse {
+  scroll-margin-top: 6rem;
+}
+
+.verse:target {
+  border-color: var(--accent);
+  background: var(--card);
+}
+
+.verse mark {
+  background: var(--yellow, var(--secondary-container));
+  color: var(--art-outline);
+  font-weight: 700;
+}
+
+.verse figcaption {
+  margin-top: 0.45rem;
+  font-size: 0.875rem;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+@media (min-width: 900px) {
+  .spread {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+
+  .verse {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :global(html):has(.page) {
+    scroll-behavior: smooth;
+  }
+
+  .verse {
+    transition:
+      background-color 320ms ease-out,
+      border-color 320ms ease-out;
+  }
+
+  .doveIdle {
+    animation: doveIdle 1.5s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes doveIdle {
+  to {
+    transform: translateY(-6px);
+  }
+}

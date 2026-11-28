@@ -19,7 +19,7 @@ type Panel = {
 
 const PANELS: Panel[] = [
   {
-    href: "/mission",
+    href: "/about",
     title: "About Us",
     src: KP2_PHOTOS.baptismFamily.src,
     alt: KP2_PHOTOS.baptismFamily.alt,

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { withBasePath } from "@/lib/base-path";
 
@@ -13,6 +13,10 @@ function ChatMark() {
 }
 
 type Turn = { role: "user" | "assistant"; content: string };
+
+type Answer = { state: "pending" } | { state: "received" | "failed"; text: string };
+
+type Exchange = { id: number; question: string; answer: Answer };
 
 const WELCOME =
   "Hi, I'm Grace, your assistant. I can help you find a KP2 branch, a service, or the right page.";
@@ -71,37 +75,60 @@ export function GraceChat() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [messages, setMessages] = useState<Turn[]>([{ role: "assistant", content: WELCOME }]);
+  const [exchanges, setExchanges] = useState<Exchange[]>([]);
+  const nextId = useRef(0);
+  const exchangesRef = useRef<Exchange[]>([]);
+  const logRef = useRef<HTMLDivElement>(null);
+  const followLatest = useRef(true);
+
+  useEffect(() => {
+    const log = logRef.current;
+    if (log && followLatest.current) log.scrollTop = log.scrollHeight;
+  }, [open, exchanges]);
+
+  function publish(updated: Exchange[]) {
+    exchangesRef.current = updated;
+    setExchanges(updated);
+  }
 
   async function send(text: string) {
-    const content = text.trim();
-    if (!content || busy) return;
-    setError("");
-    const next = [...messages, { role: "user" as const, content }];
-    setMessages(next);
+    const question = text.trim();
+    if (!question) return;
+    const id = nextId.current++;
+    const exchange: Exchange = { id, question, answer: { state: "pending" } };
+    const next = [...exchangesRef.current, exchange];
+    followLatest.current = true;
+    publish(next);
     setInput("");
-    setBusy(true);
+
+    function setAnswer(answer: Answer) {
+      publish(exchangesRef.current.map((item) => (item.id === id ? { ...item, answer } : item)));
+    }
+
+    // Snapshot what the visitor had said and received when they sent this question.
+    const messages = next.flatMap<Turn>(({ question, answer }) => {
+      const turns: Turn[] = [{ role: "user", content: question }];
+      if (answer.state === "received") turns.push({ role: "assistant", content: answer.text });
+      return turns;
+    });
     try {
       const response = await fetch(withBasePath("/api/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          page: pathname || "/",
-          messages: next.map((turn) => ({ role: turn.role, content: turn.content })),
-        }),
+        body: JSON.stringify({ page: pathname || "/", messages: messages.slice(-12) }),
+        signal: AbortSignal.timeout(60_000),
       });
       const data = (await response.json()) as { ok?: boolean; reply?: string; error?: string };
-      if (!response.ok || !data.ok || !data.reply) {
-        setError(data.error || "I'm a bit busy right now, please try again in a moment.");
+      if (!response.ok || !data.ok || !data.reply?.trim()) {
+        setAnswer({
+          state: "failed",
+          text: data.error || "Grace couldn't reply. Please try again.",
+        });
         return;
       }
-      setMessages((current) => [...current, { role: "assistant", content: data.reply! }]);
+      setAnswer({ state: "received", text: data.reply });
     } catch {
-      setError("I'm a bit busy right now, please try again in a moment.");
-    } finally {
-      setBusy(false);
+      setAnswer({ state: "failed", text: "Grace couldn't reply. Please try again." });
     }
   }
 
@@ -126,34 +153,52 @@ export function GraceChat() {
               Close
             </button>
           </header>
-          <div className="kp-grace__log">
-            {messages.map((turn, index) => (
-              <div key={index}>
-                <div className={`kp-grace__bubble kp-grace__bubble--${turn.role}`}>
-                  <Reply text={turn.content} />
+          <div
+            className="kp-grace__log"
+            role="log"
+            aria-label="Conversation with Grace"
+            ref={logRef}
+            onScroll={(event) => {
+              const log = event.currentTarget;
+              followLatest.current = log.scrollHeight - log.scrollTop - log.clientHeight < 32;
+            }}
+          >
+            <div className="kp-grace__bubble kp-grace__bubble--assistant">{WELCOME}</div>
+            {exchanges.length === 0 && (
+              <div className="kp-grace__chips">
+                {CHIPS.map((chip) => (
+                  <button key={chip.label} type="button" onClick={() => void send(chip.prompt)}>
+                    {chip.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {exchanges.map(({ id, question, answer }) => (
+              <div key={id}>
+                <div className="kp-grace__bubble kp-grace__bubble--user">
+                  <Reply text={question} />
                 </div>
-                {index === 0 && messages.length === 1 ? (
-                  <div className="kp-grace__chips">
-                    {CHIPS.map((chip) => (
-                      <button key={chip.label} type="button" onClick={() => void send(chip.prompt)}>
-                        {chip.label}
-                      </button>
-                    ))}
+                {answer.state === "received" ? (
+                  <div className="kp-grace__bubble kp-grace__bubble--assistant">
+                    <Reply text={answer.text} />
                   </div>
-                ) : null}
+                ) : answer.state === "failed" ? (
+                  <p className="kp-grace__error">{answer.text}</p>
+                ) : (
+                  <p className="kp-grace__status">Grace is typing…</p>
+                )}
               </div>
             ))}
-            {busy ? <p className="kp-grace__error">Grace is typing…</p> : null}
           </div>
-          {error ? <p className="kp-grace__error">{error}</p> : null}
           <form className="kp-grace__form" onSubmit={onSubmit}>
             <input
               value={input}
               onChange={(event) => setInput(event.target.value)}
+              maxLength={1500}
               placeholder="Ask Grace"
               aria-label="Message Grace"
             />
-            <button type="submit" disabled={busy}>
+            <button type="submit" disabled={!input.trim()}>
               Send
             </button>
           </form>

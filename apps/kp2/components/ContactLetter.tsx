@@ -106,7 +106,7 @@ export function ContactLetter({
               Start with a <em>few lines.</em>
             </h2>
             <p className="kp-write__sub">
-              Tell us what&apos;s on your heart. Your message goes to the Kharis Phase 2 team.
+              Tell us what&apos;s on your heart. Whatever it is, it matters to us.
             </p>
           </header>
 
@@ -225,7 +225,7 @@ export function ContactLetter({
                     rows={5}
                     aria-invalid={Boolean(errors.message)}
                     aria-describedby={errors.message ? "kp-err-message" : undefined}
-                    placeholder="Here's what's on my heart…"
+                    placeholder="Tell us what's on your heart…"
                     value={form.message}
                     onChange={(e) => set("message")(e.target.value)}
                   />
@@ -285,10 +285,17 @@ export function ContactLetter({
                 01
               </span>
               <div>
-                <h3>You write</h3>
-                <p>
-                  A few lines is plenty. Visiting, praying, hurting or curious, it all belongs here.
-                </p>
+                <h3>Tell us how we can help</h3>
+                <p>We look forward to hearing from you.</p>
+              </div>
+            </li>
+            <li>
+              <span className="kp-steps__num" aria-hidden="true">
+                02
+              </span>
+              <div>
+                <h3>Your words matter</h3>
+                <p>Whatever you share is received with care.</p>
               </div>
             </li>
             <li>
@@ -296,10 +303,8 @@ export function ContactLetter({
                 03
               </span>
               <div>
-                <h3>Look out for a reply</h3>
-                <p>
-                  We&apos;ll reply by email. Visiting? We&apos;ll help you find a nearby branch.
-                </p>
+                <h3>Come and experience Kharis</h3>
+                <p>We&apos;d love to meet you.</p>
               </div>
             </li>
           </ol>

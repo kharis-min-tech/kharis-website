@@ -5,7 +5,6 @@ import { FooterWorld } from "@/components/FooterWorld";
 import { TikTokIcon } from "@/components/TikTokIcon";
 import { TIKTOK_URL } from "@/lib/social";
 const eaLogoLight = "https://images.kharis.org/site-images/kp2/7034e8bd749d082a/ea-logo-light.png";
-const eaLogoDark = "https://images.kharis.org/site-images/kp2/8d53006577293048/ea-logo-dark.png";
 
 const KHARIS_MAIN_URL = "https://kharis-main.itadmin-a94.workers.dev/";
 
@@ -20,7 +19,7 @@ const COLUMNS: FooterColumn[] = [
     title: "About",
     titleColor: "text-primary",
     links: [
-      { label: "Mission", to: "/mission" },
+      { label: "About Us", to: "/about" },
       { label: "Kharis Church", to: KHARIS_MAIN_URL, external: true },
       { label: "Governance", to: "/governance" },
     ],
@@ -160,15 +159,7 @@ export function SiteFooter() {
           <img
             src={eaLogoLight}
             alt="Evangelical Alliance, together making Jesus known"
-            className="block h-auto w-[min(78vw,300px)] dark:hidden xl:justify-self-end"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            src={eaLogoDark}
-            alt=""
-            aria-hidden="true"
-            className="hidden h-auto w-[min(78vw,300px)] dark:block xl:justify-self-end"
+            className="block h-auto w-[min(78vw,300px)] xl:justify-self-end"
             loading="lazy"
             decoding="async"
           />
