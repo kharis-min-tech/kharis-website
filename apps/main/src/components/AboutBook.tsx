@@ -54,10 +54,11 @@
  * here is decorative or duplicated, and no face contains a link, so there is
  * nothing for a keyboard to get caught on behind a turned page.
  *
- * AboutPageSwitch decides whether this renders at all: under
- * prefers-reduced-motion, on a narrow screen and on the server, the scrolling
- * AboutExperience shows instead. The book is a way of presenting the content,
- * never the only way to reach it.
+ * This is now the only telling of the About page - the scrolling version it
+ * used to share the route with has been removed - so it renders on the server
+ * too, and has to read as an ordinary document with no JavaScript: headings,
+ * text and images straight out of lib/about-content.ts. AboutPageSwitch
+ * decides only its shape, a spread or a single page, by width.
  */
 "use client";
 
@@ -343,7 +344,14 @@ const FACES: Face[] = [
   },
   {
     folio: 10,
-    render: () => <Pastor pastor={ABOUT.leadership.pastors[1]} />,
+    render: () => (
+      <>
+        <h3 className="about-book__title" aria-hidden>
+          &nbsp;
+        </h3>
+        <Pastor pastor={ABOUT.leadership.pastors[1]} />
+      </>
+    ),
   },
 
   /* 11 and 12: the journey they have made together. */
