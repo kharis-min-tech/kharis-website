@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 export default function NotFound() {
   return (
     <main className="site-page not-found-page text-fg">
-      <SiteHeader />
+      <SiteHeader tone="light" />
       <NotFoundExperience />
       <SiteFooter />
     </main>
